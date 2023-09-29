@@ -1,0 +1,28 @@
+Package: collinear
+Title: Automated Multicollinearity Management
+Version: 0.0.0.9000
+Authors@R: 
+    person("Blas", "Benito", , "blasbenito@gmail.com", role = c("aut", "cre"),
+           comment = c(ORCID = "0000-0001-5105-7232"))
+Description: What the package does (one paragraph).
+License: GPL (>= 3)
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE, roclets = c("collate", "namespace", "rd",
+    "roxyglobals::global_roclet"))
+RoxygenNote: 7.2.3
+Imports:
+    sf,
+    rlang,
+    dplyr,
+    tidyr,
+    tibble
+Suggests: 
+    roxyglobals,
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3
+Depends: 
+    R (>= 2.10)
+LazyData: true
+Config/roxyglobals/filename: globals.R
+Config/roxyglobals/unique: TRUE
+URL: https://blasbenito.github.io/collinear/

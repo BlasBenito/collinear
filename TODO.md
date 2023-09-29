@@ -1,0 +1,1 @@
+- move all ggplots in examples to README.Rmd
