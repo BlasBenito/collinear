@@ -4,12 +4,12 @@
 \alias{mc_cor}
 \title{Pairwise Pearson correlation}
 \usage{
-mc_cor(data = NULL, predictors.names = NULL, verbose = TRUE)
+mc_cor(data = NULL, predictors = NULL, verbose = TRUE)
 }
 \arguments{
 \item{data}{(required; data frame or tibble) A data frame with predictors. Default: \code{NULL}.}
 
-\item{predictors.names}{(optional; character vector) Character vector with the names of the predictive variables. Every element of this vector must be in the column names of \code{data}. Default: \code{NULL}}
+\item{predictors}{(optional; character vector) Character vector with the names of the predictive variables. Every element of this vector must be in the column names of \code{data}. Default: \code{NULL}}
 
 \item{verbose}{(optional, logical) Set to \code{FALSE} to silence messages. Default: \code{TRUE}}
 }
@@ -32,7 +32,7 @@ data(
 
 df <- mc_cor(
       data = ecoregions,
-      predictors.names = ecoregions_all_predictors
+      predictors = ecoregions_all_predictors
 )
 
 }

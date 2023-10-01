@@ -13,7 +13,7 @@
 #' Please note that near-zero variance columns are ignored by this function.
 #'
 #' @param data (required; data.frame or tibble) A data frame, tibble, or sf. Default: `NULL`.
-#' @param predictors.names (optional; character vector) Character vector with the names of the predictive variables. Every element of this vector must be in the column names of `data`. If `NULL`, all the columns in data except `response.name` are used. Default: `NULL`
+#' @param predictors (optional; character vector) Character vector with the names of the predictive variables. Every element of this vector must be in the column names of `data`. If `NULL`, all the columns in data except `response` are used. Default: `NULL`
 #' @param preference.order (optional, character vector) Character vector indicating the preference order to protect variables from elimination.  Predictors not included in this argument are ranked by their VIFs. Default: `NULL`.
 #' @param max.cor (optional; numeric) Numeric between 0 and 1. Maximum Pearson correlation between any pair of the selected variables. Higher values return larger number of predictors with higher multicollinearity. Default: `0.75`
 #' @param max.vif (optional, numeric) Numeric with recommended values between 2.5 and 10 defining the maximum VIF allowed in the output dataset. Higher VIF thresholds should result in a higher number of selected variables. Default: `5`.
@@ -34,7 +34,7 @@
 #' #------------------------------------------------
 #' selected.predictors <- mc_auto(
 #'   data = ecoregions,
-#'   predictors.names = ecoregions_all_predictors,
+#'   predictors = ecoregions_all_predictors,
 #'   max.cor = 0.75,
 #'   max.vif = 5
 #'   )
@@ -48,7 +48,7 @@
 #' #because it's highly correlated to "climate_bio1_average"
 #' selected.predictors <- mc_auto(
 #'   data = ecoregions,
-#'   predictors.names = ecoregions_predictors,
+#'   predictors = ecoregions_predictors,
 #'   preference.order = c(
 #'     "fragmentation_ca",
 #'     "climate_bio1_average",
@@ -63,7 +63,7 @@
 #' @export
 mc_auto <- function(
     data = NULL,
-    predictors.names = NULL,
+    predictors = NULL,
     preference.order = NULL,
     max.cor = 0.75,
     max.vif = 5,
@@ -73,7 +73,7 @@ mc_auto <- function(
   #applying auto_cor
   selected.predictors <- mc_auto_cor(
     data = data,
-    predictors.names = predictors.names,
+    predictors = predictors,
     preference.order = preference.order,
     max.cor = max.cor,
     verbose = verbose
@@ -82,7 +82,7 @@ mc_auto <- function(
   #applying auto_vif
   selected.predictors <- mc_auto_vif(
     data = data,
-    predictors.names = selected.predictors,
+    predictors = selected.predictors,
     preference.order = preference.order,
     max.vif = max.vif,
     verbose = verbose

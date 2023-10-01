@@ -6,8 +6,8 @@
 \usage{
 fe_target_encoding(
   data = NULL,
-  response.name = NULL,
-  predictors.names = NULL,
+  response = NULL,
+  predictors = NULL,
   methods = c("mean", "rank", "loo", "rnorm"),
   sd.width = 0.1,
   seed = 1,
@@ -19,9 +19,9 @@ fe_target_encoding(
 \arguments{
 \item{data}{(required; data frame, tibble, or sf) A training data frame. Default: \code{NULL}}
 
-\item{response.name}{(required; character string) Name of the response. Must be a column name of \code{data}. Default: \code{NULL}}
+\item{response}{(required; character string) Name of the response. Must be a column name of \code{data}. Default: \code{NULL}}
 
-\item{predictors.names}{(required; character vector) Names of all the predictors in \code{data}. Only character and factor predictors are processed, but all are returned in the "data" slot of the function's output.  Default: \code{NULL}}
+\item{predictors}{(required; character vector) Names of all the predictors in \code{data}. Only character and factor predictors are processed, but all are returned in the "data" slot of the function's output.  Default: \code{NULL}}
 
 \item{methods}{(optional; character string). Name of the target encoding methods. Default: \code{c("mean", "rank", "loo", "rnorm")}}
 
@@ -86,8 +86,8 @@ unique(ecoregions$primary_productivity)
 #applying all methods for a continuous response
 output <- fe_target_encoding(
   data = ecoregions,
-  response.name = ecoregions_continuous_response,
-  predictors.names = ecoregions_all_predictors,
+  response = ecoregions_continuous_response,
+  predictors = ecoregions_all_predictors,
   methods = c(
     "mean",
     "rank",

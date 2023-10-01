@@ -6,7 +6,7 @@
 \usage{
 mc_auto_cor(
   data = NULL,
-  predictors.names = NULL,
+  predictors = NULL,
   preference.order = NULL,
   max.cor = 0.75,
   verbose = TRUE
@@ -15,7 +15,7 @@ mc_auto_cor(
 \arguments{
 \item{data}{(required; data frame or tibble) A data frame with predictors. Default: \code{NULL}.}
 
-\item{predictors.names}{(required; character vector) Character vector with the names of the predictive variables. Every element of this vector must be in the column names of \code{data}. If \code{NULL}, all the columns in data except \code{response.name} are used. Default: \code{NULL}}
+\item{predictors}{(required; character vector) Character vector with the names of the predictive variables. Every element of this vector must be in the column names of \code{data}. If \code{NULL}, all the columns in data except \code{response} are used. Default: \code{NULL}}
 
 \item{preference.order}{(optional; character vector) Character vector indicating the user's order of preference to keep variables. Predictors not included in this argument are ranked by the sum of their correlation with other variables (variables with higher sums receive lower ranks and have therefore lower preference order). Default: \code{NULL}.}
 
@@ -51,7 +51,7 @@ if(interactive()){
  #on a data frame
  out <- mc_auto_cor(
    data = ecoregions,
-   predictors.names = ecoregions_predictors
+   predictors = ecoregions_predictors
  )
 
  #getting the correlation matrix
@@ -66,14 +66,14 @@ if(interactive()){
  #with preference order (fiver first in ecoregions_predictors)
  out <- mc_auto_cor(
    data = ecoregions,
-   predictors.names = ecoregions_predictors,
+   predictors = ecoregions_predictors,
    preference.order = ecoregions_predictors[1:5],
  )
 
  #with pipes
  out <- mc_auto_cor(
    data = ecoregions,
-   predictors.names = ecoregions_predictors
+   predictors = ecoregions_predictors
  ) \%>\%
  mc_auto_vif()
 

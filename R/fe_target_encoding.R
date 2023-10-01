@@ -18,8 +18,8 @@
 #' The method "rnorm" has the argument `sd.width`, which multiplies the standard deviation argument of the `rnorm()` function to limit the spread of the encoded values between groups.
 #'
 #' @param data (required; data frame, tibble, or sf) A training data frame. Default: `NULL`
-#' @param response.name (required; character string) Name of the response. Must be a column name of `data`. Default: `NULL`
-#' @param predictors.names (required; character vector) Names of all the predictors in `data`. Only character and factor predictors are processed, but all are returned in the "data" slot of the function's output.  Default: `NULL`
+#' @param response (required; character string) Name of the response. Must be a column name of `data`. Default: `NULL`
+#' @param predictors (required; character vector) Names of all the predictors in `data`. Only character and factor predictors are processed, but all are returned in the "data" slot of the function's output.  Default: `NULL`
 #' @param methods (optional; character string). Name of the target encoding methods. Default: `c("mean", "rank", "loo", "rnorm")`
 #' @param seed (optional; integer) Random seed to facilitate reproducibility. Default: `1`
 #' @param noise (optional; numeric vector) Only in methods "mean" and "rank". Numeric vector with noise values in the range 0-1. Default: `0`.
@@ -61,8 +61,8 @@
 #' #applying all methods for a continuous response
 #' output <- fe_target_encoding(
 #'   data = ecoregions,
-#'   response.name = ecoregions_continuous_response,
-#'   predictors.names = ecoregions_all_predictors,
+#'   response = ecoregions_continuous_response,
+#'   predictors = ecoregions_all_predictors,
 #'   methods = c(
 #'     "mean",
 #'     "rank",
@@ -121,8 +121,8 @@
 #' @export
 fe_target_encoding <- function(
     data = NULL,
-    response.name = NULL,
-    predictors.names = NULL,
+    response = NULL,
+    predictors = NULL,
     methods = c(
       "mean",
       "rank",
@@ -148,22 +148,8 @@ fe_target_encoding <- function(
     several.ok = TRUE
   )
 
-  #CHECK INPUT ARGUMENTS
-  data <- check_data(
-    data = data,
-    verbose = verbose
-  )
-
-  predictors.names <- check_predictors_names(
-    predictors.names = predictors.names,
-    data = data,
-    numeric.only = FALSE,
-    is.required = TRUE,
-    verbose = verbose
-  )
-
-  response.name <- check_response_name(
-    response.name = response.name,
+  response <- check_response_name(
+    response = response,
     data = data,
     is.required = TRUE
   )
@@ -176,26 +162,19 @@ fe_target_encoding <- function(
     sd.width <- sd.width[1]
   }
 
-  #check if input is tibble
-  if(tibble::is_tibble(data) == TRUE){
-    return.tibble <- TRUE
-  } else {
-    return.tibble <- FALSE
-  }
-
   #return data if all predictors are numeric
   data.numeric <- unlist(
     lapply(
       X = dplyr::select(
         data,
-        dplyr::all_of(predictors.names)
+        dplyr::all_of(predictors)
         ),
       FUN = is.numeric
     )
   )
 
   if(
-    sum(data.numeric) == length(predictors.names)
+    sum(data.numeric) == length(predictors)
   ){
 
     if(verbose == TRUE){
@@ -219,9 +198,9 @@ fe_target_encoding <- function(
   )
 
   #find names of character variables
-  categorical.predictors <- predictors.names[unlist(
+  categorical.predictors <- predictors[unlist(
     lapply(
-      X = data[, predictors.names, drop = FALSE],
+      X = data[, predictors, drop = FALSE],
       FUN = is.character
     )
   )]
@@ -250,7 +229,7 @@ fe_target_encoding <- function(
 
         data <- fe_target_encoding_mean(
           data = data,
-          response.name = response.name,
+          response = response,
           categorical.variable.name = categorical.predictor,
           noise = noise.i,
           seed = seed,
@@ -268,7 +247,7 @@ fe_target_encoding <- function(
 
         data <- fe_target_encoding_rank(
           data = data,
-          response.name = response.name,
+          response = response,
           categorical.variable.name = categorical.predictor,
           noise = noise.i,
           seed = seed,
@@ -287,7 +266,7 @@ fe_target_encoding <- function(
 
         data <- fe_target_encoding_rnorm(
           data = data,
-          response.name = response.name,
+          response = response,
           categorical.variable.name = categorical.predictor,
           sd.width = sd.width.i,
           seed = seed,
@@ -303,7 +282,7 @@ fe_target_encoding <- function(
 
       data <- fe_target_encoding_loo(
         data = data,
-        response.name = response.name,
+        response = response,
         categorical.variable.name = categorical.predictor,
         replace = replace,
         verbose = verbose
@@ -326,7 +305,7 @@ fe_target_encoding <- function(
       FUN = function(x){
         stats::cor.test(
           x,
-          data[[response.name]]
+          data[[response]]
         )$estimate
       }
     ) %>%
@@ -357,13 +336,6 @@ fe_target_encoding <- function(
 
     rownames(leakage.df) <- seq_len(nrow(leakage.df))
 
-    #to tibble
-    if(return.tibble == TRUE){
-      leakage.df <- tibble::as_tibble(leakage.df)
-    } else {
-      leakage.df <- as.data.frame(leakage.df)
-    }
-
     #message with output
     if(verbose == TRUE){
       message(
@@ -379,14 +351,6 @@ fe_target_encoding <- function(
   }
 
 
-  #to tibble
-  if(return.tibble == TRUE){
-    data <- tibble::as_tibble(data)
-  } else {
-    if(!("sf" %in% class(data))){
-      data <- as.data.frame(data)
-    }
-  }
 
   #return data frame right away if replace is TRUE
   if(replace == TRUE){

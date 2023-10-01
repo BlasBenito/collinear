@@ -1,179 +1,107 @@
-#' Checks 'data' argument
+#' Inspects argument df
 #'
-#' @param data data argument.
-#' @param drop.gemetry drops geometry column if data is an sf data frame
+#' @param df (required; data frame or matrix) Input data frame
+#' @param minimum_rows (required; integer) Minimum number of rows appropriate for a pairwise correlation or a variance inflation factor analysis.
+#' @param minimum_numeric_columns (required, integer) Minimum number of numeric columns required for a pairwise correlation or a variance inflation factor analysis.
 #'
-#' @return data
+#' @return data frame
+#' @example
+#' if (interactive()) {
+#'   data(ecoregions)
+#'   ecoregions <- df_inspect(df = ecoregions)
+#' }
 #' @export
-#' @rdname internal
-#' @keywords internal
-check_data <- function(
-    data = NULL,
-    drop.geometry = FALSE,
-    verbose = TRUE
-){
+#' @autoglobal
+df_inspect <- function(
+    df = NULL,
+    minimum_rows = 30,
+    minimum_numeric_columns = 1
+    ){
 
-  #check if it's NULL
-  if(is.null(data)){
-    stop("Argument 'data' is missing.")
+  #handle df = NULL
+  if(is.null(df)){
+    stop("Argument 'df' cannot be NULL.")
   }
 
-  if(!("data.frame" %in% class(data))){
-    stop("Argument 'data' must be a data frame (tibbles and sf data frames are supported as well).")
-  }
-
-  #check number of rows
-  if(nrow(data) < 30){
-    if(verbose == TRUE){
-      message("Argument 'data' has too few rows to fit a model.")
-    }
-  }
-
-  if(drop.geometry == TRUE){
-    if("sf" %in% class(data)){
-      if(verbose == TRUE){
-        message("Dropping geometry column from the 'data' data frame.")
+  #handle coercion to df
+  if(is.data.frame(df) == FALSE){
+    df <- tryCatch(
+      {as.data.frame(df)},
+      error = function(e){
+        stop("Argument 'df' must be a data frame or a matrix.")
       }
-      data <- sf::st_drop_geometry(data)
-    }
+    )
   }
 
-  data
+  #number of numeric columns must be > 0
+  if(length(df_numeric_columns(df)) == 0){
+    stop("Argument 'df' must have at least one numeric column.")
+  }
+
+  #number of rows must be > 30
+  if(nrow(df) < minimum_rows){
+    warning("Number of rows in argument 'df' is low. This function may fail or yield meaningless results.")
+  }
+
+  df
 
 }
 
-
-#' Checks 'predictors.names' argument
+#' Checks 'predictors' argument
 #'
-#' @param data data argument.
-#' @param predictors.names predictors.names.argument
+#' @param df data argument.
+#' @param predictors predictors.argument
 #' @param numeric.only logical
-#' @param is.required logical
-#' @param na.allowed logical, changes the check depending on whether NAs are allowed in data or not.
 #' @param zero.variance.allowed logical
-#' @param decimal.places integer, number of decimals for the zero variance test
+#' @param decimal_places integer, number of decimals for the zero variance test
 #' @param verbose logical
 #'
 #' @return predictor.names
 #' @export
 #' @rdname internal
 #' @keywords internal
-check_predictors_names <- function(
-    predictors.names = NULL,
-    data = NULL,
-    is.required = TRUE,
+predictors_inspect <- function(
+    df = NULL,
+    predictors = NULL,
     numeric.only = TRUE,
-    na.allowed = FALSE,
     zero.variance.allowed = FALSE,
-    decimal.places = 4,
+    decimal_places = 4,
     verbose = TRUE
 ){
 
-  if(is.null(predictors.names) == TRUE){
-    if(is.required == TRUE){
-      stop("Argument 'predictors.names' is required.")
-    }
+  #if predictors is null, use colnames(df)
+  if(is.null(predictors)){
+    predictors <- colnames(df)
   }
 
-  if(is.character(predictors.names) == FALSE){
-    stop("Argument 'predictors.names' must be a character vector.")
-  }
+  #show predictors that are possibly mispelled
+  #subset predictors to colnames(df)
+  predictors.not.in.df <- setdiff(
+    x = colnames(df),
+    y = predictors
+  )
 
-  if(length(predictors.names) == 0){
-    if(is.required == TRUE){
-      stop("Argument 'predictors.names' is empty.")
-    }
-  }
+  if(length(predictors.not.in.df) > 0){
 
-  #check that all predictors are in data
-  if(all(predictors.names %in% colnames(data)) == FALSE){
-
-    if(verbose == TRUE){
-      message(
-        paste0(
-          "The predictors.names ",
-          paste0(
-            predictors.names[!(predictors.names %in% colnames(data))],
-            collapse = ", "
-          ),
-          " are missing from 'data'."
-        )
+    warning(
+      "These predictors are not column names of argument 'df' and will be ignored: ",
+      paste(predictors.not.in.df, collapse = ", ")
       )
-    }
 
-    predictors.names <- predictors.names[predictors.names %in% colnames(data)]
-
-  }
-
-  #check that all predictors are numeric
-  if(numeric.only == TRUE){
-
-    non.numeric.predictors <- non_numeric_columns(
-      data = data,
-      columns = predictors.names
+    predictors <- intersect(
+      x = predictors,
+      y = colnames(df)
     )
 
-    if(length(non.numeric.predictors) > 0){
-
-      if(verbose == TRUE){
-        message(
-          "These non-numeric predictors will be ignored:\n",
-          paste0(
-            non.numeric.predictors,
-            collapse = "\n"
-          )
-        )
-      }
-
-      predictors.names <- setdiff(
-        predictors.names,
-        non.numeric.predictors
-      )
-
-    }
-
-  }
-
-  #remove predictors with NA
-  if(na.allowed == FALSE){
-
-    na.columns <- apply(
-      X = data[, predictors.names],
-      MARGIN = 2,
-      FUN = function(x){sum(is.na(x)) > 0}
-    )
-
-    if(all(na.columns) == FALSE){
-
-      na.columns <- names(na.columns[na.columns])
-
-      if(verbose == TRUE){
-        message(
-          "These predictors have NA and will be dropped:\n",
-          paste0(
-            na.columns,
-            collapse = "\n"
-          )
-        )
-      }
-
-      predictors.names <- setdiff(
-        predictors.names,
-        na.columns
-      )
-
-    }
-
   }
 
 
-  #removing columns with zero variance
-  if(zero.variance.allowed == FALSE){
+  #removing zero variance predictors
 
-    zero.variance.columns <- zero_variance_columns(
-      data = data,
-      columns = predictors.names,
-      decimal.places = decimal.places
+    zero.variance.columns <- df_zero_variance_columns(
+      df = df,
+      columns = predictors,
+      decimal_places = decimal_places
     )
 
     if(length(zero.variance.columns) > 0){
@@ -188,75 +116,73 @@ check_predictors_names <- function(
         )
       }
 
-      predictors.names <- setdiff(
-        predictors.names,
+      predictors <- setdiff(
+        predictors,
         zero.variance.columns
       )
 
     }
 
-  }
 
-
-  predictors.names
+  predictors
 
 }
 
-#' Checks 'response.name' argument
+#' Checks 'response' argument
 #'
-#' @param data data argument.
-#' @param response.name response.name
-#' @param na.allowed logical, changes the check depending on whether NAs are allowed in data or not.
+#' @param df df argument.
+#' @param response response
+#' @param na.allowed logical, changes the check depending on whether NAs are allowed in df or not.
 #' @param zero.variance.allowed logical
-#' @param decimal.places integer, number of decimals for the zero variance test
+#' @param decimal_places integer, number of decimals for the zero variance test
 #'
-#' @return response.name
+#' @return response
 #' @export
 #' @rdname internal
 #' @keywords internal
 check_response_name <- function(
-    response.name = NULL,
-    data = NULL,
+    response = NULL,
+    df = NULL,
     is.required = TRUE,
     na.allowed = FALSE,
     zero.variance.allowed = FALSE,
-    decimal.places = 4,
+    decimal_places = 4,
     verbose = TRUE
 ){
 
-  if(is.null(response.name) == TRUE){
+  if(is.null(response) == TRUE){
     if(is.required == TRUE){
-      stop("Argument 'response.name' is required.")
+      stop("Argument 'response' is required.")
     }
   }
 
-  if(is.character(response.name) == FALSE){
-    stop("Argument 'response.name' must be a character vector.")
+  if(is.character(response) == FALSE){
+    stop("Argument 'response' must be a character vector.")
   }
 
-  if(length(response.name) != 1){
+  if(length(response) != 1){
     if(is.required == TRUE){
-      stop("Argument 'response.name' must be of length 1 but it is empty.")
+      stop("Argument 'response' must be of length 1 but it is empty.")
     }
   }
 
-  #check that all predictors are in data
-  if(!(response.name %in% colnames(data))){
+  #check that all predictors are in df
+  if(!(response %in% colnames(df))){
     if(is.required == TRUE){
-      stop("Argument 'response.name' must be a column name of 'data'.")
+      stop("Argument 'response' must be a column name of 'df'.")
     } else {
       if(verbose == TRUE){
-        message("Argument 'response.name' must be a column name of 'data'.")
+        message("Argument 'response' must be a column name of 'df'.")
       }
     }
   }
 
-  if(is.numeric(data[[response.name]]) == FALSE){
+  if(is.numeric(df[[response]]) == FALSE){
     if(is.required == TRUE){
-      stop("Argument 'response.name' must be a numeric column of 'data'.")
+      stop("Argument 'response' must be a numeric column of 'df'.")
     } else {
       if(verbose == TRUE){
-        message("Argument 'response.name' is not a numeric column of 'data' and will be ignored.")
+        message("Argument 'response' is not a numeric column of 'df' and will be ignored.")
       }
       return(NULL)
     }
@@ -264,12 +190,12 @@ check_response_name <- function(
   } else {
 
     if(zero.variance.allowed == FALSE){
-      if(var(round(data[[response.name]], decimal.places)) == 0){
+      if(var(round(df[[response]], decimal_places)) == 0){
         if(is.required == TRUE){
-          stop("Argument 'response.name' is the name of a column with near zero variance.")
+          stop("Argument 'response' is the name of a column with near zero variance.")
         } else {
           if(verbose == TRUE){
-            message("Argument 'response.name' is the name of a column with near zero variance. This might cause numerical issues.")
+            message("Argument 'response' is the name of a column with near zero variance. This might cause numerical issues.")
           }
         }
       }
@@ -279,85 +205,83 @@ check_response_name <- function(
 
   if(na.allowed == FALSE){
 
-    if(sum(is.na(data[[response.name]])) > 0){
+    if(sum(is.na(df[[response]])) > 0){
       if(is.required == TRUE){
-        stop("Argument 'response.name' is the name of a column with NA values.")
+        stop("Argument 'response' is the name of a column with NA values.")
       } else {
         if(verbose == TRUE){
-          message("Argument 'response.name' is the name of a column with NA values. This might cause unintended issues.")
+          message("Argument 'response' is the name of a column with NA values. This might cause unintended issues.")
         }
       }
     }
 
   }
 
-
-
-  response.name
+  response
 
 }
 
 
 #' Extract Numeric Columns from a Data Frame
 #'
-#' This function takes a data frame and a set of columns and returns the names of the numeric columns in the selected data frame.
+#' This function takes a df frame and a set of columns and returns the names of the numeric columns in the selected data frame.
 #'
-#' @param data A data frame to extract numeric columns from.
+#' @param df A data frame to extract numeric columns from.
 #' @param columns A character vector specifying the columns of the data frame to extract.
-#' @return A character vector with the names of the numeric columns in the selected data frame.
+#' @return A character vector with the names of the numeric columns in the selected df frame.
 #' @export
 #' @rdname internal
 #' @keywords internal
-non_numeric_columns <- function(
-    data,
+df_non_numeric_columns <- function(
+    df,
     columns = NULL
 ){
 
   if(is.null(columns)){
-    columns <- colnames(data)
+    columns <- colnames(df)
   }
 
-  data <- data[, columns]
+  df <- df[, columns]
 
-  out <- colnames(data)[!sapply(data, is.numeric)]
+  out <- colnames(df)[!sapply(df, is.numeric)]
 
   out
 
 }
 
 
-#' Extract zero-variance Columns from a Data Frame
+#' Extract zero-variance Columns from a df Frame
 #'
-#' This function takes a data frame and a set of columns and returns the names of the columns with zero variance.
+#' This function takes a df frame and a set of columns and returns the names of the columns with zero variance.
 #'
-#' @param data A data frame to extract numeric columns from.
+#' @param df A data frame to extract numeric columns from.
 #' @param columns A character vector specifying the columns of the data frame to extract.
-#' @param decimal.places Integer, number of decimal places to round `columns` to. Defines the tolerance of the test. Default: 4
+#' @param decimal_places Integer, number of decimal places to round `columns` to. Defines the tolerance of the test. Default: 4
 #' @return A character vector with the names of the numeric columns in the selected data frame.
 #' @export
 #' @rdname internal
 #' @keywords internal
-zero_variance_columns <- function(
-    data,
+df_zero_variance_columns <- function(
+    df,
     columns = NULL,
-    decimal.places = 4
+    decimal_places = 4
 ){
 
   if(is.null(columns)){
-    columns <- colnames(data)
+    columns <- colnames(df)
   }
 
-  numeric.columns <- numeric_columns(
-    data = data,
+  numeric.columns <- df_numeric_columns(
+    df = df,
     columns = columns
   )
 
-  data <- data[, numeric.columns]
+  df <- df[, numeric.columns]
 
-  zero.variance.columns <- colnames(data)[
+  zero.variance.columns <- colnames(df)[
     round(
       apply(
-        X = data,
+        X = df,
         MARGIN = 2,
         FUN = var
       ),
@@ -373,18 +297,18 @@ zero_variance_columns <- function(
 #' @title Rescales a numeric vector into a new range
 #' @description Rescales a numeric vector to a new range.
 #' @param x (required, numeric vector) Numeric vector. Default: `NULL`
-#' @param new.min (optional, numeric) New minimum value. Default: `0`
-#' @param new.max (optional_numeric) New maximum value. Default: `1`
-#' @param old.min (optional, numeric) Old minimum value. Default: `NULL`
-#' @param old.max (optional_numeric) Old maximum value. Default: `NULL`
-#' @return A numeric vector of the same length as x, but with its values rescaled between `new.min` and `new.max.`
+#' @param new_min (optional, numeric) New minimum value. Default: `0`
+#' @param new_max (optional_numeric) New maximum value. Default: `1`
+#' @param old_min (optional, numeric) Old minimum value. Default: `NULL`
+#' @param old_max (optional_numeric) Old maximum value. Default: `NULL`
+#' @return A numeric vector of the same length as x, but with its values rescaled between `new_min` and `new_max.`
 #' @examples
 #' if(interactive()){
 #'
 #'  out <- rescale_vector(
 #'    x = rnorm(100),
-#'    new.min = 0,
-#'    new.max = 100,
+#'    new_min = 0,
+#'    new_max = 100,
 #'    integer = TRUE
 #'    )
 #'    out
@@ -393,26 +317,26 @@ zero_variance_columns <- function(
 #' @rdname rescale_vector
 #' @export
 rescale_vector <- function(x = NULL,
-                           new.min = 0,
-                           new.max = 1,
-                           old.min = NULL,
-                           old.max = NULL){
+                           new_min = 0,
+                           new_max = 1,
+                           old_min = NULL,
+                           old_max = NULL){
 
   if(is.null(x) | !is.vector(x) | !is.numeric(x)){
     stop("x must be a numeric vector.")
   }
 
   #data extremes
-  if(is.null(old.min)){
-    old.min = min(x)
+  if(is.null(old_min)){
+    old_min = min(x)
   }
 
-  if(is.null(old.max)){
-    old.max = max(x)
+  if(is.null(old_max)){
+    old_max = max(x)
   }
 
   #scaling
-  x = ((x - old.min) / (old.max - old.min)) * (new.max - new.min) + new.min
+  x = ((x - old_min) / (old_max - old_min)) * (new_max - new_min) + new_min
 
   x
 
@@ -422,24 +346,24 @@ rescale_vector <- function(x = NULL,
 #'
 #' This function takes a data frame and a set of columns and returns the names of the non-numeric columns in the selected data frame.
 #'
-#' @param data A data frame to extract numeric columns from.
+#' @param df A data frame to extract numeric columns from.
 #' @param columns A character vector specifying the columns of the data frame to extract.
 #' @return A character vector with the names of the non-numeric columns in the selected data frame.
 #' @export
 #' @rdname internal
 #' @keywords internal
-numeric_columns <- function(
-    data = NULL,
+df_numeric_columns <- function(
+    df = NULL,
     columns = NULL
 ){
 
   if(is.null(columns)){
-    columns <- colnames(data)
+    columns <- colnames(df)
   }
 
-  data <- data[, columns]
+  df <- df[, columns]
 
-  out <- colnames(data)[sapply(data, is.numeric)]
+  out <- colnames(df)[sapply(df, is.numeric)]
 
   out
 

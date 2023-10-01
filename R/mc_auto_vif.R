@@ -16,7 +16,7 @@
 #'
 #'
 #' @param data (required; data.frame or tibble) A data frame, tibble, or sf. Default: `NULL`.
-#' @param predictors.names (optional; character vector) Character vector with the names of the predictive variables. Every element of this vector must be in the column names of `data`. Default: `NULL`
+#' @param predictors (optional; character vector) Character vector with the names of the predictive variables. Every element of this vector must be in the column names of `data`. Default: `NULL`
 #' @param preference.order (optional, character vector) Character vector indicating the preference order to protect variables from elimination.  Predictors not included in this argument are ranked by their VIFs. Default: `NULL`.
 #' @param max.vif (optional, numeric) Numeric with recommended values between 2.5 and 10 defining the maximum VIF allowed in the output dataset. Higher VIF thresholds should result in a higher number of selected variables. Default: `5`.
 #' @param verbose (optional, logical) Set to `FALSE` to silence messages. Default: `TRUE`
@@ -40,7 +40,7 @@
 #' #-------------------------------
 #' selected.predictors <- mc_auto_vif(
 #'   data = ecoregions,
-#'   predictors.names = ecoregions_predictors,
+#'   predictors = ecoregions_predictors,
 #'   max.vif = 2
 #' )
 #'
@@ -56,7 +56,7 @@
 #' #-------------------------------
 #' selected.predictors <- mc_auto_vif(
 #'   data = ecoregions,
-#'   predictors.names = ecoregions_predictors,
+#'   predictors = ecoregions_predictors,
 #'   max.vif = 10
 #' )
 #'
@@ -72,7 +72,7 @@
 #' #because it's highly correlated to "climate_bio1_average"
 #' selected.predictors <- mc_auto_vif(
 #'   data = ecoregions,
-#'   predictors.names = ecoregions_predictors,
+#'   predictors = ecoregions_predictors,
 #'   preference.order = c(
 #'     "fragmentation_ca",
 #'     "climate_bio1_average",
@@ -106,7 +106,7 @@
 #' #using it in mc_auto_vif as preference.order
 #' selected.predictors <- mc_auto_vif(
 #'   data = ecoregions,
-#'   predictors.names = ecoregions_predictors,
+#'   predictors = ecoregions_predictors,
 #'   preference.order = preference.order
 #' )
 #'
@@ -115,14 +115,14 @@
 #' #-----------------------------------------------
 #' mc_auto_cor.result <- mc_auto_cor(
 #'   data = ecoregions,
-#'   predictors.names = ecoregions_predictors,
+#'   predictors = ecoregions_predictors,
 #'   preference.order = preference.order,
 #'   max.cor = 0.75
 #' )
 #'
 #' selected.predictors <- mc_auto_vif(
 #'   data = ecoregions,
-#'   predictors.names = mc_auto_cor.result,
+#'   predictors = mc_auto_cor.result,
 #'   preference.order = preference.order
 #' )
 #'
@@ -141,7 +141,7 @@
 #' #requires the name of the response to compute the target-encoding
 #' selected.predictors <- mc_auto_vif(
 #'   data = ecoregions,
-#'   predictors.names = ecoregions_all_predictors
+#'   predictors = ecoregions_all_predictors
 #' )
 #'
 #' #both categorical predictors have been selected
@@ -152,7 +152,7 @@
 #' #---------------------------------------------------
 #' data.encoded <- fe_target_encoding(
 #'   data = ecoregions,
-#'   predictors.names = ecoregions_all_predictors,
+#'   predictors = ecoregions_all_predictors,
 #'   methods = "mean",
 #'   replace = TRUE
 #' )
@@ -160,7 +160,7 @@
 #' #now the function does not require the response's name
 #' selected.predictors <- mc_auto_vif(
 #'   data = data.encoded,
-#'   predictors.names = ecoregions_all_predictors
+#'   predictors = ecoregions_all_predictors
 #' )
 #'
 #' #both categorical predictors have been selected again
@@ -173,7 +173,7 @@
 #' @export
 mc_auto_vif <- function(
     data = NULL,
-    predictors.names = NULL,
+    predictors = NULL,
     preference.order = NULL,
     max.vif = 5,
     verbose = TRUE
@@ -218,32 +218,16 @@ mc_auto_vif <- function(
 
   }
 
-  data <- check_data(
-    data = data,
-    drop.geometry = TRUE,
-    verbose = verbose
-  )
-
-  predictors.names <- check_predictors_names(
-    predictors.names = predictors.names,
-    data = data,
-    numeric.only = TRUE,
-    na.allowed = TRUE,
-    zero.variance.allowed = FALSE,
-    is.required = TRUE,
-    verbose = verbose
-  )
-
-  data <- data[, predictors.names]
+  data <- data[, predictors]
 
   #check cor
   data.cor <- mc_cor(
     data = data,
-    predictors.names = predictors.names
+    predictors = predictors
   )
 
   if(max(data.cor$cor) >= 0.99){
-    stop("The maximum correlation between a pair of predictors is > 0.99. The VIF computation will fail. Please use the output of 'mc_cor_auto()' as input for the argument 'predictors.names'.")
+    stop("The maximum correlation between a pair of predictors is > 0.99. The VIF computation will fail. Please use the output of 'mc_cor_auto()' as input for the argument 'predictors'.")
   }
 
   #auto preference order by vif

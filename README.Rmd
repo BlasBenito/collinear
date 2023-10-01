@@ -19,3 +19,55 @@ always_allow_html: yes
 [![Devel-version](https://img.shields.io/badge/devel%20version-1.1.5-blue.svg)](https://github.com/blasbenito/spatialRF) [![lifecycle](https://img.shields.io/badge/lifecycle-stable-green.svg)](https://lifecycle.r-lib.org/articles/stages.html)
 [![License](https://img.shields.io/badge/license-GPL--3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0.en.html) [![DOI](https://zenodo.org/badge/330962704.svg)](https://zenodo.org/badge/latestdoi/330962704)[![CRAN status](https://www.r-pkg.org/badges/version/spatialRF)](https://cran.r-project.org/package=spatialRF)[![CRAN\_Download\_Badge](http://cranlogs.r-pkg.org/badges/grand-total/spatialRF)](https://CRAN.R-project.org/package=spatialRF)
 -->
+
+"Collinearity is a problem for statistical analyses in the same way that Belgium’s lack of mountains is detrimental to the country’s chances of hosting the Winter Olympics: It is an unfortunate fact of life, but not something that has to be solved."
+
+Jan Vanhove
+
+A second approach is to drop one or more of the collinear predictors from the model. I have no problem with this approach per se. But the problem that it solves is not collinearity but rather that the original model was misspecified. This approach only represents a solution
+if the new model is capable of answering the research question since, crucially, estimated coefficients from models with different predictors do not have the same meaning.
+
+Experienced data scientists often emphasize the importance of managing multicollinearity in datasets for statistical or machine learning models. While some may find it tempting to include all available variables, especially in complex environmental or ecological datasets, multicollinearity can pose significant challenges.
+
+The impact of multicollinearity can vary across fields and research objectives. In certain domains, like ecology or environmental science, it may be more critical to understand the individual contributions of predictor variables. However, in other contexts, such as economics, multicollinearity might be considered less problematic if the focus is on prediction rather than causal inference.
+
+  +**Interpretability**: When predictor variables are highly correlated, it becomes difficult to discern their individual contributions to the model's predictions. This can obscure the understanding of which variables are truly driving the observed outcomes, which is crucial in fields like ecology and environmental science.
+  
+  + **Model Stability**: Multicollinearity can make models unstable. Small changes in the data can lead to large variations in model coefficients, making the model less reliable for making predictions. This instability can hinder decision-making in domains where accurate predictions are vital.
+
+  + **Inflated Standard Errors**: Multicollinearity can lead to inflated standard errors of regression coefficients. This can result in p-values that incorrectly suggest variables are not significant when they actually are. Misleading p-values can lead to incorrect conclusions.
+
+  + **Reduced Generalization**: In machine learning, multicollinearity can reduce a model's ability to generalize to new, unseen data. The model may become too specialized to the training data, making it less effective when applied to real-world scenarios.
+
+To address multicollinearity, practitioners often employ techniques such as:
+
+  + **Feature Selection**: Choosing a subset of the most relevant variables and excluding highly correlated ones.
+  + **Dimensionality Reduction**: Using methods like Principal Component Analysis (PCA) to create uncorrelated combinations of variables.
+  + **Regularization**: Applying techniques like Ridge or Lasso regression, which penalize the inclusion of highly correlated predictors.
+  + **Domain Knowledge**: Leveraging expert knowledge to identify and exclude variables that are known to be collinear.
+  
+  
+## Bivariate Correlation Analysis:
+
+Starting with a bivariate correlation analysis, we systematically evaluate how each predictor variable relates to every other variable in the dataset. High correlation coefficients indicate strong pairwise relationships. Identifying these correlations is a crucial first step in detecting multicollinearity.
+
+Variance Inflation Factors (VIF) provide a numerical assessment of multicollinearity. For each predictor variable, the VIF measures how much its variance is inflated by the presence of other predictors. High VIF values (typically above 5 or 10) suggest problematic multicollinearity.
+
+Combining bivariate correlation analysis with VIF, we can take specific actions to reduce multicollinearity:
+
+Identify Problematic Variables: High bivariate correlations (e.g., correlation coefficients close to 1 or -1) between pairs of variables highlight those causing multicollinearity.
+
+Prioritize Variables: When faced with correlated variables, prioritize those that are more theoretically or practically important. This decision should be based on domain knowledge.
+
+Stepwise Variable Selection: Perform stepwise variable selection techniques, such as backward or forward selection, while considering the VIF values. Eliminate variables with high VIF to reduce multicollinearity.
+
+Transform Variables: Transforming variables can sometimes mitigate multicollinearity. For example, combining correlated variables into a single composite variable can help.
+
+By systematically applying bivariate correlation analysis and VIF calculations, data scientists can pinpoint and address multicollinearity issues effectively. This approach ensures that the most relevant variables are retained in the model while minimizing the impact of multicollinearity, ultimately leading to more robust and interpretable statistical or machine learning models in environmental problem-solving scenarios.
+
+#Resources
+
+Suggested by https://fosstodon.org/@MikeMahoney218
+https://psyarxiv.com/mv2wx/
+https://quod.lib.umich.edu/cgi/p/pod/dod-idx/multiple-regression-is-not-multiple-regressions-the-meaning.pdf?c=ptpbio;idno=16039257.0010.003;format=pdf
+

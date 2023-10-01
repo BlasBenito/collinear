@@ -6,7 +6,7 @@
 \usage{
 mc_auto(
   data = NULL,
-  predictors.names = NULL,
+  predictors = NULL,
   preference.order = NULL,
   max.cor = 0.75,
   max.vif = 5,
@@ -16,7 +16,7 @@ mc_auto(
 \arguments{
 \item{data}{(required; data.frame or tibble) A data frame, tibble, or sf. Default: \code{NULL}.}
 
-\item{predictors.names}{(optional; character vector) Character vector with the names of the predictive variables. Every element of this vector must be in the column names of \code{data}. If \code{NULL}, all the columns in data except \code{response.name} are used. Default: \code{NULL}}
+\item{predictors}{(optional; character vector) Character vector with the names of the predictive variables. Every element of this vector must be in the column names of \code{data}. If \code{NULL}, all the columns in data except \code{response} are used. Default: \code{NULL}}
 
 \item{preference.order}{(optional, character vector) Character vector indicating the preference order to protect variables from elimination.  Predictors not included in this argument are ranked by their VIFs. Default: \code{NULL}.}
 
@@ -55,7 +55,7 @@ data(
 #------------------------------------------------
 selected.predictors <- mc_auto(
   data = ecoregions,
-  predictors.names = ecoregions_all_predictors,
+  predictors = ecoregions_all_predictors,
   max.cor = 0.75,
   max.vif = 5
   )
@@ -69,7 +69,7 @@ selected.predictors <- mc_auto(
 #because it's highly correlated to "climate_bio1_average"
 selected.predictors <- mc_auto(
   data = ecoregions,
-  predictors.names = ecoregions_predictors,
+  predictors = ecoregions_predictors,
   preference.order = c(
     "fragmentation_ca",
     "climate_bio1_average",

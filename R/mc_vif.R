@@ -11,7 +11,7 @@
 #' Please note that near-zero variance columns are ignored by this function. Use [mc_auto_vif()] to remove them.
 #'
 #' @param data (required; data frame or tibble) A data frame with predictors. Default: `NULL`.
-#' @param predictors.names (optional; character vector) Character vector with the names of the predictive variables. Every element of this vector must be in the column names of `data`. Default: `NULL`
+#' @param predictors (optional; character vector) Character vector with the names of the predictive variables. Every element of this vector must be in the column names of `data`. Default: `NULL`
 #' @param verbose (optional, logical) Set to `FALSE` to silence messages. Default: `TRUE`
 #'
 #' @return Data frame with the columns "variable" containing the predictor name, and "vif" containing the variance inflation factor of the given variable.
@@ -27,7 +27,7 @@
 #'
 #' df <- mc_vif(
 #'       data = ecoregions,
-#'       predictors.names = ecoregions_all_predictors
+#'       predictors = ecoregions_all_predictors
 #' )
 #'
 #' }
@@ -36,35 +36,12 @@
 #' @export
 mc_vif <- function(
     data = NULL,
-    predictors.names = NULL,
+    predictors = NULL,
     verbose = TRUE
 ){
 
-  data <- check_data(
-    data = data,
-    drop.geometry = TRUE,
-    verbose = verbose
-  )
-
-  predictors.names <- check_predictors_names(
-    predictors.names = predictors.names,
-    data = data,
-    numeric.only = TRUE,
-    na.allowed = TRUE,
-    zero.variance.allowed = FALSE,
-    is.required = TRUE,
-    verbose = verbose
-  )
-
-  #check if input is tibble
-  if(tibble::is_tibble(data) == TRUE){
-    return.tibble <- TRUE
-  } else {
-    return.tibble <- FALSE
-  }
-
   #subset for correlation analysis
-  data <- data[, predictors.names]
+  data <- data[, predictors]
 
   #stop if not enough data
   if(ncol(data) == 1){
@@ -74,11 +51,11 @@ mc_vif <- function(
   #check cor
   data.cor <- mc_cor(
     data = data,
-    predictors.names = predictors.names
+    predictors = predictors
   )
 
   if(max(data.cor$cor) >= 0.99){
-    stop("The maximum correlation between a pair of predictors is > 0.99. The VIF computation will fail. Please use the output of 'mc_cor_auto()' as input for the argument 'predictors.names'.")
+    stop("The maximum correlation between a pair of predictors is > 0.99. The VIF computation will fail. Please use the output of 'mc_cor_auto()' as input for the argument 'predictors'.")
   }
 
   #vif data frame
@@ -98,12 +75,6 @@ mc_vif <- function(
     tibble::rownames_to_column(var = "variable") %>%
     dplyr::mutate(vif = round(vif, 3)) %>%
     dplyr::arrange(vif)
-
-  if(return.tibble == TRUE){
-    vif.df <- tibble::as_tibble(vif.df)
-  } else {
-    vif.df <- as.data.frame(vif.df)
-  }
 
   vif.df
 

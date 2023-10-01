@@ -6,7 +6,7 @@
 \usage{
 mc_auto_vif(
   data = NULL,
-  predictors.names = NULL,
+  predictors = NULL,
   preference.order = NULL,
   max.vif = 5,
   verbose = TRUE
@@ -15,7 +15,7 @@ mc_auto_vif(
 \arguments{
 \item{data}{(required; data.frame or tibble) A data frame, tibble, or sf. Default: \code{NULL}.}
 
-\item{predictors.names}{(optional; character vector) Character vector with the names of the predictive variables. Every element of this vector must be in the column names of \code{data}. Default: \code{NULL}}
+\item{predictors}{(optional; character vector) Character vector with the names of the predictive variables. Every element of this vector must be in the column names of \code{data}. Default: \code{NULL}}
 
 \item{preference.order}{(optional, character vector) Character vector indicating the preference order to protect variables from elimination.  Predictors not included in this argument are ranked by their VIFs. Default: \code{NULL}.}
 
@@ -57,7 +57,7 @@ data(
 #-------------------------------
 selected.predictors <- mc_auto_vif(
   data = ecoregions,
-  predictors.names = ecoregions_predictors,
+  predictors = ecoregions_predictors,
   max.vif = 2
 )
 
@@ -73,7 +73,7 @@ length(selected.predictors)
 #-------------------------------
 selected.predictors <- mc_auto_vif(
   data = ecoregions,
-  predictors.names = ecoregions_predictors,
+  predictors = ecoregions_predictors,
   max.vif = 10
 )
 
@@ -89,7 +89,7 @@ length(selected.predictors)
 #because it's highly correlated to "climate_bio1_average"
 selected.predictors <- mc_auto_vif(
   data = ecoregions,
-  predictors.names = ecoregions_predictors,
+  predictors = ecoregions_predictors,
   preference.order = c(
     "fragmentation_ca",
     "climate_bio1_average",
@@ -123,7 +123,7 @@ preference.order <- names(
 #using it in mc_auto_vif as preference.order
 selected.predictors <- mc_auto_vif(
   data = ecoregions,
-  predictors.names = ecoregions_predictors,
+  predictors = ecoregions_predictors,
   preference.order = preference.order
 )
 
@@ -132,14 +132,14 @@ selected.predictors <- mc_auto_vif(
 #-----------------------------------------------
 mc_auto_cor.result <- mc_auto_cor(
   data = ecoregions,
-  predictors.names = ecoregions_predictors,
+  predictors = ecoregions_predictors,
   preference.order = preference.order,
   max.cor = 0.75
 )
 
 selected.predictors <- mc_auto_vif(
   data = ecoregions,
-  predictors.names = mc_auto_cor.result,
+  predictors = mc_auto_cor.result,
   preference.order = preference.order
 )
 
@@ -158,7 +158,7 @@ ecoregions_all_predictors[45:46]
 #requires the name of the response to compute the target-encoding
 selected.predictors <- mc_auto_vif(
   data = ecoregions,
-  predictors.names = ecoregions_all_predictors
+  predictors = ecoregions_all_predictors
 )
 
 #both categorical predictors have been selected
@@ -169,7 +169,7 @@ ecoregions_all_predictors[45:46] \%in\% selected.predictors
 #---------------------------------------------------
 data.encoded <- fe_target_encoding(
   data = ecoregions,
-  predictors.names = ecoregions_all_predictors,
+  predictors = ecoregions_all_predictors,
   methods = "mean",
   replace = TRUE
 )
@@ -177,7 +177,7 @@ data.encoded <- fe_target_encoding(
 #now the function does not require the response's name
 selected.predictors <- mc_auto_vif(
   data = data.encoded,
-  predictors.names = ecoregions_all_predictors
+  predictors = ecoregions_all_predictors
 )
 
 #both categorical predictors have been selected again

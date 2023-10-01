@@ -6,25 +6,25 @@
 \usage{
 rescale_vector(
   x = NULL,
-  new.min = 0,
-  new.max = 1,
-  old.min = NULL,
-  old.max = NULL
+  new_min = 0,
+  new_max = 1,
+  old_min = NULL,
+  old_max = NULL
 )
 }
 \arguments{
 \item{x}{(required, numeric vector) Numeric vector. Default: \code{NULL}}
 
-\item{new.min}{(optional, numeric) New minimum value. Default: \code{0}}
+\item{new_min}{(optional, numeric) New minimum value. Default: \code{0}}
 
-\item{new.max}{(optional_numeric) New maximum value. Default: \code{1}}
+\item{new_max}{(optional_numeric) New maximum value. Default: \code{1}}
 
-\item{old.min}{(optional, numeric) Old minimum value. Default: \code{NULL}}
+\item{old_min}{(optional, numeric) Old minimum value. Default: \code{NULL}}
 
-\item{old.max}{(optional_numeric) Old maximum value. Default: \code{NULL}}
+\item{old_max}{(optional_numeric) Old maximum value. Default: \code{NULL}}
 }
 \value{
-A numeric vector of the same length as x, but with its values rescaled between \code{new.min} and \code{new.max.}
+A numeric vector of the same length as x, but with its values rescaled between \code{new_min} and \code{new_max.}
 }
 \description{
 Rescales a numeric vector to a new range.
@@ -34,8 +34,8 @@ if(interactive()){
 
  out <- rescale_vector(
    x = rnorm(100),
-   new.min = 0,
-   new.max = 100,
+   new_min = 0,
+   new_max = 100,
    integer = TRUE
    )
    out

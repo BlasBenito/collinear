@@ -9,7 +9,7 @@
 #' }
 #'
 #' @param data (required; data frame, tibble, or sf) A training data frame. Default: `NULL`
-#' @param response.name (required; character string) Name of the response. Must be a column name of `data`. Default: `NULL`
+#' @param response (required; character string) Name of the response. Must be a column name of `data`. Default: `NULL`
 #' @param categorical.variable.name (required; character) Name of the categorical variable to encode.
 #' @param noise (optional; numeric) Numeric with noise values in the range 0-1. Default: `0`.
 #' @param sd.width (optional; numeric) Numeric with multiplicator of the standard deviation of each group in the categorical variable, in the range 0.01-1. Default: `0.1`
@@ -40,7 +40,7 @@
 #' #transforming primary_productivity
 #' ecoregions <- fe_target_encoding_mean(
 #'   data = ecoregions,
-#'   response.name = ecoregions_continuous_response,
+#'   response = ecoregions_continuous_response,
 #'   categorical.variable.name = "primary_productivity"
 #' )
 #'
@@ -62,7 +62,7 @@
 #' #transforming primary_productivity
 #' ecoregions <- fe_target_encoding_rank(
 #'   data = ecoregions,
-#'   response.name = ecoregions_continuous_response,
+#'   response = ecoregions_continuous_response,
 #'   categorical.variable.name = "primary_productivity"
 #' )
 #'
@@ -83,7 +83,7 @@
 #' #transforming primary_productivity
 #' ecoregions <- fe_target_encoding_loo(
 #'   data = ecoregions,
-#'   response.name = ecoregions_continuous_response,
+#'   response = ecoregions_continuous_response,
 #'   categorical.variable.name = "primary_productivity"
 #' )
 #'
@@ -105,7 +105,7 @@
 #' #transforming primary_productivity
 #' ecoregions <- fe_target_encoding_rnorm(
 #'   data = ecoregions,
-#'   response.name = ecoregions_continuous_response,
+#'   response = ecoregions_continuous_response,
 #'   categorical.variable.name = "primary_productivity"
 #' )
 #'
@@ -128,7 +128,7 @@
 #' @rdname target_encoding_methods
 fe_target_encoding_mean <- function(
     data,
-    response.name,
+    response,
     categorical.variable.name,
     noise = 0,
     seed = 1,
@@ -153,7 +153,7 @@ fe_target_encoding_mean <- function(
 
   #aggregate by groups
   df.map <- tapply(
-    X = data[[response.name]],
+    X = data[[response]],
     INDEX = data[[categorical.variable.name]],
     FUN = mean,
     na.rm = TRUE
@@ -210,7 +210,7 @@ fe_target_encoding_mean <- function(
 #' @export
 fe_target_encoding_rnorm <- function(
     data,
-    response.name,
+    response,
     categorical.variable.name,
     sd.width = 0.1,
     seed = 1,
@@ -240,11 +240,11 @@ fe_target_encoding_rnorm <- function(
       !!categorical.variable.new.name := stats::rnorm(
         n = dplyr::n(),
         mean = mean(
-          get(response.name),
+          get(response),
           na.rm = TRUE
         ),
         sd = stats::sd(
-          get(response.name),
+          get(response),
           na.rm = TRUE
         ) * sd.width
       )
@@ -275,7 +275,7 @@ fe_target_encoding_rnorm <- function(
 #' @export
 fe_target_encoding_rank <- function(
     data,
-    response.name,
+    response,
     categorical.variable.name,
     noise = 0,
     seed = 1,
@@ -300,7 +300,7 @@ fe_target_encoding_rank <- function(
 
   #aggregate by groups
   df.map <- tapply(
-    X = data[[response.name]],
+    X = data[[response]],
     INDEX = data[[categorical.variable.name]],
     FUN = mean,
     na.rm = TRUE
@@ -351,7 +351,7 @@ fe_target_encoding_rank <- function(
 #' @export
 fe_target_encoding_loo <- function(
     data,
-    response.name,
+    response,
     categorical.variable.name,
     replace = FALSE,
     verbose = TRUE
@@ -370,10 +370,10 @@ fe_target_encoding_loo <- function(
     dplyr::mutate(
       !!categorical.variable.new.name := (
         sum(
-          get(response.name),
+          get(response),
           na.rm = TRUE
         ) -
-          get(response.name)
+          get(response)
       ) /
         (dplyr::n() - 1)
     ) %>%

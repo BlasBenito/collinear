@@ -1,9 +1,10 @@
 ^collinear\.Rproj$
 ^\.Rproj\.user$
 ^LICENSE\.md$
-README.Rmd
+^README.Rmd
 ^_pkgdown\.yml$
 ^docs$
 ^pkgdown$
 ^\.github$
-TODO.md$
+^TODO.md$
+^dev_scripts/

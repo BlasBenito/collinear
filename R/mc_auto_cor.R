@@ -12,7 +12,7 @@
 #' Please note that near-zero variance columns are ignored by this function.
 #'
 #' @param data (required; data frame or tibble) A data frame with predictors. Default: `NULL`.
-#' @param predictors.names (required; character vector) Character vector with the names of the predictive variables. Every element of this vector must be in the column names of `data`. If `NULL`, all the columns in data except `response.name` are used. Default: `NULL`
+#' @param predictors (required; character vector) Character vector with the names of the predictive variables. Every element of this vector must be in the column names of `data`. If `NULL`, all the columns in data except `response` are used. Default: `NULL`
 #' @param preference.order  (optional; character vector) Character vector indicating the user's order of preference to keep variables. Predictors not included in this argument are ranked by the sum of their correlation with other variables (variables with higher sums receive lower ranks and have therefore lower preference order). Default: `NULL`.
 #' @param max.cor (optional; numeric) Numeric between 0 and 1. Maximum Pearson correlation between any pair of the selected variables. Higher values return larger number of predictors with higher multicollinearity. Default: `0.75`
 #' @param verbose (optional, logical) Logical. if `TRUE`, describes the function operations to the user. Default: `TRUE`
@@ -29,7 +29,7 @@
 #'  #on a data frame
 #'  out <- mc_auto_cor(
 #'    data = ecoregions,
-#'    predictors.names = ecoregions_predictors
+#'    predictors = ecoregions_predictors
 #'  )
 #'
 #'  #getting the correlation matrix
@@ -44,14 +44,14 @@
 #'  #with preference order (fiver first in ecoregions_predictors)
 #'  out <- mc_auto_cor(
 #'    data = ecoregions,
-#'    predictors.names = ecoregions_predictors,
+#'    predictors = ecoregions_predictors,
 #'    preference.order = ecoregions_predictors[1:5],
 #'  )
 #'
 #'  #with pipes
 #'  out <- mc_auto_cor(
 #'    data = ecoregions,
-#'    predictors.names = ecoregions_predictors
+#'    predictors = ecoregions_predictors
 #'  ) %>%
 #'  mc_auto_vif()
 #'
@@ -62,7 +62,7 @@
 #' @export
 mc_auto_cor <- function(
     data = NULL,
-    predictors.names = NULL,
+    predictors = NULL,
     preference.order = NULL,
     max.cor = 0.75,
     verbose = TRUE
@@ -73,26 +73,8 @@ mc_auto_cor <- function(
     stop("Argument 'max.cor' must be in the range (0, 1].")
   }
 
-  #checking data
-  ##############
-  data <- check_data(
-    data = data,
-    drop.geometry = TRUE,
-    verbose = verbose
-  )
-
-  predictors.names <- check_predictors_names(
-    predictors.names = predictors.names,
-    data = data,
-    numeric.only = TRUE,
-    na.allowed = TRUE,
-    zero.variance.allowed = FALSE,
-    is.required = TRUE,
-    verbose = verbose
-  )
-
   #subset for correlation analysis
-  data <- data[, predictors.names]
+  data <- data[, predictors]
 
   #finding zero variance columns
   zero.variance.columns <- colnames(data)[round(apply(data, 2, var), 6) == 0]
@@ -111,10 +93,10 @@ mc_auto_cor <- function(
   #remove zero variance columns
   if(length(zero.variance.columns) > 0){
 
-    predictors.names <- predictors.names[!(predictors.names %in% zero.variance.columns)]
+    predictors <- predictors[!(predictors %in% zero.variance.columns)]
 
     #subset for correlation analysis
-    data <- data[, predictors.names]
+    data <- data[, predictors]
 
   }
 
@@ -203,7 +185,7 @@ mc_auto_cor <- function(
   }
 
   #selected variables
-  selected.variables <- preference.order[preference.order %in% setdiff(predictors.names, removed.vars)]
+  selected.variables <- preference.order[preference.order %in% setdiff(predictors, removed.vars)]
 
   if(verbose == TRUE){
     message(
