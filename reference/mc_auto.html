@@ -62,7 +62,7 @@ Please note that near-zero variance columns are ignored by this function."><!-- 
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">mc_auto</span><span class="op">(</span></span>
 <span>  data <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  predictors.names <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  predictors <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  preference.order <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  max.cor <span class="op">=</span> <span class="fl">0.75</span>,</span>
 <span>  max.vif <span class="op">=</span> <span class="fl">5</span>,</span>
@@ -76,8 +76,8 @@ Please note that near-zero variance columns are ignored by this function."><!-- 
 <dd><p>(required; data.frame or tibble) A data frame, tibble, or sf. Default: <code>NULL</code>.</p></dd>
 
 
-<dt>predictors.names</dt>
-<dd><p>(optional; character vector) Character vector with the names of the predictive variables. Every element of this vector must be in the column names of <code>data</code>. If <code>NULL</code>, all the columns in data except <code>response.name</code> are used. Default: <code>NULL</code></p></dd>
+<dt>predictors</dt>
+<dd><p>(optional; character vector) Character vector with the names of the predictive variables. Every element of this vector must be in the column names of <code>data</code>. If <code>NULL</code>, all the columns in data except <code>response</code> are used. Default: <code>NULL</code></p></dd>
 
 
 <dt>preference.order</dt>
@@ -117,7 +117,7 @@ Please note that near-zero variance columns are ignored by this function."><!-- 
 <span class="r-in"><span><span class="co">#------------------------------------------------</span></span></span>
 <span class="r-in"><span><span class="va">selected.predictors</span> <span class="op">&lt;-</span> <span class="fu">mc_auto</span><span class="op">(</span></span></span>
 <span class="r-in"><span>  data <span class="op">=</span> <span class="va">ecoregions</span>,</span></span>
-<span class="r-in"><span>  predictors.names <span class="op">=</span> <span class="va">ecoregions_all_predictors</span>,</span></span>
+<span class="r-in"><span>  predictors <span class="op">=</span> <span class="va">ecoregions_all_predictors</span>,</span></span>
 <span class="r-in"><span>  max.cor <span class="op">=</span> <span class="fl">0.75</span>,</span></span>
 <span class="r-in"><span>  max.vif <span class="op">=</span> <span class="fl">5</span></span></span>
 <span class="r-in"><span>  <span class="op">)</span></span></span>
@@ -131,7 +131,7 @@ Please note that near-zero variance columns are ignored by this function."><!-- 
 <span class="r-in"><span><span class="co">#because it's highly correlated to "climate_bio1_average"</span></span></span>
 <span class="r-in"><span><span class="va">selected.predictors</span> <span class="op">&lt;-</span> <span class="fu">mc_auto</span><span class="op">(</span></span></span>
 <span class="r-in"><span>  data <span class="op">=</span> <span class="va">ecoregions</span>,</span></span>
-<span class="r-in"><span>  predictors.names <span class="op">=</span> <span class="va">ecoregions_predictors</span>,</span></span>
+<span class="r-in"><span>  predictors <span class="op">=</span> <span class="va">ecoregions_predictors</span>,</span></span>
 <span class="r-in"><span>  preference.order <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span></span>
 <span class="r-in"><span>    <span class="st">"fragmentation_ca"</span>,</span></span>
 <span class="r-in"><span>    <span class="st">"climate_bio1_average"</span>,</span></span>
