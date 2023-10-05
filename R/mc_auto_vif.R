@@ -187,11 +187,6 @@ mc_auto_vif <- function(
     stop("Argument 'max.vif' must be in the range (0, Inf).")
   }
 
-  #dropping geometry if sf
-  if("sf" %in% class(data)){
-    data <- sf::st_drop_geometry(data)
-  }
-
   #internal vif function
   .vif <- function(data){
 
@@ -201,28 +196,28 @@ mc_auto_vif <- function(
       diag(
         solve(
           cor(
-            x = data,
+            x = df,
             use = "complete.obs"
           ),
           tol = 0
         )
       ),
       stringsAsFactors = FALSE
-    ) %>%
-      dplyr::rename(vif = 1) %>%
-      tibble::rownames_to_column(var = "variable") %>%
-      dplyr::mutate(vif = round(vif, 3)) %>%
+    ) |>
+      dplyr::rename(vif = 1) |>
+      tibble::rownames_to_column(var = "variable") |>
+      dplyr::mutate(vif = round(vif, 3)) |>
       dplyr::arrange(vif)
 
     out
 
   }
 
-  data <- data[, predictors]
+  df <- df[, predictors]
 
   #check cor
-  data.cor <- mc_cor(
-    data = data,
+  df.cor <- cor_df(
+    df = df,
     predictors = predictors
   )
 
@@ -231,7 +226,7 @@ mc_auto_vif <- function(
   }
 
   #auto preference order by vif
-  preference.order.auto <- .vif(data)[["variable"]]
+  preference.order.auto <- .vif(df)[["variable"]]
 
   #if preference.order is not provided, use auto
   if(is.null(preference.order)){
@@ -241,12 +236,12 @@ mc_auto_vif <- function(
   } else {
 
     #subset preference.order to colnames(x)
-    preference.order <- preference.order[preference.order %in% colnames(data)]
+    preference.order <- preference.order[preference.order %in% colnames(df)]
 
     #if there are variables not in preference.order, add them in the order of preference.order.auto
-    if(length(preference.order) < ncol(data)){
+    if(length(preference.order) < ncol(df)){
 
-      not.in.preference.order <- colnames(data)[!(colnames(data) %in% preference.order)]
+      not.in.preference.order <- colnames(df)[!(colnames(df) %in% preference.order)]
       preference.order <- c(preference.order, preference.order.auto[preference.order.auto %in% not.in.preference.order])
 
     }
@@ -254,30 +249,30 @@ mc_auto_vif <- function(
   }
 
   #order x according to preference order
-  data <- data[, preference.order]
+  df <- df[, preference.order]
 
   #rank of interest
-  data.rank <- data.frame(
-    variable = colnames(data),
-    rank = 1:ncol(data)
+  df.rank <- data.frame(
+    variable = colnames(df),
+    rank = 1:ncol(df)
   )
 
   #iterating through reversed preference order
-  for(i in seq(from = nrow(data.rank), to = 2)){
+  for(i in seq(from = nrow(df.rank), to = 2)){
 
-    vif.i <- .vif(data = data[, data.rank$variable]) %>%
+    vif.i <- .vif(df = df[, df.rank$variable]) |>
       dplyr::filter(
-        variable == data.rank[i, "variable"]
-      ) %>%
+        variable == df.rank[i, "variable"]
+      ) |>
       dplyr::pull(vif)
 
     #removing var if vif is above threshold
     if(vif.i > max.vif){
 
       #removing it from x.rank
-      data.rank <- dplyr::filter(
-        data.rank,
-        variable != data.rank[i, "variable"]
+      df.rank <- dplyr::filter(
+        df.rank,
+        variable != df.rank[i, "variable"]
       )
 
     }
@@ -285,8 +280,8 @@ mc_auto_vif <- function(
   }
 
   removed.vars <- setdiff(
-    x = colnames(data),
-    y = data.rank$variable
+    x = colnames(df),
+    y = df.rank$variable
   )
 
   #message
@@ -297,7 +292,7 @@ mc_auto_vif <- function(
   }
 
   #selected variables
-  selected.variables <- preference.order[preference.order %in% setdiff(colnames(data), removed.vars)]
+  selected.variables <- preference.order[preference.order %in% setdiff(colnames(df), removed.vars)]
 
   if(verbose == TRUE){
     message(

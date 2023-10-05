@@ -52,7 +52,7 @@
 #'  out <- mc_auto_cor(
 #'    data = ecoregions,
 #'    predictors = ecoregions_predictors
-#'  ) %>%
+#'  ) |>
 #'  mc_auto_vif()
 #'
 #' }
@@ -109,7 +109,7 @@ mc_auto_cor <- function(
   data.cor <- cor(
     x = data,
     use = "complete.obs"
-  ) %>%
+  ) |>
     abs()
 
   #diagonals to zero
@@ -117,8 +117,8 @@ mc_auto_cor <- function(
 
   #auto preference order
   #variables with lower sum of cor with others go higher
-  preference.order.auto <- colSums(data.cor) %>%
-    sort() %>%
+  preference.order.auto <- colSums(data.cor) |>
+    sort() |>
     names()
 
   #if there is no preference order

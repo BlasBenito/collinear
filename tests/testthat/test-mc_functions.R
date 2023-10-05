@@ -1,7 +1,6 @@
 testthat::test_that("mc_ functions work", {
 
   library(collinear)
-  library(magrittr)
 
   #loading data
   data(

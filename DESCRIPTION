@@ -11,17 +11,17 @@ Roxygen: list(markdown = TRUE, roclets = c("collate", "namespace", "rd",
     "roxyglobals::global_roclet"))
 RoxygenNote: 7.2.3
 Imports:
-    sf,
     rlang,
     dplyr,
     tidyr,
     tibble
 Suggests: 
     roxyglobals,
+    data.table,
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
 Depends: 
-    R (>= 2.10)
+    R (>= 4.0)
 LazyData: true
 Config/roxyglobals/filename: globals.R
 Config/roxyglobals/unique: TRUE

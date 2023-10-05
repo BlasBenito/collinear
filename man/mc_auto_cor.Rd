@@ -74,7 +74,7 @@ if(interactive()){
  out <- mc_auto_cor(
    data = ecoregions,
    predictors = ecoregions_predictors
- ) \%>\%
+ ) |>
  mc_auto_vif()
 
 }

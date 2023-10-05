@@ -1,4 +1,4 @@
-#' Pairwise Pearson correlation
+#' Pairwise correlation
 #'
 #' @description Returns the pairwise Pearson correlation between all pairs of predictors in a training dataset.
 #'
@@ -32,16 +32,6 @@ cor_df <- function(
     method = NULL
 ){
 
-  #method argument for stats::cor
-  method <- match.arg(
-    arg = method,
-    choices = c(
-      "pearson",
-      "spearman"
-    ),
-    several.ok = FALSE
-  )
-
   #check predictors
   predictors <- predictors_inspect(
     df = df,
@@ -51,22 +41,20 @@ cor_df <- function(
   #check input data frame
   df <- df_inspect(
     df = df[, predictors],
-    minimum_rows = ifelse(
+    min_rows = ifelse(
       test = method == "pearson",
       yes = 30,
       no = 10
     ))
 
-  #TODO: modify predictors inspect
-  predictors_inspect()
-
   #correlation matrix
   #TODO: function cor_matrix using target encoding for categoricals
   cor.matrix <- stats::cor(
     x = df,
-    use = "pairwise.complete.obs"
-  ) %>%
-    abs() %>%
+    use = "pairwise.complete.obs",
+    method = method
+  ) |>
+    abs() |>
     round(3)
 
   #selecting upper triangle only
@@ -76,15 +64,15 @@ cor_df <- function(
   cor.matrix[!cor.matrix.upper.tri] <- NA
 
   #to long format
-  cor.df <- cor.matrix %>%
-    as.df.frame() %>%
-    tibble::rownames_to_column(var = "a") %>%
+  cor.df <- cor.matrix |>
+    as.data.frame() |>
+    tibble::rownames_to_column(var = "a") |>
     tidyr::pivot_longer(
       cols = dplyr::all_of(predictors),
       names_to = "b",
       values_to = "cor"
-    ) %>%
-    stats::na.omit() %>%
+    ) |>
+    stats::na.omit() |>
     dplyr::arrange(
       dplyr::desc(cor)
     )

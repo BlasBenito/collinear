@@ -3,15 +3,29 @@
 utils::globalVariables(c(
   # <fe_target_encoding_rnorm>
   # <fe_target_encoding_loo>
+  ":=",
+  # <fe_target_encoding_rnorm>
+  # <fe_target_encoding_loo>
   ".data",
   # <fe_target_encoding>
   "correlation_with_response",
+  # <fe_target_encoding>
+  "data",
+  # <mc_auto_vif>
+  "data.cor",
+  # <target_encode>
+  "encoded",
   # <fe_target_encoding>
   "encoded_predictor",
   # <fe_target_encoding>
   "interpretation",
   # <fe_target_encoding>
+  "predictors.categorical",
+  # <fe_target_encoding>
   "r_squared",
+  # <cor_df>
+  "return.df",
+  # <predictors_zero_variance>
   # <mc_auto_cor>
   "var",
   # <mc_auto_vif>

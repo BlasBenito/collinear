@@ -5,7 +5,7 @@
 \title{Target encoding of character and factor variables}
 \usage{
 fe_target_encoding(
-  data = NULL,
+  df = NULL,
   response = NULL,
   predictors = NULL,
   methods = c("mean", "rank", "loo", "rnorm"),
@@ -17,11 +17,11 @@ fe_target_encoding(
 )
 }
 \arguments{
-\item{data}{(required; data frame, tibble, or sf) A training data frame. Default: \code{NULL}}
+\item{df}{(required; data frame, tibble, or sf) A training data frame. Default: \code{NULL}}
 
-\item{response}{(required; character string) Name of the response. Must be a column name of \code{data}. Default: \code{NULL}}
+\item{response}{(required; character string) Name of the response. Must be a column name of \code{df}. Default: \code{NULL}}
 
-\item{predictors}{(required; character vector) Names of all the predictors in \code{data}. Only character and factor predictors are processed, but all are returned in the "data" slot of the function's output.  Default: \code{NULL}}
+\item{predictors}{(required; character vector) Names of all the predictors in \code{df}. Only character and factor predictors are processed, but all are returned in the "df" slot of the function's output.  Default: \code{NULL}}
 
 \item{methods}{(optional; character string). Name of the target encoding methods. Default: \code{c("mean", "rank", "loo", "rnorm")}}
 
@@ -36,7 +36,7 @@ fe_target_encoding(
 \item{verbose}{(optional; logical) If TRUE, messages and plots generated during the execution of the function are displayed. Default: \code{TRUE}}
 }
 \value{
-If no target encoding is needed because all predictors are numeric, the function returns \code{data}.
+If no target encoding is needed because all predictors are numeric, the function returns \code{df}.
 
 Otherwise it returns a list of the class "fe_target_encoding" with the slots:
 \itemize{
@@ -119,13 +119,13 @@ tidyr::pivot_longer(
       x = output$encoded_predictors,
       value = TRUE)
     )
-) \%>\%
+) |>
   dplyr::select(
     plant_richness,
     primary_productivity,
     name,
     value
-  ) \%>\%
+  ) |>
   ggplot2::ggplot() +
   ggplot2::aes(
     x = plant_richness,

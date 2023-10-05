@@ -10,8 +10,8 @@
 #'
 #' Please note that near-zero variance columns are ignored by this function. Use [mc_auto_vif()] to remove them.
 #'
-#' @param data (required; data frame or tibble) A data frame with predictors. Default: `NULL`.
-#' @param predictors (optional; character vector) Character vector with the names of the predictive variables. Every element of this vector must be in the column names of `data`. Default: `NULL`
+#' @param df (required; data frame or tibble) A data frame with predictors. Default: `NULL`.
+#' @param predictors (optional; character vector) Character vector with the names of the predictive variables. Every element of this vector must be in the column names of `df`. Default: `NULL`
 #' @param verbose (optional, logical) Set to `FALSE` to silence messages. Default: `TRUE`
 #'
 #' @return Data frame with the columns "variable" containing the predictor name, and "vif" containing the variance inflation factor of the given variable.
@@ -26,7 +26,7 @@
 #' )
 #'
 #' df <- mc_vif(
-#'       data = ecoregions,
+#'       df = ecoregions,
 #'       predictors = ecoregions_all_predictors
 #' )
 #'
@@ -35,26 +35,26 @@
 #' @autoglobal
 #' @export
 mc_vif <- function(
-    data = NULL,
+    df = NULL,
     predictors = NULL,
     verbose = TRUE
 ){
 
   #subset for correlation analysis
-  data <- data[, predictors]
+  df <- df[, predictors]
 
   #stop if not enough data
-  if(ncol(data) == 1){
+  if(ncol(df) == 1){
     stop("There are not enough predictors to perform the analysis.")
   }
 
   #check cor
-  data.cor <- mc_cor(
-    data = data,
+  df.cor <- cor_df(
+    df = df,
     predictors = predictors
   )
 
-  if(max(data.cor$cor) >= 0.99){
+  if(max(df.cor$cor) >= 0.99){
     stop("The maximum correlation between a pair of predictors is > 0.99. The VIF computation will fail. Please use the output of 'mc_cor_auto()' as input for the argument 'predictors'.")
   }
 
@@ -63,17 +63,17 @@ mc_vif <- function(
     diag(
       solve(
         cor(
-          x = data,
+          x = df,
           use = "complete.obs"
         ),
         tol = 0
       )
     ),
     stringsAsFactors = FALSE
-  ) %>%
-    dplyr::rename(vif = 1) %>%
-    tibble::rownames_to_column(var = "variable") %>%
-    dplyr::mutate(vif = round(vif, 3)) %>%
+  ) |>
+    dplyr::rename(vif = 1) |>
+    tibble::rownames_to_column(var = "variable") |>
+    dplyr::mutate(vif = round(vif, 3)) |>
     dplyr::arrange(vif)
 
   vif.df

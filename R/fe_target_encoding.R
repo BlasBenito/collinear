@@ -17,9 +17,9 @@
 #'
 #' The method "rnorm" has the argument `sd.width`, which multiplies the standard deviation argument of the `rnorm()` function to limit the spread of the encoded values between groups.
 #'
-#' @param data (required; data frame, tibble, or sf) A training data frame. Default: `NULL`
-#' @param response (required; character string) Name of the response. Must be a column name of `data`. Default: `NULL`
-#' @param predictors (required; character vector) Names of all the predictors in `data`. Only character and factor predictors are processed, but all are returned in the "data" slot of the function's output.  Default: `NULL`
+#' @param df (required; data frame, tibble, or sf) A training data frame. Default: `NULL`
+#' @param response (required; character string) Name of the response. Must be a column name of `df`. Default: `NULL`
+#' @param predictors (required; character vector) Names of all the predictors in `df`. Only character and factor predictors are processed, but all are returned in the "df" slot of the function's output.  Default: `NULL`
 #' @param methods (optional; character string). Name of the target encoding methods. Default: `c("mean", "rank", "loo", "rnorm")`
 #' @param seed (optional; integer) Random seed to facilitate reproducibility. Default: `1`
 #' @param noise (optional; numeric vector) Only in methods "mean" and "rank". Numeric vector with noise values in the range 0-1. Default: `0`.
@@ -28,7 +28,7 @@
 #' @param verbose (optional; logical) If TRUE, messages and plots generated during the execution of the function are displayed. Default: `TRUE`
 #'
 #' @return
-#' If no target encoding is needed because all predictors are numeric, the function returns `data`.
+#' If no target encoding is needed because all predictors are numeric, the function returns `df`.
 #'
 #' Otherwise it returns a list of the class "fe_target_encoding" with the slots:
 #' \itemize{
@@ -94,13 +94,13 @@
 #'       x = output$encoded_predictors,
 #'       value = TRUE)
 #'     )
-#' ) %>%
+#' ) |>
 #'   dplyr::select(
 #'     plant_richness,
 #'     primary_productivity,
 #'     name,
 #'     value
-#'   ) %>%
+#'   ) |>
 #'   ggplot2::ggplot() +
 #'   ggplot2::aes(
 #'     x = plant_richness,
@@ -120,7 +120,7 @@
 #' @rdname fe_target_encoding
 #' @export
 fe_target_encoding <- function(
-    data = NULL,
+    df = NULL,
     response = NULL,
     predictors = NULL,
     methods = c(
@@ -148,12 +148,6 @@ fe_target_encoding <- function(
     several.ok = TRUE
   )
 
-  response <- check_response_name(
-    response = response,
-    data = data,
-    is.required = TRUE
-  )
-
 
   if(replace == TRUE){
     verbose <- FALSE
@@ -162,32 +156,9 @@ fe_target_encoding <- function(
     sd.width <- sd.width[1]
   }
 
-  #return data if all predictors are numeric
-  data.numeric <- unlist(
-    lapply(
-      X = dplyr::select(
-        data,
-        dplyr::all_of(predictors)
-        ),
-      FUN = is.numeric
-    )
-  )
-
-  if(
-    sum(data.numeric) == length(predictors)
-  ){
-
-    if(verbose == TRUE){
-      message("All predictors are numeric, nothing to do. Returning the input data frame.")
-    }
-
-    return(data)
-
-  }
-
   #factors to characters
-  data <- rapply(
-    object = data,
+  df <- rapply(
+    object = df,
     f = as.character,
     classes = c(
       "factor",
@@ -197,19 +168,28 @@ fe_target_encoding <- function(
     how = "replace"
   )
 
-  #find names of character variables
-  categorical.predictors <- predictors[unlist(
-    lapply(
-      X = data[, predictors, drop = FALSE],
-      FUN = is.character
-    )
-  )]
+  #return data if all predictors are numeric
+  predictors.non.numeric <- predictors_non_numeric(
+    df = df,
+    predictors = predictors
+  )
+
+
+  if(length(predictors.non.numeric) == 0){
+
+    if(verbose == TRUE){
+      message("All predictors are numeric, returning the input data frame.")
+    }
+
+    return(data)
+
+  }
 
   if(verbose == TRUE){
     message(
       "Encoding the variables:\n",
       paste0(
-        categorical.predictors,
+        predictors.non.numeric,
         collapse = "\n"
       ),
       "\n"
@@ -217,20 +197,20 @@ fe_target_encoding <- function(
   }
 
   #original column names
-  original.column.names <- colnames(data)
+  original.column.names <- colnames(df)
 
   #iterating over categorical variables
-  for(categorical.predictor in categorical.predictors){
+  for(predictors.categorical.i in predictors.categorical){
 
       #method "mean"
       if("mean" %in% methods){
 
         for(noise.i in noise){
 
-        data <- fe_target_encoding_mean(
-          data = data,
+        df <- fe_target_encoding_mean(
+          df = df,
           response = response,
-          categorical.variable.name = categorical.predictor,
+          categorical.variable.name = predictors.categorical.i,
           noise = noise.i,
           seed = seed,
           replace = replace,
@@ -245,10 +225,10 @@ fe_target_encoding <- function(
 
         for(noise.i in noise){
 
-        data <- fe_target_encoding_rank(
-          data = data,
+        df <- fe_target_encoding_rank(
+          df = df,
           response = response,
-          categorical.variable.name = categorical.predictor,
+          categorical.variable.name = predictors.categorical.i,
           noise = noise.i,
           seed = seed,
           replace = replace,
@@ -264,10 +244,10 @@ fe_target_encoding <- function(
 
       for(sd.width.i in sd.width){
 
-        data <- fe_target_encoding_rnorm(
-          data = data,
+        df <- fe_target_encoding_rnorm(
+          df = df,
           response = response,
-          categorical.variable.name = categorical.predictor,
+          categorical.variable.name = predictors.categorical.i,
           sd.width = sd.width.i,
           seed = seed,
           replace = replace,
@@ -280,10 +260,10 @@ fe_target_encoding <- function(
 
     if("loo" %in% methods){
 
-      data <- fe_target_encoding_loo(
-        data = data,
+      df <- fe_target_encoding_loo(
+        df = df,
         response = response,
-        categorical.variable.name = categorical.predictor,
+        categorical.variable.name = predictors.categorical.i,
         replace = replace,
         verbose = verbose
       )
@@ -296,40 +276,39 @@ fe_target_encoding <- function(
   if(replace == FALSE){
 
     encoded.predictors <- setdiff(
-      x = colnames(data),
+      x = colnames(df),
       y = original.column.names
     )
 
     leakage.df <- lapply(
-      X = sf::st_drop_geometry(data[, encoded.predictors]),
+      X = df[, encoded.predictors],
       FUN = function(x){
         stats::cor.test(
           x,
-          data[[response]]
+          df[[response]]
         )$estimate
       }
-    ) %>%
-      unlist() %>%
-      as.data.frame() %>%
+    ) |>
+      unlist() |>
+      as.data.frame() |>
       dplyr::rename(
         r_squared = "."
-      ) %>%
+      ) |>
       dplyr::mutate(
         r_squared = round(r_squared, 2),
         encoded_predictor = encoded.predictors,
         interpretation = dplyr::case_when(
-
           r_squared >= 0.9 ~ "Leakage",
           r_squared < 0.9 & r_squared >= 0.75 ~ "Likely leakage",
           r_squared < 0.75 & r_squared >= 0.25 ~ "Unlikely leakage",
           r_squared < 0.25 ~ "No leakage"
         )
-      ) %>%
+      ) |>
       dplyr::transmute(
         encoded_predictor,
         correlation_with_response = r_squared,
         interpretation
-      ) %>%
+      ) |>
       dplyr::arrange(
         correlation_with_response
       )
@@ -350,17 +329,15 @@ fe_target_encoding <- function(
 
   }
 
-
-
-  #return data frame right away if replace is TRUE
+  #return df frame right away if replace is TRUE
   if(replace == TRUE){
-    return(data)
+    return(df)
   }
 
   #preparing output object
   out <- list(
     encoded_predictors = encoded.predictors,
-    data = data,
+    df = df,
     leakage_test = leakage.df
   )
 

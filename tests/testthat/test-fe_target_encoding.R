@@ -10,19 +10,12 @@ testthat::test_that("`target_encoding()` works", {
 
   #loading libraries
   library(collinear)
-  library(magrittr)
-  library(sf)
   library(dplyr)
 
   #loading data
   data(
     ecoregions,
-    ecoregions_sf,
-    ecoregions_tibble,
-    ecoregions_all_predictors,
-    ecoregions_predictors,
-    ecoregions_continuous_response,
-    ecoregions_binary_response
+    ecoregions_predictors
   )
 
   #A FEW INDIVIDUAL TESTS TO INCREASE CODE COVERAGE

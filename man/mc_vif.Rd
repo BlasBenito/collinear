@@ -4,12 +4,12 @@
 \alias{mc_vif}
 \title{Variance Inflation Factor}
 \usage{
-mc_vif(data = NULL, predictors = NULL, verbose = TRUE)
+mc_vif(df = NULL, predictors = NULL, verbose = TRUE)
 }
 \arguments{
-\item{data}{(required; data frame or tibble) A data frame with predictors. Default: \code{NULL}.}
+\item{df}{(required; data frame or tibble) A data frame with predictors. Default: \code{NULL}.}
 
-\item{predictors}{(optional; character vector) Character vector with the names of the predictive variables. Every element of this vector must be in the column names of \code{data}. Default: \code{NULL}}
+\item{predictors}{(optional; character vector) Character vector with the names of the predictive variables. Every element of this vector must be in the column names of \code{df}. Default: \code{NULL}}
 
 \item{verbose}{(optional, logical) Set to \code{FALSE} to silence messages. Default: \code{TRUE}}
 }
@@ -35,7 +35,7 @@ data(
 )
 
 df <- mc_vif(
-      data = ecoregions,
+      df = ecoregions,
       predictors = ecoregions_all_predictors
 )
 
