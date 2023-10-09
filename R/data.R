@@ -36,3 +36,20 @@
 #'
 #' @format Character vector with 43 predictor names.
 "ecoregions_predictors"
+
+
+#' 30.000 records of responses and predictors all over the world
+#'
+#' @usage data(vi)
+#' @seealso [vi_predictors]
+#'
+#' @format Data frame with 30.000 rows and 67 columns.
+"vi"
+
+#' Names of predictors in dataset 'vi'
+#'
+#' @usage data(vi_predictors)
+#' @seealso [vi]
+#'
+#' @format Character vector with predictor names.
+"vi_predictors"

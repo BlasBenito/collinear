@@ -2,24 +2,40 @@
 % Please edit documentation in R/cor_df.R
 \name{cor_df}
 \alias{cor_df}
-\title{Pairwise correlation}
+\title{Correlation data frame of numeric and character variables}
 \usage{
-cor_df(df = NULL, predictors = NULL, method = NULL)
+cor_df(df = NULL, response = NULL, predictors = NULL, method = "pearson")
 }
 \arguments{
-\item{df}{(required; data frame or tibble) A data frame with predictors. Default: \code{NULL}.}
+\item{df}{(required; data frame or tibble) A data frame with numeric and/or character predictors predictors, and optionally, a response variable. Default: NULL.}
 
-\item{predictors}{(optional; character vector) Character vector with the names of the predictive variables. Every element of this vector must be in the column names of \code{df}. Default: \code{NULL}}
+\item{response}{(recommended, character string) Name of a numeric response variable. Character response variables are ignored. Please, see 'Details' to better understand how providing this argument or not leads to different results when there are character variables in 'predictors'. Default: NULL.}
 
-\item{method}{(optional; charater string) Method used to compute pairwise correlations. Accepted methods are "pearson" (with a recommended minimum of 30 rows in 'df') or "spearman" (with a recommended minimum of 10 rows in 'df'). Default: "pearson".}
+\item{predictors}{(optional; character vector) Character vector with column names of predictors in 'df'. If omitted, all columns of 'df' are used as predictors. Default:'NULL'}
+
+\item{method}{(optional; character string) Method used to compute pairwise correlations. Accepted methods are "pearson" (with a recommended minimum of 30 rows in 'df') or "spearman" (with a recommended minimum of 10 rows in 'df'). Default: "pearson".}
 }
 \value{
 Data frame with pairs of predictors and their correlation.
 }
 \description{
-Returns the pairwise Pearson correlation between all pairs of predictors in a training dataset.
-
-Please note that near-zero variance columns are ignored by this function. Use \code{\link[=mc_auto_vif]{mc_auto_vif()}} to remove them.
+Returns a correlation data frame between all pairs of predictors in a training dataset. Non-numeric predictors are transformed into numeric via target encoding, using the 'response' variable as reference.
+}
+\details{
+This function attempts to handle correlations between pairs of variables that can be of different types:
+\itemize{
+\item numeric vs. numeric: computed with stats::cor() with the methods "pearson" or "spearman".
+\item numeric vs. character, two alternatives leading to different results:
+\itemize{
+\item 'response' is provided: the character variable is target-encoded as numeric using the values of the response as reference, and then its correlation with the numeric variable is computed with stats::cor(). This option generates a response-specific result suitable for training statistical and machine-learning models
+\item 'response' is NULL (or the name of a non-numeric column): the character variable is target-encoded as numeric using the values of the numeric predictor (instead of the response) as reference, and then their correlation is computed with stats::cor(). This option leads to a response-agnostic result suitable for clustering problems.
+}
+\item character vs. character, two alternatives leading to different results:
+\itemize{
+\item 'response' is provided: the character variables are target-encoded as numeric using the values of the response as reference, and then their correlation is computed with stats::cor().
+\item response' is NULL (or the name of a non-numeric column): the association between the character variables is computed using Cramer's V. This option might be problematic, because R-squared values and Cramer's V, even when having the same range between 0 and 1, are not fully comparable.
+}
+}
 }
 \examples{
 if(interactive()){
@@ -32,7 +48,7 @@ data(
 df <- cor_df(
       df = ecoregions,
       predictors = ecoregions_predictors
-)
+  )
 
 }
 }

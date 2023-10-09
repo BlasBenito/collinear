@@ -52,7 +52,7 @@ df_inspect <- function(
   df <- df_drop_geometry(df = df)
 
   #remove non-numeric columns with as many values as rows
-  non.numeric.columns <- predictors_non_numeric(df)
+  non.numeric.columns <- predictors_character(df)
 
   non.numeric.columns.unique.values <- lapply(
     X = non.numeric.columns,
@@ -62,7 +62,19 @@ df_inspect <- function(
 
   names(non.numeric.columns.unique.values) <- non.numeric.columns
 
-  columns.to.remove <- names(non.numeric.columns.unique.values[non.numeric.columns.unique.values == nrow(df)])
+  columns.to.remove <- names(
+    non.numeric.columns.unique.values[
+      non.numeric.columns.unique.values == nrow(df)
+      ]
+    )
+
+  if(length(columns.to.remove) > 0){
+    warning(
+      "The column/s ",
+      paste0(columns.to.remove, collapse = ", "),
+      " have as many unique values as rows in 'df' and will be ignored."
+    )
+  }
 
   df <- df[, !(colnames(df) %in% columns.to.remove)]
 
@@ -238,7 +250,7 @@ predictors_numeric <- function(
 #' @noRd
 #' @keywords internal
 #' @autoglobal
-predictors_non_numeric <- function(
+predictors_character <- function(
     df = NULL,
     predictors = NULL
 ){
@@ -296,7 +308,8 @@ predictors_zero_variance <- function(
       apply(
         X = df,
         MARGIN = 2,
-        FUN = var
+        FUN = var,
+        na.rm = TRUE
       ),
       decimals
     ) == 0
@@ -309,60 +322,75 @@ predictors_zero_variance <- function(
 #' Checks the 'response' argument
 #'
 #' @param df (required; data frame or matrix) input data frame. Default: NULL
-#' @param response (required; character string) name of the response variable. Default: NULL
+#' @param response (optional, character string) Name of a numeric response variable. Character response variables are ignored. Default: NULL.
 #' @param decimals (required, integer) number of decimal places to round `predictors` to. Defines the tolerance of the zero-variance test. Default: 4
 #' @return character string with name of the response
 #' @noRd
 #' @keywords internal
 #' @autoglobal
-# response_inspect <- function(
-#     df = NULL,
-#     response = NULL,
-#     decimals = 4
-# ){
-#
-#   if(is.null(response) == TRUE){
-#     stop("Argument 'response' cannot be NULL.")
-#   }
-#
-#   if(is.character(response) == FALSE){
-#     stop("Argument 'response' must be a character string")
-#   }
-#
-#   if(length(response) != 1){
-#     if(is.required == TRUE){
-#       stop("Argument 'response' must be of length 1.")
-#     }
-#   }
-#
-#   #check that the response is in df
-#   if(!(response %in% colnames(df))){
-#     stop("Argument 'response' must be a column name of 'df'.")
-#   }
-#
-#   if(is.numeric(df[[response]]) == FALSE){
-#     stop("Argument 'response' must be a numeric column of 'df'.")
-#   }
-#
-# } else {
-#
-#   if(var(round(df[[response]], decimals)) == 0){
-#     stop("Argument 'response' is the name of a column with near zero variance.")
-#   }
-# }
-#
-# }
-#
-#
-# if(sum(is.na(df[[response]])) > 0){
-#   stop("Argument 'response' is the name of a column with NA values.")
-# }
-# }
-#
-#
-# response
-#
-# }
+response_inspect <- function(
+    df = NULL,
+    response = NULL,
+    decimals = 4
+){
+
+  if(is.null(response) == TRUE){
+    return(NULL)
+  }
+
+  if(is.character(response) == FALSE){
+    stop("Argument 'response' must be a character string")
+  }
+
+  if(length(response) != 1){
+    if(is.required == TRUE){
+      stop("Argument 'response' must be of length 1.")
+    }
+  }
+
+  #check that the response is in df
+  if(!(response %in% colnames(df))){
+    stop("Argument 'response' must be a column name of 'df'.")
+  }
+
+  if(is.numeric(df[[response]]) == FALSE){
+    warning(
+      "The 'response' column '",
+      response,
+      "' is not numeric, ignoring it."
+    )
+    return(NULL)
+  }
+
+  response.zero.variance <- predictors_zero_variance(
+    df = df,
+    predictors = response,
+    decimals = 4
+  )
+
+  if(length(response.zero.variance) == 1){
+    warning(
+      "The 'response' column '",
+      response,
+      "' has near-zero variance, ignoring it."
+    )
+    return(NULL)
+  }
+
+  response.na.values <- sum(is.na(df[[response]]))
+  if(response.na.values > 0){
+    warning(
+      "The 'response' column '",
+      response,
+      "' has ",
+      response.na.values,
+      " NA values. This may cause unexpected issues."
+    )
+  }
+
+  response
+
+}
 
 
 
@@ -445,3 +473,43 @@ df_drop_geometry <- function(df){
   df
 
 }
+
+
+df_to_matrix <- function(
+    df,
+    colnames,
+    rownames,
+    values
+){
+
+  allnames <- c(
+    df[[colnames]],
+    df[[rownames]]
+  ) |>
+    unique()
+
+  # Create an empty square matrix
+  n <- length(allnames)
+  m <- matrix(
+    data = NA,
+    nrow = n,
+    ncol = n,
+    dimnames = list(
+      allnames,
+      allnames
+    )
+  )
+
+  for(i in seq_len(nrow(df))){
+
+    colname <- df[[colnames]][i]
+    rowname <- df[[rownames]]
+
+    m[colname, rowname] <- df[[values]][i]
+  }
+
+  m
+
+}
+
+

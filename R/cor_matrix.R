@@ -1,12 +1,13 @@
-#' Correlation matrix
+#' Correlation matrix of numeric and character variables
 #'
-#' @description Returns a correlation matrix between all pairs of predictors in a training dataset. Non-numeric predictors are transformed into numeric via target encoding.
+#' @description Returns a correlation matrix frame between all pairs of predictors in a training dataset, or transforms the result of `cor_df()` to matrix. Please read the documentation of `cor_df()` to better understand how the correlations between numeric and character predictors are computed.
 #'
+#' @param df (required; data frame or tibble) AA data frame with numeric and/or character predictors predictors, and optionally, a response variable, or the result of `cor_df()`. Default: NULL.
+#' @param response (recommended, character string) Name of a numeric response variable. Character response variables are ignored. Ignored if 'df' is the result of `cor_df()`. Default: NULL.
+#' @param predictors (optional; character vector) Character vector with column names of predictors in 'df'. If omitted, all columns of 'df' are used as predictors. Ignored if 'df' is the result of `cor_df()`. Default:'NULL'
+#' @param method (optional; character string) Method used to compute pairwise correlations. Accepted methods are "pearson" (with a recommended minimum of 30 rows in 'df') or "spearman" (with a recommended minimum of 10 rows in 'df'). Ignored if 'df' is the result of `cor_df()`. Default: "pearson".
 #'
-#' @param df (required; data frame or tibble) A data frame with predictors. Default: `NULL`.
-#' @param method (optional; charater string) Method used to compute pairwise correlations. Accepted methods are "pearson" (with a recommended minimum of 30 rows in 'df') or "spearman" (with a recommended minimum of 10 rows in 'df'). Default: "pearson".
-#'
-#' @return Data frame with pairs of predictors and their correlation.
+#' @return correlation matrix
 #'
 #' @examples
 #' if(interactive()){
@@ -16,76 +17,69 @@
 #'   ecoregions_predictors
 #' )
 #'
-#' df <- cor_df(
+#' m <- cor_matrix(
 #'       df = ecoregions,
 #'       predictors = ecoregions_predictors
-#' )
+#'   )
 #'
 #' }
 #' @autoglobal
 #' @export
 cor_matrix <- function(
     df = NULL,
-    method = NULL
+    response = NULL,
+    predictors = NULL,
+    method = "pearson"
 ){
 
-  #method argument for stats::cor
-  method <- match.arg(
-    arg = method,
-    choices = c(
-      "pearson",
-      "spearman"
-    ),
-    several.ok = FALSE
-  )
+  #if df with predictors, compute cor data frame
+  if(all(names(df) %in% c("x", "y", "r_squared")) == FALSE){
 
-  #check input data frame
-  df <- df_inspect(
-    df = df,
-    min_rows = ifelse(
-      test = method == "pearson",
-      yes = 30,
-      no = 10
-    ))
-
-  #identify numerics and non-numerics
-  predictors.numeric <- predictors_numeric(df = df)
-  predictors.non.numeric <- predictors_non_numeric(df = df)
-
-  #correlation matrix for numeric variables
-  cor.matrix.numeric <- stats::cor(
-    x = df[, predictors.numeric],
-    use = "pairwise.complete.obs",
-    method = method
-  )
-
-  dimnames(x = cor.matrix.numeric) <- predictors.numeric
-
-  #return output if there are only numeric variables
-  if(length(predictors.non.numeric) == 0){
-    return(cor.matrix.numeric)
-  }
-
-  #correlation matrix between numerics and non.numerics
-  cor.df <- expand.grid(
-    numeric = predictors.numeric,
-    non.numeric = predictors.non.numeric,
-    correlation = NA,
-    stringsAsFactors = FALSE
-  )
-
-  for(i in seq_len(nrow(cor.df))){
-
-    df.i <- fe_target_encoding(
+    df <- cor_df(
       df = df,
-      response = cor.df$numeric[i],
-      predictors = cor.df$non.numeric[i],
-      methods = "mean",
-      replace = TRUE,
-      verbose = FALSE
+      response = response,
+      predictors = predictors,
+      method = method
     )
 
   }
 
+  #create all possible pairs
+  df <- df |>
+    dplyr::mutate(
+      x = df$y,
+      y = df$x
+    ) |>
+    rbind(df)
+
+  #rows and col names
+  variables <- unique(c(df$x, df$y))
+
+  #empty square matrix
+  m <- matrix(
+    data = NA,
+    nrow = length(variables),
+    ncol = length(variables)
+    )
+
+  #named vector to map row/column names to indices
+  index_map <- stats::setNames(
+    object = 1:length(variables),
+    nm = variables
+    )
+
+  #vectorized indexing to fill in the matrix
+  m[
+    cbind(
+      index_map[df$x],
+      index_map[df$y]
+      )
+    ] <- df$r_squared
+
+  #dim names
+  rownames(m) <- variables
+  colnames(m) <- variables
+
+  m
 
 }

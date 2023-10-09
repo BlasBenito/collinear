@@ -2,20 +2,24 @@
 % Please edit documentation in R/cor_matrix.R
 \name{cor_matrix}
 \alias{cor_matrix}
-\title{Correlation matrix}
+\title{Correlation matrix of numeric and character variables}
 \usage{
-cor_matrix(df = NULL, method = NULL)
+cor_matrix(df = NULL, response = NULL, predictors = NULL, method = "pearson")
 }
 \arguments{
-\item{df}{(required; data frame or tibble) A data frame with predictors. Default: \code{NULL}.}
+\item{df}{(required; data frame or tibble) AA data frame with numeric and/or character predictors predictors, and optionally, a response variable, or the result of \code{cor_df()}. Default: NULL.}
 
-\item{method}{(optional; charater string) Method used to compute pairwise correlations. Accepted methods are "pearson" (with a recommended minimum of 30 rows in 'df') or "spearman" (with a recommended minimum of 10 rows in 'df'). Default: "pearson".}
+\item{response}{(recommended, character string) Name of a numeric response variable. Character response variables are ignored. Ignored if 'df' is the result of \code{cor_df()}. Default: NULL.}
+
+\item{predictors}{(optional; character vector) Character vector with column names of predictors in 'df'. If omitted, all columns of 'df' are used as predictors. Ignored if 'df' is the result of \code{cor_df()}. Default:'NULL'}
+
+\item{method}{(optional; character string) Method used to compute pairwise correlations. Accepted methods are "pearson" (with a recommended minimum of 30 rows in 'df') or "spearman" (with a recommended minimum of 10 rows in 'df'). Ignored if 'df' is the result of \code{cor_df()}. Default: "pearson".}
 }
 \value{
-Data frame with pairs of predictors and their correlation.
+correlation matrix
 }
 \description{
-Returns a correlation matrix between all pairs of predictors in a training dataset. Non-numeric predictors are transformed into numeric via target encoding.
+Returns a correlation matrix frame between all pairs of predictors in a training dataset, or transforms the result of \code{cor_df()} to matrix. Please read the documentation of \code{cor_df()} to better understand how the correlations between numeric and character predictors are computed.
 }
 \examples{
 if(interactive()){
@@ -25,10 +29,10 @@ data(
   ecoregions_predictors
 )
 
-df <- cor_df(
+m <- cor_matrix(
       df = ecoregions,
       predictors = ecoregions_predictors
-)
+  )
 
 }
 }
