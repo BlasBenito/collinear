@@ -24,7 +24,7 @@ utils::globalVariables(c(
   # <mc_auto_vif>
   "variable",
   # <mc_auto_vif>
-  # <mc_vif>
+  # <vif_df>
   "vif",
   # <cor_numerics>
   "x",

@@ -80,6 +80,9 @@ cor_matrix <- function(
   rownames(m) <- variables
   colnames(m) <- variables
 
+  #replace NA in diag with 1
+  diag(m) <- 1
+
   m
 
 }

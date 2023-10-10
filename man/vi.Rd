@@ -3,15 +3,15 @@
 \docType{data}
 \name{vi}
 \alias{vi}
-\title{50.000 records of responses and predictors all over the world}
+\title{30.000 records of responses and predictors all over the world}
 \format{
-Data frame with 50.000 rows and 67 columns.
+Data frame with 30.000 rows and 67 columns.
 }
 \usage{
 data(vi)
 }
 \description{
-50.000 records of responses and predictors all over the world
+30.000 records of responses and predictors all over the world
 }
 \seealso{
 \link{vi_predictors}

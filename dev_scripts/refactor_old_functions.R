@@ -14,3 +14,9 @@ m <- cor_matrix(
   df = df
 )
 
+v <- vif_df(
+  df = vi,
+  response = "vi_mean",
+  predictors = vi_predictors
+)
+

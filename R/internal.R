@@ -54,29 +54,35 @@ df_inspect <- function(
   #remove non-numeric columns with as many values as rows
   non.numeric.columns <- predictors_character(df)
 
-  non.numeric.columns.unique.values <- lapply(
-    X = non.numeric.columns,
-    FUN = function(x) length(unique(df[[x]]))
-  ) |>
-    unlist()
+  if(length(non.numeric.columns) > 0){
 
-  names(non.numeric.columns.unique.values) <- non.numeric.columns
+    non.numeric.columns.unique.values <- lapply(
+      X = non.numeric.columns,
+      FUN = function(x) length(unique(df[[x]]))
+    ) |>
+      unlist()
 
-  columns.to.remove <- names(
-    non.numeric.columns.unique.values[
-      non.numeric.columns.unique.values == nrow(df)
+    names(non.numeric.columns.unique.values) <- non.numeric.columns
+
+    columns.to.remove <- names(
+      non.numeric.columns.unique.values[
+        non.numeric.columns.unique.values == nrow(df)
       ]
     )
 
-  if(length(columns.to.remove) > 0){
-    warning(
-      "The column/s ",
-      paste0(columns.to.remove, collapse = ", "),
-      " have as many unique values as rows in 'df' and will be ignored."
-    )
+    if(length(columns.to.remove) > 0){
+      warning(
+        "The column/s ",
+        paste0(columns.to.remove, collapse = ", "),
+        " have as many unique values as rows in 'df' and will be ignored."
+      )
+    }
+
+    df <- df[, !(colnames(df) %in% columns.to.remove)]
+
   }
 
-  df <- df[, !(colnames(df) %in% columns.to.remove)]
+
 
   #number of rows must be > 30
   if(nrow(df) < min_rows){
