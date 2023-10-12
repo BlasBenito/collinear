@@ -13,6 +13,37 @@ target_encode <- function(
     predictors = NULL
 ){
 
+  #check input data frame
+  df <- df_inspect(
+    df = df,
+    min_rows = 30
+  )
+
+  #check predictors
+  predictors <- predictors_inspect(
+    df = df,
+    predictors = predictors,
+    min_numerics = 0
+  )
+
+  #check response
+  response <- response_inspect(
+    df = df,
+    response = response
+  )
+
+  #factors, logical, and ordered to characters
+  df <- rapply(
+    object = df[, c(response, predictors)],
+    f = as.character,
+    classes = c(
+      "factor",
+      "ordered",
+      "logical"
+    ),
+    how = "replace"
+  )
+
   predictors.character <- predictors_character(
     df = df,
     predictors = predictors

@@ -82,24 +82,6 @@ cor_df <- function(
     min_numerics = 0
   )
 
-  #check response
-  response <- response_inspect(
-    df = df,
-    response = response
-  )
-
-  #factors, logical, and ordered to characters
-  df <- rapply(
-    object = df[, c(response, predictors)],
-    f = as.character,
-    classes = c(
-      "factor",
-      "ordered",
-      "logical"
-    ),
-    how = "replace"
-  )
-
   #target encode character predictors
   df <- target_encode(
     df = df,
@@ -134,11 +116,11 @@ cor_df <- function(
   cor.df <- cor.list |>
     dplyr::bind_rows() |>
     dplyr::arrange(
-      dplyr::desc(r_squared)
+      dplyr::desc(abs(correlation))
     ) |>
     dplyr::mutate(
-      r_squared = round(
-        x = r_squared,
+      correlation = round(
+        x = correlation,
         digits = 3
         )
     )
@@ -176,7 +158,8 @@ cor_numerics <- function(
   )
 
   predictors.numeric <- predictors_numeric(
-    df = df[, predictors]
+    df = df,
+    predictors = predictors
   )
 
   if(length(predictors.numeric) == 0){
@@ -194,11 +177,11 @@ cor_numerics <- function(
     dplyr::transmute(
       x = as.character(Var1),
       y = as.character(Var2),
-      r_squared = Freq^2
+      correlation = Freq
     ) |>
     #remove matrix diagonal
     dplyr::filter(
-      r_squared < 1
+      correlation < 1
     ) |>
     #unique pair names to remove mirrored pairs
     dplyr::rowwise() |>
@@ -210,10 +193,7 @@ cor_numerics <- function(
       pair_name,
       .keep_all = TRUE
     ) |>
-    dplyr::select(-pair_name) |>
-    dplyr::arrange(
-      dplyr::desc(r_squared)
-    )
+    dplyr::select(-pair_name)
 
   cor.numerics
 
@@ -267,11 +247,11 @@ cor_numerics_and_characters <- function(
   r.num.char <- expand.grid(
     x = predictors.numeric,
     y = predictors.character,
-    r_squared = NA,
+    correlation = NA,
     stringsAsFactors = FALSE
   )
 
-  #iterate to compute r_squared
+  #iterate to compute correlation
   for(i in seq_len(nrow(r.num.char))){
 
     #get variable for target encoding
@@ -285,18 +265,13 @@ cor_numerics_and_characters <- function(
     )
 
     #compute correlation
-    r.num.char$r_squared[i] <- stats::cor(
+    r.num.char$correlation[i] <- stats::cor(
       x = x,
       y = y,
       method = method
-    )^2
+    )
 
   }
-
-  r.num.char <- r.num.char |>
-    dplyr::arrange(
-      dplyr::desc(r_squared)
-    )
 
   r.num.char
 
@@ -331,25 +306,20 @@ cor_characters <- function(
   r.char.char <- expand.grid(
     x = predictors.character[1],
     y = predictors.character[2:length(predictors.character)],
-    r_squared = NA,
+    correlation = NA,
     stringsAsFactors = FALSE
   )
 
-  #iterate to compute r_squared
+  #iterate to compute correlation
   for(i in seq_len(nrow(r.char.char))){
 
-    r.char.char$r_squared[i] <- cramer_v(
+    r.char.char$correlation[i] <- cramer_v(
       x = df[[r.char.char$x[i]]],
       y = df[[r.char.char$y[i]]],
       check_input = FALSE
     )
 
   }
-
-  r.char.char <- r.char.char |>
-    dplyr::arrange(
-      dplyr::desc(r_squared)
-    )
 
   r.char.char
 

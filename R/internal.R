@@ -20,9 +20,8 @@
 #'   ecoregions <- df_inspect(df = ecoregions)
 #'
 #' }
-#' @noRd
 #' @keywords internal
-#' @autoglobal
+#' @export
 df_inspect <- function(
     df = NULL,
     min_rows = 30
@@ -122,9 +121,9 @@ df_inspect <- function(
 #' @param decimals (required, integer) number of decimal places for the zero variance test. Smaller numbers will increase the number of variables detected as near-zero variance. Recommended values will depend on the range of the numeric variables in 'df'. Default: 4
 #'
 #' @return predictor names
-#' @noRd
 #' @keywords internal
 #' @autoglobal
+#' @export
 predictors_inspect <- function(
     df = NULL,
     predictors = NULL,
@@ -222,9 +221,9 @@ predictors_inspect <- function(
 #' @param df (required; data frame or matrix) Input data frame. Default: NULL
 #' @param predictors (optional, character vector) names of predictors in 'df'. Default: NULL
 #' @return character vector with names of non-numeric predictors.
-#' @noRd
 #' @keywords internal
 #' @autoglobal
+#' @export
 predictors_numeric <- function(
     df = NULL,
     predictors = NULL
@@ -253,9 +252,9 @@ predictors_numeric <- function(
 #' @param df (required; data frame or matrix) Input data frame. Default: NULL
 #' @param predictors (optional, character vector) names of predictors in arguemnt 'df'. Default: NULL
 #' @return character vector with names of non-numeric columns.
-#' @noRd
 #' @keywords internal
 #' @autoglobal
+#' @export
 predictors_character <- function(
     df = NULL,
     predictors = NULL
@@ -285,9 +284,9 @@ predictors_character <- function(
 #' @param predictors (optional, character vector) names of predictors in arguemnt 'df'. Default: NULL
 #' @param decimals (required, integer) number of decimal places for the zero variance test. Smaller numbers will increase the number of variables detected as near-zero variance. Recommended values will depend on the range of the numeric variables in 'df'. Default: 4
 #' @return character vector with names of zero-variance columns.
-#' @noRd
 #' @keywords internal
 #' @autoglobal
+#' @export
 predictors_zero_variance <- function(
     df = NULL,
     predictors = NULL,
@@ -331,9 +330,9 @@ predictors_zero_variance <- function(
 #' @param response (optional, character string) Name of a numeric response variable. Character response variables are ignored. Default: NULL.
 #' @param decimals (required, integer) number of decimal places to round `predictors` to. Defines the tolerance of the zero-variance test. Default: 4
 #' @return character string with name of the response
-#' @noRd
 #' @keywords internal
 #' @autoglobal
+#' @export
 response_inspect <- function(
     df = NULL,
     response = NULL,
@@ -423,9 +422,9 @@ response_inspect <- function(
 #'    out
 #'
 #' }
-#' @noRd
 #' @keywords internal
 #' @autoglobal
+#' @export
 rescale_vector <- function(
     x = NULL,
     new_min = 0,
@@ -460,9 +459,9 @@ rescale_vector <- function(
 #' @param df (required; data frame or matrix) Input data frame. Default: NULL
 #'
 #' @return The input data frame without a geometry column
-#' @noRd
 #' @keywords internal
 #' @autoglobal
+#' @export
 df_drop_geometry <- function(df){
 
   #remove geometry column from df
@@ -479,43 +478,4 @@ df_drop_geometry <- function(df){
   df
 
 }
-
-
-df_to_matrix <- function(
-    df,
-    colnames,
-    rownames,
-    values
-){
-
-  allnames <- c(
-    df[[colnames]],
-    df[[rownames]]
-  ) |>
-    unique()
-
-  # Create an empty square matrix
-  n <- length(allnames)
-  m <- matrix(
-    data = NA,
-    nrow = n,
-    ncol = n,
-    dimnames = list(
-      allnames,
-      allnames
-    )
-  )
-
-  for(i in seq_len(nrow(df))){
-
-    colname <- df[[colnames]][i]
-    rowname <- df[[rownames]]
-
-    m[colname, rowname] <- df[[values]][i]
-  }
-
-  m
-
-}
-
 

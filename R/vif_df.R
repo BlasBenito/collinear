@@ -43,11 +43,6 @@ vif_df <- function(
     predictors = NULL
 ){
 
-  #for development only
-  # df <- ecoregions
-  # response <- "plant_richness"
-  # predictors <- ecoregions_predictors
-
   #check input data frame
   df <- df_inspect(
     df = df,
@@ -59,24 +54,6 @@ vif_df <- function(
     df = df,
     predictors = predictors,
     min_numerics = 0
-  )
-
-  #check response
-  response <- response_inspect(
-    df = df,
-    response = response
-  )
-
-  #factors, logical, and ordered to characters
-  df <- rapply(
-    object = df[, c(response, predictors)],
-    f = as.character,
-    classes = c(
-      "factor",
-      "ordered",
-      "logical"
-    ),
-    how = "replace"
   )
 
   #target encode character predictors
@@ -95,25 +72,21 @@ vif_df <- function(
   #vif data frame
   tryCatch(
     {
-      vif.df <- data.frame(
-        diag(
-          solve(
-            cor(
-              x = df[, predictors.numeric],
-              use = "complete.obs"
-            ),
-            tol = 0
-          )
-        ),
-        stringsAsFactors = FALSE
-      ) |>
+
+      vif.df <- df[, predictors.numeric] |>
+        stats::cor(use = "complete.obs") |>
+        solve(tol = 0) |>
+        diag() |>
+        data.frame(stringsAsFactors = FALSE) |>
         dplyr::rename(vif = 1) |>
         dplyr::transmute(
           variable = predictors.numeric,
           vif = round(abs(vif), 3)
         ) |>
         dplyr::arrange(vif)
+
       rownames(vif.df) <- NULL
+
     }, error = function(e) {
       stop("the VIF computation failed. Please check for perfect correlations between predictors, or an excessive number of NA values in the 'df' argument.")
     }

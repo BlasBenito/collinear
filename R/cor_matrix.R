@@ -33,7 +33,7 @@ cor_matrix <- function(
 ){
 
   #if df with predictors, compute cor data frame
-  if(all(names(df) %in% c("x", "y", "r_squared")) == FALSE){
+  if(all(names(df) %in% c("x", "y", "correlation")) == FALSE){
 
     df <- cor_df(
       df = df,
@@ -74,7 +74,7 @@ cor_matrix <- function(
       index_map[df$x],
       index_map[df$y]
       )
-    ] <- df$r_squared
+    ] <- df$correlation
 
   #dim names
   rownames(m) <- variables

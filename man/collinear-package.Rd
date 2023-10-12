@@ -2,11 +2,11 @@
 % Please edit documentation in R/imports.R
 \docType{package}
 \name{collinear-package}
-\alias{collinear}
 \alias{collinear-package}
-\title{collinear: Automated Multicollinearity Management}
+\alias{_PACKAGE}
+\title{The collinear package}
 \description{
-What the package does (one paragraph).
+An R package for multicollinearity management
 }
 \seealso{
 Useful links:
@@ -19,3 +19,4 @@ Useful links:
 \strong{Maintainer}: Blas Benito \email{blasbenito@gmail.com} (\href{https://orcid.org/0000-0001-5105-7232}{ORCID})
 
 }
+\keyword{internal}

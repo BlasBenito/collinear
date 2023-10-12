@@ -16,7 +16,7 @@ testthat::test_that("mc_ functions work", {
   ecoregions_predictors <- c(ecoregions_predictors, "zeros")
 
   #making a set of not collinear variables
-  variables_not_collinear <- mc_auto_cor(
+  variables_not_collinear <- cor_select(
     data = ecoregions,
     predictor.variable.names = ecoregions_predictors
   )
@@ -110,7 +110,7 @@ testthat::test_that("mc_ functions work", {
 
               }
 
-              #exceptions for mc_auto_vif
+              #exceptions for vif_select
               if(
                 max.vif[[max.vif.i]] < 0 |
                 is.null(max.vif[[max.vif.i]]) |
@@ -120,7 +120,7 @@ testthat::test_that("mc_ functions work", {
               ){
 
                 testthat::expect_error(
-                  x <- mc_auto_vif(
+                  x <- vif_select(
                     data = training[[training.i]],
                     predictor.variable.names = predictors[[predictors.i]],
                     dependent.variable.name = response[[response.i]],
@@ -132,7 +132,7 @@ testthat::test_that("mc_ functions work", {
 
               } else {
 
-                x <- mc_auto_vif(
+                x <- vif_select(
                   data = training[[training.i]],
                   predictor.variable.names = predictors[[predictors.i]],
                   dependent.variable.name = response[[response.i]],
