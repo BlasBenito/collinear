@@ -10,6 +10,8 @@ utils::globalVariables(c(
   "is.required",
   # <cor_numerics>
   "pair_name",
+  # <preference_order>
+  "value",
   # <predictors_zero_variance>
   "var",
   # <cor_numerics>
