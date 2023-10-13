@@ -4,49 +4,49 @@ testthat::test_that("mc_ functions work", {
 
   #loading data
   data(
-    ecoregions
+    vi
   )
 
   #adding zero variance zolumn
   #passing zero variance column
-  ecoregions$zeros <- runif(n = nrow(ecoregions)) /10000
-  ecoregions_tibble$zeros <- runif(n = nrow(ecoregions)) /10000
-  ecoregions_sf$zeros <- runif(n = nrow(ecoregions)) /10000
+  vi$zeros <- runif(n = nrow(vi)) /10000
+  vi_tibble$zeros <- runif(n = nrow(vi)) /10000
+  vi_sf$zeros <- runif(n = nrow(vi)) /10000
 
-  ecoregions_predictors <- c(ecoregions_predictors, "zeros")
+  vi_predictors <- c(vi_predictors, "zeros")
 
   #making a set of not collinear variables
   variables_not_collinear <- cor_select(
-    data = ecoregions,
-    predictor.variable.names = ecoregions_predictors
+    data = vi,
+    predictor.variable.names = vi_predictors
   )
 
   #lists to iterate over
   training <- list(
-    df = ecoregions,
-    sf = ecoregions_sf,
-    tibble = ecoregions_tibble,
+    df = vi,
+    sf = vi_sf,
+    tibble = vi_tibble,
     null = NULL
   )
 
   response <- list(
-    continuous = ecoregions_continuous_response,
-    binary = ecoregions_binary_response,
+    continuous = vi_continuous_response,
+    binary = vi_binary_response,
     null = NULL,
     other = "other"
   )
 
   predictors <- list(
-    all = ecoregions_all_predictors,
+    all = vi_all_predictors,
     not_collinear = variables_not_collinear,
-    two = ecoregions_predictors[1:2],
-    one = ecoregions_predictors[1],
+    two = vi_predictors[1:2],
+    one = vi_predictors[1],
     null = NULL
   )
 
   preference <- list(
-    all = ecoregions_all_predictors,
-    partial = ecoregions_all_predictors[1:10],
+    all = vi_all_predictors,
+    partial = vi_all_predictors[1:10],
     null = NULL
   )
 

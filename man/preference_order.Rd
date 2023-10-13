@@ -17,7 +17,7 @@ preference_order(
 
 \item{response}{(recommended, character string) Name of a numeric response variable. Character response variables are ignored. Please, see 'Details' to better understand how providing this argument or not leads to different results when there are character variables in 'predictors'. Default: NULL.}
 
-\item{predictors}{(optional; character vector) Character vector with column names of predictors in 'df'. If omitted, all columns of 'df' are used as predictors. Default:'NULL'}
+\item{predictors}{(optional; character vector) character vector with predictor names in 'df'. If omitted, all columns of 'df' are used as predictors. Default:'NULL'}
 
 \item{f}{(optional: function) A function that returns a value representing the relationship between a given predictor and the response. Higher values are ranked higher. The available options are:
 \itemize{
@@ -34,4 +34,34 @@ A data frame with the columns "predictor" and "value". The former contains the p
 }
 \description{
 This function calculates the preference order of predictors based on a user-provided function that takes a predictor, a response, and a data frame as arguments.
+}
+\examples{
+if(interactive()){
+
+data(
+  vi,
+  vi_predictors
+)
+
+preference.order <- preference_order(
+  df = vi,
+  response = "vi_mean",
+  predictors = vi_predictors[1:10],
+  f = f_rsquared,
+  workers = 2
+  )
+
+#without preference_order
+selected.predictors <- collinear(
+  df = vi,
+  predictors = vi_predictors[1:10],
+  preference_order = preference.order$predictor,
+  max_cor = 0.75,
+  max_vif = 5
+  )
+
+selected.predictors
+
+}
+
 }

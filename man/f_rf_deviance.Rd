@@ -19,3 +19,24 @@ The R-squared value from the Random Forest model for the predictor.
 \description{
 This function calculates the preference order of predictors based on the R-squared value from a Random Forest model between each predictor and the response variable.
 }
+\examples{
+if(interactive()){
+
+data(
+  vi,
+  vi_predictors
+)
+
+preference.order <- preference_order(
+  df = vi[1:1000, ],
+  response = "vi_mean",
+  predictors = vi_predictors[1:10],
+  f = f_rf_deviance,
+  workers = 1
+  )
+
+preference.order
+
+
+}
+}

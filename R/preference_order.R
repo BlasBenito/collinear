@@ -4,7 +4,7 @@
 #'
 #' @param df (required; data frame or tibble) A data frame with numeric and/or character predictors predictors, and optionally, a response variable. Default: NULL.
 #' @param response (recommended, character string) Name of a numeric response variable. Character response variables are ignored. Please, see 'Details' to better understand how providing this argument or not leads to different results when there are character variables in 'predictors'. Default: NULL.
-#' @param predictors (optional; character vector) Character vector with column names of predictors in 'df'. If omitted, all columns of 'df' are used as predictors. Default:'NULL'
+#' @param predictors (optional; character vector) character vector with predictor names in 'df'. If omitted, all columns of 'df' are used as predictors. Default:'NULL'
 #' @param f (optional: function) A function that returns a value representing the relationship between a given predictor and the response. Higher values are ranked higher. The available options are:
 #' \itemize{
 #'  \item f_rsquared (default option): returns the R-squared of the correlation between the response and the predictor.
@@ -15,6 +15,35 @@
 #' @param workers (integer) number of workers for parallel execution. Default: 1
 #'
 #' @return A data frame with the columns "predictor" and "value". The former contains the predictors names in order, ready for the argument `preference_order` in `cor_select()`, `vif_select()` and `collinear()`. The latter contains the result of the function `f` for each combination of predictor and response.
+#' @examples
+#' if(interactive()){
+#'
+#' data(
+#'   vi,
+#'   vi_predictors
+#' )
+#'
+#' preference.order <- preference_order(
+#'   df = vi,
+#'   response = "vi_mean",
+#'   predictors = vi_predictors[1:10],
+#'   f = f_rsquared,
+#'   workers = 2
+#'   )
+#'
+#' #without preference_order
+#' selected.predictors <- collinear(
+#'   df = vi,
+#'   predictors = vi_predictors[1:10],
+#'   preference_order = preference.order$predictor,
+#'   max_cor = 0.75,
+#'   max_vif = 5
+#'   )
+#'
+#' selected.predictors
+#'
+#' }
+#'
 #' @autoglobal
 #' @export
 preference_order <- function(
@@ -26,20 +55,20 @@ preference_order <- function(
     ){
 
   #check input data frame
-  df <- df_inspect(
+  df <- validate_df(
     df = df,
     min_rows = 30
   )
 
   #check predictors
-  predictors <- predictors_inspect(
+  predictors <- validate_predictors(
     df = df,
     predictors = predictors,
     min_numerics = 0
   )
 
   #check response
-  response <- response_inspect(
+  response <- validate_response(
     df = df,
     response = response
   )
@@ -104,6 +133,23 @@ preference_order <- function(
 #' @param df The data frame containing the variables.
 #'
 #' @return The R-squared value between the predictor and the response variable.
+#' @examples
+#' if(interactive()){
+#'
+#' data(
+#'   vi,
+#'   vi_predictors
+#' )
+#'
+#' preference.order <- preference_order(
+#'   df = vi[1:1000, ],
+#'   response = "vi_mean",
+#'   predictors = vi_predictors[1:10],
+#'   f = f_rsquared,
+#'   workers = 1
+#'   )
+#'
+#' }
 #' @autoglobal
 #' @export
 f_rsquared <- function(x, y, df){
@@ -126,6 +172,25 @@ f_rsquared <- function(x, y, df){
 #' @param df The data frame containing the variables.
 #'
 #' @return The absolute linear regression coefficient for the predictor.
+#' @examples
+#' if(interactive()){
+#'
+#' data(
+#'   vi,
+#'   vi_predictors
+#' )
+#'
+#' preference.order <- preference_order(
+#'   df = vi[1:1000, ],
+#'   response = "vi_mean",
+#'   predictors = vi_predictors[1:10],
+#'   f = f_lm_coef,
+#'   workers = 1
+#'   )
+#'
+#' preference.order
+#'
+#' }
 #' @autoglobal
 #' @export
 f_lm_coef <- function(x, y, df){
@@ -154,6 +219,25 @@ f_lm_coef <- function(x, y, df){
 #' @param df The data frame containing the variables.
 #'
 #' @return The deviance explained by the GAM model for the predictor.
+#' @examples
+#' if(interactive()){
+#'
+#' data(
+#'   vi,
+#'   vi_predictors
+#' )
+#'
+#' preference.order <- preference_order(
+#'   df = vi[1:1000, ],
+#'   response = "vi_mean",
+#'   predictors = vi_predictors[1:10],
+#'   f = f_gam_deviance,
+#'   workers = 1
+#'   )
+#'
+#' preference.order
+#'
+#' }
 #' @autoglobal
 #' @export
 f_gam_deviance <- function(x, y, df){
@@ -175,7 +259,7 @@ f_gam_deviance <- function(x, y, df){
 
   } else {
 
-    stop("The function 'gam_deviance()' requires the package 'mgcv'.")
+    stop("the function 'f_gam_deviance()' requires the package 'mgcv'.")
 
   }
 
@@ -190,6 +274,26 @@ f_gam_deviance <- function(x, y, df){
 #' @param df The data frame containing the variables.
 #'
 #' @return The R-squared value from the Random Forest model for the predictor.
+#' @examples
+#' if(interactive()){
+#'
+#' data(
+#'   vi,
+#'   vi_predictors
+#' )
+#'
+#' preference.order <- preference_order(
+#'   df = vi[1:1000, ],
+#'   response = "vi_mean",
+#'   predictors = vi_predictors[1:10],
+#'   f = f_rf_deviance,
+#'   workers = 1
+#'   )
+#'
+#' preference.order
+#'
+#'
+#' }
 #' @autoglobal
 #' @export
 f_rf_deviance <- function(x, y, df){
@@ -214,7 +318,7 @@ f_rf_deviance <- function(x, y, df){
 
   } else {
 
-    stop("The function 'gam_deviance()' requires the package 'ranger'.")
+    stop("The function 'f_fr_deviance()' requires the package 'ranger'.")
 
   }
 

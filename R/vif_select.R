@@ -2,6 +2,8 @@
 #'
 #' @description
 #'
+#' Automates multicollinearity management by selecting variables based on their Variance Inflation Factor (VIF).
+#'
 #' The Variance Inflation Factor for a given variable `y` is computed as `1/(1-R2)`, where `R2` is the multiple R-squared of a multiple regression model fitted using `y` as response and all other predictors in the input data frame as predictors. The VIF equation can be interpreted as the "rate of perfect model's R-squared to the unexplained variance of this model".
 #'
 #' The possible range of VIF values is (1, Inf]. A VIF lower than 10 suggest that removing `y` from the data set would reduce overall multicollinearity. The recommended thresholds for maximum VIF may vary depending on the source consulted, being the most common values, 2.5, 5, and 10.
@@ -23,11 +25,10 @@
 #'
 #' @param df (required; data frame or tibble) A data frame with numeric and/or character predictors predictors, and optionally, a response variable. Default: NULL.
 #' @param response (recommended, character string) Name of a numeric response variable. Character response variables are ignored. Please, see 'Details' to better understand how providing this argument or not leads to different results when there are character variables in 'predictors'. Default: NULL.
-#' @param predictors (optional; character vector) Character vector with column names of predictors in 'df'. If omitted, all columns of 'df' are used as predictors. Default:'NULL'
-#' @param preference_order  (optional; character vector) vector with column names of 'df' in the desired preference order. Predictors not included in this argument are ranked by their Variance Inflation Factor. Default: `NULL`.
-#' @param max_vif (optional, numeric) Numeric with recommended values between 2.5 and 10 defining the maximum VIF allowed in the output dataset. Higher VIF thresholds should result in a higher number of selected variables. Default: `5`.
-
-#' @return Character vector with the names of uncorrelated predictors.
+#' @param predictors (optional; character vector) character vector with predictor names in 'df'. If omitted, all columns of 'df' are used as predictors. Default:'NULL'
+#' @param preference_order  (optional; character vector) vector with column names in 'predictors' in the desired preference order, or result of the function `preference_order()`. Allows defining a priority order for selecting predictors, which can be particularly useful when some predictors are more critical for the analysis than others. Predictors not included in this argument are ranked by their Variance Inflation Factor. Default: `NULL`.
+#' @param max_vif (optional, numeric) Numeric with recommended values between 2.5 and 10 defining the maximum VIF allowed for any given predictor in the output dataset. Higher VIF thresholds should result in a higher number of selected variables. Default: `5`.
+#' @return Character vector with the names of the selected predictors.
 #' @examples
 #' if(interactive()){
 #'
@@ -49,7 +50,12 @@
 #'  selected.variables <- vif_select(
 #'    data = vi,
 #'    predictors = vi_predictors,
-#'    preference_order = vi_predictors[1:5],
+#'    preference_order = c(
+#'    "soil_temperature_mean",
+#'    "swi_mean",
+#'    "soil_type",
+#'    "soil_nitrogen"
+#'    ),
 #'  )
 #'
 #'  selected.variables
@@ -65,27 +71,20 @@ vif_select <- function(
     max_vif = 5
 ){
 
-  #dev args
-  # df <- vi
-  # response <- "vi_mean"
-  # predictors <- vi_predictors
-  # preference_order <- vi_predictors[1:5]
-  # max_vif <- 5
-
   #checking argument max_vif
   if(max_vif < 2.5 | max_vif > 10){
     if(max_vif < 0){max_vif <- 0}
-    warning("Recommended values for the 'max_vif' argument are between 2.5 and 10.")
+    warning("the recommended values for the argument 'max_vif' are between 2.5 and 10.")
   }
 
   #check input data frame
-  df <- df_inspect(
+  df <- validate_df(
     df = df,
     min_rows = 30
   )
 
   #check predictors
-  predictors <- predictors_inspect(
+  predictors <- validate_predictors(
     df = df,
     predictors = predictors,
     min_numerics = 0
@@ -113,8 +112,13 @@ vif_select <- function(
 
   }
 
+  #check if preference_order comes from preference_order()
+  if(is.data.frame(preference_order) == TRUE){
+    preference_order <- preference_order$predictor
+  }
+
   #check preference order
-  preference_order <- predictors_inspect(
+  preference_order <- validate_predictors(
     df = df,
     predictors = preference_order
   )
@@ -174,7 +178,3 @@ vif_select <- function(
   df.rank$variable
 
 }
-
-
-
-

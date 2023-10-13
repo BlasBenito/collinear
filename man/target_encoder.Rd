@@ -7,7 +7,7 @@
 target_encoder(x = NULL, y = NULL, check_input = TRUE)
 }
 \arguments{
-\item{x}{(required; numeric vector) A numeric vector. Default: NULL}
+\item{x}{(required; numeric vector) A numeric vector generally representing a response variable. Default: NULL}
 
 \item{y}{(required; character vector) A character vector of the same length as 'x', representing the categorical variable.  Default: NULL}
 
@@ -17,16 +17,19 @@ target_encoder(x = NULL, y = NULL, check_input = TRUE)
 A numeric vector containing target-encoded values.
 }
 \description{
-This function calculates the mean of the numeric variable for each group defined by
-the categorical variable and returns the target-encoded values.
+Transforms character variables into numeric by assigning to each group the mean of a numeric variable (usually the model response) across the group's cases.
 }
 \examples{
 if(interactive()){
-data(ecoregions)
-encoded_values <- target_encoder(
-  x = ecoregions$plant_richness,
-  y = ecoregions$dominant_landcover
+
+#load example data frame
+data(vi)
+
+biogeo_biome_encoded <- target_encoder(
+  x = vi$vi_mean,
+  y = vi$biogeo_biome
   )
+
 }
 
 }

@@ -19,3 +19,23 @@ The absolute linear regression coefficient for the predictor.
 \description{
 This function calculates the preference order of predictors based on the linear regression coefficient between each predictor and the response variable.
 }
+\examples{
+if(interactive()){
+
+data(
+  vi,
+  vi_predictors
+)
+
+preference.order <- preference_order(
+  df = vi[1:1000, ],
+  response = "vi_mean",
+  predictors = vi_predictors[1:10],
+  f = f_lm_coef,
+  workers = 1
+  )
+
+preference.order
+
+}
+}

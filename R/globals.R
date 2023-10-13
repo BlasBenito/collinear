@@ -6,13 +6,13 @@ utils::globalVariables(c(
   "correlation",
   # <cor_numerics>
   "Freq",
-  # <response_inspect>
+  # <validate_response>
   "is.required",
   # <cor_numerics>
   "pair_name",
   # <preference_order>
   "value",
-  # <predictors_zero_variance>
+  # <identify_zero_variance_predictors>
   "var",
   # <cor_numerics>
   "Var1",

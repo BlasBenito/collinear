@@ -19,3 +19,21 @@ The R-squared value between the predictor and the response variable.
 \description{
 This function calculates the preference order of predictors based on the R-squared value between each predictor and the response variable.
 }
+\examples{
+if(interactive()){
+
+data(
+  vi,
+  vi_predictors
+)
+
+preference.order <- preference_order(
+  df = vi[1:1000, ],
+  response = "vi_mean",
+  predictors = vi_predictors[1:10],
+  f = f_rsquared,
+  workers = 1
+  )
+
+}
+}

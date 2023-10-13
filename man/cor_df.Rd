@@ -7,16 +7,16 @@
 cor_df(df = NULL, response = NULL, predictors = NULL, method = "pearson")
 }
 \arguments{
-\item{df}{(required; data frame or tibble) A data frame with numeric and/or character predictors predictors, and optionally, a response variable. Default: NULL.}
+\item{df}{(required; data frame or tibble) A data frame with numeric and/or character predictors, and optionally, a response variable. Default: NULL.}
 
 \item{response}{(recommended, character string) Name of a numeric response variable. Character response variables are ignored. Please, see 'Details' to better understand how providing this argument or not leads to different results when there are character variables in 'predictors'. Default: NULL.}
 
-\item{predictors}{(optional; character vector) Character vector with column names of predictors in 'df'. If omitted, all columns of 'df' are used as predictors. Default:'NULL'}
+\item{predictors}{(optional; character vector) character vector with predictor names in 'df'. If omitted, all columns of 'df' are used as predictors. Default:'NULL'}
 
 \item{method}{(optional; character string) Method used to compute pairwise correlations. Accepted methods are "pearson" (with a recommended minimum of 30 rows in 'df') or "spearman" (with a recommended minimum of 10 rows in 'df'). Default: "pearson".}
 }
 \value{
-Data frame with pairs of predictors and their correlation.
+data frame with pairs of predictors and their correlation.
 }
 \description{
 Returns a correlation data frame between all pairs of predictors in a training dataset. Non-numeric predictors are transformed into numeric via target encoding, using the 'response' variable as reference.
@@ -41,13 +41,13 @@ This function attempts to handle correlations between pairs of variables that ca
 if(interactive()){
 
 data(
-  ecoregions,
-  ecoregions_predictors
+  vi,
+  vi_predictors
 )
 
 df <- cor_df(
-      df = ecoregions,
-      predictors = ecoregions_predictors
+      df = vi,
+      predictors = vi_predictors
   )
 
 }

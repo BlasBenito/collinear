@@ -17,10 +17,10 @@
 #'
 #' @param df (required; data frame or tibble) A data frame with numeric and/or character predictors predictors, and optionally, a response variable. Default: NULL.
 #' @param response (recommended, character string) Name of a numeric response variable. Character response variables are ignored. Please, see 'Details' to better understand how providing this argument or not leads to different results when there are character variables in 'predictors'. Default: NULL.
-#' @param predictors (optional; character vector) Character vector with column names of predictors in 'df'. If omitted, all columns of 'df' are used as predictors. Default:'NULL'
-#' @param preference_order  (optional; character vector) vector with column names of 'df' in the desired preference order. Predictors not included in this argument are ranked by their Variance Inflation Factor. Default: `NULL`.
+#' @param predictors (optional; character vector) Character vector with predictor names in 'df'. If omitted, all columns of 'df' are used as predictors. Default:'NULL'
+#' @param preference_order  (optional; character vector) vector with column names in 'predictors' in the desired preference order, or result of the function `preference_order()`. Allows defining a priority order for selecting predictors, which can be particularly useful when some predictors are more critical for the analysis than others. Predictors not included in this argument are ranked by their Variance Inflation Factor. Default: `NULL`.
 #' @param method (optional; character string) Method used to compute pairwise correlations. Accepted methods are "pearson" (with a recommended minimum of 30 rows in 'df') or "spearman" (with a recommended minimum of 10 rows in 'df'). Default: "pearson".
-#' @param max_cor (optional; numeric) Maximum correlation between any pair of the selected variables. Higher values return larger number of predictors with higher multicollinearity. Default: `0.75`
+#' @param max_cor (optional; numeric) Maximum correlation allowed between any pair of predictors. Higher values return larger number of predictors with higher multicollinearity. Default: `0.75`
 #' @return Character vector with the names of the selected predictors.
 #' @examples
 #' if(interactive()){
@@ -33,7 +33,7 @@
 #'
 #'  #without preference order
 #'  selected.variables <- cor_select(
-#'    data = vi,
+#'    df = vi,
 #'    predictors = vi_predictors
 #'  )
 #'
@@ -41,7 +41,7 @@
 #'
 #'  #with preference order
 #'  selected.variables <- cor_select(
-#'    data = vi,
+#'    df = vi,
 #'    predictors = vi_predictors,
 #'    preference_order = vi_predictors[1:5],
 #'  )
@@ -62,7 +62,7 @@ cor_select <- function(
 
   #checking argument max_cor
   if(max_cor < 0 | max_cor > 1){
-    stop("Argument 'max_cor' must be a numeric between 0 and 1.")
+    stop("argument 'max_cor' must be a numeric between 0 and 1.")
   }
 
   #correlation data frame
@@ -94,8 +94,13 @@ cor_select <- function(
 
   }
 
+  #check if preference_order comes from preference_order()
+  if(is.data.frame(preference_order) == TRUE){
+    preference_order <- preference_order$predictor
+  }
+
   #check preference order
-  preference_order <- predictors_inspect(
+  preference_order <- validate_predictors(
     df = df,
     predictors = preference_order
   )

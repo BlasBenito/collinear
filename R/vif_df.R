@@ -17,7 +17,7 @@
 #'
 #' @param df (required; data frame or tibble) A data frame with numeric and/or character predictors predictors, and optionally, a response variable. Default: NULL.
 #' @param response (recommended, character string) Name of a numeric response variable. Character response variables are ignored. Please, see 'Details' to better understand how providing this argument or not leads to different results when there are character variables in 'predictors'. Default: NULL.
-#' @param predictors (optional; character vector) Character vector with column names of predictors in 'df'. If omitted, all columns of 'df' are used as predictors. Default:'NULL'
+#' @param predictors (optional; character vector) character vector with predictor names in 'df'. If omitted, all columns of 'df' are used as predictors. Default:'NULL'
 #'
 #' @return Data frame with predictor names and VIF values
 #'
@@ -25,13 +25,13 @@
 #' if(interactive()){
 #'
 #' data(
-#'   ecoregions,
-#'   ecoregions_predictors
+#'   vi,
+#'   vi_predictors
 #' )
 #'
 #' df <- vif_df(
-#'       df = ecoregions,
-#'       predictors = ecoregions_predictors
+#'       df = vi,
+#'       predictors = vi_predictors
 #' )
 #'
 #' }
@@ -44,13 +44,13 @@ vif_df <- function(
 ){
 
   #check input data frame
-  df <- df_inspect(
+  df <- validate_df(
     df = df,
     min_rows = 30
   )
 
   #check predictors
-  predictors <- predictors_inspect(
+  predictors <- validate_predictors(
     df = df,
     predictors = predictors,
     min_numerics = 0
@@ -64,7 +64,7 @@ vif_df <- function(
   )
 
   #get numeric predictors only
-  predictors.numeric <- predictors_numeric(
+  predictors.numeric <- identify_numeric_predictors(
     df = df,
     predictors = predictors
   )

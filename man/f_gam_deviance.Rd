@@ -19,3 +19,23 @@ The deviance explained by the GAM model for the predictor.
 \description{
 This function calculates the preference order of predictors based on the deviance explained by a Generalized Additive Model (GAM) between each predictor and the response variable.
 }
+\examples{
+if(interactive()){
+
+data(
+  vi,
+  vi_predictors
+)
+
+preference.order <- preference_order(
+  df = vi[1:1000, ],
+  response = "vi_mean",
+  predictors = vi_predictors[1:10],
+  f = f_gam_deviance,
+  workers = 1
+  )
+
+preference.order
+
+}
+}

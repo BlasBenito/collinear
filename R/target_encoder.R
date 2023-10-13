@@ -1,9 +1,8 @@
 #' Target encode a categorical variable based on a numeric variable.
 #'
-#' This function calculates the mean of the numeric variable for each group defined by
-#' the categorical variable and returns the target-encoded values.
+#' Transforms character variables into numeric by assigning to each group the mean of a numeric variable (usually the model response) across the group's cases.
 #'
-#' @param x (required; numeric vector) A numeric vector. Default: NULL
+#' @param x (required; numeric vector) A numeric vector generally representing a response variable. Default: NULL
 #' @param y (required; character vector) A character vector of the same length as 'x', representing the categorical variable.  Default: NULL
 #' @param check_input (required; logical) If FALSE, disables data checking for a slightly better performance when many tests are performed. Default: TRUE
 #'
@@ -11,11 +10,15 @@
 #'
 #' @examples
 #' if(interactive()){
-#' data(ecoregions)
-#' encoded_values <- target_encoder(
-#'   x = ecoregions$plant_richness,
-#'   y = ecoregions$dominant_landcover
+#'
+#' #load example data frame
+#' data(vi)
+#'
+#' biogeo_biome_encoded <- target_encoder(
+#'   x = vi$vi_mean,
+#'   y = vi$biogeo_biome
 #'   )
+#'
 #' }
 #'
 #' @autoglobal
@@ -29,27 +32,26 @@ target_encoder <- function(
   #data checks
   if(check_input == TRUE){
 
-    #checking equal length
-    if(length(x) != length(y)){
-      stop("Arguments 'x' and 'y' must have the same length.")
-    }
-
-    #checking x
     if(is.null(x)){
-      stop("The argument 'x' must not be NULL.")
+      stop("argument 'x' must not be NULL.")
     }
 
-    if(is.numeric(as.numeric(x)) == FALSE){
-      stop("Argument 'x' must be of type numeric.")
-    }
-
-    #checking y
     if(is.null(y)){
-      stop("The argument 'y' must not be NULL.")
+      stop("argument 'y' must not be NULL.")
     }
 
-    if(is.character(as.character(y)) == FALSE){
-      stop("Argument 'y' must be of type character")
+    if(length(x) != length(y)){
+      stop("arguments 'x' and 'y' must have the same length.")
+    }
+
+    x <- as.numeric(x)
+    if(is.numeric(x) == FALSE){
+      stop("argument 'x' must be of type numeric.")
+    }
+
+    y <- as.character(y)
+    if(is.character(y) == FALSE){
+      stop("argument 'y' must be of type character")
     }
 
   }
@@ -60,7 +62,7 @@ target_encoder <- function(
     numeric = as.numeric(x)
   )
 
-  #dplyr version
+  #target encoding
   df <- df |>
     dplyr::group_by(character) |>
     dplyr::mutate(

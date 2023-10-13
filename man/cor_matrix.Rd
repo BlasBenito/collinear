@@ -7,31 +7,47 @@
 cor_matrix(df = NULL, response = NULL, predictors = NULL, method = "pearson")
 }
 \arguments{
-\item{df}{(required; data frame or tibble) AA data frame with numeric and/or character predictors predictors, and optionally, a response variable, or the result of \code{cor_df()}. Default: NULL.}
+\item{df}{(required; data frame or tibble) A data frame with numeric and/or character predictors, and optionally, a response variable. Default: NULL.}
 
-\item{response}{(recommended, character string) Name of a numeric response variable. Character response variables are ignored. Ignored if 'df' is the result of \code{cor_df()}. Default: NULL.}
+\item{response}{(recommended, character string) Name of a numeric response variable. Character response variables are ignored. Please, see 'Details' to better understand how providing this argument or not leads to different results when there are character variables in 'predictors'. Default: NULL.}
 
-\item{predictors}{(optional; character vector) Character vector with column names of predictors in 'df'. If omitted, all columns of 'df' are used as predictors. Ignored if 'df' is the result of \code{cor_df()}. Default:'NULL'}
+\item{predictors}{(optional; character vector) character vector with predictor names in 'df'. If omitted, all columns of 'df' are used as predictors. Default:'NULL'}
 
-\item{method}{(optional; character string) Method used to compute pairwise correlations. Accepted methods are "pearson" (with a recommended minimum of 30 rows in 'df') or "spearman" (with a recommended minimum of 10 rows in 'df'). Ignored if 'df' is the result of \code{cor_df()}. Default: "pearson".}
+\item{method}{(optional; character string) Method used to compute pairwise correlations. Accepted methods are "pearson" (with a recommended minimum of 30 rows in 'df') or "spearman" (with a recommended minimum of 10 rows in 'df'). Default: "pearson".}
 }
 \value{
 correlation matrix
 }
 \description{
-Returns a correlation matrix frame between all pairs of predictors in a training dataset, or transforms the result of \code{cor_df()} to matrix. Please read the documentation of \code{cor_df()} to better understand how the correlations between numeric and character predictors are computed.
+Returns a correlation matrix between all pairs of predictors in a training dataset. Non-numeric predictors are transformed into numeric via target encoding, using the 'response' variable as reference.
+}
+\details{
+This function attempts to handle correlations between pairs of variables that can be of different types:
+\itemize{
+\item numeric vs. numeric: computed with stats::cor() with the methods "pearson" or "spearman".
+\item numeric vs. character, two alternatives leading to different results:
+\itemize{
+\item 'response' is provided: the character variable is target-encoded as numeric using the values of the response as reference, and then its correlation with the numeric variable is computed with stats::cor(). This option generates a response-specific result suitable for training statistical and machine-learning models
+\item 'response' is NULL (or the name of a non-numeric column): the character variable is target-encoded as numeric using the values of the numeric predictor (instead of the response) as reference, and then their correlation is computed with stats::cor(). This option leads to a response-agnostic result suitable for clustering problems.
+}
+\item character vs. character, two alternatives leading to different results:
+\itemize{
+\item 'response' is provided: the character variables are target-encoded as numeric using the values of the response as reference, and then their correlation is computed with stats::cor().
+\item response' is NULL (or the name of a non-numeric column): the association between the character variables is computed using Cramer's V. This option might be problematic, because R-squared values and Cramer's V, even when having the same range between 0 and 1, are not fully comparable.
+}
+}
 }
 \examples{
 if(interactive()){
 
 data(
-  ecoregions,
-  ecoregions_predictors
+  vi,
+  vi_predictors
 )
 
 m <- cor_matrix(
-      df = ecoregions,
-      predictors = ecoregions_predictors
+      df = vi,
+      predictors = vi_predictors
   )
 
 }

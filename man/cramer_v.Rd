@@ -2,14 +2,14 @@
 % Please edit documentation in R/cramer_v.R
 \name{cramer_v}
 \alias{cramer_v}
-\title{Correlation (Cramer's V) for categorical variables}
+\title{Cramer's V for categorical variables}
 \usage{
 cramer_v(x = NULL, y = NULL, check_input = TRUE)
 }
 \arguments{
-\item{x}{(required; character vector) Values of a categorical variable.  Default: NULL}
+\item{x}{(required; character vector) character vector representing a categorical variable.  Default: NULL}
 
-\item{y}{(required; character vector) Values of a categorical variable. Must have the same length as 'x'.  Default: NULL}
+\item{y}{(required; character vector) character vector representing a categorical variable. Must have the same length as 'x'. Default: NULL}
 
 \item{check_input}{(required; logical) If FALSE, disables data checking for a slightly faster execution. Default: TRUE}
 }
@@ -17,14 +17,16 @@ cramer_v(x = NULL, y = NULL, check_input = TRUE)
 Numeric, value of Cramer's V
 }
 \description{
+The \code{cramer_v()} function calculates Cramer's V, a measure of association between two categorical variables.
+
 Cramer's V is an extension of the chi-squared test to measure the strength of association between two categorical variables. Provides values between 0 and 1, where 0 indicates no association, and 1 indicates a perfect association. In essence, Cramer's V assesses the co-occurrence of the categories of two variables to quantify how strongly these variables are related.
 }
 \examples{
 if(interactive()){
-data(ecoregions)
+data(vi)
 cramer_v(
-  x = ecoregions$primary_productivity,
-  y = ecoregions$dominant_landcover
+  x = vi$primary_productivity,
+  y = vi$dominant_landcover
   )
 }
 }

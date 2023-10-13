@@ -18,13 +18,13 @@ cor_select(
 
 \item{response}{(recommended, character string) Name of a numeric response variable. Character response variables are ignored. Please, see 'Details' to better understand how providing this argument or not leads to different results when there are character variables in 'predictors'. Default: NULL.}
 
-\item{predictors}{(optional; character vector) Character vector with column names of predictors in 'df'. If omitted, all columns of 'df' are used as predictors. Default:'NULL'}
+\item{predictors}{(optional; character vector) Character vector with predictor names in 'df'. If omitted, all columns of 'df' are used as predictors. Default:'NULL'}
 
-\item{preference_order}{(optional; character vector) vector with column names of 'df' in the desired preference order. Predictors not included in this argument are ranked by their Variance Inflation Factor. Default: \code{NULL}.}
+\item{preference_order}{(optional; character vector) vector with column names in 'predictors' in the desired preference order, or result of the function \code{preference_order()}. Allows defining a priority order for selecting predictors, which can be particularly useful when some predictors are more critical for the analysis than others. Predictors not included in this argument are ranked by their Variance Inflation Factor. Default: \code{NULL}.}
 
 \item{method}{(optional; character string) Method used to compute pairwise correlations. Accepted methods are "pearson" (with a recommended minimum of 30 rows in 'df') or "spearman" (with a recommended minimum of 10 rows in 'df'). Default: "pearson".}
 
-\item{max_cor}{(optional; numeric) Maximum correlation between any pair of the selected variables. Higher values return larger number of predictors with higher multicollinearity. Default: \code{0.75}}
+\item{max_cor}{(optional; numeric) Maximum correlation allowed between any pair of predictors. Higher values return larger number of predictors with higher multicollinearity. Default: \code{0.75}}
 }
 \value{
 Character vector with the names of the selected predictors.
@@ -55,7 +55,7 @@ if(interactive()){
 
  #without preference order
  selected.variables <- cor_select(
-   data = vi,
+   df = vi,
    predictors = vi_predictors
  )
 
@@ -63,7 +63,7 @@ if(interactive()){
 
  #with preference order
  selected.variables <- cor_select(
-   data = vi,
+   df = vi,
    predictors = vi_predictors,
    preference_order = vi_predictors[1:5],
  )

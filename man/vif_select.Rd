@@ -17,16 +17,18 @@ vif_select(
 
 \item{response}{(recommended, character string) Name of a numeric response variable. Character response variables are ignored. Please, see 'Details' to better understand how providing this argument or not leads to different results when there are character variables in 'predictors'. Default: NULL.}
 
-\item{predictors}{(optional; character vector) Character vector with column names of predictors in 'df'. If omitted, all columns of 'df' are used as predictors. Default:'NULL'}
+\item{predictors}{(optional; character vector) character vector with predictor names in 'df'. If omitted, all columns of 'df' are used as predictors. Default:'NULL'}
 
-\item{preference_order}{(optional; character vector) vector with column names of 'df' in the desired preference order. Predictors not included in this argument are ranked by their Variance Inflation Factor. Default: \code{NULL}.}
+\item{preference_order}{(optional; character vector) vector with column names in 'predictors' in the desired preference order, or result of the function \code{preference_order()}. Allows defining a priority order for selecting predictors, which can be particularly useful when some predictors are more critical for the analysis than others. Predictors not included in this argument are ranked by their Variance Inflation Factor. Default: \code{NULL}.}
 
-\item{max_vif}{(optional, numeric) Numeric with recommended values between 2.5 and 10 defining the maximum VIF allowed in the output dataset. Higher VIF thresholds should result in a higher number of selected variables. Default: \code{5}.}
+\item{max_vif}{(optional, numeric) Numeric with recommended values between 2.5 and 10 defining the maximum VIF allowed for any given predictor in the output dataset. Higher VIF thresholds should result in a higher number of selected variables. Default: \code{5}.}
 }
 \value{
-Character vector with the names of uncorrelated predictors.
+Character vector with the names of the selected predictors.
 }
 \description{
+Automates multicollinearity management by selecting variables based on their Variance Inflation Factor (VIF).
+
 The Variance Inflation Factor for a given variable \code{y} is computed as \code{1/(1-R2)}, where \code{R2} is the multiple R-squared of a multiple regression model fitted using \code{y} as response and all other predictors in the input data frame as predictors. The VIF equation can be interpreted as the "rate of perfect model's R-squared to the unexplained variance of this model".
 
 The possible range of VIF values is (1, Inf]. A VIF lower than 10 suggest that removing \code{y} from the data set would reduce overall multicollinearity. The recommended thresholds for maximum VIF may vary depending on the source consulted, being the most common values, 2.5, 5, and 10.
@@ -66,7 +68,12 @@ if(interactive()){
  selected.variables <- vif_select(
    data = vi,
    predictors = vi_predictors,
-   preference_order = vi_predictors[1:5],
+   preference_order = c(
+   "soil_temperature_mean",
+   "swi_mean",
+   "soil_type",
+   "soil_nitrogen"
+   ),
  )
 
  selected.variables

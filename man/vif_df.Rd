@@ -11,7 +11,7 @@ vif_df(df = NULL, response = NULL, predictors = NULL)
 
 \item{response}{(recommended, character string) Name of a numeric response variable. Character response variables are ignored. Please, see 'Details' to better understand how providing this argument or not leads to different results when there are character variables in 'predictors'. Default: NULL.}
 
-\item{predictors}{(optional; character vector) Character vector with column names of predictors in 'df'. If omitted, all columns of 'df' are used as predictors. Default:'NULL'}
+\item{predictors}{(optional; character vector) character vector with predictor names in 'df'. If omitted, all columns of 'df' are used as predictors. Default:'NULL'}
 }
 \value{
 Data frame with predictor names and VIF values
@@ -34,13 +34,13 @@ This function computes the Variance Inflation Factor (VIF) in three steps:
 if(interactive()){
 
 data(
-  ecoregions,
-  ecoregions_predictors
+  vi,
+  vi_predictors
 )
 
 df <- vif_df(
-      df = ecoregions,
-      predictors = ecoregions_predictors
+      df = vi,
+      predictors = vi_predictors
 )
 
 }

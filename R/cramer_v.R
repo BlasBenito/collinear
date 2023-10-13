@@ -1,20 +1,23 @@
-#' Correlation (Cramer's V) for categorical variables
+#' Cramer's V for categorical variables
 #'
 #' @description
+#'
+#' The `cramer_v()` function calculates Cramer's V, a measure of association between two categorical variables.
+#'
 #' Cramer's V is an extension of the chi-squared test to measure the strength of association between two categorical variables. Provides values between 0 and 1, where 0 indicates no association, and 1 indicates a perfect association. In essence, Cramer's V assesses the co-occurrence of the categories of two variables to quantify how strongly these variables are related.
 #'
-#' @param x (required; character vector) Values of a categorical variable.  Default: NULL
-#' @param y (required; character vector) Values of a categorical variable. Must have the same length as 'x'.  Default: NULL
+#' @param x (required; character vector) character vector representing a categorical variable.  Default: NULL
+#' @param y (required; character vector) character vector representing a categorical variable. Must have the same length as 'x'. Default: NULL
 #' @param check_input (required; logical) If FALSE, disables data checking for a slightly faster execution. Default: TRUE
 #'
 #' @return Numeric, value of Cramer's V
 #'
 #' @examples
 #' if(interactive()){
-#' data(ecoregions)
+#' data(vi)
 #' cramer_v(
-#'   x = ecoregions$primary_productivity,
-#'   y = ecoregions$dominant_landcover
+#'   x = vi$primary_productivity,
+#'   y = vi$dominant_landcover
 #'   )
 #' }
 #' @autoglobal
@@ -30,17 +33,17 @@ cramer_v <- function(
 
     # Check if 'x' and 'y' have the same length
     if(length(x) != length(y)){
-      stop("Arguments 'x' and 'y' must have the same length.")
+      stop("arguments 'x' and 'y' must have the same length.")
     }
 
     # Check if 'x' is not NULL
     if(is.null(x)){
-      stop("The argument 'x' must not be NULL.")
+      stop("argument 'x' must not be NULL.")
     }
 
     # Check if 'y' is not NULL
     if(is.null(y)){
-      stop("The argument 'y' must not be NULL.")
+      stop("argument 'y' must not be NULL.")
     }
 
     # Check if 'x' is a character vector
@@ -50,7 +53,7 @@ cramer_v <- function(
 
     # Check if 'y' is a character vector
     if(is.numeric(y)){
-      stop("Argument 'y' must be of class 'character' or 'factor', but it is 'numeric'.")
+      stop("argument 'y' must be of class 'character' or 'factor', but it is 'numeric'.")
     }
 
   }

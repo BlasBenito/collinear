@@ -18,24 +18,24 @@
 #'   }
 #' }
 #'
-#' @param df (required; data frame or tibble) A data frame with numeric and/or character predictors predictors, and optionally, a response variable. Default: NULL.
+#' @param df (required; data frame or tibble) A data frame with numeric and/or character predictors, and optionally, a response variable. Default: NULL.
 #' @param response (recommended, character string) Name of a numeric response variable. Character response variables are ignored. Please, see 'Details' to better understand how providing this argument or not leads to different results when there are character variables in 'predictors'. Default: NULL.
-#' @param predictors (optional; character vector) Character vector with column names of predictors in 'df'. If omitted, all columns of 'df' are used as predictors. Default:'NULL'
+#' @param predictors (optional; character vector) character vector with predictor names in 'df'. If omitted, all columns of 'df' are used as predictors. Default:'NULL'
 #' @param method (optional; character string) Method used to compute pairwise correlations. Accepted methods are "pearson" (with a recommended minimum of 30 rows in 'df') or "spearman" (with a recommended minimum of 10 rows in 'df'). Default: "pearson".
 #'
-#' @return Data frame with pairs of predictors and their correlation.
+#' @return data frame with pairs of predictors and their correlation.
 #'
 #' @examples
 #' if(interactive()){
 #'
 #' data(
-#'   ecoregions,
-#'   ecoregions_predictors
+#'   vi,
+#'   vi_predictors
 #' )
 #'
 #' df <- cor_df(
-#'       df = ecoregions,
-#'       predictors = ecoregions_predictors
+#'       df = vi,
+#'       predictors = vi_predictors
 #'   )
 #'
 #' }
@@ -49,9 +49,9 @@ cor_df <- function(
 ){
 
   #for development only
-  # df <- ecoregions
+  # df <- vi
   # response <- "plant_richness"
-  # predictors <- ecoregions_predictors
+  # predictors <- vi_predictors
   # method = "pearson"
 
 
@@ -66,7 +66,7 @@ cor_df <- function(
   )
 
   #check input data frame
-  df <- df_inspect(
+  df <- validate_df(
     df = df,
     min_rows = ifelse(
       test = method == "pearson",
@@ -76,7 +76,7 @@ cor_df <- function(
   )
 
   #check predictors
-  predictors <- predictors_inspect(
+  predictors <- validate_predictors(
     df = df,
     predictors = predictors,
     min_numerics = 0
@@ -135,7 +135,7 @@ cor_df <- function(
 #' Correlation data frame between numeric variables
 #'
 #' @param df (required; data frame or tibble) A data frame Default: NULL.
-#' @param predictors (optional; character vector) Character vector with column names of predictors in 'df'. Default:'NULL'
+#' @param predictors (optional; character vector) character vector with predictor names in 'df'. Default:'NULL'
 #' @param method (optional; charater string) Method used to compute pairwise correlations. Accepted methods are "pearson" (with a recommended minimum of 30 rows in 'df') or "spearman" (with a recommended minimum of 10 rows in 'df'). Default: "pearson".
 #' @return data frame
 #' @noRd
@@ -157,7 +157,7 @@ cor_numerics <- function(
     several.ok = FALSE
   )
 
-  predictors.numeric <- predictors_numeric(
+  predictors.numeric <- identify_numeric_predictors(
     df = df,
     predictors = predictors
   )
@@ -203,7 +203,7 @@ cor_numerics <- function(
 #' Correlation data frame between numeric and character variables
 #'
 #' @param df (required; data frame or tibble) A data frame Default: NULL.
-#' @param predictors (optional; character vector) Character vector with column names of predictors in 'df'. Default:'NULL'
+#' @param predictors (optional; character vector) character vector with predictor names in 'df'. Default:'NULL'
 #' @param method (optional; charater string) Method used to compute pairwise correlations. Accepted methods are "pearson" (with a recommended minimum of 30 rows in 'df') or "spearman" (with a recommended minimum of 10 rows in 'df'). Default: "pearson".
 #'
 #' @return data frame
@@ -226,12 +226,12 @@ cor_numerics_and_characters <- function(
     several.ok = FALSE
   )
 
-  predictors.numeric <- predictors_numeric(
+  predictors.numeric <- identify_numeric_predictors(
     df = df,
     predictors = predictors
   )
 
-  predictors.character <- predictors_character(
+  predictors.character <- identify_non_numeric_predictors(
     df = df,
     predictors = predictors
   )
@@ -280,7 +280,7 @@ cor_numerics_and_characters <- function(
 #' Correlation data frame between character variables
 #'
 #' @param df (required; data frame or tibble) A data frame Default: NULL.
-#' @param predictors (optional; character vector) Character vector with column names of predictors in 'df'. Default:'NULL'
+#' @param predictors (optional; character vector) character vector with predictor names in 'df'. Default:'NULL'
 #'
 #' @return data frame
 #' @noRd
@@ -291,7 +291,7 @@ cor_characters <- function(
     predictors
 ){
 
-  predictors.character <- predictors_character(
+  predictors.character <- identify_non_numeric_predictors(
     df = df,
     predictors = predictors
   )
