@@ -1,5 +1,5 @@
 ---
-title: "`collinear`: automated multicollinearity management"
+title: "`collinear`: seamless multicollinearity management for numeric and categorical variables"
 output:
   github_document:
     toc: true
@@ -19,6 +19,30 @@ always_allow_html: yes
 [![Devel-version](https://img.shields.io/badge/devel%20version-1.1.5-blue.svg)](https://github.com/blasbenito/spatialRF) [![lifecycle](https://img.shields.io/badge/lifecycle-stable-green.svg)](https://lifecycle.r-lib.org/articles/stages.html)
 [![License](https://img.shields.io/badge/license-GPL--3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0.en.html) [![DOI](https://zenodo.org/badge/330962704.svg)](https://zenodo.org/badge/latestdoi/330962704)[![CRAN status](https://www.r-pkg.org/badges/version/spatialRF)](https://cran.r-project.org/package=spatialRF)[![CRAN\_Download\_Badge](http://cranlogs.r-pkg.org/badges/grand-total/spatialRF)](https://CRAN.R-project.org/package=spatialRF)
 -->
+
+# Summary
+
+The R package `collinear` combines four different methods to offer a comprehensive tool for multicollinearity management in data frames for statistical analysis and machine learning modeling with numeric and/or categorical predictors:
+
+  + 1.- Bivariate correlation (Pearson, Spearman, and Cramer's V).
+  + 2.- Variance inflation factor analysis (VIF).
+  + 3.- Target encoding of categorical predictors to handle them as numerics during the multicollinearity analysis.
+  + 4.- A flexible feature prioritisation method to ensure that the variable selection fulfills the user's needs while compliying with robust multicollinearity criteria.
+  
+These methods are integrated in the flagship function of the package:
+
+```{r, eval = FALSE}
+selected_predictors <- collinear(
+  df, #your data frame
+  response, #name of your response variable
+  predictors, #names of your predictors,
+  preference_order, #your predictors in order of interest
+)
+```
+
+# Multicollinearity
+
+
 
 "Collinearity is a problem for statistical analyses in the same way that Belgium’s lack of mountains is detrimental to the country’s chances of hosting the Winter Olympics: It is an unfortunate fact of life, but not something that has to be solved."
 

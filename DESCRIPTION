@@ -1,10 +1,17 @@
 Package: collinear
-Title: Automated Multicollinearity Management
-Version: 0.0.0.9000
+Title: Multicollinearity Management for Categorical and Numeric Variables
+Version: 1.0.0
 Authors@R: 
     person("Blas", "Benito", , "blasbenito@gmail.com", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0001-5105-7232"))
-Description: What the package does (one paragraph).
+Description: System for seamless management of multicollinearity in data frames
+    with numeric and/or categorical variables for statistical analysis and 
+    machine learning modeling. The package combines bivariate correlation 
+    (Pearson, Spearman, and Cramer's V) with variance inflation factor analysis, 
+    target encoding of categorical variables (Micci-Barreca, D. 2001 
+    <DOI:10.1145/507533.507538>), and a flexible 
+    feature prioritisation automated method to deliver a comprehensive 
+    multicollinearity management tool covering a wide range of usage cases.
 License: GPL (>= 3)
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE, roclets = c("collate", "namespace", "rd",

@@ -4,7 +4,8 @@ testthat::test_that("mc_ functions work", {
 
   #loading data
   data(
-    vi
+    vi,
+    vi_predictors
   )
 
   #adding zero variance zolumn

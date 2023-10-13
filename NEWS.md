@@ -1,3 +1,5 @@
 # collinear (development version)
 
-* Initial CRAN submission.
+# collinear 1.0.0
+
+First functional version of the package. 
