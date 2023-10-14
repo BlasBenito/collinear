@@ -117,11 +117,8 @@ vif_select <- function(
     preference_order <- preference_order$predictor
   }
 
-  #check preference order
-  preference_order <- validate_predictors(
-    df = df,
-    predictors = preference_order
-  )
+  #subset preference_order in predictors
+  preference_order <- preference_order[preference_order %in% predictors]
 
   #if there are variables not in preference_order
   #add them in the order of preference_order.auto
@@ -154,7 +151,8 @@ vif_select <- function(
   for(i in seq(from = nrow(df.rank), to = 2)){
 
     vif.i <- vif_df(
-      df = df[, df.rank$variable]
+      df = df,
+      predictors = df.rank$variable
       ) |>
       dplyr::filter(
         variable == df.rank[i, "variable"]

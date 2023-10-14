@@ -7,15 +7,15 @@
 identify_non_numeric_predictors(df = NULL, predictors = NULL)
 }
 \arguments{
-\item{df}{(required; data frame or tibble) A validated data frame with numeric and/or character predictors predictors, and optionally, a response variable. Default: NULL.}
+\item{df}{(required; data frame or tibble) A data frame with numeric and/or character predictors predictors, and optionally, a response variable. Default: NULL.}
 
-\item{predictors}{(optional; character vector) A validated vector with predictor names in 'df'. If omitted, all columns of 'df' are used as predictors. Default:'NULL'}
+\item{predictors}{(optional; character vector) A vector with predictor names in 'df'. If omitted, all columns of 'df' are used as predictors. Default:'NULL'}
 }
 \value{
 character vector with names of numeric predictors.
 }
 \description{
-Given validated 'df' and 'predictors' arguments, this function subsets and returns the non-numeric (character, factor, and logical) predictors.
+Given 'df' and 'predictors' arguments, this function subsets and returns the non-numeric (character, factor, and logical) predictors.
 }
 \examples{
 if (interactive()) {

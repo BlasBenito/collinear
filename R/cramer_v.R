@@ -1,10 +1,12 @@
-#' Cramer's V for categorical variables
+#' Bias Corrected Cramer's V
 #'
 #' @description
 #'
-#' The `cramer_v()` function calculates Cramer's V, a measure of association between two categorical variables.
+#' The `cramer_v()` function calculates bias-corrected Cramer's V, a measure of association between two categorical variables.
 #'
 #' Cramer's V is an extension of the chi-squared test to measure the strength of association between two categorical variables. Provides values between 0 and 1, where 0 indicates no association, and 1 indicates a perfect association. In essence, Cramer's V assesses the co-occurrence of the categories of two variables to quantify how strongly these variables are related.
+#'
+#' Even when its range is between 0 and 1, Cramer's V values are not directly comparable to R-squared values, and as such, a multicollinearity analysis containing both types of values must be assessed with care. It is probably preferable to convert non-numeric variables to numeric using target encoding rather before a multicollinearity analysis.
 #'
 #' @param x (required; character vector) character vector representing a categorical variable.  Default: NULL
 #' @param y (required; character vector) character vector representing a categorical variable. Must have the same length as 'x'. Default: NULL
@@ -16,8 +18,8 @@
 #' if(interactive()){
 #' data(vi)
 #' cramer_v(
-#'   x = vi$primary_productivity,
-#'   y = vi$dominant_landcover
+#'   x = vi$soil_type,
+#'   y = vi$koppen_zone
 #'   )
 #' }
 #' @autoglobal
@@ -62,7 +64,7 @@ cramer_v <- function(
   xy.table <- table(
     as.character(x),
     as.character(y)
-    )
+  )
 
   # chi-squared test with Monte Carlo simulation
   #for p-value estimation
@@ -72,14 +74,41 @@ cramer_v <- function(
   )$statistic |>
     suppressWarnings()
 
-  # number of cases
-  n <- sum(xy.table)
+  #columns of xy.table
+  xy.table.cols <- ncol(xy.table)
 
-  # minimum number of categories
-  min_dim <- min(dim(xy.table))
+  #rows of xy.table
+  xy.table.rows <- nrow(xy.table)
 
-  # Cramer's V computation
-  v <- sqrt(xy.chi / (n * (min_dim - 1)))
+  #total sample size
+  xy.table.sum <- sum(xy.table)
+
+  #bias corrected Cramer's V
+  v <- sqrt(
+    max(
+      c(
+        0,
+        (xy.chi /  xy.table.sum) - ((xy.table.cols - 1)*(xy.table.rows - 1)) /
+          (xy.table.sum - 1)
+      )
+    ) /
+      min(
+        c(
+          (
+            xy.table.cols - ((xy.table.cols - 1)^2 /
+                               (xy.table.sum - 1))
+          ) - 1,
+          (xy.table.rows - ((xy.table.rows - 1)^2 /
+                              (xy.table.sum - 1))
+          ) - 1
+        )
+      )
+  )
+
+  #Cramer's V with no bias correction
+  #kept here for reference
+  # min_dim <- min(dim(xy.table))
+  # v <- sqrt(xy.chi / (xy.table.sum * (min_dim - 1)))
 
   #remove names from the output
   names(v) <- NULL

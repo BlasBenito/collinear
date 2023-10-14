@@ -2,7 +2,7 @@
 % Please edit documentation in R/cramer_v.R
 \name{cramer_v}
 \alias{cramer_v}
-\title{Cramer's V for categorical variables}
+\title{Bias Corrected Cramer's V}
 \usage{
 cramer_v(x = NULL, y = NULL, check_input = TRUE)
 }
@@ -17,16 +17,18 @@ cramer_v(x = NULL, y = NULL, check_input = TRUE)
 Numeric, value of Cramer's V
 }
 \description{
-The \code{cramer_v()} function calculates Cramer's V, a measure of association between two categorical variables.
+The \code{cramer_v()} function calculates bias-corrected Cramer's V, a measure of association between two categorical variables.
 
 Cramer's V is an extension of the chi-squared test to measure the strength of association between two categorical variables. Provides values between 0 and 1, where 0 indicates no association, and 1 indicates a perfect association. In essence, Cramer's V assesses the co-occurrence of the categories of two variables to quantify how strongly these variables are related.
+
+Even when its range is between 0 and 1, Cramer's V values are not directly comparable to R-squared values, and as such, a multicollinearity analysis containing both types of values must be assessed with care. It is probably preferable to convert non-numeric variables to numeric using target encoding rather before a multicollinearity analysis.
 }
 \examples{
 if(interactive()){
 data(vi)
 cramer_v(
-  x = vi$primary_productivity,
-  y = vi$dominant_landcover
+  x = vi$soil_type,
+  y = vi$koppen_zone
   )
 }
 }

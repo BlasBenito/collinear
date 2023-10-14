@@ -99,11 +99,8 @@ cor_select <- function(
     preference_order <- preference_order$predictor
   }
 
-  #check preference order
-  preference_order <- validate_predictors(
-    df = df,
-    predictors = preference_order
-  )
+  #subset preference_order in predictors
+  preference_order <- preference_order[preference_order %in% predictors]
 
   #if there are variables not in preference_order
   #add them in the order of preference_order.auto

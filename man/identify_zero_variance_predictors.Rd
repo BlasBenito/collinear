@@ -7,9 +7,9 @@
 identify_zero_variance_predictors(df = NULL, predictors = NULL, decimals = 4)
 }
 \arguments{
-\item{df}{(required; data frame or tibble) A validated data frame with numeric and/or character predictors predictors, and optionally, a response variable. Default: NULL.}
+\item{df}{(required; data frame or tibble) A data frame with numeric and/or character predictors predictors, and optionally, a response variable. Default: NULL.}
 
-\item{predictors}{(optional; character vector) A validated vector with predictor names in 'df'. If omitted, all columns of 'df' are used as predictors. Default:'NULL'}
+\item{predictors}{(optional; character vector) A vector with predictor names in 'df'. If omitted, all columns of 'df' are used as predictors. Default:'NULL'}
 
 \item{decimals}{(required, integer) number of decimal places for the zero variance test. Default: 4}
 }

@@ -63,6 +63,11 @@ target_encode <- function(
     predictors = NULL
 ){
 
+  #do nothing if response is NULL
+  if(is.null(response)){
+    return(df)
+  }
+
   #check input data frame
   df <- validate_df(
     df = df,
@@ -81,11 +86,6 @@ target_encode <- function(
     df = df,
     response = response
   )
-
-  #stop if NULL or non-numeric.
-  if(is.null(response)){
-    stop("the argument 'response' must name a numeric column of 'df'.")
-  }
 
   #factors, logical, and ordered to characters
   df <- rapply(
@@ -122,6 +122,11 @@ target_encode <- function(
         )
       )
     )
+
+  attr(
+    x = df,
+    which = "validated"
+  ) <- TRUE
 
   df
 
