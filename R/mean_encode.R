@@ -1,8 +1,10 @@
 #' Target encoding of categorical variables in a data frame
 #'
+#' Applies [mean_encoder()] to all non-numeric columns in a data frame. Used within [collinear()], [cor_select()] and [vif_select()]. If you wish to have more control over the target encoding process, you can use [target_encoding_lab()].
+#'
 #' This function performs target encoding of categorical variables (including factor, ordered, and logical types) based on a numeric response variable. This method facilitates a seamless computation of multicollinearity metrics between numeric and non-numeric variables when a numeric response is available.
 #'
-#' Target encoding, also known as mean encoding, is a technique used to transform categorical variables into numeric representations based on their relationship with a target variable (usually, the model's response). This method calculates the mean of the target variable for each category within a categorical feature. Target encoding is particularly useful when working with categorical variables that exhibit strong associations with the target variable, making it easier for models to learn from the encoded information.
+#' Mean encoding is a method of target encoding used to transform categorical variables into numeric representations based on their relationship with a target variable (usually, the model's response). This method calculates the mean of the target variable for each category within a categorical feature.
 #'
 #'
 #' @param df (required; data frame or tibble) A data frame with numeric and/or character predictors predictors, and optionally, a response variable. Default: NULL.
@@ -42,7 +44,7 @@
 #'   )
 #'
 #'   #target encoding
-#'   vi <- collinear::target_encode(
+#'   vi <- collinear::mean_encode(
 #'     df = vi,
 #'     response = response,
 #'     predictors = predictors
@@ -57,7 +59,7 @@
 #' }
 #' @export
 #' @autoglobal
-target_encode <- function(
+mean_encode <- function(
     df = NULL,
     response = NULL,
     predictors = NULL
@@ -115,9 +117,9 @@ target_encode <- function(
     dplyr::mutate(
       dplyr::across(
         dplyr::all_of(predictors.character),
-        ~target_encoder(
-          x = df[[response]],
-          y = .,
+        ~mean_encoder(
+          response = df[[response]],
+          predictor = .,
           check_input = FALSE
         )
       )

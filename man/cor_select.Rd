@@ -32,7 +32,7 @@ Character vector with the names of the selected predictors.
 \description{
 Applies a recursive algorithm to remove variables with a bivariate correlation with any other variable higher than a threshold defined by the argument \code{max_cor}.
 
-If the argument \code{response} is provided, all non-numeric variables in \code{predictors} are transformed into numeric using target encoding (see \code{target_encode()}). Otherwise, non-numeric variables are ignored.
+If the argument \code{response} is provided, all non-numeric variables in \code{predictors} are transformed into numeric using target encoding (see \code{\link[=mean_encode]{mean_encode()}}). Otherwise, non-numeric variables are ignored.
 
 The argument \code{preference_order} allows defining a preference selection order to preserve (when possible) variables that might be interesting or even required for a given analysis
 

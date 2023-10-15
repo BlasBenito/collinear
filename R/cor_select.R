@@ -1,8 +1,10 @@
 #' @title Automated multicollinearity reduction via pairwise correlation
 #'
-#' @description Applies a recursive algorithm to remove variables with a bivariate correlation with any other variable higher than a threshold defined by the argument `max_cor`.
+#' @description
 #'
-#' If the argument `response` is provided, all non-numeric variables in `predictors` are transformed into numeric using target encoding (see `target_encode()`). Otherwise, non-numeric variables are ignored.
+#' Applies a recursive algorithm to remove variables with a bivariate correlation with any other variable higher than a threshold defined by the argument `max_cor`.
+#'
+#' If the argument `response` is provided, all non-numeric variables in `predictors` are transformed into numeric using target encoding (see [mean_encode()]). Otherwise, non-numeric variables are ignored.
 #'
 #' The argument `preference_order` allows defining a preference selection order to preserve (when possible) variables that might be interesting or even required for a given analysis
 #'

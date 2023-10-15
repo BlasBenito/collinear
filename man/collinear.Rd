@@ -35,6 +35,8 @@ Character vector with the names of uncorrelated predictors.
 \description{
 The \code{collinear()} function is designed to automate the reduction of multicollinearity in a set of predictors by sequentially applying correlation-based and VIF-based variable selection by applying \code{\link[=cor_select]{cor_select()}} and \code{\link[=vif_select]{vif_select()}} sequentially.
 
+If the 'response' argument is provided, categorical predictors are converted to numeric via target encoding (see \code{\link[=mean_encode]{mean_encode()}}). If the 'response' argument is not provided, categorical variables are ignored.
+
 The function \code{\link[=cor_select]{cor_select()}} applies a recursive algorithm to remove variables with a Pearson correlation with another variable higher than a given threshold (defined by the argument \code{max_cor}).  When two variables are correlated above this threshold, the one with the highest sum of R-squared with all the other variables is removed.
 
 The function \code{\link[=vif_select]{vif_select()}} applyies a Variance Inflation Factor (VIF) analysis to reduce multicollinearity. The VIF for a given variable \code{y} is computed as \code{1/(1-R2)}, where \code{R2} is the multiple R-squared of a multiple regression model fitted using \code{y} as response and all the remaining variables of the input data frame as predictors. The equation can be interpreted as "the rate of perfect model's R-squared to the unexplained variance of this model". The possible range of VIF values is (1, Inf]. A VIF lower than 10 suggest that removing \code{y} from the data set would reduce overall multicollinearity. The recommended thresholds for maximum VIF may vary depending on the source consulted, being the most common values, 2.5, 5, and 10.

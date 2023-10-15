@@ -74,7 +74,7 @@ preference_order <- function(
   )
 
   #target encode character predictors
-  df <- target_encode(
+  df <- mean_encode(
     df = df,
     response = response,
     predictors = predictors

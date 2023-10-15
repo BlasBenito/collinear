@@ -29,13 +29,17 @@ Character vector with the names of the selected predictors.
 \description{
 Automates multicollinearity management by selecting variables based on their Variance Inflation Factor (VIF).
 
+The \code{vif_select()} function is designed to automate the reduction of multicollinearity in a set of predictors by using Variance Inflation Factors.
+
+If the 'response' argument is provided, categorical predictors are converted to numeric via target encoding (see \code{\link[=mean_encode]{mean_encode()}}). If the 'response' argument is not provided, categorical variables are ignored.
+
 The Variance Inflation Factor for a given variable \code{y} is computed as \code{1/(1-R2)}, where \code{R2} is the multiple R-squared of a multiple regression model fitted using \code{y} as response and all other predictors in the input data frame as predictors. The VIF equation can be interpreted as the "rate of perfect model's R-squared to the unexplained variance of this model".
 
 The possible range of VIF values is (1, Inf]. A VIF lower than 10 suggest that removing \code{y} from the data set would reduce overall multicollinearity. The recommended thresholds for maximum VIF may vary depending on the source consulted, being the most common values, 2.5, 5, and 10.
 
 The function \code{vif_select()} applies a recursive algorithm to remove variables with a VIF higher than a given threshold (defined by the argument \code{max_vif}).
 
-If the argument \code{response} is provided, all non-numeric variables in \code{predictors} are transformed into numeric using target encoding (see \code{target_encode()}). Otherwise, non-numeric variables are ignored.
+If the argument \code{response} is provided, all non-numeric variables in \code{predictors} are transformed into numeric using target encoding (see \code{mean_encode()}). Otherwise, non-numeric variables are ignored.
 
 The argument \code{preference_order} allows defining a preference selection order to preserve (when possible) variables that might be interesting or even required for a given analysis.
 

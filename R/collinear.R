@@ -4,6 +4,8 @@
 #'
 #' The `collinear()` function is designed to automate the reduction of multicollinearity in a set of predictors by sequentially applying correlation-based and VIF-based variable selection by applying [cor_select()] and [vif_select()] sequentially.
 #'
+#' If the 'response' argument is provided, categorical predictors are converted to numeric via target encoding (see [mean_encode()]). If the 'response' argument is not provided, categorical variables are ignored.
+#'
 #' The function [cor_select()] applies a recursive algorithm to remove variables with a Pearson correlation with another variable higher than a given threshold (defined by the argument `max_cor`).  When two variables are correlated above this threshold, the one with the highest sum of R-squared with all the other variables is removed.
 #'
 #' The function [vif_select()] applyies a Variance Inflation Factor (VIF) analysis to reduce multicollinearity. The VIF for a given variable `y` is computed as `1/(1-R2)`, where `R2` is the multiple R-squared of a multiple regression model fitted using `y` as response and all the remaining variables of the input data frame as predictors. The equation can be interpreted as "the rate of perfect model's R-squared to the unexplained variance of this model". The possible range of VIF values is (1, Inf]. A VIF lower than 10 suggest that removing `y` from the data set would reduce overall multicollinearity. The recommended thresholds for maximum VIF may vary depending on the source consulted, being the most common values, 2.5, 5, and 10.
@@ -139,7 +141,7 @@ collinear <- function(
   )
 
   #target encode character predictors
-  df <- target_encode(
+  df <- mean_encode(
     df = df,
     response = response,
     predictors = predictors

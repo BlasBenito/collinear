@@ -95,3 +95,6 @@ selected.predictors <- collinear(
 
 selected.predictors
 
+
+#cor_select()
+#####################################################
