@@ -134,10 +134,27 @@ collinear <- function(
     max_vif = 5
 ){
 
-  #check input data frame
+  #validate input data frame
   df <- validate_df(
     df = df,
-    min_rows = 30
+    min_rows = ifelse(
+      test = method == "pearson",
+      yes = 30,
+      no = 10
+    )
+  )
+
+  #validate predictors
+  predictors <- validate_predictors(
+    df = df,
+    predictors = predictors,
+    min_numerics = 0
+  )
+
+  #validate response
+  response <- validate_response(
+    df = df,
+    response = response
   )
 
   #target encode character predictors

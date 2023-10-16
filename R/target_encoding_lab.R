@@ -26,7 +26,7 @@
 #' @param seed (optional; integer) Random seed to facilitate reproducibility when `noise` is not 0. Default: 1
 #' @param noise (optional; numeric vector) Numeric vector with noise values in the range 0-1. Used only in methods "mean" and "rank". Generates white noise to reduce overfitting. Default: 0.
 #' @param sd_width (optional; numeric vector) Only for the method "rnorm". Numeric vector with multiplicators of the standard deviation of each group in the categorical variable, in the range 0.01-1. Default: 0.1
-#' @param replace (optional; logical) Advanced option that changes the behavior of the function. Use only if you really know exactly what you neare doing. If `TRUE`, only the first option in the `methods`, `noise`, and `sd_width` arguments is used, it replaces each categorical variable with its encoded version, and returns the input data frame with the encoded variables and without the original ones. Default: FALSE
+#' @param replace (optional; logical) If `TRUE`, the function replaces each categorical variable with its encoded version, and returns the input data frame with the encoded variables instead of the original ones. Default: FALSE
 #' @param verbose (optional; logical) If TRUE, messages generated during the execution of the function are printed to the console Default: TRUE
 #'
 #' @return
@@ -56,7 +56,7 @@
 #'
 #' #applying all methods for a continuous response
 #' output <- target_encoding_lab(
-#'   data = vi,
+#'   df = vi,
 #'   response = "vi_mean",
 #'   predictors = vi_predictors,
 #'   methods = c(
@@ -143,7 +143,26 @@ target_encoding_lab <- function(
     several.ok = TRUE
   )
 
+  #validate input data frame
+  df <- validate_df(
+    df = df,
+    min_rows = 30
+  )
 
+  #validate predictors
+  predictors <- validate_predictors(
+    df = df,
+    predictors = predictors,
+    min_numerics = 0
+  )
+
+  #validate response
+  response <- validate_response(
+    df = df,
+    response = response
+  )
+
+  #if replace is true, get only first option of all inputs
   if(replace == TRUE){
     verbose <- FALSE
     methods <- methods[1]
@@ -172,7 +191,7 @@ target_encoding_lab <- function(
   if(length(predictors.non.numeric) == 0){
 
     if(verbose == TRUE){
-      message("All predictors are numeric, returning the input data frame.")
+      message("All predictors are numeric, returning input data frame.")
     }
 
     return(data)
@@ -189,9 +208,6 @@ target_encoding_lab <- function(
       "\n"
     )
   }
-
-  #original column names
-  original.column.names <- colnames(df)
 
   #iterating over categorical variables
   for(predictors.non.numeric.i in predictors.non.numeric){
@@ -271,7 +287,7 @@ target_encoding_lab <- function(
 
     encoded.predictors <- setdiff(
       x = colnames(df),
-      y = original.column.names
+      y = predictors
     )
 
     correlation.df <- lapply(

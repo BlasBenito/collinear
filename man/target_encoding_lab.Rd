@@ -31,7 +31,7 @@ target_encoding_lab(
 
 \item{noise}{(optional; numeric vector) Numeric vector with noise values in the range 0-1. Used only in methods "mean" and "rank". Generates white noise to reduce overfitting. Default: 0.}
 
-\item{replace}{(optional; logical) Advanced option that changes the behavior of the function. Use only if you really know exactly what you neare doing. If \code{TRUE}, only the first option in the \code{methods}, \code{noise}, and \code{sd_width} arguments is used, it replaces each categorical variable with its encoded version, and returns the input data frame with the encoded variables and without the original ones. Default: FALSE}
+\item{replace}{(optional; logical) If \code{TRUE}, the function replaces each categorical variable with its encoded version, and returns the input data frame with the encoded variables instead of the original ones. Default: FALSE}
 
 \item{verbose}{(optional; logical) If TRUE, messages generated during the execution of the function are printed to the console Default: TRUE}
 }
@@ -79,7 +79,7 @@ data(
 
 #applying all methods for a continuous response
 output <- target_encoding_lab(
-  data = vi,
+  df = vi,
   response = "vi_mean",
   predictors = vi_predictors,
   methods = c(

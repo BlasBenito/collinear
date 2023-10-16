@@ -64,17 +64,12 @@ mean_encoder <- function(
     numeric = as.numeric(response)
   )
 
-  #target encoding
-  df <- df |>
-    dplyr::group_by(character) |>
-    dplyr::mutate(
-      encoded = mean(
-        numeric,
-        na.rm = TRUE
-      )
-    )
-
-  df[["encoded"]]
+  #mean encoding
+  stats::ave(
+    x = response,
+    predictor,
+    FUN = function(x) mean(x, na.rm = TRUE)
+  )
 
 }
 

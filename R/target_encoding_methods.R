@@ -148,31 +148,11 @@ target_encoding_mean <- function(
     )
   }
 
-  #aggregate by groups
-  df.map <- tapply(
-    X = df[[response]],
-    INDEX = df[[predictor]],
-    FUN = mean,
-    na.rm = TRUE
-  )
-
-  #to data frame
-  df.map <- data.frame(
-    names(df.map),
-    df.map
-    )
-
-  #add new name
-  names(df.map) <- c(
-    predictor,
-    categorical.variable.new.name
-  )
-
-  #join with df
-  df <- dplyr::inner_join(
-    x = df,
-    y = df.map,
-    by = predictor
+  #mean encoding
+  df[[categorical.variable.new.name]] <- stats::ave(
+    x = df[[response]],
+    df[[predictor]],
+    FUN = function(x) mean(x, na.rm = TRUE)
   )
 
   #add noise if any

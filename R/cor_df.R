@@ -65,7 +65,7 @@ cor_df <- function(
     several.ok = FALSE
   )
 
-  #check input data frame
+  #validate input data frame
   df <- validate_df(
     df = df,
     min_rows = ifelse(
@@ -75,7 +75,7 @@ cor_df <- function(
     )
   )
 
-  #check predictors
+  #validate predictors
   predictors <- validate_predictors(
     df = df,
     predictors = predictors,

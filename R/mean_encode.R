@@ -70,20 +70,20 @@ mean_encode <- function(
     return(df)
   }
 
-  #check input data frame
+  #validate input data frame
   df <- validate_df(
     df = df,
     min_rows = 30
   )
 
-  #check predictors
+  #validate predictors
   predictors <- validate_predictors(
     df = df,
     predictors = predictors,
     min_numerics = 0
   )
 
-  #check response
+  #validate response
   response <- validate_response(
     df = df,
     response = response
