@@ -11,19 +11,13 @@ utils::globalVariables(c(
   # <cor_numerics>
   "correlation",
   # <target_encoding_lab>
-  "correlation_with_response",
-  # <target_encoding_lab>
   "data",
-  # <target_encoding_lab>
-  "encoded_predictor",
   # <cor_numerics>
   "Freq",
   # <validate_response>
   "is.required",
   # <cor_numerics>
   "pair_name",
-  # <target_encoding_lab>
-  "r_squared",
   # <preference_order>
   "value",
   # <identify_zero_variance_predictors>

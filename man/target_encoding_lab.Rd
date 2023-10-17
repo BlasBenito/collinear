@@ -9,9 +9,9 @@ target_encoding_lab(
   response = NULL,
   predictors = NULL,
   methods = c("mean", "rank", "loo", "rnorm"),
-  sd_width = 0.1,
+  rnorm_sd_multiplier = 0.1,
   seed = 1,
-  noise = 0,
+  white_noise = 0,
   replace = FALSE,
   verbose = TRUE
 )
@@ -25,11 +25,11 @@ target_encoding_lab(
 
 \item{methods}{(optional; character string). Name of the target encoding methods. Default: \code{c("mean", "rank", "loo", "rnorm")}}
 
-\item{sd_width}{(optional; numeric vector) Only for the method "rnorm". Numeric vector with multiplicators of the standard deviation of each group in the categorical variable, in the range 0.01-1. Default: 0.1}
+\item{rnorm_sd_multiplier}{(optional; numeric vector) Only for the method "rnorm". Numeric vector with multiplicators of the standard deviation of each group in the categorical variable, in the range 0.01-1. Default: 0.1}
 
-\item{seed}{(optional; integer) Random seed to facilitate reproducibility when \code{noise} is not 0. Default: 1}
+\item{seed}{(optional; integer) Random seed to facilitate reproducibility when \code{white_noise} is not 0. Default: 1}
 
-\item{noise}{(optional; numeric vector) Numeric vector with noise values in the range 0-1. Used only in methods "mean" and "rank". Generates white noise to reduce overfitting. Default: 0.}
+\item{white_noise}{(optional; numeric vector) Numeric vector with white noise values in the range 0-1. Used only in methods "mean" and "rank". Generates white noise to reduce overfitting. Default: 0.}
 
 \item{replace}{(optional; logical) If \code{TRUE}, the function replaces each categorical variable with its encoded version, and returns the input data frame with the encoded variables instead of the original ones. Default: FALSE}
 
@@ -40,7 +40,7 @@ If no target encoding is needed because all predictors are numeric, the function
 
 Otherwise it returns a list with these slots:
 \itemize{
-\item \code{data}: Input data frame, but with target-encoded character or factor columns.
+\item \code{df}: Input data frame, but with target-encoded character or factor columns.
 \item \code{correlation_test}: Data frame with the results of a linear model between the target-encoded variable and the response. It contains the following columns:
 \itemize{
 \item \code{encoded_predictor}: name of the target-encoded variable.
@@ -58,15 +58,15 @@ This function identifies categorical variables in the input data frame, transfor
 The target encoding methods implemented in this function are:
 
 \itemize{
-\item \code{rank}: returns the order of the group as a integer, starting with the value 1 as the rank of the group with the lower mean of the response variable. This method accepts the  \code{noise} argument, which adds white noise to the result to increase data variability and reduce overfitting. The variables returned by this method are named with the suffix "__encoded_rank". This method is implemented in the function \code{\link[=target_encoding_rank]{target_encoding_rank()}}.
-\item \code{mean}: uses the mean value of the response over each group in the categorical variable. This option accepts \code{noise}. The variables returned by this method are named with the suffix "__encoded_mean".  This method is implemented in the function \code{\link[=target_encoding_mean]{target_encoding_mean()}}.
-\item \code{rnorm}: This method computes the mean and standard deviation of the response for each group of the categorical variable, and uses \code{\link[=rnorm]{rnorm()}} to generate values taken from a normal distribution. The argument \code{sd_width} is used as a multiplier of the standard deviation to reduce the range of values produced by \code{\link[=rnorm]{rnorm()}} for each group of the categorical predictor. The variables returned by this method are named with the suffix "__encoded_rnorm".  This method is implemented in the function \code{\link[=target_encoding_rnorm]{target_encoding_rnorm()}}.
+\item \code{rank}: Returns the rank of the group as a integer, starting with 1 as the rank of the group with the lower mean of the response variable. This method accepts the  \code{white_noise} argument, which adds white noise to the result to increase data variability and reduce overfitting. The variables returned by this method are named with the suffix "__encoded_rank". This method is implemented in the function \code{\link[=target_encoding_rank]{target_encoding_rank()}}.
+\item \code{mean}: Returns the mean of the response for each group in the categorical variable. This option accepts \code{white_noise} to increase data variability. The variables returned by this method are named with the suffix "__encoded_mean".  This method is implemented in the function \code{\link[=target_encoding_mean]{target_encoding_mean()}}.
+\item \code{rnorm}: Computes the mean and standard deviation of the response for each group of the categorical variable, and uses \code{\link[=rnorm]{rnorm()}} to generate values taken from a normal distribution with these parameters. The argument \code{rnorm_sd_multiplier} is used as a multiplier of the standard deviation to reduce the range of values produced by \code{\link[=rnorm]{rnorm()}} for each group of the categorical predictor. The variables returned by this method are named with the suffix "__encoded_rnorm".  This method is implemented in the function \code{\link[=target_encoding_rnorm]{target_encoding_rnorm()}}.
 \item \code{loo}: This is the leave-one-out method. Each categorical value is replaced with the mean of the response variable across the other cases within the same group. The variables returned by this method are named with the suffix "__encoded_loo". This method is implemented in the function \code{\link[=target_encoding_loo]{target_encoding_loo()}}.
 }
 
-The methods "mean" and "rank" support the \code{noise} argument. Values larger than zero in this argument add white noise to the target-encoded variables using \code{stats::rnorm()} via the function \code{\link[=target_encoding_noise]{target_encoding_noise()}}). The \code{noise} argument represents a fraction of the average differences between groups of the target-encoded variable. For example, if noise = 0.25 and the target-encoded variable has the unique values c(1, 2, 3), as it could be the case when using the "rank" method, then the average between-groups difference would be 1, and the range of the noise added to each row would go between 0 and 0.25
+The methods "mean" and "rank" support the \code{white_noise} argument. Values larger than zero in this argument add white noise to the target-encoded variables using \code{stats::rnorm()} via the function \code{\link[=target_encoding_white_noise]{target_encoding_white_noise()}}). The \code{white_noise} argument represents a fraction of the average differences between groups of the target-encoded variable. For example, if white_noise = 0.25 and the target-encoded variable has the unique values c(1, 2, 3), as it could be the case when using the "rank" method, then the average between-groups difference would be 1, and the range of the white noise added to each row would go between 0 and 0.25
 
-The method "rnorm" has the argument \code{sd_width}, which multiplies the standard deviation argument of the \code{rnorm()} function to limit the spread of the encoded values between groups.
+The method "rnorm" has the argument \code{rnorm_sd_multiplier}, which multiplies the standard deviation argument of the \code{rnorm()} function to limit the spread of the encoded values between groups.
 }
 \examples{
 if(interactive()){
@@ -88,8 +88,8 @@ output <- target_encoding_lab(
     "rnorm",
     "loo"
   ),
-  sd_width = c(0.01, 0.1, 1),
-  noise = c(0, 1)
+  rnorm_sd_multiplier = c(0.01, 0.1, 1),
+  white_noise = c(0, 1)
 )
 
 #the output has several objects

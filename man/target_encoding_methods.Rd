@@ -5,14 +5,14 @@
 \alias{target_encoding_rnorm}
 \alias{target_encoding_rank}
 \alias{target_encoding_loo}
-\alias{target_encoding_noise}
+\alias{target_encoding_white_noise}
 \title{Target-encoding methods}
 \usage{
 target_encoding_mean(
   df,
   response,
   predictor,
-  noise = 0,
+  white_noise = 0,
   seed = 1,
   replace = FALSE,
   verbose = TRUE
@@ -22,7 +22,7 @@ target_encoding_rnorm(
   df,
   response,
   predictor,
-  sd_width = 0.1,
+  rnorm_sd_multiplier = 0.1,
   seed = 1,
   replace = FALSE,
   verbose = TRUE
@@ -32,7 +32,7 @@ target_encoding_rank(
   df,
   response,
   predictor,
-  noise = 0,
+  white_noise = 0,
   seed = 1,
   replace = FALSE,
   verbose = TRUE
@@ -40,7 +40,7 @@ target_encoding_rank(
 
 target_encoding_loo(df, response, predictor, replace = FALSE, verbose = TRUE)
 
-target_encoding_noise(df, predictor, noise = 0, seed = 1)
+target_encoding_white_noise(df, predictor, white_noise = 0, seed = 1)
 }
 \arguments{
 \item{df}{(required; data frame, tibble, or sf) A training data frame. Default: \code{NULL}}
@@ -49,7 +49,7 @@ target_encoding_noise(df, predictor, noise = 0, seed = 1)
 
 \item{predictor}{(required; character) Name of the categorical variable to encode.}
 
-\item{noise}{(optional; numeric) Numeric with noise values in the range 0-1. Default: \code{0}.}
+\item{white_noise}{(optional; numeric) Numeric with white noise values in the range 0-1. Default: \code{0}.}
 
 \item{seed}{(optional; integer) Random seed to facilitate reproducibility. Default: \code{1}}
 
@@ -57,7 +57,7 @@ target_encoding_noise(df, predictor, noise = 0, seed = 1)
 
 \item{verbose}{(optional; logical) If TRUE, messages and plots generated during the execution of the function are displayed. Default: \code{TRUE}}
 
-\item{sd_width}{(optional; numeric) Numeric with multiplicator of the standard deviation of each group in the categorical variable, in the range 0.01-1. Default: \code{0.1}}
+\item{rnorm_sd_multiplier}{(optional; numeric) Numeric with multiplicator of the standard deviation of each group in the categorical variable, in the range 0.01-1. Default: \code{0.1}}
 }
 \value{
 The input data frame with a target-encoded variable.
@@ -65,9 +65,9 @@ The input data frame with a target-encoded variable.
 \description{
 Methods to apply target-encoding to individual categorical variables. The functions implemented are:
 \itemize{
-\item \code{target_encoding_mean()}: Each group is identified by the mean of the response over the group cases. White noise can be added via the \code{noise} argument. Columns encoded with this function are identified by the suffix "__encoded_mean". If \code{noise} is used, then the amount of noise is also added to the suffix.
-\item \code{target_encoding_rank()}: Each group is identified by the rank of the mean of the response variable over the group cases. The group with the lower mean receives the rank 1. White noise can be added via the \code{noise} argument. Columns encoded with this function are identified by the suffix "__encoded_rank". If \code{noise} is used, then the amount of noise is also added to the suffix.
-\item \code{target_encoding_rnorm()}: Each case in a group receives a value coming from a normal distribution with the mean and the standard deviation of the response over the cases of the group. The argument \code{sd_width} multiplies the standard deviation to reduce the spread of the obtained values. Columns encoded with this function are identified by the suffix "__encoded_rnorm_sd_width_X", where X is the amount of \code{sd_width} used.
+\item \code{target_encoding_mean()}: Each group is identified by the mean of the response over the group cases. White noise can be added via the \code{white_noise} argument. Columns encoded with this function are identified by the suffix "__encoded_mean". If \code{white_noise} is used, then the amount of white noise is also added to the suffix.
+\item \code{target_encoding_rank()}: Each group is identified by the rank of the mean of the response variable over the group cases. The group with the lower mean receives the rank 1. White noise can be added via the \code{white_noise} argument. Columns encoded with this function are identified by the suffix "__encoded_rank". If \code{white_noise} is used, then the amount of noise is also added to the suffix.
+\item \code{target_encoding_rnorm()}: Each case in a group receives a value coming from a normal distribution with the mean and the standard deviation of the response over the cases of the group. The argument \code{rnorm_sd_multiplier} multiplies the standard deviation to reduce the spread of the obtained values. Columns encoded with this function are identified by the suffix "__encoded_rnorm_rnorm_sd_multiplier_X", where X is the amount of \code{rnorm_sd_multiplier} used.
 \item \code{target_encoding_loo()}: The suffix "loo" stands for "leave-one-out". Each case in a group is encoded as the average of the response over the other cases of the group. olumns encoded with this function are identified by the suffix "__encoded_loo".
 }
 }
@@ -157,13 +157,13 @@ vi <- target_encoding_rnorm(
   predictor = "soil_type"
 )
 
-#the encoded variable is named soil_type__encoded_rnorm_sd_width_0.1
+#the encoded variable is named soil_type__encoded_rnorm_rnorm_sd_multiplier_0.1
 
 #plotting it against the response
 ggplot2::ggplot(data = vi) +
   ggplot2::aes(
     x = plant_richness,
-    y = soil_type__encoded_rnorm_sd_width_0.1,
+    y = soil_type__encoded_rnorm_rnorm_sd_multiplier_0.1,
     color = soil_type
   ) +
   ggplot2::geom_point()

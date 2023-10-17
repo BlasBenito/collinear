@@ -2,17 +2,17 @@
 #'
 #' @description Methods to apply target-encoding to individual categorical variables. The functions implemented are:
 #' \itemize{
-#'   \item `target_encoding_mean()`: Each group is identified by the mean of the response over the group cases. White noise can be added via the `noise` argument. Columns encoded with this function are identified by the suffix "__encoded_mean". If `noise` is used, then the amount of noise is also added to the suffix.
-#'   \item `target_encoding_rank()`: Each group is identified by the rank of the mean of the response variable over the group cases. The group with the lower mean receives the rank 1. White noise can be added via the `noise` argument. Columns encoded with this function are identified by the suffix "__encoded_rank". If `noise` is used, then the amount of noise is also added to the suffix.
-#'   \item `target_encoding_rnorm()`: Each case in a group receives a value coming from a normal distribution with the mean and the standard deviation of the response over the cases of the group. The argument `sd_width` multiplies the standard deviation to reduce the spread of the obtained values. Columns encoded with this function are identified by the suffix "__encoded_rnorm_sd_width_X", where X is the amount of `sd_width` used.
+#'   \item `target_encoding_mean()`: Each group is identified by the mean of the response over the group cases. White noise can be added via the `white_noise` argument. Columns encoded with this function are identified by the suffix "__encoded_mean". If `white_noise` is used, then the amount of white noise is also added to the suffix.
+#'   \item `target_encoding_rank()`: Each group is identified by the rank of the mean of the response variable over the group cases. The group with the lower mean receives the rank 1. White noise can be added via the `white_noise` argument. Columns encoded with this function are identified by the suffix "__encoded_rank". If `white_noise` is used, then the amount of noise is also added to the suffix.
+#'   \item `target_encoding_rnorm()`: Each case in a group receives a value coming from a normal distribution with the mean and the standard deviation of the response over the cases of the group. The argument `rnorm_sd_multiplier` multiplies the standard deviation to reduce the spread of the obtained values. Columns encoded with this function are identified by the suffix "__encoded_rnorm_rnorm_sd_multiplier_X", where X is the amount of `rnorm_sd_multiplier` used.
 #'   \item `target_encoding_loo()`: The suffix "loo" stands for "leave-one-out". Each case in a group is encoded as the average of the response over the other cases of the group. olumns encoded with this function are identified by the suffix "__encoded_loo".
 #' }
 #'
 #' @param df (required; data frame, tibble, or sf) A training data frame. Default: `NULL`
 #' @param response (required; character string) Name of the response. Must be a column name of `df`. Default: `NULL`
 #' @param predictor (required; character) Name of the categorical variable to encode.
-#' @param noise (optional; numeric) Numeric with noise values in the range 0-1. Default: `0`.
-#' @param sd_width (optional; numeric) Numeric with multiplicator of the standard deviation of each group in the categorical variable, in the range 0.01-1. Default: `0.1`
+#' @param white_noise (optional; numeric) Numeric with white noise values in the range 0-1. Default: `0`.
+#' @param rnorm_sd_multiplier (optional; numeric) Numeric with multiplicator of the standard deviation of each group in the categorical variable, in the range 0.01-1. Default: `0.1`
 #' @param seed (optional; integer) Random seed to facilitate reproducibility. Default: `1`
 #' @param replace (optional; logical) Advanced option that changes the behavior of the function. Use only if you really know exactly what you need. If `TRUE`, it replaces each categorical variable with its encoded version, and returns the input data frame with the replaced variables.
 #' @param verbose (optional; logical) If TRUE, messages and plots generated during the execution of the function are displayed. Default: `TRUE`
@@ -106,13 +106,13 @@
 #'   predictor = "soil_type"
 #' )
 #'
-#' #the encoded variable is named soil_type__encoded_rnorm_sd_width_0.1
+#' #the encoded variable is named soil_type__encoded_rnorm_rnorm_sd_multiplier_0.1
 #'
 #' #plotting it against the response
 #' ggplot2::ggplot(data = vi) +
 #'   ggplot2::aes(
 #'     x = plant_richness,
-#'     y = soil_type__encoded_rnorm_sd_width_0.1,
+#'     y = soil_type__encoded_rnorm_rnorm_sd_multiplier_0.1,
 #'     color = soil_type
 #'   ) +
 #'   ggplot2::geom_point()
@@ -127,46 +127,46 @@ target_encoding_mean <- function(
     df,
     response,
     predictor,
-    noise = 0,
+    white_noise = 0,
     seed = 1,
     replace = FALSE,
     verbose = TRUE
 ){
 
   #new variable name
-  if(noise == 0){
-    categorical.variable.new.name <- paste0(
+  if(white_noise == 0){
+    encoded.variable.name <- paste0(
       predictor,
       "__encoded_mean"
     )
   } else {
-    categorical.variable.new.name <- paste0(
+    encoded.variable.name <- paste0(
       predictor,
       "__encoded_mean_",
-      "noise_",
-      noise
+      "white_noise_",
+      white_noise
     )
   }
 
   #mean encoding
-  df[[categorical.variable.new.name]] <- stats::ave(
+  df[[encoded.variable.name]] <- stats::ave(
     x = df[[response]],
     df[[predictor]],
     FUN = function(x) mean(x, na.rm = TRUE)
   )
 
-  #add noise if any
-  df <- target_encoding_noise(
+  #add white_noise if any
+  df <- target_encoding_white_noise(
     df = df,
-    predictor = categorical.variable.new.name,
-    noise = noise,
+    predictor = encoded.variable.name,
+    white_noise = white_noise,
     seed = seed
   )
 
   if(verbose == TRUE && replace == FALSE){
     message(
       "New encoded predictor: '",
-      categorical.variable.new.name,
+      encoded.variable.name,
       "'"
     )
   }
@@ -174,7 +174,7 @@ target_encoding_mean <- function(
   #replacing original variable with encoded version
   if(replace == TRUE){
     df[[predictor]] <- NULL
-    colnames(df)[colnames(df) == categorical.variable.new.name] <- predictor
+    colnames(df)[colnames(df) == encoded.variable.name] <- predictor
   }
 
   df
@@ -189,25 +189,25 @@ target_encoding_rnorm <- function(
     df,
     response,
     predictor,
-    sd_width = 0.1,
+    rnorm_sd_multiplier = 0.1,
     seed = 1,
     replace = FALSE,
     verbose = TRUE
 ){
 
-  if(sd_width <= 0){
-    sd_width <- 0.0001
+  if(rnorm_sd_multiplier <= 0){
+    rnorm_sd_multiplier <- 0.0001
   }
-  if(sd_width > 1){
-    sd_width <- 1
+  if(rnorm_sd_multiplier > 1){
+    rnorm_sd_multiplier <- 1
   }
 
 
-  categorical.variable.new.name <- paste0(
+  encoded.variable.name <- paste0(
     predictor,
     "__encoded_rnorm_",
-    "sd_width_",
-    sd_width
+    "rnorm_sd_multiplier_",
+    rnorm_sd_multiplier
   )
 
   set.seed(seed)
@@ -216,7 +216,7 @@ target_encoding_rnorm <- function(
   df <- df |>
     dplyr::group_by(.data[[predictor]]) |>
     dplyr::mutate(
-      !!categorical.variable.new.name := stats::rnorm(
+      !!encoded.variable.name := stats::rnorm(
         n = dplyr::n(),
         mean = mean(
           get(response),
@@ -225,7 +225,7 @@ target_encoding_rnorm <- function(
         sd = stats::sd(
           get(response),
           na.rm = TRUE
-        ) * sd_width
+        ) * rnorm_sd_multiplier
       )
     ) |>
     dplyr::ungroup()
@@ -233,7 +233,7 @@ target_encoding_rnorm <- function(
   if(verbose == TRUE && replace == FALSE){
     message(
       "New encoded predictor: '",
-      categorical.variable.new.name,
+      encoded.variable.name,
       "'"
     )
   }
@@ -241,7 +241,7 @@ target_encoding_rnorm <- function(
   #replacing original variable with encoded version
   if(replace == TRUE){
     df[[predictor]] <- NULL
-    colnames(df)[colnames(df) == categorical.variable.new.name] <- predictor
+    colnames(df)[colnames(df) == encoded.variable.name] <- predictor
   }
 
   df
@@ -256,24 +256,24 @@ target_encoding_rank <- function(
     df,
     response,
     predictor,
-    noise = 0,
+    white_noise = 0,
     seed = 1,
     replace = FALSE,
     verbose = TRUE
 ){
 
   #new variable name
-  if(noise == 0){
-    categorical.variable.new.name <- paste0(
+  if(white_noise == 0){
+    encoded.variable.name <- paste0(
       predictor,
       "__encoded_rank"
     )
   } else {
-    categorical.variable.new.name <- paste0(
+    encoded.variable.name <- paste0(
       predictor,
       "__encoded_rank_",
-      "noise_",
-      noise
+      "white_noise_",
+      white_noise
     )
   }
 
@@ -286,11 +286,12 @@ target_encoding_rank <- function(
   ) |>
     sort()
 
+  #add rank column
   df.map <- data.frame(
     names(df.map),
-    1:length(df.map)
+    1:length(df.map) #rank column
   )
-  names(df.map) <- c(predictor, categorical.variable.new.name)
+  names(df.map) <- c(predictor, encoded.variable.name)
 
   #merge
   df <- dplyr::inner_join(
@@ -299,18 +300,18 @@ target_encoding_rank <- function(
     by = predictor
   )
 
-  #add noise if any
-  df <- target_encoding_noise(
+  #add white_noise if any
+  df <- target_encoding_white_noise(
     df = df,
-    predictor = categorical.variable.new.name,
-    noise = noise,
+    predictor = encoded.variable.name,
+    white_noise = white_noise,
     seed = seed
   )
 
   if(verbose == TRUE && replace == FALSE){
     message(
       "New encoded predictor: '",
-      categorical.variable.new.name,
+      encoded.variable.name,
       "'"
     )
   }
@@ -318,7 +319,7 @@ target_encoding_rank <- function(
   #replacing original variable with encoded version
   if(replace == TRUE){
     df[[predictor]] <- NULL
-    colnames(df)[colnames(df) == categorical.variable.new.name] <- predictor
+    colnames(df)[colnames(df) == encoded.variable.name] <- predictor
   }
 
   df
@@ -337,7 +338,7 @@ target_encoding_loo <- function(
 ){
 
   #new variable name
-  categorical.variable.new.name <- paste0(
+  encoded.variable.name <- paste0(
     predictor,
     "__encoded_loo"
   )
@@ -347,7 +348,7 @@ target_encoding_loo <- function(
   df <- df |>
     dplyr::group_by(.data[[predictor]]) |>
     dplyr::mutate(
-      !!categorical.variable.new.name := (
+      !!encoded.variable.name := (
         sum(
           get(response),
           na.rm = TRUE
@@ -361,7 +362,7 @@ target_encoding_loo <- function(
   if(verbose == TRUE && replace == FALSE){
     message(
       "New encoded predictor: '",
-      categorical.variable.new.name,
+      encoded.variable.name,
       "'"
     )
   }
@@ -369,7 +370,7 @@ target_encoding_loo <- function(
   #replacing original variable with encoded version
   if(replace == TRUE){
     df[[predictor]] <- NULL
-    colnames(df)[colnames(df) == categorical.variable.new.name] <- predictor
+    colnames(df)[colnames(df) == encoded.variable.name] <- predictor
   }
 
   df
@@ -379,15 +380,15 @@ target_encoding_loo <- function(
 #' @rdname target_encoding_methods
 #' @autoglobal
 #' @export
-target_encoding_noise <- function(
+target_encoding_white_noise <- function(
     df,
     predictor,
-    noise = 0,
+    white_noise = 0,
     seed = 1
 ){
 
-  #internal function to rescale noise
-  rescale_noise <- function(
+  #internal function to rescale white_noise
+  rescale_white_noise <- function(
     x = NULL,
     new_min = 0,
     new_max = 1
@@ -406,16 +407,16 @@ target_encoding_noise <- function(
 
   }
 
-  if(noise < 0){
-    noise <- 0
+  if(white_noise < 0){
+    white_noise <- 0
   }
 
-  if(noise == 0){
+  if(white_noise == 0){
     return(df)
   }
 
-  if(noise > 1){
-    noise <- 1
+  if(white_noise > 1){
+    white_noise <- 1
   }
 
   #mean difference between groups
@@ -425,19 +426,19 @@ target_encoding_noise <- function(
     diff() |>
     mean()
 
-  #minimum noise
-  min.noise <- 0
-  max.noise <- between.group.difference * noise
+  #minimum white_noise
+  min.white_noise <- 0
+  max.white_noise <- between.group.difference * white_noise
 
-  #if noise is too small
-  # if(min.noise == max.noise){
+  #if white_noise is too small
+  # if(min.white_noise == max.white_noise){
   #
-  #   #increase noise until min and max noise are different
-  #   while(max.noise == min.noise){
+  #   #increase white_noise until min and max white_noise are different
+  #   while(max.white_noise == min.white_noise){
   #
-  #     noise <- noise + 0.01
+  #     white_noise <- white_noise + 0.01
   #
-  #     max.noise <- between.group.difference * noise
+  #     max.white_noise <- between.group.difference * white_noise
   #
   #   }
   #
@@ -446,15 +447,15 @@ target_encoding_noise <- function(
   #reset random seed
   set.seed(seed)
 
-  #add noise to the given variable
+  #add white_noise to the given variable
   df[[predictor]] <- df[[predictor]] +
     stats::rnorm(
       n = nrow(df)
     ) |>
     abs() |>
-    rescale_noise(
-      new_min = min.noise,
-      new_max = max.noise
+    rescale_white_noise(
+      new_min = min.white_noise,
+      new_max = max.white_noise
       )
 
   #return df
