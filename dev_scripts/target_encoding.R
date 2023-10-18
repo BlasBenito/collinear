@@ -12,6 +12,6 @@ output <- target_encoding_lab(
     "rnorm",
     "loo"
   ),
-  sd_width = c(0.01, 0.1, 1),
-  noise = c(0, 1)
+  rnorm_sd_multiplier = c(0.01, 0.1, 1),
+  white_noise = c(0, 1)
 )

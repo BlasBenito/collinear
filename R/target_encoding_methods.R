@@ -23,16 +23,15 @@
 #' @examples
 #' if(interactive()){
 #'
-#' #target_encoding mean
+#' #loading example data
 #' data(
 #'   vi,
-#'   "vi_mean",
 #'   vi_predictors
 #' )
 #'
 #'
-#' #Group mean
-#' #########################################################
+#' #mean encoding
+#' #-------------
 #'
 #' #transforming soil_type
 #' vi <- target_encoding_mean(
@@ -54,7 +53,7 @@
 #'
 #'
 #' #Group rank
-#' #########################################################
+#' #----------
 #'
 #' #transforming soil_type
 #' vi <- target_encoding_rank(
@@ -75,8 +74,9 @@
 #'   ggplot2::geom_point()
 #'
 #'
-#' #Leave-one-out
-#' #########################################################
+#' #leave-one-out
+#' #-------------
+#'
 #' #transforming soil_type
 #' vi <- target_encoding_loo(
 #'   df = vi,
@@ -97,7 +97,7 @@
 #'
 #'
 #' #rnorm
-#' #########################################################
+#' #-----
 #'
 #' #transforming soil_type
 #' vi <- target_encoding_rnorm(
@@ -142,8 +142,7 @@ target_encoding_mean <- function(
   } else {
     encoded.variable.name <- paste0(
       predictor,
-      "__encoded_mean_",
-      "white_noise_",
+      "__encoded_mean__white_noise_",
       white_noise
     )
   }
@@ -195,6 +194,19 @@ target_encoding_rnorm <- function(
     verbose = TRUE
 ){
 
+  if(rnorm_sd_multiplier == 0){
+    encoded.variable.name <- paste0(
+      predictor,
+      "__encoded_rnorm"
+    )
+  } else {
+    encoded.variable.name <- paste0(
+      predictor,
+      "__encoded_rnorm__sd_multiplier_",
+      rnorm_sd_multiplier
+    )
+  }
+
   if(rnorm_sd_multiplier <= 0){
     rnorm_sd_multiplier <- 0.0001
   }
@@ -202,21 +214,13 @@ target_encoding_rnorm <- function(
     rnorm_sd_multiplier <- 1
   }
 
-
-  encoded.variable.name <- paste0(
-    predictor,
-    "__encoded_rnorm_",
-    "rnorm_sd_multiplier_",
-    rnorm_sd_multiplier
-  )
-
   set.seed(seed)
 
   #target encoding
   df <- df |>
-    dplyr::group_by(.data[[predictor]]) |>
+    dplyr::group_by(df[[predictor]]) |>
     dplyr::mutate(
-      !!encoded.variable.name := stats::rnorm(
+      encoded = stats::rnorm(
         n = dplyr::n(),
         mean = mean(
           get(response),
@@ -229,6 +233,9 @@ target_encoding_rnorm <- function(
       )
     ) |>
     dplyr::ungroup()
+
+  #rename encoded column
+  names(df)[names(df) == "encoded"] <- encoded.variable.name
 
   if(verbose == TRUE && replace == FALSE){
     message(
@@ -271,8 +278,7 @@ target_encoding_rank <- function(
   } else {
     encoded.variable.name <- paste0(
       predictor,
-      "__encoded_rank_",
-      "white_noise_",
+      "__encoded_rank__white_noise_",
       white_noise
     )
   }
@@ -346,9 +352,9 @@ target_encoding_loo <- function(
   #leave one out
   #by group, sum all cases of the response, subtract the value of the current row, and divide by n-1
   df <- df |>
-    dplyr::group_by(.data[[predictor]]) |>
+    dplyr::group_by(df[[predictor]]) |>
     dplyr::mutate(
-      !!encoded.variable.name := (
+      encoded = (
         sum(
           get(response),
           na.rm = TRUE
@@ -358,6 +364,9 @@ target_encoding_loo <- function(
         (dplyr::n() - 1)
     ) |>
     dplyr::ungroup()
+
+  #rename encoded column
+  names(df)[names(df) == "encoded"] <- encoded.variable.name
 
   if(verbose == TRUE && replace == FALSE){
     message(

@@ -123,7 +123,7 @@ target_encoding_lab <- function(
       "rank",
       "loo",
       "rnorm"
-      ),
+    ),
     rnorm_sd_multiplier = 0.1,
     seed = 1,
     white_noise = 0,
@@ -170,18 +170,6 @@ target_encoding_lab <- function(
     rnorm_sd_multiplier <- rnorm_sd_multiplier[1]
   }
 
-  #factors to characters
-  df <- rapply(
-    object = df,
-    f = as.character,
-    classes = c(
-      "factor",
-      "ordered",
-      "logical"
-    ),
-    how = "replace"
-  )
-
   #return data if all predictors are numeric
   predictors.to.encode <- identify_non_numeric_predictors(
     df = df,
@@ -191,10 +179,10 @@ target_encoding_lab <- function(
   if(length(predictors.to.encode) == 0){
 
     if(verbose == TRUE){
-      message("All predictors are numeric, returning input data frame.")
+      message("All predictors are numeric, nothing to do.")
     }
 
-    return(data)
+    return(df)
 
   }
 
@@ -212,10 +200,10 @@ target_encoding_lab <- function(
   #iterating over categorical variables
   for(predictors.to.encode.i in predictors.to.encode){
 
-      #method "mean"
-      if("mean" %in% methods){
+    #method "mean"
+    if("mean" %in% methods){
 
-        for(white_noise.i in white_noise){
+      for(white_noise.i in white_noise){
 
         df <- target_encoding_mean(
           df = df,
@@ -227,13 +215,13 @@ target_encoding_lab <- function(
           verbose = verbose
         )
 
-        }
-
       }
 
-      if("rank" %in% methods){
+    }
 
-        for(white_noise.i in white_noise){
+    if("rank" %in% methods){
+
+      for(white_noise.i in white_noise){
 
         df <- target_encoding_rank(
           df = df,
@@ -245,9 +233,9 @@ target_encoding_lab <- function(
           verbose = verbose
         )
 
-        }
-
       }
+
+    }
 
 
     if("rnorm" %in% methods){

@@ -1,7 +1,10 @@
 #' Validate and pre-process input data
 #'
 #' @description
-#' Validates a data frame to ensure it complies with the requirements of the package functions. It performs the following actions:
+#'
+#' Internal function to validate and prepare the input data frame for a multicollinearity analysis.
+#'
+#' Validates a data frame to ensure it complies with the requirements of the package functions. The function performs the following actions:
 #' \itemize{
 #'   \item Stops if 'df' is NULL.
 #'   \item Stops if 'df' cannot be coerced to data frame.
@@ -9,6 +12,8 @@
 #'   \item Removes geometry column if the input data frame is an "sf" object.
 #'   \item Removes non-numeric columns with as many unique values as rows df has.
 #'   \item Raise warning if number of rows of 'df' is lower than 'min_rows'.
+#'   \item Converts logical columns to numeric.
+#'   \item Converts factor and ordered columns to character.
 #'   \item Tags the data frame with the attribute `validated = TRUE` to let the package functions skip the data validation.
 #' }
 #'
@@ -99,14 +104,35 @@ validate_df <- function(
 
   }
 
+  #convert types
 
+  #logical to numeric
+  df <- rapply(
+    object = df,
+    f = as.numeric,
+    classes = c(
+      "logical"
+    ),
+    how = "replace"
+  )
+
+  #factors and ordered to characters
+  df <- rapply(
+    object = df,
+    f = as.character,
+    classes = c(
+      "factor",
+      "ordered"
+    ),
+    how = "replace"
+  )
 
   #number of rows must be > 30
   if(nrow(df) < min_rows){
     warning(
       "the number of rows in 'df' is lower than ",
       min_rows,
-      ". This function may fail or yield meaningless results."
+      ". A multicollinearity analysis may fail or yield meaningless results."
     )
   }
 

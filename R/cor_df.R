@@ -257,7 +257,7 @@ cor_numerics_and_characters <- function(
     #get variable for target encoding
     x <- df[[r.num.char$x[i]]]
 
-    #apply target-encoding against the given predictor
+    #apply mean encoding against the given predictor
     y <- mean_encoder(
       response = x,
       predictor = df[[r.num.char$y[i]]],

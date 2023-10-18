@@ -89,18 +89,6 @@ mean_encode <- function(
     response = response
   )
 
-  #factors, logical, and ordered to characters
-  df <- rapply(
-    object = df[, c(response, predictors)],
-    f = as.character,
-    classes = c(
-      "factor",
-      "ordered",
-      "logical"
-    ),
-    how = "replace"
-  )
-
   predictors.character <- identify_non_numeric_predictors(
     df = df,
     predictors = predictors
