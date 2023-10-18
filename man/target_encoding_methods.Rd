@@ -5,7 +5,7 @@
 \alias{target_encoding_rnorm}
 \alias{target_encoding_rank}
 \alias{target_encoding_loo}
-\alias{target_encoding_white_noise}
+\alias{add_white_noise}
 \title{Target-encoding methods}
 \usage{
 target_encoding_mean(
@@ -22,7 +22,7 @@ target_encoding_rnorm(
   df,
   response,
   predictor,
-  rnorm_sd_multiplier = 0.1,
+  rnorm_sd_multiplier = 1,
   seed = 1,
   replace = FALSE,
   verbose = TRUE
@@ -32,15 +32,22 @@ target_encoding_rank(
   df,
   response,
   predictor,
+  seed = 1,
+  replace = FALSE,
+  verbose = TRUE
+)
+
+target_encoding_loo(
+  df,
+  response,
+  predictor,
   white_noise = 0,
   seed = 1,
   replace = FALSE,
   verbose = TRUE
 )
 
-target_encoding_loo(df, response, predictor, replace = FALSE, verbose = TRUE)
-
-target_encoding_white_noise(df, predictor, white_noise = 0, seed = 1)
+add_white_noise(df, response, predictor, white_noise = 0.1, seed = 1)
 }
 \arguments{
 \item{df}{(required; data frame, tibble, or sf) A training data frame. Default: \code{NULL}}
@@ -49,7 +56,7 @@ target_encoding_white_noise(df, predictor, white_noise = 0, seed = 1)
 
 \item{predictor}{(required; character) Name of the categorical variable to encode.}
 
-\item{white_noise}{(optional; numeric) Numeric with white noise values in the range 0-1. Default: \code{0}.}
+\item{white_noise}{(optional; numeric) Numeric with white noise values in the range 0-1, representing a fraction of the range of the response to be added as noise to the encoded variable. Controls the variability in the encoded variables to mitigate potential overfitting. Default: \code{0}.}
 
 \item{seed}{(optional; integer) Random seed to facilitate reproducibility. Default: \code{1}}
 
@@ -57,7 +64,7 @@ target_encoding_white_noise(df, predictor, white_noise = 0, seed = 1)
 
 \item{verbose}{(optional; logical) If TRUE, messages and plots generated during the execution of the function are displayed. Default: \code{TRUE}}
 
-\item{rnorm_sd_multiplier}{(optional; numeric) Numeric with multiplicator of the standard deviation of each group in the categorical variable, in the range 0.01-1. Default: \code{0.1}}
+\item{rnorm_sd_multiplier}{(optional; numeric) Numeric with multiplicator of the standard deviation of each group in the categorical variable, in the range 0-1. Controls the variability in the encoded variables to mitigate potential overfitting. Default: \code{1}}
 }
 \value{
 The input data frame with a target-encoded variable.
@@ -74,100 +81,129 @@ Methods to apply target-encoding to individual categorical variables. The functi
 \examples{
 if(interactive()){
 
-#target_encoding mean
-data(
-  vi,
-  "vi_mean",
-  vi_predictors
-)
+data(vi)
 
+#mean encoding
+#-------------
 
-#Group mean
-#########################################################
-
-#transforming soil_type
-vi <- target_encoding_mean(
+#without noise
+df <- target_encoding_mean(
   df = vi,
   response = "vi_mean",
-  predictor = "soil_type"
+  predictor = "soil_type",
+  replace = TRUE
 )
 
-#the encoded variable is named soil_type__encoded_mean
+plot(
+  x = df$soil_type,
+  y = df$vi_mean,
+  xlab = "encoded variable",
+  ylab = "response"
+)
 
-#plotting it against the response
-ggplot2::ggplot(data = vi) +
-  ggplot2::aes(
-    x = plant_richness,
-    y = soil_type__encoded_mean,
-    color = soil_type
-  ) +
-  ggplot2::geom_point()
-
-
-#Group rank
-#########################################################
-
-#transforming soil_type
-vi <- target_encoding_rank(
+#with noise
+df <- target_encoding_mean(
   df = vi,
   response = "vi_mean",
-  predictor = "soil_type"
+  predictor = "soil_type",
+  white_noise = 0.1,
+  replace = TRUE
 )
 
-#the encoded variable is named soil_type__encoded_rank
-
-#plotting it against the response
-ggplot2::ggplot(data = vi) +
-  ggplot2::aes(
-    x = plant_richness,
-    y = soil_type__encoded_rank,
-    color = soil_type
-  ) +
-  ggplot2::geom_point()
+plot(
+  x = df$soil_type,
+  y = df$vi_mean,
+  xlab = "encoded variable",
+  ylab = "response"
+)
 
 
-#Leave-one-out
-#########################################################
-#transforming soil_type
-vi <- target_encoding_loo(
+#group rank
+#----------
+
+df <- target_encoding_rank(
   df = vi,
   response = "vi_mean",
-  predictor = "soil_type"
+  predictor = "soil_type",
+  replace = TRUE
 )
 
-#the encoded variable is named soil_type__encoded_loo
+plot(
+  x = df$soil_type,
+  y = df$vi_mean,
+  xlab = "encoded variable",
+  ylab = "response"
+)
 
-#plotting it against the response
-ggplot2::ggplot(data = vi) +
-  ggplot2::aes(
-    x = plant_richness,
-    y = soil_type__encoded_loo,
-    color = soil_type
-  ) +
-  ggplot2::geom_point()
+
+#leave-one-out
+#-------------
+
+#without noise
+df <- target_encoding_loo(
+  df = vi,
+  response = "vi_mean",
+  predictor = "soil_type",
+  replace = TRUE
+)
+
+plot(
+  x = df$soil_type,
+  y = df$vi_mean,
+  xlab = "encoded variable",
+  ylab = "response"
+)
+
+#with noise
+df <- target_encoding_loo(
+  df = vi,
+  response = "vi_mean",
+  predictor = "soil_type",
+  white_noise = 0.1,
+  replace = TRUE
+)
+
+plot(
+  x = df$soil_type,
+  y = df$vi_mean,
+  xlab = "encoded variable",
+  ylab = "response"
+)
 
 
 #rnorm
-#########################################################
+#-----
 
-#transforming soil_type
-vi <- target_encoding_rnorm(
+#without sd multiplier
+df <- target_encoding_rnorm(
   df = vi,
   response = "vi_mean",
-  predictor = "soil_type"
+  predictor = "soil_type",
+  replace = TRUE
 )
 
-#the encoded variable is named soil_type__encoded_rnorm_rnorm_sd_multiplier_0.1
+plot(
+  x = df$soil_type,
+  y = df$vi_mean,
+  xlab = "encoded variable",
+  ylab = "response"
+)
 
-#plotting it against the response
-ggplot2::ggplot(data = vi) +
-  ggplot2::aes(
-    x = plant_richness,
-    y = soil_type__encoded_rnorm_rnorm_sd_multiplier_0.1,
-    color = soil_type
-  ) +
-  ggplot2::geom_point()
+#with sd multiplier
+df <- target_encoding_rnorm(
+  df = vi,
+  response = "vi_mean",
+  predictor = "soil_type",
+  rnorm_sd_multiplier = 0.1,
+  replace = TRUE
+)
 
+plot(
+  x = df$soil_type,
+  y = df$vi_mean,
+  xlab = "encoded variable",
+  ylab = "response"
+)
 
 }
 

@@ -8,8 +8,8 @@ target_encoding_lab(
   df = NULL,
   response = NULL,
   predictors = NULL,
-  methods = c("mean", "rank", "loo", "rnorm"),
-  rnorm_sd_multiplier = 0.1,
+  encoding_methods = c("mean", "rank", "loo", "rnorm"),
+  rnorm_sd_multiplier = 0,
   seed = 1,
   white_noise = 0,
   replace = FALSE,
@@ -23,13 +23,13 @@ target_encoding_lab(
 
 \item{predictors}{(required; character vector) Names of all the predictors in \code{df}. Only character and factor predictors are processed, but all are returned in the "df" slot of the function's output.  Default: \code{NULL}}
 
-\item{methods}{(optional; character string). Name of the target encoding methods. Default: \code{c("mean", "rank", "loo", "rnorm")}}
+\item{encoding_methods}{(optional; character string or vector). Name of the target encoding methods. Default: \code{c("mean", "rank", "loo", "rnorm")}}
 
-\item{rnorm_sd_multiplier}{(optional; numeric vector) Only for the method "rnorm". Numeric vector with multiplicators of the standard deviation of each group in the categorical variable, in the range 0.01-1. Default: 0.1}
+\item{rnorm_sd_multiplier}{(optional; numeric) Numeric with multiplicator of the standard deviation of each group in the categorical variable, in the range 0-1. Controls the variability in the encoded variables to mitigate potential overfitting. Default: \code{1}}
 
 \item{seed}{(optional; integer) Random seed to facilitate reproducibility when \code{white_noise} is not 0. Default: 1}
 
-\item{white_noise}{(optional; numeric vector) Numeric vector with white noise values in the range 0-1. Used only in methods "mean" and "rank". Generates white noise to reduce overfitting. Default: 0.}
+\item{white_noise}{(optional; numeric) Numeric with white noise values in the range 0-1, representing a fraction of the range of the response to be added as noise to the encoded variable. Controls the variability in the encoded variables to mitigate potential overfitting. Default: \code{0}.}
 
 \item{replace}{(optional; logical) If \code{TRUE}, the function replaces each categorical variable with its encoded version, and returns the input data frame with the encoded variables instead of the original ones. Default: FALSE}
 
@@ -53,20 +53,20 @@ If the option \code{replace} is \code{TRUE}, then the input data frame is return
 \description{
 Target encoding involves replacing the values of categorical variables with numeric ones from a "target variable", usually a model's response. Target encoding can be useful for improving the performance of machine learning models.
 
-This function identifies categorical variables in the input data frame, transforms them using a set of target-encoding methods defined by the user, and returns the input data frame with the newly encoded variables.
+This function identifies categorical variables in the input data frame, and transforms them using a set of target-encoding methods selected by the user, and returns the input data frame with the newly encoded variables.
 
 The target encoding methods implemented in this function are:
 
 \itemize{
-\item \code{rank}: Returns the rank of the group as a integer, starting with 1 as the rank of the group with the lower mean of the response variable. This method accepts the  \code{white_noise} argument, which adds white noise to the result to increase data variability and reduce overfitting. The variables returned by this method are named with the suffix "__encoded_rank". This method is implemented in the function \code{\link[=target_encoding_rank]{target_encoding_rank()}}.
-\item \code{mean}: Returns the mean of the response for each group in the categorical variable. This option accepts \code{white_noise} to increase data variability. The variables returned by this method are named with the suffix "__encoded_mean".  This method is implemented in the function \code{\link[=target_encoding_mean]{target_encoding_mean()}}.
-\item \code{rnorm}: Computes the mean and standard deviation of the response for each group of the categorical variable, and uses \code{\link[=rnorm]{rnorm()}} to generate values taken from a normal distribution with these parameters. The argument \code{rnorm_sd_multiplier} is used as a multiplier of the standard deviation to reduce the range of values produced by \code{\link[=rnorm]{rnorm()}} for each group of the categorical predictor. The variables returned by this method are named with the suffix "__encoded_rnorm".  This method is implemented in the function \code{\link[=target_encoding_rnorm]{target_encoding_rnorm()}}.
-\item \code{loo}: This is the leave-one-out method. Each categorical value is replaced with the mean of the response variable across the other cases within the same group. The variables returned by this method are named with the suffix "__encoded_loo". This method is implemented in the function \code{\link[=target_encoding_loo]{target_encoding_loo()}}.
+\item "rank": Returns the rank of the group as a integer, starting with 1 as the rank of the group with the lower mean of the response variable. The variables returned by this method are named with the suffix "__encoded_rank". This method is implemented in the function \code{\link[=target_encoding_rank]{target_encoding_rank()}}.
+\item "mean": Returns the mean of the response for each group in the categorical variable. This option accepts the argument "white_noise" to limit potential overfitting. The variables returned by this method are named with the suffix "__encoded_mean". This method is implemented in the function \code{\link[=target_encoding_mean]{target_encoding_mean()}}.
+\item "rnorm": Computes the mean and standard deviation of the response for each group of the categorical variable, and uses \code{\link[=rnorm]{rnorm()}} to generate random values from a normal distribution with these parameters. The argument \code{rnorm_sd_multiplier} is used as a multiplier of the standard deviation to control the range of values produced by \code{\link[=rnorm]{rnorm()}} for each group of the categorical predictor. The variables returned by this method are named with the suffix "__encoded_rnorm".  This method is implemented in the function \code{\link[=target_encoding_rnorm]{target_encoding_rnorm()}}.
+\item "loo": This is the leave-one-out method, that replaces each categorical value with the mean of the response variable across the other cases within the same group. This method supports the \code{white_noise} argument to increase limit potential overfitting. The variables returned by this method are named with the suffix "__encoded_loo". This method is implemented in the function \code{\link[=target_encoding_loo]{target_encoding_loo()}}.
 }
 
-The methods "mean" and "rank" support the \code{white_noise} argument. Values larger than zero in this argument add white noise to the target-encoded variables using \code{stats::rnorm()} via the function \code{\link[=target_encoding_white_noise]{target_encoding_white_noise()}}). The \code{white_noise} argument represents a fraction of the average differences between groups of the target-encoded variable. For example, if white_noise = 0.25 and the target-encoded variable has the unique values c(1, 2, 3), as it could be the case when using the "rank" method, then the average between-groups difference would be 1, and the range of the white noise added to each row would go between 0 and 0.25
+The methods "mean" and "rank" support the \code{white_noise} argument, which is a fraction of the range of the \code{response} variable, and the maximum possible value of white noise to be added. For example, if \code{response} is within 0 and 1, a \code{white_noise} of 0.25 will add to every value of the encoded variable a random number selected from a normal distribution between -0.25 and 0.25. This argument helps control potential overfitting induced by the encoded variable.
 
-The method "rnorm" has the argument \code{rnorm_sd_multiplier}, which multiplies the standard deviation argument of the \code{rnorm()} function to limit the spread of the encoded values between groups.
+The method "rnorm" has the argument \code{rnorm_sd_multiplier}, which multiplies the standard deviation argument of the \code{stats::rnorm()} function to lcontrol the spread of the encoded values between groups. Values smaller than 1 reduce the spread in the results, while values larger than 1 have the opposite effect.
 }
 \examples{
 if(interactive()){
@@ -77,62 +77,52 @@ data(
   vi_predictors
   )
 
+#reduce size of vi to speed-up example runtime
+vi <- vi[1:1000, ]
+
 #applying all methods for a continuous response
-output <- target_encoding_lab(
+df <- target_encoding_lab(
   df = vi,
   response = "vi_mean",
-  predictors = vi_predictors,
-  methods = c(
+  predictors = "koppen_zone",
+  encoding_methods = c(
     "mean",
     "rank",
     "rnorm",
     "loo"
   ),
-  rnorm_sd_multiplier = c(0.01, 0.1, 1),
-  white_noise = c(0, 1)
+  rnorm_sd_multiplier = c(0, 0.1, 0.2),
+  white_noise = c(0, 0.1, 0.2)
 )
 
-#the output has several objects
-names(output)
+#identify encoded predictors
+predictors.encoded <- grep(
+  pattern = "*__encoded*",
+  x = colnames(df),
+  value = TRUE
+)
 
-#names of the encoded predictors
-output$encoded_predictors
+#correlation between encoded predictors and the response
+stats::cor(
+  x = df[["vi_mean"]],
+  y = df[, predictors.encoded],
+  use = "pairwise.complete.obs"
+)
 
-#the data with the original and the encoded predictors
-colnames(output$data)
-
-#a correlation test assessing the correlation between the response and the encoded predictors
-output$leakage_test
-
-#plotting the transformations of "primary_productivity"
-tidyr::pivot_longer(
-  data = output$data,
-  cols = dplyr::all_of(
-    grep(
-      pattern = "primary_productivity",
-      x = output$encoded_predictors,
-      value = TRUE)
+#plot encoded predictors vs response
+par(mfrow = c(4, 3))
+x <- lapply(
+  X = predictors.encoded,
+  FUN = function(x) plot(
+    x = df[[x]],
+    y = df$vi_mean,
+    xlab = x,
+    ylab = "vi_mean"
     )
-) |>
-  dplyr::select(
-    plant_richness,
-    primary_productivity,
-    name,
-    value
-  ) |>
-  ggplot2::ggplot() +
-  ggplot2::aes(
-    x = plant_richness,
-    y = value,
-    color = primary_productivity
-  ) +
-  ggplot2::facet_wrap(~name, scales = "free_y") +
-  ggplot2::geom_point() +
-  ggplot2::labs(
-    x = "Response values",
-    y = "Encoded values",
-    color = "Original\ngroups"
-  )
+)
+
+#reset plotting parameters
+dev.off()
 
 }
 }

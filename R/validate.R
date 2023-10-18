@@ -100,7 +100,7 @@ validate_df <- function(
       )
     }
 
-    df <- df[, !(colnames(df) %in% columns.to.remove)]
+    df <- df[, !(colnames(df) %in% columns.to.remove), drop = FALSE]
 
   }
 
@@ -215,7 +215,7 @@ validate_predictors <- function(
   }
 
   #subset df
-  df <- df[, predictors]
+  df <- df[, predictors, drop = FALSE]
 
   #identify wrongly named predictors
   predictors.missing <- setdiff(

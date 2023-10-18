@@ -4,7 +4,7 @@
 #'
 #' Applies a recursive algorithm to remove variables with a bivariate correlation with any other variable higher than a threshold defined by the argument `max_cor`.
 #'
-#' If the argument `response` is provided, all non-numeric variables in `predictors` are transformed into numeric using target encoding (see [mean_encode()]). Otherwise, non-numeric variables are ignored.
+#' If the argument `response` is provided, all non-numeric variables in `predictors` are transformed into numeric using target encoding (see [target_encoding_lab()]). Otherwise, non-numeric variables are ignored.
 #'
 #' The argument `preference_order` allows defining a preference selection order to preserve (when possible) variables that might be interesting or even required for a given analysis
 #'
@@ -21,34 +21,101 @@
 #' @param response (recommended, character string) Name of a numeric response variable. Character response variables are ignored. Please, see 'Details' to better understand how providing this argument or not leads to different results when there are character variables in 'predictors'. Default: NULL.
 #' @param predictors (optional; character vector) Character vector with predictor names in 'df'. If omitted, all columns of 'df' are used as predictors. Default:'NULL'
 #' @param preference_order  (optional; character vector) vector with column names in 'predictors' in the desired preference order, or result of the function `preference_order()`. Allows defining a priority order for selecting predictors, which can be particularly useful when some predictors are more critical for the analysis than others. Predictors not included in this argument are ranked by their Variance Inflation Factor. Default: `NULL`.
-#' @param method (optional; character string) Method used to compute pairwise correlations. Accepted methods are "pearson" (with a recommended minimum of 30 rows in 'df') or "spearman" (with a recommended minimum of 10 rows in 'df'). Default: "pearson".
+#' @param cor_method (optional; character string) Method used to compute pairwise correlations. Accepted methods are "pearson" (with a recommended minimum of 30 rows in 'df') or "spearman" (with a recommended minimum of 10 rows in 'df'). Default: "pearson".
 #' @param max_cor (optional; numeric) Maximum correlation allowed between any pair of predictors. Higher values return larger number of predictors with higher multicollinearity. Default: `0.75`
+#' @param encoding_method (optional; character string). Name of the target encoding method to convert character and factor predictors to numeric. One of "mean", "rank", "loo", "rnorm" (see [target_encoding_lab()] for further details). Default: `"mean"`
 #' @return Character vector with the names of the selected predictors.
 #' @examples
 #' if(interactive()){
 #'
-#'  #loading example data
-#'  data(
+#' data(
 #'   vi,
 #'   vi_predictors
-#'   )
+#' )
 #'
-#'  #without preference order
-#'  selected.variables <- cor_select(
-#'    df = vi,
-#'    predictors = vi_predictors
-#'  )
+#' #reduce size of vi to speed-up example execution
+#' vi <- vi[1:1000, ]
 #'
-#'  selected.variables
+#' #no response
+#' #no preference_order
+#' #permissive max_cor
+#' selected.predictors <- cor_select(
+#'   df = vi,
+#'   predictors = vi_predictors,
+#'   max_cor = 0.8
+#' )
 #'
-#'  #with preference order
-#'  selected.variables <- cor_select(
-#'    df = vi,
-#'    predictors = vi_predictors,
-#'    preference_order = vi_predictors[1:5],
-#'  )
+#' selected.predictors
 #'
-#'  selected.variables
+#' #no response
+#' #no preference_order
+#' #restrictive max_cor
+#' selected.predictors <- cor_select(
+#'   df = vi,
+#'   predictors = vi_predictors,
+#'   max_cor = 0.5
+#' )
+#'
+#' selected.predictors
+#'
+#' #with response
+#' #no preference_order
+#' #restrictive max_cor
+#' #slightly different solution than previous one
+#' #because here target encoding is done against the response
+#' #while before was done pairwise against each numeric predictor
+#' selected.predictors <- cor_select(
+#'   df = vi,
+#'   response = "vi_mean",
+#'   predictors = vi_predictors,
+#'   max_cor = 0.5
+#' )
+#'
+#' selected.predictors
+#'
+#' #with response
+#' #with user-defined preference_order
+#' #restrictive max_cor
+#' #numerics and categorical variables in output
+#' selected.predictors <- cor_select(
+#'   df = vi,
+#'   response = "vi_mean",
+#'   predictors = vi_predictors,
+#'   preference_order = c(
+#'     "soil_type", #categorical variable
+#'     "soil_temperature_mean",
+#'     "swi_mean",
+#'     "rainfall_mean",
+#'     "evapotranspiration_mean"
+#'   ),
+#'   max_cor = 0.5
+#' )
+#'
+#' selected.predictors
+#'
+#'
+#' #with response
+#' #with automated preference_order
+#' #restrictive max_cor and max_vif
+#' #numerics and categorical variables in output
+#' preference.order <- preference_order(
+#'   df = vi,
+#'   response = "vi_mean",
+#'   predictors = vi_predictors,
+#'   f = f_rsquared #cor(response, predictor)
+#' )
+#'
+#' head(preference.order)
+#'
+#' selected.predictors <- cor_select(
+#'   df = vi,
+#'   response = "vi_mean",
+#'   predictors = vi_predictors,
+#'   preference_order = preference.order,
+#'   max_cor = 0.5
+#' )
+#'
+#' selected.predictors
 #'
 #' }
 #' @autoglobal
@@ -58,8 +125,9 @@ cor_select <- function(
     response = NULL,
     predictors = NULL,
     preference_order = NULL,
-    method = "pearson",
-    max_cor = 0.75
+    cor_method = "pearson",
+    max_cor = 0.75,
+    encoding_method = "mean"
 ){
 
   #checking argument max_cor
@@ -72,7 +140,8 @@ cor_select <- function(
     df = df,
     response = response,
     predictors = predictors,
-    method = method
+    cor_method = cor_method,
+    encoding_method = encoding_method
   )
 
   #correlation matrix
@@ -91,9 +160,7 @@ cor_select <- function(
 
   #if there is no preference order
   if(is.null(preference_order)){
-
     preference_order <- preference_order.auto
-
   }
 
   #check if preference_order comes from preference_order()

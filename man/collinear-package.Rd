@@ -4,9 +4,9 @@
 \name{collinear-package}
 \alias{collinear-package}
 \alias{_PACKAGE}
-\title{The collinear package}
+\title{collinear}
 \description{
-An R package for multicollinearity management
+Package for multicollinearity management in data frames with numeric and categorical variables.
 }
 \seealso{
 Useful links:

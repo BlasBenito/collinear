@@ -9,6 +9,7 @@ preference_order(
   response = NULL,
   predictors = NULL,
   f = f_rsquared,
+  encoding_method = "mean",
   workers = 1
 )
 }
@@ -26,6 +27,8 @@ preference_order(
 \item f_gam_deviance: returns the explained deviance of a GAM model of the response against a predictor. Requires the package \code{mgcv}.
 \item f_f_variance: returns the explained deviance of a random forest model of the response against the predictor. Requires the package \code{ranger}.
 }}
+
+\item{encoding_method}{(optional; character string). Name of the target encoding method to convert character and factor predictors to numeric. One of "mean", "rank", "loo", "rnorm" (see \code{\link[=target_encoding_lab]{target_encoding_lab()}} for further details). Default: \code{"mean"}}
 
 \item{workers}{(integer) number of workers for parallel execution. Default: 1}
 }

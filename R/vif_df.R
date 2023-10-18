@@ -18,7 +18,7 @@
 #' @param df (required; data frame or tibble) A data frame with numeric and/or character predictors predictors, and optionally, a response variable. Default: NULL.
 #' @param response (recommended, character string) Name of a numeric response variable. Character response variables are ignored. Please, see 'Details' to better understand how providing this argument or not leads to different results when there are character variables in 'predictors'. Default: NULL.
 #' @param predictors (optional; character vector) character vector with predictor names in 'df'. If omitted, all columns of 'df' are used as predictors. Default:'NULL'
-#'
+#' @param encoding_method (optional; character string). Name of the target encoding method to convert character and factor predictors to numeric. One of "mean", "rank", "loo", "rnorm" (see [target_encoding_lab()] for further details). Default: `"mean"`
 #' @return Data frame with predictor names and VIF values
 #'
 #' @examples
@@ -40,7 +40,8 @@
 vif_df <- function(
     df = NULL,
     response = NULL,
-    predictors = NULL
+    predictors = NULL,
+    encoding_method = "mean"
 ){
 
   #check input data frame
@@ -57,10 +58,13 @@ vif_df <- function(
   )
 
   #target encode character predictors
-  df <- mean_encode(
+  df <- target_encoding_lab(
     df = df,
     response = response,
-    predictors = predictors
+    predictors = predictors,
+    encoding_methods = encoding_method,
+    replace = TRUE,
+    verbose = FALSE
   )
 
   #get numeric predictors only
@@ -73,7 +77,7 @@ vif_df <- function(
   tryCatch(
     {
 
-      vif.df <- df[, predictors.numeric] |>
+      vif.df <- df[, predictors.numeric, drop = FALSE] |>
         stats::cor(use = "complete.obs") |>
         solve(tol = 0) |>
         diag() |>

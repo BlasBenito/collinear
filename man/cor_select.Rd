@@ -9,8 +9,9 @@ cor_select(
   response = NULL,
   predictors = NULL,
   preference_order = NULL,
-  method = "pearson",
-  max_cor = 0.75
+  cor_method = "pearson",
+  max_cor = 0.75,
+  encoding_method = "mean"
 )
 }
 \arguments{
@@ -22,9 +23,11 @@ cor_select(
 
 \item{preference_order}{(optional; character vector) vector with column names in 'predictors' in the desired preference order, or result of the function \code{preference_order()}. Allows defining a priority order for selecting predictors, which can be particularly useful when some predictors are more critical for the analysis than others. Predictors not included in this argument are ranked by their Variance Inflation Factor. Default: \code{NULL}.}
 
-\item{method}{(optional; character string) Method used to compute pairwise correlations. Accepted methods are "pearson" (with a recommended minimum of 30 rows in 'df') or "spearman" (with a recommended minimum of 10 rows in 'df'). Default: "pearson".}
+\item{cor_method}{(optional; character string) Method used to compute pairwise correlations. Accepted methods are "pearson" (with a recommended minimum of 30 rows in 'df') or "spearman" (with a recommended minimum of 10 rows in 'df'). Default: "pearson".}
 
 \item{max_cor}{(optional; numeric) Maximum correlation allowed between any pair of predictors. Higher values return larger number of predictors with higher multicollinearity. Default: \code{0.75}}
+
+\item{encoding_method}{(optional; character string). Name of the target encoding method to convert character and factor predictors to numeric. One of "mean", "rank", "loo", "rnorm" (see \code{\link[=target_encoding_lab]{target_encoding_lab()}} for further details). Default: \code{"mean"}}
 }
 \value{
 Character vector with the names of the selected predictors.
@@ -32,7 +35,7 @@ Character vector with the names of the selected predictors.
 \description{
 Applies a recursive algorithm to remove variables with a bivariate correlation with any other variable higher than a threshold defined by the argument \code{max_cor}.
 
-If the argument \code{response} is provided, all non-numeric variables in \code{predictors} are transformed into numeric using target encoding (see \code{\link[=mean_encode]{mean_encode()}}). Otherwise, non-numeric variables are ignored.
+If the argument \code{response} is provided, all non-numeric variables in \code{predictors} are transformed into numeric using target encoding (see \code{\link[=target_encoding_lab]{target_encoding_lab()}}). Otherwise, non-numeric variables are ignored.
 
 The argument \code{preference_order} allows defining a preference selection order to preserve (when possible) variables that might be interesting or even required for a given analysis
 
@@ -47,28 +50,94 @@ If \code{preference_order} is not provided, then the predictors are ranked by th
 \examples{
 if(interactive()){
 
- #loading example data
- data(
+data(
   vi,
   vi_predictors
-  )
+)
 
- #without preference order
- selected.variables <- cor_select(
-   df = vi,
-   predictors = vi_predictors
- )
+#reduce size of vi to speed-up example execution
+vi <- vi[1:1000, ]
 
- selected.variables
+#no response
+#no preference_order
+#permissive max_cor
+selected.predictors <- cor_select(
+  df = vi,
+  predictors = vi_predictors,
+  max_cor = 0.8
+)
 
- #with preference order
- selected.variables <- cor_select(
-   df = vi,
-   predictors = vi_predictors,
-   preference_order = vi_predictors[1:5],
- )
+selected.predictors
 
- selected.variables
+#no response
+#no preference_order
+#restrictive max_cor
+selected.predictors <- cor_select(
+  df = vi,
+  predictors = vi_predictors,
+  max_cor = 0.5
+)
+
+selected.predictors
+
+#with response
+#no preference_order
+#restrictive max_cor
+#slightly different solution than previous one
+#because here target encoding is done against the response
+#while before was done pairwise against each numeric predictor
+selected.predictors <- cor_select(
+  df = vi,
+  response = "vi_mean",
+  predictors = vi_predictors,
+  max_cor = 0.5
+)
+
+selected.predictors
+
+#with response
+#with user-defined preference_order
+#restrictive max_cor
+#numerics and categorical variables in output
+selected.predictors <- cor_select(
+  df = vi,
+  response = "vi_mean",
+  predictors = vi_predictors,
+  preference_order = c(
+    "soil_type", #categorical variable
+    "soil_temperature_mean",
+    "swi_mean",
+    "rainfall_mean",
+    "evapotranspiration_mean"
+  ),
+  max_cor = 0.5
+)
+
+selected.predictors
+
+
+#with response
+#with automated preference_order
+#restrictive max_cor and max_vif
+#numerics and categorical variables in output
+preference.order <- preference_order(
+  df = vi,
+  response = "vi_mean",
+  predictors = vi_predictors,
+  f = f_rsquared #cor(response, predictor)
+)
+
+head(preference.order)
+
+selected.predictors <- cor_select(
+  df = vi,
+  response = "vi_mean",
+  predictors = vi_predictors,
+  preference_order = preference.order,
+  max_cor = 0.5
+)
+
+selected.predictors
 
 }
 }

@@ -44,7 +44,7 @@ identify_numeric_predictors <- function(
     predictors <- colnames(df)
   }
 
-  df <- df[, predictors]
+  df <- df[, predictors, drop = FALSE]
 
   predictors.numeric <- colnames(df)[sapply(df, is.numeric)]
 
@@ -98,7 +98,7 @@ identify_non_numeric_predictors <- function(
     predictors <- colnames(df)
   }
 
-  df <- df[, predictors]
+  df <- df[, predictors, drop = FALSE]
 
   predictors.non.numeric <- colnames(df)[!sapply(df, is.numeric)]
 
@@ -160,7 +160,7 @@ identify_zero_variance_predictors <- function(
     predictors = predictors
   )
 
-  df <- df[, predictors.numeric]
+  df <- df[, predictors.numeric, drop = FALSE]
 
   zero.variance.predictors <- colnames(df)[
     round(

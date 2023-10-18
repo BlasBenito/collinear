@@ -12,6 +12,7 @@
 #'  \item f_gam_deviance: returns the explained deviance of a GAM model of the response against a predictor. Requires the package `mgcv`.
 #'  \item f_f_variance: returns the explained deviance of a random forest model of the response against the predictor. Requires the package `ranger`.
 #' }
+#' @param encoding_method (optional; character string). Name of the target encoding method to convert character and factor predictors to numeric. One of "mean", "rank", "loo", "rnorm" (see [target_encoding_lab()] for further details). Default: `"mean"`
 #' @param workers (integer) number of workers for parallel execution. Default: 1
 #'
 #' @return A data frame with the columns "predictor" and "value". The former contains the predictors names in order, ready for the argument `preference_order` in `cor_select()`, `vif_select()` and `collinear()`. The latter contains the result of the function `f` for each combination of predictor and response.
@@ -51,8 +52,15 @@ preference_order <- function(
     response = NULL,
     predictors = NULL,
     f = f_rsquared,
+    encoding_method = "mean",
     workers = 1
-    ){
+){
+
+  #check workers
+  workers <- as.integer(workers)
+  if(workers < 1){
+    workers <- 1
+  }
 
   #check input data frame
   df <- validate_df(
@@ -74,10 +82,13 @@ preference_order <- function(
   )
 
   #target encode character predictors
-  df <- mean_encode(
+  df <- target_encoding_lab(
     df = df,
     response = response,
-    predictors = predictors
+    predictors = predictors,
+    encoding_methods = encoding_method,
+    replace = TRUE,
+    verbose = FALSE
   )
 
   #computing preference order
@@ -85,24 +96,34 @@ preference_order <- function(
     predictor = predictors
   )
 
-  #prepare parallel execution
-  if(workers > future::nbrOfFreeWorkers()){
-    workers <- future::nbrOfFreeWorkers()
-  }
+  #default lapply function
+  lapply_custom <- lapply
 
+  #run preference order
   if(workers > 1){
-    future::plan(
-      strategy = future::multisession,
-      workers = workers
-    )
-  } else {
-    future::plan(
-      strategy = future::sequential
-    )
+
+    if(
+      requireNamespace("future", quietly = TRUE) &
+      requireNamespace("future.apply", quietly = TRUE)
+    ){
+
+      future::plan(
+        strategy = future::multisession,
+        workers = workers
+      )
+
+      lapply_custom <- future.apply::future_lapply
+
+    } else {
+
+      message("R packages 'future' and 'future.apply' are required to run this function in parallel. but are not installed. Running preference_order() sequentially.")
+
+    }
+
   }
 
-  #compute preference
-  preference$value <- future.apply::future_lapply(
+  #computing preference order
+  preference$value <- lapply_custom(
     X = preference$predictor,
     FUN = function(x){
       f(
@@ -112,7 +133,8 @@ preference_order <- function(
       )
     }
   ) |>
-    unlist()
+    unlist() |>
+    suppressWarnings()
 
   #reorder preference
   preference <- preference |>

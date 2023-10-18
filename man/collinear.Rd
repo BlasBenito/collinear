@@ -9,9 +9,10 @@ collinear(
   response = NULL,
   predictors = NULL,
   preference_order = NULL,
-  method = "pearson",
+  cor_method = "pearson",
   max_cor = 0.75,
-  max_vif = 5
+  max_vif = 5,
+  encoding_method = "mean"
 )
 }
 \arguments{
@@ -19,15 +20,17 @@ collinear(
 
 \item{response}{(recommended, character string) Name of a numeric response variable. Character response variables are ignored. Please, see 'Details' to better understand how providing this argument or not leads to different results when there are character variables in 'predictors'. Default: NULL.}
 
-\item{predictors}{(optional; character vector) character vector with predictor names in 'df'. If omitted, all columns of 'df' are used as predictors. Default:'NULL'}
+\item{predictors}{(optional; character vector) character vector with predictor names in 'df'. If omitted, all columns of 'df' are used as predictors. Default: \code{NULL}}
 
 \item{preference_order}{(optional; character vector) vector with column names in 'predictors' in the desired preference order, or result of the function \code{preference_order()}. Allows defining a priority order for selecting predictors, which can be particularly useful when some predictors are more critical for the analysis than others. Predictors not included in this argument are ranked by their Variance Inflation Factor. Default: \code{NULL}.}
 
-\item{method}{(optional; character string) Method used to compute pairwise correlations. Accepted methods are "pearson" (with a recommended minimum of 30 rows in 'df') or "spearman" (with a recommended minimum of 10 rows in 'df'). Default: "pearson".}
+\item{cor_method}{(optional; character string) Method used to compute pairwise correlations. Accepted methods are "pearson" (with a recommended minimum of 30 rows in 'df') or "spearman" (with a recommended minimum of 10 rows in 'df'). Default: "pearson".}
 
 \item{max_cor}{(optional; numeric) Maximum correlation allowed between any pair of predictors. Higher values return larger number of predictors with higher multicollinearity. Default: \code{0.75}}
 
 \item{max_vif}{(optional, numeric) Numeric with recommended values between 2.5 and 10 defining the maximum VIF allowed for any given predictor in the output dataset. Higher VIF thresholds should result in a higher number of selected variables. Default: \code{5}.}
+
+\item{encoding_method}{(optional; character string). Name of the target encoding method to convert character and factor predictors to numeric. One of "mean", "rank", "loo", "rnorm" (see \code{\link[=target_encoding_lab]{target_encoding_lab()}} for further details). Default: \code{"mean"}}
 }
 \value{
 Character vector with the names of uncorrelated predictors.
@@ -35,7 +38,7 @@ Character vector with the names of uncorrelated predictors.
 \description{
 The \code{collinear()} function is designed to automate the reduction of multicollinearity in a set of predictors by sequentially applying correlation-based and VIF-based variable selection by applying \code{\link[=cor_select]{cor_select()}} and \code{\link[=vif_select]{vif_select()}} sequentially.
 
-If the 'response' argument is provided, categorical predictors are converted to numeric via target encoding (see \code{\link[=mean_encode]{mean_encode()}}). If the 'response' argument is not provided, categorical variables are ignored.
+If the 'response' argument is provided, categorical predictors are converted to numeric via target encoding (see \code{\link[=target_encoding_lab]{target_encoding_lab()}}). If the 'response' argument is not provided, categorical variables are ignored.
 
 The function \code{\link[=cor_select]{cor_select()}} applies a recursive algorithm to remove variables with a Pearson correlation with another variable higher than a given threshold (defined by the argument \code{max_cor}).  When two variables are correlated above this threshold, the one with the highest sum of R-squared with all the other variables is removed.
 

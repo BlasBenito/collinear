@@ -4,7 +4,7 @@
 #'
 #' The `collinear()` function is designed to automate the reduction of multicollinearity in a set of predictors by sequentially applying correlation-based and VIF-based variable selection by applying [cor_select()] and [vif_select()] sequentially.
 #'
-#' If the 'response' argument is provided, categorical predictors are converted to numeric via target encoding (see [mean_encode()]). If the 'response' argument is not provided, categorical variables are ignored.
+#' If the 'response' argument is provided, categorical predictors are converted to numeric via target encoding (see [target_encoding_lab()]). If the 'response' argument is not provided, categorical variables are ignored.
 #'
 #' The function [cor_select()] applies a recursive algorithm to remove variables with a Pearson correlation with another variable higher than a given threshold (defined by the argument `max_cor`).  When two variables are correlated above this threshold, the one with the highest sum of R-squared with all the other variables is removed.
 #'
@@ -18,11 +18,12 @@
 #'
 #' @param df (required; data frame or tibble) A data frame with numeric and/or character predictors predictors, and optionally, a response variable. Default: NULL.
 #' @param response (recommended, character string) Name of a numeric response variable. Character response variables are ignored. Please, see 'Details' to better understand how providing this argument or not leads to different results when there are character variables in 'predictors'. Default: NULL.
-#' @param predictors (optional; character vector) character vector with predictor names in 'df'. If omitted, all columns of 'df' are used as predictors. Default:'NULL'
+#' @param predictors (optional; character vector) character vector with predictor names in 'df'. If omitted, all columns of 'df' are used as predictors. Default: `NULL`
 #' @param preference_order  (optional; character vector) vector with column names in 'predictors' in the desired preference order, or result of the function `preference_order()`. Allows defining a priority order for selecting predictors, which can be particularly useful when some predictors are more critical for the analysis than others. Predictors not included in this argument are ranked by their Variance Inflation Factor. Default: `NULL`.
-#' @param method (optional; character string) Method used to compute pairwise correlations. Accepted methods are "pearson" (with a recommended minimum of 30 rows in 'df') or "spearman" (with a recommended minimum of 10 rows in 'df'). Default: "pearson".
+#' @param cor_method (optional; character string) Method used to compute pairwise correlations. Accepted methods are "pearson" (with a recommended minimum of 30 rows in 'df') or "spearman" (with a recommended minimum of 10 rows in 'df'). Default: "pearson".
 #' @param max_cor (optional; numeric) Maximum correlation allowed between any pair of predictors. Higher values return larger number of predictors with higher multicollinearity. Default: `0.75`
 #' @param max_vif (optional, numeric) Numeric with recommended values between 2.5 and 10 defining the maximum VIF allowed for any given predictor in the output dataset. Higher VIF thresholds should result in a higher number of selected variables. Default: `5`.
+#' @param encoding_method (optional; character string). Name of the target encoding method to convert character and factor predictors to numeric. One of "mean", "rank", "loo", "rnorm" (see [target_encoding_lab()] for further details). Default: `"mean"`
 #' @return Character vector with the names of uncorrelated predictors.
 #'
 #' @examples
@@ -129,16 +130,17 @@ collinear <- function(
     response = NULL,
     predictors = NULL,
     preference_order = NULL,
-    method = "pearson",
+    cor_method = "pearson",
     max_cor = 0.75,
-    max_vif = 5
+    max_vif = 5,
+    encoding_method = "mean"
 ){
 
   #validate input data frame
   df <- validate_df(
     df = df,
     min_rows = ifelse(
-      test = method == "pearson",
+      test = cor_method == "pearson",
       yes = 30,
       no = 10
     )
@@ -158,10 +160,13 @@ collinear <- function(
   )
 
   #target encode character predictors
-  df <- mean_encode(
+  df <- target_encoding_lab(
     df = df,
     response = response,
-    predictors = predictors
+    predictors = predictors,
+    encoding_methods = encoding_method,
+    replace = TRUE,
+    verbose = FALSE
   )
 
   #applying cor selection
@@ -170,7 +175,7 @@ collinear <- function(
     response = response,
     predictors = predictors,
     preference_order = preference_order,
-    method = method,
+    cor_method = cor_method,
     max_cor = max_cor
   )
 

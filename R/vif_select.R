@@ -6,7 +6,7 @@
 #'
 #' The `vif_select()` function is designed to automate the reduction of multicollinearity in a set of predictors by using Variance Inflation Factors.
 #'
-#' If the 'response' argument is provided, categorical predictors are converted to numeric via target encoding (see [mean_encode()]). If the 'response' argument is not provided, categorical variables are ignored.
+#' If the 'response' argument is provided, categorical predictors are converted to numeric via target encoding (see [target_encoding_lab()]). If the 'response' argument is not provided, categorical variables are ignored.
 #'
 #' The Variance Inflation Factor for a given variable `y` is computed as `1/(1-R2)`, where `R2` is the multiple R-squared of a multiple regression model fitted using `y` as response and all other predictors in the input data frame as predictors. The VIF equation can be interpreted as the "rate of perfect model's R-squared to the unexplained variance of this model".
 #'
@@ -14,7 +14,7 @@
 #'
 #' The function `vif_select()` applies a recursive algorithm to remove variables with a VIF higher than a given threshold (defined by the argument `max_vif`).
 #'
-#' If the argument `response` is provided, all non-numeric variables in `predictors` are transformed into numeric using target encoding (see `mean_encode()`). Otherwise, non-numeric variables are ignored.
+#' If the argument `response` is provided, all non-numeric variables in `predictors` are transformed into numeric using target encoding (see `target_encoding_lab()`). Otherwise, non-numeric variables are ignored.
 #'
 #' The argument `preference_order` allows defining a preference selection order to preserve (when possible) variables that might be interesting or even required for a given analysis.
 #'
@@ -32,37 +32,100 @@
 #' @param predictors (optional; character vector) character vector with predictor names in 'df'. If omitted, all columns of 'df' are used as predictors. Default:'NULL'
 #' @param preference_order  (optional; character vector) vector with column names in 'predictors' in the desired preference order, or result of the function `preference_order()`. Allows defining a priority order for selecting predictors, which can be particularly useful when some predictors are more critical for the analysis than others. Predictors not included in this argument are ranked by their Variance Inflation Factor. Default: `NULL`.
 #' @param max_vif (optional, numeric) Numeric with recommended values between 2.5 and 10 defining the maximum VIF allowed for any given predictor in the output dataset. Higher VIF thresholds should result in a higher number of selected variables. Default: `5`.
+#' @param encoding_method (optional; character string). Name of the target encoding method to convert character and factor predictors to numeric. One of "mean", "rank", "loo", "rnorm" (see [target_encoding_lab()] for further details). Default: `"mean"`
 #' @return Character vector with the names of the selected predictors.
 #' @examples
 #' if(interactive()){
 #'
-#'  #loading example data
-#'  data(
+#' data(
 #'   vi,
 #'   vi_predictors
-#'   )
+#' )
 #'
-#'  #without preference order
-#'  selected.variables <- vif_select(
-#'    data = vi,
-#'    predictors = vi_predictors
-#'  )
+#' #reduce size of vi to speed-up example execution
+#' vi <- vi[1:1000, ]
 #'
-#'  selected.variables
+#' #no response
+#' #no preference_order
+#' #permissive max_vif
+#' #only numeric predictors are processed
+#' selected.predictors <- vif_select(
+#'   df = vi,
+#'   predictors = vi_predictors,
+#'   max_vif = 10
+#' )
 #'
-#'  #with preference order
-#'  selected.variables <- vif_select(
-#'    data = vi,
-#'    predictors = vi_predictors,
-#'    preference_order = c(
-#'    "soil_temperature_mean",
-#'    "swi_mean",
-#'    "soil_type",
-#'    "soil_nitrogen"
-#'    ),
-#'  )
+#' selected.predictors
 #'
-#'  selected.variables
+#' #no response
+#' #no preference_order
+#' #restrictive max_vif
+#' #only numeric predictors are processed
+#' selected.predictors <- vif_select(
+#'   df = vi,
+#'   predictors = vi_predictors,
+#'   max_vif = 2.5
+#' )
+#'
+#' selected.predictors
+#'
+#' #with response
+#' #no preference_order
+#' #restrictive max_cor
+#' #slightly different solution than previous one
+#' #because categorical variables are target-enccoded
+#' selected.predictors <- vif_select(
+#'   df = vi,
+#'   response = "vi_mean",
+#'   predictors = vi_predictors,
+#'   max_vif = 2.5
+#' )
+#'
+#' selected.predictors
+#'
+#' #with response
+#' #with user-defined preference_order
+#' #restrictive max_cor
+#' #numerics and categorical variables in output
+#' selected.predictors <- vif_select(
+#'   df = vi,
+#'   response = "vi_mean",
+#'   predictors = vi_predictors,
+#'   preference_order = c(
+#'     "soil_type", #categorical variable
+#'     "soil_temperature_mean",
+#'     "swi_mean",
+#'     "rainfall_mean",
+#'     "evapotranspiration_mean"
+#'   ),
+#'   max_vif = 2.5
+#' )
+#'
+#' selected.predictors
+#'
+#'
+#' #with response
+#' #with automated preference_order
+#' #restrictive max_cor and max_vif
+#' #numerics and categorical variables in output
+#' preference.order <- preference_order(
+#'   df = vi,
+#'   response = "vi_mean",
+#'   predictors = vi_predictors,
+#'   f = f_rsquared #cor(response, predictor)
+#' )
+#'
+#' head(preference.order)
+#'
+#' selected.predictors <- vif_select(
+#'   df = vi,
+#'   response = "vi_mean",
+#'   predictors = vi_predictors,
+#'   preference_order = preference.order,
+#'   max_vif = 2.5
+#' )
+#'
+#' selected.predictors
 #'
 #' }
 #' @autoglobal
@@ -72,7 +135,8 @@ vif_select <- function(
     response = NULL,
     predictors = NULL,
     preference_order = NULL,
-    max_vif = 5
+    max_vif = 5,
+    encoding_method = "mean"
 ){
 
   #checking argument max_vif
@@ -95,10 +159,13 @@ vif_select <- function(
   )
 
   #target encode character predictors
-  df <- mean_encode(
+  df <- target_encoding_lab(
     df = df,
     response = response,
-    predictors = predictors
+    predictors = predictors,
+    encoding_methods = encoding_method,
+    replace = TRUE,
+    verbose = FALSE
   )
 
   #auto preference order
@@ -143,7 +210,7 @@ vif_select <- function(
   }
 
   #order df according to preference order
-  df <- df[, preference_order]
+  df <- df[, preference_order, drop = FALSE]
 
   #rank of interest
   df.rank <- data.frame(

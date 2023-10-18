@@ -11,8 +11,8 @@
 #' @param df (required; data frame, tibble, or sf) A training data frame. Default: `NULL`
 #' @param response (required; character string) Name of the response. Must be a column name of `df`. Default: `NULL`
 #' @param predictor (required; character) Name of the categorical variable to encode.
-#' @param white_noise (optional; numeric) Numeric with white noise values in the range 0-1. Default: `0`.
-#' @param rnorm_sd_multiplier (optional; numeric) Numeric with multiplicator of the standard deviation of each group in the categorical variable, in the range 0.01-1. Default: `0.1`
+#' @param white_noise (optional; numeric) Numeric with white noise values in the range 0-1, representing a fraction of the range of the response to be added as noise to the encoded variable. Controls the variability in the encoded variables to mitigate potential overfitting. Default: `0`.
+#' @param rnorm_sd_multiplier (optional; numeric) Numeric with multiplicator of the standard deviation of each group in the categorical variable, in the range 0-1. Controls the variability in the encoded variables to mitigate potential overfitting. Default: `1`
 #' @param seed (optional; integer) Random seed to facilitate reproducibility. Default: `1`
 #' @param replace (optional; logical) Advanced option that changes the behavior of the function. Use only if you really know exactly what you need. If `TRUE`, it replaces each categorical variable with its encoded version, and returns the input data frame with the replaced variables.
 #' @param verbose (optional; logical) If TRUE, messages and plots generated during the execution of the function are displayed. Default: `TRUE`
@@ -23,100 +23,130 @@
 #' @examples
 #' if(interactive()){
 #'
-#' #loading example data
-#' data(
-#'   vi,
-#'   vi_predictors
-#' )
-#'
+#loading example data
+#' data(vi)
 #'
 #' #mean encoding
 #' #-------------
 #'
-#' #transforming soil_type
-#' vi <- target_encoding_mean(
+#' #without noise
+#' df <- target_encoding_mean(
 #'   df = vi,
 #'   response = "vi_mean",
-#'   predictor = "soil_type"
+#'   predictor = "soil_type",
+#'   replace = TRUE
 #' )
 #'
-#' #the encoded variable is named soil_type__encoded_mean
+#' plot(
+#'   x = df$soil_type,
+#'   y = df$vi_mean,
+#'   xlab = "encoded variable",
+#'   ylab = "response"
+#' )
 #'
-#' #plotting it against the response
-#' ggplot2::ggplot(data = vi) +
-#'   ggplot2::aes(
-#'     x = plant_richness,
-#'     y = soil_type__encoded_mean,
-#'     color = soil_type
-#'   ) +
-#'   ggplot2::geom_point()
+#' #with noise
+#' df <- target_encoding_mean(
+#'   df = vi,
+#'   response = "vi_mean",
+#'   predictor = "soil_type",
+#'   white_noise = 0.1,
+#'   replace = TRUE
+#' )
+#'
+#' plot(
+#'   x = df$soil_type,
+#'   y = df$vi_mean,
+#'   xlab = "encoded variable",
+#'   ylab = "response"
+#' )
 #'
 #'
-#' #Group rank
+#' #group rank
 #' #----------
 #'
-#' #transforming soil_type
-#' vi <- target_encoding_rank(
+#' df <- target_encoding_rank(
 #'   df = vi,
 #'   response = "vi_mean",
-#'   predictor = "soil_type"
+#'   predictor = "soil_type",
+#'   replace = TRUE
 #' )
 #'
-#' #the encoded variable is named soil_type__encoded_rank
-#'
-#' #plotting it against the response
-#' ggplot2::ggplot(data = vi) +
-#'   ggplot2::aes(
-#'     x = plant_richness,
-#'     y = soil_type__encoded_rank,
-#'     color = soil_type
-#'   ) +
-#'   ggplot2::geom_point()
+#' plot(
+#'   x = df$soil_type,
+#'   y = df$vi_mean,
+#'   xlab = "encoded variable",
+#'   ylab = "response"
+#' )
 #'
 #'
 #' #leave-one-out
 #' #-------------
 #'
-#' #transforming soil_type
-#' vi <- target_encoding_loo(
+#' #without noise
+#' df <- target_encoding_loo(
 #'   df = vi,
 #'   response = "vi_mean",
-#'   predictor = "soil_type"
+#'   predictor = "soil_type",
+#'   replace = TRUE
 #' )
 #'
-#' #the encoded variable is named soil_type__encoded_loo
+#' plot(
+#'   x = df$soil_type,
+#'   y = df$vi_mean,
+#'   xlab = "encoded variable",
+#'   ylab = "response"
+#' )
 #'
-#' #plotting it against the response
-#' ggplot2::ggplot(data = vi) +
-#'   ggplot2::aes(
-#'     x = plant_richness,
-#'     y = soil_type__encoded_loo,
-#'     color = soil_type
-#'   ) +
-#'   ggplot2::geom_point()
+#' #with noise
+#' df <- target_encoding_loo(
+#'   df = vi,
+#'   response = "vi_mean",
+#'   predictor = "soil_type",
+#'   white_noise = 0.1,
+#'   replace = TRUE
+#' )
+#'
+#' plot(
+#'   x = df$soil_type,
+#'   y = df$vi_mean,
+#'   xlab = "encoded variable",
+#'   ylab = "response"
+#' )
 #'
 #'
 #' #rnorm
 #' #-----
 #'
-#' #transforming soil_type
-#' vi <- target_encoding_rnorm(
+#' #without sd multiplier
+#' df <- target_encoding_rnorm(
 #'   df = vi,
 #'   response = "vi_mean",
-#'   predictor = "soil_type"
+#'   predictor = "soil_type",
+#'   replace = TRUE
 #' )
 #'
-#' #the encoded variable is named soil_type__encoded_rnorm_rnorm_sd_multiplier_0.1
+#' plot(
+#'   x = df$soil_type,
+#'   y = df$vi_mean,
+#'   xlab = "encoded variable",
+#'   ylab = "response"
+#' )
 #'
-#' #plotting it against the response
-#' ggplot2::ggplot(data = vi) +
-#'   ggplot2::aes(
-#'     x = plant_richness,
-#'     y = soil_type__encoded_rnorm_rnorm_sd_multiplier_0.1,
-#'     color = soil_type
-#'   ) +
-#'   ggplot2::geom_point()
+#' #with sd multiplier
+#' df <- target_encoding_rnorm(
+#'   df = vi,
+#'   response = "vi_mean",
+#'   predictor = "soil_type",
+#'   rnorm_sd_multiplier = 0.1,
+#'   replace = TRUE
+#' )
 #'
+#' plot(
+#'   x = df$soil_type,
+#'   y = df$vi_mean,
+#'   xlab = "encoded variable",
+#'   ylab = "response"
+#' )
 #'
 #' }
 #'
@@ -155,8 +185,9 @@ target_encoding_mean <- function(
   )
 
   #add white_noise if any
-  df <- target_encoding_white_noise(
+  df <- add_white_noise(
     df = df,
+    response = response,
     predictor = encoded.variable.name,
     white_noise = white_noise,
     seed = seed
@@ -188,13 +219,18 @@ target_encoding_rnorm <- function(
     df,
     response,
     predictor,
-    rnorm_sd_multiplier = 0.1,
+    rnorm_sd_multiplier = 1,
     seed = 1,
     replace = FALSE,
     verbose = TRUE
 ){
 
+  if(length(rnorm_sd_multiplier) > 1){
+    rnorm_sd_multiplier <- rnorm_sd_multiplier[1]
+  }
+
   if(rnorm_sd_multiplier == 0){
+    rnorm_sd_multiplier <- 0.0001
     encoded.variable.name <- paste0(
       predictor,
       "__encoded_rnorm"
@@ -205,13 +241,6 @@ target_encoding_rnorm <- function(
       "__encoded_rnorm__sd_multiplier_",
       rnorm_sd_multiplier
     )
-  }
-
-  if(rnorm_sd_multiplier <= 0){
-    rnorm_sd_multiplier <- 0.0001
-  }
-  if(rnorm_sd_multiplier > 1){
-    rnorm_sd_multiplier <- 1
   }
 
   set.seed(seed)
@@ -230,6 +259,23 @@ target_encoding_rnorm <- function(
           get(response),
           na.rm = TRUE
         ) * rnorm_sd_multiplier
+      )
+    ) |>
+    dplyr::ungroup() |>
+    suppressWarnings()
+
+  #fill NAs produced in groups with one row
+  df <- df |>
+    dplyr::rowwise() |>
+    dplyr::mutate(
+      encoded = ifelse(
+        test = is.na(encoded),
+        yes = stats::rnorm(
+          n = 1,
+          mean = get(response),
+          sd = get(response)/10
+        ),
+        no = encoded
       )
     ) |>
     dplyr::ungroup()
@@ -263,7 +309,6 @@ target_encoding_rank <- function(
     df,
     response,
     predictor,
-    white_noise = 0,
     seed = 1,
     replace = FALSE,
     verbose = TRUE
@@ -306,9 +351,74 @@ target_encoding_rank <- function(
     by = predictor
   )
 
+  if(verbose == TRUE && replace == FALSE){
+    message(
+      "New encoded predictor: '",
+      encoded.variable.name,
+      "'"
+    )
+  }
+
+  #replacing original variable with encoded version
+  if(replace == TRUE){
+    df[[predictor]] <- NULL
+    colnames(df)[colnames(df) == encoded.variable.name] <- predictor
+  }
+
+  df
+
+}
+
+#' @rdname target_encoding_methods
+#' @autoglobal
+#' @export
+target_encoding_loo <- function(
+    df,
+    response,
+    predictor,
+    white_noise = 0,
+    seed = 1,
+    replace = FALSE,
+    verbose = TRUE
+){
+
+  #new variable name
+  if(white_noise == 0){
+    encoded.variable.name <- paste0(
+      predictor,
+      "__encoded_loo"
+    )
+  } else {
+    encoded.variable.name <- paste0(
+      predictor,
+      "__encoded_loo__white_noise_",
+      white_noise
+    )
+  }
+
+  #leave one out
+  #by group, sum all cases of the response, subtract the value of the current row, and divide by n-1
+  df <- df |>
+    dplyr::group_by(df[[predictor]]) |>
+    dplyr::mutate(
+      encoded = (
+        sum(
+          get(response),
+          na.rm = TRUE
+        ) -
+          get(response)
+      ) /
+        (dplyr::n() - 1)
+    ) |>
+    dplyr::ungroup()
+
+  #rename encoded column
+  names(df)[names(df) == "encoded"] <- encoded.variable.name
+
   #add white_noise if any
-  df <- target_encoding_white_noise(
+  df <- add_white_noise(
     df = df,
+    response = response,
     predictor = encoded.variable.name,
     white_noise = white_noise,
     seed = seed
@@ -335,66 +445,29 @@ target_encoding_rank <- function(
 #' @rdname target_encoding_methods
 #' @autoglobal
 #' @export
-target_encoding_loo <- function(
+add_white_noise <- function(
     df,
     response,
     predictor,
-    replace = FALSE,
-    verbose = TRUE
-){
-
-  #new variable name
-  encoded.variable.name <- paste0(
-    predictor,
-    "__encoded_loo"
-  )
-
-  #leave one out
-  #by group, sum all cases of the response, subtract the value of the current row, and divide by n-1
-  df <- df |>
-    dplyr::group_by(df[[predictor]]) |>
-    dplyr::mutate(
-      encoded = (
-        sum(
-          get(response),
-          na.rm = TRUE
-        ) -
-          get(response)
-      ) /
-        (dplyr::n() - 1)
-    ) |>
-    dplyr::ungroup()
-
-  #rename encoded column
-  names(df)[names(df) == "encoded"] <- encoded.variable.name
-
-  if(verbose == TRUE && replace == FALSE){
-    message(
-      "New encoded predictor: '",
-      encoded.variable.name,
-      "'"
-    )
-  }
-
-  #replacing original variable with encoded version
-  if(replace == TRUE){
-    df[[predictor]] <- NULL
-    colnames(df)[colnames(df) == encoded.variable.name] <- predictor
-  }
-
-  df
-
-}
-
-#' @rdname target_encoding_methods
-#' @autoglobal
-#' @export
-target_encoding_white_noise <- function(
-    df,
-    predictor,
-    white_noise = 0,
+    white_noise = 0.1,
     seed = 1
 ){
+
+  if(length(white_noise) > 1){
+    white_noise <- white_noise[1]
+  }
+
+  if(white_noise < 0){
+    white_noise <- 0
+  }
+
+  if(white_noise > 1){
+    white_noise <- 1
+  }
+
+  if(white_noise == 0){
+    return(df)
+  }
 
   #internal function to rescale white_noise
   rescale_white_noise <- function(
@@ -416,56 +489,36 @@ target_encoding_white_noise <- function(
 
   }
 
-  if(white_noise < 0){
-    white_noise <- 0
-  }
-
-  if(white_noise == 0){
-    return(df)
-  }
-
-  if(white_noise > 1){
-    white_noise <- 1
-  }
-
   #mean difference between groups
-  between.group.difference <- df[[predictor]] |>
-    sort() |>
-    unique() |>
-    diff() |>
-    mean()
+  response.range <- max(
+    df[[response]],
+    na.rm = TRUE
+    ) -
+    min(
+      df[[response]],
+      na.rm = TRUE
+    )
 
-  #minimum white_noise
-  min.white_noise <- 0
-  max.white_noise <- between.group.difference * white_noise
-
-  #if white_noise is too small
-  # if(min.white_noise == max.white_noise){
-  #
-  #   #increase white_noise until min and max white_noise are different
-  #   while(max.white_noise == min.white_noise){
-  #
-  #     white_noise <- white_noise + 0.01
-  #
-  #     max.white_noise <- between.group.difference * white_noise
-  #
-  #   }
-  #
-  # }
+  #minimum and maximum white_noise
+  max.white_noise <- response.range * white_noise
+  min.white_noise <- -max.white_noise
 
   #reset random seed
   set.seed(seed)
 
-  #add white_noise to the given variable
-  df[[predictor]] <- df[[predictor]] +
-    stats::rnorm(
+  #generate white noise
+  noise <- rescale_white_noise(
+    x = stats::runif(
       n = nrow(df)
-    ) |>
-    abs() |>
-    rescale_white_noise(
-      new_min = min.white_noise,
-      new_max = max.white_noise
-      )
+    ),
+    new_min = min.white_noise,
+    new_max = max.white_noise
+  )
+
+
+
+  #add white_noise to the given variable
+  df[[predictor]] <- df[[predictor]] + noise
 
   #return df
   df

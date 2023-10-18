@@ -4,7 +4,7 @@
 \alias{vif_df}
 \title{Variance Inflation Factor}
 \usage{
-vif_df(df = NULL, response = NULL, predictors = NULL)
+vif_df(df = NULL, response = NULL, predictors = NULL, encoding_method = "mean")
 }
 \arguments{
 \item{df}{(required; data frame or tibble) A data frame with numeric and/or character predictors predictors, and optionally, a response variable. Default: NULL.}
@@ -12,6 +12,8 @@ vif_df(df = NULL, response = NULL, predictors = NULL)
 \item{response}{(recommended, character string) Name of a numeric response variable. Character response variables are ignored. Please, see 'Details' to better understand how providing this argument or not leads to different results when there are character variables in 'predictors'. Default: NULL.}
 
 \item{predictors}{(optional; character vector) character vector with predictor names in 'df'. If omitted, all columns of 'df' are used as predictors. Default:'NULL'}
+
+\item{encoding_method}{(optional; character string). Name of the target encoding method to convert character and factor predictors to numeric. One of "mean", "rank", "loo", "rnorm" (see \code{\link[=target_encoding_lab]{target_encoding_lab()}} for further details). Default: \code{"mean"}}
 }
 \value{
 Data frame with predictor names and VIF values

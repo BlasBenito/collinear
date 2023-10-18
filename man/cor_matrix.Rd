@@ -4,7 +4,12 @@
 \alias{cor_matrix}
 \title{Correlation matrix of numeric and character variables}
 \usage{
-cor_matrix(df = NULL, response = NULL, predictors = NULL, method = "pearson")
+cor_matrix(
+  df = NULL,
+  response = NULL,
+  predictors = NULL,
+  cor_method = "pearson"
+)
 }
 \arguments{
 \item{df}{(required; data frame or tibble) A data frame with numeric and/or character predictors, and optionally, a response variable. Default: NULL.}
@@ -13,7 +18,7 @@ cor_matrix(df = NULL, response = NULL, predictors = NULL, method = "pearson")
 
 \item{predictors}{(optional; character vector) character vector with predictor names in 'df'. If omitted, all columns of 'df' are used as predictors. Default:'NULL'}
 
-\item{method}{(optional; character string) Method used to compute pairwise correlations. Accepted methods are "pearson" (with a recommended minimum of 30 rows in 'df') or "spearman" (with a recommended minimum of 10 rows in 'df'). Default: "pearson".}
+\item{cor_method}{(optional; character string) Method used to compute pairwise correlations. Accepted methods are "pearson" (with a recommended minimum of 30 rows in 'df') or "spearman" (with a recommended minimum of 10 rows in 'df'). Default: "pearson".}
 }
 \value{
 correlation matrix

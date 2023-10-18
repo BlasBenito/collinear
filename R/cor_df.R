@@ -21,7 +21,8 @@
 #' @param df (required; data frame or tibble) A data frame with numeric and/or character predictors, and optionally, a response variable. Default: NULL.
 #' @param response (recommended, character string) Name of a numeric response variable. Character response variables are ignored. Please, see 'Details' to better understand how providing this argument or not leads to different results when there are character variables in 'predictors'. Default: NULL.
 #' @param predictors (optional; character vector) character vector with predictor names in 'df'. If omitted, all columns of 'df' are used as predictors. Default:'NULL'
-#' @param method (optional; character string) Method used to compute pairwise correlations. Accepted methods are "pearson" (with a recommended minimum of 30 rows in 'df') or "spearman" (with a recommended minimum of 10 rows in 'df'). Default: "pearson".
+#' @param cor_method (optional; character string) Method used to compute pairwise correlations. Accepted methods are "pearson" (with a recommended minimum of 30 rows in 'df') or "spearman" (with a recommended minimum of 10 rows in 'df'). Default: "pearson".
+#' @param encoding_method (optional; character string). Name of the target encoding method to convert character and factor predictors to numeric. One of "mean", "rank", "loo", "rnorm" (see [target_encoding_lab()] for further details). Default: `"mean"`
 #'
 #' @return data frame with pairs of predictors and their correlation.
 #'
@@ -45,19 +46,20 @@ cor_df <- function(
     df = NULL,
     response = NULL,
     predictors = NULL,
-    method = "pearson"
+    cor_method = "pearson",
+    encoding_method = "mean"
 ){
 
   #for development only
   # df <- vi
   # response <- "plant_richness"
   # predictors <- vi_predictors
-  # method = "pearson"
+  # cor_method = "pearson"
 
 
   #method argument for stats::cor
-  method <- match.arg(
-    arg = method,
+  cor_method <- match.arg(
+    arg = cor_method,
     choices = c(
       "pearson",
       "spearman"
@@ -69,7 +71,7 @@ cor_df <- function(
   df <- validate_df(
     df = df,
     min_rows = ifelse(
-      test = method == "pearson",
+      test = cor_method == "pearson",
       yes = 30,
       no = 10
     )
@@ -83,10 +85,13 @@ cor_df <- function(
   )
 
   #target encode character predictors
-  df <- mean_encode(
+  df <- target_encoding_lab(
     df = df,
     response = response,
-    predictors = predictors
+    predictors = predictors,
+    encoding_methods = encoding_method,
+    replace = TRUE,
+    verbose = FALSE
   )
 
   #list to store correlation data frames
@@ -96,14 +101,14 @@ cor_df <- function(
   cor.list[["numerics"]] <- cor_numerics(
     df = df,
     predictors = predictors,
-    method = method
+    cor_method = cor_method
   )
 
   #correlation between numeric and character variables
   cor.list[["num-char"]] <- cor_numerics_and_characters(
     df = df,
     predictors = predictors,
-    method = method
+    cor_method = cor_method
   )
 
   #correlation between characters
@@ -136,7 +141,7 @@ cor_df <- function(
 #'
 #' @param df (required; data frame or tibble) A data frame Default: NULL.
 #' @param predictors (optional; character vector) character vector with predictor names in 'df'. Default:'NULL'
-#' @param method (optional; charater string) Method used to compute pairwise correlations. Accepted methods are "pearson" (with a recommended minimum of 30 rows in 'df') or "spearman" (with a recommended minimum of 10 rows in 'df'). Default: "pearson".
+#' @param cor_method (optional; charater string) Method used to compute pairwise correlations. Accepted methods are "pearson" (with a recommended minimum of 30 rows in 'df') or "spearman" (with a recommended minimum of 10 rows in 'df'). Default: "pearson".
 #' @return data frame
 #' @noRd
 #' @keywords internal
@@ -144,12 +149,12 @@ cor_df <- function(
 cor_numerics <- function(
     df = NULL,
     predictors = NULL,
-    method = "pearson"
+    cor_method = "pearson"
 ){
 
   #method argument for stats::cor
-  method <- match.arg(
-    arg = method,
+  cor_method <- match.arg(
+    arg = cor_method,
     choices = c(
       "pearson",
       "spearman"
@@ -169,7 +174,7 @@ cor_numerics <- function(
   cor.numerics <- stats::cor(
     x = df[, predictors.numeric],
     use = "pairwise.complete.obs",
-    method = method
+    method = cor_method
   ) |>
     #correlation matrix to data frame
     as.table() |>
@@ -204,7 +209,8 @@ cor_numerics <- function(
 #'
 #' @param df (required; data frame or tibble) A data frame Default: NULL.
 #' @param predictors (optional; character vector) character vector with predictor names in 'df'. Default:'NULL'
-#' @param method (optional; charater string) Method used to compute pairwise correlations. Accepted methods are "pearson" (with a recommended minimum of 30 rows in 'df') or "spearman" (with a recommended minimum of 10 rows in 'df'). Default: "pearson".
+#' @param cor_method (optional; charater string) Method used to compute pairwise correlations. Accepted methods are "pearson" (with a recommended minimum of 30 rows in 'df') or "spearman" (with a recommended minimum of 10 rows in 'df'). Default: "pearson".
+#' @param encoding_method (optional; character string). Name of the target encoding method to convert character and factor predictors to numeric. One of "mean", "rank", "loo", "rnorm" (see [target_encoding_lab()] for further details). Default: `"mean"`
 #'
 #' @return data frame
 #' @noRd
@@ -213,12 +219,26 @@ cor_numerics <- function(
 cor_numerics_and_characters <- function(
     df = NULL,
     predictors = NULL,
-    method = "pearson"
+    cor_method = "pearson",
+    encoding_method = "mean"
 ){
 
+  #check input data frame
+  df <- validate_df(
+    df = df,
+    min_rows = 30
+  )
+
+  #check predictors
+  predictors <- validate_predictors(
+    df = df,
+    predictors = predictors,
+    min_numerics = 0
+  )
+
   #method argument for stats::cor
-  method <- match.arg(
-    arg = method,
+  cor_method <- match.arg(
+    arg = cor_method,
     choices = c(
       "pearson",
       "spearman"
@@ -236,13 +256,6 @@ cor_numerics_and_characters <- function(
     predictors = predictors
   )
 
-  if(
-    length(predictors.numeric) == 0 |
-    length(predictors.character) == 0
-  ){
-    return(NULL)
-  }
-
   #data frame to store results
   r.num.char <- expand.grid(
     x = predictors.numeric,
@@ -254,21 +267,29 @@ cor_numerics_and_characters <- function(
   #iterate to compute correlation
   for(i in seq_len(nrow(r.num.char))){
 
-    #get variable for target encoding
-    x <- df[[r.num.char$x[i]]]
+    #get response and predictor to a temp data frame
+    df.i <- data.frame(
+      x = df[[r.num.char$x[i]]],
+      y = df[[r.num.char$y[i]]]
+    ) |>
+      na.omit()
 
-    #apply mean encoding against the given predictor
-    y <- mean_encoder(
-      response = x,
-      predictor = df[[r.num.char$y[i]]],
-      check_input = FALSE
+    #target encode
+    df.i <- target_encoding_lab(
+      df = df.i,
+      response = "x",
+      predictors = "y",
+      encoding_methods = encoding_method,
+      replace = TRUE,
+      verbose = FALSE
     )
 
     #compute correlation
     r.num.char$correlation[i] <- stats::cor(
-      x = x,
-      y = y,
-      method = method
+      x = df.i$x,
+      y = df.i$y,
+      method = cor_method,
+      use = "pairwise.complete.obs"
     )
 
   }
