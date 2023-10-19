@@ -2,40 +2,33 @@
 % Please edit documentation in R/preference_order.R
 \name{f_gam_deviance}
 \alias{f_gam_deviance}
-\title{Compute the preference order for predictors based on the GAM deviance explained.}
+\title{Explained Deviance from univariate GAM model}
 \usage{
 f_gam_deviance(x, y, df)
 }
 \arguments{
-\item{x}{The predictor variable name.}
+\item{x}{(required, character string) name of the predictor variable.}
 
-\item{y}{The response variable name.}
+\item{y}{(required, character string) name of the response variable}
 
-\item{df}{The data frame containing the variables.}
+\item{df}{(required, data frame) data frame with the columns 'x' and 'y'.}
 }
 \value{
-The deviance explained by the GAM model for the predictor.
+Explained deviance
 }
 \description{
-This function calculates the preference order of predictors based on the deviance explained by a Generalized Additive Model (GAM) between each predictor and the response variable.
+Computes the explained deviance of a response against a predictor via Generalized Additive Model (GAM). This option is slower than \code{\link[=f_rsquared]{f_rsquared()}}, but suitable if you will be fitting GAMs with the resulting preference order.
 }
 \examples{
 if(interactive()){
 
-data(
-  vi,
-  vi_predictors
+data(vi)
+
+f_gam_deviance(
+  x = "growing_season_length", #predictor
+  y = "vi_mean",               #response
+  df = vi
 )
-
-preference.order <- preference_order(
-  df = vi[1:1000, ],
-  response = "vi_mean",
-  predictors = vi_predictors[1:10],
-  f = f_gam_deviance,
-  workers = 1
-  )
-
-preference.order
 
 }
 }

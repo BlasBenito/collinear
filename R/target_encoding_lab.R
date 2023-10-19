@@ -153,11 +153,9 @@ target_encoding_lab <- function(
   )
 
   if(is.null(response)){
-
     if(verbose == TRUE){
-      message("Argument 'response' is required for target encoding, but was not provided.")
+      message("Argument 'response' is required for target encoding, but was not provided. Returning 'df' with no target-encoding.")
     }
-
     return(df)
 
   }

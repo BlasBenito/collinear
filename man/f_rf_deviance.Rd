@@ -2,41 +2,33 @@
 % Please edit documentation in R/preference_order.R
 \name{f_rf_deviance}
 \alias{f_rf_deviance}
-\title{Compute the preference order for predictors based on the random forest R-squared value.}
+\title{R-squared of Random Forest model from out-of-bag data}
 \usage{
 f_rf_deviance(x, y, df)
 }
 \arguments{
-\item{x}{The predictor variable name.}
+\item{x}{(required, character string) name of the predictor variable.}
 
-\item{y}{The response variable name.}
+\item{y}{(required, character string) name of the response variable}
 
-\item{df}{The data frame containing the variables.}
+\item{df}{(required, data frame) data frame with the columns 'x' and 'y'.}
 }
 \value{
-The R-squared value from the Random Forest model for the predictor.
+R-squared
 }
 \description{
-This function calculates the preference order of predictors based on the R-squared value from a Random Forest model between each predictor and the response variable.
+Computes a univariate random forest model with \code{ranger::ranger()} and returns the R-squared on the out-of-bag data.
 }
 \examples{
 if(interactive()){
 
-data(
-  vi,
-  vi_predictors
+data(vi)
+
+f_rf_deviance(
+  x = "growing_season_length", #predictor
+  y = "vi_mean",               #response
+  df = vi
 )
-
-preference.order <- preference_order(
-  df = vi[1:1000, ],
-  response = "vi_mean",
-  predictors = vi_predictors[1:10],
-  f = f_rf_deviance,
-  workers = 1
-  )
-
-preference.order
-
 
 }
 }

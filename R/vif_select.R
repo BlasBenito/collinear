@@ -45,8 +45,8 @@
 #' #reduce size of vi to speed-up example execution
 #' vi <- vi[1:1000, ]
 #'
-#' #no response
-#' #no preference_order
+#' #without response
+#' #without preference_order
 #' #permissive max_vif
 #' #only numeric predictors are processed
 #' selected.predictors <- vif_select(
@@ -57,8 +57,8 @@
 #'
 #' selected.predictors
 #'
-#' #no response
-#' #no preference_order
+#' #without response
+#' #without preference_order
 #' #restrictive max_vif
 #' #only numeric predictors are processed
 #' selected.predictors <- vif_select(
@@ -70,7 +70,7 @@
 #' selected.predictors
 #'
 #' #with response
-#' #no preference_order
+#' #without preference_order
 #' #restrictive max_cor
 #' #slightly different solution than previous one
 #' #because categorical variables are target-enccoded
@@ -140,7 +140,7 @@ vif_select <- function(
 ){
 
   #checking argument max_vif
-  if(max_vif < 2.5 | max_vif > 10){
+  if(max_vif < 2.5 || max_vif > 10){
     if(max_vif < 0){max_vif <- 0}
     warning("the recommended values for the argument 'max_vif' are between 2.5 and 10.")
   }
@@ -188,6 +188,15 @@ vif_select <- function(
     preference_order <- preference_order$predictor
   }
 
+  #check if preference_order comes from preference_order()
+  if(is.data.frame(preference_order) == TRUE){
+    if("predictor" %in% names(preference_order)){
+      preference_order <- preference_order$predictor
+    } else {
+      stop("argument 'preference_order' must be a data frame with the column 'predictor'.")
+    }
+  }
+
   #subset preference_order in predictors
   preference_order <- preference_order[preference_order %in% predictors]
 
@@ -215,7 +224,7 @@ vif_select <- function(
   #rank of interest
   df.rank <- data.frame(
     variable = colnames(df),
-    rank = 1:ncol(df)
+    rank = seq_len(ncol(df))
   )
 
   #iterating through reversed preference order

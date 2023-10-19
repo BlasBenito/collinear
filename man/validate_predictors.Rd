@@ -24,6 +24,8 @@ validate_predictors(
 A character vector of validated predictor names
 }
 \description{
+Requires the argument 'df' to be validated with \code{\link[=validate_df]{validate_df()}}.
+
 Validates and preprocesses the 'predictors' argument to ensure it complies with the requirements of the package functions. It performs the following actions:
 \itemize{
 \item Stops if 'df' is NULL.
@@ -38,20 +40,24 @@ Validates and preprocesses the 'predictors' argument to ensure it complies with 
 \examples{
 if (interactive()) {
 
-  #load example data
-  #and its predictors
-  data(
-    vi,
-    vi_predictors
-    )
+data(
+  vi,
+  vi_predictors
+  )
 
-  #validate the vi data frame
-  vi <- collinear::validate_df(df = vi)
+#validating example data frame
+vi <- validate_df(
+  df = vi
+)
 
-  #validate predictors
-  predictors <- collinear::validate_df_predictors(
-    df = vi,
-    predictors = vi_predictors
-    )
+#validating example predictors
+vi_predictors <- validate_predictors(
+  df = vi,
+  predictors = vi_predictors
+)
+
+#tagged as validated
+attributes(vi_predictors)$validated
+
 }
 }

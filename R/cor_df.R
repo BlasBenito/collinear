@@ -34,10 +34,30 @@
 #'   vi_predictors
 #' )
 #'
+#' #reduce size of vi to speed-up example execution
+#' vi <- vi[1:1000, ]
+#'
+#' #without response
+#' #categorical vs categorical compared with cramer_v()
+#' #categorical vs numerical compared wit stats::cor() via target-encoding
+#' #numerical vs numerical compared with stats::cor()
 #' df <- cor_df(
-#'       df = vi,
-#'       predictors = vi_predictors
-#'   )
+#'   df = vi,
+#'   predictors = vi_predictors
+#' )
+#'
+#' head(df)
+#'
+#' #with response
+#' #different solution than previous one
+#' #because target encoding is done against the response
+#' #rather than against the other numeric in the pair
+#' df <- cor_df(
+#'   df = vi,
+#'   response = "vi_mean",
+#'   predictors = vi_predictors
+#' )
+#'
 #'
 #' }
 #' @autoglobal
@@ -49,13 +69,6 @@ cor_df <- function(
     cor_method = "pearson",
     encoding_method = "mean"
 ){
-
-  #for development only
-  # df <- vi
-  # response <- "plant_richness"
-  # predictors <- vi_predictors
-  # cor_method = "pearson"
-
 
   #method argument for stats::cor
   cor_method <- match.arg(
@@ -167,7 +180,7 @@ cor_numerics <- function(
     predictors = predictors
   )
 
-  if(length(predictors.numeric) == 0){
+  if(length(predictors.numeric) <= 1){
     return(NULL)
   }
 
@@ -251,10 +264,18 @@ cor_numerics_and_characters <- function(
     predictors = predictors
   )
 
+  if(length(predictors.numeric) == 0){
+    return(NULL)
+  }
+
   predictors.character <- identify_non_numeric_predictors(
     df = df,
     predictors = predictors
   )
+
+  if(length(predictors.character) == 0){
+    return(NULL)
+  }
 
   #data frame to store results
   r.num.char <- expand.grid(
@@ -325,8 +346,8 @@ cor_characters <- function(
 
   #data frame to store results
   r.char.char <- expand.grid(
-    x = predictors.character[1],
-    y = predictors.character[2:length(predictors.character)],
+    x = predictors.character,
+    y = predictors.character,
     correlation = NA,
     stringsAsFactors = FALSE
   )

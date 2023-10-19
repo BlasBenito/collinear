@@ -22,6 +22,7 @@
 #' @param response (recommended, character string) Name of a numeric response variable. Character response variables are ignored. Please, see 'Details' to better understand how providing this argument or not leads to different results when there are character variables in 'predictors'. Default: NULL.
 #' @param predictors (optional; character vector) character vector with predictor names in 'df'. If omitted, all columns of 'df' are used as predictors. Default:'NULL'
 #' @param cor_method (optional; character string) Method used to compute pairwise correlations. Accepted methods are "pearson" (with a recommended minimum of 30 rows in 'df') or "spearman" (with a recommended minimum of 10 rows in 'df'). Default: "pearson".
+#' @param encoding_method (optional; character string). Name of the target encoding method to convert character and factor predictors to numeric. One of "mean", "rank", "loo", "rnorm" (see [target_encoding_lab()] for further details). Default: `"mean"`
 #'
 #' @return correlation matrix
 #'
@@ -33,10 +34,42 @@
 #'   vi_predictors
 #' )
 #'
+#' #reduce size of vi to speed-up example execution
+#' vi <- vi[1:1000, ]
+#'
+#' #convert correlation data frame to matrix
+#' df <- cor_df(
+#'   df = vi,
+#'   predictors = vi_predictors
+#' )
+#'
 #' m <- cor_matrix(
-#'       df = vi,
-#'       predictors = vi_predictors
-#'   )
+#'   df = df
+#' )
+#'
+#' #show first three columns and rows
+#' #pairs of categoricals
+#' m[1:5, 1:5]
+#'
+#' #generate correlation matrix directly
+#' m <- cor_matrix(
+#'   df = vi,
+#'   predictors = vi_predictors
+#' )
+#'
+#' m[1:5, 1:5]
+#'
+#' #with response (much faster)
+#' #different solution than previous one
+#' #because target encoding is done against the response
+#' #rather than against the other numeric in the pair
+#' m <- cor_matrix(
+#'   df = vi,
+#'   response = "vi_mean",
+#'   predictors = vi_predictors
+#' )
+#'
+#' m[1:5, 1:5]
 #'
 #' }
 #' @autoglobal
@@ -45,7 +78,8 @@ cor_matrix <- function(
     df = NULL,
     response = NULL,
     predictors = NULL,
-    cor_method = "pearson"
+    cor_method = "pearson",
+    encoding_method = "mean"
 ){
 
   #if df with predictors, compute cor data frame
@@ -55,7 +89,8 @@ cor_matrix <- function(
       df = df,
       response = response,
       predictors = predictors,
-      cor_method = cor_method
+      cor_method = cor_method,
+      encoding_method = encoding_method
     )
 
   }
@@ -80,7 +115,7 @@ cor_matrix <- function(
 
   #named vector to map row/column names to indices
   index_map <- stats::setNames(
-    object = 1:length(variables),
+    object = seq_along(variables),
     nm = variables
     )
 

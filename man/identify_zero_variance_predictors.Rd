@@ -21,26 +21,31 @@ Predictors a variance of zero or near zero are highly problematic for multicolli
 }
 \examples{
 if (interactive()) {
-  #load example data
-  #and its predictors
-  data(
-    vi,
-    vi_predictors
-    )
 
-  #validate the vi data frame
-  vi <- collinear::validate_df(df = vi)
+data(
+  vi,
+  vi_predictors
+)
 
-  #validate predictors
-  predictors <- collinear::validate_df_predictors(
+#create zero variance predictors
+vi$zv_1 <- 1
+vi$zv_2 <- runif(n = nrow(vi), min = 0, max = 0.0001)
+
+
+#add to vi predictors
+vi_predictors <- c(
+  vi_predictors,
+  "zv_1",
+  "zv_2"
+)
+
+#identify zero variance predictors
+zero.variance.predictors <- identify_zero_variance_predictors(
   df = vi,
   predictors = vi_predictors
-  )
+)
 
-  #get numeric predictors
-  predictors.numeric <- collinear::identify_non_numeric_predictors(
-    df = vi,
-    predictors = predictors
-    )
+zero.variance.predictors
+
 }
 }

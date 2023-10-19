@@ -315,18 +315,10 @@ target_encoding_rank <- function(
 ){
 
   #new variable name
-  if(white_noise == 0){
-    encoded.variable.name <- paste0(
-      predictor,
-      "__encoded_rank"
-    )
-  } else {
-    encoded.variable.name <- paste0(
-      predictor,
-      "__encoded_rank__white_noise_",
-      white_noise
-    )
-  }
+  encoded.variable.name <- paste0(
+    predictor,
+    "__encoded_rank"
+  )
 
   #aggregate by groups
   df.map <- tapply(
@@ -340,7 +332,7 @@ target_encoding_rank <- function(
   #add rank column
   df.map <- data.frame(
     names(df.map),
-    1:length(df.map) #rank column
+    seq_along(df.map) #rank column
   )
   names(df.map) <- c(predictor, encoded.variable.name)
 

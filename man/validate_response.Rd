@@ -17,25 +17,28 @@ validate_response(df = NULL, response = NULL, decimals = 4)
 character string with name of the response
 }
 \description{
-Validate the 'response' argument for target encoding of non-numeric variables
+Requires the argument 'df' to be validated with \code{\link[=validate_df]{validate_df()}}.
 }
 \examples{
 if (interactive()) {
-  #load example data
-  #and its predictors
-  data(
-    vi,
-    vi_predictors
-    )
 
-  #validate the vi data frame
-  vi <- collinear::validate_df(df = vi)
+data(
+  vi
+)
 
+#validating example data frame
+vi <- validate_df(
+  df = vi
+)
 
-  #validate the response "vi_mean"
-  response <- collinear::validate_response(
-    df = vi,
-    response = "vi_mean"
-    )
+#validating example predictors
+response <- validate_response(
+  df = vi,
+  response = "vi_mean"
+)
+
+#tagged as validated
+attributes(response)$validated
+
 }
 }

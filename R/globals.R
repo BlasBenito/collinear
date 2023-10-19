@@ -12,8 +12,6 @@ utils::globalVariables(c(
   "is.required",
   # <cor_numerics>
   "pair_name",
-  # <preference_order>
-  "value",
   # <identify_zero_variance_predictors>
   "var",
   # <cor_numerics>
@@ -25,8 +23,6 @@ utils::globalVariables(c(
   # <vif_df>
   # <vif_select>
   "vif",
-  # <target_encoding_rank>
-  "white_noise",
   # <cor_numerics>
   "x",
   # <cor_numerics>

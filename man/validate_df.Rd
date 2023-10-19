@@ -33,18 +33,15 @@ Validates a data frame to ensure it complies with the requirements of the packag
 \examples{
 if (interactive()) {
 
-  #load example data
-  data(vi)
+data(vi)
 
-  #validate the vi data frame
-  vi <- collinear::validate_df(df = vi)
+#validating example data frame
+vi <- validate_df(
+  df = vi
+)
 
-  #test effect of argument min_rows
-  #on a subset of the vi data frame
-  vi <- collinear::validate_df(
-  df = vi[1:10, ],
-  min_rows = 20
-  )
+#tagged as validated
+attributes(vi)$validated
 
 }
 }

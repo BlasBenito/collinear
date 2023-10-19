@@ -65,8 +65,8 @@ data(
 #reduce size of vi to speed-up example execution
 vi <- vi[1:1000, ]
 
-#no response
-#no preference_order
+#without response
+#without preference_order
 #permissive max_vif
 #only numeric predictors are processed
 selected.predictors <- vif_select(
@@ -77,8 +77,8 @@ selected.predictors <- vif_select(
 
 selected.predictors
 
-#no response
-#no preference_order
+#without response
+#without preference_order
 #restrictive max_vif
 #only numeric predictors are processed
 selected.predictors <- vif_select(
@@ -90,7 +90,7 @@ selected.predictors <- vif_select(
 selected.predictors
 
 #with response
-#no preference_order
+#without preference_order
 #restrictive max_cor
 #slightly different solution than previous one
 #because categorical variables are target-enccoded

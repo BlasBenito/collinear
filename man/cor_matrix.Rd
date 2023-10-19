@@ -8,7 +8,8 @@ cor_matrix(
   df = NULL,
   response = NULL,
   predictors = NULL,
-  cor_method = "pearson"
+  cor_method = "pearson",
+  encoding_method = "mean"
 )
 }
 \arguments{
@@ -19,6 +20,8 @@ cor_matrix(
 \item{predictors}{(optional; character vector) character vector with predictor names in 'df'. If omitted, all columns of 'df' are used as predictors. Default:'NULL'}
 
 \item{cor_method}{(optional; character string) Method used to compute pairwise correlations. Accepted methods are "pearson" (with a recommended minimum of 30 rows in 'df') or "spearman" (with a recommended minimum of 10 rows in 'df'). Default: "pearson".}
+
+\item{encoding_method}{(optional; character string). Name of the target encoding method to convert character and factor predictors to numeric. One of "mean", "rank", "loo", "rnorm" (see \code{\link[=target_encoding_lab]{target_encoding_lab()}} for further details). Default: \code{"mean"}}
 }
 \value{
 correlation matrix
@@ -50,10 +53,42 @@ data(
   vi_predictors
 )
 
+#reduce size of vi to speed-up example execution
+vi <- vi[1:1000, ]
+
+#convert correlation data frame to matrix
+df <- cor_df(
+  df = vi,
+  predictors = vi_predictors
+)
+
 m <- cor_matrix(
-      df = vi,
-      predictors = vi_predictors
-  )
+  df = df
+)
+
+#show first three columns and rows
+#pairs of categoricals
+m[1:5, 1:5]
+
+#generate correlation matrix directly
+m <- cor_matrix(
+  df = vi,
+  predictors = vi_predictors
+)
+
+m[1:5, 1:5]
+
+#with response (much faster)
+#different solution than previous one
+#because target encoding is done against the response
+#rather than against the other numeric in the pair
+m <- cor_matrix(
+  df = vi,
+  response = "vi_mean",
+  predictors = vi_predictors
+)
+
+m[1:5, 1:5]
 
 }
 }

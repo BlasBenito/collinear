@@ -16,7 +16,7 @@ preference_order(
 \arguments{
 \item{df}{(required; data frame or tibble) A data frame with numeric and/or character predictors predictors, and optionally, a response variable. Default: NULL.}
 
-\item{response}{(recommended, character string) Name of a numeric response variable. Character response variables are ignored. Please, see 'Details' to better understand how providing this argument or not leads to different results when there are character variables in 'predictors'. Default: NULL.}
+\item{response}{(required, character string) Name of a numeric response variable. Character response variables are ignored. Please, see 'Details' to better understand how providing this argument or not leads to different results when there are character variables in 'predictors'. Default: NULL.}
 
 \item{predictors}{(optional; character vector) character vector with predictor names in 'df'. If omitted, all columns of 'df' are used as predictors. Default:'NULL'}
 
@@ -46,24 +46,70 @@ data(
   vi_predictors
 )
 
+#reduce size of vi to speed-up example execution
+vi <- vi[1:1000, ]
+
+#computing preference order
+#with response
+#numerics and categoricals in the output
+#as the R-squared between each predictor and the response
 preference.order <- preference_order(
   df = vi,
   response = "vi_mean",
-  predictors = vi_predictors[1:10],
+  predictors = vi_predictors,
   f = f_rsquared,
-  workers = 2
+  workers = 1
   )
 
-#without preference_order
-selected.predictors <- collinear(
+preference.order
+
+#using it in variable selection with collinear()
+selected.predictors <- cor_select(
   df = vi,
-  predictors = vi_predictors[1:10],
-  preference_order = preference.order$predictor,
-  max_cor = 0.75,
-  max_vif = 5
+  response = "vi_mean", #don't forget the response!
+  predictors = vi_predictors,
+  preference_order = preference.order,
+  max_cor = 0.75
   )
 
 selected.predictors
+
+#check their correlations
+selected.predictors.cor <- cor_df(
+  df = vi,
+  response = "vi_mean",
+  predictors = selected.predictors
+)
+
+#all correlations below max_cor
+selected.predictors.cor
+
+#USING A CUSTOM FUNCTION
+#custom function to compute RMSE between a predictor and a response
+#x is a predictor name
+#y is a response name
+#df is a data frame with multiple predictors and one response
+#must return a single number, with higher number indicating higher preference
+#notice we use "one minus RMSE" to give higher rank to variables with lower RMSE
+f_rmse <- function(x, y, df){
+
+  xy <- df[, c(x, y)] |>
+    na.omit() |>
+    scale()
+
+  1 - sqrt(mean((xy[, 1] - xy[, 2])^2))
+
+}
+
+preference.order <- preference_order(
+  df = vi,
+  response = "vi_mean",
+  predictors = vi_predictors,
+  f = f_rmse,
+  workers = 1
+)
+
+preference.order
 
 }
 

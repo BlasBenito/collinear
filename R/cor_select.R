@@ -36,8 +36,8 @@
 #' #reduce size of vi to speed-up example execution
 #' vi <- vi[1:1000, ]
 #'
-#' #no response
-#' #no preference_order
+#' #without response
+#' #without preference_order
 #' #permissive max_cor
 #' selected.predictors <- cor_select(
 #'   df = vi,
@@ -47,8 +47,8 @@
 #'
 #' selected.predictors
 #'
-#' #no response
-#' #no preference_order
+#' #without response
+#' #without preference_order
 #' #restrictive max_cor
 #' selected.predictors <- cor_select(
 #'   df = vi,
@@ -59,7 +59,7 @@
 #' selected.predictors
 #'
 #' #with response
-#' #no preference_order
+#' #without preference_order
 #' #restrictive max_cor
 #' #slightly different solution than previous one
 #' #because here target encoding is done against the response
@@ -131,24 +131,9 @@ cor_select <- function(
 ){
 
   #checking argument max_cor
-  if(max_cor < 0 | max_cor > 1){
+  if(max_cor < 0 || max_cor > 1){
     stop("argument 'max_cor' must be a numeric between 0 and 1.")
   }
-
-  #correlation data frame
-  cor.df <- cor_df(
-    df = df,
-    response = response,
-    predictors = predictors,
-    cor_method = cor_method,
-    encoding_method = encoding_method
-  )
-
-  #correlation matrix
-  cor.matrix <- cor_matrix(
-    df = cor.df
-  ) |>
-    abs()
 
   #auto preference order
   #variables with lower sum of cor with others go higher
@@ -165,7 +150,11 @@ cor_select <- function(
 
   #check if preference_order comes from preference_order()
   if(is.data.frame(preference_order) == TRUE){
-    preference_order <- preference_order$predictor
+    if("predictor" %in% names(preference_order)){
+      preference_order <- preference_order$predictor
+    } else {
+      stop("argument 'preference_order' must be a data frame with the column 'predictor'.")
+    }
   }
 
   #subset preference_order in predictors
@@ -188,6 +177,21 @@ cor_select <- function(
     )
 
   }
+
+  #correlation data frame
+  cor.df <- cor_df(
+    df = df,
+    response = response,
+    predictors = preference_order,
+    cor_method = cor_method,
+    encoding_method = encoding_method
+  )
+
+  #correlation matrix
+  cor.matrix <- cor_matrix(
+    df = cor.df
+  ) |>
+    abs()
 
   #organize the correlation matrix according to preference_order
   cor.matrix <- cor.matrix[

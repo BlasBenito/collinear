@@ -16,11 +16,18 @@
 #'
 #' @examples
 #' if(interactive()){
+#'
+#' #loading example data
 #' data(vi)
-#' cramer_v(
+#'
+#' #computing Cramer's V for two categorical predictors
+#' v <- cramer_v(
 #'   x = vi$soil_type,
 #'   y = vi$koppen_zone
 #'   )
+#'
+#' v
+#'
 #' }
 #' @autoglobal
 #' @export
@@ -60,10 +67,17 @@ cramer_v <- function(
 
   }
 
+  #to data frame to remove NA
+  xy.df <- data.frame(
+    x = as.character(x),
+    y = as.character(y)
+  ) |>
+    na.omit()
+
   # contingency table of 'x' and 'y'
   xy.table <- table(
-    as.character(x),
-    as.character(y)
+    xy.df$x,
+    xy.df$y
   )
 
   # chi-squared test with Monte Carlo simulation

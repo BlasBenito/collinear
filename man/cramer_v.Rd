@@ -25,10 +25,17 @@ Even when its range is between 0 and 1, Cramer's V values are not directly compa
 }
 \examples{
 if(interactive()){
+
+#loading example data
 data(vi)
-cramer_v(
+
+#computing Cramer's V for two categorical predictors
+v <- cramer_v(
   x = vi$soil_type,
   y = vi$koppen_zone
   )
+
+v
+
 }
 }

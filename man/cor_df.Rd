@@ -53,10 +53,30 @@ data(
   vi_predictors
 )
 
+#reduce size of vi to speed-up example execution
+vi <- vi[1:1000, ]
+
+#without response
+#categorical vs categorical compared with cramer_v()
+#categorical vs numerical compared wit stats::cor() via target-encoding
+#numerical vs numerical compared with stats::cor()
 df <- cor_df(
-      df = vi,
-      predictors = vi_predictors
-  )
+  df = vi,
+  predictors = vi_predictors
+)
+
+head(df)
+
+#with response
+#different solution than previous one
+#because target encoding is done against the response
+#rather than against the other numeric in the pair
+df <- cor_df(
+  df = vi,
+  response = "vi_mean",
+  predictors = vi_predictors
+)
+
 
 }
 }

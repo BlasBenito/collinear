@@ -2,38 +2,34 @@
 % Please edit documentation in R/preference_order.R
 \name{f_rsquared}
 \alias{f_rsquared}
-\title{Compute the preference order for predictors based on the R-squared value.}
+\title{R-squared between a response and a predictor}
 \usage{
 f_rsquared(x, y, df)
 }
 \arguments{
-\item{x}{The predictor variable name.}
+\item{x}{(required, character string) name of the predictor variable.}
 
-\item{y}{The response variable name.}
+\item{y}{(required, character string) name of the response variable}
 
-\item{df}{The data frame containing the variables.}
+\item{df}{(required, data frame) data frame with the columns 'x' and 'y'.}
 }
 \value{
-The R-squared value between the predictor and the response variable.
+R-squared
 }
 \description{
-This function calculates the preference order of predictors based on the R-squared value between each predictor and the response variable.
+Computes the R-squared between a response and a predictor.
+Fastest option to compute preference order.
 }
 \examples{
 if(interactive()){
 
-data(
-  vi,
-  vi_predictors
-)
+data(vi)
 
-preference.order <- preference_order(
-  df = vi[1:1000, ],
-  response = "vi_mean",
-  predictors = vi_predictors[1:10],
-  f = f_rsquared,
-  workers = 1
-  )
+f_rsquared(
+  x = "growing_season_length", #predictor
+  y = "vi_mean",               #response
+  df = vi
+)
 
 }
 }

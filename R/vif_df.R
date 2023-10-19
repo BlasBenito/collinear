@@ -29,10 +29,27 @@
 #'   vi_predictors
 #' )
 #'
+#' #reduce size of vi to speed-up example execution
+#' vi <- vi[1:1000, ]
+#'
+#' #without response
+#' #only numeric predictors are returned
 #' df <- vif_df(
-#'       df = vi,
-#'       predictors = vi_predictors
+#'   df = vi,
+#'   predictors = vi_predictors
 #' )
+#'
+#' df
+#'
+#' #with response
+#' #categorical and numeric predictors are returned
+#' df <- vif_df(
+#'   df = vi,
+#'   response = "vi_mean",
+#'   predictors = vi_predictors
+#' )
+#'
+#' df
 #'
 #' }
 #' @autoglobal

@@ -7,27 +7,19 @@
 #' @return character vector with names of numeric predictors.
 #' @examples
 #' if (interactive()) {
-#'   #load example data
-#'   #and its predictors
-#'   data(
-#'     vi,
-#'     vi_predictors
-#'     )
 #'
-#'   #validate the vi data frame
-#'   vi <- collinear::validate_df(df = vi)
+#' data(
+#'   vi,
+#'   vi_predictors
+#' )
 #'
-#'   #validate predictors
-#'   predictors <- collinear::validate_df_predictors(
+#' numeric.predictors <- identify_numeric_predictors(
 #'   df = vi,
 #'   predictors = vi_predictors
-#'   )
+#' )
 #'
-#'   #get numeric predictors
-#'   predictors.numeric <- collinear::identify_numeric_predictors(
-#'     df = vi,
-#'     predictors = predictors
-#'     )
+#' numeric.predictors
+#'
 #' }
 #' @autoglobal
 #' @export
@@ -61,27 +53,19 @@ identify_numeric_predictors <- function(
 #' @return character vector with names of numeric predictors.
 #' @examples
 #' if (interactive()) {
-#'   #load example data
-#'   #and its predictors
-#'   data(
-#'     vi,
-#'     vi_predictors
-#'     )
 #'
-#'   #validate the vi data frame
-#'   vi <- collinear::validate_df(df = vi)
+#' data(
+#'   vi,
+#'   vi_predictors
+#' )
 #'
-#'   #validate predictors
-#'   predictors <- collinear::validate_df_predictors(
+#' non.numeric.predictors <- identify_non_numeric_predictors(
 #'   df = vi,
 #'   predictors = vi_predictors
-#'   )
+#' )
 #'
-#'   #get numeric predictors
-#'   predictors.numeric <- collinear::identify_non_numeric_predictors(
-#'     df = vi,
-#'     predictors = predictors
-#'     )
+#' non.numeric.predictors
+#'
 #' }
 #' @autoglobal
 #' @export
@@ -117,27 +101,32 @@ identify_non_numeric_predictors <- function(
 #' @return character vector with names of zero and near-zero variance columns.
 #' @examples
 #' if (interactive()) {
-#'   #load example data
-#'   #and its predictors
-#'   data(
-#'     vi,
-#'     vi_predictors
-#'     )
 #'
-#'   #validate the vi data frame
-#'   vi <- collinear::validate_df(df = vi)
+#' data(
+#'   vi,
+#'   vi_predictors
+#' )
 #'
-#'   #validate predictors
-#'   predictors <- collinear::validate_df_predictors(
+#' #create zero variance predictors
+#' vi$zv_1 <- 1
+#' vi$zv_2 <- runif(n = nrow(vi), min = 0, max = 0.0001)
+#'
+#'
+#' #add to vi predictors
+#' vi_predictors <- c(
+#'   vi_predictors,
+#'   "zv_1",
+#'   "zv_2"
+#' )
+#'
+#' #identify zero variance predictors
+#' zero.variance.predictors <- identify_zero_variance_predictors(
 #'   df = vi,
 #'   predictors = vi_predictors
-#'   )
+#' )
 #'
-#'   #get numeric predictors
-#'   predictors.numeric <- collinear::identify_non_numeric_predictors(
-#'     df = vi,
-#'     predictors = predictors
-#'     )
+#' zero.variance.predictors
+#'
 #' }
 #' @autoglobal
 #' @export

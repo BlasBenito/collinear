@@ -10,9 +10,7 @@
 #'
 #' The function [vif_select()] applyies a Variance Inflation Factor (VIF) analysis to reduce multicollinearity. The VIF for a given variable `y` is computed as `1/(1-R2)`, where `R2` is the multiple R-squared of a multiple regression model fitted using `y` as response and all the remaining variables of the input data frame as predictors. The equation can be interpreted as "the rate of perfect model's R-squared to the unexplained variance of this model". The possible range of VIF values is (1, Inf]. A VIF lower than 10 suggest that removing `y` from the data set would reduce overall multicollinearity. The recommended thresholds for maximum VIF may vary depending on the source consulted, being the most common values, 2.5, 5, and 10.
 #'
-#' The argument `preference_order` allows the user to "protect" variables that might be interesting or even required for the given analysis.
-#'
-#' If `preference_order` is not provided, then the predictors are ranked from lower to higher sum of R-squared with the other preodictors, and removed one by one until the maximum R-squared of the correlation matrix is lower than `max_cor` and the maximum VIF is below `max_vif`.
+#' The argument `preference_order` allows the user to prioritise variables that might be interesting or even required for the given analysis. If `preference_order` is not provided, then the predictors are ranked from lower to higher sum of R-squared with the other preodictors, and removed one by one until the maximum R-squared of the correlation matrix is lower than `max_cor` and the maximum VIF is below `max_vif`.
 #'
 #' Please note that near-zero variance columns are ignored by this function.
 #'
@@ -37,8 +35,8 @@
 #' #reduce size of vi to speed-up example execution
 #' vi <- vi[1:1000, ]
 #'
-#' #no response
-#' #no preference_order
+#' #without response
+#' #without preference_order
 #' #permissive max_cor and max_vif
 #' #only numeric variables in output
 #' selected.predictors <- collinear(
@@ -50,8 +48,8 @@
 #'
 #' selected.predictors
 #'
-#' #no response
-#' #no preference_order
+#' #without response
+#' #without preference_order
 #' #restrictive max_cor and max_vif
 #' #only numeric variables in output
 #' selected.predictors <- collinear(
@@ -64,7 +62,7 @@
 #' selected.predictors
 #'
 #' #with response
-#' #no preference_order
+#' #without preference_order
 #' #restrictive max_cor and max_vif
 #' #numerics and categorical variables in output
 #' selected.predictors <- collinear(

@@ -24,18 +24,15 @@
 #' @examples
 #' if (interactive()) {
 #'
-#'   #load example data
-#'   data(vi)
+#' data(vi)
 #'
-#'   #validate the vi data frame
-#'   vi <- collinear::validate_df(df = vi)
+#' #validating example data frame
+#' vi <- validate_df(
+#'   df = vi
+#' )
 #'
-#'   #test effect of argument min_rows
-#'   #on a subset of the vi data frame
-#'   vi <- collinear::validate_df(
-#'   df = vi[1:10, ],
-#'   min_rows = 20
-#'   )
+#' #tagged as validated
+#' attributes(vi)$validated
 #'
 #' }
 #' @autoglobal
@@ -148,6 +145,9 @@ validate_df <- function(
 #' Validate and preprocess the 'predictors' argument for analysis
 #'
 #' @description
+#'
+#' Requires the argument 'df' to be validated with [validate_df()].
+#'
 #' Validates and preprocesses the 'predictors' argument to ensure it complies with the requirements of the package functions. It performs the following actions:
 #' \itemize{
 #'   \item Stops if 'df' is NULL.
@@ -169,21 +169,25 @@ validate_df <- function(
 #' @examples
 #' if (interactive()) {
 #'
-#'   #load example data
-#'   #and its predictors
-#'   data(
-#'     vi,
-#'     vi_predictors
-#'     )
+#' data(
+#'   vi,
+#'   vi_predictors
+#'   )
 #'
-#'   #validate the vi data frame
-#'   vi <- collinear::validate_df(df = vi)
+#' #validating example data frame
+#' vi <- validate_df(
+#'   df = vi
+#' )
 #'
-#'   #validate predictors
-#'   predictors <- collinear::validate_df_predictors(
-#'     df = vi,
-#'     predictors = vi_predictors
-#'     )
+#' #validating example predictors
+#' vi_predictors <- validate_predictors(
+#'   df = vi,
+#'   predictors = vi_predictors
+#' )
+#'
+#' #tagged as validated
+#' attributes(vi_predictors)$validated
+#'
 #' }
 #' @autoglobal
 #' @export
@@ -286,28 +290,36 @@ validate_predictors <- function(
 
 #' Validate the 'response' argument for target encoding of non-numeric variables
 #'
+#' @description
+#'
+#' Requires the argument 'df' to be validated with [validate_df()].
+#'
+#'
 #' @param df (required; data frame or tibble) A validated data frame with numeric and/or character predictors predictors, and optionally, a response variable. Default: NULL.
 #' @param response (optional, character string) Name of a numeric response variable. Character response variables are ignored. Default: NULL.
 #' @param decimals (required, integer) number of decimal places for the zero variance test. Default: 4
 #' @return character string with name of the response
 #' @examples
 #' if (interactive()) {
-#'   #load example data
-#'   #and its predictors
-#'   data(
-#'     vi,
-#'     vi_predictors
-#'     )
 #'
-#'   #validate the vi data frame
-#'   vi <- collinear::validate_df(df = vi)
+#' data(
+#'   vi
+#' )
 #'
+#' #validating example data frame
+#' vi <- validate_df(
+#'   df = vi
+#' )
 #'
-#'   #validate the response "vi_mean"
-#'   response <- collinear::validate_response(
-#'     df = vi,
-#'     response = "vi_mean"
-#'     )
+#' #validating example predictors
+#' response <- validate_response(
+#'   df = vi,
+#'   response = "vi_mean"
+#' )
+#'
+#' #tagged as validated
+#' attributes(response)$validated
+#'
 #' }
 #' @autoglobal
 #' @export

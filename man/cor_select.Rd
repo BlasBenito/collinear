@@ -58,8 +58,8 @@ data(
 #reduce size of vi to speed-up example execution
 vi <- vi[1:1000, ]
 
-#no response
-#no preference_order
+#without response
+#without preference_order
 #permissive max_cor
 selected.predictors <- cor_select(
   df = vi,
@@ -69,8 +69,8 @@ selected.predictors <- cor_select(
 
 selected.predictors
 
-#no response
-#no preference_order
+#without response
+#without preference_order
 #restrictive max_cor
 selected.predictors <- cor_select(
   df = vi,
@@ -81,7 +81,7 @@ selected.predictors <- cor_select(
 selected.predictors
 
 #with response
-#no preference_order
+#without preference_order
 #restrictive max_cor
 #slightly different solution than previous one
 #because here target encoding is done against the response

@@ -19,26 +19,18 @@ Given 'df' and 'predictors' arguments, this function subsets and returns the num
 }
 \examples{
 if (interactive()) {
-  #load example data
-  #and its predictors
-  data(
-    vi,
-    vi_predictors
-    )
 
-  #validate the vi data frame
-  vi <- collinear::validate_df(df = vi)
+data(
+  vi,
+  vi_predictors
+)
 
-  #validate predictors
-  predictors <- collinear::validate_df_predictors(
+numeric.predictors <- identify_numeric_predictors(
   df = vi,
   predictors = vi_predictors
-  )
+)
 
-  #get numeric predictors
-  predictors.numeric <- collinear::identify_numeric_predictors(
-    df = vi,
-    predictors = predictors
-    )
+numeric.predictors
+
 }
 }
