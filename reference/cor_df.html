@@ -57,7 +57,7 @@
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
     <dl><dt>df</dt>
-<dd><p>(required; data frame or tibble) A data frame with numeric and/or character predictors, and optionally, a response variable. Default: NULL.</p></dd>
+<dd><p>(required; data frame) A data frame with numeric and/or character predictors, and optionally, a response variable. Default: NULL.</p></dd>
 
 
 <dt>response</dt>
@@ -73,7 +73,7 @@
 
 
 <dt>encoding_method</dt>
-<dd><p>(optional; character string). Name of the target encoding method to convert character and factor predictors to numeric. One of "mean", "rank", "loo", "rnorm" (see <code><a href="target_encoding_lab.html">target_encoding_lab()</a></code> for further details). Default: <code>"mean"</code></p></dd>
+<dd><p>(optional; character string). Name of the target encoding method to convert character and factor predictors to numeric. One of "mean", "rank", "loo", "rnorm" (see <code><a href="target_encoding_lab.html">target_encoding_lab()</a></code> for further details). Default: "mean"</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -92,6 +92,10 @@
 <li><p>response' is NULL (or the name of a non-numeric column): the association between the character variables is computed using Cramer's V. This option might be problematic, because R-squared values and Cramer's V, even when having the same range between 0 and 1, are not fully comparable.</p></li>
 </ul></li>
 </ul></div>
+    <div class="section level2">
+    <h2 id="author">Author<a class="anchor" aria-label="anchor" href="#author"></a></h2>
+    <p>Blas M. Benito</p>
+    </div>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>

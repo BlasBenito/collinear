@@ -58,7 +58,7 @@
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
     <dl><dt>df</dt>
-<dd><p>(required; data frame or tibble) A data frame with numeric and/or character predictors predictors, and optionally, a response variable. Default: NULL.</p></dd>
+<dd><p>(required; data frame) A data frame with numeric and/or character predictors predictors, and optionally, a response variable. Default: NULL.</p></dd>
 
 
 <dt>response</dt>
@@ -78,7 +78,7 @@
 
 
 <dt>encoding_method</dt>
-<dd><p>(optional; character string). Name of the target encoding method to convert character and factor predictors to numeric. One of "mean", "rank", "loo", "rnorm" (see <code><a href="target_encoding_lab.html">target_encoding_lab()</a></code> for further details). Default: <code>"mean"</code></p></dd>
+<dd><p>(optional; character string). Name of the target encoding method to convert character and factor predictors to numeric. One of "mean", "rank", "loo", "rnorm" (see <code><a href="target_encoding_lab.html">target_encoding_lab()</a></code> for further details). Default: "mean"</p></dd>
 
 
 <dt>workers</dt>
@@ -90,6 +90,10 @@
     
 
 <p>A data frame with the columns "predictor" and "value". The former contains the predictors names in order, ready for the argument <code>preference_order</code> in <code><a href="cor_select.html">cor_select()</a></code>, <code><a href="vif_select.html">vif_select()</a></code> and <code><a href="collinear.html">collinear()</a></code>. The latter contains the result of the function <code>f</code> for each combination of predictor and response.</p>
+    </div>
+    <div class="section level2">
+    <h2 id="author">Author<a class="anchor" aria-label="anchor" href="#author"></a></h2>
+    <p>Blas M. Benito</p>
     </div>
 
     <div class="section level2">
@@ -106,7 +110,7 @@
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#computing preference order</span></span></span>
 <span class="r-in"><span><span class="co">#with response</span></span></span>
-<span class="r-in"><span><span class="co">#numerics and categoricals in the output</span></span></span>
+<span class="r-in"><span><span class="co">#numeric and categorical predictors in the output</span></span></span>
 <span class="r-in"><span><span class="co">#as the R-squared between each predictor and the response</span></span></span>
 <span class="r-in"><span><span class="va">preference.order</span> <span class="op">&lt;-</span> <span class="fu">preference_order</span><span class="op">(</span></span></span>
 <span class="r-in"><span>  df <span class="op">=</span> <span class="va">vi</span>,</span></span>

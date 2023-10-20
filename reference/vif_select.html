@@ -7,7 +7,7 @@ The possible range of VIF values is (1, Inf]. A VIF lower than 10 suggest that r
 The function vif_select() applies a recursive algorithm to remove variables with a VIF higher than a given threshold (defined by the argument max_vif).
 If the argument response is provided, all non-numeric variables in predictors are transformed into numeric using target encoding (see target_encoding_lab()). Otherwise, non-numeric variables are ignored.
 The argument preference_order allows defining a preference selection order to preserve (when possible) variables that might be interesting or even required for a given analysis.
-For example, if predictors is &quot;c(&quot;a&quot;, &quot;b&quot;, &quot;c&quot;) and preference_order is &quot;c(&quot;a&quot;, &quot;b&quot;), there are two possibilities:
+For example, if predictors is c(&quot;a&quot;, &quot;b&quot;, &quot;c&quot;) and preference_order is c(&quot;a&quot;, &quot;b&quot;), there are two possibilities:
 If the VIF of &quot;a&quot; is higher than the VIF of &quot;b&quot;, and both VIF values are above max_vif, then &quot;a&quot; is selected and &quot;b&quot; is removed.
 If their correlation is equal or above max_cor, then &quot;a&quot; is selected, no matter its correlation with &quot;c&quot;,
 
@@ -20,7 +20,7 @@ The possible range of VIF values is (1, Inf]. A VIF lower than 10 suggest that r
 The function vif_select() applies a recursive algorithm to remove variables with a VIF higher than a given threshold (defined by the argument max_vif).
 If the argument response is provided, all non-numeric variables in predictors are transformed into numeric using target encoding (see target_encoding_lab()). Otherwise, non-numeric variables are ignored.
 The argument preference_order allows defining a preference selection order to preserve (when possible) variables that might be interesting or even required for a given analysis.
-For example, if predictors is &quot;c(&quot;a&quot;, &quot;b&quot;, &quot;c&quot;) and preference_order is &quot;c(&quot;a&quot;, &quot;b&quot;), there are two possibilities:
+For example, if predictors is c(&quot;a&quot;, &quot;b&quot;, &quot;c&quot;) and preference_order is c(&quot;a&quot;, &quot;b&quot;), there are two possibilities:
 If the VIF of &quot;a&quot; is higher than the VIF of &quot;b&quot;, and both VIF values are above max_vif, then &quot;a&quot; is selected and &quot;b&quot; is removed.
 If their correlation is equal or above max_cor, then &quot;a&quot; is selected, no matter its correlation with &quot;c&quot;,
 
@@ -74,7 +74,7 @@ If preference_order is not provided, then the predictors are ranked by their var
 <p>The function <code>vif_select()</code> applies a recursive algorithm to remove variables with a VIF higher than a given threshold (defined by the argument <code>max_vif</code>).</p>
 <p>If the argument <code>response</code> is provided, all non-numeric variables in <code>predictors</code> are transformed into numeric using target encoding (see <code><a href="target_encoding_lab.html">target_encoding_lab()</a></code>). Otherwise, non-numeric variables are ignored.</p>
 <p>The argument <code>preference_order</code> allows defining a preference selection order to preserve (when possible) variables that might be interesting or even required for a given analysis.</p>
-<p>For example, if <code>predictors</code> is <code>"c("a", "b", "c")</code> and <code>preference_order</code> is <code>"c("a", "b")</code>, there are two possibilities:</p><ul><li><p>If the VIF of <code>"a"</code> is higher than the VIF of <code>"b"</code>, and both VIF values are above <code>max_vif</code>, then <code>"a"</code> is selected and <code>"b"</code> is removed.</p></li>
+<p>For example, if <code>predictors</code> is <code>c("a", "b", "c")</code> and <code>preference_order</code> is <code>c("a", "b")</code>, there are two possibilities:</p><ul><li><p>If the VIF of <code>"a"</code> is higher than the VIF of <code>"b"</code>, and both VIF values are above <code>max_vif</code>, then <code>"a"</code> is selected and <code>"b"</code> is removed.</p></li>
 <li><p>If their correlation is equal or above <code>max_cor</code>, then <code>"a"</code> is selected, no matter its correlation with <code>"c"</code>,</p></li>
 </ul><p>If <code>preference_order</code> is not provided, then the predictors are ranked by their variance inflation factor as computed by <code><a href="vif_df.html">vif_df()</a></code>.</p>
     </div>
@@ -94,7 +94,7 @@ If preference_order is not provided, then the predictors are ranked by their var
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
     <dl><dt>df</dt>
-<dd><p>(required; data frame or tibble) A data frame with numeric and/or character predictors predictors, and optionally, a response variable. Default: NULL.</p></dd>
+<dd><p>(required; data frame) A data frame with numeric and/or character predictors predictors, and optionally, a response variable. Default: NULL.</p></dd>
 
 
 <dt>response</dt>
@@ -106,15 +106,15 @@ If preference_order is not provided, then the predictors are ranked by their var
 
 
 <dt>preference_order</dt>
-<dd><p>(optional; character vector) vector with column names in 'predictors' in the desired preference order, or result of the function <code><a href="preference_order.html">preference_order()</a></code>. Allows defining a priority order for selecting predictors, which can be particularly useful when some predictors are more critical for the analysis than others. Predictors not included in this argument are ranked by their Variance Inflation Factor. Default: <code>NULL</code>.</p></dd>
+<dd><p>(optional; character vector) vector with column names in 'predictors' in the desired preference order, or result of the function <code><a href="preference_order.html">preference_order()</a></code>. Allows defining a priority order for selecting predictors, which can be particularly useful when some predictors are more critical for the analysis than others. Predictors not included in this argument are ranked by their Variance Inflation Factor. Default: NULL.</p></dd>
 
 
 <dt>max_vif</dt>
-<dd><p>(optional, numeric) Numeric with recommended values between 2.5 and 10 defining the maximum VIF allowed for any given predictor in the output dataset. Higher VIF thresholds should result in a higher number of selected variables. Default: <code>5</code>.</p></dd>
+<dd><p>(optional, numeric) Numeric with recommended values between 2.5 and 10 defining the maximum VIF allowed for any given predictor in the output dataset. Higher VIF thresholds should result in a higher number of selected variables. Default: 5.</p></dd>
 
 
 <dt>encoding_method</dt>
-<dd><p>(optional; character string). Name of the target encoding method to convert character and factor predictors to numeric. One of "mean", "rank", "loo", "rnorm" (see <code><a href="target_encoding_lab.html">target_encoding_lab()</a></code> for further details). Default: <code>"mean"</code></p></dd>
+<dd><p>(optional; character string). Name of the target encoding method to convert character and factor predictors to numeric. One of "mean", "rank", "loo", "rnorm" (see <code><a href="target_encoding_lab.html">target_encoding_lab()</a></code> for further details). Default: "mean"</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -123,6 +123,11 @@ If preference_order is not provided, then the predictors are ranked by their var
 
 <p>Character vector with the names of the selected predictors.</p>
     </div>
+    <div class="section level2">
+    <h2 id="author">Author<a class="anchor" aria-label="anchor" href="#author"></a></h2>
+    <p>Blas M. Benito</p><ul><li><p>David A. Belsley, D.A., Kuh, E., Welsch, R.E. (1980). Regression Diagnostics: Identifying Influential Data and Sources of Collinearity. John Wiley &amp; Sons. <a href="https://doi.org/10.1002/0471725153" class="external-link">doi:10.1002/0471725153</a>
+.</p></li>
+</ul></div>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>

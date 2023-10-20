@@ -9,24 +9,24 @@
     with numeric and/or categorical variables for statistical analysis and 
     machine learning modeling. The package combines bivariate correlation 
     (Pearson, Spearman, and Cramer's V) with variance inflation factor analysis, 
-    target encoding of categorical variables (Micci-Barreca, D. 2001 
+    target encoding to transform categorical variables into numeric (Micci-Barreca, D. 2001 
     &lt;DOI:10.1145/507533.507538&gt;), and a flexible 
-    feature prioritisation automated method to deliver a comprehensive 
-    multicollinearity management tool covering a wide range of usage cases.">
-<title>Multicollinearity Management for Categorical and Numeric Variables • collinear</title>
+    feature prioritization method, to deliver a comprehensive 
+    multicollinearity management tool covering a wide range of use cases.">
+<title>Seamless Multicollinearity Management for Categorical and Numeric Variables • collinear</title>
 <script src="deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="deps/bootstrap-5.2.2/bootstrap.min.css" rel="stylesheet">
 <script src="deps/bootstrap-5.2.2/bootstrap.bundle.min.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
-<!-- bootstrap-toc --><script src="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@v1.0.1/dist/bootstrap-toc.min.js" integrity="sha256-4veVQbu7//Lk5TSmc7YV48MxtMy98e26cf5MrgZYnwo=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="Multicollinearity Management for Categorical and Numeric Variables">
+<!-- bootstrap-toc --><script src="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@v1.0.1/dist/bootstrap-toc.min.js" integrity="sha256-4veVQbu7//Lk5TSmc7YV48MxtMy98e26cf5MrgZYnwo=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="Seamless Multicollinearity Management for Categorical and Numeric Variables">
 <meta property="og:description" content="System for seamless management of multicollinearity in data frames
     with numeric and/or categorical variables for statistical analysis and 
     machine learning modeling. The package combines bivariate correlation 
     (Pearson, Spearman, and Cramer's V) with variance inflation factor analysis, 
-    target encoding of categorical variables (Micci-Barreca, D. 2001 
+    target encoding to transform categorical variables into numeric (Micci-Barreca, D. 2001 
     &lt;DOI:10.1145/507533.507538&gt;), and a flexible 
-    feature prioritisation automated method to deliver a comprehensive 
-    multicollinearity management tool covering a wide range of usage cases.">
+    feature prioritization method, to deliver a comprehensive 
+    multicollinearity management tool covering a wide range of use cases.">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
@@ -113,7 +113,7 @@
 <span>  <span class="va">max_vif</span>, <span class="co">#maximum variance inflation factor</span></span>
 <span>  <span class="va">encoding_method</span>, <span class="co">#method to convert categoricals into numerics</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<p>The package contains other functions that may be useful during multicollinearity management: + <code><a href="reference/cor_select.html">cor_select()</a></code>: like <code><a href="reference/collinear.html">collinear()</a></code>, but only using pairwise correlations. + <code><a href="reference/vif_select.html">vif_select()</a></code>: like <code><a href="reference/collinear.html">collinear()</a></code>, but only using variance inflation factors. + <code><a href="reference/preference_order.html">preference_order()</a></code>: to compute preference order based on univariate models. + <code><a href="reference/target_encoding_lab.html">target_encoding_lab()</a></code>: to convert categoricals into numeric using several methods. + <code><a href="reference/cor_df.html">cor_df()</a></code>: to generate a data frame with all pairwise correlation scores. + <code><a href="reference/cor_matrix.html">cor_matrix()</a></code>: to convert a correlation data frame into matrix, or obtain a correlation matrix. + <code><a href="reference/vif_df.html">vif_df()</a></code>: to obtain a data frame with all variance inflation factors.</p>
+<p>The package contains other functions that may be useful during multicollinearity management: + <code><a href="reference/cor_select.html">cor_select()</a></code>: like <code><a href="reference/collinear.html">collinear()</a></code>, but only using pairwise correlations. + <code><a href="reference/vif_select.html">vif_select()</a></code>: like <code><a href="reference/collinear.html">collinear()</a></code>, but only using variance inflation factors. + <code><a href="reference/preference_order.html">preference_order()</a></code>: to compute preference order based on univariate models. + <code><a href="reference/target_encoding_lab.html">target_encoding_lab()</a></code>: to convert categorical predictors into numeric using several methods. + <code><a href="reference/cor_df.html">cor_df()</a></code>: to generate a data frame with all pairwise correlation scores. + <code><a href="reference/cor_matrix.html">cor_matrix()</a></code>: to convert a correlation data frame into matrix, or obtain a correlation matrix. + <code><a href="reference/vif_df.html">vif_df()</a></code>: to obtain a data frame with all variance inflation factors.</p>
 </div>
 <div class="section level1">
 <h1 id="citation">Citation<a class="anchor" aria-label="anchor" href="#citation"></a>
@@ -518,7 +518,7 @@
 <span id="cb31-10"><a href="#cb31-10" aria-hidden="true" tabindex="-1"></a><span class="do">## [19] "cloud_cover_min"            "temperature_max"           </span></span>
 <span id="cb31-11"><a href="#cb31-11" aria-hidden="true" tabindex="-1"></a><span class="do">## [21] "region"                     "swi_min"                   </span></span>
 <span id="cb31-12"><a href="#cb31-12" aria-hidden="true" tabindex="-1"></a><span class="do">## [23] "solar_rad_max"</span></span></code></pre></div>
-<p>The variable selection results differ because the numeric representations of the categorical variables are rather different between the two options. When no <code>response</code> is provided, the function <code><a href="reference/cor_select.html">cor_select()</a></code> compares categoricals against numerics by encoding each categorical after each numeric, and compares pairs of categoricals using Cramer’s V, implemented in the function <code><a href="reference/cramer_v.html">cramer_v()</a></code>. Additionally, Cramer’s V values are not directly comparable with Pearson or Spearman correlation scores, and having them together in the same analysis might induce bias during the variable selection. Not using the <code>response</code> argument should always be the last option.</p>
+<p>The variable selection results differ because the numeric representations of the categorical variables are rather different between the two options. When no <code>response</code> is provided, the function <code><a href="reference/cor_select.html">cor_select()</a></code> compares categorical predictors against numeric ones by encoding each categorical after each numeric, and compares pairs of categorical predictors using Cramer’s V, implemented in the function <code><a href="reference/cramer_v.html">cramer_v()</a></code>. Additionally, Cramer’s V values are not directly comparable with Pearson or Spearman correlation scores, and having them together in the same analysis might induce bias during the variable selection. Not using the <code>response</code> argument should always be the last option.</p>
 </div>
 <div class="section level3">
 <h3 id="preference-order">Preference order<a class="anchor" aria-label="anchor" href="#preference-order"></a>
@@ -711,7 +711,7 @@
 <li>“rnorm” (in <code><a href="reference/target_encoding_methods.html">target_encoding_rnorm()</a></code>): replaces each value in a category with a number generated by <code><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">stats::rnorm()</a></code> from a normal distribution with the mean and the standard deviation of the response over the category.</li>
 <li>“loo” (in <code><a href="reference/target_encoding_methods.html">target_encoding_loo()</a></code>): replaces each value in a category with the mean of the response across all the other cases within the category. White noise can be added to this option to increase data variability.</li>
 </ul>
-<p>The method “mean” is used as default througout all functions in the package, but can be changed via the argument <code>encoding_method</code>.</p>
+<p>The method “mean” is used as default throughout all functions in the package, but can be changed via the argument <code>encoding_method</code>.</p>
 <p>Below we use all methods to generate different numeric encodings for the categorical variable “koppen_zone”.</p>
 <div class="sourceCode" id="cb45"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/target_encoding_lab.html">target_encoding_lab</a></span><span class="op">(</span></span>
@@ -827,7 +827,7 @@
 <div class="developers">
 <h2 data-toc-skip>Developers</h2>
 <ul class="list-unstyled">
-<li>Blas Benito <br><small class="roles"> Author, maintainer </small> <a href="https://orcid.org/0000-0001-5105-7232" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
+<li>Blas Benito <br><small class="roles"> Author, maintainer, copyright holder </small> <a href="https://orcid.org/0000-0001-5105-7232" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
 </ul>
 </div>
 
