@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">collinear</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -45,13 +45,19 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">cor_df</span><span class="op">(</span>df <span class="op">=</span> <span class="cn">NULL</span>, response <span class="op">=</span> <span class="cn">NULL</span>, predictors <span class="op">=</span> <span class="cn">NULL</span>, method <span class="op">=</span> <span class="st">"pearson"</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">cor_df</span><span class="op">(</span></span>
+<span>  df <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  response <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  predictors <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  cor_method <span class="op">=</span> <span class="st">"pearson"</span>,</span>
+<span>  encoding_method <span class="op">=</span> <span class="st">"mean"</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
     <dl><dt>df</dt>
-<dd><p>(required; data frame or tibble) A data frame with numeric and/or character predictors predictors, and optionally, a response variable. Default: NULL.</p></dd>
+<dd><p>(required; data frame or tibble) A data frame with numeric and/or character predictors, and optionally, a response variable. Default: NULL.</p></dd>
 
 
 <dt>response</dt>
@@ -59,18 +65,22 @@
 
 
 <dt>predictors</dt>
-<dd><p>(optional; character vector) Character vector with column names of predictors in 'df'. If omitted, all columns of 'df' are used as predictors. Default:'NULL'</p></dd>
+<dd><p>(optional; character vector) character vector with predictor names in 'df'. If omitted, all columns of 'df' are used as predictors. Default:'NULL'</p></dd>
 
 
-<dt>method</dt>
+<dt>cor_method</dt>
 <dd><p>(optional; character string) Method used to compute pairwise correlations. Accepted methods are "pearson" (with a recommended minimum of 30 rows in 'df') or "spearman" (with a recommended minimum of 10 rows in 'df'). Default: "pearson".</p></dd>
+
+
+<dt>encoding_method</dt>
+<dd><p>(optional; character string). Name of the target encoding method to convert character and factor predictors to numeric. One of "mean", "rank", "loo", "rnorm" (see <code><a href="target_encoding_lab.html">target_encoding_lab()</a></code> for further details). Default: <code>"mean"</code></p></dd>
 
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     
 
-<p>Data frame with pairs of predictors and their correlation.</p>
+<p>data frame with pairs of predictors and their correlation.</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
@@ -88,14 +98,34 @@
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/interactive.html" class="external-link">interactive</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">{</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span></span></span>
-<span class="r-in"><span>  <span class="va">ecoregions</span>,</span></span>
-<span class="r-in"><span>  <span class="va">ecoregions_predictors</span></span></span>
+<span class="r-in"><span>  <span class="va">vi</span>,</span></span>
+<span class="r-in"><span>  <span class="va">vi_predictors</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">#reduce size of vi to speed-up example execution</span></span></span>
+<span class="r-in"><span><span class="va">vi</span> <span class="op">&lt;-</span> <span class="va">vi</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">1000</span>, <span class="op">]</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">#without response</span></span></span>
+<span class="r-in"><span><span class="co">#categorical vs categorical compared with cramer_v()</span></span></span>
+<span class="r-in"><span><span class="co">#categorical vs numerical compared wit stats::cor() via target-encoding</span></span></span>
+<span class="r-in"><span><span class="co">#numerical vs numerical compared with stats::cor()</span></span></span>
 <span class="r-in"><span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu">cor_df</span><span class="op">(</span></span></span>
-<span class="r-in"><span>      df <span class="op">=</span> <span class="va">ecoregions</span>,</span></span>
-<span class="r-in"><span>      predictors <span class="op">=</span> <span class="va">ecoregions_predictors</span></span></span>
-<span class="r-in"><span>  <span class="op">)</span></span></span>
+<span class="r-in"><span>  df <span class="op">=</span> <span class="va">vi</span>,</span></span>
+<span class="r-in"><span>  predictors <span class="op">=</span> <span class="va">vi_predictors</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">df</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">#with response</span></span></span>
+<span class="r-in"><span><span class="co">#different solution than previous one</span></span></span>
+<span class="r-in"><span><span class="co">#because target encoding is done against the response</span></span></span>
+<span class="r-in"><span><span class="co">#rather than against the other numeric in the pair</span></span></span>
+<span class="r-in"><span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu">cor_df</span><span class="op">(</span></span></span>
+<span class="r-in"><span>  df <span class="op">=</span> <span class="va">vi</span>,</span></span>
+<span class="r-in"><span>  response <span class="op">=</span> <span class="st">"vi_mean"</span>,</span></span>
+<span class="r-in"><span>  predictors <span class="op">=</span> <span class="va">vi_predictors</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="op">}</span></span></span>
 </code></pre></div>

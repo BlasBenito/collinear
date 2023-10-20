@@ -22,42 +22,72 @@
     <loc>https://blasbenito.github.io/collinear/reference/collinear-package.html</loc>
   </url>
   <url>
+    <loc>https://blasbenito.github.io/collinear/reference/collinear.html</loc>
+  </url>
+  <url>
     <loc>https://blasbenito.github.io/collinear/reference/cor_df.html</loc>
   </url>
   <url>
     <loc>https://blasbenito.github.io/collinear/reference/cor_matrix.html</loc>
   </url>
   <url>
+    <loc>https://blasbenito.github.io/collinear/reference/cor_select.html</loc>
+  </url>
+  <url>
     <loc>https://blasbenito.github.io/collinear/reference/cramer_v.html</loc>
   </url>
   <url>
-    <loc>https://blasbenito.github.io/collinear/reference/ecoregions.html</loc>
+    <loc>https://blasbenito.github.io/collinear/reference/drop_geometry_column.html</loc>
   </url>
   <url>
-    <loc>https://blasbenito.github.io/collinear/reference/ecoregions_predictors.html</loc>
+    <loc>https://blasbenito.github.io/collinear/reference/f_gam_deviance.html</loc>
+  </url>
+  <url>
+    <loc>https://blasbenito.github.io/collinear/reference/f_rf_deviance.html</loc>
+  </url>
+  <url>
+    <loc>https://blasbenito.github.io/collinear/reference/f_rsquared.html</loc>
+  </url>
+  <url>
+    <loc>https://blasbenito.github.io/collinear/reference/identify_non_numeric_predictors.html</loc>
+  </url>
+  <url>
+    <loc>https://blasbenito.github.io/collinear/reference/identify_numeric_predictors.html</loc>
+  </url>
+  <url>
+    <loc>https://blasbenito.github.io/collinear/reference/identify_zero_variance_predictors.html</loc>
   </url>
   <url>
     <loc>https://blasbenito.github.io/collinear/reference/index.html</loc>
   </url>
   <url>
-    <loc>https://blasbenito.github.io/collinear/reference/mc_auto.html</loc>
+    <loc>https://blasbenito.github.io/collinear/reference/preference_order.html</loc>
   </url>
   <url>
-    <loc>https://blasbenito.github.io/collinear/reference/mc_auto_cor.html</loc>
+    <loc>https://blasbenito.github.io/collinear/reference/target_encoding_lab.html</loc>
   </url>
   <url>
-    <loc>https://blasbenito.github.io/collinear/reference/mc_auto_vif.html</loc>
+    <loc>https://blasbenito.github.io/collinear/reference/target_encoding_methods.html</loc>
   </url>
   <url>
-    <loc>https://blasbenito.github.io/collinear/reference/mc_vif.html</loc>
+    <loc>https://blasbenito.github.io/collinear/reference/validate_df.html</loc>
   </url>
   <url>
-    <loc>https://blasbenito.github.io/collinear/reference/target_encoder.html</loc>
+    <loc>https://blasbenito.github.io/collinear/reference/validate_predictors.html</loc>
+  </url>
+  <url>
+    <loc>https://blasbenito.github.io/collinear/reference/validate_response.html</loc>
   </url>
   <url>
     <loc>https://blasbenito.github.io/collinear/reference/vi.html</loc>
   </url>
   <url>
     <loc>https://blasbenito.github.io/collinear/reference/vi_predictors.html</loc>
+  </url>
+  <url>
+    <loc>https://blasbenito.github.io/collinear/reference/vif_df.html</loc>
+  </url>
+  <url>
+    <loc>https://blasbenito.github.io/collinear/reference/vif_select.html</loc>
   </url>
 </urlset>
