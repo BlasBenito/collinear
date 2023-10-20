@@ -2,7 +2,7 @@
 #'
 #' Given 'df' and 'predictors' arguments, this function subsets and returns the numeric predictors.
 #'
-#' @param df (required; data frame or tibble) A data frame with numeric and/or character predictors predictors, and optionally, a response variable. Default: NULL.
+#' @param df (required; data frame) A data frame with numeric and/or character predictors predictors, and optionally, a response variable. Default: NULL.
 #' @param predictors (optional; character vector) A vector with predictor names in 'df'. If omitted, all columns of 'df' are used as predictors. Default:'NULL'
 #' @return character vector with names of numeric predictors.
 #' @examples
@@ -22,6 +22,7 @@
 #'
 #' }
 #' @autoglobal
+#' @author Blas M. Benito
 #' @export
 identify_numeric_predictors <- function(
     df = NULL,
@@ -48,7 +49,7 @@ identify_numeric_predictors <- function(
 #'
 #' Given 'df' and 'predictors' arguments, this function subsets and returns the non-numeric (character, factor, and logical) predictors.
 #'
-#' @param df (required; data frame or tibble) A data frame with numeric and/or character predictors predictors, and optionally, a response variable. Default: NULL.
+#' @param df (required; data frame) A data frame with numeric and/or character predictors predictors, and optionally, a response variable. Default: NULL.
 #' @param predictors (optional; character vector) A vector with predictor names in 'df'. If omitted, all columns of 'df' are used as predictors. Default:'NULL'
 #' @return character vector with names of numeric predictors.
 #' @examples
@@ -68,6 +69,7 @@ identify_numeric_predictors <- function(
 #'
 #' }
 #' @autoglobal
+#' @author Blas M. Benito
 #' @export
 identify_non_numeric_predictors <- function(
     df = NULL,
@@ -95,7 +97,7 @@ identify_non_numeric_predictors <- function(
 #'
 #' Predictors a variance of zero or near zero are highly problematic for multicollinearity analysis and modelling in general. This function identifies these predictors with a level of sensitivity defined by the 'decimals' argument. Smaller number of decimals increase the number of variables detected as near zero variance. Recommended values will depend on the range of the numeric variables in 'df'.
 #'
-#' @param df (required; data frame or tibble) A data frame with numeric and/or character predictors predictors, and optionally, a response variable. Default: NULL.
+#' @param df (required; data frame) A data frame with numeric and/or character predictors predictors, and optionally, a response variable. Default: NULL.
 #' @param predictors (optional; character vector) A vector with predictor names in 'df'. If omitted, all columns of 'df' are used as predictors. Default:'NULL'
 #' @param decimals (required, integer) number of decimal places for the zero variance test. Default: 4
 #' @return character vector with names of zero and near-zero variance columns.
@@ -129,6 +131,7 @@ identify_non_numeric_predictors <- function(
 #'
 #' }
 #' @autoglobal
+#' @author Blas M. Benito
 #' @export
 identify_zero_variance_predictors <- function(
     df = NULL,

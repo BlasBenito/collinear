@@ -1,17 +1,17 @@
 Package: collinear
-Title: Multicollinearity Management for Categorical and Numeric Variables
+Title: Seamless Multicollinearity Management for Categorical and Numeric Variables
 Version: 1.0.0
 Authors@R: 
-    person("Blas", "Benito", , "blasbenito@gmail.com", role = c("aut", "cre"),
+    person("Blas", "Benito", , "blasbenito@gmail.com", role = c("aut", "cre", "cph"),
            comment = c(ORCID = "0000-0001-5105-7232"))
 Description: System for seamless management of multicollinearity in data frames
     with numeric and/or categorical variables for statistical analysis and 
     machine learning modeling. The package combines bivariate correlation 
     (Pearson, Spearman, and Cramer's V) with variance inflation factor analysis, 
-    target encoding of categorical variables (Micci-Barreca, D. 2001 
+    target encoding to transform categorical variables into numeric (Micci-Barreca, D. 2001 
     <DOI:10.1145/507533.507538>), and a flexible 
-    feature prioritisation automated method to deliver a comprehensive 
-    multicollinearity management tool covering a wide range of usage cases.
+    feature prioritization method, to deliver a comprehensive 
+    multicollinearity management tool covering a wide range of use cases.
 License: GPL (>= 3)
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE, roclets = c("collate", "namespace", "rd",
@@ -20,16 +20,15 @@ RoxygenNote: 7.2.3
 Imports:
     dplyr
 Suggests: 
-    roxyglobals,
     ranger,
     mgcv,
     future,
     future.apply,
-    testthat (>= 3.0.0)
+    testthat (>= 3.0.0),
+    spelling
 Config/testthat/edition: 3
 Depends: 
     R (>= 4.0)
 LazyData: true
-Config/roxyglobals/filename: globals.R
-Config/roxyglobals/unique: TRUE
 URL: https://blasbenito.github.io/collinear/
+Language: en-US

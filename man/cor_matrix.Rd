@@ -13,7 +13,7 @@ cor_matrix(
 )
 }
 \arguments{
-\item{df}{(required; data frame or tibble) A data frame with numeric and/or character predictors, and optionally, a response variable. Default: NULL.}
+\item{df}{(required; data frame) A data frame with numeric and/or character predictors, and optionally, a response variable. Default: NULL.}
 
 \item{response}{(recommended, character string) Name of a numeric response variable. Character response variables are ignored. Please, see 'Details' to better understand how providing this argument or not leads to different results when there are character variables in 'predictors'. Default: NULL.}
 
@@ -21,7 +21,7 @@ cor_matrix(
 
 \item{cor_method}{(optional; character string) Method used to compute pairwise correlations. Accepted methods are "pearson" (with a recommended minimum of 30 rows in 'df') or "spearman" (with a recommended minimum of 10 rows in 'df'). Default: "pearson".}
 
-\item{encoding_method}{(optional; character string). Name of the target encoding method to convert character and factor predictors to numeric. One of "mean", "rank", "loo", "rnorm" (see \code{\link[=target_encoding_lab]{target_encoding_lab()}} for further details). Default: \code{"mean"}}
+\item{encoding_method}{(optional; character string). Name of the target encoding method to convert character and factor predictors to numeric. One of "mean", "rank", "loo", "rnorm" (see \code{\link[=target_encoding_lab]{target_encoding_lab()}} for further details). Default: "mean"}
 }
 \value{
 correlation matrix
@@ -67,7 +67,6 @@ m <- cor_matrix(
 )
 
 #show first three columns and rows
-#pairs of categoricals
 m[1:5, 1:5]
 
 #generate correlation matrix directly
@@ -91,4 +90,7 @@ m <- cor_matrix(
 m[1:5, 1:5]
 
 }
+}
+\author{
+Blas M. Benito
 }

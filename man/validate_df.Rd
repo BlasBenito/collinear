@@ -2,7 +2,7 @@
 % Please edit documentation in R/validate.R
 \name{validate_df}
 \alias{validate_df}
-\title{Validate and pre-process input data}
+\title{Validate input data frame}
 \usage{
 validate_df(df = NULL, min_rows = 30)
 }
@@ -44,4 +44,7 @@ vi <- validate_df(
 attributes(vi)$validated
 
 }
+}
+\author{
+Blas M. Benito
 }

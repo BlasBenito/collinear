@@ -14,17 +14,17 @@ vif_select(
 )
 }
 \arguments{
-\item{df}{(required; data frame or tibble) A data frame with numeric and/or character predictors predictors, and optionally, a response variable. Default: NULL.}
+\item{df}{(required; data frame) A data frame with numeric and/or character predictors predictors, and optionally, a response variable. Default: NULL.}
 
 \item{response}{(recommended, character string) Name of a numeric response variable. Character response variables are ignored. Please, see 'Details' to better understand how providing this argument or not leads to different results when there are character variables in 'predictors'. Default: NULL.}
 
 \item{predictors}{(optional; character vector) character vector with predictor names in 'df'. If omitted, all columns of 'df' are used as predictors. Default:'NULL'}
 
-\item{preference_order}{(optional; character vector) vector with column names in 'predictors' in the desired preference order, or result of the function \code{preference_order()}. Allows defining a priority order for selecting predictors, which can be particularly useful when some predictors are more critical for the analysis than others. Predictors not included in this argument are ranked by their Variance Inflation Factor. Default: \code{NULL}.}
+\item{preference_order}{(optional; character vector) vector with column names in 'predictors' in the desired preference order, or result of the function \code{\link[=preference_order]{preference_order()}}. Allows defining a priority order for selecting predictors, which can be particularly useful when some predictors are more critical for the analysis than others. Predictors not included in this argument are ranked by their Variance Inflation Factor. Default: NULL.}
 
-\item{max_vif}{(optional, numeric) Numeric with recommended values between 2.5 and 10 defining the maximum VIF allowed for any given predictor in the output dataset. Higher VIF thresholds should result in a higher number of selected variables. Default: \code{5}.}
+\item{max_vif}{(optional, numeric) Numeric with recommended values between 2.5 and 10 defining the maximum VIF allowed for any given predictor in the output dataset. Higher VIF thresholds should result in a higher number of selected variables. Default: 5.}
 
-\item{encoding_method}{(optional; character string). Name of the target encoding method to convert character and factor predictors to numeric. One of "mean", "rank", "loo", "rnorm" (see \code{\link[=target_encoding_lab]{target_encoding_lab()}} for further details). Default: \code{"mean"}}
+\item{encoding_method}{(optional; character string). Name of the target encoding method to convert character and factor predictors to numeric. One of "mean", "rank", "loo", "rnorm" (see \code{\link[=target_encoding_lab]{target_encoding_lab()}} for further details). Default: "mean"}
 }
 \value{
 Character vector with the names of the selected predictors.
@@ -32,7 +32,7 @@ Character vector with the names of the selected predictors.
 \description{
 Automates multicollinearity management by selecting variables based on their Variance Inflation Factor (VIF).
 
-The \code{vif_select()} function is designed to automate the reduction of multicollinearity in a set of predictors by using Variance Inflation Factors.
+The \code{\link[=vif_select]{vif_select()}} function is designed to automate the reduction of multicollinearity in a set of predictors by using Variance Inflation Factors.
 
 If the 'response' argument is provided, categorical predictors are converted to numeric via target encoding (see \code{\link[=target_encoding_lab]{target_encoding_lab()}}). If the 'response' argument is not provided, categorical variables are ignored.
 
@@ -40,19 +40,19 @@ The Variance Inflation Factor for a given variable \code{y} is computed as \code
 
 The possible range of VIF values is (1, Inf]. A VIF lower than 10 suggest that removing \code{y} from the data set would reduce overall multicollinearity. The recommended thresholds for maximum VIF may vary depending on the source consulted, being the most common values, 2.5, 5, and 10.
 
-The function \code{vif_select()} applies a recursive algorithm to remove variables with a VIF higher than a given threshold (defined by the argument \code{max_vif}).
+The function \code{\link[=vif_select]{vif_select()}} applies a recursive algorithm to remove variables with a VIF higher than a given threshold (defined by the argument \code{max_vif}).
 
-If the argument \code{response} is provided, all non-numeric variables in \code{predictors} are transformed into numeric using target encoding (see \code{target_encoding_lab()}). Otherwise, non-numeric variables are ignored.
+If the argument \code{response} is provided, all non-numeric variables in \code{predictors} are transformed into numeric using target encoding (see \code{\link[=target_encoding_lab]{target_encoding_lab()}}). Otherwise, non-numeric variables are ignored.
 
 The argument \code{preference_order} allows defining a preference selection order to preserve (when possible) variables that might be interesting or even required for a given analysis.
 
-For example, if \code{predictors} is \verb{"c("a", "b", "c")} and \code{preference_order} is \verb{"c("a", "b")}, there are two possibilities:
+For example, if \code{predictors} is \code{c("a", "b", "c")} and \code{preference_order} is \code{c("a", "b")}, there are two possibilities:
 \itemize{
 \item If the VIF of \code{"a"} is higher than the VIF of \code{"b"}, and both VIF values are above \code{max_vif}, then \code{"a"} is selected and \code{"b"} is removed.
 \item If their correlation is equal or above \code{max_cor}, then \code{"a"} is selected, no matter its correlation with \code{"c"},
 }
 
-If \code{preference_order} is not provided, then the predictors are ranked by their variance inflation factor as computed by \code{vif_df()}.
+If \code{preference_order} is not provided, then the predictors are ranked by their variance inflation factor as computed by \code{\link[=vif_df]{vif_df()}}.
 }
 \examples{
 if(interactive()){
@@ -147,5 +147,11 @@ selected.predictors <- vif_select(
 
 selected.predictors
 
+}
+}
+\author{
+Blas M. Benito
+\itemize{
+\item David A. Belsley, D.A., Kuh, E., Welsch, R.E. (1980). Regression Diagnostics: Identifying Influential Data and Sources of Collinearity. John Wiley & Sons. \doi{10.1002/0471725153}.
 }
 }

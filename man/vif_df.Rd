@@ -7,13 +7,13 @@
 vif_df(df = NULL, response = NULL, predictors = NULL, encoding_method = "mean")
 }
 \arguments{
-\item{df}{(required; data frame or tibble) A data frame with numeric and/or character predictors predictors, and optionally, a response variable. Default: NULL.}
+\item{df}{(required; data frame) A data frame with numeric and/or character predictors predictors, and optionally, a response variable. Default: NULL.}
 
 \item{response}{(recommended, character string) Name of a numeric response variable. Character response variables are ignored. Please, see 'Details' to better understand how providing this argument or not leads to different results when there are character variables in 'predictors'. Default: NULL.}
 
 \item{predictors}{(optional; character vector) character vector with predictor names in 'df'. If omitted, all columns of 'df' are used as predictors. Default:'NULL'}
 
-\item{encoding_method}{(optional; character string). Name of the target encoding method to convert character and factor predictors to numeric. One of "mean", "rank", "loo", "rnorm" (see \code{\link[=target_encoding_lab]{target_encoding_lab()}} for further details). Default: \code{"mean"}}
+\item{encoding_method}{(optional; character string). Name of the target encoding method to convert character and factor predictors to numeric. One of "mean", "rank", "loo", "rnorm" (see \code{\link[=target_encoding_lab]{target_encoding_lab()}} for further details). Default: "mean"}
 }
 \value{
 Data frame with predictor names and VIF values
@@ -27,9 +27,9 @@ The possible range of VIF values is (1, Inf]. A VIF lower than 10 suggest that r
 
 This function computes the Variance Inflation Factor (VIF) in three steps:
 \itemize{
-\item Computes the correlation matrix between all pairs of predictors using \code{stats::cor()}.
-\item Applies \code{solve()} to obtain the precision matrix, which is the inverse of the covariance matrix.
-\item Uses \code{diag()} to extract the diagonal of the precision matrix, which contains the variance of the prediction of each predictor from all other predictors.
+\item Computes the correlation matrix between all pairs of predictors using \verb{\link[stats]\{cor\}}.
+\item Applies \verb{\link[base]\{solve\}} to obtain the precision matrix, which is the inverse of the covariance matrix.
+\item Uses \verb{\link[base]\{diag\}} to extract the diagonal of the precision matrix, which contains the variance of the prediction of each predictor from all other predictors.
 }
 }
 \examples{
@@ -62,5 +62,11 @@ df <- vif_df(
 
 df
 
+}
+}
+\author{
+Blas M. Benito
+\itemize{
+\item David A. Belsley, D.A., Kuh, E., Welsch, R.E. (1980). Regression Diagnostics: Identifying Influential Data and Sources of Collinearity. John Wiley & Sons. \doi{10.1002/0471725153}.
 }
 }

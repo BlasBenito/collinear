@@ -2,7 +2,7 @@
 % Please edit documentation in R/validate.R
 \name{validate_predictors}
 \alias{validate_predictors}
-\title{Validate and preprocess the 'predictors' argument for analysis}
+\title{Validate the 'predictors' argument for analysis}
 \usage{
 validate_predictors(
   df = NULL,
@@ -12,7 +12,7 @@ validate_predictors(
 )
 }
 \arguments{
-\item{df}{(required; data frame or tibble) A validated data frame with numeric and/or character predictors, and optionally, a response variable. Default: NULL.}
+\item{df}{(required; data frame) A validated data frame with numeric and/or character predictors, and optionally, a response variable. Default: NULL.}
 
 \item{predictors}{(optional; character vector) character vector with predictor names in 'df'. If omitted, all columns of 'df' are used as predictors. Default:NULL}
 
@@ -26,7 +26,7 @@ A character vector of validated predictor names
 \description{
 Requires the argument 'df' to be validated with \code{\link[=validate_df]{validate_df()}}.
 
-Validates and preprocesses the 'predictors' argument to ensure it complies with the requirements of the package functions. It performs the following actions:
+Validates the 'predictors' argument to ensure it complies with the requirements of the package functions. It performs the following actions:
 \itemize{
 \item Stops if 'df' is NULL.
 \item Stops if 'df' is not validated.
@@ -60,4 +60,7 @@ vi_predictors <- validate_predictors(
 attributes(vi_predictors)$validated
 
 }
+}
+\author{
+Blas M. Benito
 }

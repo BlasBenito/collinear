@@ -17,7 +17,7 @@ f_rf_deviance(x, y, df)
 R-squared
 }
 \description{
-Computes a univariate random forest model with \code{ranger::ranger()} and returns the R-squared on the out-of-bag data.
+Computes a univariate random forest model with \verb{\link[ranger]\{ranger\}} and returns the R-squared on the out-of-bag data.
 }
 \examples{
 if(interactive()){

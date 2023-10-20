@@ -2,7 +2,7 @@
 #'
 #' @description
 #'
-#' The `cramer_v()` function calculates bias-corrected Cramer's V, a measure of association between two categorical variables.
+#' The [cramer_v()] function calculates bias-corrected Cramer's V, a measure of association between two categorical variables.
 #'
 #' Cramer's V is an extension of the chi-squared test to measure the strength of association between two categorical variables. Provides values between 0 and 1, where 0 indicates no association, and 1 indicates a perfect association. In essence, Cramer's V assesses the co-occurrence of the categories of two variables to quantify how strongly these variables are related.
 #'
@@ -30,6 +30,11 @@
 #'
 #' }
 #' @autoglobal
+#' @author Blas M. Benito
+#' @references
+#' \itemize{
+#'  \item Cramér, H. (1946). Mathematical Methods of Statistics. Princeton: Princeton University Press, page 282 (Chapter 21. The two-dimensional case). ISBN 0-691-08004-6
+#' }
 #' @export
 cramer_v <- function(
     x = NULL,

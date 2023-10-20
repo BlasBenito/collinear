@@ -28,7 +28,7 @@ comprehensive tool for multicollinearity management:
 
 - **Bivariate correlation for numeric and categorical predictors**:
   Pearson and Spearman correlation methods for pairs of numeric
-  predictors, and Cramer’s V for pairs of categorical predictors.
+  predictors, and Cramer's V for pairs of categorical predictors.
 - **Variance Inflation Factor analysis (VIF)**: to identify predictors
   that are linear combinations of other predictors.
 - **Target encoding of categorical predictors**: to convert them to
@@ -59,7 +59,7 @@ multicollinearity management: + `cor_select()`: like `collinear()`, but
 only using pairwise correlations. + `vif_select()`: like `collinear()`,
 but only using variance inflation factors. + `preference_order()`: to
 compute preference order based on univariate models. +
-`target_encoding_lab()`: to convert categoricals into numeric using
+`target_encoding_lab()`: to convert categorical predictors into numeric using
 several methods. + `cor_df()`: to generate a data frame with all
 pairwise correlation scores. + `cor_matrix()`: to convert a correlation
 data frame into matrix, or obtain a correlation matrix. + `vif_df()`: to
@@ -555,10 +555,10 @@ selected_predictors_no_response
 The variable selection results differ because the numeric
 representations of the categorical variables are rather different
 between the two options. When no `response` is provided, the function
-`cor_select()` compares categoricals against numerics by encoding each
-categorical after each numeric, and compares pairs of categoricals using
-Cramer’s V, implemented in the function `cramer_v()`. Additionally,
-Cramer’s V values are not directly comparable with Pearson or Spearman
+`cor_select()` compares categorical predictors against numeric ones by encoding each
+categorical after each numeric, and compares pairs of categorical predictors using
+Cramer's V, implemented in the function `cramer_v()`. Additionally,
+Cramer's V values are not directly comparable with Pearson or Spearman
 correlation scores, and having them together in the same analysis might
 induce bias during the variable selection. Not using the `response`
 argument should always be the last option.
@@ -817,7 +817,7 @@ four target encoding methods:
   category. White noise can be added to this option to increase data
   variability.
 
-The method “mean” is used as default througout all functions in the
+The method “mean” is used as default throughout all functions in the
 package, but can be changed via the argument `encoding_method`.
 
 Below we use all methods to generate different numeric encodings for the

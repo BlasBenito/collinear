@@ -14,7 +14,7 @@ preference_order(
 )
 }
 \arguments{
-\item{df}{(required; data frame or tibble) A data frame with numeric and/or character predictors predictors, and optionally, a response variable. Default: NULL.}
+\item{df}{(required; data frame) A data frame with numeric and/or character predictors predictors, and optionally, a response variable. Default: NULL.}
 
 \item{response}{(required, character string) Name of a numeric response variable. Character response variables are ignored. Please, see 'Details' to better understand how providing this argument or not leads to different results when there are character variables in 'predictors'. Default: NULL.}
 
@@ -28,12 +28,12 @@ preference_order(
 \item f_f_variance: returns the explained deviance of a random forest model of the response against the predictor. Requires the package \code{ranger}.
 }}
 
-\item{encoding_method}{(optional; character string). Name of the target encoding method to convert character and factor predictors to numeric. One of "mean", "rank", "loo", "rnorm" (see \code{\link[=target_encoding_lab]{target_encoding_lab()}} for further details). Default: \code{"mean"}}
+\item{encoding_method}{(optional; character string). Name of the target encoding method to convert character and factor predictors to numeric. One of "mean", "rank", "loo", "rnorm" (see \code{\link[=target_encoding_lab]{target_encoding_lab()}} for further details). Default: "mean"}
 
 \item{workers}{(integer) number of workers for parallel execution. Default: 1}
 }
 \value{
-A data frame with the columns "predictor" and "value". The former contains the predictors names in order, ready for the argument \code{preference_order} in \code{cor_select()}, \code{vif_select()} and \code{collinear()}. The latter contains the result of the function \code{f} for each combination of predictor and response.
+A data frame with the columns "predictor" and "value". The former contains the predictors names in order, ready for the argument \code{preference_order} in \code{\link[=cor_select]{cor_select()}}, \code{\link[=vif_select]{vif_select()}} and \code{\link[=collinear]{collinear()}}. The latter contains the result of the function \code{f} for each combination of predictor and response.
 }
 \description{
 This function calculates the preference order of predictors based on a user-provided function that takes a predictor, a response, and a data frame as arguments.
@@ -51,7 +51,7 @@ vi <- vi[1:1000, ]
 
 #computing preference order
 #with response
-#numerics and categoricals in the output
+#numeric and categorical predictors in the output
 #as the R-squared between each predictor and the response
 preference.order <- preference_order(
   df = vi,
@@ -113,4 +113,7 @@ preference.order
 
 }
 
+}
+\author{
+Blas M. Benito
 }

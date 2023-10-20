@@ -9,4 +9,6 @@
 ^TODO.md$
 ^dev_scripts/
 ^\.lintr$
+^cran-comments.md$
 README_files/
+^CRAN-SUBMISSION$

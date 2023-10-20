@@ -1,13 +1,14 @@
 
 #' Removes geometry column in sf data frames
 #'
-#' Replicates the functionality of `sf::st_drop_geometry()` without depending on the `sf` package.
+#' Replicates the functionality of  `\link[sf]{st_drop_geometry}` without depending on the `sf` package.
 #'
 #' @param df (required; data frame or matrix) Input data frame. Default: NULL
 #'
 #' @return The input data frame without a geometry column
 #' @keywords internal
 #' @autoglobal
+#' @author Blas M. Benito
 #' @export
 drop_geometry_column <- function(df){
 

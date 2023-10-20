@@ -7,7 +7,7 @@
 validate_response(df = NULL, response = NULL, decimals = 4)
 }
 \arguments{
-\item{df}{(required; data frame or tibble) A validated data frame with numeric and/or character predictors predictors, and optionally, a response variable. Default: NULL.}
+\item{df}{(required; data frame) A validated data frame with numeric and/or character predictors predictors, and optionally, a response variable. Default: NULL.}
 
 \item{response}{(optional, character string) Name of a numeric response variable. Character response variables are ignored. Default: NULL.}
 
@@ -41,4 +41,7 @@ response <- validate_response(
 attributes(response)$validated
 
 }
+}
+\author{
+Blas M. Benito
 }

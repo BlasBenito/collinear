@@ -2,7 +2,7 @@
 #'
 #' This function calculates the preference order of predictors based on a user-provided function that takes a predictor, a response, and a data frame as arguments.
 #'
-#' @param df (required; data frame or tibble) A data frame with numeric and/or character predictors predictors, and optionally, a response variable. Default: NULL.
+#' @param df (required; data frame) A data frame with numeric and/or character predictors predictors, and optionally, a response variable. Default: NULL.
 #' @param response (required, character string) Name of a numeric response variable. Character response variables are ignored. Please, see 'Details' to better understand how providing this argument or not leads to different results when there are character variables in 'predictors'. Default: NULL.
 #' @param predictors (optional; character vector) character vector with predictor names in 'df'. If omitted, all columns of 'df' are used as predictors. Default:'NULL'
 #' @param f (optional: function) A function that returns a value representing the relationship between a given predictor and the response. Higher values are ranked higher. The available options are:
@@ -12,10 +12,10 @@
 #'  \item f_gam_deviance: returns the explained deviance of a GAM model of the response against a predictor. Requires the package `mgcv`.
 #'  \item f_f_variance: returns the explained deviance of a random forest model of the response against the predictor. Requires the package `ranger`.
 #' }
-#' @param encoding_method (optional; character string). Name of the target encoding method to convert character and factor predictors to numeric. One of "mean", "rank", "loo", "rnorm" (see [target_encoding_lab()] for further details). Default: `"mean"`
+#' @param encoding_method (optional; character string). Name of the target encoding method to convert character and factor predictors to numeric. One of "mean", "rank", "loo", "rnorm" (see [target_encoding_lab()] for further details). Default: "mean"
 #' @param workers (integer) number of workers for parallel execution. Default: 1
 #'
-#' @return A data frame with the columns "predictor" and "value". The former contains the predictors names in order, ready for the argument `preference_order` in `cor_select()`, `vif_select()` and `collinear()`. The latter contains the result of the function `f` for each combination of predictor and response.
+#' @return A data frame with the columns "predictor" and "value". The former contains the predictors names in order, ready for the argument `preference_order` in [cor_select()], [vif_select()] and [collinear()]. The latter contains the result of the function `f` for each combination of predictor and response.
 #' @examples
 #' if(interactive()){
 #'
@@ -29,7 +29,7 @@
 #'
 #' #computing preference order
 #' #with response
-#' #numerics and categoricals in the output
+#' #numeric and categorical predictors in the output
 #' #as the R-squared between each predictor and the response
 #' preference.order <- preference_order(
 #'   df = vi,
@@ -92,6 +92,7 @@
 #' }
 #'
 #' @autoglobal
+#' @author Blas M. Benito
 #' @export
 preference_order <- function(
     df = NULL,
@@ -288,7 +289,7 @@ f_gam_deviance <- function(x, y, df){
 
 #' R-squared of Random Forest model from out-of-bag data
 #'
-#' Computes a univariate random forest model with `ranger::ranger()` and returns the R-squared on the out-of-bag data.
+#' Computes a univariate random forest model with `\link[ranger]{ranger}` and returns the R-squared on the out-of-bag data.
 #'
 #' @param x (required, character string) name of the predictor variable.
 #' @param y (required, character string) name of the response variable

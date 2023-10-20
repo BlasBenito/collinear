@@ -200,7 +200,7 @@ vi <- vi[1:1000, ]
 
 #computing preference order
 #with response
-#numerics and categoricals in the output
+#numeric and categorical predictors in the output
 #as the R-squared between each predictor and the response
 preference.order <- preference_order(
   df = vi,

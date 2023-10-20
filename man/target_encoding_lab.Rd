@@ -17,15 +17,15 @@ target_encoding_lab(
 )
 }
 \arguments{
-\item{df}{(required; data frame, tibble, or sf) A training data frame. Default: \code{NULL}}
+\item{df}{(required; data frame, tibble, or sf) A training data frame. Default: NULL}
 
-\item{response}{(required; character string) Name of the response. Must be a column name of \code{df}. Default: \code{NULL}}
+\item{response}{(required; character string) Name of the response. Must be a column name of \code{df}. Default: NULL}
 
-\item{predictors}{(required; character vector) Names of all the predictors in \code{df}. Only character and factor predictors are processed, but all are returned in the "df" slot of the function's output.  Default: \code{NULL}}
+\item{predictors}{(required; character vector) Names of all the predictors in \code{df}. Only character and factor predictors are processed, but all are returned in the "df" slot of the function's output.  Default: NULL}
 
-\item{encoding_methods}{(optional; character string or vector). Name of the target encoding methods. Default: \code{c("mean", "rank", "loo", "rnorm")}}
+\item{encoding_methods}{(optional; character string or vector). Name of the target encoding methods. Default: c("mean", "rank", "loo", "rnorm")}
 
-\item{rnorm_sd_multiplier}{(optional; numeric) Numeric with multiplicator of the standard deviation of each group in the categorical variable, in the range 0-1. Controls the variability in the encoded variables to mitigate potential overfitting. Default: \code{1}}
+\item{rnorm_sd_multiplier}{(optional; numeric) Numeric with multiplier of the standard deviation of each group in the categorical variable, in the range 0-1. Controls the variability in the encoded variables to mitigate potential overfitting. Default: \code{1}}
 
 \item{seed}{(optional; integer) Random seed to facilitate reproducibility when \code{white_noise} is not 0. Default: 1}
 
@@ -44,7 +44,7 @@ Otherwise it returns a list with these slots:
 \item \code{correlation_test}: Data frame with the results of a linear model between the target-encoded variable and the response. It contains the following columns:
 \itemize{
 \item \code{encoded_predictor}: name of the target-encoded variable.
-\item \code{correlation_with_response}: R-squared resulting from \code{cor.test()} on the target-encoded variable and the response.
+\item \code{correlation_with_response}: R-squared resulting from \code{\link[=cor.test]{cor.test()}} on the target-encoded variable and the response.
 }
 }
 
@@ -66,7 +66,7 @@ The target encoding methods implemented in this function are:
 
 The methods "mean" and "rank" support the \code{white_noise} argument, which is a fraction of the range of the \code{response} variable, and the maximum possible value of white noise to be added. For example, if \code{response} is within 0 and 1, a \code{white_noise} of 0.25 will add to every value of the encoded variable a random number selected from a normal distribution between -0.25 and 0.25. This argument helps control potential overfitting induced by the encoded variable.
 
-The method "rnorm" has the argument \code{rnorm_sd_multiplier}, which multiplies the standard deviation argument of the \code{stats::rnorm()} function to lcontrol the spread of the encoded values between groups. Values smaller than 1 reduce the spread in the results, while values larger than 1 have the opposite effect.
+The method "rnorm" has the argument \code{rnorm_sd_multiplier}, which multiplies the standard deviation argument of the \verb{\link[stats]\{rnorm\}} function to control the spread of the encoded values between groups. Values smaller than 1 reduce the spread in the results, while values larger than 1 have the opposite effect.
 }
 \examples{
 if(interactive()){
@@ -125,4 +125,12 @@ x <- lapply(
 dev.off()
 
 }
+}
+\references{
+\itemize{
+\item Micci-Barreca, D. (2001) A Preprocessing Scheme for High-Cardinality Categorical Attributes in Classification and Prediction Problems. SIGKDD Explor. Newsl. 3, 1, 27-32 \doi{10.1145/507533.507538}
+}
+}
+\author{
+Blas M. Benito
 }

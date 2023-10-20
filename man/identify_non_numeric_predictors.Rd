@@ -7,7 +7,7 @@
 identify_non_numeric_predictors(df = NULL, predictors = NULL)
 }
 \arguments{
-\item{df}{(required; data frame or tibble) A data frame with numeric and/or character predictors predictors, and optionally, a response variable. Default: NULL.}
+\item{df}{(required; data frame) A data frame with numeric and/or character predictors predictors, and optionally, a response variable. Default: NULL.}
 
 \item{predictors}{(optional; character vector) A vector with predictor names in 'df'. If omitted, all columns of 'df' are used as predictors. Default:'NULL'}
 }
@@ -33,4 +33,7 @@ non.numeric.predictors <- identify_non_numeric_predictors(
 non.numeric.predictors
 
 }
+}
+\author{
+Blas M. Benito
 }

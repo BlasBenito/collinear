@@ -49,5 +49,4 @@ po/*~
 rsconnect/
 .Rproj.user
 docs
-dev_scripts/new_dataset.R
-dev_scripts/df_full.RData
+dev_scripts/example_data.R

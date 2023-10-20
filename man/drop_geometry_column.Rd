@@ -13,6 +13,9 @@ drop_geometry_column(df)
 The input data frame without a geometry column
 }
 \description{
-Replicates the functionality of \code{sf::st_drop_geometry()} without depending on the \code{sf} package.
+Replicates the functionality of  \verb{\link[sf]\{st_drop_geometry\}} without depending on the \code{sf} package.
+}
+\author{
+Blas M. Benito
 }
 \keyword{internal}

@@ -10,15 +10,15 @@
 #'
 #' This function computes the Variance Inflation Factor (VIF) in three steps:
 #' \itemize{
-#'   \item Computes the correlation matrix between all pairs of predictors using `stats::cor()`.
-#'   \item Applies `solve()` to obtain the precision matrix, which is the inverse of the covariance matrix.
-#'   \item Uses `diag()` to extract the diagonal of the precision matrix, which contains the variance of the prediction of each predictor from all other predictors.
+#'   \item Computes the correlation matrix between all pairs of predictors using `\link[stats]{cor}`.
+#'   \item Applies `\link[base]{solve}` to obtain the precision matrix, which is the inverse of the covariance matrix.
+#'   \item Uses `\link[base]{diag}` to extract the diagonal of the precision matrix, which contains the variance of the prediction of each predictor from all other predictors.
 #' }
 #'
-#' @param df (required; data frame or tibble) A data frame with numeric and/or character predictors predictors, and optionally, a response variable. Default: NULL.
+#' @param df (required; data frame) A data frame with numeric and/or character predictors predictors, and optionally, a response variable. Default: NULL.
 #' @param response (recommended, character string) Name of a numeric response variable. Character response variables are ignored. Please, see 'Details' to better understand how providing this argument or not leads to different results when there are character variables in 'predictors'. Default: NULL.
 #' @param predictors (optional; character vector) character vector with predictor names in 'df'. If omitted, all columns of 'df' are used as predictors. Default:'NULL'
-#' @param encoding_method (optional; character string). Name of the target encoding method to convert character and factor predictors to numeric. One of "mean", "rank", "loo", "rnorm" (see [target_encoding_lab()] for further details). Default: `"mean"`
+#' @param encoding_method (optional; character string). Name of the target encoding method to convert character and factor predictors to numeric. One of "mean", "rank", "loo", "rnorm" (see [target_encoding_lab()] for further details). Default: "mean"
 #' @return Data frame with predictor names and VIF values
 #'
 #' @examples
@@ -53,6 +53,10 @@
 #'
 #' }
 #' @autoglobal
+#' @author Blas M. Benito
+#' \itemize{
+#'  \item David A. Belsley, D.A., Kuh, E., Welsch, R.E. (1980). Regression Diagnostics: Identifying Influential Data and Sources of Collinearity. John Wiley & Sons. \doi{10.1002/0471725153}.
+#' }
 #' @export
 vif_df <- function(
     df = NULL,

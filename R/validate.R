@@ -1,4 +1,4 @@
-#' Validate and pre-process input data
+#' Validate input data frame
 #'
 #' @description
 #'
@@ -36,6 +36,7 @@
 #'
 #' }
 #' @autoglobal
+#' @author Blas M. Benito
 #' @export
 validate_df <- function(
     df = NULL,
@@ -142,13 +143,13 @@ validate_df <- function(
 
 }
 
-#' Validate and preprocess the 'predictors' argument for analysis
+#' Validate the 'predictors' argument for analysis
 #'
 #' @description
 #'
 #' Requires the argument 'df' to be validated with [validate_df()].
 #'
-#' Validates and preprocesses the 'predictors' argument to ensure it complies with the requirements of the package functions. It performs the following actions:
+#' Validates the 'predictors' argument to ensure it complies with the requirements of the package functions. It performs the following actions:
 #' \itemize{
 #'   \item Stops if 'df' is NULL.
 #'   \item Stops if 'df' is not validated.
@@ -160,7 +161,7 @@ validate_df <- function(
 #' }
 #'
 #'
-#' @param df (required; data frame or tibble) A validated data frame with numeric and/or character predictors, and optionally, a response variable. Default: NULL.
+#' @param df (required; data frame) A validated data frame with numeric and/or character predictors, and optionally, a response variable. Default: NULL.
 #' @param predictors (optional; character vector) character vector with predictor names in 'df'. If omitted, all columns of 'df' are used as predictors. Default:NULL
 #' @param min_numerics (required, integer) Minimum number of numeric predictors required. Default: 1
 #' @param decimals (required, integer) Number of decimal places for the zero variance test. Smaller numbers will increase the number of variables detected as near-zero variance. Recommended values will depend on the range of the numeric variables in 'df'. Default: 4
@@ -190,6 +191,7 @@ validate_df <- function(
 #'
 #' }
 #' @autoglobal
+#' @author Blas M. Benito
 #' @export
 validate_predictors <- function(
     df = NULL,
@@ -295,7 +297,7 @@ validate_predictors <- function(
 #' Requires the argument 'df' to be validated with [validate_df()].
 #'
 #'
-#' @param df (required; data frame or tibble) A validated data frame with numeric and/or character predictors predictors, and optionally, a response variable. Default: NULL.
+#' @param df (required; data frame) A validated data frame with numeric and/or character predictors predictors, and optionally, a response variable. Default: NULL.
 #' @param response (optional, character string) Name of a numeric response variable. Character response variables are ignored. Default: NULL.
 #' @param decimals (required, integer) number of decimal places for the zero variance test. Default: 4
 #' @return character string with name of the response
@@ -322,6 +324,7 @@ validate_predictors <- function(
 #'
 #' }
 #' @autoglobal
+#' @author Blas M. Benito
 #' @export
 validate_response <- function(
     df = NULL,
