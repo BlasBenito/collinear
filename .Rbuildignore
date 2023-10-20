@@ -8,3 +8,5 @@
 ^\.github$
 ^TODO.md$
 ^dev_scripts/
+^\.lintr$
+README_files/

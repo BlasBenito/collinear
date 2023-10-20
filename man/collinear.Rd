@@ -2,7 +2,7 @@
 % Please edit documentation in R/collinear.R
 \name{collinear}
 \alias{collinear}
-\title{Autommated multicollinearity reduction}
+\title{Autommated multicollinearity management}
 \usage{
 collinear(
   df = NULL,
@@ -36,17 +36,23 @@ collinear(
 Character vector with the names of uncorrelated predictors.
 }
 \description{
-The \code{collinear()} function is designed to automate the reduction of multicollinearity in a set of predictors by sequentially applying correlation-based and VIF-based variable selection by applying \code{\link[=cor_select]{cor_select()}} and \code{\link[=vif_select]{vif_select()}} sequentially.
+The \code{collinear()} function automates multicollinearity management in data frames by combining four methods:
+\itemize{
+\item Pairwise correlation filtering: Pearson, Spearman, and Cramer's V statistics to identify pairs of highly correlated predictors.
+\item Variance Inflation Factor (VIF) filtering: identifies predictors that are linear combinations of other predictors.
+\item Target encoding: to transform categorical predictors to numeric using a numeric variable as reference.
+\item Flexible prioritization method: to help the user select a meaningful set of non-correlated predictors.
+}
 
-If the 'response' argument is provided, categorical predictors are converted to numeric via target encoding (see \code{\link[=target_encoding_lab]{target_encoding_lab()}}). If the 'response' argument is not provided, categorical variables are ignored.
+Pairwise correlation filtering is implemented in \code{\link[=cor_select]{cor_select()}}. This function applies a recursive algorithm to remove predictors with a Pearson correlation with another predictor higher than a given threshold defined by the argument \code{max_cor}.  When two predictors are correlated above this threshold, the one with the lowest preference order is removed (the one with the highest VIF by default).
 
-The function \code{\link[=cor_select]{cor_select()}} applies a recursive algorithm to remove variables with a Pearson correlation with another variable higher than a given threshold (defined by the argument \code{max_cor}).  When two variables are correlated above this threshold, the one with the highest sum of R-squared with all the other variables is removed.
+VIF-based filtering is implemented in \code{\link[=vif_select]{vif_select()}}, which removes variables and recomputes VIF scores iteratively, until all variables in the resulting selection have a VIF below the value of the argument \code{max_vif}. The VIF for a given variable \code{y} is computed as \code{1/(1-R2)}, where \code{R2} is the R-squared of a multiple regression model fitted using \code{y} as response against the other predictors. The equation can be interpreted as "the rate of perfect model's R-squared to the unexplained variance of this model". The possible range of VIF values is (1, Inf], but the recommended thresholds for maximum VIF (argument \code{max_vif}) may vary, being 2.5, 5, and 10 the values most commonly mentioned in the relevant bibliography.
 
-The function \code{\link[=vif_select]{vif_select()}} applyies a Variance Inflation Factor (VIF) analysis to reduce multicollinearity. The VIF for a given variable \code{y} is computed as \code{1/(1-R2)}, where \code{R2} is the multiple R-squared of a multiple regression model fitted using \code{y} as response and all the remaining variables of the input data frame as predictors. The equation can be interpreted as "the rate of perfect model's R-squared to the unexplained variance of this model". The possible range of VIF values is (1, Inf]. A VIF lower than 10 suggest that removing \code{y} from the data set would reduce overall multicollinearity. The recommended thresholds for maximum VIF may vary depending on the source consulted, being the most common values, 2.5, 5, and 10.
+When a 'response' argument is provided, categorical predictors are converted to numeric via target encoding with the function \code{\link[=target_encoding_lab]{target_encoding_lab()}}, and all predictors are then handled as numeric during the multicollinearity filtering. When the 'response' argument is not provided, categorical variables are ignored. However, in such case, the function \code{\link[=cor_select]{cor_select()}} can handle categorical variables, albeit with a lower computation speed.
 
-The argument \code{preference_order} allows the user to prioritise variables that might be interesting or even required for the given analysis. If \code{preference_order} is not provided, then the predictors are ranked from lower to higher sum of R-squared with the other preodictors, and removed one by one until the maximum R-squared of the correlation matrix is lower than \code{max_cor} and the maximum VIF is below \code{max_vif}.
+The argument \code{preference_order} allows prioritizing variables that might be interesting or even required for a given analysis. If \code{preference_order} is not provided, then the predictors are ranked from lower to higher sum of their absolute correlations with the other predictors in \code{\link[=cor_select]{cor_select()}}, and by their VIF in \code{\link[=vif_select]{vif_select()}}, and removed one by one until the maximum R-squared of the correlation matrix is lower than \code{max_cor} and the maximum VIF is below \code{max_vif}.
 
-Please note that near-zero variance columns are ignored by this function.
+Please note that near-zero variance columns are identified by \code{\link[=identify_zero_variance_predictors]{identify_zero_variance_predictors()}}, and ignored by \code{\link[=collinear]{collinear()}}, \code{\link[=cor_select]{cor_select()}}, and \code{\link[=vif_select]{vif_select()}}.
 }
 \examples{
 if(interactive()){
