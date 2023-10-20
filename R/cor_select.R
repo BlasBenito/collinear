@@ -6,7 +6,7 @@
 #'
 #' If the argument `response` is provided, all non-numeric variables in `predictors` are transformed into numeric using target encoding (see [target_encoding_lab()]). Otherwise, non-numeric variables are ignored.
 #'
-#' The argument `preference_order` allows defining a preference selection order to preserve (when possible) variables that might be interesting or even required for a given analysis
+#' The argument `preference_order` allows defining a preference selection order to preserve (when possible) variables that might be interesting or even required for a given analysis. If NULL, predictors are ordered from lower to higher sum of their absolute correlation with the other predictors.
 #'
 #' For example, if `predictors` is `"c("a", "b", "c")` and `preference_order` is `"c("a", "b")`, there are two possibilities:
 #' \itemize{
@@ -20,7 +20,7 @@
 #' @param df (required; data frame or tibble) A data frame with numeric and/or character predictors predictors, and optionally, a response variable. Default: NULL.
 #' @param response (recommended, character string) Name of a numeric response variable. Character response variables are ignored. Please, see 'Details' to better understand how providing this argument or not leads to different results when there are character variables in 'predictors'. Default: NULL.
 #' @param predictors (optional; character vector) Character vector with predictor names in 'df'. If omitted, all columns of 'df' are used as predictors. Default:'NULL'
-#' @param preference_order  (optional; character vector) vector with column names in 'predictors' in the desired preference order, or result of the function `preference_order()`. Allows defining a priority order for selecting predictors, which can be particularly useful when some predictors are more critical for the analysis than others. Predictors not included in this argument are ranked by their Variance Inflation Factor. Default: `NULL`.
+#' @param preference_order  (optional; character vector) vector with column names in 'predictors' in the desired preference order, or result of the function `preference_order()`. Allows defining a priority order for selecting predictors, which can be particularly useful when some predictors are more critical for the analysis than others. Default: `NULL` (predictors ordered from lower to higher sum of absolute correlation with the other predictors).
 #' @param cor_method (optional; character string) Method used to compute pairwise correlations. Accepted methods are "pearson" (with a recommended minimum of 30 rows in 'df') or "spearman" (with a recommended minimum of 10 rows in 'df'). Default: "pearson".
 #' @param max_cor (optional; numeric) Maximum correlation allowed between any pair of predictors. Higher values return larger number of predictors with higher multicollinearity. Default: `0.75`
 #' @param encoding_method (optional; character string). Name of the target encoding method to convert character and factor predictors to numeric. One of "mean", "rank", "loo", "rnorm" (see [target_encoding_lab()] for further details). Default: `"mean"`
@@ -135,13 +135,27 @@ cor_select <- function(
     stop("argument 'max_cor' must be a numeric between 0 and 1.")
   }
 
-  #auto preference order
-  #variables with lower sum of cor with others go higher
-  preference_order.auto <- vif_df(
+  #correlation data frame
+  cor.df <- cor_df(
     df = df,
     response = response,
-    predictors = predictors
-  )$variable
+    predictors = predictors,
+    cor_method = cor_method,
+    encoding_method = encoding_method
+  )
+
+  #correlation matrix
+  cor.matrix <- cor_matrix(
+    df = cor.df
+  ) |>
+    abs()
+
+  #auto preference order
+  #variables with lower sum of cor with others go higher
+  preference_order.auto <- cor.matrix |>
+    colSums() |>
+    sort() |>
+    names()
 
   #if there is no preference order
   if(is.null(preference_order)){
@@ -177,21 +191,6 @@ cor_select <- function(
     )
 
   }
-
-  #correlation data frame
-  cor.df <- cor_df(
-    df = df,
-    response = response,
-    predictors = preference_order,
-    cor_method = cor_method,
-    encoding_method = encoding_method
-  )
-
-  #correlation matrix
-  cor.matrix <- cor_matrix(
-    df = cor.df
-  ) |>
-    abs()
 
   #organize the correlation matrix according to preference_order
   cor.matrix <- cor.matrix[

@@ -1,18 +1,24 @@
-#' @title Autommated multicollinearity reduction
+#' @title Autommated multicollinearity management
 #'
 #' @description
 #'
-#' The `collinear()` function is designed to automate the reduction of multicollinearity in a set of predictors by sequentially applying correlation-based and VIF-based variable selection by applying [cor_select()] and [vif_select()] sequentially.
+#' The `collinear()` function automates multicollinearity management in data frames by combining four methods:
+#' \itemize{
+#' \item Pairwise correlation filtering: Pearson, Spearman, and Cramer's V statistics to identify pairs of highly correlated predictors.
+#' \item Variance Inflation Factor (VIF) filtering: identifies predictors that are linear combinations of other predictors.
+#' \item Target encoding: to transform categorical predictors to numeric using a numeric variable as reference.
+#' \item Flexible prioritization method: to help the user select a meaningful set of non-correlated predictors.
+#' }
 #'
-#' If the 'response' argument is provided, categorical predictors are converted to numeric via target encoding (see [target_encoding_lab()]). If the 'response' argument is not provided, categorical variables are ignored.
+#' Pairwise correlation filtering is implemented in [cor_select()]. This function applies a recursive algorithm to remove predictors with a Pearson correlation with another predictor higher than a given threshold defined by the argument `max_cor`.  When two predictors are correlated above this threshold, the one with the lowest preference order is removed (the one with the highest VIF by default).
 #'
-#' The function [cor_select()] applies a recursive algorithm to remove variables with a Pearson correlation with another variable higher than a given threshold (defined by the argument `max_cor`).  When two variables are correlated above this threshold, the one with the highest sum of R-squared with all the other variables is removed.
+#' VIF-based filtering is implemented in [vif_select()], which removes variables and recomputes VIF scores iteratively, until all variables in the resulting selection have a VIF below the value of the argument `max_vif`. The VIF for a given variable `y` is computed as `1/(1-R2)`, where `R2` is the R-squared of a multiple regression model fitted using `y` as response against the other predictors. The equation can be interpreted as "the rate of perfect model's R-squared to the unexplained variance of this model". The possible range of VIF values is (1, Inf], but the recommended thresholds for maximum VIF (argument `max_vif`) may vary, being 2.5, 5, and 10 the values most commonly mentioned in the relevant bibliography.
 #'
-#' The function [vif_select()] applyies a Variance Inflation Factor (VIF) analysis to reduce multicollinearity. The VIF for a given variable `y` is computed as `1/(1-R2)`, where `R2` is the multiple R-squared of a multiple regression model fitted using `y` as response and all the remaining variables of the input data frame as predictors. The equation can be interpreted as "the rate of perfect model's R-squared to the unexplained variance of this model". The possible range of VIF values is (1, Inf]. A VIF lower than 10 suggest that removing `y` from the data set would reduce overall multicollinearity. The recommended thresholds for maximum VIF may vary depending on the source consulted, being the most common values, 2.5, 5, and 10.
+#' When a 'response' argument is provided, categorical predictors are converted to numeric via target encoding with the function [target_encoding_lab()], and all predictors are then handled as numeric during the multicollinearity filtering. When the 'response' argument is not provided, categorical variables are ignored. However, in such case, the function [cor_select()] can handle categorical variables, albeit with a lower computation speed.
 #'
-#' The argument `preference_order` allows the user to prioritise variables that might be interesting or even required for the given analysis. If `preference_order` is not provided, then the predictors are ranked from lower to higher sum of R-squared with the other preodictors, and removed one by one until the maximum R-squared of the correlation matrix is lower than `max_cor` and the maximum VIF is below `max_vif`.
+#' The argument `preference_order` allows prioritizing variables that might be interesting or even required for a given analysis. If `preference_order` is not provided, then the predictors are ranked from lower to higher sum of their absolute correlations with the other predictors in [cor_select()], and by their VIF in [cor_vif()], and removed one by one until the maximum R-squared of the correlation matrix is lower than `max_cor` and the maximum VIF is below `max_vif`.
 #'
-#' Please note that near-zero variance columns are ignored by this function.
+#' Please note that near-zero variance columns are identified by [identify_zero_variance_predictors()], and ignored by [collinear()], [cor_select()], and [vif_select()].
 #'
 #' @param df (required; data frame or tibble) A data frame with numeric and/or character predictors predictors, and optionally, a response variable. Default: NULL.
 #' @param response (recommended, character string) Name of a numeric response variable. Character response variables are ignored. Please, see 'Details' to better understand how providing this argument or not leads to different results when there are character variables in 'predictors'. Default: NULL.
@@ -166,6 +172,14 @@ collinear <- function(
     replace = TRUE,
     verbose = FALSE
   )
+
+  #use only numeric predictors if the response is NULL
+  if(is.null(response)){
+    predictors <- identify_numeric_predictors(
+      df = df,
+      predictors = predictors
+    )
+  }
 
   #applying cor selection
   selected.predictors <- cor_select(
