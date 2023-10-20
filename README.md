@@ -1,12 +1,16 @@
+collinear: seamless multicollinearity management for numeric and
+categorical variables
+================
 
-- [`collinear`: seamless multicollinearity management for numeric and
-  categorical
-  variables](#collinear-seamless-multicollinearity-management-for-numeric-and-categorical-variables)
-  - [Summary](#summary)
-  - [Citation](#citation)
-  - [Install](#install)
-  - [Multicollinearity management with the `collinear`
-    package.](#multicollinearity-management-with-the-collinear-package)
+- [Summary](#summary)
+- [Citation](#citation)
+- [Install](#install)
+- [Multicollinearity management with the `collinear`
+  package.](#multicollinearity-management-with-the-collinear-package)
+  - [Example data](#example-data)
+  - [`collinear()`](#collinear)
+  - [`cor_select()` and `vif_select()`](#cor_select-and-vif_select)
+  - [`target_encoding_lab()`](#target_encoding_lab)
 
 <!---
 [![R-CMD-check](https://github.com/BlasBenito/collinear/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/BlasBenito/collinear/actions/workflows/R-CMD-check.yaml)
@@ -17,9 +21,7 @@
 [![License](https://img.shields.io/badge/license-GPL--3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0.en.html) [![DOI](https://zenodo.org/badge/330962704.svg)](https://zenodo.org/badge/latestdoi/330962704)[![CRAN status](https://www.r-pkg.org/badges/version/collinear)](https://cran.r-project.org/package=collinear)[![CRAN\_Download\_Badge](http://cranlogs.r-pkg.org/badges/grand-total/collinear)](https://CRAN.R-project.org/package=collinear)
 -->
 
-# `collinear`: seamless multicollinearity management for numeric and categorical variables
-
-## Summary
+# Summary
 
 The R package `collinear` combines four different methods to offer a
 comprehensive tool for multicollinearity management:
@@ -63,7 +65,7 @@ pairwise correlation scores. + `cor_matrix()`: to convert a correlation
 data frame into matrix, or obtain a correlation matrix. + `vif_df()`: to
 obtain a data frame with all variance inflation factors.
 
-## Citation
+# Citation
 
 If you found this package useful during your research work, please cite
 it as:
@@ -71,7 +73,7 @@ it as:
 *Blas M. Benito (2023). collinear: seamless multicollinearity management
 for numeric and categorical variables. R package version 1.0.0.*
 
-## Install
+# Install
 
 The package `collinear` is not on CRAN yet, but it will be submitted
 soon. In the meantime, the development version can be installed directly
@@ -84,7 +86,7 @@ remotes::install_github(
   )
 ```
 
-## Multicollinearity management with the `collinear` package.
+# Multicollinearity management with the `collinear` package.
 
 This section shows the basic usage of the package and offers a brief
 explanation on the methods used within.
@@ -95,7 +97,7 @@ library(dplyr)
 library(tictoc)
 ```
 
-### Example data
+## Example data
 
 The package is shipped with a data frame named `vi`, with 30.000
 records, and 67 columns with a mixture of types.
@@ -214,12 +216,12 @@ vi_predictors
     ## [59] "continent"                  "region"                    
     ## [61] "subregion"
 
-### `collinear()`
+## `collinear()`
 
 The `collinear()` function contains the functionality required for a
 robust multicollinearity management.
 
-#### Input arguments
+### Input arguments
 
 The function takes these inputs:
 
@@ -340,7 +342,7 @@ selected_predictors_vif
 The output shows that the maximum VIF is 4.2, so here `collinear()` did
 its work as expected.
 
-#### Permissive versus restrictive multicollinearity filtering
+### Arguments `max_cor` and `max_vif`
 
 The arguments `max_cor` and `max_vif` control the intensity of the
 multicollinearity filtering.
@@ -404,7 +406,7 @@ predictors. There are no hard rules for `max_cor` and `max_vif`, and
 their selection will depend on the objective of the analysis and the
 nature of the predictors.
 
-#### The importance of the `response` argument
+### The `response` argument
 
 The response argument is used to encode categorical variables as
 numeric. When omitted, the `collinear()` function ignores categorical
@@ -468,21 +470,21 @@ dplyr::glimpse(vi[, selected_predictors_no_response])
     ## Rows: 30,000
     ## Columns: 18
     ## $ topo_diversity             <int> 29, 24, 21, 25, 19, 30, 26, 20, 26, 22, 25,…
+    ## $ humidity_range             <dbl> 15.57, 6.03, 14.44, 4.69, 33.18, 5.76, 3.99…
     ## $ country_population         <dbl> 313973000, 1338612970, 33487208, 1338612970…
     ## $ country_gdp                <dbl> 15094000, 7973000, 1300000, 7973000, 15860,…
     ## $ topo_slope                 <int> 6, 2, 0, 10, 0, 10, 6, 0, 2, 0, 0, 1, 0, 1,…
-    ## $ humidity_range             <dbl> 15.57, 6.03, 14.44, 4.69, 33.18, 5.76, 3.99…
+    ## $ topo_elevation             <int> 1821, 143, 765, 1474, 378, 485, 604, 1159, …
+    ## $ swi_range                  <dbl> 38.4, 41.2, 39.7, 49.8, 74.9, 45.0, 30.5, 2…
     ## $ soil_soc                   <dbl> 43.1, 14.6, 36.4, 34.9, 8.1, 20.8, 44.5, 4.…
     ## $ soil_clay                  <int> 20, 24, 28, 31, 27, 29, 40, 15, 26, 22, 23,…
-    ## $ swi_range                  <dbl> 38.4, 41.2, 39.7, 49.8, 74.9, 45.0, 30.5, 2…
     ## $ soil_sand                  <int> 41, 39, 27, 29, 48, 33, 30, 78, 23, 64, 54,…
-    ## $ topo_elevation             <int> 1821, 143, 765, 1474, 378, 485, 604, 1159, …
     ## $ swi_min                    <dbl> 24.5, 33.3, 42.2, 31.3, 8.3, 28.8, 25.3, 11…
     ## $ soil_nitrogen              <dbl> 2.8, 1.3, 2.9, 3.6, 1.2, 1.9, 2.8, 0.6, 3.1…
     ## $ cloud_cover_range          <int> 23, 27, 15, 17, 38, 27, 32, 11, 15, 12, 21,…
-    ## $ solar_rad_max              <dbl> 31.317, 24.498, 25.283, 17.237, 28.038, 22.…
     ## $ growing_season_temperature <dbl> 12.65, 19.35, 11.55, 12.45, 26.45, 17.75, 2…
     ## $ rainfall_min               <int> 25, 37, 24, 29, 0, 60, 122, 1, 10, 12, 0, 0…
+    ## $ solar_rad_max              <dbl> 31.317, 24.498, 25.283, 17.237, 28.038, 22.…
     ## $ solar_rad_min              <dbl> 5.209, 13.311, 1.587, 9.642, 19.102, 12.196…
     ## $ rainfall_range             <int> 37, 172, 63, 264, 226, 215, 303, 61, 245, 2…
 
@@ -502,7 +504,7 @@ selected_predictors_response <- cor_select(
 tictoc::toc()
 ```
 
-    ## 0.417 sec elapsed
+    ## 0.678 sec elapsed
 
 ``` r
 tictoc::tic()
@@ -513,7 +515,7 @@ selected_predictors_no_response <- cor_select(
 tictoc::toc()
 ```
 
-    ## 34.645 sec elapsed
+    ## 98.45 sec elapsed
 
 ``` r
 selected_predictors_response
@@ -561,7 +563,7 @@ correlation scores, and having them together in the same analysis might
 induce bias during the variable selection. Not using the `response`
 argument should always be the last option.
 
-#### Working with a preference order
+### Preference order
 
 The argument `preference_order` gives the user some control on what
 predictors should be removed first and what predictors should be kept
@@ -570,7 +572,7 @@ of predictor names in the order of interest, or the result of the
 function `preference_order()`, which allows to define preference order
 following a quantitative criteria.
 
-##### Manual preference order
+#### Manual preference order
 
 Let’s start with the former option. Below, the argument
 `preference_order` names several predictors that are of importance for a
@@ -610,7 +612,7 @@ the selection, the VIF of “soil_temperature_mean” and
 “soil_temperature_max” was higher than `max_vif`, and the one with lower
 preference was removed.
 
-##### Quantitative preference order
+#### Quantitative preference order
 
 The function `preference_order()` requires the `response` argument, and
 takes a function `f` that returns a value of association between the
@@ -748,7 +750,7 @@ These can be run in parallel across predictors by increasing the value
 of the `workers` argument if the R packages `future` and `future.apply`
 are installed in the system.
 
-### `cor_select()` and `vif_select()`
+## `cor_select()` and `vif_select()`
 
 The functions `cor_select()` and `vif_select()`, called within
 `collinear()`, perform the pairwise correlation filtering, and the
@@ -795,7 +797,7 @@ selected_predictors_vif
     ## [13] "soil_sand"          "topo_slope"         "country_gdp"       
     ## [16] "country_population"
 
-### `target_encoding_lab()`
+## `target_encoding_lab()`
 
 The function `target_encoding_lab()` is used within all other functions
 in the package to encode categorical variables as numeric. It implements
