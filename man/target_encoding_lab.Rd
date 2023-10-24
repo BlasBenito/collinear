@@ -107,23 +107,6 @@ stats::cor(
   use = "pairwise.complete.obs"
 )
 
-#record the user's graphical parameters
-user.par <- par(no.readonly = TRUE)
-
-#plot encoded predictors vs response
-par(mfrow = c(4, 3))
-x <- lapply(
-  X = predictors.encoded,
-  FUN = function(x) plot(
-    x = df[[x]],
-    y = df$vi_mean,
-    xlab = x,
-    ylab = "vi_mean"
-  )
-)
-
-#reset the user's graphical parameters
-par(user.par)
 
 }
 \references{

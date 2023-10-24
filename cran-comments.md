@@ -27,7 +27,7 @@ Change log:
 
 - removed if(interactive()){} from all @examples.
 
-- used a proper method to reset the user's graphical options in the @example of the function target_encoding_lab().
+- removed plot() call from the @examples of the function target_encoding_lab() because it was messing up pkgdown's build. This piece of code triggered the comment "Please always make sure to reset to user's options()" by the reviewer, so this should solve the issue.
 
 - made sure that all examples run in less than 5 seconds.
 
