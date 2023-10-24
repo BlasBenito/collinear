@@ -31,7 +31,6 @@ Validates a data frame to ensure it complies with the requirements of the packag
 }
 }
 \examples{
-if (interactive()) {
 
 data(vi)
 
@@ -43,7 +42,6 @@ vi <- validate_df(
 #tagged as validated
 attributes(vi)$validated
 
-}
 }
 \author{
 Blas M. Benito

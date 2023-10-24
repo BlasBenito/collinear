@@ -31,14 +31,13 @@
 #' @return Character vector with the names of uncorrelated predictors.
 #'
 #' @examples
-#' if(interactive()){
-
+#'
 #' data(
 #'   vi,
 #'   vi_predictors
 #' )
 #'
-#' #reduce size of vi to speed-up example execution
+#' #subset to limit example run time
 #' vi <- vi[1:1000, ]
 #'
 #' #without response
@@ -124,9 +123,7 @@
 #' )
 #'
 #' selected.predictors
-
-
-#' }
+#'
 #' @autoglobal
 #' @author Blas M. Benito
 #' @references
@@ -159,6 +156,7 @@ collinear <- function(
   #validate predictors
   predictors <- validate_predictors(
     df = df,
+    response = response,
     predictors = predictors,
     min_numerics = 0
   )

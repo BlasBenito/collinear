@@ -39,14 +39,13 @@ A data frame with the columns "predictor" and "value". The former contains the p
 This function calculates the preference order of predictors based on a user-provided function that takes a predictor, a response, and a data frame as arguments.
 }
 \examples{
-if(interactive()){
 
 data(
   vi,
   vi_predictors
 )
 
-#reduce size of vi to speed-up example execution
+#subset to limit example run time
 vi <- vi[1:1000, ]
 
 #computing preference order
@@ -110,8 +109,6 @@ preference.order <- preference_order(
 )
 
 preference.order
-
-}
 
 }
 \author{

@@ -22,7 +22,6 @@
 #' @param min_rows (required; integer) Minimum number of rows required for a pairwise correlation or a variance inflation factor analysis. Default: 30
 #' @return The input data frame modified to comply with the requirements of the functions in this package
 #' @examples
-#' if (interactive()) {
 #'
 #' data(vi)
 #'
@@ -34,7 +33,6 @@
 #' #tagged as validated
 #' attributes(vi)$validated
 #'
-#' }
 #' @autoglobal
 #' @author Blas M. Benito
 #' @export
@@ -162,13 +160,13 @@ validate_df <- function(
 #'
 #'
 #' @param df (required; data frame) A validated data frame with numeric and/or character predictors, and optionally, a response variable. Default: NULL.
+#' @param response (optional, character string) Name of a numeric response variable. Used to remove the response from the predictors when predictors is NULL. Character response variables are ignored. Default: NULL.
 #' @param predictors (optional; character vector) character vector with predictor names in 'df'. If omitted, all columns of 'df' are used as predictors. Default:NULL
 #' @param min_numerics (required, integer) Minimum number of numeric predictors required. Default: 1
 #' @param decimals (required, integer) Number of decimal places for the zero variance test. Smaller numbers will increase the number of variables detected as near-zero variance. Recommended values will depend on the range of the numeric variables in 'df'. Default: 4
 #'
 #' @return A character vector of validated predictor names
 #' @examples
-#' if (interactive()) {
 #'
 #' data(
 #'   vi,
@@ -189,12 +187,12 @@ validate_df <- function(
 #' #tagged as validated
 #' attributes(vi_predictors)$validated
 #'
-#' }
 #' @autoglobal
 #' @author Blas M. Benito
 #' @export
 validate_predictors <- function(
     df = NULL,
+    response = NULL,
     predictors = NULL,
     min_numerics = 0,
     decimals = 4
@@ -280,6 +278,12 @@ validate_predictors <- function(
 
   }
 
+  #removing response from predictors
+  predictors <- setdiff(
+    x = predictors,
+    y = response
+  )
+
   attr(
     x = predictors,
     which = "validated"
@@ -302,7 +306,6 @@ validate_predictors <- function(
 #' @param decimals (required, integer) number of decimal places for the zero variance test. Default: 4
 #' @return character string with name of the response
 #' @examples
-#' if (interactive()) {
 #'
 #' data(
 #'   vi
@@ -322,7 +325,6 @@ validate_predictors <- function(
 #' #tagged as validated
 #' attributes(response)$validated
 #'
-#' }
 #' @autoglobal
 #' @author Blas M. Benito
 #' @export

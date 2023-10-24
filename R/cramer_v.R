@@ -15,10 +15,12 @@
 #' @return Numeric, value of Cramer's V
 #'
 #' @examples
-#' if(interactive()){
 #'
 #' #loading example data
 #' data(vi)
+#'
+#' #subset to limit example run time
+#' vi <- vi[1:1000, ]
 #'
 #' #computing Cramer's V for two categorical predictors
 #' v <- cramer_v(
@@ -28,7 +30,6 @@
 #'
 #' v
 #'
-#' }
 #' @autoglobal
 #' @author Blas M. Benito
 #' @references

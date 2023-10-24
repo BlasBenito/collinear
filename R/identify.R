@@ -53,7 +53,6 @@ identify_numeric_predictors <- function(
 #' @param predictors (optional; character vector) A vector with predictor names in 'df'. If omitted, all columns of 'df' are used as predictors. Default:'NULL'
 #' @return character vector with names of numeric predictors.
 #' @examples
-#' if (interactive()) {
 #'
 #' data(
 #'   vi,
@@ -67,7 +66,6 @@ identify_numeric_predictors <- function(
 #'
 #' non.numeric.predictors
 #'
-#' }
 #' @autoglobal
 #' @author Blas M. Benito
 #' @export
@@ -102,7 +100,6 @@ identify_non_numeric_predictors <- function(
 #' @param decimals (required, integer) number of decimal places for the zero variance test. Default: 4
 #' @return character vector with names of zero and near-zero variance columns.
 #' @examples
-#' if (interactive()) {
 #'
 #' data(
 #'   vi,
@@ -129,7 +126,6 @@ identify_non_numeric_predictors <- function(
 #'
 #' zero.variance.predictors
 #'
-#' }
 #' @autoglobal
 #' @author Blas M. Benito
 #' @export

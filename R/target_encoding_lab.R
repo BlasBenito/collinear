@@ -46,15 +46,14 @@
 #'
 #'
 #' @examples
-#' if(interactive()){
 #'
-#' #loading example data
+#loading example data
 #' data(
 #'   vi,
 #'   vi_predictors
 #'   )
 #'
-#' #reduce size of vi to speed-up example runtime
+#' #subset to limit example run time
 #' vi <- vi[1:1000, ]
 #'
 #' #applying all methods for a continuous response
@@ -86,6 +85,9 @@
 #'   use = "pairwise.complete.obs"
 #' )
 #'
+#' #record the user's graphical parameters
+#' user.par <- par(no.readonly = TRUE)
+#'
 #' #plot encoded predictors vs response
 #' par(mfrow = c(4, 3))
 #' x <- lapply(
@@ -95,13 +97,12 @@
 #'     y = df$vi_mean,
 #'     xlab = x,
 #'     ylab = "vi_mean"
-#'     )
+#'   )
 #' )
 #'
-#' #reset plotting parameters
-#' dev.off()
+#' #reset the user's graphical parameters
+#' par(user.par)
 #'
-#' }
 #' @autoglobal
 #' @author Blas M. Benito
 #' @references
@@ -147,6 +148,7 @@ target_encoding_lab <- function(
   #validate predictors
   predictors <- validate_predictors(
     df = df,
+    response = response,
     predictors = predictors,
     min_numerics = 0
   )

@@ -46,7 +46,6 @@ This function attempts to handle correlations between pairs of variables that ca
 }
 }
 \examples{
-if(interactive()){
 
 data(
   vi,
@@ -55,6 +54,7 @@ data(
 
 #reduce size of vi to speed-up example execution
 vi <- vi[1:1000, ]
+vi_predictors <- vi_predictors[1:10]
 
 #without response
 #categorical vs categorical compared with cramer_v()
@@ -77,8 +77,8 @@ df <- cor_df(
   predictors = vi_predictors
 )
 
+head(df)
 
-}
 }
 \author{
 Blas M. Benito

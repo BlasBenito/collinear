@@ -21,9 +21,11 @@ Computes the R-squared between a response and a predictor.
 Fastest option to compute preference order.
 }
 \examples{
-if(interactive()){
 
 data(vi)
+
+#subset to limit example run time
+vi <- vi[1:1000, ]
 
 f_rsquared(
   x = "growing_season_length", #predictor
@@ -31,5 +33,4 @@ f_rsquared(
   df = vi
 )
 
-}
 }

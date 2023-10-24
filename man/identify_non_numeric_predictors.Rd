@@ -18,7 +18,6 @@ character vector with names of numeric predictors.
 Given 'df' and 'predictors' arguments, this function subsets and returns the non-numeric (character, factor, and logical) predictors.
 }
 \examples{
-if (interactive()) {
 
 data(
   vi,
@@ -32,7 +31,6 @@ non.numeric.predictors <- identify_non_numeric_predictors(
 
 non.numeric.predictors
 
-}
 }
 \author{
 Blas M. Benito

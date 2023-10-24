@@ -20,15 +20,21 @@ Explained deviance
 Computes the explained deviance of a response against a predictor via Generalized Additive Model (GAM). This option is slower than \code{\link[=f_rsquared]{f_rsquared()}}, but suitable if you will be fitting GAMs with the resulting preference order.
 }
 \examples{
-if(interactive()){
 
 data(vi)
 
-f_gam_deviance(
-  x = "growing_season_length", #predictor
-  y = "vi_mean",               #response
-  df = vi
-)
+#subset to limit example run time
+vi <- vi[1:1000, ]
+
+#this example requires "mgcv" installed in the system
+if(requireNamespace(package = "mgcv", quietly = TRUE)){
+
+  f_gam_deviance(
+    x = "growing_season_length", #predictor
+    y = "vi_mean",               #response
+    df = vi
+  )
 
 }
+
 }

@@ -27,7 +27,6 @@
 #' @return data frame with pairs of predictors and their correlation.
 #'
 #' @examples
-#' if(interactive()){
 #'
 #' data(
 #'   vi,
@@ -36,6 +35,7 @@
 #'
 #' #reduce size of vi to speed-up example execution
 #' vi <- vi[1:1000, ]
+#' vi_predictors <- vi_predictors[1:10]
 #'
 #' #without response
 #' #categorical vs categorical compared with cramer_v()
@@ -58,8 +58,8 @@
 #'   predictors = vi_predictors
 #' )
 #'
+#' head(df)
 #'
-#' }
 #' @autoglobal
 #' @author Blas M. Benito
 #' @export
@@ -94,6 +94,7 @@ cor_df <- function(
   #validate predictors
   predictors <- validate_predictors(
     df = df,
+    response = response,
     predictors = predictors,
     min_numerics = 0
   )
@@ -246,6 +247,7 @@ cor_numerics_and_characters <- function(
   #check predictors
   predictors <- validate_predictors(
     df = df,
+    response = response,
     predictors = predictors,
     min_numerics = 0
   )

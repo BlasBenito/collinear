@@ -35,15 +35,15 @@
 #' @param encoding_method (optional; character string). Name of the target encoding method to convert character and factor predictors to numeric. One of "mean", "rank", "loo", "rnorm" (see [target_encoding_lab()] for further details). Default: "mean"
 #' @return Character vector with the names of the selected predictors.
 #' @examples
-#' if(interactive()){
 #'
 #' data(
 #'   vi,
 #'   vi_predictors
 #' )
 #'
-#' #reduce size of vi to speed-up example execution
+#' #subset to limit example run time
 #' vi <- vi[1:1000, ]
+#' vi_predictors <- vi_predictors[1:10]
 #'
 #' #without response
 #' #without preference_order
@@ -127,7 +127,6 @@
 #'
 #' selected.predictors
 #'
-#' }
 #' @autoglobal
 #' @author Blas M. Benito
 #' \itemize{
@@ -158,6 +157,7 @@ vif_select <- function(
   #check predictors
   predictors <- validate_predictors(
     df = df,
+    response = response,
     predictors = predictors,
     min_numerics = 0
   )

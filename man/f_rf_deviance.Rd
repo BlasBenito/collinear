@@ -20,15 +20,21 @@ R-squared
 Computes a univariate random forest model with \verb{\link[ranger]\{ranger\}} and returns the R-squared on the out-of-bag data.
 }
 \examples{
-if(interactive()){
 
 data(vi)
 
-f_rf_deviance(
-  x = "growing_season_length", #predictor
-  y = "vi_mean",               #response
-  df = vi
-)
+#subset to limit example run time
+vi <- vi[1:1000, ]
+
+#this example requires "ranger" installed in the system
+if(requireNamespace(package = "ranger", quietly = TRUE)){
+
+  f_rf_deviance(
+    x = "growing_season_length", #predictor
+    y = "vi_mean",               #response
+    df = vi
+  )
 
 }
+
 }

@@ -20,7 +20,6 @@ character string with name of the response
 Requires the argument 'df' to be validated with \code{\link[=validate_df]{validate_df()}}.
 }
 \examples{
-if (interactive()) {
 
 data(
   vi
@@ -40,7 +39,6 @@ response <- validate_response(
 #tagged as validated
 attributes(response)$validated
 
-}
 }
 \author{
 Blas M. Benito

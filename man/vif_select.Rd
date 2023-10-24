@@ -55,15 +55,15 @@ For example, if \code{predictors} is \code{c("a", "b", "c")} and \code{preferenc
 If \code{preference_order} is not provided, then the predictors are ranked by their variance inflation factor as computed by \code{\link[=vif_df]{vif_df()}}.
 }
 \examples{
-if(interactive()){
 
 data(
   vi,
   vi_predictors
 )
 
-#reduce size of vi to speed-up example execution
+#subset to limit example run time
 vi <- vi[1:1000, ]
+vi_predictors <- vi_predictors[1:10]
 
 #without response
 #without preference_order
@@ -147,7 +147,6 @@ selected.predictors <- vif_select(
 
 selected.predictors
 
-}
 }
 \author{
 Blas M. Benito

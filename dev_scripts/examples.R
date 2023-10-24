@@ -21,7 +21,7 @@ library(collinear)
 #vif_df DONE
 
 
-#validate_response  (done and tested)
+#validate_response DONE
 ###################################################
 ###################################################
 ###################################################
@@ -44,7 +44,7 @@ response <- validate_response(
 #tagged as validated
 attributes(response)$validated
 
-#validate_predictors  (done and tested)
+#validate_predictors DONE
 ###################################################
 ###################################################
 ###################################################
@@ -68,7 +68,7 @@ vi_predictors <- validate_predictors(
 #tagged as validated
 attributes(vi_predictors)$validated
 
-#validate_df  (done and tested)
+#validate_df DONE
 ###################################################
 ###################################################
 ###################################################
@@ -83,37 +83,37 @@ vi <- validate_df(
 #tagged as validated
 attributes(vi)$validated
 
-#identify_zero_variance_predictors  (done and tested)
+#identify_zero_variance_predictors DONE
 ###################################################
 ###################################################
 ###################################################
 
-#' data(
-#'   vi,
-#'   vi_predictors
-#' )
-#'
-#' #create zero variance predictors
-#' vi$zv_1 <- 1
-#' vi$zv_2 <- runif(n = nrow(vi), min = 0, max = 0.0001)
-#'
-#'
-#' #add to vi predictors
-#' vi_predictors <- c(
-#'   vi_predictors,
-#'   "zv_1",
-#'   "zv_2"
-#' )
-#'
-#' #identify zero variance predictors
-#' zero.variance.predictors <- identify_zero_variance_predictors(
-#'   df = vi,
-#'   predictors = vi_predictors
-#' )
-#'
-#' zero.variance.predictors
+data(
+  vi,
+  vi_predictors
+)
 
-#identify_non_numeric_predictors  (done and tested)
+#create zero variance predictors
+vi$zv_1 <- 1
+vi$zv_2 <- runif(n = nrow(vi), min = 0, max = 0.0001)
+
+
+#add to vi predictors
+vi_predictors <- c(
+  vi_predictors,
+  "zv_1",
+  "zv_2"
+)
+
+#identify zero variance predictors
+zero.variance.predictors <- identify_zero_variance_predictors(
+  df = vi,
+  predictors = vi_predictors
+)
+
+zero.variance.predictors
+
+#identify_non_numeric_predictors DONE
 ###################################################
 ###################################################
 ###################################################
@@ -131,7 +131,7 @@ non.numeric.predictors <- identify_non_numeric_predictors(
 non.numeric.predictors
 
 
-#identify_numeric_predictors (done and tested)
+#identify_numeric_predictors DONE
 ###################################################
 ###################################################
 ###################################################
@@ -148,36 +148,56 @@ numeric.predictors <- identify_numeric_predictors(
 
 numeric.predictors
 
-#f_rf_deviance (done and tested)
+#f_rf_deviance DONE
 ###################################################
 ###################################################
 ###################################################
 data(vi)
 
-f_rf_deviance(
-  x = "growing_season_length", #predictor
-  y = "vi_mean",               #response
-  df = vi
-)
+#subset to limit run time
+vi <- vi[1:1000, ]
 
-#f_gam_deviance (done and tested)
+#this example requires "ranger" installed in the system
+if(requireNamespace(package = "ranger", quietly = TRUE)){
+
+  f_rf_deviance(
+    x = "growing_season_length", #predictor
+    y = "vi_mean",               #response
+    df = vi
+  )
+
+}
+
+
+#f_gam_deviance DONE
 ###################################################
 ###################################################
 ###################################################
 data(vi)
 
-f_gam_deviance(
-  x = "growing_season_length", #predictor
-  y = "vi_mean",               #response
-  df = vi
-)
+#subset to limit run time
+vi <- vi[1:1000, ]
+
+#this example requires "mgcv" installed in the system
+if(requireNamespace(package = "mgcv", quietly = TRUE)){
+
+  f_gam_deviance(
+    x = "growing_season_length", #predictor
+    y = "vi_mean",               #response
+    df = vi
+  )
+
+}
 
 
-#f_rsquared (done and tested)
+#f_rsquared DONE
 ###################################################
 ###################################################
 ###################################################
 data(vi)
+
+#subset to limit run time
+vi <- vi[1:1000, ]
 
 f_rsquared(
   x = "growing_season_length", #predictor
@@ -186,7 +206,7 @@ f_rsquared(
 )
 
 
-#preference_order (done and tested)
+#preference_order DONE
 ###################################################
 ###################################################
 ###################################################
@@ -195,7 +215,7 @@ data(
   vi_predictors
 )
 
-#reduce size of vi to speed-up example execution
+#subset to limit run time
 vi <- vi[1:1000, ]
 
 #computing preference order
@@ -262,12 +282,15 @@ preference.order
 
 
 
-#cramer_vi (done and tested)
+#cramer_vi DONE
 ###################################################
 ###################################################
 ###################################################
 #loading example data
 data(vi)
+
+#subset to limit run time
+vi <- vi[1:1000, ]
 
 #computing Cramer's V for two categorical predictors
 v <- cramer_v(
@@ -278,7 +301,7 @@ v <- cramer_v(
 v
 
 
-#collinear (done and tested)
+#collinear DONE
 ###################################################
 ###################################################
 ###################################################
@@ -288,7 +311,7 @@ data(
   vi_predictors
 )
 
-#reduce size of vi to speed-up example execution
+#subset to limit run time
 vi <- vi[1:1000, ]
 
 #without response
@@ -376,7 +399,7 @@ selected.predictors <- collinear(
 selected.predictors
 
 
-#cor_select (done and tested)
+#cor_select DONE
 ###################################################
 ###################################################
 ###################################################
@@ -386,8 +409,9 @@ data(
   vi_predictors
 )
 
-#reduce size of vi to speed-up example execution
+#subset to limit run time
 vi <- vi[1:1000, ]
+vi_predictors <- vi_predictors[1:10]
 
 #without response
 #without preference_order
@@ -471,7 +495,7 @@ selected.predictors <- cor_select(
 selected.predictors
 
 
-#cor_df  (done and tested)
+#cor_df DONE
 ###################################################
 ###################################################
 ###################################################
@@ -481,8 +505,9 @@ data(
   vi_predictors
 )
 
-#reduce size of vi to speed-up example execution
+#subset to limit run time
 vi <- vi[1:1000, ]
+vi_predictors <- vi_predictors[1:10]
 
 #without response
 #categorical vs categorical compared with cramer_v()
@@ -507,7 +532,7 @@ df <- cor_df(
 
 head(df)
 
-#vif_df  (done and tested)
+#vif_df DONE
 ###################################################
 ###################################################
 ###################################################
@@ -517,7 +542,7 @@ data(
   vi_predictors
 )
 
-#reduce size of vi to speed-up example execution
+#subset to limit run time
 vi <- vi[1:1000, ]
 
 #without response
@@ -540,7 +565,7 @@ df <- vif_df(
 df
 
 
-#cor_matrix
+#cor_matrix DONE
 ###################################################
 ###################################################
 ###################################################
@@ -550,8 +575,9 @@ data(
   vi_predictors
 )
 
-#reduce size of vi to speed-up example execution
+#subset to limit run time
 vi <- vi[1:1000, ]
+vi_predictors <- vi_predictors[1:5]
 
 #convert correlation data frame to matrix
 df <- cor_df(
@@ -589,7 +615,7 @@ m[1:5, 1:5]
 
 
 
-#vif_select (done and tested)
+#vif_select DONE
 ###################################################
 ###################################################
 ###################################################
@@ -599,8 +625,9 @@ data(
   vi_predictors
 )
 
-#reduce size of vi to speed-up example execution
+#subset to limit run time
 vi <- vi[1:1000, ]
+vi_predictors <- vi_predictors[1:10]
 
 #without response
 #without preference_order
@@ -685,7 +712,7 @@ selected.predictors <- vif_select(
 selected.predictors
 
 
-#target_encoding_lab()
+#target_encoding_lab() DONE
 ###################################################
 ###################################################
 ###################################################
@@ -695,7 +722,7 @@ data(
   vi_predictors
   )
 
-#reduce size of vi to speed-up example runtime
+#subset to limit run time
 vi <- vi[1:1000, ]
 
 #applying all methods for a continuous response
@@ -727,6 +754,9 @@ stats::cor(
   use = "pairwise.complete.obs"
 )
 
+#record the user's graphical parameters
+user.par <- par(no.readonly = TRUE)
+
 #plot encoded predictors vs response
 par(mfrow = c(4, 3))
 x <- lapply(
@@ -736,16 +766,21 @@ x <- lapply(
     y = df$vi_mean,
     xlab = x,
     ylab = "vi_mean"
-    )
+  )
 )
 
+#reset the user's graphical parameters
+par(user.par)
 
-#target_encoding_methods
+#target_encoding_methods DONE
 ###################################################
 ###################################################
 ###################################################
 #loading example data
 data(vi)
+
+#subset to limit run time
+vi <- vi[1:1000, ]
 
 #mean encoding
 #-------------

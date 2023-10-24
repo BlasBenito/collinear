@@ -46,15 +46,15 @@ This function attempts to handle correlations between pairs of variables that ca
 }
 }
 \examples{
-if(interactive()){
 
 data(
   vi,
   vi_predictors
 )
 
-#reduce size of vi to speed-up example execution
+#subset to limit example run time
 vi <- vi[1:1000, ]
+vi_predictors <- vi_predictors[1:5]
 
 #convert correlation data frame to matrix
 df <- cor_df(
@@ -89,7 +89,6 @@ m <- cor_matrix(
 
 m[1:5, 1:5]
 
-}
 }
 \author{
 Blas M. Benito

@@ -33,14 +33,13 @@ This function computes the Variance Inflation Factor (VIF) in three steps:
 }
 }
 \examples{
-if(interactive()){
 
 data(
   vi,
   vi_predictors
 )
 
-#reduce size of vi to speed-up example execution
+#subset to limit example run time
 vi <- vi[1:1000, ]
 
 #without response
@@ -62,7 +61,6 @@ df <- vif_df(
 
 df
 
-}
 }
 \author{
 Blas M. Benito

@@ -27,15 +27,15 @@
 #' @return correlation matrix
 #'
 #' @examples
-#' if(interactive()){
 #'
 #' data(
 #'   vi,
 #'   vi_predictors
 #' )
 #'
-#' #reduce size of vi to speed-up example execution
+#' #subset to limit example run time
 #' vi <- vi[1:1000, ]
+#' vi_predictors <- vi_predictors[1:5]
 #'
 #' #convert correlation data frame to matrix
 #' df <- cor_df(
@@ -70,7 +70,6 @@
 #'
 #' m[1:5, 1:5]
 #'
-#' }
 #' @autoglobal
 #' @author Blas M. Benito
 #' @export

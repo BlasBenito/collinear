@@ -69,15 +69,13 @@ The methods "mean" and "rank" support the \code{white_noise} argument, which is 
 The method "rnorm" has the argument \code{rnorm_sd_multiplier}, which multiplies the standard deviation argument of the \verb{\link[stats]\{rnorm\}} function to control the spread of the encoded values between groups. Values smaller than 1 reduce the spread in the results, while values larger than 1 have the opposite effect.
 }
 \examples{
-if(interactive()){
 
-#loading example data
 data(
   vi,
   vi_predictors
   )
 
-#reduce size of vi to speed-up example runtime
+#subset to limit example run time
 vi <- vi[1:1000, ]
 
 #applying all methods for a continuous response
@@ -109,6 +107,9 @@ stats::cor(
   use = "pairwise.complete.obs"
 )
 
+#record the user's graphical parameters
+user.par <- par(no.readonly = TRUE)
+
 #plot encoded predictors vs response
 par(mfrow = c(4, 3))
 x <- lapply(
@@ -118,13 +119,12 @@ x <- lapply(
     y = df$vi_mean,
     xlab = x,
     ylab = "vi_mean"
-    )
+  )
 )
 
-#reset plotting parameters
-dev.off()
+#reset the user's graphical parameters
+par(user.par)
 
-}
 }
 \references{
 \itemize{

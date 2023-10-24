@@ -24,10 +24,12 @@ Cramer's V is an extension of the chi-squared test to measure the strength of as
 Even when its range is between 0 and 1, Cramer's V values are not directly comparable to R-squared values, and as such, a multicollinearity analysis containing both types of values must be assessed with care. It is probably preferable to convert non-numeric variables to numeric using target encoding rather before a multicollinearity analysis.
 }
 \examples{
-if(interactive()){
 
 #loading example data
 data(vi)
+
+#subset to limit example run time
+vi <- vi[1:1000, ]
 
 #computing Cramer's V for two categorical predictors
 v <- cramer_v(
@@ -37,7 +39,6 @@ v <- cramer_v(
 
 v
 
-}
 }
 \references{
 \itemize{

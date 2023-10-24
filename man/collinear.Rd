@@ -55,13 +55,13 @@ The argument \code{preference_order} allows prioritizing variables that might be
 Please note that near-zero variance columns are identified by \code{\link[=identify_zero_variance_predictors]{identify_zero_variance_predictors()}}, and ignored by \code{\link[=collinear]{collinear()}}, \code{\link[=cor_select]{cor_select()}}, and \code{\link[=vif_select]{vif_select()}}.
 }
 \examples{
-if(interactive()){
+
 data(
   vi,
   vi_predictors
 )
 
-#reduce size of vi to speed-up example execution
+#subset to limit example run time
 vi <- vi[1:1000, ]
 
 #without response
@@ -147,7 +147,7 @@ selected.predictors <- collinear(
 )
 
 selected.predictors
-}
+
 }
 \references{
 \itemize{

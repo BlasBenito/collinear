@@ -22,14 +22,13 @@
 #' @return Data frame with predictor names and VIF values
 #'
 #' @examples
-#' if(interactive()){
 #'
 #' data(
 #'   vi,
 #'   vi_predictors
 #' )
 #'
-#' #reduce size of vi to speed-up example execution
+#' #subset to limit example run time
 #' vi <- vi[1:1000, ]
 #'
 #' #without response
@@ -51,7 +50,6 @@
 #'
 #' df
 #'
-#' }
 #' @autoglobal
 #' @author Blas M. Benito
 #' \itemize{
@@ -74,6 +72,7 @@ vif_df <- function(
   #check predictors
   predictors <- validate_predictors(
     df = df,
+    response = response,
     predictors = predictors,
     min_numerics = 0
   )

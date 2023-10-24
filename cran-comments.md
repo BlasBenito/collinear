@@ -1,3 +1,37 @@
+## Re-resubmission
+
+This resubmission results from the kind review performed by Benjamin Altmann.
+
+Benjamin's comments are quoted below:
+
+"if(interactive()) should only be used if the example can only be run
+interactivly (e.g.: shiny Apps). Does not seem necessary. Please replace
+if(interacvtive()) with \donttest.
+
+Please unwrap the examples if they are executable in < 5 sec, or replace
+dontrun{} with \donttest{}.
+
+Please always make sure to reset to user's options(), working directory
+or par() after you changed it in examples and vignettes and demos. ->
+man/target_encoding_lab.Rd
+e.g.:
+oldpar <- par(mfrow = c(1,2))
+...
+par(oldpar)"
+
+
+Change log:
+#----------
+
+- removed if(interactive()){} from all @examples.
+
+- used a proper method to reset the user's graphical options in the @example of the function target_encoding_lab().
+
+- made sure that all examples run in less than 5 seconds.
+
+- fixed a bug in which all functions would include the response as a predictor when 'predictors = NULL' and 'response' was a valid column of the input data frame.
+
+
 ## Test environments
 
 Tested via GitHub actions with usethis::use_github_action("check-standard"):

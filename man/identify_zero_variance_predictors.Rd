@@ -20,7 +20,6 @@ character vector with names of zero and near-zero variance columns.
 Predictors a variance of zero or near zero are highly problematic for multicollinearity analysis and modelling in general. This function identifies these predictors with a level of sensitivity defined by the 'decimals' argument. Smaller number of decimals increase the number of variables detected as near zero variance. Recommended values will depend on the range of the numeric variables in 'df'.
 }
 \examples{
-if (interactive()) {
 
 data(
   vi,
@@ -47,7 +46,6 @@ zero.variance.predictors <- identify_zero_variance_predictors(
 
 zero.variance.predictors
 
-}
 }
 \author{
 Blas M. Benito

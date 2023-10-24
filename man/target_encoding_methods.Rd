@@ -79,9 +79,11 @@ Methods to apply target-encoding to individual categorical variables. The functi
 }
 }
 \examples{
-if(interactive()){
 
 data(vi)
+
+#subset to limit example run time
+vi <- vi[1:1000, ]
 
 #mean encoding
 #-------------
@@ -205,7 +207,6 @@ plot(
   ylab = "response"
 )
 
-}
 
 }
 \references{

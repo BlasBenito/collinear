@@ -21,10 +21,12 @@
 #' @return The input data frame with a target-encoded variable.
 #'
 #' @examples
-#' if(interactive()){
 #'
 #loading example data
 #' data(vi)
+#'
+#' #subset to limit example run time
+#' vi <- vi[1:1000, ]
 #'
 #' #mean encoding
 #' #-------------
@@ -148,7 +150,6 @@
 #'   ylab = "response"
 #' )
 #'
-#' }
 #'
 #' @export
 #' @autoglobal

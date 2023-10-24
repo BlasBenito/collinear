@@ -6,6 +6,7 @@
 \usage{
 validate_predictors(
   df = NULL,
+  response = NULL,
   predictors = NULL,
   min_numerics = 0,
   decimals = 4
@@ -13,6 +14,8 @@ validate_predictors(
 }
 \arguments{
 \item{df}{(required; data frame) A validated data frame with numeric and/or character predictors, and optionally, a response variable. Default: NULL.}
+
+\item{response}{(optional, character string) Name of a numeric response variable. Used to remove the response from the predictors when predictors is NULL. Character response variables are ignored. Default: NULL.}
 
 \item{predictors}{(optional; character vector) character vector with predictor names in 'df'. If omitted, all columns of 'df' are used as predictors. Default:NULL}
 
@@ -38,7 +41,6 @@ Validates the 'predictors' argument to ensure it complies with the requirements 
 }
 }
 \examples{
-if (interactive()) {
 
 data(
   vi,
@@ -59,7 +61,6 @@ vi_predictors <- validate_predictors(
 #tagged as validated
 attributes(vi_predictors)$validated
 
-}
 }
 \author{
 Blas M. Benito

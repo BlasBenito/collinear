@@ -17,14 +17,13 @@
 #'
 #' @return A data frame with the columns "predictor" and "value". The former contains the predictors names in order, ready for the argument `preference_order` in [cor_select()], [vif_select()] and [collinear()]. The latter contains the result of the function `f` for each combination of predictor and response.
 #' @examples
-#' if(interactive()){
 #'
 #'data(
 #'   vi,
 #'   vi_predictors
 #' )
 #'
-#' #reduce size of vi to speed-up example execution
+#' #subset to limit example run time
 #' vi <- vi[1:1000, ]
 #'
 #' #computing preference order
@@ -89,8 +88,6 @@
 #'
 #' preference.order
 #'
-#' }
-#'
 #' @autoglobal
 #' @author Blas M. Benito
 #' @export
@@ -118,6 +115,7 @@ preference_order <- function(
   #check predictors
   predictors <- validate_predictors(
     df = df,
+    response = response,
     predictors = predictors,
     min_numerics = 0
   )
@@ -215,9 +213,11 @@ preference_order <- function(
 #'
 #' @return R-squared
 #' @examples
-#' if(interactive()){
 #'
 #' data(vi)
+#'
+#' #subset to limit example run time
+#' vi <- vi[1:1000, ]
 #'
 #' f_rsquared(
 #'   x = "growing_season_length", #predictor
@@ -225,7 +225,6 @@ preference_order <- function(
 #'   df = vi
 #' )
 #'
-#' }
 #' @autoglobal
 #' @export
 f_rsquared <- function(x, y, df){
@@ -249,17 +248,23 @@ f_rsquared <- function(x, y, df){
 #'
 #' @return Explained deviance
 #' @examples
-#' if(interactive()){
 #'
 #' data(vi)
 #'
-#' f_gam_deviance(
-#'   x = "growing_season_length", #predictor
-#'   y = "vi_mean",               #response
-#'   df = vi
-#' )
+#' #subset to limit example run time
+#' vi <- vi[1:1000, ]
+#'
+#' #this example requires "mgcv" installed in the system
+#' if(requireNamespace(package = "mgcv", quietly = TRUE)){
+#'
+#'   f_gam_deviance(
+#'     x = "growing_season_length", #predictor
+#'     y = "vi_mean",               #response
+#'     df = vi
+#'   )
 #'
 #' }
+#'
 #' @autoglobal
 #' @export
 f_gam_deviance <- function(x, y, df){
@@ -297,17 +302,23 @@ f_gam_deviance <- function(x, y, df){
 #'
 #' @return R-squared
 #' @examples
-#' if(interactive()){
 #'
 #' data(vi)
 #'
-#' f_rf_deviance(
-#'   x = "growing_season_length", #predictor
-#'   y = "vi_mean",               #response
-#'   df = vi
-#' )
+#' #subset to limit example run time
+#' vi <- vi[1:1000, ]
+#'
+#' #this example requires "ranger" installed in the system
+#' if(requireNamespace(package = "ranger", quietly = TRUE)){
+#'
+#'   f_rf_deviance(
+#'     x = "growing_season_length", #predictor
+#'     y = "vi_mean",               #response
+#'     df = vi
+#'   )
 #'
 #' }
+#'
 #' @autoglobal
 #' @export
 f_rf_deviance <- function(x, y, df){
