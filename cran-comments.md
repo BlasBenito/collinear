@@ -23,6 +23,8 @@ par(oldpar)"
 Change log:
 #----------
 
+- version number bumped up to 1.0.1
+
 - removed if(interactive()){} from all @examples.
 
 - used a proper method to reset the user's graphical options in the @example of the function target_encoding_lab().

@@ -1,6 +1,6 @@
 Package: collinear
 Title: Seamless Multicollinearity Management for Categorical and Numeric Variables
-Version: 1.0.0
+Version: 1.0.1
 Authors@R: 
     person("Blas", "Benito", , "blasbenito@gmail.com", role = c("aut", "cre", "cph"),
            comment = c(ORCID = "0000-0001-5105-7232"))
