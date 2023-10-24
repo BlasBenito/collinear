@@ -384,14 +384,21 @@ df <- target_encoding_lab(
 
 The relationship between these encoded versions of "koppen_zone" and the response are shown below.
 
-```{r, fig.width=9, fig.height=9}
+```{r, fig.width=9, fig.height=9, eval = FALSE}
+#get names of encoded variables
 koppen_zone_encoded <- grep(
   pattern = "*__encoded*",
   x = colnames(df),
   value = TRUE
 )
 
+#record the user's graphical parameters
+user.par <- par(no.readonly = TRUE)
+
+#modify graphical parameters for the plot
 par(mfrow = c(4, 3))
+
+#plot target encoding
 x <- lapply(
   X = koppen_zone_encoded,
   FUN = function(x) plot(
@@ -402,6 +409,9 @@ x <- lapply(
     cex = 0.5
     )
 )
+
+#reset the user's graphical parameters
+par(user.par)
 ```
 
 The function implementing each method can be used directly as well. The example below shows the "mean" method with the option `replace = FALSE`, which replaces the categorical values with the numeric ones in the output data frame.

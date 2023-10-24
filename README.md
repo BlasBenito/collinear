@@ -28,7 +28,7 @@ comprehensive tool for multicollinearity management:
 
 - **Bivariate correlation for numeric and categorical predictors**:
   Pearson and Spearman correlation methods for pairs of numeric
-  predictors, and Cramer's V for pairs of categorical predictors.
+  predictors, and Cramer’s V for pairs of categorical predictors.
 - **Variance Inflation Factor analysis (VIF)**: to identify predictors
   that are linear combinations of other predictors.
 - **Target encoding of categorical predictors**: to convert them to
@@ -50,7 +50,7 @@ selected_variables <- collinear(
   preference_order, #your predictors in order of interest
   max_cor, #maximum bivariate correlation
   max_vif, #maximum variance inflation factor
-  encoding_method, #method to convert categoricals into numerics
+  encoding_method, #method to convert categorical predictors into numerics
 )
 ```
 
@@ -59,8 +59,8 @@ multicollinearity management: + `cor_select()`: like `collinear()`, but
 only using pairwise correlations. + `vif_select()`: like `collinear()`,
 but only using variance inflation factors. + `preference_order()`: to
 compute preference order based on univariate models. +
-`target_encoding_lab()`: to convert categorical predictors into numeric using
-several methods. + `cor_df()`: to generate a data frame with all
+`target_encoding_lab()`: to convert categorical predictors into numeric
+using several methods. + `cor_df()`: to generate a data frame with all
 pairwise correlation scores. + `cor_matrix()`: to convert a correlation
 data frame into matrix, or obtain a correlation matrix. + `vif_df()`: to
 obtain a data frame with all variance inflation factors.
@@ -504,7 +504,7 @@ selected_predictors_response <- cor_select(
 tictoc::toc()
 ```
 
-    ## 0.678 sec elapsed
+    ## 0.412 sec elapsed
 
 ``` r
 tictoc::tic()
@@ -515,7 +515,7 @@ selected_predictors_no_response <- cor_select(
 tictoc::toc()
 ```
 
-    ## 98.45 sec elapsed
+    ## 34.457 sec elapsed
 
 ``` r
 selected_predictors_response
@@ -555,13 +555,13 @@ selected_predictors_no_response
 The variable selection results differ because the numeric
 representations of the categorical variables are rather different
 between the two options. When no `response` is provided, the function
-`cor_select()` compares categorical predictors against numeric ones by encoding each
-categorical after each numeric, and compares pairs of categorical predictors using
-Cramer's V, implemented in the function `cramer_v()`. Additionally,
-Cramer's V values are not directly comparable with Pearson or Spearman
-correlation scores, and having them together in the same analysis might
-induce bias during the variable selection. Not using the `response`
-argument should always be the last option.
+`cor_select()` compares categorical predictors against numeric ones by
+encoding each categorical after each numeric, and compares pairs of
+categoricals using Cramer’s V, implemented in the function `cramer_v()`.
+Additionally, Cramer’s V values are not directly comparable with Pearson
+or Spearman correlation scores, and having them together in the same
+analysis might induce bias during the variable selection. Not using the
+`response` argument should always be the last option.
 
 ### Preference order
 
@@ -868,13 +868,20 @@ The relationship between these encoded versions of “koppen_zone” and the
 response are shown below.
 
 ``` r
+#get names of encoded variables
 koppen_zone_encoded <- grep(
   pattern = "*__encoded*",
   x = colnames(df),
   value = TRUE
 )
 
+#record the user's graphical parameters
+user.par <- par(no.readonly = TRUE)
+
+#modify graphical parameters for the plot
 par(mfrow = c(4, 3))
+
+#plot target encoding
 x <- lapply(
   X = koppen_zone_encoded,
   FUN = function(x) plot(
@@ -885,9 +892,10 @@ x <- lapply(
     cex = 0.5
     )
 )
-```
 
-![](README_files/figure-gfm/unnamed-chunk-26-1.png)<!-- -->
+#reset the user's graphical parameters
+par(user.par)
+```
 
 The function implementing each method can be used directly as well. The
 example below shows the “mean” method with the option `replace = FALSE`,
