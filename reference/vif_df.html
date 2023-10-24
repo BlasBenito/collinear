@@ -26,7 +26,7 @@ Uses \link[base]{diag} to extract the diagonal of the precision matrix, which co
     
     <a class="navbar-brand me-2" href="../index.html">collinear</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.1</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -101,14 +101,13 @@ Uses \link[base]{diag} to extract the diagonal of the precision matrix, which co
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/interactive.html" class="external-link">interactive</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">{</span></span></span>
-<span class="r-in"><span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span></span></span>
 <span class="r-in"><span>  <span class="va">vi</span>,</span></span>
 <span class="r-in"><span>  <span class="va">vi_predictors</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co">#reduce size of vi to speed-up example execution</span></span></span>
+<span class="r-in"><span><span class="co">#subset to limit example run time</span></span></span>
 <span class="r-in"><span><span class="va">vi</span> <span class="op">&lt;-</span> <span class="va">vi</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">1000</span>, <span class="op">]</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#without response</span></span></span>
@@ -119,6 +118,56 @@ Uses \link[base]{diag} to extract the diagonal of the precision matrix, which co
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">df</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                      variable          vif</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1              topo_diversity 1.786000e+00</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2                  topo_slope 2.270000e+00</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3                 country_gdp 2.601000e+00</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4          country_population 2.688000e+00</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5                    soil_soc 2.897000e+00</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6               soil_nitrogen 4.453000e+00</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7              topo_elevation 5.054000e+00</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8                     soil_ph 7.136000e+00</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9  growing_season_temperature 9.269000e+00</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10      growing_season_length 1.495200e+01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 11              aridity_index 1.499800e+01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 12                   swi_mean 2.736000e+01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 13             solar_rad_mean 4.919300e+01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 14           cloud_cover_mean 5.344500e+01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 15    temperature_seasonality 9.290800e+01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 16    growing_season_rainfall 1.012140e+02</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 17              humidity_mean 1.290110e+02</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 18              rainfall_mean 1.498440e+02</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 19    evapotranspiration_mean 1.710330e+02</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 20      soil_temperature_mean 2.013750e+02</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 21        growing_degree_days 2.232080e+02</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 22                  soil_clay 2.574240e+02</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 23           temperature_mean 5.292950e+02</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 24                  soil_silt 5.575680e+02</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 25            cloud_cover_min 7.071580e+02</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 26          cloud_cover_range 8.785910e+02</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 27                  soil_sand 9.756500e+02</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 28            cloud_cover_max 1.335884e+03</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 29               rainfall_min 9.531836e+03</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 30       soil_temperature_max 3.170799e+04</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 31                    swi_min 5.326762e+04</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 32       soil_temperature_min 6.904174e+04</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 33             rainfall_range 7.675072e+04</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 34     soil_temperature_range 8.768997e+04</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 35               rainfall_max 9.613249e+04</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 36                  swi_range 1.156553e+05</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 37                    swi_max 1.928551e+05</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 38     evapotranspiration_min 7.174198e+07</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 39     evapotranspiration_max 7.217919e+07</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 40   evapotranspiration_range 9.338840e+07</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 41             humidity_range 1.227998e+13</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 42               humidity_max 1.451895e+13</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 43               humidity_min 2.599575e+13</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 44            temperature_max 3.505428e+13</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 45          temperature_range 1.266661e+14</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 46            temperature_min 1.617150e+14</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 47              solar_rad_max 2.309310e+15</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 48              solar_rad_min 5.445903e+15</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 49            solar_rad_range 7.841058e+15</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#with response</span></span></span>
 <span class="r-in"><span><span class="co">#categorical and numeric predictors are returned</span></span></span>
@@ -129,8 +178,69 @@ Uses \link[base]{diag} to extract the diagonal of the precision matrix, which co
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">df</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                      variable          vif</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1              country_income 1.517000e+00</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2              topo_diversity 1.803000e+00</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3                  topo_slope 2.369000e+00</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4                    soil_soc 3.040000e+00</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5                   soil_type 3.684000e+00</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6          country_population 3.850000e+00</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7               soil_nitrogen 4.746000e+00</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8                   subregion 4.889000e+00</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9                 country_gdp 5.153000e+00</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10             topo_elevation 5.281000e+00</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 11               biogeo_realm 6.151000e+00</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 12               country_name 7.016000e+00</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 13               biogeo_biome 8.255000e+00</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 14                    soil_ph 8.643000e+00</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 15 growing_season_temperature 1.077200e+01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 16               koppen_group 1.251000e+01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 17              aridity_index 1.630400e+01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 18           biogeo_ecoregion 1.672900e+01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 19                  continent 1.713000e+01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 20                     region 1.915700e+01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 21      growing_season_length 2.058000e+01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 22                   swi_mean 3.001200e+01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 23             solar_rad_mean 5.197700e+01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 24           cloud_cover_mean 5.528600e+01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 25         koppen_description 8.531600e+01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 26                koppen_zone 9.087200e+01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 27    temperature_seasonality 9.821700e+01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 28    growing_season_rainfall 1.167960e+02</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 29              humidity_mean 1.339890e+02</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 30              rainfall_mean 1.664040e+02</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 31    evapotranspiration_mean 1.786880e+02</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 32      soil_temperature_mean 2.148030e+02</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 33                  soil_clay 2.602330e+02</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 34        growing_degree_days 2.640790e+02</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 35                  soil_silt 5.665110e+02</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 36           temperature_mean 6.187390e+02</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 37            cloud_cover_min 7.152130e+02</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 38          cloud_cover_range 8.884340e+02</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 39                  soil_sand 9.875840e+02</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 40            cloud_cover_max 1.351808e+03</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 41               rainfall_min 9.689695e+03</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 42       soil_temperature_max 3.234640e+04</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 43                    swi_min 5.413497e+04</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 44       soil_temperature_min 7.022641e+04</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 45             rainfall_range 7.800025e+04</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 46     soil_temperature_range 8.937667e+04</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 47               rainfall_max 9.770174e+04</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 48                  swi_range 1.176375e+05</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 49                    swi_max 1.962015e+05</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 50     evapotranspiration_min 7.236812e+07</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 51     evapotranspiration_max 7.280810e+07</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 52   evapotranspiration_range 9.420265e+07</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 53             humidity_range 1.229813e+13</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 54               humidity_max 1.454041e+13</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 55               humidity_min 2.603417e+13</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 56            temperature_max 4.155268e+13</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 57          temperature_range 1.501476e+14</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 58            temperature_min 1.916940e+14</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 59              solar_rad_max 1.156875e+15</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 60              solar_rad_min 2.735466e+15</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 61            solar_rad_range 3.942136e+15</span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="op">}</span></span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>

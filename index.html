@@ -40,7 +40,7 @@
     
     <a class="navbar-brand me-2" href="index.html">collinear</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.1</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -111,7 +111,7 @@
 <span>  <span class="va">preference_order</span>, <span class="co">#your predictors in order of interest</span></span>
 <span>  <span class="va">max_cor</span>, <span class="co">#maximum bivariate correlation</span></span>
 <span>  <span class="va">max_vif</span>, <span class="co">#maximum variance inflation factor</span></span>
-<span>  <span class="va">encoding_method</span>, <span class="co">#method to convert categoricals into numerics</span></span>
+<span>  <span class="va">encoding_method</span>, <span class="co">#method to convert categorical predictors into numerics</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <p>The package contains other functions that may be useful during multicollinearity management: + <code><a href="reference/cor_select.html">cor_select()</a></code>: like <code><a href="reference/collinear.html">collinear()</a></code>, but only using pairwise correlations. + <code><a href="reference/vif_select.html">vif_select()</a></code>: like <code><a href="reference/collinear.html">collinear()</a></code>, but only using variance inflation factors. + <code><a href="reference/preference_order.html">preference_order()</a></code>: to compute preference order based on univariate models. + <code><a href="reference/target_encoding_lab.html">target_encoding_lab()</a></code>: to convert categorical predictors into numeric using several methods. + <code><a href="reference/cor_df.html">cor_df()</a></code>: to generate a data frame with all pairwise correlation scores. + <code><a href="reference/cor_matrix.html">cor_matrix()</a></code>: to convert a correlation data frame into matrix, or obtain a correlation matrix. + <code><a href="reference/vif_df.html">vif_df()</a></code>: to obtain a data frame with all variance inflation factors.</p>
 </div>
@@ -480,7 +480,7 @@
 <span>  predictors <span class="op">=</span> <span class="va">vi_predictors</span></span>
 <span><span class="op">)</span></span>
 <span><span class="fu">tictoc</span><span class="fu">::</span><span class="fu">toc</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb25"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="do">## 0.678 sec elapsed</span></span></code></pre></div>
+<div class="sourceCode" id="cb25"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="do">## 0.412 sec elapsed</span></span></code></pre></div>
 <div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">tictoc</span><span class="fu">::</span><span class="fu">tic</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">selected_predictors_no_response</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/cor_select.html">cor_select</a></span><span class="op">(</span></span>
@@ -488,7 +488,7 @@
 <span>  predictors <span class="op">=</span> <span class="va">vi_predictors</span></span>
 <span><span class="op">)</span></span>
 <span><span class="fu">tictoc</span><span class="fu">::</span><span class="fu">toc</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb27"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="do">## 98.45 sec elapsed</span></span></code></pre></div>
+<div class="sourceCode" id="cb27"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="do">## 34.457 sec elapsed</span></span></code></pre></div>
 <div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">selected_predictors_response</span></span></code></pre></div>
 <div class="sourceCode" id="cb29"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="do">##  [1] "country_population"         "topo_elevation"            </span></span>
@@ -518,7 +518,7 @@
 <span id="cb31-10"><a href="#cb31-10" aria-hidden="true" tabindex="-1"></a><span class="do">## [19] "cloud_cover_min"            "temperature_max"           </span></span>
 <span id="cb31-11"><a href="#cb31-11" aria-hidden="true" tabindex="-1"></a><span class="do">## [21] "region"                     "swi_min"                   </span></span>
 <span id="cb31-12"><a href="#cb31-12" aria-hidden="true" tabindex="-1"></a><span class="do">## [23] "solar_rad_max"</span></span></code></pre></div>
-<p>The variable selection results differ because the numeric representations of the categorical variables are rather different between the two options. When no <code>response</code> is provided, the function <code><a href="reference/cor_select.html">cor_select()</a></code> compares categorical predictors against numeric ones by encoding each categorical after each numeric, and compares pairs of categorical predictors using Cramer’s V, implemented in the function <code><a href="reference/cramer_v.html">cramer_v()</a></code>. Additionally, Cramer’s V values are not directly comparable with Pearson or Spearman correlation scores, and having them together in the same analysis might induce bias during the variable selection. Not using the <code>response</code> argument should always be the last option.</p>
+<p>The variable selection results differ because the numeric representations of the categorical variables are rather different between the two options. When no <code>response</code> is provided, the function <code><a href="reference/cor_select.html">cor_select()</a></code> compares categorical predictors against numeric ones by encoding each categorical after each numeric, and compares pairs of categoricals using Cramer’s V, implemented in the function <code><a href="reference/cramer_v.html">cramer_v()</a></code>. Additionally, Cramer’s V values are not directly comparable with Pearson or Spearman correlation scores, and having them together in the same analysis might induce bias during the variable selection. Not using the <code>response</code> argument should always be the last option.</p>
 </div>
 <div class="section level3">
 <h3 id="preference-order">Preference order<a class="anchor" aria-label="anchor" href="#preference-order"></a>
@@ -753,13 +753,20 @@
 <span id="cb46-22"><a href="#cb46-22" aria-hidden="true" tabindex="-1"></a><span class="do">## New encoded predictor: 'koppen_zone__encoded_rnorm__sd_multiplier_0.1'</span></span></code></pre></div>
 <p>The relationship between these encoded versions of “koppen_zone” and the response are shown below.</p>
 <div class="sourceCode" id="cb47"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">koppen_zone_encoded</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">grep</a></span><span class="op">(</span></span>
+<code class="sourceCode R"><span><span class="co">#get names of encoded variables</span></span>
+<span><span class="va">koppen_zone_encoded</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">grep</a></span><span class="op">(</span></span>
 <span>  pattern <span class="op">=</span> <span class="st">"*__encoded*"</span>,</span>
 <span>  x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">df</span><span class="op">)</span>,</span>
 <span>  value <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span>
 <span></span>
+<span><span class="co">#record the user's graphical parameters</span></span>
+<span><span class="va">user.par</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span>no.readonly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co">#modify graphical parameters for the plot</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span>mfrow <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">4</span>, <span class="fl">3</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co">#plot target encoding</span></span>
 <span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span></span>
 <span>  X <span class="op">=</span> <span class="va">koppen_zone_encoded</span>,</span>
 <span>  FUN <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span></span>
@@ -769,8 +776,10 @@
 <span>    ylab <span class="op">=</span> <span class="st">"vi_mean"</span>,</span>
 <span>    cex <span class="op">=</span> <span class="fl">0.5</span></span>
 <span>    <span class="op">)</span></span>
-<span><span class="op">)</span></span></code></pre></div>
-<p><img src="README_files/figure-gfm/unnamed-chunk-26-1.png"><!-- --></p>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="co">#reset the user's graphical parameters</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span><span class="va">user.par</span><span class="op">)</span></span></code></pre></div>
 <p>The function implementing each method can be used directly as well. The example below shows the “mean” method with the option <code>replace = FALSE</code>, which replaces the categorical values with the numeric ones in the output data frame.</p>
 <div class="sourceCode" id="cb48"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">vi</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"vi_mean"</span>, <span class="st">"koppen_zone"</span><span class="op">)</span><span class="op">]</span>, n <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span></code></pre></div>

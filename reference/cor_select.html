@@ -26,7 +26,7 @@ If preference_order is not provided, then the predictors are ranked by their var
     
     <a class="navbar-brand me-2" href="../index.html">collinear</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.1</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -120,15 +120,15 @@ If preference_order is not provided, then the predictors are ranked by their var
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/interactive.html" class="external-link">interactive</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">{</span></span></span>
-<span class="r-in"><span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span></span></span>
 <span class="r-in"><span>  <span class="va">vi</span>,</span></span>
 <span class="r-in"><span>  <span class="va">vi_predictors</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co">#reduce size of vi to speed-up example execution</span></span></span>
+<span class="r-in"><span><span class="co">#subset to limit example run time</span></span></span>
 <span class="r-in"><span><span class="va">vi</span> <span class="op">&lt;-</span> <span class="va">vi</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">1000</span>, <span class="op">]</span></span></span>
+<span class="r-in"><span><span class="va">vi_predictors</span> <span class="op">&lt;-</span> <span class="va">vi_predictors</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">]</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#without response</span></span></span>
 <span class="r-in"><span><span class="co">#without preference_order</span></span></span>
@@ -140,6 +140,8 @@ If preference_order is not provided, then the predictors are ranked by their var
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">selected.predictors</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "topo_elevation" "topo_slope"     "topo_diversity" "soil_type"     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [5] "swi_min"        "swi_max"       </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#without response</span></span></span>
 <span class="r-in"><span><span class="co">#without preference_order</span></span></span>
@@ -151,6 +153,7 @@ If preference_order is not provided, then the predictors are ranked by their var
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">selected.predictors</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "topo_elevation" "topo_slope"     "soil_type"     </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#with response</span></span></span>
 <span class="r-in"><span><span class="co">#without preference_order</span></span></span>
@@ -166,6 +169,7 @@ If preference_order is not provided, then the predictors are ranked by their var
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">selected.predictors</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "topo_elevation" "topo_slope"     "swi_min"        "soil_type"     </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#with response</span></span></span>
 <span class="r-in"><span><span class="co">#with user-defined preference_order</span></span></span>
@@ -186,6 +190,7 @@ If preference_order is not provided, then the predictors are ranked by their var
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">selected.predictors</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "soil_type"      "topo_elevation" "topo_slope"    </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#with response</span></span></span>
@@ -200,6 +205,13 @@ If preference_order is not provided, then the predictors are ranked by their var
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">preference.order</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            predictor preference</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1        koppen_zone  0.8137065</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2 koppen_description  0.7984011</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3           swi_mean  0.7433342</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4       koppen_group  0.7150807</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5          soil_type  0.6465576</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6            swi_max  0.5933516</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">selected.predictors</span> <span class="op">&lt;-</span> <span class="fu">cor_select</span><span class="op">(</span></span></span>
 <span class="r-in"><span>  df <span class="op">=</span> <span class="va">vi</span>,</span></span>
@@ -210,8 +222,8 @@ If preference_order is not provided, then the predictors are ranked by their var
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">selected.predictors</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "koppen_zone"    "topo_diversity" "topo_elevation"</span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="op">}</span></span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>

@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">collinear</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.1</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -39,11 +39,18 @@
     </div>
 
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="development version" id="collinear-development-version">collinear (development version)<a class="anchor" aria-label="anchor" href="#collinear-development-version"></a></h2>
-</div>
+<h2 class="pkg-version" data-toc-text="1.0.1" id="collinear-101">collinear 1.0.1<a class="anchor" aria-label="anchor" href="#collinear-101"></a></h2>
+<p>Re-submission after minor CRAN comments.</p>
+<p>Changes:</p>
+<ul><li><p>version number bumped up to 1.0.1</p></li>
+<li><p>removed if(interactive()){} from all @examples.</p></li>
+<li><p>removed plot() call from the @examples of the function target_encoding_lab() because it was messing up pkgdown’s build. This piece of code triggered the comment “Please always make sure to reset to user’s options()” by the reviewer, so this should solve the issue.</p></li>
+<li><p>made sure that all examples run in less than 5 seconds.</p></li>
+<li><p>fixed a bug in which all functions would include the response as a predictor when ‘predictors = NULL’ and ‘response’ was a valid column of the input data frame.</p></li>
+</ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="1.0.0" id="collinear-100">collinear 1.0.0<a class="anchor" aria-label="anchor" href="#collinear-100"></a></h2>
-<p>First functional version of the package.</p>
+<p>First functional version of the package submitted to CRAN.</p>
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside></div>

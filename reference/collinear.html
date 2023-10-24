@@ -32,7 +32,7 @@ Please note that near-zero variance columns are identified by identify_zero_vari
     
     <a class="navbar-brand me-2" href="../index.html">collinear</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.1</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -141,13 +141,13 @@ Please note that near-zero variance columns are identified by identify_zero_vari
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/interactive.html" class="external-link">interactive</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">{</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span></span></span>
 <span class="r-in"><span>  <span class="va">vi</span>,</span></span>
 <span class="r-in"><span>  <span class="va">vi_predictors</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co">#reduce size of vi to speed-up example execution</span></span></span>
+<span class="r-in"><span><span class="co">#subset to limit example run time</span></span></span>
 <span class="r-in"><span><span class="va">vi</span> <span class="op">&lt;-</span> <span class="va">vi</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">1000</span>, <span class="op">]</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#without response</span></span></span>
@@ -162,6 +162,17 @@ Please note that near-zero variance columns are identified by identify_zero_vari
 <span class="r-in"><span>  <span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">selected.predictors</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] "topo_diversity"             "country_gdp"               </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [3] "topo_slope"                 "country_population"        </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [5] "topo_elevation"             "soil_soc"                  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [7] "soil_clay"                  "swi_range"                 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [9] "soil_sand"                  "swi_min"                   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [11] "soil_nitrogen"              "solar_rad_max"             </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [13] "growing_season_temperature" "rainfall_range"            </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [15] "soil_ph"                    "solar_rad_min"             </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [17] "rainfall_min"               "humidity_range"            </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [19] "evapotranspiration_range"   "cloud_cover_min"           </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [21] "cloud_cover_range"         </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#without response</span></span></span>
 <span class="r-in"><span><span class="co">#without preference_order</span></span></span>
@@ -175,6 +186,10 @@ Please note that near-zero variance columns are identified by identify_zero_vari
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">selected.predictors</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "country_population"         "soil_clay"                 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [3] "soil_soc"                   "topo_slope"                </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [5] "growing_season_temperature" "humidity_range"            </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [7] "topo_elevation"             "cloud_cover_range"         </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#with response</span></span></span>
 <span class="r-in"><span><span class="co">#without preference_order</span></span></span>
@@ -189,6 +204,12 @@ Please note that near-zero variance columns are identified by identify_zero_vari
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">selected.predictors</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] "country_income"             "soil_clay"                 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [3] "soil_soc"                   "country_population"        </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [5] "continent"                  "topo_slope"                </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [7] "topo_elevation"             "humidity_range"            </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [9] "cloud_cover_range"          "growing_season_temperature"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [11] "soil_silt"                 </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#with response</span></span></span>
 <span class="r-in"><span><span class="co">#with user-defined preference_order</span></span></span>
@@ -209,6 +230,10 @@ Please note that near-zero variance columns are identified by identify_zero_vari
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">selected.predictors</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] "soil_temperature_mean" "swi_mean"              "country_income"       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [4] "soil_clay"             "topo_slope"            "country_population"   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [7] "continent"             "topo_elevation"        "soil_soc"             </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [10] "humidity_range"        "soil_silt"             "cloud_cover_range"    </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#with response</span></span></span>
@@ -233,7 +258,9 @@ Please note that near-zero variance columns are identified by identify_zero_vari
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">selected.predictors</span></span></span>
-<span class="r-in"><span><span class="op">}</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "biogeo_ecoregion"   "topo_diversity"     "soil_clay"         </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [4] "country_income"     "topo_elevation"     "country_population"</span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
