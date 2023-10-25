@@ -12,14 +12,16 @@ categorical variables
   - [`cor_select()` and `vif_select()`](#cor_select-and-vif_select)
   - [`target_encoding_lab()`](#target_encoding_lab)
 
-<!---
-[![R-CMD-check](https://github.com/BlasBenito/collinear/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/BlasBenito/collinear/actions/workflows/R-CMD-check.yaml)
-&#10;
-<!-- badges: start -->
-<!---
-[![Devel-version](https://img.shields.io/badge/devel%20version-1.1.5-blue.svg)](https://github.com/blasbenito/collinear) [![lifecycle](https://img.shields.io/badge/lifecycle-stable-green.svg)](https://lifecycle.r-lib.org/articles/stages.html)
-[![License](https://img.shields.io/badge/license-GPL--3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0.en.html) [![DOI](https://zenodo.org/badge/330962704.svg)](https://zenodo.org/badge/latestdoi/330962704)[![CRAN status](https://www.r-pkg.org/badges/version/collinear)](https://cran.r-project.org/package=collinear)[![CRAN\_Download\_Badge](http://cranlogs.r-pkg.org/badges/grand-total/collinear)](https://CRAN.R-project.org/package=collinear)
--->
+<!-- Development badges 
+&#10;[![R-CMD-check](https://github.com/BlasBenito/collinear/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/BlasBenito/collinear/actions/workflows/R-CMD-check.yaml)
+[![Devel-version](https://img.shields.io/badge/devel%20version-1.0.1-blue.svg)](https://github.com/blasbenito/collinear)
+[![DOI](https://zenodo.org/badge/330962704.svg)](https://zenodo.org/badge/latestdoi/330962704)
+[![lifecycle](https://img.shields.io/badge/lifecycle-stable-green.svg)](https://lifecycle.r-lib.org/articles/stages.html)
+&#10;<!-- Released version badges -->
+
+[![License](https://img.shields.io/badge/license-GPL--3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0.en.html)[![R-CMD-check](https://github.com/BlasBenito/collinear/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/BlasBenito/collinear/actions/workflows/R-CMD-check.yaml)
+[![CRAN
+status](https://www.r-pkg.org/badges/version/collinear)](https://cran.r-project.org/package=collinear)[![CRAN_Download_Badge](http://cranlogs.r-pkg.org/badges/grand-total/collinear)](https://CRAN.R-project.org/package=collinear)
 
 # Summary
 
@@ -75,9 +77,21 @@ for numeric and categorical variables. R package version 1.0.0.*
 
 # Install
 
-The package `collinear` is not on CRAN yet, but it will be submitted
-soon. In the meantime, the development version can be installed directly
-from GitHub, as follows.
+The package `collinear` can be installed from CRAN.
+
+``` r
+install.packages("collinear")
+```
+
+    ## Installing package into '/home/blas/R/x86_64-pc-linux-gnu-library/4.3'
+    ## (as 'lib' is unspecified)
+
+``` r
+library(collinear)
+```
+
+Three are no big development plans for this package, but still, latest
+bug fixes and features will surely be in the development version.
 
 ``` r
 remotes::install_github(
@@ -504,7 +518,7 @@ selected_predictors_response <- cor_select(
 tictoc::toc()
 ```
 
-    ## 0.412 sec elapsed
+    ## 0.674 sec elapsed
 
 ``` r
 tictoc::tic()
@@ -515,7 +529,7 @@ selected_predictors_no_response <- cor_select(
 tictoc::toc()
 ```
 
-    ## 34.457 sec elapsed
+    ## 108.86 sec elapsed
 
 ``` r
 selected_predictors_response

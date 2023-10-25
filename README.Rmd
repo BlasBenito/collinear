@@ -9,16 +9,18 @@ always_allow_html: yes
 ---
 
 
-<!---
+<!-- Development badges 
+
 [![R-CMD-check](https://github.com/BlasBenito/collinear/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/BlasBenito/collinear/actions/workflows/R-CMD-check.yaml)
+[![Devel-version](https://img.shields.io/badge/devel%20version-1.0.1-blue.svg)](https://github.com/blasbenito/collinear)
+[![DOI](https://zenodo.org/badge/330962704.svg)](https://zenodo.org/badge/latestdoi/330962704)
+[![lifecycle](https://img.shields.io/badge/lifecycle-stable-green.svg)](https://lifecycle.r-lib.org/articles/stages.html)
 
+<!-- Released version badges -->
 
-<!-- badges: start -->
+[![License](https://img.shields.io/badge/license-GPL--3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0.en.html)[![R-CMD-check](https://github.com/BlasBenito/collinear/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/BlasBenito/collinear/actions/workflows/R-CMD-check.yaml)
+[![CRAN status](https://www.r-pkg.org/badges/version/collinear)](https://cran.r-project.org/package=collinear)[![CRAN\_Download\_Badge](http://cranlogs.r-pkg.org/badges/grand-total/collinear)](https://CRAN.R-project.org/package=collinear)
 
-<!---
-[![Devel-version](https://img.shields.io/badge/devel%20version-1.1.5-blue.svg)](https://github.com/blasbenito/collinear) [![lifecycle](https://img.shields.io/badge/lifecycle-stable-green.svg)](https://lifecycle.r-lib.org/articles/stages.html)
-[![License](https://img.shields.io/badge/license-GPL--3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0.en.html) [![DOI](https://zenodo.org/badge/330962704.svg)](https://zenodo.org/badge/latestdoi/330962704)[![CRAN status](https://www.r-pkg.org/badges/version/collinear)](https://cran.r-project.org/package=collinear)[![CRAN\_Download\_Badge](http://cranlogs.r-pkg.org/badges/grand-total/collinear)](https://CRAN.R-project.org/package=collinear)
--->
 
 # Summary
 
@@ -60,7 +62,14 @@ If you found this package useful during your research work, please cite it as:
 
 # Install
 
-The package `collinear` is not on CRAN yet, but it will be submitted soon. In the meantime, the development version can be installed directly from GitHub, as follows.
+The package `collinear` can be installed from CRAN.
+
+```{r}
+install.packages("collinear")
+library(collinear)
+```
+
+Three are no big development plans for this package, but still, latest bug fixes and features will surely be in the development version.
 
 ```{r, eval = FALSE}
 remotes::install_github(
