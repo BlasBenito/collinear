@@ -1,28 +1,45 @@
 ---
-title: "collinear: seamless multicollinearity management for numeric and categorical variables"
-output:
-  github_document:
-    toc: true
-    toc_depth: 2
-    pandoc_args: --webtex
-always_allow_html: yes
+output: github_document
 ---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%"
+)
+options(tibble.print_min = 5, tibble.print_max = 5)
+```
+
+
+# collinear: R Package for Seamless Multicollinearity Management
 
 
 <!-- Development badges 
 
 [![R-CMD-check](https://github.com/BlasBenito/collinear/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/BlasBenito/collinear/actions/workflows/R-CMD-check.yaml)
 [![Devel-version](https://img.shields.io/badge/devel%20version-1.0.1-blue.svg)](https://github.com/blasbenito/collinear)
-[![DOI](https://zenodo.org/badge/330962704.svg)](https://zenodo.org/badge/latestdoi/330962704)
+
+
+
+<!-- badges: start -->
+
+[![DOI](https://zenodo.org/badge/698046617.svg)](https://zenodo.org/doi/10.5281/zenodo.10039396)
+[![CRAN status](https://www.r-pkg.org/badges/version/collinear)](https://cran.r-project.org/package=collinear)
+[![CRAN\_Download\_Badge](http://cranlogs.r-pkg.org/badges/grand-total/collinear)](https://CRAN.R-project.org/package=collinear)
+[![R-CMD-check](https://github.com/BlasBenito/collinear/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/BlasBenito/collinear/actions/workflows/R-CMD-check.yaml)
 [![lifecycle](https://img.shields.io/badge/lifecycle-stable-green.svg)](https://lifecycle.r-lib.org/articles/stages.html)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://www.gnu.org/licenses/MIT.en.html)
 
-<!-- Released version badges -->
-
-[![License](https://img.shields.io/badge/license-GPL--3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0.en.html)[![R-CMD-check](https://github.com/BlasBenito/collinear/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/BlasBenito/collinear/actions/workflows/R-CMD-check.yaml)
-[![CRAN status](https://www.r-pkg.org/badges/version/collinear)](https://cran.r-project.org/package=collinear)[![CRAN\_Download\_Badge](http://cranlogs.r-pkg.org/badges/grand-total/collinear)](https://CRAN.R-project.org/package=collinear)
+<!-- badges: end -->
 
 
-# Summary
+
+
+## Summary
 
 The R package `collinear` combines four different methods to offer a comprehensive tool for multicollinearity management:
 
@@ -54,13 +71,13 @@ The package contains other functions that may be useful during multicollinearity
   + `cor_matrix()`: to convert a correlation data frame into matrix, or obtain a correlation matrix.
   + `vif_df()`: to obtain a data frame with all variance inflation factors.
   
-# Citation
+## Citation
 
 If you found this package useful during your research work, please cite it as:
 
-*Blas M. Benito (2023). collinear: seamless multicollinearity management for numeric and categorical variables. R package version 1.0.0.*
+*Blas M. Benito (2023). collinear: R Package for Seamless Multicollinearity Management. Version 1.0.1. DOI: 10.5281/zenodo.10039397*
 
-# Install
+## Install
 
 The package `collinear` can be installed from CRAN.
 
@@ -79,7 +96,7 @@ remotes::install_github(
 ```
 
 
-# Multicollinearity management with the `collinear` package.
+## Multicollinearity management with the `collinear` package.
 
 This section shows the basic usage of the package and offers a brief explanation on the methods used within.
 
@@ -90,7 +107,7 @@ library(tictoc)
 ```
 
 
-## Example data
+### Example data
 
 The package is shipped with a data frame named `vi`, with 30.000 records, and 67 columns with a mixture of types.
 
@@ -104,11 +121,11 @@ The response variables are "vi_mean", "vi_max", "vi_min", and "vi_range", with s
 vi_predictors
 ```
 
-## `collinear()`
+### `collinear()`
 
 The `collinear()` function contains the functionality required for a robust multicollinearity management.
 
-### Input arguments
+#### Input arguments
 
 The function takes these inputs:
 
@@ -164,7 +181,7 @@ selected_predictors_vif
 ```
 The output shows that the maximum VIF is 4.2, so here `collinear()` did its work as expected.
 
-### Arguments `max_cor` and `max_vif`
+#### Arguments `max_cor` and `max_vif`
 
 The arguments `max_cor` and `max_vif` control the intensity of the multicollinearity filtering.
 
@@ -202,7 +219,7 @@ selected_predictors_permissive
 
 As expected, the restrictive setup resulted in a smaller set of selected predictors. There are no hard rules for `max_cor` and `max_vif`, and their selection will depend on the objective of the analysis and the nature of the predictors.
 
-### The `response` argument
+#### The `response` argument
 
 The response argument is used to encode categorical variables as numeric. When omitted, the `collinear()` function ignores categorical variables. However, the function `cor_select()` can help when there is not a suitable `response` variable in a data frame. This option is discussed at the end of this section.
 
@@ -259,11 +276,11 @@ selected_predictors_no_response
 
 The variable selection results differ because the numeric representations of the categorical variables are rather different between the two options. When no `response` is provided, the function `cor_select()` compares categorical predictors against numeric ones by encoding each categorical after each numeric, and compares pairs of categoricals using Cramer's V, implemented in the function `cramer_v()`. Additionally, Cramer's V values are not directly comparable with Pearson or Spearman correlation scores, and having them together in the same analysis might induce bias during the variable selection. Not using the `response` argument should always be the last option. 
 
-### Preference order
+#### Preference order
 
 The argument `preference_order` gives the user some control on what predictors should be removed first and what predictors should be kept during the multicollinearity filtering. This argument accepts a vector of predictor names in the order of interest, or the result of the function `preference_order()`, which allows to define preference order following a quantitative criteria. 
 
-#### Manual preference order
+##### Manual preference order
 
 Let's start with the former option. Below, the argument `preference_order` names several predictors that are of importance for a hypothetical analysis. The `predictors` not in `preference_order` are ranked by the absolute sum of their correlations with other predictors during the pairwise correlation filtering, and by their VIF during the VIF-based filtering.
 
@@ -284,7 +301,7 @@ selected_predictors
 
 Notice that in the output, two of the variables in `preference_order` are selected ("soil_temperature_mean" and "soil_type"), but one was removed ("soil_temperature_max"). This happens because at some point in the selection, the VIF of "soil_temperature_mean" and "soil_temperature_max" was higher than `max_vif`, and the one with lower preference was removed.
 
-#### Quantitative preference order
+##### Quantitative preference order
 
 The function `preference_order()` requires the `response` argument, and takes a function `f` that returns a value of association between the response and any predictor. This value is then located in the "preference" column of the function's output.
 
@@ -332,7 +349,7 @@ Custom functions created by the user are also accepted as input, as long as they
 
 These can be run in parallel across predictors by increasing the value of the `workers` argument if the R packages `future` and `future.apply` are installed in the system.
 
-## `cor_select()` and `vif_select()`
+### `cor_select()` and `vif_select()`
 
 The functions `cor_select()` and `vif_select()`, called within `collinear()`, perform the pairwise correlation filtering, and the VIF-based filtering. The main difference between them is that `cor_select()` can handle categorical predictors even when the `response` is omitted, while `vif_select()` ignores them entirely in such case.
 
@@ -360,7 +377,7 @@ selected_predictors_cor
 selected_predictors_vif
 ```
 
-## `target_encoding_lab()`
+### `target_encoding_lab()`
 
 The function `target_encoding_lab()` is used within all other functions in the package to encode categorical variables as numeric. It implements four target encoding methods:
 
