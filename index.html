@@ -82,13 +82,13 @@
 </ul>
 </li>
 </ul>
-<!---
-[![R-CMD-check](https://github.com/BlasBenito/collinear/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/BlasBenito/collinear/actions/workflows/R-CMD-check.yaml)
-&#10;
-<!-- badges: start --><!---
-[![Devel-version](https://img.shields.io/badge/devel%20version-1.1.5-blue.svg)](https://github.com/blasbenito/collinear) [![lifecycle](https://img.shields.io/badge/lifecycle-stable-green.svg)](https://lifecycle.r-lib.org/articles/stages.html)
-[![License](https://img.shields.io/badge/license-GPL--3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0.en.html) [![DOI](https://zenodo.org/badge/330962704.svg)](https://zenodo.org/badge/latestdoi/330962704)[![CRAN status](https://www.r-pkg.org/badges/version/collinear)](https://cran.r-project.org/package=collinear)[![CRAN\_Download\_Badge](http://cranlogs.r-pkg.org/badges/grand-total/collinear)](https://CRAN.R-project.org/package=collinear)
---><div class="section level1">
+<!-- Development badges 
+&#10;[![R-CMD-check](https://github.com/BlasBenito/collinear/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/BlasBenito/collinear/actions/workflows/R-CMD-check.yaml)
+[![Devel-version](https://img.shields.io/badge/devel%20version-1.0.1-blue.svg)](https://github.com/blasbenito/collinear)
+[![DOI](https://zenodo.org/badge/330962704.svg)](https://zenodo.org/badge/latestdoi/330962704)
+[![lifecycle](https://img.shields.io/badge/lifecycle-stable-green.svg)](https://lifecycle.r-lib.org/articles/stages.html)
+&#10;<!-- Released version badges --><p><a href="https://www.gnu.org/licenses/gpl-3.0.en.html" class="external-link"><img src="https://img.shields.io/badge/license-GPL--3-blue.svg" alt="License"></a><a href="https://github.com/BlasBenito/collinear/actions/workflows/R-CMD-check.yaml" class="external-link"><img src="https://github.com/BlasBenito/collinear/actions/workflows/R-CMD-check.yaml/badge.svg" alt="R-CMD-check"></a> <a href="https://cran.r-project.org/package=collinear" class="external-link"><img src="https://www.r-pkg.org/badges/version/collinear" alt="CRAN status"></a><a href="https://CRAN.R-project.org/package=collinear" class="external-link"><img src="http://cranlogs.r-pkg.org/badges/grand-total/collinear" alt="CRAN_Download_Badge"></a></p>
+<div class="section level1">
 <div class="page-header"><h1 id="summary">Summary<a class="anchor" aria-label="anchor" href="#summary"></a>
 </h1></div>
 <p>The R package <code>collinear</code> combines four different methods to offer a comprehensive tool for multicollinearity management:</p>
@@ -124,8 +124,15 @@
 <div class="section level1">
 <h1 id="install">Install<a class="anchor" aria-label="anchor" href="#install"></a>
 </h1>
-<p>The package <code>collinear</code> is not on CRAN yet, but it will be submitted soon. In the meantime, the development version can be installed directly from GitHub, as follows.</p>
+<p>The package <code>collinear</code> can be installed from CRAN.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"collinear"</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Installing package into '/home/blas/R/x86_64-pc-linux-gnu-library/4.3'</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="do">## (as 'lib' is unspecified)</span></span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://blasbenito.github.io/collinear/">collinear</a></span><span class="op">)</span></span></code></pre></div>
+<p>Three are no big development plans for this package, but still, latest bug fixes and features will surely be in the development version.</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span></span>
 <span>  repo <span class="op">=</span> <span class="st">"blasbenito/collinear"</span>, </span>
 <span>  ref <span class="op">=</span> <span class="st">"development"</span></span>
@@ -135,7 +142,7 @@
 <h1 id="multicollinearity-management-with-the-collinear-package">Multicollinearity management with the <code>collinear</code> package.<a class="anchor" aria-label="anchor" href="#multicollinearity-management-with-the-collinear-package"></a>
 </h1>
 <p>This section shows the basic usage of the package and offers a brief explanation on the methods used within.</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://blasbenito.github.io/collinear/">collinear</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/jabiru/tictoc" class="external-link">tictoc</a></span><span class="op">)</span></span></code></pre></div>
@@ -143,111 +150,111 @@
 <h2 id="example-data">Example data<a class="anchor" aria-label="anchor" href="#example-data"></a>
 </h2>
 <p>The package is shipped with a data frame named <code>vi</code>, with 30.000 records, and 67 columns with a mixture of types.</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html" class="external-link">glimpse</a></span><span class="op">(</span><span class="va">vi</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb5"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Rows: 30,000</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="do">## Columns: 67</span></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="do">## $ longitude                  &lt;dbl&gt; -114.254306, 114.845693, -122.145972, 108.3…</span></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="do">## $ latitude                   &lt;dbl&gt; 45.0540272, 26.2706940, 56.3790272, 29.9456…</span></span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="do">## $ vi_mean                    &lt;dbl&gt; 0.38, 0.53, 0.45, 0.69, 0.42, 0.68, 0.70, 0…</span></span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="do">## $ vi_max                     &lt;dbl&gt; 0.57, 0.67, 0.65, 0.85, 0.64, 0.78, 0.77, 0…</span></span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="do">## $ vi_min                     &lt;dbl&gt; 0.12, 0.41, 0.25, 0.50, 0.25, 0.48, 0.60, 0…</span></span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="do">## $ vi_range                   &lt;dbl&gt; 0.45, 0.26, 0.40, 0.34, 0.39, 0.31, 0.17, 0…</span></span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="do">## $ koppen_zone                &lt;chr&gt; "BSk", "Cfa", "Dfc", "Cfb", "Aw", "Cfa", "A…</span></span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="do">## $ koppen_group               &lt;chr&gt; "Arid", "Temperate", "Cold", "Temperate", "…</span></span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="do">## $ koppen_description         &lt;chr&gt; "steppe, cold", "no dry season, hot summer"…</span></span>
-<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="do">## $ soil_type                  &lt;chr&gt; "Cambisols", "Acrisols", "Luvisols", "Aliso…</span></span>
-<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a><span class="do">## $ topo_slope                 &lt;int&gt; 6, 2, 0, 10, 0, 10, 6, 0, 2, 0, 0, 1, 0, 1,…</span></span>
-<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a><span class="do">## $ topo_diversity             &lt;int&gt; 29, 24, 21, 25, 19, 30, 26, 20, 26, 22, 25,…</span></span>
-<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a><span class="do">## $ topo_elevation             &lt;int&gt; 1821, 143, 765, 1474, 378, 485, 604, 1159, …</span></span>
-<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a><span class="do">## $ swi_mean                   &lt;dbl&gt; 27.5, 56.1, 41.4, 59.3, 37.4, 56.3, 52.3, 2…</span></span>
-<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a><span class="do">## $ swi_max                    &lt;dbl&gt; 62.9, 74.4, 81.9, 81.1, 83.2, 73.8, 55.8, 3…</span></span>
-<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a><span class="do">## $ swi_min                    &lt;dbl&gt; 24.5, 33.3, 42.2, 31.3, 8.3, 28.8, 25.3, 11…</span></span>
-<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a><span class="do">## $ swi_range                  &lt;dbl&gt; 38.4, 41.2, 39.7, 49.8, 74.9, 45.0, 30.5, 2…</span></span>
-<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a><span class="do">## $ soil_temperature_mean      &lt;dbl&gt; 4.8, 19.9, 1.2, 13.0, 28.2, 18.1, 21.5, 23.…</span></span>
-<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a><span class="do">## $ soil_temperature_max       &lt;dbl&gt; 29.9, 32.6, 20.4, 24.6, 41.6, 29.1, 26.4, 4…</span></span>
-<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a><span class="do">## $ soil_temperature_min       &lt;dbl&gt; -12.4, 3.9, -16.0, -0.4, 16.8, 4.1, 17.3, 5…</span></span>
-<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a><span class="do">## $ soil_temperature_range     &lt;dbl&gt; 42.3, 28.8, 36.4, 25.0, 24.8, 24.9, 9.1, 38…</span></span>
-<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a><span class="do">## $ soil_sand                  &lt;int&gt; 41, 39, 27, 29, 48, 33, 30, 78, 23, 64, 54,…</span></span>
-<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a><span class="do">## $ soil_clay                  &lt;int&gt; 20, 24, 28, 31, 27, 29, 40, 15, 26, 22, 23,…</span></span>
-<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a><span class="do">## $ soil_silt                  &lt;int&gt; 38, 35, 43, 38, 23, 36, 29, 6, 49, 13, 22, …</span></span>
-<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a><span class="do">## $ soil_ph                    &lt;dbl&gt; 6.5, 5.9, 5.6, 5.5, 6.5, 5.8, 5.2, 7.1, 7.3…</span></span>
-<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a><span class="do">## $ soil_soc                   &lt;dbl&gt; 43.1, 14.6, 36.4, 34.9, 8.1, 20.8, 44.5, 4.…</span></span>
-<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a><span class="do">## $ soil_nitrogen              &lt;dbl&gt; 2.8, 1.3, 2.9, 3.6, 1.2, 1.9, 2.8, 0.6, 3.1…</span></span>
-<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a><span class="do">## $ solar_rad_mean             &lt;dbl&gt; 17.634, 19.198, 13.257, 14.163, 24.512, 17.…</span></span>
-<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a><span class="do">## $ solar_rad_max              &lt;dbl&gt; 31.317, 24.498, 25.283, 17.237, 28.038, 22.…</span></span>
-<span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a><span class="do">## $ solar_rad_min              &lt;dbl&gt; 5.209, 13.311, 1.587, 9.642, 19.102, 12.196…</span></span>
-<span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a><span class="do">## $ solar_rad_range            &lt;dbl&gt; 26.108, 11.187, 23.696, 7.595, 8.936, 10.20…</span></span>
-<span id="cb5-34"><a href="#cb5-34" aria-hidden="true" tabindex="-1"></a><span class="do">## $ growing_season_length      &lt;dbl&gt; 139, 365, 164, 333, 228, 365, 365, 60, 365,…</span></span>
-<span id="cb5-35"><a href="#cb5-35" aria-hidden="true" tabindex="-1"></a><span class="do">## $ growing_season_temperature &lt;dbl&gt; 12.65, 19.35, 11.55, 12.45, 26.45, 17.75, 2…</span></span>
-<span id="cb5-36"><a href="#cb5-36" aria-hidden="true" tabindex="-1"></a><span class="do">## $ growing_season_rainfall    &lt;dbl&gt; 224.5, 1493.4, 345.4, 1765.5, 984.4, 1860.5…</span></span>
-<span id="cb5-37"><a href="#cb5-37" aria-hidden="true" tabindex="-1"></a><span class="do">## $ growing_degree_days        &lt;dbl&gt; 2140.5, 7080.9, 2053.2, 4162.9, 10036.7, 64…</span></span>
-<span id="cb5-38"><a href="#cb5-38" aria-hidden="true" tabindex="-1"></a><span class="do">## $ temperature_mean           &lt;dbl&gt; 3.65, 19.35, 1.45, 11.35, 27.55, 17.65, 22.…</span></span>
-<span id="cb5-39"><a href="#cb5-39" aria-hidden="true" tabindex="-1"></a><span class="do">## $ temperature_max            &lt;dbl&gt; 24.65, 33.35, 21.15, 23.75, 38.35, 30.55, 2…</span></span>
-<span id="cb5-40"><a href="#cb5-40" aria-hidden="true" tabindex="-1"></a><span class="do">## $ temperature_min            &lt;dbl&gt; -14.05, 3.05, -18.25, -3.55, 19.15, 2.45, 1…</span></span>
-<span id="cb5-41"><a href="#cb5-41" aria-hidden="true" tabindex="-1"></a><span class="do">## $ temperature_range          &lt;dbl&gt; 38.7, 30.3, 39.4, 27.3, 19.2, 28.1, 7.0, 29…</span></span>
-<span id="cb5-42"><a href="#cb5-42" aria-hidden="true" tabindex="-1"></a><span class="do">## $ temperature_seasonality    &lt;dbl&gt; 882.6, 786.6, 1070.9, 724.7, 219.3, 747.2, …</span></span>
-<span id="cb5-43"><a href="#cb5-43" aria-hidden="true" tabindex="-1"></a><span class="do">## $ rainfall_mean              &lt;int&gt; 446, 1493, 560, 1794, 990, 1860, 3150, 356,…</span></span>
-<span id="cb5-44"><a href="#cb5-44" aria-hidden="true" tabindex="-1"></a><span class="do">## $ rainfall_min               &lt;int&gt; 25, 37, 24, 29, 0, 60, 122, 1, 10, 12, 0, 0…</span></span>
-<span id="cb5-45"><a href="#cb5-45" aria-hidden="true" tabindex="-1"></a><span class="do">## $ rainfall_max               &lt;int&gt; 62, 209, 87, 293, 226, 275, 425, 62, 256, 3…</span></span>
-<span id="cb5-46"><a href="#cb5-46" aria-hidden="true" tabindex="-1"></a><span class="do">## $ rainfall_range             &lt;int&gt; 37, 172, 63, 264, 226, 215, 303, 61, 245, 2…</span></span>
-<span id="cb5-47"><a href="#cb5-47" aria-hidden="true" tabindex="-1"></a><span class="do">## $ evapotranspiration_mean    &lt;dbl&gt; 78.32, 105.88, 50.03, 64.65, 156.60, 108.50…</span></span>
-<span id="cb5-48"><a href="#cb5-48" aria-hidden="true" tabindex="-1"></a><span class="do">## $ evapotranspiration_max     &lt;dbl&gt; 164.70, 190.86, 117.53, 115.79, 187.71, 191…</span></span>
-<span id="cb5-49"><a href="#cb5-49" aria-hidden="true" tabindex="-1"></a><span class="do">## $ evapotranspiration_min     &lt;dbl&gt; 13.67, 50.44, 3.53, 28.01, 128.59, 51.39, 8…</span></span>
-<span id="cb5-50"><a href="#cb5-50" aria-hidden="true" tabindex="-1"></a><span class="do">## $ evapotranspiration_range   &lt;dbl&gt; 151.03, 140.42, 113.99, 87.79, 59.13, 139.9…</span></span>
-<span id="cb5-51"><a href="#cb5-51" aria-hidden="true" tabindex="-1"></a><span class="do">## $ cloud_cover_mean           &lt;int&gt; 31, 48, 42, 64, 38, 52, 60, 13, 53, 20, 11,…</span></span>
-<span id="cb5-52"><a href="#cb5-52" aria-hidden="true" tabindex="-1"></a><span class="do">## $ cloud_cover_max            &lt;int&gt; 39, 61, 49, 71, 58, 67, 77, 18, 60, 27, 23,…</span></span>
-<span id="cb5-53"><a href="#cb5-53" aria-hidden="true" tabindex="-1"></a><span class="do">## $ cloud_cover_min            &lt;int&gt; 16, 34, 33, 54, 19, 39, 45, 6, 45, 14, 2, 1…</span></span>
-<span id="cb5-54"><a href="#cb5-54" aria-hidden="true" tabindex="-1"></a><span class="do">## $ cloud_cover_range          &lt;int&gt; 23, 27, 15, 17, 38, 27, 32, 11, 15, 12, 21,…</span></span>
-<span id="cb5-55"><a href="#cb5-55" aria-hidden="true" tabindex="-1"></a><span class="do">## $ aridity_index              &lt;dbl&gt; 0.54, 1.27, 0.90, 2.08, 0.55, 1.67, 2.88, 0…</span></span>
-<span id="cb5-56"><a href="#cb5-56" aria-hidden="true" tabindex="-1"></a><span class="do">## $ humidity_mean              &lt;dbl&gt; 55.56, 62.14, 59.87, 69.32, 51.60, 62.76, 7…</span></span>
-<span id="cb5-57"><a href="#cb5-57" aria-hidden="true" tabindex="-1"></a><span class="do">## $ humidity_max               &lt;dbl&gt; 63.98, 65.00, 68.19, 71.90, 67.07, 65.68, 7…</span></span>
-<span id="cb5-58"><a href="#cb5-58" aria-hidden="true" tabindex="-1"></a><span class="do">## $ humidity_min               &lt;dbl&gt; 48.41, 58.97, 53.75, 67.21, 33.89, 59.92, 7…</span></span>
-<span id="cb5-59"><a href="#cb5-59" aria-hidden="true" tabindex="-1"></a><span class="do">## $ humidity_range             &lt;dbl&gt; 15.57, 6.03, 14.44, 4.69, 33.18, 5.76, 3.99…</span></span>
-<span id="cb5-60"><a href="#cb5-60" aria-hidden="true" tabindex="-1"></a><span class="do">## $ biogeo_ecoregion           &lt;chr&gt; "South Central Rockies forests", "Jian Nan …</span></span>
-<span id="cb5-61"><a href="#cb5-61" aria-hidden="true" tabindex="-1"></a><span class="do">## $ biogeo_biome               &lt;chr&gt; "Temperate Conifer Forests", "Tropical &amp; Su…</span></span>
-<span id="cb5-62"><a href="#cb5-62" aria-hidden="true" tabindex="-1"></a><span class="do">## $ biogeo_realm               &lt;chr&gt; "Nearctic", "Indomalayan", "Nearctic", "Pal…</span></span>
-<span id="cb5-63"><a href="#cb5-63" aria-hidden="true" tabindex="-1"></a><span class="do">## $ country_name               &lt;chr&gt; "United States of America", "China", "Canad…</span></span>
-<span id="cb5-64"><a href="#cb5-64" aria-hidden="true" tabindex="-1"></a><span class="do">## $ country_population         &lt;dbl&gt; 313973000, 1338612970, 33487208, 1338612970…</span></span>
-<span id="cb5-65"><a href="#cb5-65" aria-hidden="true" tabindex="-1"></a><span class="do">## $ country_gdp                &lt;dbl&gt; 15094000, 7973000, 1300000, 7973000, 15860,…</span></span>
-<span id="cb5-66"><a href="#cb5-66" aria-hidden="true" tabindex="-1"></a><span class="do">## $ country_income             &lt;chr&gt; "1. High income: OECD", "3. Upper middle in…</span></span>
-<span id="cb5-67"><a href="#cb5-67" aria-hidden="true" tabindex="-1"></a><span class="do">## $ continent                  &lt;chr&gt; "North America", "Asia", "North America", "…</span></span>
-<span id="cb5-68"><a href="#cb5-68" aria-hidden="true" tabindex="-1"></a><span class="do">## $ region                     &lt;chr&gt; "Americas", "Asia", "Americas", "Asia", "Af…</span></span>
-<span id="cb5-69"><a href="#cb5-69" aria-hidden="true" tabindex="-1"></a><span class="do">## $ subregion                  &lt;chr&gt; "Northern America", "Eastern Asia", "Northe…</span></span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Rows: 30,000</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="do">## Columns: 67</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="do">## $ longitude                  &lt;dbl&gt; -114.254306, 114.845693, -122.145972, 108.3…</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="do">## $ latitude                   &lt;dbl&gt; 45.0540272, 26.2706940, 56.3790272, 29.9456…</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="do">## $ vi_mean                    &lt;dbl&gt; 0.38, 0.53, 0.45, 0.69, 0.42, 0.68, 0.70, 0…</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="do">## $ vi_max                     &lt;dbl&gt; 0.57, 0.67, 0.65, 0.85, 0.64, 0.78, 0.77, 0…</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="do">## $ vi_min                     &lt;dbl&gt; 0.12, 0.41, 0.25, 0.50, 0.25, 0.48, 0.60, 0…</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="do">## $ vi_range                   &lt;dbl&gt; 0.45, 0.26, 0.40, 0.34, 0.39, 0.31, 0.17, 0…</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a><span class="do">## $ koppen_zone                &lt;chr&gt; "BSk", "Cfa", "Dfc", "Cfb", "Aw", "Cfa", "A…</span></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a><span class="do">## $ koppen_group               &lt;chr&gt; "Arid", "Temperate", "Cold", "Temperate", "…</span></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a><span class="do">## $ koppen_description         &lt;chr&gt; "steppe, cold", "no dry season, hot summer"…</span></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a><span class="do">## $ soil_type                  &lt;chr&gt; "Cambisols", "Acrisols", "Luvisols", "Aliso…</span></span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a><span class="do">## $ topo_slope                 &lt;int&gt; 6, 2, 0, 10, 0, 10, 6, 0, 2, 0, 0, 1, 0, 1,…</span></span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a><span class="do">## $ topo_diversity             &lt;int&gt; 29, 24, 21, 25, 19, 30, 26, 20, 26, 22, 25,…</span></span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a><span class="do">## $ topo_elevation             &lt;int&gt; 1821, 143, 765, 1474, 378, 485, 604, 1159, …</span></span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a><span class="do">## $ swi_mean                   &lt;dbl&gt; 27.5, 56.1, 41.4, 59.3, 37.4, 56.3, 52.3, 2…</span></span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a><span class="do">## $ swi_max                    &lt;dbl&gt; 62.9, 74.4, 81.9, 81.1, 83.2, 73.8, 55.8, 3…</span></span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a><span class="do">## $ swi_min                    &lt;dbl&gt; 24.5, 33.3, 42.2, 31.3, 8.3, 28.8, 25.3, 11…</span></span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a><span class="do">## $ swi_range                  &lt;dbl&gt; 38.4, 41.2, 39.7, 49.8, 74.9, 45.0, 30.5, 2…</span></span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a><span class="do">## $ soil_temperature_mean      &lt;dbl&gt; 4.8, 19.9, 1.2, 13.0, 28.2, 18.1, 21.5, 23.…</span></span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a><span class="do">## $ soil_temperature_max       &lt;dbl&gt; 29.9, 32.6, 20.4, 24.6, 41.6, 29.1, 26.4, 4…</span></span>
+<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a><span class="do">## $ soil_temperature_min       &lt;dbl&gt; -12.4, 3.9, -16.0, -0.4, 16.8, 4.1, 17.3, 5…</span></span>
+<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a><span class="do">## $ soil_temperature_range     &lt;dbl&gt; 42.3, 28.8, 36.4, 25.0, 24.8, 24.9, 9.1, 38…</span></span>
+<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a><span class="do">## $ soil_sand                  &lt;int&gt; 41, 39, 27, 29, 48, 33, 30, 78, 23, 64, 54,…</span></span>
+<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a><span class="do">## $ soil_clay                  &lt;int&gt; 20, 24, 28, 31, 27, 29, 40, 15, 26, 22, 23,…</span></span>
+<span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a><span class="do">## $ soil_silt                  &lt;int&gt; 38, 35, 43, 38, 23, 36, 29, 6, 49, 13, 22, …</span></span>
+<span id="cb8-27"><a href="#cb8-27" aria-hidden="true" tabindex="-1"></a><span class="do">## $ soil_ph                    &lt;dbl&gt; 6.5, 5.9, 5.6, 5.5, 6.5, 5.8, 5.2, 7.1, 7.3…</span></span>
+<span id="cb8-28"><a href="#cb8-28" aria-hidden="true" tabindex="-1"></a><span class="do">## $ soil_soc                   &lt;dbl&gt; 43.1, 14.6, 36.4, 34.9, 8.1, 20.8, 44.5, 4.…</span></span>
+<span id="cb8-29"><a href="#cb8-29" aria-hidden="true" tabindex="-1"></a><span class="do">## $ soil_nitrogen              &lt;dbl&gt; 2.8, 1.3, 2.9, 3.6, 1.2, 1.9, 2.8, 0.6, 3.1…</span></span>
+<span id="cb8-30"><a href="#cb8-30" aria-hidden="true" tabindex="-1"></a><span class="do">## $ solar_rad_mean             &lt;dbl&gt; 17.634, 19.198, 13.257, 14.163, 24.512, 17.…</span></span>
+<span id="cb8-31"><a href="#cb8-31" aria-hidden="true" tabindex="-1"></a><span class="do">## $ solar_rad_max              &lt;dbl&gt; 31.317, 24.498, 25.283, 17.237, 28.038, 22.…</span></span>
+<span id="cb8-32"><a href="#cb8-32" aria-hidden="true" tabindex="-1"></a><span class="do">## $ solar_rad_min              &lt;dbl&gt; 5.209, 13.311, 1.587, 9.642, 19.102, 12.196…</span></span>
+<span id="cb8-33"><a href="#cb8-33" aria-hidden="true" tabindex="-1"></a><span class="do">## $ solar_rad_range            &lt;dbl&gt; 26.108, 11.187, 23.696, 7.595, 8.936, 10.20…</span></span>
+<span id="cb8-34"><a href="#cb8-34" aria-hidden="true" tabindex="-1"></a><span class="do">## $ growing_season_length      &lt;dbl&gt; 139, 365, 164, 333, 228, 365, 365, 60, 365,…</span></span>
+<span id="cb8-35"><a href="#cb8-35" aria-hidden="true" tabindex="-1"></a><span class="do">## $ growing_season_temperature &lt;dbl&gt; 12.65, 19.35, 11.55, 12.45, 26.45, 17.75, 2…</span></span>
+<span id="cb8-36"><a href="#cb8-36" aria-hidden="true" tabindex="-1"></a><span class="do">## $ growing_season_rainfall    &lt;dbl&gt; 224.5, 1493.4, 345.4, 1765.5, 984.4, 1860.5…</span></span>
+<span id="cb8-37"><a href="#cb8-37" aria-hidden="true" tabindex="-1"></a><span class="do">## $ growing_degree_days        &lt;dbl&gt; 2140.5, 7080.9, 2053.2, 4162.9, 10036.7, 64…</span></span>
+<span id="cb8-38"><a href="#cb8-38" aria-hidden="true" tabindex="-1"></a><span class="do">## $ temperature_mean           &lt;dbl&gt; 3.65, 19.35, 1.45, 11.35, 27.55, 17.65, 22.…</span></span>
+<span id="cb8-39"><a href="#cb8-39" aria-hidden="true" tabindex="-1"></a><span class="do">## $ temperature_max            &lt;dbl&gt; 24.65, 33.35, 21.15, 23.75, 38.35, 30.55, 2…</span></span>
+<span id="cb8-40"><a href="#cb8-40" aria-hidden="true" tabindex="-1"></a><span class="do">## $ temperature_min            &lt;dbl&gt; -14.05, 3.05, -18.25, -3.55, 19.15, 2.45, 1…</span></span>
+<span id="cb8-41"><a href="#cb8-41" aria-hidden="true" tabindex="-1"></a><span class="do">## $ temperature_range          &lt;dbl&gt; 38.7, 30.3, 39.4, 27.3, 19.2, 28.1, 7.0, 29…</span></span>
+<span id="cb8-42"><a href="#cb8-42" aria-hidden="true" tabindex="-1"></a><span class="do">## $ temperature_seasonality    &lt;dbl&gt; 882.6, 786.6, 1070.9, 724.7, 219.3, 747.2, …</span></span>
+<span id="cb8-43"><a href="#cb8-43" aria-hidden="true" tabindex="-1"></a><span class="do">## $ rainfall_mean              &lt;int&gt; 446, 1493, 560, 1794, 990, 1860, 3150, 356,…</span></span>
+<span id="cb8-44"><a href="#cb8-44" aria-hidden="true" tabindex="-1"></a><span class="do">## $ rainfall_min               &lt;int&gt; 25, 37, 24, 29, 0, 60, 122, 1, 10, 12, 0, 0…</span></span>
+<span id="cb8-45"><a href="#cb8-45" aria-hidden="true" tabindex="-1"></a><span class="do">## $ rainfall_max               &lt;int&gt; 62, 209, 87, 293, 226, 275, 425, 62, 256, 3…</span></span>
+<span id="cb8-46"><a href="#cb8-46" aria-hidden="true" tabindex="-1"></a><span class="do">## $ rainfall_range             &lt;int&gt; 37, 172, 63, 264, 226, 215, 303, 61, 245, 2…</span></span>
+<span id="cb8-47"><a href="#cb8-47" aria-hidden="true" tabindex="-1"></a><span class="do">## $ evapotranspiration_mean    &lt;dbl&gt; 78.32, 105.88, 50.03, 64.65, 156.60, 108.50…</span></span>
+<span id="cb8-48"><a href="#cb8-48" aria-hidden="true" tabindex="-1"></a><span class="do">## $ evapotranspiration_max     &lt;dbl&gt; 164.70, 190.86, 117.53, 115.79, 187.71, 191…</span></span>
+<span id="cb8-49"><a href="#cb8-49" aria-hidden="true" tabindex="-1"></a><span class="do">## $ evapotranspiration_min     &lt;dbl&gt; 13.67, 50.44, 3.53, 28.01, 128.59, 51.39, 8…</span></span>
+<span id="cb8-50"><a href="#cb8-50" aria-hidden="true" tabindex="-1"></a><span class="do">## $ evapotranspiration_range   &lt;dbl&gt; 151.03, 140.42, 113.99, 87.79, 59.13, 139.9…</span></span>
+<span id="cb8-51"><a href="#cb8-51" aria-hidden="true" tabindex="-1"></a><span class="do">## $ cloud_cover_mean           &lt;int&gt; 31, 48, 42, 64, 38, 52, 60, 13, 53, 20, 11,…</span></span>
+<span id="cb8-52"><a href="#cb8-52" aria-hidden="true" tabindex="-1"></a><span class="do">## $ cloud_cover_max            &lt;int&gt; 39, 61, 49, 71, 58, 67, 77, 18, 60, 27, 23,…</span></span>
+<span id="cb8-53"><a href="#cb8-53" aria-hidden="true" tabindex="-1"></a><span class="do">## $ cloud_cover_min            &lt;int&gt; 16, 34, 33, 54, 19, 39, 45, 6, 45, 14, 2, 1…</span></span>
+<span id="cb8-54"><a href="#cb8-54" aria-hidden="true" tabindex="-1"></a><span class="do">## $ cloud_cover_range          &lt;int&gt; 23, 27, 15, 17, 38, 27, 32, 11, 15, 12, 21,…</span></span>
+<span id="cb8-55"><a href="#cb8-55" aria-hidden="true" tabindex="-1"></a><span class="do">## $ aridity_index              &lt;dbl&gt; 0.54, 1.27, 0.90, 2.08, 0.55, 1.67, 2.88, 0…</span></span>
+<span id="cb8-56"><a href="#cb8-56" aria-hidden="true" tabindex="-1"></a><span class="do">## $ humidity_mean              &lt;dbl&gt; 55.56, 62.14, 59.87, 69.32, 51.60, 62.76, 7…</span></span>
+<span id="cb8-57"><a href="#cb8-57" aria-hidden="true" tabindex="-1"></a><span class="do">## $ humidity_max               &lt;dbl&gt; 63.98, 65.00, 68.19, 71.90, 67.07, 65.68, 7…</span></span>
+<span id="cb8-58"><a href="#cb8-58" aria-hidden="true" tabindex="-1"></a><span class="do">## $ humidity_min               &lt;dbl&gt; 48.41, 58.97, 53.75, 67.21, 33.89, 59.92, 7…</span></span>
+<span id="cb8-59"><a href="#cb8-59" aria-hidden="true" tabindex="-1"></a><span class="do">## $ humidity_range             &lt;dbl&gt; 15.57, 6.03, 14.44, 4.69, 33.18, 5.76, 3.99…</span></span>
+<span id="cb8-60"><a href="#cb8-60" aria-hidden="true" tabindex="-1"></a><span class="do">## $ biogeo_ecoregion           &lt;chr&gt; "South Central Rockies forests", "Jian Nan …</span></span>
+<span id="cb8-61"><a href="#cb8-61" aria-hidden="true" tabindex="-1"></a><span class="do">## $ biogeo_biome               &lt;chr&gt; "Temperate Conifer Forests", "Tropical &amp; Su…</span></span>
+<span id="cb8-62"><a href="#cb8-62" aria-hidden="true" tabindex="-1"></a><span class="do">## $ biogeo_realm               &lt;chr&gt; "Nearctic", "Indomalayan", "Nearctic", "Pal…</span></span>
+<span id="cb8-63"><a href="#cb8-63" aria-hidden="true" tabindex="-1"></a><span class="do">## $ country_name               &lt;chr&gt; "United States of America", "China", "Canad…</span></span>
+<span id="cb8-64"><a href="#cb8-64" aria-hidden="true" tabindex="-1"></a><span class="do">## $ country_population         &lt;dbl&gt; 313973000, 1338612970, 33487208, 1338612970…</span></span>
+<span id="cb8-65"><a href="#cb8-65" aria-hidden="true" tabindex="-1"></a><span class="do">## $ country_gdp                &lt;dbl&gt; 15094000, 7973000, 1300000, 7973000, 15860,…</span></span>
+<span id="cb8-66"><a href="#cb8-66" aria-hidden="true" tabindex="-1"></a><span class="do">## $ country_income             &lt;chr&gt; "1. High income: OECD", "3. Upper middle in…</span></span>
+<span id="cb8-67"><a href="#cb8-67" aria-hidden="true" tabindex="-1"></a><span class="do">## $ continent                  &lt;chr&gt; "North America", "Asia", "North America", "…</span></span>
+<span id="cb8-68"><a href="#cb8-68" aria-hidden="true" tabindex="-1"></a><span class="do">## $ region                     &lt;chr&gt; "Americas", "Asia", "Americas", "Asia", "Af…</span></span>
+<span id="cb8-69"><a href="#cb8-69" aria-hidden="true" tabindex="-1"></a><span class="do">## $ subregion                  &lt;chr&gt; "Northern America", "Eastern Asia", "Northe…</span></span></code></pre></div>
 <p>The response variables are “vi_mean”, “vi_max”, “vi_min”, and “vi_range”, with statistics of a vegetation index named NDVI. The predictors are stored in the character vector <code>vi_predictors</code>.</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">vi_predictors</span></span></code></pre></div>
-<div class="sourceCode" id="cb7"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="do">##  [1] "koppen_zone"                "koppen_group"              </span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="do">##  [3] "koppen_description"         "soil_type"                 </span></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="do">##  [5] "topo_slope"                 "topo_diversity"            </span></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="do">##  [7] "topo_elevation"             "swi_mean"                  </span></span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="do">##  [9] "swi_max"                    "swi_min"                   </span></span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="do">## [11] "swi_range"                  "soil_temperature_mean"     </span></span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="do">## [13] "soil_temperature_max"       "soil_temperature_min"      </span></span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="do">## [15] "soil_temperature_range"     "soil_sand"                 </span></span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="do">## [17] "soil_clay"                  "soil_silt"                 </span></span>
-<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a><span class="do">## [19] "soil_ph"                    "soil_soc"                  </span></span>
-<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a><span class="do">## [21] "soil_nitrogen"              "solar_rad_mean"            </span></span>
-<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a><span class="do">## [23] "solar_rad_max"              "solar_rad_min"             </span></span>
-<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a><span class="do">## [25] "solar_rad_range"            "growing_season_length"     </span></span>
-<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a><span class="do">## [27] "growing_season_temperature" "growing_season_rainfall"   </span></span>
-<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a><span class="do">## [29] "growing_degree_days"        "temperature_mean"          </span></span>
-<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a><span class="do">## [31] "temperature_max"            "temperature_min"           </span></span>
-<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a><span class="do">## [33] "temperature_range"          "temperature_seasonality"   </span></span>
-<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a><span class="do">## [35] "rainfall_mean"              "rainfall_min"              </span></span>
-<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a><span class="do">## [37] "rainfall_max"               "rainfall_range"            </span></span>
-<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a><span class="do">## [39] "evapotranspiration_mean"    "evapotranspiration_max"    </span></span>
-<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a><span class="do">## [41] "evapotranspiration_min"     "evapotranspiration_range"  </span></span>
-<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a><span class="do">## [43] "cloud_cover_mean"           "cloud_cover_max"           </span></span>
-<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a><span class="do">## [45] "cloud_cover_min"            "cloud_cover_range"         </span></span>
-<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a><span class="do">## [47] "aridity_index"              "humidity_mean"             </span></span>
-<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a><span class="do">## [49] "humidity_max"               "humidity_min"              </span></span>
-<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a><span class="do">## [51] "humidity_range"             "biogeo_ecoregion"          </span></span>
-<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a><span class="do">## [53] "biogeo_biome"               "biogeo_realm"              </span></span>
-<span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a><span class="do">## [55] "country_name"               "country_population"        </span></span>
-<span id="cb7-29"><a href="#cb7-29" aria-hidden="true" tabindex="-1"></a><span class="do">## [57] "country_gdp"                "country_income"            </span></span>
-<span id="cb7-30"><a href="#cb7-30" aria-hidden="true" tabindex="-1"></a><span class="do">## [59] "continent"                  "region"                    </span></span>
-<span id="cb7-31"><a href="#cb7-31" aria-hidden="true" tabindex="-1"></a><span class="do">## [61] "subregion"</span></span></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="do">##  [1] "koppen_zone"                "koppen_group"              </span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="do">##  [3] "koppen_description"         "soil_type"                 </span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="do">##  [5] "topo_slope"                 "topo_diversity"            </span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="do">##  [7] "topo_elevation"             "swi_mean"                  </span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="do">##  [9] "swi_max"                    "swi_min"                   </span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="do">## [11] "swi_range"                  "soil_temperature_mean"     </span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="do">## [13] "soil_temperature_max"       "soil_temperature_min"      </span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a><span class="do">## [15] "soil_temperature_range"     "soil_sand"                 </span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a><span class="do">## [17] "soil_clay"                  "soil_silt"                 </span></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a><span class="do">## [19] "soil_ph"                    "soil_soc"                  </span></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a><span class="do">## [21] "soil_nitrogen"              "solar_rad_mean"            </span></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a><span class="do">## [23] "solar_rad_max"              "solar_rad_min"             </span></span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a><span class="do">## [25] "solar_rad_range"            "growing_season_length"     </span></span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a><span class="do">## [27] "growing_season_temperature" "growing_season_rainfall"   </span></span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a><span class="do">## [29] "growing_degree_days"        "temperature_mean"          </span></span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a><span class="do">## [31] "temperature_max"            "temperature_min"           </span></span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a><span class="do">## [33] "temperature_range"          "temperature_seasonality"   </span></span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a><span class="do">## [35] "rainfall_mean"              "rainfall_min"              </span></span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a><span class="do">## [37] "rainfall_max"               "rainfall_range"            </span></span>
+<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a><span class="do">## [39] "evapotranspiration_mean"    "evapotranspiration_max"    </span></span>
+<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a><span class="do">## [41] "evapotranspiration_min"     "evapotranspiration_range"  </span></span>
+<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a><span class="do">## [43] "cloud_cover_mean"           "cloud_cover_max"           </span></span>
+<span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a><span class="do">## [45] "cloud_cover_min"            "cloud_cover_range"         </span></span>
+<span id="cb10-24"><a href="#cb10-24" aria-hidden="true" tabindex="-1"></a><span class="do">## [47] "aridity_index"              "humidity_mean"             </span></span>
+<span id="cb10-25"><a href="#cb10-25" aria-hidden="true" tabindex="-1"></a><span class="do">## [49] "humidity_max"               "humidity_min"              </span></span>
+<span id="cb10-26"><a href="#cb10-26" aria-hidden="true" tabindex="-1"></a><span class="do">## [51] "humidity_range"             "biogeo_ecoregion"          </span></span>
+<span id="cb10-27"><a href="#cb10-27" aria-hidden="true" tabindex="-1"></a><span class="do">## [53] "biogeo_biome"               "biogeo_realm"              </span></span>
+<span id="cb10-28"><a href="#cb10-28" aria-hidden="true" tabindex="-1"></a><span class="do">## [55] "country_name"               "country_population"        </span></span>
+<span id="cb10-29"><a href="#cb10-29" aria-hidden="true" tabindex="-1"></a><span class="do">## [57] "country_gdp"                "country_income"            </span></span>
+<span id="cb10-30"><a href="#cb10-30" aria-hidden="true" tabindex="-1"></a><span class="do">## [59] "continent"                  "region"                    </span></span>
+<span id="cb10-31"><a href="#cb10-31" aria-hidden="true" tabindex="-1"></a><span class="do">## [61] "subregion"</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="collinear">
@@ -277,7 +284,7 @@
 <code>encoding_method</code>: method used to convert categorical variables into numeric. Only relevant when a <code>response</code> is provided. By default, each group of the categorical variable is encoded with the mean of the <code>response</code> across the group.</li>
 </ul>
 <p>The code below shows a quick example. Notice that the argument <code>preference_order</code> was left as NULL, but will be explained later.</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">selected_predictors</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/collinear.html">collinear</a></span><span class="op">(</span></span>
 <span>  df <span class="op">=</span> <span class="va">vi</span>,</span>
 <span>  response <span class="op">=</span> <span class="st">"vi_mean"</span>,</span>
@@ -289,69 +296,69 @@
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">selected_predictors</span></span></code></pre></div>
-<div class="sourceCode" id="cb9"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="do">##  [1] "country_income"             "topo_diversity"            </span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="do">##  [3] "topo_slope"                 "humidity_range"            </span></span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="do">##  [5] "topo_elevation"             "country_gdp"               </span></span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="do">##  [7] "country_population"         "soil_soc"                  </span></span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="do">##  [9] "region"                     "soil_type"                 </span></span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="do">## [11] "soil_clay"                  "subregion"                 </span></span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="do">## [13] "biogeo_realm"               "soil_sand"                 </span></span>
-<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="do">## [15] "swi_min"                    "soil_nitrogen"             </span></span>
-<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a><span class="do">## [17] "swi_range"                  "cloud_cover_range"         </span></span>
-<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a><span class="do">## [19] "rainfall_min"               "growing_season_temperature"</span></span>
-<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a><span class="do">## [21] "solar_rad_max"              "solar_rad_min"             </span></span>
-<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a><span class="do">## [23] "rainfall_range"</span></span></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="do">##  [1] "country_income"             "topo_diversity"            </span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="do">##  [3] "topo_slope"                 "humidity_range"            </span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="do">##  [5] "topo_elevation"             "country_gdp"               </span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="do">##  [7] "country_population"         "soil_soc"                  </span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="do">##  [9] "region"                     "soil_type"                 </span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="do">## [11] "soil_clay"                  "subregion"                 </span></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a><span class="do">## [13] "biogeo_realm"               "soil_sand"                 </span></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a><span class="do">## [15] "swi_min"                    "soil_nitrogen"             </span></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a><span class="do">## [17] "swi_range"                  "cloud_cover_range"         </span></span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a><span class="do">## [19] "rainfall_min"               "growing_season_temperature"</span></span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a><span class="do">## [21] "solar_rad_max"              "solar_rad_min"             </span></span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a><span class="do">## [23] "rainfall_range"</span></span></code></pre></div>
 <p>The function has returned a list of predictors that should have a correlation lower than 0.75 with each other, and a VIF lower than 5. Let’s see if that’s true.</p>
 <p>The function <code><a href="reference/cor_df.html">cor_df()</a></code> returns a data frame with pairwise correlations, arranged by the absolute value of the correlation.</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">selected_predictors_cor</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/cor_df.html">cor_df</a></span><span class="op">(</span></span>
 <span>  df <span class="op">=</span> <span class="va">vi</span>,</span>
 <span>  response <span class="op">=</span> <span class="st">"vi_mean"</span>,</span>
 <span>  predictors <span class="op">=</span> <span class="va">selected_predictors</span></span>
 <span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">selected_predictors_cor</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb11"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="do">## # A tibble: 6 × 3</span></span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="do">##   x             y                          correlation</span></span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="do">##   &lt;chr&gt;         &lt;chr&gt;                            &lt;dbl&gt;</span></span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="do">## 1 solar_rad_min growing_season_temperature       0.744</span></span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="do">## 2 soil_nitrogen soil_soc                         0.729</span></span>
-<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="do">## 3 soil_nitrogen swi_min                          0.673</span></span>
-<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a><span class="do">## 4 soil_sand     soil_clay                       -0.666</span></span>
-<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a><span class="do">## 5 solar_rad_max soil_type                       -0.652</span></span>
-<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a><span class="do">## 6 biogeo_realm  soil_type                        0.62</span></span></code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="do">## # A tibble: 6 × 3</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="do">##   x             y                          correlation</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="do">##   &lt;chr&gt;         &lt;chr&gt;                            &lt;dbl&gt;</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="do">## 1 solar_rad_min growing_season_temperature       0.744</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a><span class="do">## 2 soil_nitrogen soil_soc                         0.729</span></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a><span class="do">## 3 soil_nitrogen swi_min                          0.673</span></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a><span class="do">## 4 soil_sand     soil_clay                       -0.666</span></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a><span class="do">## 5 solar_rad_max soil_type                       -0.652</span></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a><span class="do">## 6 biogeo_realm  soil_type                        0.62</span></span></code></pre></div>
 <p>The data frame above shows that the maximum correlation between two of the selected predictors is below 0.75, so here <code><a href="reference/collinear.html">collinear()</a></code> worked as expected.</p>
 <p>The function <code><a href="reference/vif_df.html">vif_df()</a></code> returns a data frame with the VIF scores of all predictors.</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">selected_predictors_vif</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/vif_df.html">vif_df</a></span><span class="op">(</span></span>
 <span>  df <span class="op">=</span> <span class="va">vi</span>,</span>
 <span>  response <span class="op">=</span> <span class="st">"vi_mean"</span>,</span>
 <span>  predictors <span class="op">=</span> <span class="va">selected_predictors</span></span>
 <span><span class="op">)</span></span>
 <span><span class="va">selected_predictors_vif</span></span></code></pre></div>
-<div class="sourceCode" id="cb13"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="do">##                      variable   vif</span></span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="do">## 1              country_income 1.211</span></span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="do">## 2              topo_diversity 1.635</span></span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="do">## 3                  topo_slope 1.928</span></span>
-<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="do">## 4              humidity_range 1.959</span></span>
-<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a><span class="do">## 5              topo_elevation 2.073</span></span>
-<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a><span class="do">## 6                 country_gdp 2.157</span></span>
-<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a><span class="do">## 7          country_population 2.169</span></span>
-<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a><span class="do">## 8                rainfall_min 2.256</span></span>
-<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a><span class="do">## 9           cloud_cover_range 2.393</span></span>
-<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a><span class="do">## 10             rainfall_range 2.716</span></span>
-<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a><span class="do">## 11                   soil_soc 2.744</span></span>
-<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a><span class="do">## 12                     region 2.846</span></span>
-<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a><span class="do">## 13                  subregion 2.870</span></span>
-<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a><span class="do">## 14                  soil_type 2.874</span></span>
-<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a><span class="do">## 15                  soil_clay 2.966</span></span>
-<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a><span class="do">## 16               biogeo_realm 3.120</span></span>
-<span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a><span class="do">## 17              solar_rad_max 3.126</span></span>
-<span id="cb13-19"><a href="#cb13-19" aria-hidden="true" tabindex="-1"></a><span class="do">## 18                    swi_min 3.138</span></span>
-<span id="cb13-20"><a href="#cb13-20" aria-hidden="true" tabindex="-1"></a><span class="do">## 19                  soil_sand 3.170</span></span>
-<span id="cb13-21"><a href="#cb13-21" aria-hidden="true" tabindex="-1"></a><span class="do">## 20                  swi_range 3.263</span></span>
-<span id="cb13-22"><a href="#cb13-22" aria-hidden="true" tabindex="-1"></a><span class="do">## 21              soil_nitrogen 3.372</span></span>
-<span id="cb13-23"><a href="#cb13-23" aria-hidden="true" tabindex="-1"></a><span class="do">## 22 growing_season_temperature 4.271</span></span>
-<span id="cb13-24"><a href="#cb13-24" aria-hidden="true" tabindex="-1"></a><span class="do">## 23              solar_rad_min 4.287</span></span></code></pre></div>
+<div class="sourceCode" id="cb16"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="do">##                      variable   vif</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="do">## 1              country_income 1.211</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="do">## 2              topo_diversity 1.635</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="do">## 3                  topo_slope 1.928</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a><span class="do">## 4              humidity_range 1.959</span></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a><span class="do">## 5              topo_elevation 2.073</span></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a><span class="do">## 6                 country_gdp 2.157</span></span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a><span class="do">## 7          country_population 2.169</span></span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a><span class="do">## 8                rainfall_min 2.256</span></span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a><span class="do">## 9           cloud_cover_range 2.393</span></span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a><span class="do">## 10             rainfall_range 2.716</span></span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a><span class="do">## 11                   soil_soc 2.744</span></span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a><span class="do">## 12                     region 2.846</span></span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a><span class="do">## 13                  subregion 2.870</span></span>
+<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a><span class="do">## 14                  soil_type 2.874</span></span>
+<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a><span class="do">## 15                  soil_clay 2.966</span></span>
+<span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a><span class="do">## 16               biogeo_realm 3.120</span></span>
+<span id="cb16-18"><a href="#cb16-18" aria-hidden="true" tabindex="-1"></a><span class="do">## 17              solar_rad_max 3.126</span></span>
+<span id="cb16-19"><a href="#cb16-19" aria-hidden="true" tabindex="-1"></a><span class="do">## 18                    swi_min 3.138</span></span>
+<span id="cb16-20"><a href="#cb16-20" aria-hidden="true" tabindex="-1"></a><span class="do">## 19                  soil_sand 3.170</span></span>
+<span id="cb16-21"><a href="#cb16-21" aria-hidden="true" tabindex="-1"></a><span class="do">## 20                  swi_range 3.263</span></span>
+<span id="cb16-22"><a href="#cb16-22" aria-hidden="true" tabindex="-1"></a><span class="do">## 21              soil_nitrogen 3.372</span></span>
+<span id="cb16-23"><a href="#cb16-23" aria-hidden="true" tabindex="-1"></a><span class="do">## 22 growing_season_temperature 4.271</span></span>
+<span id="cb16-24"><a href="#cb16-24" aria-hidden="true" tabindex="-1"></a><span class="do">## 23              solar_rad_min 4.287</span></span></code></pre></div>
 <p>The output shows that the maximum VIF is 4.2, so here <code><a href="reference/collinear.html">collinear()</a></code> did its work as expected.</p>
 </div>
 <div class="section level3">
@@ -359,7 +366,7 @@
 <a class="anchor" aria-label="anchor" href="#arguments-max_cor-and-max_vif"></a>
 </h3>
 <p>The arguments <code>max_cor</code> and <code>max_vif</code> control the intensity of the multicollinearity filtering.</p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#restrictive setup</span></span>
 <span><span class="va">selected_predictors_restrictive</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/collinear.html">collinear</a></span><span class="op">(</span></span>
 <span>  df <span class="op">=</span> <span class="va">vi</span>,</span>
@@ -378,38 +385,38 @@
 <span>  max_vif <span class="op">=</span> <span class="fl">10</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <p>These are the variables selected under a restrictive setup:</p>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">selected_predictors_restrictive</span></span></code></pre></div>
-<div class="sourceCode" id="cb16"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="do">##  [1] "country_income"             "soil_clay"                 </span></span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="do">##  [3] "country_population"         "region"                    </span></span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="do">##  [5] "soil_soc"                   "topo_slope"                </span></span>
-<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="do">##  [7] "growing_season_temperature" "humidity_range"            </span></span>
-<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a><span class="do">##  [9] "cloud_cover_range"          "topo_elevation"</span></span></code></pre></div>
+<div class="sourceCode" id="cb19"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="do">##  [1] "country_income"             "soil_clay"                 </span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="do">##  [3] "country_population"         "region"                    </span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="do">##  [5] "soil_soc"                   "topo_slope"                </span></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="do">##  [7] "growing_season_temperature" "humidity_range"            </span></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a><span class="do">##  [9] "cloud_cover_range"          "topo_elevation"</span></span></code></pre></div>
 <p>These are the variables selected under a more permissive setup:</p>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">selected_predictors_permissive</span></span></code></pre></div>
-<div class="sourceCode" id="cb18"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="do">##  [1] "country_income"             "topo_diversity"            </span></span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="do">##  [3] "topo_slope"                 "country_population"        </span></span>
-<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="do">##  [5] "country_gdp"                "soil_soc"                  </span></span>
-<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="do">##  [7] "region"                     "soil_type"                 </span></span>
-<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a><span class="do">##  [9] "soil_nitrogen"              "subregion"                 </span></span>
-<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a><span class="do">## [11] "topo_elevation"             "biogeo_realm"              </span></span>
-<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a><span class="do">## [13] "koppen_group"               "biogeo_biome"              </span></span>
-<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a><span class="do">## [15] "country_name"               "soil_ph"                   </span></span>
-<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a><span class="do">## [17] "growing_season_temperature" "aridity_index"             </span></span>
-<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a><span class="do">## [19] "soil_temperature_max"       "rainfall_min"              </span></span>
-<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a><span class="do">## [21] "rainfall_range"             "swi_mean"                  </span></span>
-<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a><span class="do">## [23] "temperature_max"            "solar_rad_mean"            </span></span>
-<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a><span class="do">## [25] "soil_clay"                  "soil_silt"                 </span></span>
-<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a><span class="do">## [27] "cloud_cover_min"            "swi_range"                 </span></span>
-<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a><span class="do">## [29] "humidity_range"</span></span></code></pre></div>
+<div class="sourceCode" id="cb21"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="do">##  [1] "country_income"             "topo_diversity"            </span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="do">##  [3] "topo_slope"                 "country_population"        </span></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="do">##  [5] "country_gdp"                "soil_soc"                  </span></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a><span class="do">##  [7] "region"                     "soil_type"                 </span></span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a><span class="do">##  [9] "soil_nitrogen"              "subregion"                 </span></span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a><span class="do">## [11] "topo_elevation"             "biogeo_realm"              </span></span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a><span class="do">## [13] "koppen_group"               "biogeo_biome"              </span></span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a><span class="do">## [15] "country_name"               "soil_ph"                   </span></span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a><span class="do">## [17] "growing_season_temperature" "aridity_index"             </span></span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a><span class="do">## [19] "soil_temperature_max"       "rainfall_min"              </span></span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a><span class="do">## [21] "rainfall_range"             "swi_mean"                  </span></span>
+<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a><span class="do">## [23] "temperature_max"            "solar_rad_mean"            </span></span>
+<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a><span class="do">## [25] "soil_clay"                  "soil_silt"                 </span></span>
+<span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a><span class="do">## [27] "cloud_cover_min"            "swi_range"                 </span></span>
+<span id="cb21-15"><a href="#cb21-15" aria-hidden="true" tabindex="-1"></a><span class="do">## [29] "humidity_range"</span></span></code></pre></div>
 <p>As expected, the restrictive setup resulted in a smaller set of selected predictors. There are no hard rules for <code>max_cor</code> and <code>max_vif</code>, and their selection will depend on the objective of the analysis and the nature of the predictors.</p>
 </div>
 <div class="section level3">
 <h3 id="the-response-argument">The <code>response</code> argument<a class="anchor" aria-label="anchor" href="#the-response-argument"></a>
 </h3>
 <p>The response argument is used to encode categorical variables as numeric. When omitted, the <code><a href="reference/collinear.html">collinear()</a></code> function ignores categorical variables. However, the function <code><a href="reference/cor_select.html">cor_select()</a></code> can help when there is not a suitable <code>response</code> variable in a data frame. This option is discussed at the end of this section.</p>
-<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">selected_predictors_response</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/collinear.html">collinear</a></span><span class="op">(</span></span>
 <span>  df <span class="op">=</span> <span class="va">vi</span>,</span>
 <span>  response <span class="op">=</span> <span class="st">"vi_mean"</span>,</span>
@@ -421,58 +428,58 @@
 <span>  predictors <span class="op">=</span> <span class="va">vi_predictors</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <p>When the argument <code>response</code> is used, the output may contain categorical predictors (tagged with <code>&lt;chr&gt;</code>, from “character” below).</p>
-<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html" class="external-link">glimpse</a></span><span class="op">(</span><span class="va">vi</span><span class="op">[</span>, <span class="va">selected_predictors_response</span><span class="op">]</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb21"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Rows: 30,000</span></span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="do">## Columns: 23</span></span>
-<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="do">## $ country_income             &lt;chr&gt; "1. High income: OECD", "3. Upper middle in…</span></span>
-<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a><span class="do">## $ topo_diversity             &lt;int&gt; 29, 24, 21, 25, 19, 30, 26, 20, 26, 22, 25,…</span></span>
-<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a><span class="do">## $ topo_slope                 &lt;int&gt; 6, 2, 0, 10, 0, 10, 6, 0, 2, 0, 0, 1, 0, 1,…</span></span>
-<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a><span class="do">## $ humidity_range             &lt;dbl&gt; 15.57, 6.03, 14.44, 4.69, 33.18, 5.76, 3.99…</span></span>
-<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a><span class="do">## $ topo_elevation             &lt;int&gt; 1821, 143, 765, 1474, 378, 485, 604, 1159, …</span></span>
-<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a><span class="do">## $ country_gdp                &lt;dbl&gt; 15094000, 7973000, 1300000, 7973000, 15860,…</span></span>
-<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a><span class="do">## $ country_population         &lt;dbl&gt; 313973000, 1338612970, 33487208, 1338612970…</span></span>
-<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a><span class="do">## $ soil_soc                   &lt;dbl&gt; 43.1, 14.6, 36.4, 34.9, 8.1, 20.8, 44.5, 4.…</span></span>
-<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a><span class="do">## $ region                     &lt;chr&gt; "Americas", "Asia", "Americas", "Asia", "Af…</span></span>
-<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a><span class="do">## $ soil_type                  &lt;chr&gt; "Cambisols", "Acrisols", "Luvisols", "Aliso…</span></span>
-<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a><span class="do">## $ soil_clay                  &lt;int&gt; 20, 24, 28, 31, 27, 29, 40, 15, 26, 22, 23,…</span></span>
-<span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a><span class="do">## $ subregion                  &lt;chr&gt; "Northern America", "Eastern Asia", "Northe…</span></span>
-<span id="cb21-15"><a href="#cb21-15" aria-hidden="true" tabindex="-1"></a><span class="do">## $ biogeo_realm               &lt;chr&gt; "Nearctic", "Indomalayan", "Nearctic", "Pal…</span></span>
-<span id="cb21-16"><a href="#cb21-16" aria-hidden="true" tabindex="-1"></a><span class="do">## $ soil_sand                  &lt;int&gt; 41, 39, 27, 29, 48, 33, 30, 78, 23, 64, 54,…</span></span>
-<span id="cb21-17"><a href="#cb21-17" aria-hidden="true" tabindex="-1"></a><span class="do">## $ swi_min                    &lt;dbl&gt; 24.5, 33.3, 42.2, 31.3, 8.3, 28.8, 25.3, 11…</span></span>
-<span id="cb21-18"><a href="#cb21-18" aria-hidden="true" tabindex="-1"></a><span class="do">## $ soil_nitrogen              &lt;dbl&gt; 2.8, 1.3, 2.9, 3.6, 1.2, 1.9, 2.8, 0.6, 3.1…</span></span>
-<span id="cb21-19"><a href="#cb21-19" aria-hidden="true" tabindex="-1"></a><span class="do">## $ swi_range                  &lt;dbl&gt; 38.4, 41.2, 39.7, 49.8, 74.9, 45.0, 30.5, 2…</span></span>
-<span id="cb21-20"><a href="#cb21-20" aria-hidden="true" tabindex="-1"></a><span class="do">## $ cloud_cover_range          &lt;int&gt; 23, 27, 15, 17, 38, 27, 32, 11, 15, 12, 21,…</span></span>
-<span id="cb21-21"><a href="#cb21-21" aria-hidden="true" tabindex="-1"></a><span class="do">## $ rainfall_min               &lt;int&gt; 25, 37, 24, 29, 0, 60, 122, 1, 10, 12, 0, 0…</span></span>
-<span id="cb21-22"><a href="#cb21-22" aria-hidden="true" tabindex="-1"></a><span class="do">## $ growing_season_temperature &lt;dbl&gt; 12.65, 19.35, 11.55, 12.45, 26.45, 17.75, 2…</span></span>
-<span id="cb21-23"><a href="#cb21-23" aria-hidden="true" tabindex="-1"></a><span class="do">## $ solar_rad_max              &lt;dbl&gt; 31.317, 24.498, 25.283, 17.237, 28.038, 22.…</span></span>
-<span id="cb21-24"><a href="#cb21-24" aria-hidden="true" tabindex="-1"></a><span class="do">## $ solar_rad_min              &lt;dbl&gt; 5.209, 13.311, 1.587, 9.642, 19.102, 12.196…</span></span>
-<span id="cb21-25"><a href="#cb21-25" aria-hidden="true" tabindex="-1"></a><span class="do">## $ rainfall_range             &lt;int&gt; 37, 172, 63, 264, 226, 215, 303, 61, 245, 2…</span></span></code></pre></div>
+<div class="sourceCode" id="cb24"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Rows: 30,000</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="do">## Columns: 23</span></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="do">## $ country_income             &lt;chr&gt; "1. High income: OECD", "3. Upper middle in…</span></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a><span class="do">## $ topo_diversity             &lt;int&gt; 29, 24, 21, 25, 19, 30, 26, 20, 26, 22, 25,…</span></span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a><span class="do">## $ topo_slope                 &lt;int&gt; 6, 2, 0, 10, 0, 10, 6, 0, 2, 0, 0, 1, 0, 1,…</span></span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a><span class="do">## $ humidity_range             &lt;dbl&gt; 15.57, 6.03, 14.44, 4.69, 33.18, 5.76, 3.99…</span></span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a><span class="do">## $ topo_elevation             &lt;int&gt; 1821, 143, 765, 1474, 378, 485, 604, 1159, …</span></span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a><span class="do">## $ country_gdp                &lt;dbl&gt; 15094000, 7973000, 1300000, 7973000, 15860,…</span></span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a><span class="do">## $ country_population         &lt;dbl&gt; 313973000, 1338612970, 33487208, 1338612970…</span></span>
+<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a><span class="do">## $ soil_soc                   &lt;dbl&gt; 43.1, 14.6, 36.4, 34.9, 8.1, 20.8, 44.5, 4.…</span></span>
+<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a><span class="do">## $ region                     &lt;chr&gt; "Americas", "Asia", "Americas", "Asia", "Af…</span></span>
+<span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a><span class="do">## $ soil_type                  &lt;chr&gt; "Cambisols", "Acrisols", "Luvisols", "Aliso…</span></span>
+<span id="cb24-13"><a href="#cb24-13" aria-hidden="true" tabindex="-1"></a><span class="do">## $ soil_clay                  &lt;int&gt; 20, 24, 28, 31, 27, 29, 40, 15, 26, 22, 23,…</span></span>
+<span id="cb24-14"><a href="#cb24-14" aria-hidden="true" tabindex="-1"></a><span class="do">## $ subregion                  &lt;chr&gt; "Northern America", "Eastern Asia", "Northe…</span></span>
+<span id="cb24-15"><a href="#cb24-15" aria-hidden="true" tabindex="-1"></a><span class="do">## $ biogeo_realm               &lt;chr&gt; "Nearctic", "Indomalayan", "Nearctic", "Pal…</span></span>
+<span id="cb24-16"><a href="#cb24-16" aria-hidden="true" tabindex="-1"></a><span class="do">## $ soil_sand                  &lt;int&gt; 41, 39, 27, 29, 48, 33, 30, 78, 23, 64, 54,…</span></span>
+<span id="cb24-17"><a href="#cb24-17" aria-hidden="true" tabindex="-1"></a><span class="do">## $ swi_min                    &lt;dbl&gt; 24.5, 33.3, 42.2, 31.3, 8.3, 28.8, 25.3, 11…</span></span>
+<span id="cb24-18"><a href="#cb24-18" aria-hidden="true" tabindex="-1"></a><span class="do">## $ soil_nitrogen              &lt;dbl&gt; 2.8, 1.3, 2.9, 3.6, 1.2, 1.9, 2.8, 0.6, 3.1…</span></span>
+<span id="cb24-19"><a href="#cb24-19" aria-hidden="true" tabindex="-1"></a><span class="do">## $ swi_range                  &lt;dbl&gt; 38.4, 41.2, 39.7, 49.8, 74.9, 45.0, 30.5, 2…</span></span>
+<span id="cb24-20"><a href="#cb24-20" aria-hidden="true" tabindex="-1"></a><span class="do">## $ cloud_cover_range          &lt;int&gt; 23, 27, 15, 17, 38, 27, 32, 11, 15, 12, 21,…</span></span>
+<span id="cb24-21"><a href="#cb24-21" aria-hidden="true" tabindex="-1"></a><span class="do">## $ rainfall_min               &lt;int&gt; 25, 37, 24, 29, 0, 60, 122, 1, 10, 12, 0, 0…</span></span>
+<span id="cb24-22"><a href="#cb24-22" aria-hidden="true" tabindex="-1"></a><span class="do">## $ growing_season_temperature &lt;dbl&gt; 12.65, 19.35, 11.55, 12.45, 26.45, 17.75, 2…</span></span>
+<span id="cb24-23"><a href="#cb24-23" aria-hidden="true" tabindex="-1"></a><span class="do">## $ solar_rad_max              &lt;dbl&gt; 31.317, 24.498, 25.283, 17.237, 28.038, 22.…</span></span>
+<span id="cb24-24"><a href="#cb24-24" aria-hidden="true" tabindex="-1"></a><span class="do">## $ solar_rad_min              &lt;dbl&gt; 5.209, 13.311, 1.587, 9.642, 19.102, 12.196…</span></span>
+<span id="cb24-25"><a href="#cb24-25" aria-hidden="true" tabindex="-1"></a><span class="do">## $ rainfall_range             &lt;int&gt; 37, 172, 63, 264, 226, 215, 303, 61, 245, 2…</span></span></code></pre></div>
 <p>However, when the argument <code>response</code> is ignored, all categorical predictors are ignored.</p>
-<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html" class="external-link">glimpse</a></span><span class="op">(</span><span class="va">vi</span><span class="op">[</span>, <span class="va">selected_predictors_no_response</span><span class="op">]</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb23"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Rows: 30,000</span></span>
-<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="do">## Columns: 18</span></span>
-<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a><span class="do">## $ topo_diversity             &lt;int&gt; 29, 24, 21, 25, 19, 30, 26, 20, 26, 22, 25,…</span></span>
-<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a><span class="do">## $ humidity_range             &lt;dbl&gt; 15.57, 6.03, 14.44, 4.69, 33.18, 5.76, 3.99…</span></span>
-<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a><span class="do">## $ country_population         &lt;dbl&gt; 313973000, 1338612970, 33487208, 1338612970…</span></span>
-<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a><span class="do">## $ country_gdp                &lt;dbl&gt; 15094000, 7973000, 1300000, 7973000, 15860,…</span></span>
-<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a><span class="do">## $ topo_slope                 &lt;int&gt; 6, 2, 0, 10, 0, 10, 6, 0, 2, 0, 0, 1, 0, 1,…</span></span>
-<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a><span class="do">## $ topo_elevation             &lt;int&gt; 1821, 143, 765, 1474, 378, 485, 604, 1159, …</span></span>
-<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a><span class="do">## $ swi_range                  &lt;dbl&gt; 38.4, 41.2, 39.7, 49.8, 74.9, 45.0, 30.5, 2…</span></span>
-<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a><span class="do">## $ soil_soc                   &lt;dbl&gt; 43.1, 14.6, 36.4, 34.9, 8.1, 20.8, 44.5, 4.…</span></span>
-<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a><span class="do">## $ soil_clay                  &lt;int&gt; 20, 24, 28, 31, 27, 29, 40, 15, 26, 22, 23,…</span></span>
-<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a><span class="do">## $ soil_sand                  &lt;int&gt; 41, 39, 27, 29, 48, 33, 30, 78, 23, 64, 54,…</span></span>
-<span id="cb23-13"><a href="#cb23-13" aria-hidden="true" tabindex="-1"></a><span class="do">## $ swi_min                    &lt;dbl&gt; 24.5, 33.3, 42.2, 31.3, 8.3, 28.8, 25.3, 11…</span></span>
-<span id="cb23-14"><a href="#cb23-14" aria-hidden="true" tabindex="-1"></a><span class="do">## $ soil_nitrogen              &lt;dbl&gt; 2.8, 1.3, 2.9, 3.6, 1.2, 1.9, 2.8, 0.6, 3.1…</span></span>
-<span id="cb23-15"><a href="#cb23-15" aria-hidden="true" tabindex="-1"></a><span class="do">## $ cloud_cover_range          &lt;int&gt; 23, 27, 15, 17, 38, 27, 32, 11, 15, 12, 21,…</span></span>
-<span id="cb23-16"><a href="#cb23-16" aria-hidden="true" tabindex="-1"></a><span class="do">## $ growing_season_temperature &lt;dbl&gt; 12.65, 19.35, 11.55, 12.45, 26.45, 17.75, 2…</span></span>
-<span id="cb23-17"><a href="#cb23-17" aria-hidden="true" tabindex="-1"></a><span class="do">## $ rainfall_min               &lt;int&gt; 25, 37, 24, 29, 0, 60, 122, 1, 10, 12, 0, 0…</span></span>
-<span id="cb23-18"><a href="#cb23-18" aria-hidden="true" tabindex="-1"></a><span class="do">## $ solar_rad_max              &lt;dbl&gt; 31.317, 24.498, 25.283, 17.237, 28.038, 22.…</span></span>
-<span id="cb23-19"><a href="#cb23-19" aria-hidden="true" tabindex="-1"></a><span class="do">## $ solar_rad_min              &lt;dbl&gt; 5.209, 13.311, 1.587, 9.642, 19.102, 12.196…</span></span>
-<span id="cb23-20"><a href="#cb23-20" aria-hidden="true" tabindex="-1"></a><span class="do">## $ rainfall_range             &lt;int&gt; 37, 172, 63, 264, 226, 215, 303, 61, 245, 2…</span></span></code></pre></div>
+<div class="sourceCode" id="cb26"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Rows: 30,000</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="do">## Columns: 18</span></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a><span class="do">## $ topo_diversity             &lt;int&gt; 29, 24, 21, 25, 19, 30, 26, 20, 26, 22, 25,…</span></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a><span class="do">## $ humidity_range             &lt;dbl&gt; 15.57, 6.03, 14.44, 4.69, 33.18, 5.76, 3.99…</span></span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a><span class="do">## $ country_population         &lt;dbl&gt; 313973000, 1338612970, 33487208, 1338612970…</span></span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a><span class="do">## $ country_gdp                &lt;dbl&gt; 15094000, 7973000, 1300000, 7973000, 15860,…</span></span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a><span class="do">## $ topo_slope                 &lt;int&gt; 6, 2, 0, 10, 0, 10, 6, 0, 2, 0, 0, 1, 0, 1,…</span></span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a><span class="do">## $ topo_elevation             &lt;int&gt; 1821, 143, 765, 1474, 378, 485, 604, 1159, …</span></span>
+<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a><span class="do">## $ swi_range                  &lt;dbl&gt; 38.4, 41.2, 39.7, 49.8, 74.9, 45.0, 30.5, 2…</span></span>
+<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a><span class="do">## $ soil_soc                   &lt;dbl&gt; 43.1, 14.6, 36.4, 34.9, 8.1, 20.8, 44.5, 4.…</span></span>
+<span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a><span class="do">## $ soil_clay                  &lt;int&gt; 20, 24, 28, 31, 27, 29, 40, 15, 26, 22, 23,…</span></span>
+<span id="cb26-12"><a href="#cb26-12" aria-hidden="true" tabindex="-1"></a><span class="do">## $ soil_sand                  &lt;int&gt; 41, 39, 27, 29, 48, 33, 30, 78, 23, 64, 54,…</span></span>
+<span id="cb26-13"><a href="#cb26-13" aria-hidden="true" tabindex="-1"></a><span class="do">## $ swi_min                    &lt;dbl&gt; 24.5, 33.3, 42.2, 31.3, 8.3, 28.8, 25.3, 11…</span></span>
+<span id="cb26-14"><a href="#cb26-14" aria-hidden="true" tabindex="-1"></a><span class="do">## $ soil_nitrogen              &lt;dbl&gt; 2.8, 1.3, 2.9, 3.6, 1.2, 1.9, 2.8, 0.6, 3.1…</span></span>
+<span id="cb26-15"><a href="#cb26-15" aria-hidden="true" tabindex="-1"></a><span class="do">## $ cloud_cover_range          &lt;int&gt; 23, 27, 15, 17, 38, 27, 32, 11, 15, 12, 21,…</span></span>
+<span id="cb26-16"><a href="#cb26-16" aria-hidden="true" tabindex="-1"></a><span class="do">## $ growing_season_temperature &lt;dbl&gt; 12.65, 19.35, 11.55, 12.45, 26.45, 17.75, 2…</span></span>
+<span id="cb26-17"><a href="#cb26-17" aria-hidden="true" tabindex="-1"></a><span class="do">## $ rainfall_min               &lt;int&gt; 25, 37, 24, 29, 0, 60, 122, 1, 10, 12, 0, 0…</span></span>
+<span id="cb26-18"><a href="#cb26-18" aria-hidden="true" tabindex="-1"></a><span class="do">## $ solar_rad_max              &lt;dbl&gt; 31.317, 24.498, 25.283, 17.237, 28.038, 22.…</span></span>
+<span id="cb26-19"><a href="#cb26-19" aria-hidden="true" tabindex="-1"></a><span class="do">## $ solar_rad_min              &lt;dbl&gt; 5.209, 13.311, 1.587, 9.642, 19.102, 12.196…</span></span>
+<span id="cb26-20"><a href="#cb26-20" aria-hidden="true" tabindex="-1"></a><span class="do">## $ rainfall_range             &lt;int&gt; 37, 172, 63, 264, 226, 215, 303, 61, 245, 2…</span></span></code></pre></div>
 <p>If there are categorical variables in a data frame, but there is no suitable <code>response</code> variable, then the function <code><a href="reference/cor_select.html">cor_select()</a></code> can handle the multicollinearity management via pairwise correlations, but at a MUCH higher computational cost, and with different results, as shown below.</p>
-<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">tictoc</span><span class="fu">::</span><span class="fu">tic</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">selected_predictors_response</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/cor_select.html">cor_select</a></span><span class="op">(</span></span>
 <span>  df <span class="op">=</span> <span class="va">vi</span>,</span>
@@ -480,44 +487,44 @@
 <span>  predictors <span class="op">=</span> <span class="va">vi_predictors</span></span>
 <span><span class="op">)</span></span>
 <span><span class="fu">tictoc</span><span class="fu">::</span><span class="fu">toc</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb25"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="do">## 0.412 sec elapsed</span></span></code></pre></div>
-<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb28"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="do">## 0.674 sec elapsed</span></span></code></pre></div>
+<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">tictoc</span><span class="fu">::</span><span class="fu">tic</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">selected_predictors_no_response</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/cor_select.html">cor_select</a></span><span class="op">(</span></span>
 <span>  df <span class="op">=</span> <span class="va">vi</span>,</span>
 <span>  predictors <span class="op">=</span> <span class="va">vi_predictors</span></span>
 <span><span class="op">)</span></span>
 <span><span class="fu">tictoc</span><span class="fu">::</span><span class="fu">toc</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb27"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="do">## 34.457 sec elapsed</span></span></code></pre></div>
-<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb30"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="do">## 108.86 sec elapsed</span></span></code></pre></div>
+<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">selected_predictors_response</span></span></code></pre></div>
-<div class="sourceCode" id="cb29"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="do">##  [1] "country_population"         "topo_elevation"            </span></span>
-<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="do">##  [3] "country_income"             "country_gdp"               </span></span>
-<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a><span class="do">##  [5] "topo_slope"                 "humidity_range"            </span></span>
-<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a><span class="do">##  [7] "soil_clay"                  "topo_diversity"            </span></span>
-<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a><span class="do">##  [9] "soil_sand"                  "cloud_cover_range"         </span></span>
-<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a><span class="do">## [11] "region"                     "growing_season_temperature"</span></span>
-<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a><span class="do">## [13] "solar_rad_min"              "soil_soc"                  </span></span>
-<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a><span class="do">## [15] "rainfall_min"               "swi_range"                 </span></span>
-<span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a><span class="do">## [17] "soil_nitrogen"              "rainfall_range"            </span></span>
-<span id="cb29-10"><a href="#cb29-10" aria-hidden="true" tabindex="-1"></a><span class="do">## [19] "swi_min"                    "subregion"                 </span></span>
-<span id="cb29-11"><a href="#cb29-11" aria-hidden="true" tabindex="-1"></a><span class="do">## [21] "biogeo_realm"               "cloud_cover_min"           </span></span>
-<span id="cb29-12"><a href="#cb29-12" aria-hidden="true" tabindex="-1"></a><span class="do">## [23] "soil_type"                  "aridity_index"             </span></span>
-<span id="cb29-13"><a href="#cb29-13" aria-hidden="true" tabindex="-1"></a><span class="do">## [25] "solar_rad_max"</span></span></code></pre></div>
-<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb32"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="do">##  [1] "country_population"         "topo_elevation"            </span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a><span class="do">##  [3] "country_income"             "country_gdp"               </span></span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a><span class="do">##  [5] "topo_slope"                 "humidity_range"            </span></span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a><span class="do">##  [7] "soil_clay"                  "topo_diversity"            </span></span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a><span class="do">##  [9] "soil_sand"                  "cloud_cover_range"         </span></span>
+<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a><span class="do">## [11] "region"                     "growing_season_temperature"</span></span>
+<span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a><span class="do">## [13] "solar_rad_min"              "soil_soc"                  </span></span>
+<span id="cb32-8"><a href="#cb32-8" aria-hidden="true" tabindex="-1"></a><span class="do">## [15] "rainfall_min"               "swi_range"                 </span></span>
+<span id="cb32-9"><a href="#cb32-9" aria-hidden="true" tabindex="-1"></a><span class="do">## [17] "soil_nitrogen"              "rainfall_range"            </span></span>
+<span id="cb32-10"><a href="#cb32-10" aria-hidden="true" tabindex="-1"></a><span class="do">## [19] "swi_min"                    "subregion"                 </span></span>
+<span id="cb32-11"><a href="#cb32-11" aria-hidden="true" tabindex="-1"></a><span class="do">## [21] "biogeo_realm"               "cloud_cover_min"           </span></span>
+<span id="cb32-12"><a href="#cb32-12" aria-hidden="true" tabindex="-1"></a><span class="do">## [23] "soil_type"                  "aridity_index"             </span></span>
+<span id="cb32-13"><a href="#cb32-13" aria-hidden="true" tabindex="-1"></a><span class="do">## [25] "solar_rad_max"</span></span></code></pre></div>
+<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">selected_predictors_no_response</span></span></code></pre></div>
-<div class="sourceCode" id="cb31"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="do">##  [1] "topo_elevation"             "topo_slope"                </span></span>
-<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="do">##  [3] "country_population"         "topo_diversity"            </span></span>
-<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a><span class="do">##  [5] "soil_clay"                  "humidity_range"            </span></span>
-<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a><span class="do">##  [7] "soil_sand"                  "country_gdp"               </span></span>
-<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a><span class="do">##  [9] "cloud_cover_range"          "country_income"            </span></span>
-<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a><span class="do">## [11] "rainfall_min"               "soil_soc"                  </span></span>
-<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a><span class="do">## [13] "swi_range"                  "growing_season_temperature"</span></span>
-<span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a><span class="do">## [15] "rainfall_range"             "soil_nitrogen"             </span></span>
-<span id="cb31-9"><a href="#cb31-9" aria-hidden="true" tabindex="-1"></a><span class="do">## [17] "solar_rad_min"              "aridity_index"             </span></span>
-<span id="cb31-10"><a href="#cb31-10" aria-hidden="true" tabindex="-1"></a><span class="do">## [19] "cloud_cover_min"            "temperature_max"           </span></span>
-<span id="cb31-11"><a href="#cb31-11" aria-hidden="true" tabindex="-1"></a><span class="do">## [21] "region"                     "swi_min"                   </span></span>
-<span id="cb31-12"><a href="#cb31-12" aria-hidden="true" tabindex="-1"></a><span class="do">## [23] "solar_rad_max"</span></span></code></pre></div>
+<div class="sourceCode" id="cb34"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="do">##  [1] "topo_elevation"             "topo_slope"                </span></span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a><span class="do">##  [3] "country_population"         "topo_diversity"            </span></span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a><span class="do">##  [5] "soil_clay"                  "humidity_range"            </span></span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a><span class="do">##  [7] "soil_sand"                  "country_gdp"               </span></span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a><span class="do">##  [9] "cloud_cover_range"          "country_income"            </span></span>
+<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a><span class="do">## [11] "rainfall_min"               "soil_soc"                  </span></span>
+<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a><span class="do">## [13] "swi_range"                  "growing_season_temperature"</span></span>
+<span id="cb34-8"><a href="#cb34-8" aria-hidden="true" tabindex="-1"></a><span class="do">## [15] "rainfall_range"             "soil_nitrogen"             </span></span>
+<span id="cb34-9"><a href="#cb34-9" aria-hidden="true" tabindex="-1"></a><span class="do">## [17] "solar_rad_min"              "aridity_index"             </span></span>
+<span id="cb34-10"><a href="#cb34-10" aria-hidden="true" tabindex="-1"></a><span class="do">## [19] "cloud_cover_min"            "temperature_max"           </span></span>
+<span id="cb34-11"><a href="#cb34-11" aria-hidden="true" tabindex="-1"></a><span class="do">## [21] "region"                     "swi_min"                   </span></span>
+<span id="cb34-12"><a href="#cb34-12" aria-hidden="true" tabindex="-1"></a><span class="do">## [23] "solar_rad_max"</span></span></code></pre></div>
 <p>The variable selection results differ because the numeric representations of the categorical variables are rather different between the two options. When no <code>response</code> is provided, the function <code><a href="reference/cor_select.html">cor_select()</a></code> compares categorical predictors against numeric ones by encoding each categorical after each numeric, and compares pairs of categoricals using Cramer’s V, implemented in the function <code><a href="reference/cramer_v.html">cramer_v()</a></code>. Additionally, Cramer’s V values are not directly comparable with Pearson or Spearman correlation scores, and having them together in the same analysis might induce bias during the variable selection. Not using the <code>response</code> argument should always be the last option.</p>
 </div>
 <div class="section level3">
@@ -528,7 +535,7 @@
 <h4 id="manual-preference-order">Manual preference order<a class="anchor" aria-label="anchor" href="#manual-preference-order"></a>
 </h4>
 <p>Let’s start with the former option. Below, the argument <code>preference_order</code> names several predictors that are of importance for a hypothetical analysis. The <code>predictors</code> not in <code>preference_order</code> are ranked by the absolute sum of their correlations with other predictors during the pairwise correlation filtering, and by their VIF during the VIF-based filtering.</p>
-<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">selected_predictors</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/cor_select.html">cor_select</a></span><span class="op">(</span></span>
 <span>  df <span class="op">=</span> <span class="va">vi</span>,</span>
 <span>  response <span class="op">=</span> <span class="st">"vi_mean"</span>,</span>
@@ -541,21 +548,21 @@
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">selected_predictors</span></span></code></pre></div>
-<div class="sourceCode" id="cb33"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="do">##  [1] "soil_temperature_mean" "soil_temperature_max"  "soil_type"            </span></span>
-<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a><span class="do">##  [4] "country_population"    "topo_elevation"        "country_income"       </span></span>
-<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a><span class="do">##  [7] "country_gdp"           "topo_slope"            "humidity_range"       </span></span>
-<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a><span class="do">## [10] "soil_clay"             "topo_diversity"        "soil_sand"            </span></span>
-<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a><span class="do">## [13] "cloud_cover_range"     "region"                "soil_soc"             </span></span>
-<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a><span class="do">## [16] "rainfall_min"          "swi_range"             "soil_nitrogen"        </span></span>
-<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a><span class="do">## [19] "rainfall_range"        "subregion"             "biogeo_realm"         </span></span>
-<span id="cb33-8"><a href="#cb33-8" aria-hidden="true" tabindex="-1"></a><span class="do">## [22] "aridity_index"         "solar_rad_max"</span></span></code></pre></div>
+<div class="sourceCode" id="cb36"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="do">##  [1] "soil_temperature_mean" "soil_temperature_max"  "soil_type"            </span></span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a><span class="do">##  [4] "country_population"    "topo_elevation"        "country_income"       </span></span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a><span class="do">##  [7] "country_gdp"           "topo_slope"            "humidity_range"       </span></span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a><span class="do">## [10] "soil_clay"             "topo_diversity"        "soil_sand"            </span></span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a><span class="do">## [13] "cloud_cover_range"     "region"                "soil_soc"             </span></span>
+<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a><span class="do">## [16] "rainfall_min"          "swi_range"             "soil_nitrogen"        </span></span>
+<span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a><span class="do">## [19] "rainfall_range"        "subregion"             "biogeo_realm"         </span></span>
+<span id="cb36-8"><a href="#cb36-8" aria-hidden="true" tabindex="-1"></a><span class="do">## [22] "aridity_index"         "solar_rad_max"</span></span></code></pre></div>
 <p>Notice that in the output, two of the variables in <code>preference_order</code> are selected (“soil_temperature_mean” and “soil_type”), but one was removed (“soil_temperature_max”). This happens because at some point in the selection, the VIF of “soil_temperature_mean” and “soil_temperature_max” was higher than <code>max_vif</code>, and the one with lower preference was removed.</p>
 </div>
 <div class="section level4">
 <h4 id="quantitative-preference-order">Quantitative preference order<a class="anchor" aria-label="anchor" href="#quantitative-preference-order"></a>
 </h4>
 <p>The function <code><a href="reference/preference_order.html">preference_order()</a></code> requires the <code>response</code> argument, and takes a function <code>f</code> that returns a value of association between the response and any predictor. This value is then located in the “preference” column of the function’s output.</p>
-<div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">preference_rsquared</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/preference_order.html">preference_order</a></span><span class="op">(</span></span>
 <span>  df <span class="op">=</span> <span class="va">vi</span>,</span>
 <span>  response <span class="op">=</span> <span class="st">"vi_mean"</span>,</span>
@@ -565,70 +572,70 @@
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">preference_rsquared</span></span></code></pre></div>
-<div class="sourceCode" id="cb35"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="do">##                     predictor   preference</span></span>
-<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a><span class="do">## 1            biogeo_ecoregion 0.8971347093</span></span>
-<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a><span class="do">## 2       growing_season_length 0.8076216576</span></span>
-<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a><span class="do">## 3                 koppen_zone 0.8050280970</span></span>
-<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a><span class="do">## 4          koppen_description 0.7903458680</span></span>
-<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a><span class="do">## 5                     soil_ph 0.7664428862</span></span>
-<span id="cb35-7"><a href="#cb35-7" aria-hidden="true" tabindex="-1"></a><span class="do">## 6                    swi_mean 0.7286901614</span></span>
-<span id="cb35-8"><a href="#cb35-8" aria-hidden="true" tabindex="-1"></a><span class="do">## 7               humidity_mean 0.7141389404</span></span>
-<span id="cb35-9"><a href="#cb35-9" aria-hidden="true" tabindex="-1"></a><span class="do">## 8                koppen_group 0.6996959734</span></span>
-<span id="cb35-10"><a href="#cb35-10" aria-hidden="true" tabindex="-1"></a><span class="do">## 9                biogeo_biome 0.6515724588</span></span>
-<span id="cb35-11"><a href="#cb35-11" aria-hidden="true" tabindex="-1"></a><span class="do">## 10               country_name 0.6448346803</span></span>
-<span id="cb35-12"><a href="#cb35-12" aria-hidden="true" tabindex="-1"></a><span class="do">## 11           cloud_cover_mean 0.6338773126</span></span>
-<span id="cb35-13"><a href="#cb35-13" aria-hidden="true" tabindex="-1"></a><span class="do">## 12                  soil_type 0.6318025761</span></span>
-<span id="cb35-14"><a href="#cb35-14" aria-hidden="true" tabindex="-1"></a><span class="do">## 13              rainfall_mean 0.6005761078</span></span>
-<span id="cb35-15"><a href="#cb35-15" aria-hidden="true" tabindex="-1"></a><span class="do">## 14               humidity_max 0.5876622545</span></span>
-<span id="cb35-16"><a href="#cb35-16" aria-hidden="true" tabindex="-1"></a><span class="do">## 15       soil_temperature_max 0.5827628810</span></span>
-<span id="cb35-17"><a href="#cb35-17" aria-hidden="true" tabindex="-1"></a><span class="do">## 16                    swi_max 0.5813558512</span></span>
-<span id="cb35-18"><a href="#cb35-18" aria-hidden="true" tabindex="-1"></a><span class="do">## 17            cloud_cover_max 0.5758002449</span></span>
-<span id="cb35-19"><a href="#cb35-19" aria-hidden="true" tabindex="-1"></a><span class="do">## 18               humidity_min 0.5705720164</span></span>
-<span id="cb35-20"><a href="#cb35-20" aria-hidden="true" tabindex="-1"></a><span class="do">## 19    growing_season_rainfall 0.5697006759</span></span>
-<span id="cb35-21"><a href="#cb35-21" aria-hidden="true" tabindex="-1"></a><span class="do">## 20     soil_temperature_range 0.5523074848</span></span>
-<span id="cb35-22"><a href="#cb35-22" aria-hidden="true" tabindex="-1"></a><span class="do">## 21               biogeo_realm 0.5031101984</span></span>
-<span id="cb35-23"><a href="#cb35-23" aria-hidden="true" tabindex="-1"></a><span class="do">## 22              solar_rad_max 0.4905225950</span></span>
-<span id="cb35-24"><a href="#cb35-24" aria-hidden="true" tabindex="-1"></a><span class="do">## 23     evapotranspiration_max 0.4814731607</span></span>
-<span id="cb35-25"><a href="#cb35-25" aria-hidden="true" tabindex="-1"></a><span class="do">## 24               rainfall_max 0.4783927311</span></span>
-<span id="cb35-26"><a href="#cb35-26" aria-hidden="true" tabindex="-1"></a><span class="do">## 25              aridity_index 0.4506424015</span></span>
-<span id="cb35-27"><a href="#cb35-27" aria-hidden="true" tabindex="-1"></a><span class="do">## 26                  subregion 0.4469207404</span></span>
-<span id="cb35-28"><a href="#cb35-28" aria-hidden="true" tabindex="-1"></a><span class="do">## 27                  swi_range 0.4217411381</span></span>
-<span id="cb35-29"><a href="#cb35-29" aria-hidden="true" tabindex="-1"></a><span class="do">## 28            cloud_cover_min 0.4135724066</span></span>
-<span id="cb35-30"><a href="#cb35-30" aria-hidden="true" tabindex="-1"></a><span class="do">## 29   evapotranspiration_range 0.4042241481</span></span>
-<span id="cb35-31"><a href="#cb35-31" aria-hidden="true" tabindex="-1"></a><span class="do">## 30          temperature_range 0.3753489250</span></span>
-<span id="cb35-32"><a href="#cb35-32" aria-hidden="true" tabindex="-1"></a><span class="do">## 31             rainfall_range 0.3545446680</span></span>
-<span id="cb35-33"><a href="#cb35-33" aria-hidden="true" tabindex="-1"></a><span class="do">## 32    temperature_seasonality 0.2499469281</span></span>
-<span id="cb35-34"><a href="#cb35-34" aria-hidden="true" tabindex="-1"></a><span class="do">## 33               rainfall_min 0.2484813976</span></span>
-<span id="cb35-35"><a href="#cb35-35" aria-hidden="true" tabindex="-1"></a><span class="do">## 34                    swi_min 0.2406964836</span></span>
-<span id="cb35-36"><a href="#cb35-36" aria-hidden="true" tabindex="-1"></a><span class="do">## 35             solar_rad_mean 0.2140860965</span></span>
-<span id="cb35-37"><a href="#cb35-37" aria-hidden="true" tabindex="-1"></a><span class="do">## 36              soil_nitrogen 0.1872886789</span></span>
-<span id="cb35-38"><a href="#cb35-38" aria-hidden="true" tabindex="-1"></a><span class="do">## 37                  continent 0.1818717607</span></span>
-<span id="cb35-39"><a href="#cb35-39" aria-hidden="true" tabindex="-1"></a><span class="do">## 38            temperature_max 0.1589418736</span></span>
-<span id="cb35-40"><a href="#cb35-40" aria-hidden="true" tabindex="-1"></a><span class="do">## 39                     region 0.1505256024</span></span>
-<span id="cb35-41"><a href="#cb35-41" aria-hidden="true" tabindex="-1"></a><span class="do">## 40                   soil_soc 0.1493958026</span></span>
-<span id="cb35-42"><a href="#cb35-42" aria-hidden="true" tabindex="-1"></a><span class="do">## 41    evapotranspiration_mean 0.1455828419</span></span>
-<span id="cb35-43"><a href="#cb35-43" aria-hidden="true" tabindex="-1"></a><span class="do">## 42            solar_rad_range 0.1300751363</span></span>
-<span id="cb35-44"><a href="#cb35-44" aria-hidden="true" tabindex="-1"></a><span class="do">## 43            temperature_min 0.1222051434</span></span>
-<span id="cb35-45"><a href="#cb35-45" aria-hidden="true" tabindex="-1"></a><span class="do">## 44          cloud_cover_range 0.1216812855</span></span>
-<span id="cb35-46"><a href="#cb35-46" aria-hidden="true" tabindex="-1"></a><span class="do">## 45       soil_temperature_min 0.1018471531</span></span>
-<span id="cb35-47"><a href="#cb35-47" aria-hidden="true" tabindex="-1"></a><span class="do">## 46             topo_diversity 0.0925948262</span></span>
-<span id="cb35-48"><a href="#cb35-48" aria-hidden="true" tabindex="-1"></a><span class="do">## 47                  soil_clay 0.0769366113</span></span>
-<span id="cb35-49"><a href="#cb35-49" aria-hidden="true" tabindex="-1"></a><span class="do">## 48             humidity_range 0.0575393339</span></span>
-<span id="cb35-50"><a href="#cb35-50" aria-hidden="true" tabindex="-1"></a><span class="do">## 49             country_income 0.0489946403</span></span>
-<span id="cb35-51"><a href="#cb35-51" aria-hidden="true" tabindex="-1"></a><span class="do">## 50                  soil_sand 0.0427943817</span></span>
-<span id="cb35-52"><a href="#cb35-52" aria-hidden="true" tabindex="-1"></a><span class="do">## 51             topo_elevation 0.0424759731</span></span>
-<span id="cb35-53"><a href="#cb35-53" aria-hidden="true" tabindex="-1"></a><span class="do">## 52 growing_season_temperature 0.0239161476</span></span>
-<span id="cb35-54"><a href="#cb35-54" aria-hidden="true" tabindex="-1"></a><span class="do">## 53                 topo_slope 0.0203697134</span></span>
-<span id="cb35-55"><a href="#cb35-55" aria-hidden="true" tabindex="-1"></a><span class="do">## 54      soil_temperature_mean 0.0170527033</span></span>
-<span id="cb35-56"><a href="#cb35-56" aria-hidden="true" tabindex="-1"></a><span class="do">## 55           temperature_mean 0.0067479780</span></span>
-<span id="cb35-57"><a href="#cb35-57" aria-hidden="true" tabindex="-1"></a><span class="do">## 56                  soil_silt 0.0059316757</span></span>
-<span id="cb35-58"><a href="#cb35-58" aria-hidden="true" tabindex="-1"></a><span class="do">## 57        growing_degree_days 0.0047849144</span></span>
-<span id="cb35-59"><a href="#cb35-59" aria-hidden="true" tabindex="-1"></a><span class="do">## 58     evapotranspiration_min 0.0009965488</span></span>
-<span id="cb35-60"><a href="#cb35-60" aria-hidden="true" tabindex="-1"></a><span class="do">## 59                country_gdp 0.0008850479</span></span>
-<span id="cb35-61"><a href="#cb35-61" aria-hidden="true" tabindex="-1"></a><span class="do">## 60              solar_rad_min 0.0005751350</span></span>
-<span id="cb35-62"><a href="#cb35-62" aria-hidden="true" tabindex="-1"></a><span class="do">## 61         country_population 0.0002513147</span></span></code></pre></div>
+<div class="sourceCode" id="cb38"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="do">##                     predictor   preference</span></span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a><span class="do">## 1            biogeo_ecoregion 0.8971347093</span></span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a><span class="do">## 2       growing_season_length 0.8076216576</span></span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a><span class="do">## 3                 koppen_zone 0.8050280970</span></span>
+<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a><span class="do">## 4          koppen_description 0.7903458680</span></span>
+<span id="cb38-6"><a href="#cb38-6" aria-hidden="true" tabindex="-1"></a><span class="do">## 5                     soil_ph 0.7664428862</span></span>
+<span id="cb38-7"><a href="#cb38-7" aria-hidden="true" tabindex="-1"></a><span class="do">## 6                    swi_mean 0.7286901614</span></span>
+<span id="cb38-8"><a href="#cb38-8" aria-hidden="true" tabindex="-1"></a><span class="do">## 7               humidity_mean 0.7141389404</span></span>
+<span id="cb38-9"><a href="#cb38-9" aria-hidden="true" tabindex="-1"></a><span class="do">## 8                koppen_group 0.6996959734</span></span>
+<span id="cb38-10"><a href="#cb38-10" aria-hidden="true" tabindex="-1"></a><span class="do">## 9                biogeo_biome 0.6515724588</span></span>
+<span id="cb38-11"><a href="#cb38-11" aria-hidden="true" tabindex="-1"></a><span class="do">## 10               country_name 0.6448346803</span></span>
+<span id="cb38-12"><a href="#cb38-12" aria-hidden="true" tabindex="-1"></a><span class="do">## 11           cloud_cover_mean 0.6338773126</span></span>
+<span id="cb38-13"><a href="#cb38-13" aria-hidden="true" tabindex="-1"></a><span class="do">## 12                  soil_type 0.6318025761</span></span>
+<span id="cb38-14"><a href="#cb38-14" aria-hidden="true" tabindex="-1"></a><span class="do">## 13              rainfall_mean 0.6005761078</span></span>
+<span id="cb38-15"><a href="#cb38-15" aria-hidden="true" tabindex="-1"></a><span class="do">## 14               humidity_max 0.5876622545</span></span>
+<span id="cb38-16"><a href="#cb38-16" aria-hidden="true" tabindex="-1"></a><span class="do">## 15       soil_temperature_max 0.5827628810</span></span>
+<span id="cb38-17"><a href="#cb38-17" aria-hidden="true" tabindex="-1"></a><span class="do">## 16                    swi_max 0.5813558512</span></span>
+<span id="cb38-18"><a href="#cb38-18" aria-hidden="true" tabindex="-1"></a><span class="do">## 17            cloud_cover_max 0.5758002449</span></span>
+<span id="cb38-19"><a href="#cb38-19" aria-hidden="true" tabindex="-1"></a><span class="do">## 18               humidity_min 0.5705720164</span></span>
+<span id="cb38-20"><a href="#cb38-20" aria-hidden="true" tabindex="-1"></a><span class="do">## 19    growing_season_rainfall 0.5697006759</span></span>
+<span id="cb38-21"><a href="#cb38-21" aria-hidden="true" tabindex="-1"></a><span class="do">## 20     soil_temperature_range 0.5523074848</span></span>
+<span id="cb38-22"><a href="#cb38-22" aria-hidden="true" tabindex="-1"></a><span class="do">## 21               biogeo_realm 0.5031101984</span></span>
+<span id="cb38-23"><a href="#cb38-23" aria-hidden="true" tabindex="-1"></a><span class="do">## 22              solar_rad_max 0.4905225950</span></span>
+<span id="cb38-24"><a href="#cb38-24" aria-hidden="true" tabindex="-1"></a><span class="do">## 23     evapotranspiration_max 0.4814731607</span></span>
+<span id="cb38-25"><a href="#cb38-25" aria-hidden="true" tabindex="-1"></a><span class="do">## 24               rainfall_max 0.4783927311</span></span>
+<span id="cb38-26"><a href="#cb38-26" aria-hidden="true" tabindex="-1"></a><span class="do">## 25              aridity_index 0.4506424015</span></span>
+<span id="cb38-27"><a href="#cb38-27" aria-hidden="true" tabindex="-1"></a><span class="do">## 26                  subregion 0.4469207404</span></span>
+<span id="cb38-28"><a href="#cb38-28" aria-hidden="true" tabindex="-1"></a><span class="do">## 27                  swi_range 0.4217411381</span></span>
+<span id="cb38-29"><a href="#cb38-29" aria-hidden="true" tabindex="-1"></a><span class="do">## 28            cloud_cover_min 0.4135724066</span></span>
+<span id="cb38-30"><a href="#cb38-30" aria-hidden="true" tabindex="-1"></a><span class="do">## 29   evapotranspiration_range 0.4042241481</span></span>
+<span id="cb38-31"><a href="#cb38-31" aria-hidden="true" tabindex="-1"></a><span class="do">## 30          temperature_range 0.3753489250</span></span>
+<span id="cb38-32"><a href="#cb38-32" aria-hidden="true" tabindex="-1"></a><span class="do">## 31             rainfall_range 0.3545446680</span></span>
+<span id="cb38-33"><a href="#cb38-33" aria-hidden="true" tabindex="-1"></a><span class="do">## 32    temperature_seasonality 0.2499469281</span></span>
+<span id="cb38-34"><a href="#cb38-34" aria-hidden="true" tabindex="-1"></a><span class="do">## 33               rainfall_min 0.2484813976</span></span>
+<span id="cb38-35"><a href="#cb38-35" aria-hidden="true" tabindex="-1"></a><span class="do">## 34                    swi_min 0.2406964836</span></span>
+<span id="cb38-36"><a href="#cb38-36" aria-hidden="true" tabindex="-1"></a><span class="do">## 35             solar_rad_mean 0.2140860965</span></span>
+<span id="cb38-37"><a href="#cb38-37" aria-hidden="true" tabindex="-1"></a><span class="do">## 36              soil_nitrogen 0.1872886789</span></span>
+<span id="cb38-38"><a href="#cb38-38" aria-hidden="true" tabindex="-1"></a><span class="do">## 37                  continent 0.1818717607</span></span>
+<span id="cb38-39"><a href="#cb38-39" aria-hidden="true" tabindex="-1"></a><span class="do">## 38            temperature_max 0.1589418736</span></span>
+<span id="cb38-40"><a href="#cb38-40" aria-hidden="true" tabindex="-1"></a><span class="do">## 39                     region 0.1505256024</span></span>
+<span id="cb38-41"><a href="#cb38-41" aria-hidden="true" tabindex="-1"></a><span class="do">## 40                   soil_soc 0.1493958026</span></span>
+<span id="cb38-42"><a href="#cb38-42" aria-hidden="true" tabindex="-1"></a><span class="do">## 41    evapotranspiration_mean 0.1455828419</span></span>
+<span id="cb38-43"><a href="#cb38-43" aria-hidden="true" tabindex="-1"></a><span class="do">## 42            solar_rad_range 0.1300751363</span></span>
+<span id="cb38-44"><a href="#cb38-44" aria-hidden="true" tabindex="-1"></a><span class="do">## 43            temperature_min 0.1222051434</span></span>
+<span id="cb38-45"><a href="#cb38-45" aria-hidden="true" tabindex="-1"></a><span class="do">## 44          cloud_cover_range 0.1216812855</span></span>
+<span id="cb38-46"><a href="#cb38-46" aria-hidden="true" tabindex="-1"></a><span class="do">## 45       soil_temperature_min 0.1018471531</span></span>
+<span id="cb38-47"><a href="#cb38-47" aria-hidden="true" tabindex="-1"></a><span class="do">## 46             topo_diversity 0.0925948262</span></span>
+<span id="cb38-48"><a href="#cb38-48" aria-hidden="true" tabindex="-1"></a><span class="do">## 47                  soil_clay 0.0769366113</span></span>
+<span id="cb38-49"><a href="#cb38-49" aria-hidden="true" tabindex="-1"></a><span class="do">## 48             humidity_range 0.0575393339</span></span>
+<span id="cb38-50"><a href="#cb38-50" aria-hidden="true" tabindex="-1"></a><span class="do">## 49             country_income 0.0489946403</span></span>
+<span id="cb38-51"><a href="#cb38-51" aria-hidden="true" tabindex="-1"></a><span class="do">## 50                  soil_sand 0.0427943817</span></span>
+<span id="cb38-52"><a href="#cb38-52" aria-hidden="true" tabindex="-1"></a><span class="do">## 51             topo_elevation 0.0424759731</span></span>
+<span id="cb38-53"><a href="#cb38-53" aria-hidden="true" tabindex="-1"></a><span class="do">## 52 growing_season_temperature 0.0239161476</span></span>
+<span id="cb38-54"><a href="#cb38-54" aria-hidden="true" tabindex="-1"></a><span class="do">## 53                 topo_slope 0.0203697134</span></span>
+<span id="cb38-55"><a href="#cb38-55" aria-hidden="true" tabindex="-1"></a><span class="do">## 54      soil_temperature_mean 0.0170527033</span></span>
+<span id="cb38-56"><a href="#cb38-56" aria-hidden="true" tabindex="-1"></a><span class="do">## 55           temperature_mean 0.0067479780</span></span>
+<span id="cb38-57"><a href="#cb38-57" aria-hidden="true" tabindex="-1"></a><span class="do">## 56                  soil_silt 0.0059316757</span></span>
+<span id="cb38-58"><a href="#cb38-58" aria-hidden="true" tabindex="-1"></a><span class="do">## 57        growing_degree_days 0.0047849144</span></span>
+<span id="cb38-59"><a href="#cb38-59" aria-hidden="true" tabindex="-1"></a><span class="do">## 58     evapotranspiration_min 0.0009965488</span></span>
+<span id="cb38-60"><a href="#cb38-60" aria-hidden="true" tabindex="-1"></a><span class="do">## 59                country_gdp 0.0008850479</span></span>
+<span id="cb38-61"><a href="#cb38-61" aria-hidden="true" tabindex="-1"></a><span class="do">## 60              solar_rad_min 0.0005751350</span></span>
+<span id="cb38-62"><a href="#cb38-62" aria-hidden="true" tabindex="-1"></a><span class="do">## 61         country_population 0.0002513147</span></span></code></pre></div>
 <p>The result of <code><a href="reference/preference_order.html">preference_order()</a></code> can be plugged right away into the <code>preference_order</code> argument of collinear.</p>
-<div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">selected_predictors</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/collinear.html">collinear</a></span><span class="op">(</span></span>
 <span>  df <span class="op">=</span> <span class="va">vi</span>,</span>
 <span>  response <span class="op">=</span> <span class="st">"vi_mean"</span>,</span>
@@ -636,21 +643,21 @@
 <span>  preference_order <span class="op">=</span> <span class="va">preference_rsquared</span></span>
 <span><span class="op">)</span></span>
 <span><span class="va">selected_predictors</span></span></code></pre></div>
-<div class="sourceCode" id="cb37"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="do">##  [1] "biogeo_ecoregion"       "soil_temperature_range" "rainfall_min"          </span></span>
-<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a><span class="do">##  [4] "solar_rad_mean"         "soil_nitrogen"          "continent"             </span></span>
-<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a><span class="do">##  [7] "soil_soc"               "cloud_cover_range"      "topo_diversity"        </span></span>
-<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a><span class="do">## [10] "soil_clay"              "humidity_range"         "country_income"        </span></span>
-<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a><span class="do">## [13] "soil_sand"              "topo_elevation"         "topo_slope"            </span></span>
-<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a><span class="do">## [16] "country_gdp"            "country_population"</span></span></code></pre></div>
+<div class="sourceCode" id="cb40"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="do">##  [1] "biogeo_ecoregion"       "soil_temperature_range" "rainfall_min"          </span></span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a><span class="do">##  [4] "solar_rad_mean"         "soil_nitrogen"          "continent"             </span></span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a><span class="do">##  [7] "soil_soc"               "cloud_cover_range"      "topo_diversity"        </span></span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a><span class="do">## [10] "soil_clay"              "humidity_range"         "country_income"        </span></span>
+<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a><span class="do">## [13] "soil_sand"              "topo_elevation"         "topo_slope"            </span></span>
+<span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a><span class="do">## [16] "country_gdp"            "country_population"</span></span></code></pre></div>
 <p>This variable selection satisfies three conditions at once: maximum correlation between each predictor and the response, maximum pairwise correlation, and maximum VIF.</p>
 <p>The <code>f</code> argument used by default is the function <code><a href="reference/f_rsquared.html">f_rsquared()</a></code>, that returns the R-squared between the response and any predictor.</p>
-<div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb41"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/f_rsquared.html">f_rsquared</a></span><span class="op">(</span></span>
 <span>  x <span class="op">=</span> <span class="st">"growing_season_length"</span>,</span>
 <span>  y <span class="op">=</span> <span class="st">"vi_mean"</span>,</span>
 <span>  df <span class="op">=</span> <span class="va">vi</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb39"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] 0.8076217</span></span></code></pre></div>
+<div class="sourceCode" id="cb42"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] 0.8076217</span></span></code></pre></div>
 <p>There are two other <code>f</code> functions implemented:</p>
 <ul>
 <li>
@@ -669,7 +676,7 @@
 <a class="anchor" aria-label="anchor" href="#cor_select-and-vif_select"></a>
 </h2>
 <p>The functions <code><a href="reference/cor_select.html">cor_select()</a></code> and <code><a href="reference/vif_select.html">vif_select()</a></code>, called within <code><a href="reference/collinear.html">collinear()</a></code>, perform the pairwise correlation filtering, and the VIF-based filtering. The main difference between them is that <code><a href="reference/cor_select.html">cor_select()</a></code> can handle categorical predictors even when the <code>response</code> is omitted, while <code><a href="reference/vif_select.html">vif_select()</a></code> ignores them entirely in such case.</p>
-<div class="sourceCode" id="cb40"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb43"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">selected_predictors_cor</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/cor_select.html">cor_select</a></span><span class="op">(</span></span>
 <span>  df <span class="op">=</span> <span class="va">vi</span>,</span>
 <span>  response <span class="op">=</span> <span class="st">"vi_mean"</span>,</span>
@@ -683,22 +690,22 @@
 <span>  predictors <span class="op">=</span> <span class="va">vi_predictors</span>,</span>
 <span>  preference_order <span class="op">=</span> <span class="va">preference_rsquared</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb41"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb44"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">selected_predictors_cor</span></span></code></pre></div>
-<div class="sourceCode" id="cb42"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="do">##  [1] "biogeo_ecoregion"       "soil_temperature_range" "rainfall_min"          </span></span>
-<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a><span class="do">##  [4] "solar_rad_mean"         "soil_nitrogen"          "continent"             </span></span>
-<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a><span class="do">##  [7] "soil_soc"               "cloud_cover_range"      "topo_diversity"        </span></span>
-<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a><span class="do">## [10] "soil_clay"              "humidity_range"         "country_income"        </span></span>
-<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a><span class="do">## [13] "soil_sand"              "topo_elevation"         "topo_slope"            </span></span>
-<span id="cb42-6"><a href="#cb42-6" aria-hidden="true" tabindex="-1"></a><span class="do">## [16] "country_gdp"            "country_population"</span></span></code></pre></div>
-<div class="sourceCode" id="cb43"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb45"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="do">##  [1] "biogeo_ecoregion"       "soil_temperature_range" "rainfall_min"          </span></span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a><span class="do">##  [4] "solar_rad_mean"         "soil_nitrogen"          "continent"             </span></span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a><span class="do">##  [7] "soil_soc"               "cloud_cover_range"      "topo_diversity"        </span></span>
+<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a><span class="do">## [10] "soil_clay"              "humidity_range"         "country_income"        </span></span>
+<span id="cb45-5"><a href="#cb45-5" aria-hidden="true" tabindex="-1"></a><span class="do">## [13] "soil_sand"              "topo_elevation"         "topo_slope"            </span></span>
+<span id="cb45-6"><a href="#cb45-6" aria-hidden="true" tabindex="-1"></a><span class="do">## [16] "country_gdp"            "country_population"</span></span></code></pre></div>
+<div class="sourceCode" id="cb46"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">selected_predictors_vif</span></span></code></pre></div>
-<div class="sourceCode" id="cb44"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="do">##  [1] "biogeo_ecoregion"   "soil_type"          "rainfall_mean"     </span></span>
-<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a><span class="do">##  [4] "biogeo_realm"       "solar_rad_max"      "subregion"         </span></span>
-<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a><span class="do">##  [7] "soil_nitrogen"      "continent"          "soil_soc"          </span></span>
-<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a><span class="do">## [10] "topo_diversity"     "soil_clay"          "country_income"    </span></span>
-<span id="cb44-5"><a href="#cb44-5" aria-hidden="true" tabindex="-1"></a><span class="do">## [13] "soil_sand"          "topo_slope"         "country_gdp"       </span></span>
-<span id="cb44-6"><a href="#cb44-6" aria-hidden="true" tabindex="-1"></a><span class="do">## [16] "country_population"</span></span></code></pre></div>
+<div class="sourceCode" id="cb47"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="do">##  [1] "biogeo_ecoregion"   "soil_type"          "rainfall_mean"     </span></span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a><span class="do">##  [4] "biogeo_realm"       "solar_rad_max"      "subregion"         </span></span>
+<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a><span class="do">##  [7] "soil_nitrogen"      "continent"          "soil_soc"          </span></span>
+<span id="cb47-4"><a href="#cb47-4" aria-hidden="true" tabindex="-1"></a><span class="do">## [10] "topo_diversity"     "soil_clay"          "country_income"    </span></span>
+<span id="cb47-5"><a href="#cb47-5" aria-hidden="true" tabindex="-1"></a><span class="do">## [13] "soil_sand"          "topo_slope"         "country_gdp"       </span></span>
+<span id="cb47-6"><a href="#cb47-6" aria-hidden="true" tabindex="-1"></a><span class="do">## [16] "country_population"</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="target_encoding_lab">
@@ -713,7 +720,7 @@
 </ul>
 <p>The method “mean” is used as default throughout all functions in the package, but can be changed via the argument <code>encoding_method</code>.</p>
 <p>Below we use all methods to generate different numeric encodings for the categorical variable “koppen_zone”.</p>
-<div class="sourceCode" id="cb45"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb48"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/target_encoding_lab.html">target_encoding_lab</a></span><span class="op">(</span></span>
 <span>  df <span class="op">=</span> <span class="va">vi</span>,</span>
 <span>  response <span class="op">=</span> <span class="st">"vi_mean"</span>,</span>
@@ -729,30 +736,30 @@
 <span>  white_noise <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0.01</span>, <span class="fl">0.1</span><span class="op">)</span>,</span>
 <span>  verbose <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb46"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Encoding the variables:</span></span>
-<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a><span class="do">## koppen_zone</span></span>
-<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a><span class="do">## New encoded predictor: 'koppen_zone__encoded_rank'</span></span>
-<span id="cb46-5"><a href="#cb46-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb46-6"><a href="#cb46-6" aria-hidden="true" tabindex="-1"></a><span class="do">## New encoded predictor: 'koppen_zone__encoded_mean'</span></span>
-<span id="cb46-7"><a href="#cb46-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb46-8"><a href="#cb46-8" aria-hidden="true" tabindex="-1"></a><span class="do">## New encoded predictor: 'koppen_zone__encoded_loo'</span></span>
-<span id="cb46-9"><a href="#cb46-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb46-10"><a href="#cb46-10" aria-hidden="true" tabindex="-1"></a><span class="do">## New encoded predictor: 'koppen_zone__encoded_mean__white_noise_0.01'</span></span>
-<span id="cb46-11"><a href="#cb46-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb46-12"><a href="#cb46-12" aria-hidden="true" tabindex="-1"></a><span class="do">## New encoded predictor: 'koppen_zone__encoded_loo__white_noise_0.01'</span></span>
-<span id="cb46-13"><a href="#cb46-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb46-14"><a href="#cb46-14" aria-hidden="true" tabindex="-1"></a><span class="do">## New encoded predictor: 'koppen_zone__encoded_mean__white_noise_0.1'</span></span>
-<span id="cb46-15"><a href="#cb46-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb46-16"><a href="#cb46-16" aria-hidden="true" tabindex="-1"></a><span class="do">## New encoded predictor: 'koppen_zone__encoded_loo__white_noise_0.1'</span></span>
-<span id="cb46-17"><a href="#cb46-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb46-18"><a href="#cb46-18" aria-hidden="true" tabindex="-1"></a><span class="do">## New encoded predictor: 'koppen_zone__encoded_rnorm'</span></span>
-<span id="cb46-19"><a href="#cb46-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb46-20"><a href="#cb46-20" aria-hidden="true" tabindex="-1"></a><span class="do">## New encoded predictor: 'koppen_zone__encoded_rnorm__sd_multiplier_0.01'</span></span>
-<span id="cb46-21"><a href="#cb46-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb46-22"><a href="#cb46-22" aria-hidden="true" tabindex="-1"></a><span class="do">## New encoded predictor: 'koppen_zone__encoded_rnorm__sd_multiplier_0.1'</span></span></code></pre></div>
+<div class="sourceCode" id="cb49"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Encoding the variables:</span></span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a><span class="do">## koppen_zone</span></span>
+<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-4"><a href="#cb49-4" aria-hidden="true" tabindex="-1"></a><span class="do">## New encoded predictor: 'koppen_zone__encoded_rank'</span></span>
+<span id="cb49-5"><a href="#cb49-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-6"><a href="#cb49-6" aria-hidden="true" tabindex="-1"></a><span class="do">## New encoded predictor: 'koppen_zone__encoded_mean'</span></span>
+<span id="cb49-7"><a href="#cb49-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-8"><a href="#cb49-8" aria-hidden="true" tabindex="-1"></a><span class="do">## New encoded predictor: 'koppen_zone__encoded_loo'</span></span>
+<span id="cb49-9"><a href="#cb49-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-10"><a href="#cb49-10" aria-hidden="true" tabindex="-1"></a><span class="do">## New encoded predictor: 'koppen_zone__encoded_mean__white_noise_0.01'</span></span>
+<span id="cb49-11"><a href="#cb49-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-12"><a href="#cb49-12" aria-hidden="true" tabindex="-1"></a><span class="do">## New encoded predictor: 'koppen_zone__encoded_loo__white_noise_0.01'</span></span>
+<span id="cb49-13"><a href="#cb49-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-14"><a href="#cb49-14" aria-hidden="true" tabindex="-1"></a><span class="do">## New encoded predictor: 'koppen_zone__encoded_mean__white_noise_0.1'</span></span>
+<span id="cb49-15"><a href="#cb49-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-16"><a href="#cb49-16" aria-hidden="true" tabindex="-1"></a><span class="do">## New encoded predictor: 'koppen_zone__encoded_loo__white_noise_0.1'</span></span>
+<span id="cb49-17"><a href="#cb49-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-18"><a href="#cb49-18" aria-hidden="true" tabindex="-1"></a><span class="do">## New encoded predictor: 'koppen_zone__encoded_rnorm'</span></span>
+<span id="cb49-19"><a href="#cb49-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-20"><a href="#cb49-20" aria-hidden="true" tabindex="-1"></a><span class="do">## New encoded predictor: 'koppen_zone__encoded_rnorm__sd_multiplier_0.01'</span></span>
+<span id="cb49-21"><a href="#cb49-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-22"><a href="#cb49-22" aria-hidden="true" tabindex="-1"></a><span class="do">## New encoded predictor: 'koppen_zone__encoded_rnorm__sd_multiplier_0.1'</span></span></code></pre></div>
 <p>The relationship between these encoded versions of “koppen_zone” and the response are shown below.</p>
-<div class="sourceCode" id="cb47"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb50"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#get names of encoded variables</span></span>
 <span><span class="va">koppen_zone_encoded</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">grep</a></span><span class="op">(</span></span>
 <span>  pattern <span class="op">=</span> <span class="st">"*__encoded*"</span>,</span>
@@ -781,20 +788,20 @@
 <span><span class="co">#reset the user's graphical parameters</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span><span class="va">user.par</span><span class="op">)</span></span></code></pre></div>
 <p>The function implementing each method can be used directly as well. The example below shows the “mean” method with the option <code>replace = FALSE</code>, which replaces the categorical values with the numeric ones in the output data frame.</p>
-<div class="sourceCode" id="cb48"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb51"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">vi</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"vi_mean"</span>, <span class="st">"koppen_zone"</span><span class="op">)</span><span class="op">]</span>, n <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb49"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="do">##    vi_mean koppen_zone</span></span>
-<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a><span class="do">## 1     0.38         BSk</span></span>
-<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a><span class="do">## 2     0.53         Cfa</span></span>
-<span id="cb49-4"><a href="#cb49-4" aria-hidden="true" tabindex="-1"></a><span class="do">## 3     0.45         Dfc</span></span>
-<span id="cb49-5"><a href="#cb49-5" aria-hidden="true" tabindex="-1"></a><span class="do">## 4     0.69         Cfb</span></span>
-<span id="cb49-6"><a href="#cb49-6" aria-hidden="true" tabindex="-1"></a><span class="do">## 5     0.42          Aw</span></span>
-<span id="cb49-7"><a href="#cb49-7" aria-hidden="true" tabindex="-1"></a><span class="do">## 6     0.68         Cfa</span></span>
-<span id="cb49-8"><a href="#cb49-8" aria-hidden="true" tabindex="-1"></a><span class="do">## 7     0.70          Af</span></span>
-<span id="cb49-9"><a href="#cb49-9" aria-hidden="true" tabindex="-1"></a><span class="do">## 8     0.26         BSh</span></span>
-<span id="cb49-10"><a href="#cb49-10" aria-hidden="true" tabindex="-1"></a><span class="do">## 9     0.55         Cwa</span></span>
-<span id="cb49-11"><a href="#cb49-11" aria-hidden="true" tabindex="-1"></a><span class="do">## 10    0.16         BWh</span></span></code></pre></div>
-<div class="sourceCode" id="cb50"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb52"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="do">##    vi_mean koppen_zone</span></span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a><span class="do">## 1     0.38         BSk</span></span>
+<span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a><span class="do">## 2     0.53         Cfa</span></span>
+<span id="cb52-4"><a href="#cb52-4" aria-hidden="true" tabindex="-1"></a><span class="do">## 3     0.45         Dfc</span></span>
+<span id="cb52-5"><a href="#cb52-5" aria-hidden="true" tabindex="-1"></a><span class="do">## 4     0.69         Cfb</span></span>
+<span id="cb52-6"><a href="#cb52-6" aria-hidden="true" tabindex="-1"></a><span class="do">## 5     0.42          Aw</span></span>
+<span id="cb52-7"><a href="#cb52-7" aria-hidden="true" tabindex="-1"></a><span class="do">## 6     0.68         Cfa</span></span>
+<span id="cb52-8"><a href="#cb52-8" aria-hidden="true" tabindex="-1"></a><span class="do">## 7     0.70          Af</span></span>
+<span id="cb52-9"><a href="#cb52-9" aria-hidden="true" tabindex="-1"></a><span class="do">## 8     0.26         BSh</span></span>
+<span id="cb52-10"><a href="#cb52-10" aria-hidden="true" tabindex="-1"></a><span class="do">## 9     0.55         Cwa</span></span>
+<span id="cb52-11"><a href="#cb52-11" aria-hidden="true" tabindex="-1"></a><span class="do">## 10    0.16         BWh</span></span></code></pre></div>
+<div class="sourceCode" id="cb53"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/target_encoding_methods.html">target_encoding_mean</a></span><span class="op">(</span></span>
 <span>  df <span class="op">=</span> <span class="va">vi</span>,</span>
 <span>  response <span class="op">=</span> <span class="st">"vi_mean"</span>,</span>
@@ -803,17 +810,17 @@
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">df</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"vi_mean"</span>, <span class="st">"koppen_zone"</span><span class="op">)</span><span class="op">]</span>, n <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb51"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="do">##    vi_mean koppen_zone</span></span>
-<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a><span class="do">## 1     0.38   0.2487370</span></span>
-<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a><span class="do">## 2     0.53   0.5661689</span></span>
-<span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a><span class="do">## 3     0.45   0.4338492</span></span>
-<span id="cb51-5"><a href="#cb51-5" aria-hidden="true" tabindex="-1"></a><span class="do">## 4     0.69   0.5889908</span></span>
-<span id="cb51-6"><a href="#cb51-6" aria-hidden="true" tabindex="-1"></a><span class="do">## 5     0.42   0.5275241</span></span>
-<span id="cb51-7"><a href="#cb51-7" aria-hidden="true" tabindex="-1"></a><span class="do">## 6     0.68   0.5661689</span></span>
-<span id="cb51-8"><a href="#cb51-8" aria-hidden="true" tabindex="-1"></a><span class="do">## 7     0.70   0.6708994</span></span>
-<span id="cb51-9"><a href="#cb51-9" aria-hidden="true" tabindex="-1"></a><span class="do">## 8     0.26   0.3230049</span></span>
-<span id="cb51-10"><a href="#cb51-10" aria-hidden="true" tabindex="-1"></a><span class="do">## 9     0.55   0.5218936</span></span>
-<span id="cb51-11"><a href="#cb51-11" aria-hidden="true" tabindex="-1"></a><span class="do">## 10    0.16   0.1330452</span></span></code></pre></div>
+<div class="sourceCode" id="cb54"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="do">##    vi_mean koppen_zone</span></span>
+<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a><span class="do">## 1     0.38   0.2487370</span></span>
+<span id="cb54-3"><a href="#cb54-3" aria-hidden="true" tabindex="-1"></a><span class="do">## 2     0.53   0.5661689</span></span>
+<span id="cb54-4"><a href="#cb54-4" aria-hidden="true" tabindex="-1"></a><span class="do">## 3     0.45   0.4338492</span></span>
+<span id="cb54-5"><a href="#cb54-5" aria-hidden="true" tabindex="-1"></a><span class="do">## 4     0.69   0.5889908</span></span>
+<span id="cb54-6"><a href="#cb54-6" aria-hidden="true" tabindex="-1"></a><span class="do">## 5     0.42   0.5275241</span></span>
+<span id="cb54-7"><a href="#cb54-7" aria-hidden="true" tabindex="-1"></a><span class="do">## 6     0.68   0.5661689</span></span>
+<span id="cb54-8"><a href="#cb54-8" aria-hidden="true" tabindex="-1"></a><span class="do">## 7     0.70   0.6708994</span></span>
+<span id="cb54-9"><a href="#cb54-9" aria-hidden="true" tabindex="-1"></a><span class="do">## 8     0.26   0.3230049</span></span>
+<span id="cb54-10"><a href="#cb54-10" aria-hidden="true" tabindex="-1"></a><span class="do">## 9     0.55   0.5218936</span></span>
+<span id="cb54-11"><a href="#cb54-11" aria-hidden="true" tabindex="-1"></a><span class="do">## 10    0.16   0.1330452</span></span></code></pre></div>
 </div>
 </div>
 
