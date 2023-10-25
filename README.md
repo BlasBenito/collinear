@@ -9,7 +9,7 @@
 &#10;
 &#10;<!-- badges: start -->
 
-[![DOI](https://zenodo.org/badge/698046617.svg)](https://zenodo.org/doi/10.5281/zenodo.10039396)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.10039489.svg)](https://doi.org/10.5281/zenodo.10039489)
 [![CRAN
 status](https://www.r-pkg.org/badges/version/collinear)](https://cran.r-project.org/package=collinear)
 [![CRAN_Download_Badge](http://cranlogs.r-pkg.org/badges/grand-total/collinear)](https://CRAN.R-project.org/package=collinear)
@@ -76,8 +76,8 @@ If you found this package useful during your research work, please cite
 it as:
 
 *Blas M. Benito (2023). collinear: R Package for Seamless
-Multicollinearity Management. Version 1.0.1. DOI:
-10.5281/zenodo.10039397*
+Multicollinearity Management. Version 1.0.1. doi:
+10.5281/zenodo.10039489*
 
 ## Install
 
@@ -512,7 +512,7 @@ selected_predictors_response <- cor_select(
   predictors = vi_predictors
 )
 tictoc::toc()
-#> 0.412 sec elapsed
+#> 0.42 sec elapsed
 
 tictoc::tic()
 selected_predictors_no_response <- cor_select(
@@ -520,7 +520,7 @@ selected_predictors_no_response <- cor_select(
   predictors = vi_predictors
 )
 tictoc::toc()
-#> 34.472 sec elapsed
+#> 34.875 sec elapsed
 ```
 
 ``` r

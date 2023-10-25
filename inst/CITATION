@@ -6,5 +6,6 @@ bibentry(bibtype = "Misc",
          year = 2023,
          note = note,
          url = c("https://blasbenito.github.io/collinear/"),
-         header = "To cite the collinear R package:"
+         header = "To cite the collinear R package:",
+         doi = "10.5281/zenodo.10039489"
 )
