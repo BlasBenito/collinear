@@ -22,17 +22,19 @@ status](https://www.r-pkg.org/badges/version/collinear)](https://cran.r-project.
 The R package `collinear` combines four different methods to offer a
 comprehensive tool for multicollinearity management:
 
-- **Bivariate correlation for numeric and categorical predictors**:
-  Pearson and Spearman correlation methods for pairs of numeric
-  predictors, and Cramer’s V for pairs of categorical predictors.
-- **Variance Inflation Factor analysis (VIF)**: to identify predictors
-  that are linear combinations of other predictors.
+- **Pairwise correlation for numeric and categorical predictors**:
+  computed either via Pearson or Spearman methods for numeric
+  predictors, and Cramer’s V for categorical predictors.
+- **Variance Inflation Factor analysis (VIF)**: to identify
+  multicollinearity resulting from predictors being linear combinations
+  of other predictors.
 - **Target encoding of categorical predictors**: to convert them to
   numeric using a numeric variable as response (usually a response
   variable) and handle them as numerics during the multicollinearity
-  filtering
-- **Flexible feature prioritization**: allows defining the order of
-  importance for the predictors based on specific analytic needs.
+  filtering.
+- **Variable prioritization**: method to prioritize predictors during
+  variable selection either using expert knowledge or quantitative
+  criteria.
 
 These methods are integrated in the `collinear()` function, which
 returns a vector of selected predictors with a controlled
@@ -51,15 +53,22 @@ selected_variables <- collinear(
 ```
 
 The package contains other functions that may be useful during
-multicollinearity management: + `cor_select()`: like `collinear()`, but
-only using pairwise correlations. + `vif_select()`: like `collinear()`,
-but only using variance inflation factors. + `preference_order()`: to
-compute preference order based on univariate models. +
-`target_encoding_lab()`: to convert categorical predictors into numeric
-using several methods. + `cor_df()`: to generate a data frame with all
-pairwise correlation scores. + `cor_matrix()`: to convert a correlation
-data frame into matrix, or obtain a correlation matrix. + `vif_df()`: to
-obtain a data frame with all variance inflation factors.
+multicollinearity management:
+
+- `cor_select()`: like `collinear()`, but only using pairwise
+  correlations.
+- `vif_select()`: like `collinear()`, but only using variance inflation
+  factors.
+- `preference_order()`: to compute preference order based on univariate
+  models.
+- `target_encoding_lab()`: to convert categorical predictors into
+  numeric using several methods.
+- `cor_df()`: to generate a data frame with all pairwise correlation
+  scores.
+- `cor_matrix()`: to convert a correlation data frame into matrix, or
+  obtain a correlation matrix.
+- `vif_df()`: to obtain a data frame with all variance inflation
+  factors.
 
 ## Citation
 
@@ -93,16 +102,19 @@ remotes::install_github(
 This section shows the basic usage of the package and offers a brief
 explanation on the methods used within.
 
+### Required libraries and example data
+
+The libraries below are required to run the examples in this section.
+
 ``` r
 library(collinear)
 library(dplyr)
 library(tictoc)
 ```
 
-### Example data
-
-The package is shipped with a data frame named `vi`, with 30.000
-records, and 67 columns with a mixture of types.
+The package `collinear` is shipped with a data frame named `vi`, with
+30.000 rows and 67 columns with a mixture of numeric and categorical
+variables.
 
 ``` r
 dplyr::glimpse(vi)
@@ -218,8 +230,13 @@ vi_predictors
 
 ### `collinear()`
 
-The `collinear()` function contains the functionality required for a
-robust multicollinearity management.
+The `collinear()` function applies a multicollinearity filtering to
+numeric and categorical variables via pairwise correlations (with
+`cor_select()`) and variance inflation factors (with `vif_select()`).
+Categorical variables are converted into numeric via target-encoding
+(with `target_encoding_lab()`) using a `response` variable as reference.
+If the response variable is not provided, categorical variables are
+ignored.
 
 #### Input arguments
 
@@ -293,7 +310,7 @@ head(selected_predictors_cor)
 #> 3 soil_nitrogen swi_min                          0.673
 #> 4 soil_sand     soil_clay                       -0.666
 #> 5 solar_rad_max soil_type                       -0.652
-#> # ℹ 1 more row
+#> 6 biogeo_realm  soil_type                        0.62
 ```
 
 The data frame above shows that the maximum correlation between two of
@@ -495,7 +512,7 @@ selected_predictors_response <- cor_select(
   predictors = vi_predictors
 )
 tictoc::toc()
-#> 0.656 sec elapsed
+#> 0.412 sec elapsed
 
 tictoc::tic()
 selected_predictors_no_response <- cor_select(
@@ -503,7 +520,7 @@ selected_predictors_no_response <- cor_select(
   predictors = vi_predictors
 )
 tictoc::toc()
-#> 100.395 sec elapsed
+#> 34.472 sec elapsed
 ```
 
 ``` r
@@ -908,3 +925,10 @@ head(df[, c("vi_mean", "koppen_zone")], n = 10)
 #> 9     0.55   0.5218936
 #> 10    0.16   0.1330452
 ```
+
+If you got here, thank you for your interest in the R package
+`collinear`, I hope it can serve you well.
+
+And that’s a wrap!
+
+Blas M. Benito, PhD
