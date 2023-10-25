@@ -31,8 +31,6 @@ options(tibble.print_min = 5, tibble.print_max = 5)
 [![CRAN status](https://www.r-pkg.org/badges/version/collinear)](https://cran.r-project.org/package=collinear)
 [![CRAN\_Download\_Badge](http://cranlogs.r-pkg.org/badges/grand-total/collinear)](https://CRAN.R-project.org/package=collinear)
 [![R-CMD-check](https://github.com/BlasBenito/collinear/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/BlasBenito/collinear/actions/workflows/R-CMD-check.yaml)
-[![lifecycle](https://img.shields.io/badge/lifecycle-stable-green.svg)](https://lifecycle.r-lib.org/articles/stages.html)
-[![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://www.gnu.org/licenses/MIT.en.html)
 
 <!-- badges: end -->
 
@@ -81,12 +79,12 @@ If you found this package useful during your research work, please cite it as:
 
 The package `collinear` can be installed from CRAN.
 
-```{r}
+```{r, message = FALSE, warning = FALSE}
 install.packages("collinear")
 library(collinear)
 ```
 
-Three are no big development plans for this package, but still, latest bug fixes and features will surely be in the development version.
+The development version can be installed from GitHub.
 
 ```{r, eval = FALSE}
 remotes::install_github(
