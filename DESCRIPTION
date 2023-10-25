@@ -1,8 +1,8 @@
 Package: collinear
-Title: Seamless Multicollinearity Management for Categorical and Numeric Variables
+Title: Seamless Multicollinearity Management
 Version: 1.0.1
 Authors@R: 
-    person("Blas", "Benito", , "blasbenito@gmail.com", role = c("aut", "cre", "cph"),
+    person("Blas M.", "Benito", , "blasbenito@gmail.com", role = c("aut", "cre", "cph"),
            comment = c(ORCID = "0000-0001-5105-7232"))
 Description: System for seamless management of multicollinearity in data frames
     with numeric and/or categorical variables for statistical analysis and 
@@ -12,7 +12,7 @@ Description: System for seamless management of multicollinearity in data frames
     <DOI:10.1145/507533.507538>), and a flexible 
     feature prioritization method, to deliver a comprehensive 
     multicollinearity management tool covering a wide range of use cases.
-License: GPL (>= 3)
+License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE, roclets = c("collate", "namespace", "rd",
     "roxyglobals::global_roclet"))

@@ -1,0 +1,11 @@
+year <- sub("-.*", "", meta$Date)
+note <- sprintf("R package version %s", meta$Version)
+
+bibentry(bibtype = "Misc",
+         title = "collinear: R Package for Seamless Multicollinearity Management",
+         author = person("Benito", "Blas M."),
+         year = year,
+         note = note,
+         url = c("https://blasbenito.github.io/collinear/"),
+         header = "To cite the collinear R package:"
+)

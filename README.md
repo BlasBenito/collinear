@@ -12,10 +12,8 @@
 [![DOI](https://zenodo.org/badge/698046617.svg)](https://zenodo.org/doi/10.5281/zenodo.10039396)
 [![CRAN
 status](https://www.r-pkg.org/badges/version/collinear)](https://cran.r-project.org/package=collinear)
-[![R-CMD-check](https://github.com/BlasBenito/collinear/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/BlasBenito/collinear/actions/workflows/R-CMD-check.yaml)
 [![CRAN_Download_Badge](http://cranlogs.r-pkg.org/badges/grand-total/collinear)](https://CRAN.R-project.org/package=collinear)
-[![lifecycle](https://img.shields.io/badge/lifecycle-stable-green.svg)](https://lifecycle.r-lib.org/articles/stages.html)
-[![License](https://img.shields.io/badge/license-GPL--3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0.en.html)
+[![R-CMD-check](https://github.com/BlasBenito/collinear/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/BlasBenito/collinear/actions/workflows/R-CMD-check.yaml)
 
 <!-- badges: end -->
 
@@ -78,13 +76,10 @@ The package `collinear` can be installed from CRAN.
 
 ``` r
 install.packages("collinear")
-#> Installing package into '/home/blas/R/x86_64-pc-linux-gnu-library/4.3'
-#> (as 'lib' is unspecified)
 library(collinear)
 ```
 
-Three are no big development plans for this package, but still, latest
-bug fixes and features will surely be in the development version.
+The development version can be installed from GitHub.
 
 ``` r
 remotes::install_github(
@@ -500,7 +495,7 @@ selected_predictors_response <- cor_select(
   predictors = vi_predictors
 )
 tictoc::toc()
-#> 0.655 sec elapsed
+#> 0.656 sec elapsed
 
 tictoc::tic()
 selected_predictors_no_response <- cor_select(
@@ -508,7 +503,7 @@ selected_predictors_no_response <- cor_select(
   predictors = vi_predictors
 )
 tictoc::toc()
-#> 106.178 sec elapsed
+#> 100.395 sec elapsed
 ```
 
 ``` r
