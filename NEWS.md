@@ -1,14 +1,16 @@
 # collinear 1.0.2
 
-Two bugs fixed in the variable selection algorithm in cor_select():
+This version fixes bugs in two functions: `cor_select()` and `cor_df()`
 
-- When only one variable was left in the correlation matrix, the one column matrix became a vector with no colnames, which yielded an error. Now, to avoid this issue, drop = FALSE is used in the matrix subsetting.
+**`cor_select()`**
 
-- The previous version started removing predictors on a backwards fashion, from the last predictor in preference order, moving up one by one to the top. Under the wrong circumstances (low number of predictors, low cor_max, and high correlation between first and second predictors in preference order) this configuration would lead to keep only the first predictor, even when having others comply with the max_cor restriction lower down in the preference order. The new version produces smaller subsets of predictors with a higher diversity.
+  + When only one variable was left in the correlation matrix, the one column matrix became a vector with no colnames, which yielded an error. Now, to avoid this issue, drop = FALSE is used in the matrix subsetting.
 
-One bug fixed in cor_df():
+  + The previous version started removing predictors on a backwards fashion, from the last predictor in preference order, moving up one by one to the top. Under the wrong circumstances (low number of predictors, low cor_max, and high correlation between first and second predictors in preference order) this configuration would lead to keep only the first predictor, even when having others comply with the max_cor restriction lower down in the preference order. The new version produces smaller subsets of predictors with a higher diversity.
 
-- The data frame returned pairs of the same variable when cor_method was "spearman". Fixed with a dplyr::filter(x != y).
+**`cor_df()`**
+
+  + The data frame returned pairs of the same variable when cor_method was "spearman". Fixed with a dplyr::filter(x != y).
 
 
 # collinear 1.0.1
