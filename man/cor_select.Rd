@@ -33,11 +33,11 @@ cor_select(
 Character vector with the names of the selected predictors.
 }
 \description{
-Applies a recursive algorithm to remove variables with a bivariate correlation with any other variable higher than a threshold defined by the argument \code{max_cor}.
+Applies a recursive forward selection algorithm algorithm to select predictors with a bivariate correlation with any other predictor lower than a threshold defined by the argument \code{max_cor}.
 
 If the argument \code{response} is provided, all non-numeric variables in \code{predictors} are transformed into numeric using target encoding (see \code{\link[=target_encoding_lab]{target_encoding_lab()}}). Otherwise, non-numeric variables are ignored.
 
-The argument \code{preference_order} allows defining a preference selection order to preserve (when possible) variables that might be interesting or even required for a given analysis. If NULL, predictors are ordered from lower to higher sum of their absolute correlation with the other predictors.
+The argument \code{preference_order} allows defining a preference selection order to preserve (when possible) variables that might be interesting or even required for a given analysis. If NULL, predictors are ordered from lower to higher sum of their absolute pairwise correlation with the other predictors.
 
 For example, if \code{predictors} is \code{c("a", "b", "c")} and \code{preference_order} is \code{c("a", "b")}, there are two possibilities:
 \itemize{

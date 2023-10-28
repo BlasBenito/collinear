@@ -2,11 +2,11 @@
 #'
 #' @description
 #'
-#' Applies a recursive algorithm to remove variables with a bivariate correlation with any other variable higher than a threshold defined by the argument `max_cor`.
+#' Applies a recursive forward selection algorithm algorithm to select predictors with a bivariate correlation with any other predictor lower than a threshold defined by the argument `max_cor`.
 #'
 #' If the argument `response` is provided, all non-numeric variables in `predictors` are transformed into numeric using target encoding (see [target_encoding_lab()]). Otherwise, non-numeric variables are ignored.
 #'
-#' The argument `preference_order` allows defining a preference selection order to preserve (when possible) variables that might be interesting or even required for a given analysis. If NULL, predictors are ordered from lower to higher sum of their absolute correlation with the other predictors.
+#' The argument `preference_order` allows defining a preference selection order to preserve (when possible) variables that might be interesting or even required for a given analysis. If NULL, predictors are ordered from lower to higher sum of their absolute pairwise correlation with the other predictors.
 #'
 #' For example, if `predictors` is `c("a", "b", "c")` and `preference_order` is `c("a", "b")`, there are two possibilities:
 #' \itemize{
@@ -201,12 +201,26 @@ cor_select <- function(
   #set diag to 0
   diag(cor.matrix) <- 0
 
-  #iterating through columns
-  for(i in seq(from = ncol(cor.matrix), to = 1)){
+  #i for first iteration
+  i <- 1
+
+  #iterate over i values
+  while(i < ncol(cor.matrix)){
+
+    i <- i + 1
 
     #remove i column and row if max > max_cor
-    if(max(cor.matrix[, i]) > max_cor){
-      cor.matrix <- cor.matrix[-i, -i]
+    if(max(cor.matrix[1:i, i]) > max_cor){
+
+      #remove column
+      cor.matrix <- cor.matrix[-i, -i, drop = FALSE]
+
+      #break condition
+      if(ncol(cor.matrix) == 1){break}
+
+      #go back one column
+      i <- i - 1
+
     }
 
   }
