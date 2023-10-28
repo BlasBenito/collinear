@@ -135,6 +135,9 @@ cor_df <- function(
   #join results
   cor.df <- cor.list |>
     dplyr::bind_rows() |>
+    dplyr::filter(
+      x != y
+    ) |>
     dplyr::arrange(
       dplyr::desc(abs(correlation))
     ) |>
