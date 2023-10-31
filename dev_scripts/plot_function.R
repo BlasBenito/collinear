@@ -13,6 +13,8 @@ cor <- cor_df(
   predictors = vi_predictors
 )
 
+
+
 #plot starts here
 m <- cor_matrix(
   df = vi,
@@ -34,26 +36,15 @@ par(mar = c(4, 1, 1, 10), cex = 0.6)
 plot(
   m.clust,
   horiz = TRUE,
-  cex = 0.1,
-  xlim = c(1, 0)
+  cex = 0.5,
+  xlim = c(1, 0),
   )
 
-cut_height <- 0.4  # Specify your desired cut height
-m.clust <- m.clust |>
-  dendextend::cutr (cut_height, k = NULL)
+#other version
+#####################################################################
 
+library(dendextend)
+k <- 22
+m.clust <- color_branches(m.clust, k=k, col = viridis::turbo(n = k))
+plot(m.clust, horiz = TRUE)
 
-#cut at certain level for horizontal hclust plots
-max_cor <- 0.4
-distance_threshold <- 1 - max_cor
-
-k <- cutree(
-  tree = m.clust,
-  h = distance_threshold
-  ) |>
-  unique() |>
-  length()
-
-
-plot(m.clust)
-rect.hclust(m.clust, k = k, border = "red")

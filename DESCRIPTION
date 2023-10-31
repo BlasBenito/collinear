@@ -1,6 +1,6 @@
 Package: collinear
 Title: Seamless Multicollinearity Management
-Version: 1.0.2
+Version: 1.0.3
 Authors@R: 
     person("Blas M.", "Benito", , "blasbenito@gmail.com", role = c("aut", "cre", "cph"),
            comment = c(ORCID = "0000-0001-5105-7232"))

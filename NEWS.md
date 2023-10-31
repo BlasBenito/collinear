@@ -1,3 +1,7 @@
+# collinear 1.0.3
+
+Fixed issue in function cor_df() where many cases would be lost because the logic to remove diagonals was flawed, as all pairs with correlation == 1 were being removed.
+
 # collinear 1.0.2
 
 This version fixes bugs in two functions: `cor_select()` and `cor_df()`
