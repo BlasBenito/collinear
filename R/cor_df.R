@@ -205,7 +205,18 @@ cor_numerics <- function(
     #remove matrix diagonal
     dplyr::filter(
       x != y
-    )
+    ) |>
+    #remove mirrored pairs
+    dplyr::rowwise() |>
+    dplyr::mutate(
+      pair_name = paste0(sort(c(x, y)), collapse = " ")
+    ) |>
+    dplyr::ungroup() |>
+    dplyr::distinct(
+      pair_name,
+      .keep_all = TRUE
+    ) |>
+    dplyr::select(-pair_name)
 
   cor.numerics
 
