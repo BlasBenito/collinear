@@ -9,6 +9,7 @@ utils::globalVariables(c(
   "Freq", # <cor_numerics>
   "x", # <cor_numerics>
   "y", # <cor_numerics>
+  "pair_name", # <cor_numerics>
   "response", # <cor_numerics_and_characters>
   "var", # <identify_zero_variance_predictors>
   "encoded", # <target_encoding_rnorm>

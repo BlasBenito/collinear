@@ -1,5 +1,7 @@
 # collinear 1.0.3
 
+Added the example dataset `toy`, derived from `vi`, but with known relationships between all variables.
+
 Fixed issue in function cor_df() where many cases would be lost because the logic to remove diagonals was flawed, as all pairs with correlation == 1 were being removed.
 
 # collinear 1.0.2
