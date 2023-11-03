@@ -202,7 +202,9 @@ vif_select <- function(
   }
 
   #subset preference_order in predictors
-  preference_order <- preference_order[preference_order %in% predictors]
+  if(!is.null(predictors)){
+    preference_order <- preference_order[preference_order %in% predictors]
+  }
 
   #if there are variables not in preference_order
   #add them in the order of preference_order.auto
