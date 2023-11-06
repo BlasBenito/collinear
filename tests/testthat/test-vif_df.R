@@ -1,6 +1,11 @@
 testthat::test_that("`vif_df()` works", {
+
   data(vi, vi_predictors)
   vi <- vi[1:1000, ]
+
+  #create a few perfect correlations in vi
+  vi$a <- vi$b <- vi$c <- vi$d <- vi$soil_sand
+  vi_predictors <- c(vi_predictors, "a", "b", "c")
 
   # Test with only numeric predictors
   df <- vif_df(

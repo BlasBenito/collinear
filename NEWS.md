@@ -1,5 +1,7 @@
 # collinear 1.0.3
 
+Fixed issue with perfect correlations in `vif_df()`. Now perfect correlations are replaced with 0.99 (for correlation == 1) and -0.99 (for correlation == -1) in the correlation matrix to avoid errors in `solve()`.
+
 Added the example dataset `toy`, derived from `vi`, but with known relationships between all variables.
 
 Fixed issue in function cor_df() where many cases would be lost because the logic to remove diagonals was flawed, as all pairs with correlation == 1 were being removed.

@@ -93,12 +93,26 @@ vif_df <- function(
     predictors = predictors
   )
 
+  #compute correlation matrix
+  cor.matrix <- df[, predictors.numeric, drop = FALSE] |>
+    stats::cor(use = "complete.obs")
+
+  #look for perfect correlations that break solve()
+  #and replace them with 0.99 or -0.99
+  cor.matrix.range <- range(cor.matrix[upper.tri(cor.matrix)])
+  if(1 %in% cor.matrix.range){
+    cor.matrix[cor.matrix == 1] <- 0.99999999
+    diag(cor.matrix) <- 1
+  }
+  if(-1 %in% cor.matrix.range){
+    cor.matrix[cor.matrix == -1] <- -0.99999999
+  }
+
   #vif data frame
   tryCatch(
     {
 
-      vif.df <- df[, predictors.numeric, drop = FALSE] |>
-        stats::cor(use = "complete.obs") |>
+      vif.df <- cor.matrix |>
         solve(tol = 0) |>
         diag() |>
         data.frame(stringsAsFactors = FALSE) |>
