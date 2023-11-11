@@ -1,5 +1,15 @@
 # collinear 1.0.3
 
+Added column "vi_binary" to `vi` as a binary version of "vi_mean".
+
+Added function `auc_score()` to compute the area under the curve of predictions from binary models. 
+
+Added function `case_weights()` to compute case weights when binary responses are unbalanced.
+
+Added function `f_auc()` to be used as input for the `f` argument of `preference_order()` when the response is binary and balanced.
+
+Added function `f_auc_weighted()` to be used as input for the `f` argument of `preference_order()` when the response is binary and unbalanced.
+
 Fixed issue with perfect correlations in `vif_df()`. Now perfect correlations are replaced with 0.99 (for correlation == 1) and -0.99 (for correlation == -1) in the correlation matrix to avoid errors in `solve()`.
 
 Added the example dataset `toy`, derived from `vi`, but with known relationships between all variables.

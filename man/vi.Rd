@@ -5,7 +5,7 @@
 \alias{vi}
 \title{30.000 records of responses and predictors all over the world}
 \format{
-Data frame with 30.000 rows and 67 columns.
+Data frame with 30.000 rows and 68 columns.
 }
 \usage{
 data(vi)

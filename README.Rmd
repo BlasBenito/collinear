@@ -330,6 +330,7 @@ selected_predictors <- collinear(
 )
 selected_predictors
 ```
+
 This variable selection satisfies three conditions at once: maximum correlation between each predictor and the response, maximum pairwise correlation, and maximum VIF.
 
 The `f` argument used by default is the function `f_rsquared()`, that returns the R-squared between the response and any predictor.
@@ -344,8 +345,9 @@ f_rsquared(
 
 There are two other `f` functions implemented:
 
-  + `f_ga_deviance()`: returns the explained deviance of a univariate GAM model between the response and each predictor, fitted with the function `mgcv::gam()`. Only if the R package `mgcv` is installed in the system.
+  + `f_gam_deviance()`: returns the explained deviance of a univariate GAM model between the response and each predictor, fitted with the function `mgcv::gam()`. Only if the R package `mgcv` is installed in the system.
   + `f_rf_deviance()`: returns the explained deviance of a univariate Random Forest model between the response and each predictor, fitted with the function `ranger::ranger()`. Only if the R package `ranger` is installed in the system.
+  + `f_auc()` and `f_auc_weighted()`: return the area under the roc curve of a univariate binomial GLM between a binary response of 1s and 0s and a numeric predictor. The former assumes the response is balanced, while the latter applies case weights to mitigate unbalances.
   
 Custom functions created by the user are also accepted as input, as long as they have the `x`, `y`, and `df` arguments, and they return a single numeric value.
 

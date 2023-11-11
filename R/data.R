@@ -3,7 +3,7 @@
 #' @usage data(vi)
 #' @seealso [vi_predictors]
 #'
-#' @format Data frame with 30.000 rows and 67 columns.
+#' @format Data frame with 30.000 rows and 68 columns.
 "vi"
 
 #' Predictor names in data frame 'vi'

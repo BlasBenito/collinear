@@ -1,3 +1,19 @@
+testthat::test_that("`f_auc_weighted()` works", {
+  data(vi)
+  result <- f_auc_weighted(x = "growing_season_length", y = "vi_binary", df = vi)
+  testthat::expect_true(is.numeric(result), info = "Result should be a numeric value.")
+  testthat::expect_true(result < 1, info = "Result should be a numeric value.")
+  testthat::expect_true(!is.na(result), info = "Result should not be NA.")
+})
+
+testthat::test_that("`f_auc()` works", {
+  data(vi)
+  result <- f_auc(x = "growing_season_length", y = "vi_binary", df = vi)
+  testthat::expect_true(is.numeric(result), info = "Result should be a numeric value.")
+  testthat::expect_true(result < 1, info = "Result should be a numeric value.")
+  testthat::expect_true(!is.na(result), info = "Result should not be NA.")
+})
+
 testthat::test_that("`f_gam_deviance()` works", {
   data(vi)
   result <- f_gam_deviance(x = "growing_season_length", y = "vi_mean", df = vi)
