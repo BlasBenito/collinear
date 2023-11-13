@@ -5,7 +5,7 @@ y = "vi_binary"
 df = vi
 
 #for balanced designs
-f_auc <- function(x, y, df){
+f_logistic_auc_balanced <- function(x, y, df){
 
   data <- data.frame(
     y = df[[y]],
@@ -27,7 +27,7 @@ f_auc <- function(x, y, df){
 
 }
 
-f_auc_weighted <- function(x, y, df){
+f_logistic_auc_unbalanced <- function(x, y, df){
 
   data <- data.frame(
     y = df[[y]],

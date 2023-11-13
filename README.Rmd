@@ -343,11 +343,30 @@ f_rsquared(
 )
 ```
 
-There are two other `f` functions implemented:
+There are several other `f` functions implemented:
 
   + `f_gam_deviance()`: returns the explained deviance of a univariate GAM model between the response and each predictor, fitted with the function `mgcv::gam()`. Only if the R package `mgcv` is installed in the system.
-  + `f_rf_deviance()`: returns the explained deviance of a univariate Random Forest model between the response and each predictor, fitted with the function `ranger::ranger()`. Only if the R package `ranger` is installed in the system.
-  + `f_auc()` and `f_auc_weighted()`: return the area under the roc curve of a univariate binomial GLM between a binary response of 1s and 0s and a numeric predictor. The former assumes the response is balanced, while the latter applies case weights to mitigate unbalances.
+  + `f_rf_rsquared()`: returns the explained deviance of a univariate Random Forest model between the response and each predictor, fitted with the function `ranger::ranger()`. Only if the R package `ranger` is installed in the system.
+  + `f_logistic_auc_balanced()` and `f_logistic_auc_unbalanced()`: return the area under the ROC curve of univariate binomial GLM between a binary response of 1s and 0s and a numeric predictor. The former assumes the response is balanced, while the latter applies case weights to mitigate unbalances.
+  + `f_gam_auc_balanced()` and `f_logistic_gam_unbalanced()`: return the area under the ROC curve of univariate binomial GAM between a binary response of 1s and 0s and a numeric predictor. The former assumes the response is balanced, while the latter applies case weights to mitigate unbalances.
+  
+```{r, eval = FALSE}
+#example of preference order for a binary variable
+
+#the binary variable
+table(vi$vi_binary)
+
+#computation of preference order with 
+preference_auc <- preference_order(
+  df = vi,
+  response = "vi_binary",
+  predictors = vi_predictors,
+  f = f_gam_auc_unbalanced,
+  workers = 1 #requires package future and future.apply for more workers
+)
+
+preference_auc
+```
   
 Custom functions created by the user are also accepted as input, as long as they have the `x`, `y`, and `df` arguments, and they return a single numeric value.
 

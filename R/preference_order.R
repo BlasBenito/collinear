@@ -7,10 +7,13 @@
 #' @param predictors (optional; character vector) character vector with predictor names in 'df'. If omitted, all columns of 'df' are used as predictors. Default:'NULL'
 #' @param f (optional: function) A function that returns a value representing the relationship between a given predictor and the response. Higher values are ranked higher. The available options are:
 #' \itemize{
-#'  \item f_rsquared (default option): returns the R-squared of the correlation between the response and the predictor.
-#'  \item f_lm_coef: returns the absolute coefficient of a linear model of the response against the scaled predictor.
-#'  \item f_gam_deviance: returns the explained deviance of a GAM model of the response against a predictor. Requires the package `mgcv`.
-#'  \item f_f_variance: returns the explained deviance of a random forest model of the response against the predictor. Requires the package `ranger`.
+#'  \item f_rsquared (default option): returns the R-squared of the correlation between a numeric response and a numeric predictor.
+#'  \item f_gam_deviance: fits a univariate GAM model between a numeric response and a numeric predictor to return the explained deviance. Requires the package `mgcv`.
+#'  \item f_rf_rsquared: fits a univariate random forest model with `ranger::ranger()` between a numeric response and a numeric predictor to return the R-squared of the observations against the out-of-bag predictions. Requires the package `ranger`.
+#'  \item f_logistic_auc_balanced: fits a logistic univariate GLM of a balanced binary response (0s and 1s) against a numeric predictor to return the Area Under the Curve of the observations against the predictors.
+#'  \item f_logistic_auc_unbalanced: fits a quasibinomial univariate GLM with weighted cases of an unbalanced binary response (0s and 1s) against a numeric predictor to return the Area Under the Curve of the observations against the predictors.
+#'  \item f_gam_auc_balanced: fits a logistic univariate GAM of a balanced binary response (0s and 1s) against a numeric predictor to return the Area Under the Curve of the observations against the predictors.
+#'  \item f_gam_auc_unbalanced: fits a quasibinomial univariate GAM with weighted cases of an unbalanced binary response (0s and 1s) against a numeric predictor to return the Area Under the Curve of the observations against the predictors.
 #' }
 #' @param encoding_method (optional; character string). Name of the target encoding method to convert character and factor predictors to numeric. One of "mean", "rank", "loo", "rnorm" (see [target_encoding_lab()] for further details). Default: "mean"
 #' @param workers (integer) number of workers for parallel execution. Default: 1
@@ -269,28 +272,25 @@ f_rsquared <- function(x, y, df){
 #' @export
 f_gam_deviance <- function(x, y, df){
 
-  if(requireNamespace("mgcv", quietly = TRUE)){
-
-    data <- data.frame(
-      y = df[[y]],
-      x = df[[x]]
-    ) |>
-      na.omit()
-
-    m <- mgcv::gam(
-      formula = y ~ s(x, k = 3),
-      data = data
-    )
-
-    summary(m)$dev.expl
-
-  } else {
-
-    stop("the function 'f_gam_deviance()' requires the package 'mgcv'.")
-
+  if(!requireNamespace("mgcv", quietly = TRUE)){
+    stop("the function 'f_gam_auc_unbalanced()' requires the package 'mgcv'. Please, install it first.")
   }
 
+  data <- data.frame(
+    y = df[[y]],
+    x = df[[x]]
+  ) |>
+    na.omit()
+
+  m <- mgcv::gam(
+    formula = y ~ s(x, k = 3),
+    data = data
+  )
+
+  summary(m)$dev.expl
+
 }
+
 
 #' R-squared of Random Forest model from out-of-bag data
 #'
@@ -311,7 +311,7 @@ f_gam_deviance <- function(x, y, df){
 #' #this example requires "ranger" installed in the system
 #' if(requireNamespace(package = "ranger", quietly = TRUE)){
 #'
-#'   f_rf_deviance(
+#'   f_rf_rsquared(
 #'     x = "growing_season_length", #predictor
 #'     y = "vi_mean",               #response
 #'     df = vi
@@ -321,37 +321,33 @@ f_gam_deviance <- function(x, y, df){
 #'
 #' @autoglobal
 #' @export
-f_rf_deviance <- function(x, y, df){
+f_rf_rsquared <- function(x, y, df){
 
-  if(requireNamespace("ranger", quietly = TRUE)){
-
-    data <- data.frame(
-      y = df[[y]],
-      x = df[[x]]
-    ) |>
-      na.omit()
-
-    m <- ranger::ranger(
-      formula = y ~ x,
-      data = data,
-      num.threads = 1,
-      min.node.size = ceiling(nrow(data)/100),
-      seed = 1
-    )
-
-    m$r.squared
-
-  } else {
-
-    stop("The function 'f_fr_deviance()' requires the package 'ranger'.")
-
+  if(!requireNamespace("ranger", quietly = TRUE)){
+    stop("the function 'f_fr_deviance()' requires the package 'ranger'. Please install it first.")
   }
+
+  data <- data.frame(
+    y = df[[y]],
+    x = df[[x]]
+  ) |>
+    na.omit()
+
+  m <- ranger::ranger(
+    formula = y ~ x,
+    data = data,
+    num.threads = 1,
+    min.node.size = ceiling(nrow(data)/100),
+    seed = 1
+  )
+
+  m$r.squared
 
 }
 
 #' AUC of Binomial GLM with Logit Link
 #'
-#' Fits a logistic GLM model `y ~ x` when `y` is a binary response with values 0 and 1 and `x` is numeric. This function is suitable when the response variable is balanced. If the response is unbalanced, then [f_auc_weighted()] should provide better results.
+#' Fits a logistic GLM model `y ~ x` when `y` is a binary response with values 0 and 1 and `x` is numeric. This function is suitable when the response variable is balanced. If the response is unbalanced, then [f_logistic_auc_unbalanced()] should provide better results.
 #'
 #'
 #' @param x (required, character string) name of the predictor variable.
@@ -366,7 +362,7 @@ f_rf_deviance <- function(x, y, df){
 #' #subset to limit example run time
 #' vi <- vi[1:1000, ]
 #'
-#' f_auc(
+#' f_logistic_auc_balanced(
 #'   x = "growing_season_length", #predictor
 #'   y = "vi_binary",             #binary response
 #'   df = vi
@@ -374,7 +370,11 @@ f_rf_deviance <- function(x, y, df){
 #'
 #' @autoglobal
 #' @export
-f_auc <- function(x, y, df){
+f_logistic_auc_balanced <- function(x, y, df){
+
+  if(all(sort(unique(df[[y]])) == c(0, 1)) == FALSE){
+    stop("Argument 'response' must be the name of a binary vector with 0s and 1s")
+  }
 
   data <- data.frame(
     y = df[[y]],
@@ -403,7 +403,7 @@ f_auc <- function(x, y, df){
 #'
 #'
 #' @param x (required, character string) name of the predictor variable.
-#' @param y (required, character string) name of the binary response variable
+#' @param y (required, character string) name of the binary response variable.
 #' @param df (required, data frame) data frame with the columns 'x' and 'y'.
 #'
 #' @return Area Under the Curve
@@ -414,7 +414,7 @@ f_auc <- function(x, y, df){
 #' #subset to limit example run time
 #' vi <- vi[1:1000, ]
 #'
-#' f_auc_weighted(
+#' f_logistic_auc_unbalanced(
 #'   x = "growing_season_length", #predictor
 #'   y = "vi_binary",             #binary response
 #'   df = vi
@@ -422,7 +422,11 @@ f_auc <- function(x, y, df){
 #'
 #' @autoglobal
 #' @export
-f_auc_weighted <- function(x, y, df){
+f_logistic_auc_unbalanced <- function(x, y, df){
+
+  if(all(sort(unique(df[[y]])) == c(0, 1)) == FALSE){
+    stop("Argument 'response' must be the name of a binary vector with 0s and 1s")
+  }
 
   data <- data.frame(
     y = df[[y]],
@@ -437,6 +441,127 @@ f_auc_weighted <- function(x, y, df){
     weights = case_weights(x = data$y)
   ) |>
     suppressWarnings()
+
+  auc_score(
+    observed = data$y,
+    predicted = stats::predict(m, type = "response")
+  )
+
+}
+
+
+#' AUC of Logistic GAM Model
+#'
+#' Fits a binomial logistic Generalized Additive Model (GAM) `y ~ s(x, k = 3)` between a binary response and a numeric predictor and returns the Area Under the Curve of the observations versus the predictions.
+#'
+#'
+#' @param x (required, character string) name of the predictor variable.
+#' @param y (required, character string) name of the binary response variable.
+#' @param df (required, data frame) data frame with the columns 'x' and 'y'.
+#'
+#' @return Area Under the Curve
+#' @examples
+#'
+#' data(vi)
+#'
+#' #subset to limit example run time
+#' vi <- vi[1:1000, ]
+#'
+#' #this example requires "mgcv" installed
+#' if(requireNamespace(package = "mgcv", quietly = TRUE)){
+#'
+#'   f_gam_auc_balanced(
+#'     x = "growing_season_length", #predictor
+#'     y = "vi_binary",               #response
+#'     df = vi
+#'   )
+#'
+#' }
+#'
+#' @autoglobal
+#' @export
+f_gam_auc_balanced <- function(x, y, df){
+
+  if(!requireNamespace("mgcv", quietly = TRUE)){
+    stop("the function 'f_gam_auc_unbalanced()' requires the package 'mgcv'. Please, install it first.")
+  }
+
+  if(all(sort(unique(df[[y]])) == c(0, 1)) == FALSE){
+    stop("Argument 'response' must be the name of a binary vector with 0s and 1s")
+  }
+
+  data <- data.frame(
+    y = df[[y]],
+    x = df[[x]]
+  ) |>
+    na.omit()
+
+  m <- mgcv::gam(
+    formula = y ~ s(x, k = 3),
+    data = data,
+    family = stats::binomial(link = "logit")
+  )
+
+  auc_score(
+    observed = data$y,
+    predicted = stats::predict(m, type = "response")
+  )
+
+}
+
+
+#' AUC of Logistic GAM Model with Weighted Cases
+#'
+#' Fits a quasibinomial logistic Generalized Additive Model (GAM) `y ~ s(x, k = 3)` with weighted cases between a binary response and a numeric predictor and returns the Area Under the Curve of the observations versus the predictions.
+#'
+#'
+#' @param x (required, character string) name of the predictor variable.
+#' @param y (required, character string) name of the binary response variable
+#' @param df (required, data frame) data frame with the columns 'x' and 'y'.
+#'
+#' @return Area Under the Curve
+#' @examples
+#'
+#' data(vi)
+#'
+#' #subset to limit example run time
+#' vi <- vi[1:1000, ]
+#'
+#' #this example requires "mgcv" installed
+#' if(requireNamespace(package = "mgcv", quietly = TRUE)){
+#'
+#'   f_gam_auc_unbalanced(
+#'     x = "growing_season_length", #predictor
+#'     y = "vi_binary",               #response
+#'     df = vi
+#'   )
+#'
+#' }
+#'
+#' @autoglobal
+#' @export
+f_gam_auc_unbalanced <- function(x, y, df){
+
+  if(!requireNamespace("mgcv", quietly = TRUE)){
+    stop("the function 'f_gam_auc_unbalanced()' requires the package 'mgcv'. Please, install it first.")
+  }
+
+  if(all(sort(unique(df[[y]])) == c(0, 1)) == FALSE){
+    stop("Argument 'response' must be the name of a binary vector with 0s and 1s")
+  }
+
+  data <- data.frame(
+    y = df[[y]],
+    x = df[[x]]
+  ) |>
+    na.omit()
+
+  m <- mgcv::gam(
+    formula = y ~ s(x, k = 3),
+    data = data,
+    family = stats::quasibinomial(link = "logit"),
+    weights = case_weights(x = data$y)
+  )
 
   auc_score(
     observed = data$y,
@@ -462,7 +587,7 @@ f_auc_weighted <- function(x, y, df){
 auc_score <- function(
     observed = NULL,
     predicted = NULL
-    ){
+){
 
   if(is.null(observed) | is.null(predicted)){
     stop("The arguments 'observed' and 'predicted' must not be NULL.")
@@ -490,7 +615,7 @@ auc_score <- function(
   curve <- sum(
     rank(c(ones, zeros))[1:n.ones]) -
     (n.ones*(n.ones+1)/2
-     )
+    )
 
   #area under the curve
   auc <- curve / (n.zeros * n.ones)
@@ -527,20 +652,20 @@ case_weights <- function(
     stop("Argument 'x' must be a integer vector with 0s and 1s")
   }
 
-    #counting number of ones and zeros
-    n <- length(x)
-    n.1 <- sum(x)
-    n.0 <- n - n.1
+  #counting number of ones and zeros
+  n <- length(x)
+  n.1 <- sum(x)
+  n.0 <- n - n.1
 
-    #computing weights
-    weight.1 <- 1/n.1
-    weight.0 <- 1/n.0
+  #computing weights
+  weight.1 <- 1/n.1
+  weight.0 <- 1/n.0
 
-    #vector of weights
-    case.weights <- rep(NA, n)
-    case.weights[x == 1] <- weight.1
-    case.weights[x == 0] <- weight.0
+  #vector of weights
+  case.weights <- rep(NA, n)
+  case.weights[x == 1] <- weight.1
+  case.weights[x == 0] <- weight.0
 
-    case.weights
+  case.weights
 
 }

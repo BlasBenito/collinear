@@ -11,7 +11,7 @@ library(collinear)
 #preference_order DONE
 #f_rsquared DONE
 #f_gam_deviance DONE
-#f_rf_deviance DONE
+#f_rf_rsquared DONE
 #identify_numeric_predictors DONE
 # dentify_non_numeric_predictors DONE
 #identify_zero_variance_predictors DONE
@@ -148,7 +148,7 @@ numeric.predictors <- identify_numeric_predictors(
 
 numeric.predictors
 
-#f_rf_deviance DONE
+#f_rf_rsquared DONE
 ###################################################
 ###################################################
 ###################################################
@@ -160,7 +160,7 @@ vi <- vi[1:1000, ]
 #this example requires "ranger" installed in the system
 if(requireNamespace(package = "ranger", quietly = TRUE)){
 
-  f_rf_deviance(
+  f_rf_rsquared(
     x = "growing_season_length", #predictor
     y = "vi_mean",               #response
     df = vi
