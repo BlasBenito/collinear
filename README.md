@@ -516,7 +516,7 @@ selected_predictors_response <- cor_select(
   predictors = vi_predictors
 )
 tictoc::toc()
-#> 0.424 sec elapsed
+#> 0.427 sec elapsed
 
 tictoc::tic()
 selected_predictors_no_response <- cor_select(
@@ -524,7 +524,7 @@ selected_predictors_no_response <- cor_select(
   predictors = vi_predictors
 )
 tictoc::toc()
-#> 34.844 sec elapsed
+#> 35.246 sec elapsed
 ```
 
 ``` r
@@ -761,11 +761,16 @@ There are several other `f` functions implemented:
   binary response of 1s and 0s and a numeric predictor. The former
   assumes the response is balanced, while the latter applies case
   weights to mitigate unbalances.
-- `f_gam_auc_balanced()` and `f_logistic_gam_unbalanced()`: return the
-  area under the ROC curve of univariate binomial GAM between a binary
+- `f_gam_auc_balanced()` and `f_gam_auc_unbalanced()`: return the area
+  under the ROC curve of univariate binomial GAM between a binary
   response of 1s and 0s and a numeric predictor. The former assumes the
   response is balanced, while the latter applies case weights to
   mitigate unbalances.
+- `f_rf_auc_balanced()` and `f_rf_auc_unbalanced()`: return the area
+  under the ROC curve of univariate random forest models between a
+  binary response of 1s and 0s and a numeric predictor. The former
+  assumes the response is balanced, while the latter applies case
+  weights to mitigate unbalances.
 
 ``` r
 #example of preference order for a binary variable

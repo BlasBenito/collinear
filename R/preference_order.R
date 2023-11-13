@@ -14,6 +14,8 @@
 #'  \item [f_logistic_auc_unbalanced()]: fits a quasibinomial univariate GLM with weighted cases of an unbalanced binary response (0s and 1s) against a numeric predictor to return the Area Under the Curve of the observations against the predictors.
 #'  \item [f_gam_auc_balanced()]: fits a logistic univariate GAM of a balanced binary response (0s and 1s) against a numeric predictor to return the Area Under the Curve of the observations against the predictors.
 #'  \item [f_gam_auc_unbalanced()]: fits a quasibinomial univariate GAM with weighted cases of an unbalanced binary response (0s and 1s) against a numeric predictor to return the Area Under the Curve of the observations against the predictors.
+#'  \item [f_rf_auc_balanced()]: fits a random forest model of a balanced binary response (0s and 1s) against a numeric predictor to return the Area Under the Curve of the observations against the predictors.
+#'  \item [f_rf_auc_unbalanced()]: fits a random forest model with weighted cases of an unbalanced binary response (0s and 1s) against a numeric predictor to return the Area Under the Curve of the observations against the predictors.
 #' }
 #' @param encoding_method (optional; character string). Name of the target encoding method to convert character and factor predictors to numeric. One of "mean", "rank", "loo", "rnorm" (see [target_encoding_lab()] for further details). Default: "mean"
 #' @param workers (integer) number of workers for parallel execution. Default: 1
@@ -292,7 +294,7 @@ f_gam_deviance <- function(x, y, df){
 }
 
 
-#' R-squared of Random Forest model from out-of-bag data
+#' R-squared of Random Forest model
 #'
 #' Computes a univariate random forest model with `\link[ranger]{ranger}` and returns the R-squared on the out-of-bag data.
 #'
@@ -350,6 +352,131 @@ f_rf_rsquared <- function(x, y, df){
 #' @rdname f_rf_rsquared
 #' @export
 f_rf_deviance <- f_rf_rsquared
+
+
+#' AUC of Random Forest model of an unbalanced binary response
+#'
+#' Computes a univariate random forest model with weighted cases via `\link[ranger]{ranger}` and returns the Area Under the Curve on the out-of-bag data.
+#'
+#' @param x (required, character string) name of the predictor variable.
+#' @param y (required, character string) name of the binary response variable
+#' @param df (required, data frame) data frame with the columns 'x' and 'y'.
+#'
+#' @return Area Under the Curve
+#' @examples
+#'
+#' data(vi)
+#'
+#' #subset to limit example run time
+#' vi <- vi[1:1000, ]
+#'
+#' #this example requires "ranger" installed in the system
+#' if(requireNamespace(package = "ranger", quietly = TRUE)){
+#'
+#'   f_rf_auc_unbalanced(
+#'     x = "growing_season_length", #predictor
+#'     y = "vi_binary",               #response
+#'     df = vi
+#'   )
+#'
+#' }
+#'
+#' @autoglobal
+#' @export
+f_rf_auc_unbalanced <- function(x, y, df){
+
+  if(!requireNamespace("ranger", quietly = TRUE)){
+    stop("the function 'f_fr_deviance()' requires the package 'ranger'. Please install it first.")
+  }
+
+  if(all(sort(unique(df[[y]])) == c(0, 1)) == FALSE){
+    stop("Argument 'response' must be the name of a binary vector with 0s and 1s")
+  }
+
+  data <- data.frame(
+    y = df[[y]],
+    x = df[[x]]
+  ) |>
+    na.omit()
+
+  m <- ranger::ranger(
+    formula = y ~ x,
+    data = data,
+    num.threads = 1,
+    min.node.size = ceiling(nrow(data)/100),
+    case.weights = case_weights(x = data$y),
+    seed = 1
+  )
+
+  auc_score(
+    observed = data$y,
+    predicted = m$predictions
+  )
+
+}
+
+
+
+#' AUC of Random Forest model of a balanced binary response
+#'
+#' Computes a univariate random forest model  cases via `\link[ranger]{ranger}` and returns the Area Under the Curve on the out-of-bag data.
+#'
+#' @param x (required, character string) name of the predictor variable.
+#' @param y (required, character string) name of the binary response variable
+#' @param df (required, data frame) data frame with the columns 'x' and 'y'.
+#'
+#' @return Area Under the Curve
+#' @examples
+#'
+#' data(vi)
+#'
+#' #subset to limit example run time
+#' vi <- vi[1:1000, ]
+#'
+#' #this example requires "ranger" installed in the system
+#' if(requireNamespace(package = "ranger", quietly = TRUE)){
+#'
+#'   f_rf_auc_balanced(
+#'     x = "growing_season_length", #predictor
+#'     y = "vi_binary",               #response
+#'     df = vi
+#'   )
+#'
+#' }
+#'
+#' @autoglobal
+#' @export
+f_rf_auc_balanced <- function(x, y, df){
+
+  if(!requireNamespace("ranger", quietly = TRUE)){
+    stop("the function 'f_fr_deviance()' requires the package 'ranger'. Please install it first.")
+  }
+
+  if(all(sort(unique(df[[y]])) == c(0, 1)) == FALSE){
+    stop("Argument 'response' must be the name of a binary vector with 0s and 1s")
+  }
+
+  data <- data.frame(
+    y = df[[y]],
+    x = df[[x]]
+  ) |>
+    na.omit()
+
+  m <- ranger::ranger(
+    formula = y ~ x,
+    data = data,
+    num.threads = 1,
+    min.node.size = ceiling(nrow(data)/100),
+    seed = 1
+  )
+
+  auc_score(
+    observed = data$y,
+    predicted = m$predictions
+  )
+
+}
+
 
 #' AUC of Binomial GLM with Logit Link
 #'

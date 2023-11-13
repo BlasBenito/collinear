@@ -29,6 +29,8 @@ preference_order(
 \item \code{\link[=f_logistic_auc_unbalanced]{f_logistic_auc_unbalanced()}}: fits a quasibinomial univariate GLM with weighted cases of an unbalanced binary response (0s and 1s) against a numeric predictor to return the Area Under the Curve of the observations against the predictors.
 \item \code{\link[=f_gam_auc_balanced]{f_gam_auc_balanced()}}: fits a logistic univariate GAM of a balanced binary response (0s and 1s) against a numeric predictor to return the Area Under the Curve of the observations against the predictors.
 \item \code{\link[=f_gam_auc_unbalanced]{f_gam_auc_unbalanced()}}: fits a quasibinomial univariate GAM with weighted cases of an unbalanced binary response (0s and 1s) against a numeric predictor to return the Area Under the Curve of the observations against the predictors.
+\item \code{\link[=f_rf_auc_balanced]{f_rf_auc_balanced()}}: fits a random forest model of a balanced binary response (0s and 1s) against a numeric predictor to return the Area Under the Curve of the observations against the predictors.
+\item \code{\link[=f_rf_auc_unbalanced]{f_rf_auc_unbalanced()}}: fits a random forest model with weighted cases of an unbalanced binary response (0s and 1s) against a numeric predictor to return the Area Under the Curve of the observations against the predictors.
 }}
 
 \item{encoding_method}{(optional; character string). Name of the target encoding method to convert character and factor predictors to numeric. One of "mean", "rank", "loo", "rnorm" (see \code{\link[=target_encoding_lab]{target_encoding_lab()}} for further details). Default: "mean"}

@@ -348,7 +348,8 @@ There are several other `f` functions implemented:
   + `f_gam_deviance()`: returns the explained deviance of a univariate GAM model between the response and each predictor, fitted with the function `mgcv::gam()`. Only if the R package `mgcv` is installed in the system.
   + `f_rf_rsquared()` (also named `f_rf_deviance()`): returns the explained deviance of a univariate Random Forest model between the response and each predictor, fitted with the function `ranger::ranger()`. Only if the R package `ranger` is installed in the system.
   + `f_logistic_auc_balanced()` and `f_logistic_auc_unbalanced()`: return the area under the ROC curve of univariate binomial GLM between a binary response of 1s and 0s and a numeric predictor. The former assumes the response is balanced, while the latter applies case weights to mitigate unbalances.
-  + `f_gam_auc_balanced()` and `f_logistic_gam_unbalanced()`: return the area under the ROC curve of univariate binomial GAM between a binary response of 1s and 0s and a numeric predictor. The former assumes the response is balanced, while the latter applies case weights to mitigate unbalances.
+  + `f_gam_auc_balanced()` and `f_gam_auc_unbalanced()`: return the area under the ROC curve of univariate binomial GAM between a binary response of 1s and 0s and a numeric predictor. The former assumes the response is balanced, while the latter applies case weights to mitigate unbalances.
+  + `f_rf_auc_balanced()` and `f_rf_auc_unbalanced()`: return the area under the ROC curve of univariate random forest models between a binary response of 1s and 0s and a numeric predictor. The former assumes the response is balanced, while the latter applies case weights to mitigate unbalances.
   
 ```{r, eval = FALSE}
 #example of preference order for a binary variable

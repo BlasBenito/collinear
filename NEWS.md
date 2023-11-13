@@ -8,6 +8,10 @@ Added function `auc_score()` to compute the area under the curve of predictions 
 
 Added function `case_weights()` to compute case weights when binary responses are unbalanced.
 
+Added function `f_rf_auc_balanced()` to be used as input for the `f` argument of `preference_order()` when the response is binary and balanced.
+
+Added function `f_rf_auc_unbalanced()` to be used as input for the `f` argument of `preference_order()` when the response is binary and unbalanced.
+
 Added function `f_gam_auc_balanced()` to be used as input for the `f` argument of `preference_order()` when the response is binary and balanced.
 
 Added function `f_gam_auc_unbalanced()` to be used as input for the `f` argument of `preference_order()` when the response is binary and unbalanced.
