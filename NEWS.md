@@ -1,5 +1,7 @@
 # collinear 1.0.3
 
+Added `target_encoding_mean_smoothing()` function with original target encoding method.
+
 Added alias `f_rf_rsquared()` to the function `f_rf_deviance()`.
 
 Added column "vi_binary" to `vi` as a binary version of "vi_mean".
