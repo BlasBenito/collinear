@@ -1,6 +1,6 @@
 # collinear 1.0.3
 
-Renamed the function `f_rf_deviance()` to `f_rf_rsquared()`
+Added alias `f_rf_rsquared()` to the function `f_rf_deviance()`.
 
 Added column "vi_binary" to `vi` as a binary version of "vi_mean".
 

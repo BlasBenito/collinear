@@ -2,9 +2,12 @@
 % Please edit documentation in R/preference_order.R
 \name{f_rf_rsquared}
 \alias{f_rf_rsquared}
+\alias{f_rf_deviance}
 \title{R-squared of Random Forest model from out-of-bag data}
 \usage{
 f_rf_rsquared(x, y, df)
+
+f_rf_deviance(x, y, df)
 }
 \arguments{
 \item{x}{(required, character string) name of the predictor variable.}
@@ -18,6 +21,9 @@ R-squared
 }
 \description{
 Computes a univariate random forest model with \verb{\link[ranger]\{ranger\}} and returns the R-squared on the out-of-bag data.
+}
+\details{
+\code{f_rf_rsquared()} and \code{f_rf_deviance()} are synonyms
 }
 \examples{
 

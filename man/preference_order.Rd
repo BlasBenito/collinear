@@ -22,13 +22,13 @@ preference_order(
 
 \item{f}{(optional: function) A function that returns a value representing the relationship between a given predictor and the response. Higher values are ranked higher. The available options are:
 \itemize{
-\item f_rsquared (default option): returns the R-squared of the correlation between a numeric response and a numeric predictor.
+\item \code{\link[=f_rsquared]{f_rsquared()}} (default option): returns the R-squared of the correlation between a numeric response and a numeric predictor.
 \item f_gam_deviance: fits a univariate GAM model between a numeric response and a numeric predictor to return the explained deviance. Requires the package \code{mgcv}.
-\item f_rf_rsquared: fits a univariate random forest model with \code{ranger::ranger()} between a numeric response and a numeric predictor to return the R-squared of the observations against the out-of-bag predictions. Requires the package \code{ranger}.
-\item f_logistic_auc_balanced: fits a logistic univariate GLM of a balanced binary response (0s and 1s) against a numeric predictor to return the Area Under the Curve of the observations against the predictors.
-\item f_logistic_auc_unbalanced: fits a quasibinomial univariate GLM with weighted cases of an unbalanced binary response (0s and 1s) against a numeric predictor to return the Area Under the Curve of the observations against the predictors.
-\item f_gam_auc_balanced: fits a logistic univariate GAM of a balanced binary response (0s and 1s) against a numeric predictor to return the Area Under the Curve of the observations against the predictors.
-\item f_gam_auc_unbalanced: fits a quasibinomial univariate GAM with weighted cases of an unbalanced binary response (0s and 1s) against a numeric predictor to return the Area Under the Curve of the observations against the predictors.
+\item \code{\link[=f_rf_rsquared]{f_rf_rsquared()}} also named \code{\link[=f_rf_deviance]{f_rf_deviance()}}: fits a univariate random forest model with \code{ranger::ranger()} between a numeric response and a numeric predictor to return the R-squared of the observations against the out-of-bag predictions. Requires the package \code{ranger}.
+\item \code{\link[=f_logistic_auc_balanced]{f_logistic_auc_balanced()}}: fits a logistic univariate GLM of a balanced binary response (0s and 1s) against a numeric predictor to return the Area Under the Curve of the observations against the predictors.
+\item \code{\link[=f_logistic_auc_unbalanced]{f_logistic_auc_unbalanced()}}: fits a quasibinomial univariate GLM with weighted cases of an unbalanced binary response (0s and 1s) against a numeric predictor to return the Area Under the Curve of the observations against the predictors.
+\item \code{\link[=f_gam_auc_balanced]{f_gam_auc_balanced()}}: fits a logistic univariate GAM of a balanced binary response (0s and 1s) against a numeric predictor to return the Area Under the Curve of the observations against the predictors.
+\item \code{\link[=f_gam_auc_unbalanced]{f_gam_auc_unbalanced()}}: fits a quasibinomial univariate GAM with weighted cases of an unbalanced binary response (0s and 1s) against a numeric predictor to return the Area Under the Curve of the observations against the predictors.
 }}
 
 \item{encoding_method}{(optional; character string). Name of the target encoding method to convert character and factor predictors to numeric. One of "mean", "rank", "loo", "rnorm" (see \code{\link[=target_encoding_lab]{target_encoding_lab()}} for further details). Default: "mean"}

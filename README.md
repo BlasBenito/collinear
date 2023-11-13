@@ -516,7 +516,7 @@ selected_predictors_response <- cor_select(
   predictors = vi_predictors
 )
 tictoc::toc()
-#> 0.43 sec elapsed
+#> 0.424 sec elapsed
 
 tictoc::tic()
 selected_predictors_no_response <- cor_select(
@@ -524,7 +524,7 @@ selected_predictors_no_response <- cor_select(
   predictors = vi_predictors
 )
 tictoc::toc()
-#> 34.917 sec elapsed
+#> 34.844 sec elapsed
 ```
 
 ``` r
@@ -751,10 +751,11 @@ There are several other `f` functions implemented:
   model between the response and each predictor, fitted with the
   function `mgcv::gam()`. Only if the R package `mgcv` is installed in
   the system.
-- `f_rf_rsquared()`: returns the explained deviance of a univariate
-  Random Forest model between the response and each predictor, fitted
-  with the function `ranger::ranger()`. Only if the R package `ranger`
-  is installed in the system.
+- `f_rf_rsquared()` (also named `f_rf_deviance()`): returns the
+  explained deviance of a univariate Random Forest model between the
+  response and each predictor, fitted with the function
+  `ranger::ranger()`. Only if the R package `ranger` is installed in the
+  system.
 - `f_logistic_auc_balanced()` and `f_logistic_auc_unbalanced()`: return
   the area under the ROC curve of univariate binomial GLM between a
   binary response of 1s and 0s and a numeric predictor. The former

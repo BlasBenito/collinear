@@ -7,13 +7,13 @@
 #' @param predictors (optional; character vector) character vector with predictor names in 'df'. If omitted, all columns of 'df' are used as predictors. Default:'NULL'
 #' @param f (optional: function) A function that returns a value representing the relationship between a given predictor and the response. Higher values are ranked higher. The available options are:
 #' \itemize{
-#'  \item f_rsquared (default option): returns the R-squared of the correlation between a numeric response and a numeric predictor.
+#'  \item [f_rsquared()] (default option): returns the R-squared of the correlation between a numeric response and a numeric predictor.
 #'  \item f_gam_deviance: fits a univariate GAM model between a numeric response and a numeric predictor to return the explained deviance. Requires the package `mgcv`.
-#'  \item f_rf_rsquared: fits a univariate random forest model with `ranger::ranger()` between a numeric response and a numeric predictor to return the R-squared of the observations against the out-of-bag predictions. Requires the package `ranger`.
-#'  \item f_logistic_auc_balanced: fits a logistic univariate GLM of a balanced binary response (0s and 1s) against a numeric predictor to return the Area Under the Curve of the observations against the predictors.
-#'  \item f_logistic_auc_unbalanced: fits a quasibinomial univariate GLM with weighted cases of an unbalanced binary response (0s and 1s) against a numeric predictor to return the Area Under the Curve of the observations against the predictors.
-#'  \item f_gam_auc_balanced: fits a logistic univariate GAM of a balanced binary response (0s and 1s) against a numeric predictor to return the Area Under the Curve of the observations against the predictors.
-#'  \item f_gam_auc_unbalanced: fits a quasibinomial univariate GAM with weighted cases of an unbalanced binary response (0s and 1s) against a numeric predictor to return the Area Under the Curve of the observations against the predictors.
+#'  \item [f_rf_rsquared()] also named [f_rf_deviance()]: fits a univariate random forest model with `ranger::ranger()` between a numeric response and a numeric predictor to return the R-squared of the observations against the out-of-bag predictions. Requires the package `ranger`.
+#'  \item [f_logistic_auc_balanced()]: fits a logistic univariate GLM of a balanced binary response (0s and 1s) against a numeric predictor to return the Area Under the Curve of the observations against the predictors.
+#'  \item [f_logistic_auc_unbalanced()]: fits a quasibinomial univariate GLM with weighted cases of an unbalanced binary response (0s and 1s) against a numeric predictor to return the Area Under the Curve of the observations against the predictors.
+#'  \item [f_gam_auc_balanced()]: fits a logistic univariate GAM of a balanced binary response (0s and 1s) against a numeric predictor to return the Area Under the Curve of the observations against the predictors.
+#'  \item [f_gam_auc_unbalanced()]: fits a quasibinomial univariate GAM with weighted cases of an unbalanced binary response (0s and 1s) against a numeric predictor to return the Area Under the Curve of the observations against the predictors.
 #' }
 #' @param encoding_method (optional; character string). Name of the target encoding method to convert character and factor predictors to numeric. One of "mean", "rank", "loo", "rnorm" (see [target_encoding_lab()] for further details). Default: "mean"
 #' @param workers (integer) number of workers for parallel execution. Default: 1
@@ -296,6 +296,8 @@ f_gam_deviance <- function(x, y, df){
 #'
 #' Computes a univariate random forest model with `\link[ranger]{ranger}` and returns the R-squared on the out-of-bag data.
 #'
+#' `f_rf_rsquared()` and `f_rf_deviance()` are synonyms
+#'
 #' @param x (required, character string) name of the predictor variable.
 #' @param y (required, character string) name of the response variable
 #' @param df (required, data frame) data frame with the columns 'x' and 'y'.
@@ -344,6 +346,10 @@ f_rf_rsquared <- function(x, y, df){
   m$r.squared
 
 }
+
+#' @rdname f_rf_rsquared
+#' @export
+f_rf_deviance <- f_rf_rsquared
 
 #' AUC of Binomial GLM with Logit Link
 #'
