@@ -8,7 +8,8 @@ target_encoding_lab(
   df = NULL,
   response = NULL,
   predictors = NULL,
-  encoding_methods = c("mean", "rank", "loo", "rnorm"),
+  encoding_methods = c("mean", "mean_smoothing", "rank", "loo", "rnorm"),
+  smoothing_parameter = 30,
   rnorm_sd_multiplier = 0,
   seed = 1,
   white_noise = 0,
@@ -23,7 +24,9 @@ target_encoding_lab(
 
 \item{predictors}{(required; character vector) Names of all the predictors in \code{df}. Only character and factor predictors are processed, but all are returned in the "df" slot of the function's output.  Default: NULL}
 
-\item{encoding_methods}{(optional; character string or vector). Name of the target encoding methods. Default: c("mean", "rank", "loo", "rnorm")}
+\item{encoding_methods}{(optional; character string or vector). Name of the target encoding methods. Default: c("mean", "mean_smoothing, "rank", "loo", "rnorm")}
+
+\item{smoothing_parameter}{(optional; numeric) Argument of \code{\link[=target_encoding_mean_smoothing]{target_encoding_mean_smoothing()}} (method "mean_smoothing"). Minimum group size that keeps the mean of the group. Groups smaller than this have their means pulled towards the global mean of the response. Default: 30.}
 
 \item{rnorm_sd_multiplier}{(optional; numeric) Numeric with multiplier of the standard deviation of each group in the categorical variable, in the range 0-1. Controls the variability in the encoded variables to mitigate potential overfitting. Default: \code{1}}
 
@@ -36,19 +39,7 @@ target_encoding_lab(
 \item{verbose}{(optional; logical) If TRUE, messages generated during the execution of the function are printed to the console Default: TRUE}
 }
 \value{
-If no target encoding is needed because all predictors are numeric, the function returns \code{df}.
-
-Otherwise it returns a list with these slots:
-\itemize{
-\item \code{df}: Input data frame, but with target-encoded character or factor columns.
-\item \code{correlation_test}: Data frame with the results of a linear model between the target-encoded variable and the response. It contains the following columns:
-\itemize{
-\item \code{encoded_predictor}: name of the target-encoded variable.
-\item \code{correlation_with_response}: R-squared resulting from \code{\link[=cor.test]{cor.test()}} on the target-encoded variable and the response.
-}
-}
-
-If the option \code{replace} is \code{TRUE}, then the input data frame is returned with the categorical variables replaced with their encoded versions.
+The input data frame with newly encoded columns if \code{replace} is \code{FALSE}, or the input data frame with encoded columns if \code{TRUE}
 }
 \description{
 Target encoding involves replacing the values of categorical variables with numeric ones from a "target variable", usually a model's response. Target encoding can be useful for improving the performance of machine learning models.

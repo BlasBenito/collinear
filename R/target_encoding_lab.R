@@ -22,27 +22,17 @@
 #' @param df (required; data frame, tibble, or sf) A training data frame. Default: NULL
 #' @param response (required; character string) Name of the response. Must be a column name of `df`. Default: NULL
 #' @param predictors (required; character vector) Names of all the predictors in `df`. Only character and factor predictors are processed, but all are returned in the "df" slot of the function's output.  Default: NULL
-#' @param encoding_methods (optional; character string or vector). Name of the target encoding methods. Default: c("mean", "rank", "loo", "rnorm")
+#' @param encoding_methods (optional; character string or vector). Name of the target encoding methods. Default: c("mean", "mean_smoothing, "rank", "loo", "rnorm")
 #' @param seed (optional; integer) Random seed to facilitate reproducibility when `white_noise` is not 0. Default: 1
 #' @param white_noise (optional; numeric) Numeric with white noise values in the range 0-1, representing a fraction of the range of the response to be added as noise to the encoded variable. Controls the variability in the encoded variables to mitigate potential overfitting. Default: `0`.
+#' @param smoothing_parameter (optional; numeric) Argument of [target_encoding_mean_smoothing()] (method "mean_smoothing"). Minimum group size that keeps the mean of the group. Groups smaller than this have their means pulled towards the global mean of the response. Default: 30.
 #' @param rnorm_sd_multiplier (optional; numeric) Numeric with multiplier of the standard deviation of each group in the categorical variable, in the range 0-1. Controls the variability in the encoded variables to mitigate potential overfitting. Default: `1`
 #' @param replace (optional; logical) If `TRUE`, the function replaces each categorical variable with its encoded version, and returns the input data frame with the encoded variables instead of the original ones. Default: FALSE
 #' @param verbose (optional; logical) If TRUE, messages generated during the execution of the function are printed to the console Default: TRUE
 #'
 #' @return
-#' If no target encoding is needed because all predictors are numeric, the function returns `df`.
 #'
-#' Otherwise it returns a list with these slots:
-#' \itemize{
-#'   \item `df`: Input data frame, but with target-encoded character or factor columns.
-#'   \item `correlation_test`: Data frame with the results of a linear model between the target-encoded variable and the response. It contains the following columns:
-#'   \itemize{
-#'     \item `encoded_predictor`: name of the target-encoded variable.
-#'     \item `correlation_with_response`: R-squared resulting from [cor.test()] on the target-encoded variable and the response.
-#'   }
-#' }
-#'
-#' If the option `replace` is `TRUE`, then the input data frame is returned with the categorical variables replaced with their encoded versions.
+#' The input data frame with newly encoded columns if `replace` is `FALSE`, or the input data frame with encoded columns if `TRUE`
 #'
 #'
 #' @examples
@@ -99,10 +89,12 @@ target_encoding_lab <- function(
     predictors = NULL,
     encoding_methods = c(
       "mean",
+      "mean_smoothing",
       "rank",
       "loo",
       "rnorm"
     ),
+    smoothing_parameter = 30,
     rnorm_sd_multiplier = 0,
     seed = 1,
     white_noise = 0,
@@ -115,6 +107,7 @@ target_encoding_lab <- function(
     arg = encoding_methods,
     choices = c(
       "mean",
+      "mean_smoothing",
       "rank",
       "loo",
       "rnorm"
@@ -210,6 +203,21 @@ target_encoding_lab <- function(
           df = df,
           response = response,
           predictor = predictors.to.encode.i,
+          white_noise = white_noise.i,
+          seed = seed,
+          replace = replace,
+          verbose = verbose
+        )
+
+      }
+
+      if("mean_smoothing" %in% encoding_methods){
+
+        df <- target_encoding_mean_smoothing(
+          df = df,
+          response = response,
+          predictor = predictors.to.encode.i,
+          smoothing_parameter = smoothing_parameter,
           white_noise = white_noise.i,
           seed = seed,
           replace = replace,

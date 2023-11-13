@@ -2,6 +2,7 @@
 % Please edit documentation in R/target_encoding_methods.R
 \name{target_encoding_mean}
 \alias{target_encoding_mean}
+\alias{target_encoding_mean_smoothing}
 \alias{target_encoding_rnorm}
 \alias{target_encoding_rank}
 \alias{target_encoding_loo}
@@ -12,6 +13,17 @@ target_encoding_mean(
   df,
   response,
   predictor,
+  white_noise = 0,
+  seed = 1,
+  replace = FALSE,
+  verbose = TRUE
+)
+
+target_encoding_mean_smoothing(
+  df,
+  response,
+  predictor,
+  smoothing_parameter = 30,
   white_noise = 0,
   seed = 1,
   replace = FALSE,
@@ -54,17 +66,19 @@ add_white_noise(df, response, predictor, white_noise = 0.1, seed = 1)
 
 \item{response}{(required; character string) Name of the response. Must be a column name of \code{df}. Default: NULL}
 
-\item{predictor}{(required; character) Name of the categorical variable to encode.}
+\item{predictor}{(required; character) Name of the categorical variable to encode. Default: NULL}
 
-\item{white_noise}{(optional; numeric) Numeric with white noise values in the range 0-1, representing a fraction of the range of the response to be added as noise to the encoded variable. Controls the variability in the encoded variables to mitigate potential overfitting. Default: \code{0}.}
+\item{white_noise}{(optional; numeric) Numeric with white noise values in the range 0-1, representing a fraction of the range of the response to be added as noise to the encoded variable. Controls the variability in the encoded variables to mitigate potential overfitting. Default: 0.}
 
-\item{seed}{(optional; integer) Random seed to facilitate reproducibility. Default: \code{1}}
+\item{seed}{(optional; integer) Random seed to facilitate reproducibility. Default: 1}
 
 \item{replace}{(optional; logical) Advanced option that changes the behavior of the function. Use only if you really know exactly what you need. If \code{TRUE}, it replaces each categorical variable with its encoded version, and returns the input data frame with the replaced variables.}
 
-\item{verbose}{(optional; logical) If TRUE, messages and plots generated during the execution of the function are displayed. Default: \code{TRUE}}
+\item{verbose}{(optional; logical) If TRUE, messages and plots generated during the execution of the function are displayed. Default: TRUE}
 
-\item{rnorm_sd_multiplier}{(optional; numeric) Numeric with multiplier of the standard deviation of each group in the categorical variable, in the range 0-1. Controls the variability in the encoded variables to mitigate potential overfitting. Default: \code{1}}
+\item{smoothing_parameter}{(optional; numeric) Argument of \code{\link[=target_encoding_mean_smoothing]{target_encoding_mean_smoothing()}}. Minimum group size that keeps the mean of the group. Groups smaller than this have their means pulled towards the global mean of the response. Default: 30.}
+
+\item{rnorm_sd_multiplier}{(optional; numeric) Numeric with multiplier of the standard deviation of each group in the categorical variable, in the range 0-1. Controls the variability in the encoded variables to mitigate potential overfitting. Default: 1}
 }
 \value{
 The input data frame with a target-encoded variable.
@@ -73,6 +87,7 @@ The input data frame with a target-encoded variable.
 Methods to apply target-encoding to individual categorical variables. The functions implemented are:
 \itemize{
 \item \code{\link[=target_encoding_mean]{target_encoding_mean()}}: Each group is identified by the mean of the response over the group cases. White noise can be added via the \code{white_noise} argument. Columns encoded with this function are identified by the suffix "__encoded_mean". If \code{white_noise} is used, then the amount of white noise is also added to the suffix.
+\item \code{\link[=target_encoding_mean_smoothing]{target_encoding_mean_smoothing()}}: Applies mean encoding with additive smoothing via the \code{smoothing_parameter}. This method pulls the mean of groups smaller than the \code{smoothing_parameter} towards the global mean of the response by a factor of the sample size of the group. This is the original formulation of target encoding proposed by Micci-Barreca, D. (2001).
 \item \code{\link[=target_encoding_rank]{target_encoding_rank()}}: Each group is identified by the rank of the mean of the response variable over the group cases. The group with the lower mean receives the rank 1. White noise can be added via the \code{white_noise} argument. Columns encoded with this function are identified by the suffix "__encoded_rank". If \code{white_noise} is used, then the amount of noise is also added to the suffix.
 \item \code{\link[=target_encoding_rnorm]{target_encoding_rnorm()}}: Each case in a group receives a value coming from a normal distribution with the mean and the standard deviation of the response over the cases of the group. The argument \code{rnorm_sd_multiplier} multiplies the standard deviation to reduce the spread of the obtained values. Columns encoded with this function are identified by the suffix "__encoded_rnorm_rnorm_sd_multiplier_X", where X is the amount of \code{rnorm_sd_multiplier} used.
 \item \code{\link[=target_encoding_loo]{target_encoding_loo()}}: The suffix "loo" stands for "leave-one-out". Each case in a group is encoded as the average of the response over the other cases of the group. Columns encoded with this function are identified by the suffix "__encoded_loo".
