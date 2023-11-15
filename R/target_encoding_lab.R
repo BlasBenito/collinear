@@ -25,7 +25,7 @@
 #' @param encoding_methods (optional; character string or vector). Name of the target encoding methods. Default: c("mean", "mean_smoothing, "rank", "loo", "rnorm")
 #' @param seed (optional; integer) Random seed to facilitate reproducibility when `white_noise` is not 0. Default: 1
 #' @param white_noise (optional; numeric) Numeric with white noise values in the range 0-1, representing a fraction of the range of the response to be added as noise to the encoded variable. Controls the variability in the encoded variables to mitigate potential overfitting. Default: `0`.
-#' @param smoothing_parameter (optional; numeric) Argument of [target_encoding_mean_smoothing()] (method "mean_smoothing"). Minimum group size that keeps the mean of the group. Groups smaller than this have their means pulled towards the global mean of the response. Default: 30.
+#' @param smoothing (optional; numeric) Argument of [target_encoding_mean()] (method "mean_smoothing"). Minimum group size that keeps the mean of the group. Groups smaller than this have their means pulled towards the global mean of the response. Default: 0
 #' @param rnorm_sd_multiplier (optional; numeric) Numeric with multiplier of the standard deviation of each group in the categorical variable, in the range 0-1. Controls the variability in the encoded variables to mitigate potential overfitting. Default: `1`
 #' @param replace (optional; logical) If `TRUE`, the function replaces each categorical variable with its encoded version, and returns the input data frame with the encoded variables instead of the original ones. Default: FALSE
 #' @param verbose (optional; logical) If TRUE, messages generated during the execution of the function are printed to the console Default: TRUE
@@ -89,12 +89,11 @@ target_encoding_lab <- function(
     predictors = NULL,
     encoding_methods = c(
       "mean",
-      "mean_smoothing",
       "rank",
       "loo",
       "rnorm"
     ),
-    smoothing_parameter = 30,
+    smoothing = 0,
     rnorm_sd_multiplier = 0,
     seed = 1,
     white_noise = 0,
@@ -107,7 +106,6 @@ target_encoding_lab <- function(
     arg = encoding_methods,
     choices = c(
       "mean",
-      "mean_smoothing",
       "rank",
       "loo",
       "rnorm"
@@ -168,38 +166,33 @@ target_encoding_lab <- function(
   }
 
   if(verbose == TRUE){
-    message(
-      "Encoding the variables:\n",
-      paste0(
+    if(length(predictors.to.encode) > 1){
+      message(
+        "\nEncoding the predictors:\n",
+        paste0(
+          predictors.to.encode,
+          collapse = "\n"
+        ),
+        "\n"
+      )
+    } else {
+      message(
+        "\nEncoding the predictor: ",
         predictors.to.encode,
-        collapse = "\n"
-      ),
-      "\n"
-    )
+        "\n"
+      )
+    }
   }
 
   #iterating over categorical variables
   for(predictors.to.encode.i in predictors.to.encode){
 
-    if("rank" %in% encoding_methods){
-
-      df <- target_encoding_rank(
-        df = df,
-        response = response,
-        predictor = predictors.to.encode.i,
-        seed = seed,
-        replace = replace,
-        verbose = verbose
-      )
-
-    }
-
     for(white_noise.i in white_noise){
 
-      #method "mean"
-      if("mean" %in% encoding_methods){
+      #rank method
+      if("rank" %in% encoding_methods){
 
-        df <- target_encoding_mean(
+        df <- target_encoding_rank(
           df = df,
           response = response,
           predictor = predictors.to.encode.i,
@@ -211,18 +204,22 @@ target_encoding_lab <- function(
 
       }
 
-      if("mean_smoothing" %in% encoding_methods){
+      if("mean" %in% encoding_methods){
 
-        df <- target_encoding_mean_smoothing(
-          df = df,
-          response = response,
-          predictor = predictors.to.encode.i,
-          smoothing_parameter = smoothing_parameter,
-          white_noise = white_noise.i,
-          seed = seed,
-          replace = replace,
-          verbose = verbose
-        )
+        for(smoothing.i in smoothing){
+
+          df <- target_encoding_mean(
+            df = df,
+            response = response,
+            predictor = predictors.to.encode.i,
+            smoothing = smoothing.i,
+            white_noise = white_noise.i,
+            seed = seed,
+            replace = replace,
+            verbose = verbose
+          )
+
+        }
 
       }
 

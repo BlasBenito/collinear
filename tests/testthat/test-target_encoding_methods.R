@@ -11,35 +11,36 @@ testthat::test_that("`target_encoding_methods()` works", {
     df = vi,
     response = "vi_mean",
     predictor = "soil_type",
+    smoothing = 0,
     white_noise = 0.1,
     replace = FALSE,
     verbose = FALSE
   )
 
   testthat::expect_true(
-    "soil_type__encoded_mean__white_noise_0.1" %in% names(df)
+    "soil_type__encoded_mean__noise_0.1" %in% names(df)
   )
 
   testthat::expect_true(
-    is.numeric(df$soil_type__encoded_mean__white_noise_0.1)
+    is.numeric(df$soil_type__encoded_mean__noise_0.1)
   )
 
-  df <- target_encoding_mean_smoothing(
+  df <- target_encoding_mean(
     df = vi,
     response = "vi_mean",
     predictor = "soil_type",
-    smoothing_parameter = 30,
+    smoothing = 30,
     white_noise = 0.1,
     replace = FALSE,
     verbose = FALSE
   )
 
   testthat::expect_true(
-    "soil_type__encoded_mean_smoothing__white_noise_0.1" %in% names(df)
+    "soil_type__encoded_mean__smoothing_30__noise_0.1" %in% names(df)
   )
 
   testthat::expect_true(
-    is.numeric(df$soil_type__encoded_mean_smoothing__white_noise_0.1)
+    is.numeric(df$soil_type__encoded_mean__smoothing_30__noise_0.1)
   )
 
   #target_encoding_rank
@@ -71,11 +72,11 @@ testthat::test_that("`target_encoding_methods()` works", {
   )
 
   testthat::expect_true(
-    "soil_type__encoded_loo__white_noise_0.1" %in% names(df)
+    "soil_type__encoded_loo__noise_0.1" %in% names(df)
   )
 
   testthat::expect_true(
-    is.numeric(df$soil_type__encoded_loo__white_noise_0.1)
+    is.numeric(df$soil_type__encoded_loo__noise_0.1)
   )
 
   #target_encoding_rnorm

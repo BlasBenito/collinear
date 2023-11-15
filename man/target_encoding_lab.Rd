@@ -8,8 +8,8 @@ target_encoding_lab(
   df = NULL,
   response = NULL,
   predictors = NULL,
-  encoding_methods = c("mean", "mean_smoothing", "rank", "loo", "rnorm"),
-  smoothing_parameter = 30,
+  encoding_methods = c("mean", "rank", "loo", "rnorm"),
+  smoothing = 0,
   rnorm_sd_multiplier = 0,
   seed = 1,
   white_noise = 0,
@@ -26,7 +26,7 @@ target_encoding_lab(
 
 \item{encoding_methods}{(optional; character string or vector). Name of the target encoding methods. Default: c("mean", "mean_smoothing, "rank", "loo", "rnorm")}
 
-\item{smoothing_parameter}{(optional; numeric) Argument of \code{\link[=target_encoding_mean_smoothing]{target_encoding_mean_smoothing()}} (method "mean_smoothing"). Minimum group size that keeps the mean of the group. Groups smaller than this have their means pulled towards the global mean of the response. Default: 30.}
+\item{smoothing}{(optional; numeric) Argument of \code{\link[=target_encoding_mean]{target_encoding_mean()}} (method "mean_smoothing"). Minimum group size that keeps the mean of the group. Groups smaller than this have their means pulled towards the global mean of the response. Default: 0}
 
 \item{rnorm_sd_multiplier}{(optional; numeric) Numeric with multiplier of the standard deviation of each group in the categorical variable, in the range 0-1. Controls the variability in the encoded variables to mitigate potential overfitting. Default: \code{1}}
 
