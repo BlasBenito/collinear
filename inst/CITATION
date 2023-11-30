@@ -1,11 +1,9 @@
-note <- sprintf("R package version %s", packageVersion("collinear"))
+citHeader("To cite the R package 'collinear' in publications, please use:")
 
 bibentry(bibtype = "Misc",
-         title = "collinear: R Package for Seamless Multicollinearity Management",
-         author = person("Benito", "Blas M."),
+         title = "{collinear}: R Package for Seamless Multicollinearity Management",
+         author = person(given = "Blas M.", family = "Benito"),
          year = 2023,
-         note = note,
          url = c("https://blasbenito.github.io/collinear/"),
-         header = "To cite the collinear R package:",
          doi = "10.5281/zenodo.10039489"
 )

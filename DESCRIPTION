@@ -2,7 +2,10 @@ Package: collinear
 Title: Seamless Multicollinearity Management
 Version: 1.1.0
 Authors@R: 
-    person("Blas M.", "Benito", , "blasbenito@gmail.com", role = c("aut", "cre", "cph"),
+    person(given = "Blas M.", 
+          family = "Benito", , 
+          email = "blasbenito@gmail.com", 
+          role = c("aut", "cre", "cph"),
            comment = c(ORCID = "0000-0001-5105-7232"))
 Description: System for seamless management of multicollinearity in data frames
     with numeric and/or categorical variables for statistical analysis and 

@@ -1,3 +1,15 @@
+## Fixed issue
+
+ Reading CITATION file fails with
+     there is no package called 'collinear'
+   when package is not installed.
+   
+This error was caused by this line of code in inst/CITATION:
+
+note <- sprintf("R package version %s", packageVersion("collinear")) 
+
+This line has been removed from the file.
+
 ## R CMD check results
 
 0 errors ✔ | 0 warnings ✔ | 0 notes ✔
