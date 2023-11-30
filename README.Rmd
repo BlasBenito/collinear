@@ -43,12 +43,12 @@ knitr::opts_chunk$set(
 
 The R package `collinear` combines four different methods to offer a comprehensive tool for multicollinearity management:
 
-  + **Pairwise correlation for numeric and categorical predictors**: computed either via Pearson or Spearman methods for numeric predictors, and Cramer's V for categorical predictors.
-  + **Variance Inflation Factor analysis (VIF)**: to identify multicollinearity resulting from predictors being linear combinations of other predictors.
-  + **Target encoding of categorical predictors**: to convert them to numeric using a numeric variable as response (usually a response variable) and handle them as numerics during the multicollinearity filtering.
-  + **Variable prioritization**: method to prioritize predictors during variable selection either using expert knowledge or quantitative criteria.
+  + **Pairwise correlation for numeric and categorical predictors**: identification of pairwise correlation via Pearson or Spearman methods for numeric predictors, and Cramer's V for categorical predictors.
+  + **Variance Inflation Factor analysis (VIF)**: to identify multicollinearity resulting from linear combinations of other predictors.
+  + **Target encoding of categorical predictors**: transforms categorical predictors to numeric using a numeric variable as a response (usually a response variable) and handle them as numerics during the multicollinearity filtering.
+  + **Variable prioritization**: method to prioritize predictors during variable selection using expert knowledge or quantitative criteria.
   
-These methods are integrated in the `collinear()` function, which returns a vector of selected predictors with a controlled multicollinearity.
+These methods are integrated in the `collinear()` function, which returns a vector of selected predictors with a user-defined level of multicollinearity.
 
 ```{r, eval = FALSE}
 selected_variables <- collinear(
@@ -482,8 +482,6 @@ df <- target_encoding_mean(
 head(df[, c("vi_mean", "koppen_zone")], n = 10)
 ```
 
-If you got here, thank you for your interest in the R package `collinear`, I hope it can serve you well.
-
-And that's a wrap! 
+If you got here, thank you for your interest in `collinear`. I hope you can find it useful!
 
 Blas M. Benito, PhD

@@ -1,4 +1,4 @@
-# collinear 1.0.3
+# collinear 1.1.0
 
 Added argument "smoothing" to `target_encoding_mean()` function to implement original target encoding method.
 

@@ -23,21 +23,20 @@ The R package `collinear` combines four different methods to offer a
 comprehensive tool for multicollinearity management:
 
 - **Pairwise correlation for numeric and categorical predictors**:
-  computed either via Pearson or Spearman methods for numeric
-  predictors, and Cramer’s V for categorical predictors.
+  identification of pairwise correlation via Pearson or Spearman methods
+  for numeric predictors, and Cramer’s V for categorical predictors.
 - **Variance Inflation Factor analysis (VIF)**: to identify
-  multicollinearity resulting from predictors being linear combinations
-  of other predictors.
-- **Target encoding of categorical predictors**: to convert them to
-  numeric using a numeric variable as response (usually a response
-  variable) and handle them as numerics during the multicollinearity
-  filtering.
+  multicollinearity resulting from linear combinations of other
+  predictors.
+- **Target encoding of categorical predictors**: transforms categorical
+  predictors to numeric using a numeric variable as a response (usually
+  a response variable) and handle them as numerics during the
+  multicollinearity filtering.
 - **Variable prioritization**: method to prioritize predictors during
-  variable selection either using expert knowledge or quantitative
-  criteria.
+  variable selection using expert knowledge or quantitative criteria.
 
 These methods are integrated in the `collinear()` function, which
-returns a vector of selected predictors with a controlled
+returns a vector of selected predictors with a user-defined level of
 multicollinearity.
 
 ``` r
@@ -119,13 +118,14 @@ variables.
 ``` r
 dplyr::glimpse(vi)
 #> Rows: 30,000
-#> Columns: 67
+#> Columns: 68
 #> $ longitude                  <dbl> -114.254306, 114.845693, -122.145972, 108.3…
 #> $ latitude                   <dbl> 45.0540272, 26.2706940, 56.3790272, 29.9456…
 #> $ vi_mean                    <dbl> 0.38, 0.53, 0.45, 0.69, 0.42, 0.68, 0.70, 0…
 #> $ vi_max                     <dbl> 0.57, 0.67, 0.65, 0.85, 0.64, 0.78, 0.77, 0…
 #> $ vi_min                     <dbl> 0.12, 0.41, 0.25, 0.50, 0.25, 0.48, 0.60, 0…
 #> $ vi_range                   <dbl> 0.45, 0.26, 0.40, 0.34, 0.39, 0.31, 0.17, 0…
+#> $ vi_binary                  <dbl> 0, 1, 0, 1, 0, 1, 1, 0, 1, 0, 0, 1, 0, 0, 0…
 #> $ koppen_zone                <chr> "BSk", "Cfa", "Dfc", "Cfb", "Aw", "Cfa", "A…
 #> $ koppen_group               <chr> "Arid", "Temperate", "Cold", "Temperate", "…
 #> $ koppen_description         <chr> "steppe, cold", "no dry season, hot summer"…
@@ -516,7 +516,7 @@ selected_predictors_response <- cor_select(
   predictors = vi_predictors
 )
 tictoc::toc()
-#> 0.427 sec elapsed
+#> 0.432 sec elapsed
 
 tictoc::tic()
 selected_predictors_no_response <- cor_select(
@@ -524,7 +524,7 @@ selected_predictors_no_response <- cor_select(
   predictors = vi_predictors
 )
 tictoc::toc()
-#> 35.246 sec elapsed
+#> 34.798 sec elapsed
 ```
 
 ``` r
@@ -892,15 +892,17 @@ df <- target_encoding_lab(
   white_noise = c(0, 0.01, 0.1),
   verbose = TRUE
 )
-#> Encoding the variables:
-#> koppen_zone
+#> 
+#> Encoding the predictor: koppen_zone
 #> New encoded predictor: 'koppen_zone__encoded_rank'
 #> New encoded predictor: 'koppen_zone__encoded_mean'
 #> New encoded predictor: 'koppen_zone__encoded_loo'
-#> New encoded predictor: 'koppen_zone__encoded_mean__white_noise_0.01'
-#> New encoded predictor: 'koppen_zone__encoded_loo__white_noise_0.01'
-#> New encoded predictor: 'koppen_zone__encoded_mean__white_noise_0.1'
-#> New encoded predictor: 'koppen_zone__encoded_loo__white_noise_0.1'
+#> New encoded predictor: 'koppen_zone__encoded_rank__noise_0.01'
+#> New encoded predictor: 'koppen_zone__encoded_mean__noise_0.01'
+#> New encoded predictor: 'koppen_zone__encoded_loo__noise_0.01'
+#> New encoded predictor: 'koppen_zone__encoded_rank__noise_0.1'
+#> New encoded predictor: 'koppen_zone__encoded_mean__noise_0.1'
+#> New encoded predictor: 'koppen_zone__encoded_loo__noise_0.1'
 #> New encoded predictor: 'koppen_zone__encoded_rnorm'
 #> New encoded predictor: 'koppen_zone__encoded_rnorm__sd_multiplier_0.01'
 #> New encoded predictor: 'koppen_zone__encoded_rnorm__sd_multiplier_0.1'
@@ -981,9 +983,7 @@ head(df[, c("vi_mean", "koppen_zone")], n = 10)
 #> 10    0.16   0.1330452
 ```
 
-If you got here, thank you for your interest in the R package
-`collinear`, I hope it can serve you well.
-
-And that’s a wrap!
+If you got here, thank you for your interest in `collinear`. I hope you
+can find it useful!
 
 Blas M. Benito, PhD
