@@ -22,6 +22,9 @@
     <loc>https://blasbenito.github.io/collinear/news/index.html</loc>
   </url>
   <url>
+    <loc>https://blasbenito.github.io/collinear/reference/auc_score.html</loc>
+  </url>
+  <url>
     <loc>https://blasbenito.github.io/collinear/reference/collinear-package.html</loc>
   </url>
   <url>
@@ -43,10 +46,28 @@
     <loc>https://blasbenito.github.io/collinear/reference/drop_geometry_column.html</loc>
   </url>
   <url>
+    <loc>https://blasbenito.github.io/collinear/reference/f_gam_auc_balanced.html</loc>
+  </url>
+  <url>
+    <loc>https://blasbenito.github.io/collinear/reference/f_gam_auc_unbalanced.html</loc>
+  </url>
+  <url>
     <loc>https://blasbenito.github.io/collinear/reference/f_gam_deviance.html</loc>
   </url>
   <url>
-    <loc>https://blasbenito.github.io/collinear/reference/f_rf_deviance.html</loc>
+    <loc>https://blasbenito.github.io/collinear/reference/f_logistic_auc_balanced.html</loc>
+  </url>
+  <url>
+    <loc>https://blasbenito.github.io/collinear/reference/f_logistic_auc_unbalanced.html</loc>
+  </url>
+  <url>
+    <loc>https://blasbenito.github.io/collinear/reference/f_rf_auc_balanced.html</loc>
+  </url>
+  <url>
+    <loc>https://blasbenito.github.io/collinear/reference/f_rf_auc_unbalanced.html</loc>
+  </url>
+  <url>
+    <loc>https://blasbenito.github.io/collinear/reference/f_rf_rsquared.html</loc>
   </url>
   <url>
     <loc>https://blasbenito.github.io/collinear/reference/f_rsquared.html</loc>
@@ -64,6 +85,9 @@
     <loc>https://blasbenito.github.io/collinear/reference/index.html</loc>
   </url>
   <url>
+    <loc>https://blasbenito.github.io/collinear/reference/internal.html</loc>
+  </url>
+  <url>
     <loc>https://blasbenito.github.io/collinear/reference/preference_order.html</loc>
   </url>
   <url>
@@ -71,6 +95,9 @@
   </url>
   <url>
     <loc>https://blasbenito.github.io/collinear/reference/target_encoding_methods.html</loc>
+  </url>
+  <url>
+    <loc>https://blasbenito.github.io/collinear/reference/toy.html</loc>
   </url>
   <url>
     <loc>https://blasbenito.github.io/collinear/reference/validate_df.html</loc>

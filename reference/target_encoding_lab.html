@@ -10,7 +10,7 @@ The target encoding methods implemented in this function are:
 
 
 The methods &quot;mean&quot; and &quot;rank&quot; support the white_noise argument, which is a fraction of the range of the response variable, and the maximum possible value of white noise to be added. For example, if response is within 0 and 1, a white_noise of 0.25 will add to every value of the encoded variable a random number selected from a normal distribution between -0.25 and 0.25. This argument helps control potential overfitting induced by the encoded variable.
-The method &quot;rnorm&quot; has the argument rnorm_sd_multiplier, which multiplies the standard deviation argument of the \link[stats]{rnorm} function to control the spread of the encoded values between groups. Values smaller than 1 reduce the spread in the results, while values larger than 1 have the opposite effect."><title>Target encoding of non-numeric variables — target_encoding_lab • collinear</title><script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><link href="../deps/bootstrap-5.2.2/bootstrap.min.css" rel="stylesheet"><script src="../deps/bootstrap-5.2.2/bootstrap.bundle.min.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous"><!-- bootstrap-toc --><script src="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@v1.0.1/dist/bootstrap-toc.min.js" integrity="sha256-4veVQbu7//Lk5TSmc7YV48MxtMy98e26cf5MrgZYnwo=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Target encoding of non-numeric variables — target_encoding_lab"><meta property="og:description" content="Target encoding involves replacing the values of categorical variables with numeric ones from a &quot;target variable&quot;, usually a model's response. Target encoding can be useful for improving the performance of machine learning models.
+The method &quot;rnorm&quot; has the argument rnorm_sd_multiplier, which multiplies the standard deviation argument of the \link[stats]{rnorm} function to control the spread of the encoded values between groups. Values smaller than 1 reduce the spread in the results, while values larger than 1 have the opposite effect."><title>Target encoding of non-numeric variables — target_encoding_lab • collinear</title><script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet"><script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous"><!-- bootstrap-toc --><script src="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@v1.0.1/dist/bootstrap-toc.min.js" integrity="sha256-4veVQbu7//Lk5TSmc7YV48MxtMy98e26cf5MrgZYnwo=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Target encoding of non-numeric variables — target_encoding_lab"><meta property="og:description" content="Target encoding involves replacing the values of categorical variables with numeric ones from a &quot;target variable&quot;, usually a model's response. Target encoding can be useful for improving the performance of machine learning models.
 This function identifies categorical variables in the input data frame, and transforms them using a set of target-encoding methods selected by the user, and returns the input data frame with the newly encoded variables.
 The target encoding methods implemented in this function are:
 
@@ -32,7 +32,7 @@ The method &quot;rnorm&quot; has the argument rnorm_sd_multiplier, which multipl
     
     <a class="navbar-brand me-2" href="../index.html">collinear</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.1.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -80,6 +80,7 @@ The method &quot;rnorm&quot; has the argument rnorm_sd_multiplier, which multipl
 <span>  response <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  predictors <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  encoding_methods <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"mean"</span>, <span class="st">"rank"</span>, <span class="st">"loo"</span>, <span class="st">"rnorm"</span><span class="op">)</span>,</span>
+<span>  smoothing <span class="op">=</span> <span class="fl">0</span>,</span>
 <span>  rnorm_sd_multiplier <span class="op">=</span> <span class="fl">0</span>,</span>
 <span>  seed <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>  white_noise <span class="op">=</span> <span class="fl">0</span>,</span>
@@ -103,7 +104,11 @@ The method &quot;rnorm&quot; has the argument rnorm_sd_multiplier, which multipl
 
 
 <dt>encoding_methods</dt>
-<dd><p>(optional; character string or vector). Name of the target encoding methods. Default: c("mean", "rank", "loo", "rnorm")</p></dd>
+<dd><p>(optional; character string or vector). Name of the target encoding methods. Default: c("mean", "mean_smoothing, "rank", "loo", "rnorm")</p></dd>
+
+
+<dt>smoothing</dt>
+<dd><p>(optional; numeric) Argument of <code><a href="target_encoding_methods.html">target_encoding_mean()</a></code> (method "mean_smoothing"). Minimum group size that keeps the mean of the group. Groups smaller than this have their means pulled towards the global mean of the response. Default: 0</p></dd>
 
 
 <dt>rnorm_sd_multiplier</dt>
@@ -130,14 +135,9 @@ The method &quot;rnorm&quot; has the argument rnorm_sd_multiplier, which multipl
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     
 
-<p>If no target encoding is needed because all predictors are numeric, the function returns <code>df</code>.</p>
+<p>The input data frame with newly encoded columns if <code>replace</code> is <code>FALSE</code>, or the input data frame with encoded columns if <code>TRUE</code></p>
 
 
-<p>Otherwise it returns a list with these slots:</p><ul><li><p><code>df</code>: Input data frame, but with target-encoded character or factor columns.</p></li>
-<li><p><code>correlation_test</code>: Data frame with the results of a linear model between the target-encoded variable and the response. It contains the following columns:</p><ul><li><p><code>encoded_predictor</code>: name of the target-encoded variable.</p></li>
-<li><p><code>correlation_with_response</code>: R-squared resulting from <code><a href="https://rdrr.io/r/stats/cor.test.html" class="external-link">cor.test()</a></code> on the target-encoded variable and the response.</p></li>
-</ul></li>
-</ul><p>If the option <code>replace</code> is <code>TRUE</code>, then the input data frame is returned with the categorical variables replaced with their encoded versions.</p>
     </div>
     <div class="section level2">
     <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a></h2>
@@ -174,15 +174,17 @@ The method &quot;rnorm&quot; has the argument rnorm_sd_multiplier, which multipl
 <span class="r-in"><span>  rnorm_sd_multiplier <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0.1</span>, <span class="fl">0.2</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>  white_noise <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0.1</span>, <span class="fl">0.2</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Encoding the variables:</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> koppen_zone</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Encoding the predictor: koppen_zone</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> New encoded predictor: 'koppen_zone__encoded_rank'</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> New encoded predictor: 'koppen_zone__encoded_mean'</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> New encoded predictor: 'koppen_zone__encoded_loo'</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> New encoded predictor: 'koppen_zone__encoded_mean__white_noise_0.1'</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> New encoded predictor: 'koppen_zone__encoded_loo__white_noise_0.1'</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> New encoded predictor: 'koppen_zone__encoded_mean__white_noise_0.2'</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> New encoded predictor: 'koppen_zone__encoded_loo__white_noise_0.2'</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> New encoded predictor: 'koppen_zone__encoded_rank__noise_0.1'</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> New encoded predictor: 'koppen_zone__encoded_mean__noise_0.1'</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> New encoded predictor: 'koppen_zone__encoded_loo__noise_0.1'</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> New encoded predictor: 'koppen_zone__encoded_rank__noise_0.2'</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> New encoded predictor: 'koppen_zone__encoded_mean__noise_0.2'</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> New encoded predictor: 'koppen_zone__encoded_loo__noise_0.2'</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> New encoded predictor: 'koppen_zone__encoded_rnorm'</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> New encoded predictor: 'koppen_zone__encoded_rnorm__sd_multiplier_0.1'</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> New encoded predictor: 'koppen_zone__encoded_rnorm__sd_multiplier_0.2'</span>
@@ -202,14 +204,14 @@ The method &quot;rnorm&quot; has the argument rnorm_sd_multiplier, which multipl
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      koppen_zone__encoded_rank koppen_zone__encoded_mean</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1,]                 0.8859924                 0.9020568</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>      koppen_zone__encoded_loo koppen_zone__encoded_mean__white_noise_0.1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1,]                0.8965685                                  0.8828402</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>      koppen_zone__encoded_loo__white_noise_0.1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1,]                                 0.8775426</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>      koppen_zone__encoded_mean__white_noise_0.2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1,]                                  0.8310055</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>      koppen_zone__encoded_loo__white_noise_0.2 koppen_zone__encoded_rnorm</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1,]                                 0.8260963                  0.9020412</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>      koppen_zone__encoded_loo koppen_zone__encoded_rank__noise_0.1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,]                0.8964646                            0.8860717</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>      koppen_zone__encoded_mean__noise_0.1 koppen_zone__encoded_loo__noise_0.1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,]                            0.8828402                           0.8774811</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>      koppen_zone__encoded_rank__noise_0.2 koppen_zone__encoded_mean__noise_0.2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,]                            0.8861208                            0.8310055</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>      koppen_zone__encoded_loo__noise_0.2 koppen_zone__encoded_rnorm</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,]                           0.8260699                  0.9019647</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      koppen_zone__encoded_rnorm__sd_multiplier_0.1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1,]                                     0.9002496</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      koppen_zone__encoded_rnorm__sd_multiplier_0.2</span>
