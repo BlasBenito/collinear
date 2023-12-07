@@ -1,3 +1,7 @@
+# collinear 1.1.1
+
+Hotfix of issue with solve(tol = 0) in systems with no large double support (noLD). This one wasn't fun.
+
 # collinear 1.1.0
 
 Added argument "smoothing" to `target_encoding_mean()` function to implement original target encoding method.

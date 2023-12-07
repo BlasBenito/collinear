@@ -2,6 +2,15 @@ testthat::test_that("`vif_select()` works", {
   data(vi, vi_predictors)
   vi <- vi[1:1000, ]
 
+  #create a few perfect correlations in vi
+  #reduce correlation in predictors with cor_select()
+  vi_predictors <- cor_select(
+    df = vi,
+    response = "vi_mean",
+    predictors = vi_predictors,
+    max_cor = 0.75
+  )
+
   # Test with only numeric predictors
   selected_predictors <- vif_select(
     df = vi,

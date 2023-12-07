@@ -516,7 +516,7 @@ selected_predictors_response <- cor_select(
   predictors = vi_predictors
 )
 tictoc::toc()
-#> 0.432 sec elapsed
+#> 0.414 sec elapsed
 
 tictoc::tic()
 selected_predictors_no_response <- cor_select(
@@ -524,7 +524,7 @@ selected_predictors_no_response <- cor_select(
   predictors = vi_predictors
 )
 tictoc::toc()
-#> 34.798 sec elapsed
+#> 34.603 sec elapsed
 ```
 
 ``` r

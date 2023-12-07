@@ -32,6 +32,8 @@ Character vector with the names of the selected predictors.
 \description{
 Automates multicollinearity management by selecting variables based on their Variance Inflation Factor (VIF).
 
+Warning: predictors with perfect correlation might cause errors, please use \code{\link[=cor_select]{cor_select()}} to remove perfect correlations first.
+
 The \code{\link[=vif_select]{vif_select()}} function is designed to automate the reduction of multicollinearity in a set of predictors by using Variance Inflation Factors.
 
 If the 'response' argument is provided, categorical predictors are converted to numeric via target encoding (see \code{\link[=target_encoding_lab]{target_encoding_lab()}}). If the 'response' argument is not provided, categorical variables are ignored.
@@ -64,6 +66,14 @@ data(
 #subset to limit example run time
 vi <- vi[1:1000, ]
 vi_predictors <- vi_predictors[1:10]
+
+#reduce correlation in predictors with cor_select()
+vi_predictors <- cor_select(
+  df = vi,
+  response = "vi_mean",
+  predictors = vi_predictors,
+  max_cor = 0.75
+)
 
 #without response
 #without preference_order

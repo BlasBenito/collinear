@@ -4,13 +4,14 @@
 #'
 #' Computes the Variance Inflation Factor of all variables in a training data frame.
 #'
+#' Warning: predictors with perfect correlation might cause errors, please use [cor_select()] to remove perfect correlations first.
+#'
 #' The Variance Inflation Factor for a given variable `y` is computed as `1/(1-R2)`, where `R2` is the multiple R-squared of a multiple regression model fitted using `y` as response and all the remaining variables of the input data set as predictors. The equation can be interpreted as "the rate of perfect model's R-squared to the unexplained variance of this model".
 #'
 #' The possible range of VIF values is (1, Inf]. A VIF lower than 10 suggest that removing `y` from the data set would reduce overall multicollinearity.
 #'
-#' This function computes the Variance Inflation Factor (VIF) in three steps:
+#' This function computes the Variance Inflation Factor (VIF) in two steps:
 #' \itemize{
-#'   \item Computes the correlation matrix between all pairs of predictors using `\link[stats]{cor}`.
 #'   \item Applies `\link[base]{solve}` to obtain the precision matrix, which is the inverse of the covariance matrix.
 #'   \item Uses `\link[base]{diag}` to extract the diagonal of the precision matrix, which contains the variance of the prediction of each predictor from all other predictors.
 #' }
@@ -30,6 +31,14 @@
 #'
 #' #subset to limit example run time
 #' vi <- vi[1:1000, ]
+#'
+#' #reduce correlation in predictors with cor_select()
+#' vi_predictors <- cor_select(
+#'   df = vi,
+#'   response = "vi_mean",
+#'   predictors = vi_predictors,
+#'   max_cor = 0.75
+#' )
 #'
 #' #without response
 #' #only numeric predictors are returned
@@ -101,11 +110,17 @@ vif_df <- function(
   #and replace them with 0.99 or -0.99
   cor.matrix.range <- range(cor.matrix[upper.tri(cor.matrix)])
   if(1 %in% cor.matrix.range){
-    cor.matrix[cor.matrix == 1] <- 0.99999999
+    cor.matrix[cor.matrix == 1] <- 0.999
     diag(cor.matrix) <- 1
   }
   if(-1 %in% cor.matrix.range){
-    cor.matrix[cor.matrix == -1] <- -0.99999999
+    cor.matrix[cor.matrix == -1] <- -0.999
+  }
+
+  if(capabilities("long.double") == TRUE){
+    tolerance = 0
+  } else {
+    tolerance = .Machine$double.eps
   }
 
   #vif data frame
@@ -113,7 +128,7 @@ vif_df <- function(
     {
 
       vif.df <- cor.matrix |>
-        solve(tol = 0) |>
+        solve(tol = tolerance) |>
         diag() |>
         data.frame(stringsAsFactors = FALSE) |>
         dplyr::rename(vif = 1) |>
@@ -126,7 +141,7 @@ vif_df <- function(
       rownames(vif.df) <- NULL
 
     }, error = function(e) {
-      stop("the VIF computation failed. Please check for perfect correlations between predictors, or an excessive number of NA values in the 'df' argument.")
+      stop("the VIF computation failed. Please use cor_df() or cor_select() to check and remove perfect correlations from df before the VIF assessment.")
     }
   )
 

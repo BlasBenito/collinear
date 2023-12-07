@@ -4,8 +4,13 @@ testthat::test_that("`vif_df()` works", {
   vi <- vi[1:1000, ]
 
   #create a few perfect correlations in vi
-  vi$a <- vi$b <- vi$c <- vi$d <- vi$soil_sand
-  vi_predictors <- c(vi_predictors, "a", "b", "c")
+  #reduce correlation in predictors with cor_select()
+  vi_predictors <- cor_select(
+    df = vi,
+    response = "vi_mean",
+    predictors = vi_predictors,
+    max_cor = 0.75
+  )
 
   # Test with only numeric predictors
   df <- vif_df(

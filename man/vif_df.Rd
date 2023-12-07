@@ -21,13 +21,14 @@ Data frame with predictor names and VIF values
 \description{
 Computes the Variance Inflation Factor of all variables in a training data frame.
 
+Warning: predictors with perfect correlation might cause errors, please use \code{\link[=cor_select]{cor_select()}} to remove perfect correlations first.
+
 The Variance Inflation Factor for a given variable \code{y} is computed as \code{1/(1-R2)}, where \code{R2} is the multiple R-squared of a multiple regression model fitted using \code{y} as response and all the remaining variables of the input data set as predictors. The equation can be interpreted as "the rate of perfect model's R-squared to the unexplained variance of this model".
 
 The possible range of VIF values is (1, Inf]. A VIF lower than 10 suggest that removing \code{y} from the data set would reduce overall multicollinearity.
 
-This function computes the Variance Inflation Factor (VIF) in three steps:
+This function computes the Variance Inflation Factor (VIF) in two steps:
 \itemize{
-\item Computes the correlation matrix between all pairs of predictors using \verb{\link[stats]\{cor\}}.
 \item Applies \verb{\link[base]\{solve\}} to obtain the precision matrix, which is the inverse of the covariance matrix.
 \item Uses \verb{\link[base]\{diag\}} to extract the diagonal of the precision matrix, which contains the variance of the prediction of each predictor from all other predictors.
 }
@@ -41,6 +42,14 @@ data(
 
 #subset to limit example run time
 vi <- vi[1:1000, ]
+
+#reduce correlation in predictors with cor_select()
+vi_predictors <- cor_select(
+  df = vi,
+  response = "vi_mean",
+  predictors = vi_predictors,
+  max_cor = 0.75
+)
 
 #without response
 #only numeric predictors are returned
