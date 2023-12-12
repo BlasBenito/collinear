@@ -7,6 +7,7 @@ Authors@R:
           email = "blasbenito@gmail.com", 
           role = c("aut", "cre", "cph"),
            comment = c(ORCID = "0000-0001-5105-7232"))
+URL: https://blasbenito.github.io/collinear/
 Description: System for seamless management of multicollinearity in data frames
     with numeric and/or categorical variables for statistical analysis and 
     machine learning modeling. The package combines bivariate correlation 
