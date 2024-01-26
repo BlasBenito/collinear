@@ -34,4 +34,5 @@ Depends:
     R (>= 4.0)
 LazyData: true
 URL: https://blasbenito.github.io/collinear/
+BugReports: https://github.com/blasbenito/collinear/issues
 Language: en-US
