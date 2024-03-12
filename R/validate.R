@@ -69,6 +69,25 @@ validate_df <- function(
   #remove geometry column from df
   df <- drop_geometry_column(df = df)
 
+  #replace inf with NA
+  n_inf <- lapply(
+    X = df,
+    FUN = is.infinite
+  ) |>
+    unlist() |>
+    sum()
+
+  if(n_inf > 0){
+    is.na(df) <- do.call(
+      what = cbind,
+      args = lapply(
+        X = df,
+        FUN = is.infinite
+      )
+    )
+  }
+
+
   #remove non-numeric columns with as many values as rows
   non.numeric.columns <- identify_non_numeric_predictors(df)
 
