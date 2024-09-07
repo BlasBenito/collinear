@@ -2,7 +2,7 @@
 #'
 #' @description
 #'
-#' Applies a recursive forward selection algorithm algorithm to select predictors with a bivariate correlation with any other predictor lower than a threshold defined by the argument `max_cor`.
+#' Applies a recursive forward selection algorithm to select predictors with a bivariate correlation with any other predictor lower than a threshold defined by the argument `max_cor`.
 #'
 #' If the argument `response` is provided, all non-numeric variables in `predictors` are transformed into numeric using target encoding (see [target_encoding_lab()]). Otherwise, non-numeric variables are ignored.
 #'
@@ -14,11 +14,11 @@
 #'  \item If their correlation is equal or above `max_cor`, then `"a"` is selected, no matter its correlation with `"c"`,
 #' }
 #'
-#' If `preference_order` is not provided, then the predictors are ranked by their variance inflation factor as computed by `vif_df()`.
+#' If `preference_order` is not provided, then the predictors are ranked by the sum of their absolute pairwise correlations with the other predictors.
 #'
 #'
-#' @param df (required; data frame) A data frame with numeric and/or character predictors predictors, and optionally, a response variable. Default: NULL.
-#' @param response (recommended, character string) Name of a numeric response variable. Character response variables are ignored. Please, see 'Details' to better understand how providing this argument or not leads to different results when there are character variables in 'predictors'. Default: NULL.
+#' @param df (required; data frame) A data frame with numeric and/or character predictors, and optionally, a response variable. Default: NULL.
+#' @param response (recommended, character string) Name of a numeric response variable. Character response variables are ignored. Please, see 'Description' to better understand how providing this argument or not leads to different results when there are character variables in 'predictors'. Default: NULL.
 #' @param predictors (optional; character vector) Character vector with predictor names in 'df'. If omitted, all columns of 'df' are used as predictors. Default:'NULL'
 #' @param preference_order  (optional; character vector) vector with column names in 'predictors' in the desired preference order, or result of the function [preference_order()]. Allows defining a priority order for selecting predictors, which can be particularly useful when some predictors are more critical for the analysis than others. Default: NULL (predictors ordered from lower to higher sum of absolute correlation with the other predictors).
 #' @param cor_method (optional; character string) Method used to compute pairwise correlations. Accepted methods are "pearson" (with a recommended minimum of 30 rows in 'df') or "spearman" (with a recommended minimum of 10 rows in 'df'). Default: "pearson".
@@ -96,7 +96,7 @@
 #'
 #' #with response
 #' #with automated preference_order
-#' #restrictive max_cor and max_vif
+#' #restrictive max_cor
 #' #numerics and categorical variables in output
 #' preference.order <- preference_order(
 #'   df = vi,
