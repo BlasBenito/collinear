@@ -196,13 +196,15 @@ collinear <- function(
   )
 
   #applying vif selection
-  selected.predictors <- vif_select(
-    df = df,
-    response = response,
-    predictors = selected.predictors,
-    preference_order = preference_order,
-    max_vif = max_vif
+  if(length(selected.predictors) > 1) {
+      selected.predictors <- vif_select(
+        df = df,
+        response = response,
+        predictors = selected.predictors,
+        preference_order = preference_order,
+        max_vif = max_vif
   )
+  }
 
   selected.predictors
 
