@@ -153,18 +153,15 @@ collinear <- function(
     )
   )
 
-  #validate predictors
-  predictors <- validate_predictors(
-    df = df,
-    response = response,
-    predictors = predictors,
-    min_numerics = 0
-  )
-
-  #validate response
   response <- validate_response(
     df = df,
     response = response
+  )
+
+  predictors <- validate_predictors(
+    df = df,
+    response = response,
+    predictors = predictors
   )
 
   #target encode character predictors
@@ -176,14 +173,6 @@ collinear <- function(
     replace = TRUE,
     verbose = FALSE
   )
-
-  #use only numeric predictors if the response is NULL
-  if(is.null(response)){
-    predictors <- identify_numeric_predictors(
-      df = df,
-      predictors = predictors
-    )
-  }
 
   #applying cor selection
   selected.predictors <- cor_select(

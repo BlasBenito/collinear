@@ -8,7 +8,6 @@ validate_predictors(
   df = NULL,
   response = NULL,
   predictors = NULL,
-  min_numerics = 0,
   decimals = 4
 )
 }
@@ -18,8 +17,6 @@ validate_predictors(
 \item{response}{(optional, character string) Name of a numeric response variable. Used to remove the response from the predictors when predictors is NULL. Character response variables are ignored. Default: NULL.}
 
 \item{predictors}{(optional; character vector) character vector with predictor names in 'df'. If omitted, all columns of 'df' are used as predictors. Default:NULL}
-
-\item{min_numerics}{(required, integer) Minimum number of numeric predictors required. Default: 1}
 
 \item{decimals}{(required, integer) Number of decimal places for the zero variance test. Smaller numbers will increase the number of variables detected as near-zero variance. Recommended values will depend on the range of the numeric variables in 'df'. Default: 4}
 }

@@ -91,12 +91,15 @@ cor_df <- function(
     )
   )
 
-  #validate predictors
+  response <- validate_response(
+    df = df,
+    response = response
+  )
+
   predictors <- validate_predictors(
     df = df,
     response = response,
-    predictors = predictors,
-    min_numerics = 0
+    predictors = predictors
   )
 
   #target encode character predictors
@@ -250,9 +253,7 @@ cor_numerics_and_characters <- function(
   #check predictors
   predictors <- validate_predictors(
     df = df,
-    response = response,
-    predictors = predictors,
-    min_numerics = 0
+    predictors = predictors
   )
 
   #method argument for stats::cor

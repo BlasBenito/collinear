@@ -181,7 +181,6 @@ validate_df <- function(
 #' @param df (required; data frame) A validated data frame with numeric and/or character predictors, and optionally, a response variable. Default: NULL.
 #' @param response (optional, character string) Name of a numeric response variable. Used to remove the response from the predictors when predictors is NULL. Character response variables are ignored. Default: NULL.
 #' @param predictors (optional; character vector) character vector with predictor names in 'df'. If omitted, all columns of 'df' are used as predictors. Default:NULL
-#' @param min_numerics (required, integer) Minimum number of numeric predictors required. Default: 1
 #' @param decimals (required, integer) Number of decimal places for the zero variance test. Smaller numbers will increase the number of variables detected as near-zero variance. Recommended values will depend on the range of the numeric variables in 'df'. Default: 4
 #'
 #' @return A character vector of validated predictor names
@@ -213,65 +212,71 @@ validate_predictors <- function(
     df = NULL,
     response = NULL,
     predictors = NULL,
-    min_numerics = 0,
     decimals = 4
 ){
 
-  #stop if no df
+
+  # df ----
   if(is.null(df)){
     stop("argument 'df' cannot be NULL.")
   }
 
-  #stop if df is not validated,
   if(is.null(attr(df, "validated"))){
     stop("argument 'df' is not validated. Please, run validate_df() before validate_predictors().")
   }
 
+
+  # response ----
+  if(is.null(response)){
+
+    #no target encoding later on, 2 numeric predictors required
+    min_numerics <- 2
+
+  } else {
+
+    #response is valid, there might be target encoding later on, no numerics required
+    min_numerics <- 0
+
+    #removing from df
+    df[[response]] <- NULL
+
+  }
+
+  # predictors ----
+
   #if predictors is NULL, use colnames(df)
   if(is.null(predictors)){
+
     predictors <- colnames(df)
-  }
 
-  #if already validated, return it
-  if(!is.null(attr(predictors, "validated"))){
-    return(predictors)
-  }
+  } else {
 
-  #subset df
-  df <- df[, predictors, drop = FALSE]
-
-  #identify wrongly named predictors
-  predictors.missing <- setdiff(
-    x = predictors,
-    y = colnames(df)
-  )
-
-  if(length(predictors.missing) > 0){
-
-    warning(
-      "these predictors are not column names of 'df' and will be ignored:\n",
-      paste(
-        predictors.missing,
-        collapse = "\n"
-      )
-    )
-
-    #getting common predictors
-    predictors <- intersect(
+    #identify wrongly named predictors
+    predictors.missing <- setdiff(
       x = predictors,
       y = colnames(df)
     )
 
+    if(length(predictors.missing) > 0){
+
+      warning(
+        "these predictors are not column names of 'df' and will be ignored:\n",
+        paste(
+          predictors.missing,
+          collapse = "\n"
+        )
+      )
+
+      #getting predictors in df only
+      predictors <- intersect(
+        x = predictors,
+        y = colnames(df)
+      )
+
+    }
+
   }
 
-  #number of numeric predictors must be >= min_numerics
-  if(length(identify_numeric_predictors(df)) < min_numerics){
-    stop(
-      "number of numeric columns in 'df' must be >= ",
-      min_numerics,
-      "."
-    )
-  }
 
   #removing zero variance predictors
   predictors.zero.variance <- identify_zero_variance_predictors(
@@ -297,11 +302,19 @@ validate_predictors <- function(
 
   }
 
-  #removing response from predictors
-  predictors <- setdiff(
-    x = predictors,
-    y = response
-  )
+  #use numerics only if response is null
+  if(is.null(response)){
+
+    predictors <- identify_numeric_predictors(
+      df = df,
+      predictors = predictors
+    )
+
+    if(length(predictors) < min_numerics){
+      message("at least two numeric variables are required for a multicollinearity analysis, variable selection will be skipped.")
+    }
+
+  }
 
   attr(
     x = predictors,
@@ -362,7 +375,7 @@ validate_response <- function(
     stop("argument 'df' is not validated. Please, run validate_df() before validate_response().")
   }
 
-  if(is.null(response) == TRUE){
+  if(is.null(response)){
     return(NULL)
   }
 
@@ -383,7 +396,8 @@ validate_response <- function(
 
   #check that the response is in df
   if(!(response %in% colnames(df))){
-    stop("argument 'response' must be a column name of 'df'.")
+    warning("argument 'response' with value '", response, "' is not a column name of 'df' and will be ignored.")
+    return(NULL)
   }
 
   if(is.numeric(df[[response]]) == FALSE){

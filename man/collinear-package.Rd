@@ -3,7 +3,6 @@
 \docType{package}
 \name{collinear-package}
 \alias{collinear-package}
-\alias{_PACKAGE}
 \title{collinear}
 \description{
 Package for multicollinearity management in data frames with numeric and categorical variables.
@@ -12,6 +11,7 @@ Package for multicollinearity management in data frames with numeric and categor
 Useful links:
 \itemize{
   \item \url{https://blasbenito.github.io/collinear/}
+  \item Report bugs at \url{https://github.com/blasbenito/collinear/issues}
 }
 
 }

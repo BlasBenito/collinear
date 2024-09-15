@@ -35,7 +35,7 @@
 #'
 #' #subset to limit example run time
 #' vi <- vi[1:1000, ]
-#' vi_predictors <- vi_predictors[1:5]
+#' vi_predictors <- vi_predictors[1:10]
 #'
 #' #convert correlation data frame to matrix
 #' df <- cor_df(

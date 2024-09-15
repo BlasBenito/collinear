@@ -17,7 +17,7 @@ cor_select(
 \arguments{
 \item{df}{(required; data frame) A data frame with numeric and/or character predictors predictors, and optionally, a response variable. Default: NULL.}
 
-\item{response}{(recommended, character string) Name of a numeric response variable. Character response variables are ignored. Please, see 'Details' to better understand how providing this argument or not leads to different results when there are character variables in 'predictors'. Default: NULL.}
+\item{response}{(recommended, character string) Name of a numeric response variable. Character response variables are ignored. Please, see 'Description' to better understand how providing this argument or not leads to different results when there are character variables in 'predictors'. Default: NULL.}
 
 \item{predictors}{(optional; character vector) Character vector with predictor names in 'df'. If omitted, all columns of 'df' are used as predictors. Default:'NULL'}
 

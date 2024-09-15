@@ -119,18 +119,17 @@ target_encoding_lab <- function(
     min_rows = 30
   )
 
-  #validate predictors
-  predictors <- validate_predictors(
-    df = df,
-    response = response,
-    predictors = predictors,
-    min_numerics = 0
-  )
-
   #validate response
   response <- validate_response(
     df = df,
     response = response
+  )
+
+  #validate predictors
+  predictors <- validate_predictors(
+    df = df,
+    response = response,
+    predictors = predictors
   )
 
   if(is.null(response)){

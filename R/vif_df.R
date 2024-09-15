@@ -78,12 +78,17 @@ vif_df <- function(
     min_rows = 30
   )
 
+  #validate response
+  response <- validate_response(
+    df = df,
+    response = response
+  )
+
   #check predictors
   predictors <- validate_predictors(
     df = df,
     response = response,
-    predictors = predictors,
-    min_numerics = 0
+    predictors = predictors
   )
 
   #target encode character predictors

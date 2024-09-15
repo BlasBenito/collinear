@@ -117,18 +117,17 @@ preference_order <- function(
     min_rows = 30
   )
 
-  #check predictors
-  predictors <- validate_predictors(
-    df = df,
-    response = response,
-    predictors = predictors,
-    min_numerics = 0
-  )
-
   #check response
   response <- validate_response(
     df = df,
     response = response
+  )
+
+  #check predictors
+  predictors <- validate_predictors(
+    df = df,
+    response = response,
+    predictors = predictors
   )
 
   #stop if NULL
