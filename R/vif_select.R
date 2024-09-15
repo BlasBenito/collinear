@@ -244,7 +244,8 @@ vif_select <- function(
   )
 
   #iterating through reversed preference order
-  for(i in seq(from = nrow(df.rank), to = 2)){
+  if(nrow(df.rank) > 1) {
+      for(i in seq(from = nrow(df.rank), to = 2)){
 
     vif.i <- vif_df(
       df = df,
@@ -266,7 +267,10 @@ vif_select <- function(
 
     }
 
-  }
+          }
+  } else {
+      warning("Only one variable provided; no way to select.")
+      }
 
   #selected variables
   df.rank$variable
