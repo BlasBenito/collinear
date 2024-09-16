@@ -135,6 +135,14 @@ cor_select <- function(
     stop("argument 'max_cor' must be a numeric between 0 and 1.")
   }
 
+  #remove constants, to prevent NA correlations and downstream errors:
+  constants <- which(sapply(df[ , predictors], function(x) length(unique(x)) == 1))
+  if (length(constants) > 0) {
+    message("predictor(s) excluded for having no variation:\n", 
+            paste(predictors[constants], collapse = "; "))
+    predictors <- predictors[-constants]
+  }
+
   #correlation data frame
   cor.df <- cor_df(
     df = df,
