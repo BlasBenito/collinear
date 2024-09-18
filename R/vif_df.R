@@ -72,6 +72,32 @@ vif_df <- function(
     encoding_method = "mean"
 ){
 
+  #function to compute vif
+  vif_f <- function(m = NULL){
+
+    if(capabilities("long.double") == TRUE){
+      tolerance = 0
+    } else {
+      tolerance = .Machine$double.eps
+    }
+
+    df <- m |>
+      solve(tol = tolerance) |>
+      diag() |>
+      data.frame(stringsAsFactors = FALSE) |>
+      dplyr::rename(vif = 1) |>
+      dplyr::transmute(
+        variable = colnames(m),
+        vif = round(abs(vif), 3)
+      ) |>
+      dplyr::arrange(vif)
+
+    rownames(df) <- NULL
+
+    df
+
+  }
+
   #check input data frame
   df <- validate_df(
     df = df,
@@ -107,48 +133,67 @@ vif_df <- function(
     predictors = predictors
   )
 
+  if(length(predictors.numeric) == 1){
+    return(
+      data.frame(
+        variable = predictors.numeric,
+        vif = 0
+      )
+    )
+  }
+
   #compute correlation matrix
-  cor.matrix <- df[, predictors.numeric, drop = FALSE] |>
-    stats::cor(use = "complete.obs")
+  cor.matrix <- stats::cor(
+    x = df[, predictors.numeric, drop = FALSE],
+    use = "complete.obs"
+  )
 
-  #look for perfect correlations that break solve()
-  #and replace them with 0.99 or -0.99
-  cor.matrix.range <- range(cor.matrix[upper.tri(cor.matrix)])
-  if(1 %in% cor.matrix.range){
-    cor.matrix[cor.matrix == 1] <- 0.999
-    diag(cor.matrix) <- 1
-  }
-  if(-1 %in% cor.matrix.range){
-    cor.matrix[cor.matrix == -1] <- -0.999
-  }
-
-  if(capabilities("long.double") == TRUE){
-    tolerance = 0
-  } else {
-    tolerance = .Machine$double.eps
-  }
-
-  #vif data frame
-  tryCatch(
-    {
-
-      vif.df <- cor.matrix |>
-        solve(tol = tolerance) |>
-        diag() |>
-        data.frame(stringsAsFactors = FALSE) |>
-        dplyr::rename(vif = 1) |>
-        dplyr::transmute(
-          variable = predictors.numeric,
-          vif = round(abs(vif), 3)
-        ) |>
-        dplyr::arrange(vif)
-
-      rownames(vif.df) <- NULL
-
-    }, error = function(e) {
-      stop("the VIF computation failed. Please use cor_df() or cor_select() to check and remove perfect correlations from df before the VIF assessment.")
+  #first try
+  vif.df <- tryCatch(
+    {vif_f(m = cor.matrix)},
+    error = function(e) {
+      return(NA)
     }
   )
+
+  #second try
+  if(is.data.frame(vif.df) == FALSE){
+
+    vif.df <- tryCatch(
+      {
+
+        #look for perfect correlations that break solve()
+        #and replace them with 0.99 or -0.99
+        cor.matrix.range <- range(
+          cor.matrix[upper.tri(cor.matrix)]
+          )
+
+        #maximum and minimum correlation
+        max.cor <- 0.999
+        min.cor <- -max.cor
+
+        #replace values
+        if(max(cor.matrix.range) > max.cor){
+          cor.matrix[cor.matrix > max.cor] <- max.cor
+          diag(cor.matrix) <- 1
+        }
+
+        if(min(cor.matrix.range) < min.cor){
+          cor.matrix[cor.matrix < min.cor] <- min.cor
+        }
+
+        #compute vif with the new matrix
+        vif_f(m = cor.matrix)
+
+        },
+      error = function(e) {
+
+        stop("The correlation matrix is singular and cannot be solved. This issue may be fixed by removing highly correlated variables with collinear::cor_select() before the VIF analysis.")
+
+      }
+    )
+
+  }
 
   vif.df
 
