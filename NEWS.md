@@ -1,6 +1,6 @@
 # collinear 1.1.2
 
-The functions cor_select(), vif_select() and vif_df() now ignore the analysis if only one predictor is available. This could happen in collinear() with highly correlated datasets, when cor_select() only returns one predictor and sends it to vif_select().
+The functions cor_select(), vif_select() and vif_df() now skip the analysis if only one predictor is available. This may happen in collinear() with highly correlated datasets, when cor_select() only returns one predictor and sends it to vif_select().
 
 All warnings in all data validation functions are now messages to ensure they are printed in the correct order.
 
