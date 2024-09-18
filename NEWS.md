@@ -1,3 +1,13 @@
+# collinear 1.1.2
+
+The functions cor_select(), vif_select() and vif_df() now ignore the analysis if only one predictor is available. This could happen in collinear() with highly correlated datasets, when cor_select() only returns one predictor and sends it to vif_select().
+
+All warnings in all data validation functions are now messages to ensure they are printed in the correct order.
+
+Function vif_df() now has the internal function vif_f() to compute the vif data frame, and this function is applied twice, once without modifying the correlation matrix, and if this fails, again by replacing 1 and -1 with 0.999 and -0.999 in the correlation matrix to try overcome the "singular matrix" issue.
+
+The function validate_df() now takes into account the number of predictors as reference, along with min_rows, to warn the user about potential issues in the multicollinearity analysis due to the data frame dimensions.
+
 # collinear 1.1.1
 
 Hotfix of issue with solve(tol = 0) in systems with no large double support (noLD). This one wasn't fun.
