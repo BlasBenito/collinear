@@ -102,6 +102,16 @@ cor_df <- function(
     predictors = predictors
   )
 
+  if(length(predictors) == 1){
+    return(
+      data.frame(
+        x = predictors,
+        y = predictors,
+        correlation = 1.0
+      )
+    )
+  }
+
   #target encode character predictors
   df <- target_encoding_lab(
     df = df,

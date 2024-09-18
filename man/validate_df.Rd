@@ -24,7 +24,7 @@ Validates a data frame to ensure it complies with the requirements of the packag
 \item Stops if 'df' has zero rows.
 \item Removes geometry column if the input data frame is an "sf" object.
 \item Removes non-numeric columns with as many unique values as rows df has.
-\item Raise warning if number of rows of 'df' is lower than 'min_rows'.
+\item Print messages if number of rows of 'df' is lower than 'min_rows'.
 \item Converts logical columns to numeric.
 \item Converts factor and ordered columns to character.
 \item Tags the data frame with the attribute \code{validated = TRUE} to let the package functions skip the data validation.

@@ -155,7 +155,7 @@ vif_select <- function(
   #checking argument max_vif
   if(max_vif < 2.5 || max_vif > 10){
     if(max_vif < 0){max_vif <- 0}
-    warning("recommended values for 'max_vif' are between 2.5 and 10.")
+    message("Recommended values for 'max_vif' are between 2.5 and 10.")
   }
 
   #check input data frame
@@ -176,6 +176,12 @@ vif_select <- function(
     response = response,
     predictors = predictors
   )
+
+  #ignore analysis
+  if(length(predictors == 1)){
+    attributes(predictors) <- NULL
+    return(predictors)
+  }
 
   #target encode character predictors
   df <- target_encoding_lab(

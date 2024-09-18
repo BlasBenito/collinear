@@ -31,9 +31,9 @@ Validates the 'predictors' argument to ensure it complies with the requirements 
 \item Stops if 'df' is NULL.
 \item Stops if 'df' is not validated.
 \item If 'predictors' is NULL, uses column names of 'df' as 'predictors' in the 'df' data frame.
-\item Raise a warning if there are names in 'predictors' not in the column names of 'df', and returns only the ones in 'df'.
+\item Print a message if there are names in 'predictors' not in the column names of 'df', and returns only the ones in 'df'.
 \item Stop if the number of numeric columns in 'predictors' is smaller than 'min_numerics'.
-\item Raise a warning if there are zero-variance columns in 'predictors' and returns a new 'predictors' argument without them.
+\item Print a message if there are zero-variance columns in 'predictors' and returns a new 'predictors' argument without them.
 \item Tags the vector with the attribute \code{validated = TRUE} to let the package functions skip the data validation.
 }
 }
