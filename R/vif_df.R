@@ -117,6 +117,16 @@ vif_df <- function(
     predictors = predictors
   )
 
+  #early output if only one predictor
+  if(length(predictors) == 1){
+    return(
+      data.frame(
+        variable = predictors,
+        vif = 0
+      )
+    )
+  }
+
   #target encode character predictors
   df <- target_encoding_lab(
     df = df,
@@ -132,15 +142,6 @@ vif_df <- function(
     df = df,
     predictors = predictors
   )
-
-  if(length(predictors.numeric) == 1){
-    return(
-      data.frame(
-        variable = predictors.numeric,
-        vif = 0
-      )
-    )
-  }
 
   #compute correlation matrix
   cor.matrix <- stats::cor(
@@ -169,7 +170,7 @@ vif_df <- function(
           )
 
         #maximum and minimum correlation
-        max.cor <- 0.999
+        max.cor <- 0.9999999999
         min.cor <- -max.cor
 
         #replace values

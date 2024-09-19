@@ -102,6 +102,7 @@ cor_df <- function(
     predictors = predictors
   )
 
+  #early output if only one predictor
   if(length(predictors) == 1){
     return(
       data.frame(

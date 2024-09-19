@@ -177,8 +177,8 @@ vif_select <- function(
     predictors = predictors
   )
 
-  #ignore analysis
-  if(length(predictors == 1)){
+  #early output if only one predictor
+  if(length(predictors)  == 1){
     attributes(predictors) <- NULL
     return(predictors)
   }

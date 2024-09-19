@@ -8,6 +8,8 @@ Function vif_df() now has the internal function vif_f() to compute the vif data 
 
 The function validate_df() now takes into account the number of predictors as reference, along with min_rows, to warn the user about potential issues in the multicollinearity analysis due to the data frame dimensions.
 
+The function preference_order() no longer has the `workers` argument, but can accept a parallelization setup via `future::plan()` and a progress bar via de `progressr` package.
+
 # collinear 1.1.1
 
 Hotfix of issue with solve(tol = 0) in systems with no large double support (noLD). This one wasn't fun.

@@ -54,7 +54,9 @@ validate_df <- function(
   #handle coercion to df
   if(is.data.frame(df) == FALSE){
     df <- tryCatch(
-      {as.data.frame(df)},
+      {
+        as.data.frame(df)
+        },
       error = function(e){
         stop("argument 'df' must be a data frame.")
       }
@@ -264,7 +266,7 @@ validate_predictors <- function(
     if(length(predictors.missing) > 0){
 
       message(
-        "These predictors are not column names of 'df' and will be ignored:\n",
+        "These predictors are not column names of 'df' and will be ignored:\n - ",
         paste(
           predictors.missing,
           collapse = "\n - "
@@ -292,7 +294,7 @@ validate_predictors <- function(
   if(length(predictors.zero.variance) > 0){
 
     message(
-      "These predictors have near zero variance and will be ignored:\n",
+      "These predictors have near zero variance and will be ignored:\n - ",
       paste0(
         predictors.zero.variance,
         collapse = "\n - "

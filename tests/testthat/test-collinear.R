@@ -4,6 +4,42 @@ testthat::test_that("`collinear()` works", {
 
     vi <- vi[1:1000, ]
 
+    #edge cases
+    ###################################
+
+    testthat::expect_message(
+      x <- collinear(
+        df = vi,
+        predictors = "swi_mean"
+      )
+    ) |>
+      suppressMessages()
+
+    #single predictor
+    testthat::expect_true(
+      x == "swi_mean"
+    )
+
+    #perfect correlations and constant variable
+    df.perfect <- data.frame(
+      a = vi$temperature_mean,
+      b = vi$temperature_mean,
+      c = 1
+    )
+
+    testthat::expect_message(
+      x <- collinear(
+        df = df.perfect
+      )
+    ) |>
+      suppressMessages()
+
+    #test that c was removed
+    testthat::expect_true(
+      all(x %in% c("a", "b"))
+    )
+
+
     #without response, only numeric predictors processed
     ####################################################
 

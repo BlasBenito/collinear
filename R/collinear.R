@@ -110,7 +110,6 @@
 #'   response = "vi_mean",
 #'   predictors = vi_predictors,
 #'   f = f_rsquared, #cor(response, predictor)
-#'   workers = 1
 #' )
 #'
 #' selected.predictors <- collinear(
@@ -163,6 +162,12 @@ collinear <- function(
     response = response,
     predictors = predictors
   )
+
+  #early output if only one predictor
+  if(length(predictors) == 1){
+    attributes(predictors) <- NULL
+    return(predictors)
+  }
 
   #target encode character predictors
   df <- target_encoding_lab(

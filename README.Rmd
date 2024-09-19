@@ -308,12 +308,21 @@ Notice that in the output, two of the variables in `preference_order` are select
 The function `preference_order()` requires the `response` argument, and takes a function `f` that returns a value of association between the response and any predictor. This value is then located in the "preference" column of the function's output.
 
 ```{r}
+#parallelization setup
+# future::plan(
+#   future::multisession,
+#   workers = 2 #set to parallelly::availableWorkers() - 1
+# )
+
+#progress bar
+#progressr::handlers(global = TRUE)
+
+#compute preference order
 preference_rsquared <- preference_order(
   df = vi,
   response = "vi_mean",
   predictors = vi_predictors,
   f = f_rsquared,
-  workers = 1 #requires package future and future.apply for more workers
 )
 
 preference_rsquared
@@ -362,16 +371,13 @@ preference_auc <- preference_order(
   df = vi,
   response = "vi_binary",
   predictors = vi_predictors,
-  f = f_gam_auc_unbalanced,
-  workers = 1 #requires package future and future.apply for more workers
+  f = f_gam_auc_unbalanced
 )
 
 preference_auc
 ```
   
 Custom functions created by the user are also accepted as input, as long as they have the `x`, `y`, and `df` arguments, and they return a single numeric value.
-
-These can be run in parallel across predictors by increasing the value of the `workers` argument if the R packages `future` and `future.apply` are installed in the system.
 
 ### `cor_select()` and `vif_select()`
 
