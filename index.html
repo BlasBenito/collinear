@@ -22,7 +22,7 @@
 
     <a class="navbar-brand me-2" href="index.html">collinear</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.1.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.1.2</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -38,6 +38,7 @@
 <li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="search.json">
 </form></li>
+<li class="nav-item"><a class="external-link nav-link" href="https://github.com/blasbenito/collinear/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
       </ul>
 </div>
 
@@ -473,7 +474,7 @@
 <span>  predictors <span class="op">=</span> <span class="va">vi_predictors</span></span>
 <span><span class="op">)</span></span>
 <span><span class="fu">tictoc</span><span class="fu">::</span><span class="fu">toc</span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; 0.414 sec elapsed</span></span>
+<span><span class="co">#&gt; 2.144 sec elapsed</span></span>
 <span></span>
 <span><span class="fu">tictoc</span><span class="fu">::</span><span class="fu">tic</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">selected_predictors_no_response</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/cor_select.html">cor_select</a></span><span class="op">(</span></span>
@@ -481,7 +482,7 @@
 <span>  predictors <span class="op">=</span> <span class="va">vi_predictors</span></span>
 <span><span class="op">)</span></span>
 <span><span class="fu">tictoc</span><span class="fu">::</span><span class="fu">toc</span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; 34.603 sec elapsed</span></span></code></pre></div>
+<span><span class="co">#&gt; 1.591 sec elapsed</span></span></code></pre></div>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">selected_predictors_response</span></span>
 <span><span class="co">#&gt;  [1] "country_population"         "topo_elevation"            </span></span>
@@ -501,20 +502,18 @@
 <span><span class="co">#&gt; [29] "cloud_cover_max"</span></span></code></pre></div>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">selected_predictors_no_response</span></span>
-<span><span class="co">#&gt;  [1] "topo_elevation"             "topo_slope"                </span></span>
-<span><span class="co">#&gt;  [3] "country_population"         "topo_diversity"            </span></span>
-<span><span class="co">#&gt;  [5] "soil_clay"                  "humidity_range"            </span></span>
-<span><span class="co">#&gt;  [7] "soil_sand"                  "country_gdp"               </span></span>
-<span><span class="co">#&gt;  [9] "cloud_cover_range"          "country_income"            </span></span>
-<span><span class="co">#&gt; [11] "rainfall_min"               "soil_soc"                  </span></span>
-<span><span class="co">#&gt; [13] "swi_range"                  "growing_season_temperature"</span></span>
+<span><span class="co">#&gt;  [1] "country_population"         "topo_elevation"            </span></span>
+<span><span class="co">#&gt;  [3] "humidity_range"             "topo_slope"                </span></span>
+<span><span class="co">#&gt;  [5] "country_gdp"                "soil_clay"                 </span></span>
+<span><span class="co">#&gt;  [7] "topo_diversity"             "soil_sand"                 </span></span>
+<span><span class="co">#&gt;  [9] "cloud_cover_range"          "rainfall_min"              </span></span>
+<span><span class="co">#&gt; [11] "soil_soc"                   "swi_range"                 </span></span>
+<span><span class="co">#&gt; [13] "growing_season_temperature" "solar_rad_min"             </span></span>
 <span><span class="co">#&gt; [15] "rainfall_range"             "soil_nitrogen"             </span></span>
-<span><span class="co">#&gt; [17] "solar_rad_min"              "aridity_index"             </span></span>
-<span><span class="co">#&gt; [19] "cloud_cover_min"            "temperature_max"           </span></span>
-<span><span class="co">#&gt; [21] "region"                     "swi_min"                   </span></span>
-<span><span class="co">#&gt; [23] "solar_rad_max"              "evapotranspiration_range"  </span></span>
-<span><span class="co">#&gt; [25] "swi_mean"                   "humidity_max"              </span></span>
-<span><span class="co">#&gt; [27] "soil_type"</span></span></code></pre></div>
+<span><span class="co">#&gt; [17] "swi_min"                    "temperature_max"           </span></span>
+<span><span class="co">#&gt; [19] "cloud_cover_min"            "temperature_seasonality"   </span></span>
+<span><span class="co">#&gt; [21] "aridity_index"              "solar_rad_max"             </span></span>
+<span><span class="co">#&gt; [23] "swi_mean"                   "humidity_max"</span></span></code></pre></div>
 <p>The variable selection results differ because the numeric representations of the categorical variables are rather different between the two options. When no <code>response</code> is provided, the function <code><a href="reference/cor_select.html">cor_select()</a></code> compares categorical predictors against numeric ones by encoding each categorical after each numeric, and compares pairs of categoricals using Cramer’s V, implemented in the function <code><a href="reference/cramer_v.html">cramer_v()</a></code>. Additionally, Cramer’s V values are not directly comparable with Pearson or Spearman correlation scores, and having them together in the same analysis might induce bias during the variable selection. Not using the <code>response</code> argument should always be the last option.</p>
 </div>
 <div class="section level4">
@@ -554,12 +553,21 @@
 </h5>
 <p>The function <code><a href="reference/preference_order.html">preference_order()</a></code> requires the <code>response</code> argument, and takes a function <code>f</code> that returns a value of association between the response and any predictor. This value is then located in the “preference” column of the function’s output.</p>
 <div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">preference_rsquared</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/preference_order.html">preference_order</a></span><span class="op">(</span></span>
+<code class="sourceCode R"><span><span class="co">#parallelization setup</span></span>
+<span><span class="co"># future::plan(</span></span>
+<span><span class="co">#   future::multisession,</span></span>
+<span><span class="co">#   workers = 2 #set to parallelly::availableWorkers() - 1</span></span>
+<span><span class="co"># )</span></span>
+<span></span>
+<span><span class="co">#progress bar</span></span>
+<span><span class="co">#progressr::handlers(global = TRUE)</span></span>
+<span></span>
+<span><span class="co">#compute preference order</span></span>
+<span><span class="va">preference_rsquared</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/preference_order.html">preference_order</a></span><span class="op">(</span></span>
 <span>  df <span class="op">=</span> <span class="va">vi</span>,</span>
 <span>  response <span class="op">=</span> <span class="st">"vi_mean"</span>,</span>
 <span>  predictors <span class="op">=</span> <span class="va">vi_predictors</span>,</span>
 <span>  f <span class="op">=</span> <span class="va">f_rsquared</span>,</span>
-<span>  workers <span class="op">=</span> <span class="fl">1</span> <span class="co">#requires package future and future.apply for more workers</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">preference_rsquared</span></span>
@@ -678,13 +686,11 @@
 <span>  df <span class="op">=</span> <span class="va">vi</span>,</span>
 <span>  response <span class="op">=</span> <span class="st">"vi_binary"</span>,</span>
 <span>  predictors <span class="op">=</span> <span class="va">vi_predictors</span>,</span>
-<span>  f <span class="op">=</span> <span class="va">f_gam_auc_unbalanced</span>,</span>
-<span>  workers <span class="op">=</span> <span class="fl">1</span> <span class="co">#requires package future and future.apply for more workers</span></span>
+<span>  f <span class="op">=</span> <span class="va">f_gam_auc_unbalanced</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">preference_auc</span></span></code></pre></div>
 <p>Custom functions created by the user are also accepted as input, as long as they have the <code>x</code>, <code>y</code>, and <code>df</code> arguments, and they return a single numeric value.</p>
-<p>These can be run in parallel across predictors by increasing the value of the <code>workers</code> argument if the R packages <code>future</code> and <code>future.apply</code> are installed in the system.</p>
 </div>
 </div>
 </div>
@@ -847,6 +853,8 @@
 <h2 data-toc-skip>Links</h2>
 <ul class="list-unstyled">
 <li><a href="https://cloud.r-project.org/package=collinear" class="external-link">View on CRAN</a></li>
+<li><a href="https://github.com/blasbenito/collinear/" class="external-link">Browse source code</a></li>
+<li><a href="https://github.com/blasbenito/collinear/issues" class="external-link">Report a bug</a></li>
 </ul>
 </div>
 
@@ -892,7 +900,7 @@
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.</p>
 </div>
 
     </footer>

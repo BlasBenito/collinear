@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">collinear</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.1.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.1.2</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -19,6 +19,7 @@
 <li class="active nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
+<li class="nav-item"><a class="external-link nav-link" href="https://github.com/blasbenito/collinear/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
       </ul></div>
 
 
@@ -28,9 +29,17 @@
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Changelog</h1>
-
+      <small>Source: <a href="https://github.com/blasbenito/collinear/blob/main/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="1.1.2" id="collinear-112">collinear 1.1.2<a class="anchor" aria-label="anchor" href="#collinear-112"></a></h2>
+<p>The functions cor_select(), vif_select() and vif_df() now skip the analysis if only one predictor is available. This may happen in collinear() with highly correlated datasets, when cor_select() only returns one predictor and sends it to vif_select().</p>
+<p>All warnings in all data validation functions are now messages to ensure they are printed in the correct order.</p>
+<p>Function vif_df() now has the internal function vif_f() to compute the vif data frame, and this function is applied twice, once without modifying the correlation matrix, and if this fails, again by replacing 1 and -1 with 0.999 and -0.999 in the correlation matrix to try overcome the “singular matrix” issue.</p>
+<p>The function validate_df() now takes into account the number of predictors as reference, along with min_rows, to warn the user about potential issues in the multicollinearity analysis due to the data frame dimensions.</p>
+<p>The function preference_order() no longer has the <code>workers</code> argument, but can accept a parallelization setup via <code><a href="https://future.futureverse.org/reference/plan.html" class="external-link">future::plan()</a></code> and a progress bar via de <code>progressr</code> package.</p>
+</div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="1.1.1" id="collinear-111">collinear 1.1.1<a class="anchor" aria-label="anchor" href="#collinear-111"></a></h2><p class="text-muted">CRAN release: 2023-12-08</p>
 <p>Hotfix of issue with solve(tol = 0) in systems with no large double support (noLD). This one wasn’t fun.</p>
@@ -67,8 +76,8 @@
 <p>Re-submission after minor CRAN comments.</p>
 <p>Changes:</p>
 <ul><li><p>version number bumped up to 1.0.1</p></li>
-<li><p>removed if(interactive()){} from all @examples.</p></li>
-<li><p>removed plot() call from the @examples of the function target_encoding_lab() because it was messing up pkgdown’s build. This piece of code triggered the comment “Please always make sure to reset to user’s options()” by the reviewer, so this should solve the issue.</p></li>
+<li><p>removed if(interactive()){} from all <a href="https://github.com/examples" class="external-link">@examples</a>.</p></li>
+<li><p>removed plot() call from the <a href="https://github.com/examples" class="external-link">@examples</a> of the function target_encoding_lab() because it was messing up pkgdown’s build. This piece of code triggered the comment “Please always make sure to reset to user’s options()” by the reviewer, so this should solve the issue.</p></li>
 <li><p>made sure that all examples run in less than 5 seconds.</p></li>
 <li><p>fixed a bug in which all functions would include the response as a predictor when ‘predictors = NULL’ and ‘response’ was a valid column of the input data frame.</p></li>
 </ul></div>
@@ -85,7 +94,7 @@
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.</p>
 </div>
 
     </footer></div>

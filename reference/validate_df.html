@@ -6,7 +6,7 @@ Stops if 'df' cannot be coerced to data frame.
 Stops if 'df' has zero rows.
 Removes geometry column if the input data frame is an &quot;sf&quot; object.
 Removes non-numeric columns with as many unique values as rows df has.
-Raise warning if number of rows of 'df' is lower than 'min_rows'.
+Print messages if number of rows of 'df' is lower than 'min_rows'.
 Converts logical columns to numeric.
 Converts factor and ordered columns to character.
 Tags the data frame with the attribute validated = TRUE to let the package functions skip the data validation.
@@ -18,7 +18,7 @@ Stops if 'df' cannot be coerced to data frame.
 Stops if 'df' has zero rows.
 Removes geometry column if the input data frame is an &quot;sf&quot; object.
 Removes non-numeric columns with as many unique values as rows df has.
-Raise warning if number of rows of 'df' is lower than 'min_rows'.
+Print messages if number of rows of 'df' is lower than 'min_rows'.
 Converts logical columns to numeric.
 Converts factor and ordered columns to character.
 Tags the data frame with the attribute validated = TRUE to let the package functions skip the data validation.
@@ -31,7 +31,7 @@ Tags the data frame with the attribute validated = TRUE to let the package funct
 
     <a class="navbar-brand me-2" href="../index.html">collinear</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.1.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.1.2</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -43,6 +43,7 @@ Tags the data frame with the attribute validated = TRUE to let the package funct
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
+<li class="nav-item"><a class="external-link nav-link" href="https://github.com/blasbenito/collinear/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
       </ul></div>
 
 
@@ -52,7 +53,7 @@ Tags the data frame with the attribute validated = TRUE to let the package funct
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Validate input data frame</h1>
-
+      <small class="dont-index">Source: <a href="https://github.com/blasbenito/collinear/blob/main/R/validate.R" class="external-link"><code>R/validate.R</code></a></small>
       <div class="d-none name"><code>validate_df.Rd</code></div>
     </div>
 
@@ -63,7 +64,7 @@ Tags the data frame with the attribute validated = TRUE to let the package funct
 <li><p>Stops if 'df' has zero rows.</p></li>
 <li><p>Removes geometry column if the input data frame is an "sf" object.</p></li>
 <li><p>Removes non-numeric columns with as many unique values as rows df has.</p></li>
-<li><p>Raise warning if number of rows of 'df' is lower than 'min_rows'.</p></li>
+<li><p>Print messages if number of rows of 'df' is lower than 'min_rows'.</p></li>
 <li><p>Converts logical columns to numeric.</p></li>
 <li><p>Converts factor and ordered columns to character.</p></li>
 <li><p>Tags the data frame with the attribute <code>validated = TRUE</code> to let the package functions skip the data validation.</p></li>
@@ -120,7 +121,7 @@ Tags the data frame with the attribute validated = TRUE to let the package funct
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.</p>
 </div>
 
     </footer></div>
