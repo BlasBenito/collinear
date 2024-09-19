@@ -226,8 +226,7 @@ preference.order <- preference_order(
   df = vi,
   response = "vi_mean",
   predictors = vi_predictors,
-  f = f_rsquared,
-  workers = 1
+  f = f_rsquared
   )
 
 preference.order
@@ -274,8 +273,7 @@ preference.order <- preference_order(
   df = vi,
   response = "vi_mean",
   predictors = vi_predictors,
-  f = f_rmse,
-  workers = 1
+  f = f_rmse
 )
 
 preference.order
@@ -383,8 +381,7 @@ preference.order <- preference_order(
   df = vi,
   response = "vi_mean",
   predictors = vi_predictors,
-  f = f_rsquared, #cor(response, predictor)
-  workers = 1
+  f = f_rsquared #cor(response, predictor)
 )
 
 selected.predictors <- collinear(

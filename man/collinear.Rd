@@ -134,7 +134,6 @@ preference.order <- preference_order(
   response = "vi_mean",
   predictors = vi_predictors,
   f = f_rsquared, #cor(response, predictor)
-  workers = 1
 )
 
 selected.predictors <- collinear(

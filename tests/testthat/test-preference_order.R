@@ -1,3 +1,5 @@
+
+#f_...()
 testthat::test_that("`f_rf_auc_unbalanced()` works", {
   data(vi)
   result <- f_rf_auc_unbalanced(x = "growing_season_length", y = "vi_binary", df = vi)
@@ -74,13 +76,15 @@ testthat::test_that("`f_rsquared()` works", {
   testthat::expect_true(!is.na(result), info = "Result should not be NA.")
 })
 
+#preference_order()
 testthat::test_that("`preference_order()` works", {
 
   data(vi, vi_predictors)
   vi <- vi[1:1000, ]
+
   preference.order <- preference_order(
     df = vi, response = "vi_mean",
-    predictors = vi_predictors, f = f_rsquared, workers = 1
+    predictors = vi_predictors, f = f_rsquared
   )
 
   testthat::expect_true(
@@ -126,7 +130,7 @@ testthat::test_that("`preference_order()` works", {
 
   preference.order <- preference_order(
     df = vi, response = "vi_mean",
-    predictors = vi_predictors, f = f_rmse, workers = 1
+    predictors = vi_predictors, f = f_rmse
   )
 
   testthat::expect_true(

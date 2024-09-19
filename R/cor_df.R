@@ -91,13 +91,27 @@ cor_df <- function(
     )
   )
 
-  #validate predictors
+  response <- validate_response(
+    df = df,
+    response = response
+  )
+
   predictors <- validate_predictors(
     df = df,
     response = response,
-    predictors = predictors,
-    min_numerics = 0
+    predictors = predictors
   )
+
+  #early output if only one predictor
+  if(length(predictors) == 1){
+    return(
+      data.frame(
+        x = predictors,
+        y = predictors,
+        correlation = 1.0
+      )
+    )
+  }
 
   #target encode character predictors
   df <- target_encoding_lab(
@@ -250,9 +264,7 @@ cor_numerics_and_characters <- function(
   #check predictors
   predictors <- validate_predictors(
     df = df,
-    response = response,
-    predictors = predictors,
-    min_numerics = 0
+    predictors = predictors
   )
 
   #method argument for stats::cor

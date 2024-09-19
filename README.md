@@ -516,7 +516,7 @@ selected_predictors_response <- cor_select(
   predictors = vi_predictors
 )
 tictoc::toc()
-#> 0.414 sec elapsed
+#> 2.144 sec elapsed
 
 tictoc::tic()
 selected_predictors_no_response <- cor_select(
@@ -524,7 +524,7 @@ selected_predictors_no_response <- cor_select(
   predictors = vi_predictors
 )
 tictoc::toc()
-#> 34.603 sec elapsed
+#> 1.591 sec elapsed
 ```
 
 ``` r
@@ -548,20 +548,18 @@ selected_predictors_response
 
 ``` r
 selected_predictors_no_response
-#>  [1] "topo_elevation"             "topo_slope"                
-#>  [3] "country_population"         "topo_diversity"            
-#>  [5] "soil_clay"                  "humidity_range"            
-#>  [7] "soil_sand"                  "country_gdp"               
-#>  [9] "cloud_cover_range"          "country_income"            
-#> [11] "rainfall_min"               "soil_soc"                  
-#> [13] "swi_range"                  "growing_season_temperature"
+#>  [1] "country_population"         "topo_elevation"            
+#>  [3] "humidity_range"             "topo_slope"                
+#>  [5] "country_gdp"                "soil_clay"                 
+#>  [7] "topo_diversity"             "soil_sand"                 
+#>  [9] "cloud_cover_range"          "rainfall_min"              
+#> [11] "soil_soc"                   "swi_range"                 
+#> [13] "growing_season_temperature" "solar_rad_min"             
 #> [15] "rainfall_range"             "soil_nitrogen"             
-#> [17] "solar_rad_min"              "aridity_index"             
-#> [19] "cloud_cover_min"            "temperature_max"           
-#> [21] "region"                     "swi_min"                   
-#> [23] "solar_rad_max"              "evapotranspiration_range"  
-#> [25] "swi_mean"                   "humidity_max"              
-#> [27] "soil_type"
+#> [17] "swi_min"                    "temperature_max"           
+#> [19] "cloud_cover_min"            "temperature_seasonality"   
+#> [21] "aridity_index"              "solar_rad_max"             
+#> [23] "swi_mean"                   "humidity_max"
 ```
 
 The variable selection results differ because the numeric
@@ -632,12 +630,21 @@ response and any predictor. This value is then located in the
 “preference” column of the function’s output.
 
 ``` r
+#parallelization setup
+# future::plan(
+#   future::multisession,
+#   workers = 2 #set to parallelly::availableWorkers() - 1
+# )
+
+#progress bar
+#progressr::handlers(global = TRUE)
+
+#compute preference order
 preference_rsquared <- preference_order(
   df = vi,
   response = "vi_mean",
   predictors = vi_predictors,
   f = f_rsquared,
-  workers = 1 #requires package future and future.apply for more workers
 )
 
 preference_rsquared
@@ -783,8 +790,7 @@ preference_auc <- preference_order(
   df = vi,
   response = "vi_binary",
   predictors = vi_predictors,
-  f = f_gam_auc_unbalanced,
-  workers = 1 #requires package future and future.apply for more workers
+  f = f_gam_auc_unbalanced
 )
 
 preference_auc
@@ -793,10 +799,6 @@ preference_auc
 Custom functions created by the user are also accepted as input, as long
 as they have the `x`, `y`, and `df` arguments, and they return a single
 numeric value.
-
-These can be run in parallel across predictors by increasing the value
-of the `workers` argument if the R packages `future` and `future.apply`
-are installed in the system.
 
 ### `cor_select()` and `vif_select()`
 

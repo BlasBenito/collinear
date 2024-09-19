@@ -1,12 +1,14 @@
 Package: collinear
 Title: Seamless Multicollinearity Management
-Version: 1.1.1
+Version: 1.1.2
 Authors@R: 
     person(given = "Blas M.", 
           family = "Benito", , 
           email = "blasbenito@gmail.com", 
           role = c("aut", "cre", "cph"),
            comment = c(ORCID = "0000-0001-5105-7232"))
+URL: https://blasbenito.github.io/collinear/
+BugReports: https://github.com/blasbenito/collinear/issues
 Description: System for seamless management of multicollinearity in data frames
     with numeric and/or categorical variables for statistical analysis and 
     machine learning modeling. The package combines bivariate correlation 
@@ -19,19 +21,19 @@ License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE, roclets = c("collate", "namespace", "rd",
     "roxyglobals::global_roclet"))
-RoxygenNote: 7.2.3
+RoxygenNote: 7.3.2
 Imports:
-    dplyr
+    dplyr,
+    progressr,
+    future.apply,
 Suggests: 
     ranger,
     mgcv,
     future,
-    future.apply,
     testthat (>= 3.0.0),
     spelling
 Config/testthat/edition: 3
 Depends: 
     R (>= 4.0)
 LazyData: true
-URL: https://blasbenito.github.io/collinear/
 Language: en-US

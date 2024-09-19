@@ -150,6 +150,24 @@ identify_zero_variance_predictors <- function(
 
   df <- df[, predictors.numeric, drop = FALSE]
 
+  #replace inf with NA
+  n_inf <- lapply(
+    X = df,
+    FUN = is.infinite
+  ) |>
+    unlist() |>
+    sum()
+
+  if(n_inf > 0){
+    is.na(df) <- do.call(
+      what = cbind,
+      args = lapply(
+        X = df,
+        FUN = is.infinite
+      )
+    )
+  }
+
   zero.variance.predictors <- colnames(df)[
     round(
       apply(

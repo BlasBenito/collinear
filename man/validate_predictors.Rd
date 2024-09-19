@@ -8,7 +8,6 @@ validate_predictors(
   df = NULL,
   response = NULL,
   predictors = NULL,
-  min_numerics = 0,
   decimals = 4
 )
 }
@@ -18,8 +17,6 @@ validate_predictors(
 \item{response}{(optional, character string) Name of a numeric response variable. Used to remove the response from the predictors when predictors is NULL. Character response variables are ignored. Default: NULL.}
 
 \item{predictors}{(optional; character vector) character vector with predictor names in 'df'. If omitted, all columns of 'df' are used as predictors. Default:NULL}
-
-\item{min_numerics}{(required, integer) Minimum number of numeric predictors required. Default: 1}
 
 \item{decimals}{(required, integer) Number of decimal places for the zero variance test. Smaller numbers will increase the number of variables detected as near-zero variance. Recommended values will depend on the range of the numeric variables in 'df'. Default: 4}
 }
@@ -34,9 +31,9 @@ Validates the 'predictors' argument to ensure it complies with the requirements 
 \item Stops if 'df' is NULL.
 \item Stops if 'df' is not validated.
 \item If 'predictors' is NULL, uses column names of 'df' as 'predictors' in the 'df' data frame.
-\item Raise a warning if there are names in 'predictors' not in the column names of 'df', and returns only the ones in 'df'.
+\item Print a message if there are names in 'predictors' not in the column names of 'df', and returns only the ones in 'df'.
 \item Stop if the number of numeric columns in 'predictors' is smaller than 'min_numerics'.
-\item Raise a warning if there are zero-variance columns in 'predictors' and returns a new 'predictors' argument without them.
+\item Print a message if there are zero-variance columns in 'predictors' and returns a new 'predictors' argument without them.
 \item Tags the vector with the attribute \code{validated = TRUE} to let the package functions skip the data validation.
 }
 }

@@ -10,19 +10,23 @@ testthat::test_that("`validate_predictors()` works", {
 
   vi <- validate_df(df = vi)
 
+  vi_numerics <- identify_numeric_predictors(
+    df = vi
+  )
+
   #without predictors
   #without response
-  #must contain all df columns
+  #must contain only numeric columns
   predictors <- validate_predictors(
     df = vi
     )
 
   testthat::expect_true(attributes(predictors)$validated)
   testthat::expect_true(
-    length(predictors) == ncol(vi)
+    length(predictors) == length(vi_numerics)
   )
   testthat::expect_true(
-    all(predictors %in% colnames(vi))
+    all(predictors %in% vi_numerics)
   )
 
   #without predictors

@@ -135,6 +135,12 @@ cor_select <- function(
     stop("argument 'max_cor' must be a numeric between 0 and 1.")
   }
 
+  #do nothing if one predictor only
+  if(length(predictors) == 1){
+    attributes(predictors) <- NULL
+    return(predictors)
+  }
+
   #correlation data frame
   cor.df <- cor_df(
     df = df,

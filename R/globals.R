@@ -10,7 +10,6 @@ utils::globalVariables(c(
   "x", # <cor_numerics>
   "y", # <cor_numerics>
   "pair_name", # <cor_numerics>
-  "response", # <cor_numerics_and_characters>
   "var", # <identify_zero_variance_predictors>
   "encoded", # <target_encoding_rnorm>
   "is.required", # <validate_response>
