@@ -39,6 +39,8 @@
 <p>Function vif_df() now has the internal function vif_f() to compute the vif data frame, and this function is applied twice, once without modifying the correlation matrix, and if this fails, again by replacing 1 and -1 with 0.999 and -0.999 in the correlation matrix to try overcome the “singular matrix” issue.</p>
 <p>The function validate_df() now takes into account the number of predictors as reference, along with min_rows, to warn the user about potential issues in the multicollinearity analysis due to the data frame dimensions.</p>
 <p>The function preference_order() no longer has the <code>workers</code> argument, but can accept a parallelization setup via <code><a href="https://future.futureverse.org/reference/plan.html" class="external-link">future::plan()</a></code> and a progress bar via de <code>progressr</code> package.</p>
+<p>New function <code><a href="../reference/validate_preference_order.html">validate_preference_order()</a></code> added to streamline <code><a href="../reference/cor_select.html">cor_select()</a></code> and <code><a href="../reference/vif_select.html">vif_select()</a></code>.</p>
+<p>Streamlined documentation using roxygen methods to inherit sections and parameters.</p>
 </div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="1.1.1" id="collinear-111">collinear 1.1.1<a class="anchor" aria-label="anchor" href="#collinear-111"></a></h2><p class="text-muted">CRAN release: 2023-12-08</p>
@@ -50,7 +52,7 @@
 <p>Added alias <code><a href="../reference/f_rf_rsquared.html">f_rf_rsquared()</a></code> to the function <code><a href="../reference/f_rf_rsquared.html">f_rf_deviance()</a></code>.</p>
 <p>Added column “vi_binary” to <code>vi</code> as a binary version of “vi_mean”.</p>
 <p>Added function <code><a href="../reference/auc_score.html">auc_score()</a></code> to compute the area under the curve of predictions from binary models.</p>
-<p>Added function <code><a href="../reference/internal.html">case_weights()</a></code> to compute case weights when binary responses are unbalanced.</p>
+<p>Added function <code><a href="../reference/case_weights.html">case_weights()</a></code> to compute case weights when binary responses are unbalanced.</p>
 <p>Added function <code><a href="../reference/f_rf_auc_balanced.html">f_rf_auc_balanced()</a></code> to be used as input for the <code>f</code> argument of <code><a href="../reference/preference_order.html">preference_order()</a></code> when the response is binary and balanced.</p>
 <p>Added function <code><a href="../reference/f_rf_auc_unbalanced.html">f_rf_auc_unbalanced()</a></code> to be used as input for the <code>f</code> argument of <code><a href="../reference/preference_order.html">preference_order()</a></code> when the response is binary and unbalanced.</p>
 <p>Added function <code><a href="../reference/f_gam_auc_balanced.html">f_gam_auc_balanced()</a></code> to be used as input for the <code>f</code> argument of <code><a href="../reference/preference_order.html">preference_order()</a></code> when the response is binary and balanced.</p>

@@ -59,32 +59,32 @@ Supports a parallelization setup via future::plan() and progress bars generated 
 
 
 <dl><dt id="arg-df">df<a class="anchor" aria-label="anchor" href="#arg-df"></a></dt>
-<dd><p>(required; data frame) A data frame with numeric and/or character predictors predictors, and optionally, a response variable. Default: NULL.</p></dd>
+<dd><p>(required; data frame, tibble, or sf) A data frame with numeric predictors, and optionally a numeric response and categorical predictors. Default: NULL.</p></dd>
 
 
 <dt id="arg-response">response<a class="anchor" aria-label="anchor" href="#arg-response"></a></dt>
-<dd><p>(required, character string) Name of a numeric response variable. Character response variables are ignored. Please, see 'Details' to better understand how providing this argument or not leads to different results when there are character variables in 'predictors'. Default: NULL.</p></dd>
+<dd><p>(optional, character string) Name of a numeric (non-numerics are ignored) response variable in <code>df</code>, only required if there are categorical variables named in the argument <code>predictors</code>. Default: NULL.</p></dd>
 
 
 <dt id="arg-predictors">predictors<a class="anchor" aria-label="anchor" href="#arg-predictors"></a></dt>
-<dd><p>(optional; character vector) character vector with predictor names in 'df'. If omitted, all columns of 'df' are used as predictors. Default:'NULL'</p></dd>
+<dd><p>(optional; character vector) Names of the variables to select from <code>df</code>. If omitted, all numeric columns in <code>df</code> are used instead. If argument <code>response</code> is not provided, non-numeric variables are ignored. Default: NULL</p></dd>
 
 
 <dt id="arg-f">f<a class="anchor" aria-label="anchor" href="#arg-f"></a></dt>
-<dd><p>(optional: function) A function that returns a value representing the relationship between a given predictor and the response. Higher values are ranked higher. The available options are:</p><ul><li><p><code><a href="f_rsquared.html">f_rsquared()</a></code> (default option): returns the R-squared of the correlation between a numeric response and a numeric predictor.</p></li>
-<li><p>f_gam_deviance: fits a univariate GAM model between a numeric response and a numeric predictor to return the explained deviance. Requires the package <code>mgcv</code>.</p></li>
-<li><p><code><a href="f_rf_rsquared.html">f_rf_rsquared()</a></code> also named <code><a href="f_rf_rsquared.html">f_rf_deviance()</a></code>: fits a univariate random forest model with <code><a href="http://imbs-hl.github.io/ranger/reference/ranger.html" class="external-link">ranger::ranger()</a></code> between a numeric response and a numeric predictor to return the R-squared of the observations against the out-of-bag predictions. Requires the package <code>ranger</code>.</p></li>
-<li><p><code><a href="f_logistic_auc_balanced.html">f_logistic_auc_balanced()</a></code>: fits a logistic univariate GLM of a balanced binary response (0s and 1s) against a numeric predictor to return the Area Under the Curve of the observations against the predictors.</p></li>
-<li><p><code><a href="f_logistic_auc_unbalanced.html">f_logistic_auc_unbalanced()</a></code>: fits a quasibinomial univariate GLM with weighted cases of an unbalanced binary response (0s and 1s) against a numeric predictor to return the Area Under the Curve of the observations against the predictors.</p></li>
-<li><p><code><a href="f_gam_auc_balanced.html">f_gam_auc_balanced()</a></code>: fits a logistic univariate GAM of a balanced binary response (0s and 1s) against a numeric predictor to return the Area Under the Curve of the observations against the predictors.</p></li>
-<li><p><code><a href="f_gam_auc_unbalanced.html">f_gam_auc_unbalanced()</a></code>: fits a quasibinomial univariate GAM with weighted cases of an unbalanced binary response (0s and 1s) against a numeric predictor to return the Area Under the Curve of the observations against the predictors.</p></li>
-<li><p><code><a href="f_rf_auc_balanced.html">f_rf_auc_balanced()</a></code>: fits a random forest model of a balanced binary response (0s and 1s) against a numeric predictor to return the Area Under the Curve of the observations against the predictors.</p></li>
-<li><p><code><a href="f_rf_auc_unbalanced.html">f_rf_auc_unbalanced()</a></code>: fits a random forest model with weighted cases of an unbalanced binary response (0s and 1s) against a numeric predictor to return the Area Under the Curve of the observations against the predictors.</p></li>
+<dd><p>(optional: function) Function returning a numeric value representing the relationship between a given predictor in <code>predictors</code> and <code>response</code>. The available options are:</p><ul><li><p><code><a href="f_rsquared.html">f_rsquared()</a></code> (default)</p></li>
+<li><p><code><a href="f_gam_deviance.html">f_gam_deviance()</a></code></p></li>
+<li><p><code><a href="f_rf_rsquared.html">f_rf_rsquared()</a></code></p></li>
+<li><p><code><a href="f_logistic_auc_balanced.html">f_logistic_auc_balanced()</a></code></p></li>
+<li><p><code><a href="f_logistic_auc_unbalanced.html">f_logistic_auc_unbalanced()</a></code></p></li>
+<li><p><code><a href="f_gam_auc_balanced.html">f_gam_auc_balanced()</a></code></p></li>
+<li><p><code><a href="f_gam_auc_unbalanced.html">f_gam_auc_unbalanced()</a></code></p></li>
+<li><p><code><a href="f_rf_auc_balanced.html">f_rf_auc_balanced()</a></code></p></li>
+<li><p><code><a href="f_rf_auc_unbalanced.html">f_rf_auc_unbalanced()</a></code></p></li>
 </ul></dd>
 
 
 <dt id="arg-encoding-method">encoding_method<a class="anchor" aria-label="anchor" href="#arg-encoding-method"></a></dt>
-<dd><p>(optional; character string). Name of the target encoding method to convert character and factor predictors to numeric. One of "mean", "rank", "loo", "rnorm" (see <code><a href="target_encoding_lab.html">target_encoding_lab()</a></code> for further details). Default: "mean"</p></dd>
+<dd><p>(optional; character string). Name of the target encoding method to transform non-numeric variables to numeric. One of "mean", "rank", "loo", "rnorm" (see <code><a href="target_encoding_lab.html">target_encoding_lab()</a></code> for further details). Default: "mean"</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -92,8 +92,23 @@ Supports a parallelization setup via future::plan() and progress bars generated 
     <p>data frame</p>
     </div>
     <div class="section level2">
+    <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
+    <div class="dont-index"><p>Other preference_order:
+<code><a href="auc_score.html">auc_score</a>()</code>,
+<code><a href="case_weights.html">case_weights</a>()</code>,
+<code><a href="f_gam_auc_balanced.html">f_gam_auc_balanced</a>()</code>,
+<code><a href="f_gam_auc_unbalanced.html">f_gam_auc_unbalanced</a>()</code>,
+<code><a href="f_gam_deviance.html">f_gam_deviance</a>()</code>,
+<code><a href="f_logistic_auc_balanced.html">f_logistic_auc_balanced</a>()</code>,
+<code><a href="f_logistic_auc_unbalanced.html">f_logistic_auc_unbalanced</a>()</code>,
+<code><a href="f_rf_auc_balanced.html">f_rf_auc_balanced</a>()</code>,
+<code><a href="f_rf_auc_unbalanced.html">f_rf_auc_unbalanced</a>()</code>,
+<code><a href="f_rf_rsquared.html">f_rf_rsquared</a>()</code>,
+<code><a href="f_rsquared.html">f_rsquared</a>()</code></p></div>
+    </div>
+    <div class="section level2">
     <h2 id="author">Author<a class="anchor" aria-label="anchor" href="#author"></a></h2>
-    <p>Blas M. Benito</p>
+    <p>Blas M. Benito, PhD</p>
     </div>
 
     <div class="section level2">

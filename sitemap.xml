@@ -7,6 +7,7 @@
 <url><loc>https://blasbenito.github.io/collinear/index.html</loc></url>
 <url><loc>https://blasbenito.github.io/collinear/news/index.html</loc></url>
 <url><loc>https://blasbenito.github.io/collinear/reference/auc_score.html</loc></url>
+<url><loc>https://blasbenito.github.io/collinear/reference/case_weights.html</loc></url>
 <url><loc>https://blasbenito.github.io/collinear/reference/collinear-package.html</loc></url>
 <url><loc>https://blasbenito.github.io/collinear/reference/collinear.html</loc></url>
 <url><loc>https://blasbenito.github.io/collinear/reference/cor_df.html</loc></url>
@@ -27,13 +28,13 @@
 <url><loc>https://blasbenito.github.io/collinear/reference/identify_numeric_predictors.html</loc></url>
 <url><loc>https://blasbenito.github.io/collinear/reference/identify_zero_variance_predictors.html</loc></url>
 <url><loc>https://blasbenito.github.io/collinear/reference/index.html</loc></url>
-<url><loc>https://blasbenito.github.io/collinear/reference/internal.html</loc></url>
 <url><loc>https://blasbenito.github.io/collinear/reference/preference_order.html</loc></url>
 <url><loc>https://blasbenito.github.io/collinear/reference/target_encoding_lab.html</loc></url>
 <url><loc>https://blasbenito.github.io/collinear/reference/target_encoding_methods.html</loc></url>
 <url><loc>https://blasbenito.github.io/collinear/reference/toy.html</loc></url>
 <url><loc>https://blasbenito.github.io/collinear/reference/validate_df.html</loc></url>
 <url><loc>https://blasbenito.github.io/collinear/reference/validate_predictors.html</loc></url>
+<url><loc>https://blasbenito.github.io/collinear/reference/validate_preference_order.html</loc></url>
 <url><loc>https://blasbenito.github.io/collinear/reference/validate_response.html</loc></url>
 <url><loc>https://blasbenito.github.io/collinear/reference/vi.html</loc></url>
 <url><loc>https://blasbenito.github.io/collinear/reference/vi_predictors.html</loc></url>
