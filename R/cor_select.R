@@ -16,15 +16,8 @@
 #'
 #' If `preference_order` is not provided, then the predictors are ranked by the sum of their absolute pairwise correlations with the other predictors.
 #'
-#'
-#' @param df (required; data frame) A data frame with numeric and/or character predictors, and optionally, a response variable. Default: NULL.
-#' @param response (recommended, character string) Name of a numeric response variable. Character response variables are ignored. Please, see 'Description' to better understand how providing this argument or not leads to different results when there are character variables in 'predictors'. Default: NULL.
-#' @param predictors (optional; character vector) Character vector with predictor names in 'df'. If omitted, all columns of 'df' are used as predictors. Default:'NULL'
-#' @param preference_order  (optional; character vector) vector with column names in 'predictors' in the desired preference order, or result of the function [preference_order()]. Allows defining a priority order for selecting predictors, which can be particularly useful when some predictors are more critical for the analysis than others. Default: NULL (predictors ordered from lower to higher sum of absolute correlation with the other predictors).
-#' @param cor_method (optional; character string) Method used to compute pairwise correlations. Accepted methods are "pearson" (with a recommended minimum of 30 rows in 'df') or "spearman" (with a recommended minimum of 10 rows in 'df'). Default: "pearson".
-#' @param max_cor (optional; numeric) Maximum correlation allowed between any pair of predictors. Higher values return larger number of predictors with higher multicollinearity. Default: 0.75
-#' @param encoding_method (optional; character string). Name of the target encoding method to convert character and factor predictors to numeric. One of "mean", "rank", "loo", "rnorm" (see [target_encoding_lab()] for further details). Default: "mean"
-#' @return Character vector with the names of the selected predictors.
+#' @inheritParams collinear
+#' @inherit collinear return
 #' @examples
 #'
 #' data(
@@ -118,7 +111,8 @@
 #' selected.predictors
 #'
 #' @autoglobal
-#' @author Blas M. Benito
+#' @family correlation
+#' @author Blas M. Benito, PhD
 #' @export
 cor_select <- function(
     df = NULL,
@@ -158,47 +152,17 @@ cor_select <- function(
 
   #auto preference order
   #variables with lower sum of cor with others go higher
-  preference_order.auto <- cor.matrix |>
+  preference_order_auto <- cor.matrix |>
     colSums() |>
     sort() |>
     names()
 
-  #if there is no preference order
-  if(is.null(preference_order)){
-    preference_order <- preference_order.auto
-  }
-
-  #check if preference_order comes from preference_order()
-  if(is.data.frame(preference_order) == TRUE){
-    if("predictor" %in% names(preference_order)){
-      preference_order <- preference_order$predictor
-    } else {
-      stop("argument 'preference_order' must be a data frame with the column 'predictor'.")
-    }
-  }
-
-  #subset preference_order in predictors
-  if(!is.null(predictors)){
-    preference_order <- preference_order[preference_order %in% predictors]
-  }
-
-  #if there are variables not in preference_order
-  #add them in the order of preference_order.auto
-  if(length(preference_order) < length(predictors)){
-
-    not.in.preference_order <- setdiff(
-      x = predictors,
-      y = preference_order
-    )
-
-    preference_order <- c(
-      preference_order,
-      preference_order.auto[
-        preference_order.auto %in% not.in.preference_order
-      ]
-    )
-
-  }
+  #validate preference order
+  preference_order <- validate_preference_order(
+    predictors = predictors,
+    preference_order = preference_order,
+    preference_order_auto = preference_order_auto
+  )
 
   #organize the correlation matrix according to preference_order
   cor.matrix <- cor.matrix[

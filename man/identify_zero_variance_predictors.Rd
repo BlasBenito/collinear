@@ -2,22 +2,22 @@
 % Please edit documentation in R/identify.R
 \name{identify_zero_variance_predictors}
 \alias{identify_zero_variance_predictors}
-\title{Identify zero and near-zero-variance predictors}
+\title{Identify Zero and Near-Zero Variance Predictors}
 \usage{
 identify_zero_variance_predictors(df = NULL, predictors = NULL, decimals = 4)
 }
 \arguments{
-\item{df}{(required; data frame) A data frame with numeric and/or character predictors predictors, and optionally, a response variable. Default: NULL.}
+\item{df}{(required; data frame, tibble, or sf) A data frame with numeric predictors, and optionally a numeric response and categorical predictors. Default: NULL.}
 
-\item{predictors}{(optional; character vector) A vector with predictor names in 'df'. If omitted, all columns of 'df' are used as predictors. Default:'NULL'}
+\item{predictors}{(optional; character vector) Names of the variables to select from \code{df}. If omitted, all numeric columns in \code{df} are used instead. If argument \code{response} is not provided, non-numeric variables are ignored. Default: NULL}
 
 \item{decimals}{(required, integer) number of decimal places for the zero variance test. Default: 4}
 }
 \value{
-character vector with names of zero and near-zero variance columns.
+character vector: names of zero and near-zero variance columns.
 }
 \description{
-Predictors a variance of zero or near zero are highly problematic for multicollinearity analysis and modelling in general. This function identifies these predictors with a level of sensitivity defined by the 'decimals' argument. Smaller number of decimals increase the number of variables detected as near zero variance. Recommended values will depend on the range of the numeric variables in 'df'.
+Variables with a variance of zero or near-zero are highly problematic for multicollinearity analysis and modelling in general. This function identifies these variables with a level of sensitivity defined by the 'decimals' argument. Smaller number of decimals increase the number of variables detected as near zero variance. Recommended values will depend on the range of the numeric variables in 'df'.
 }
 \examples{
 
@@ -47,6 +47,16 @@ zero.variance.predictors <- identify_zero_variance_predictors(
 zero.variance.predictors
 
 }
-\author{
-Blas M. Benito
+\seealso{
+Other data_preparation: 
+\code{\link{drop_geometry_column}()},
+\code{\link{identify_non_numeric_predictors}()},
+\code{\link{validate_df}()},
+\code{\link{validate_predictors}()},
+\code{\link{validate_preference_order}()},
+\code{\link{validate_response}()}
 }
+\author{
+Blas M. Benito, PhD
+}
+\concept{data_preparation}

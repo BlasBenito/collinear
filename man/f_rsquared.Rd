@@ -17,8 +17,7 @@ f_rsquared(x, y, df)
 R-squared
 }
 \description{
-Computes the R-squared between a response and a predictor.
-Fastest option to compute preference order.
+R-squared between a response and a predictor. Fastest option to compute preference order.
 }
 \examples{
 
@@ -34,3 +33,18 @@ f_rsquared(
 )
 
 }
+\seealso{
+Other preference_order: 
+\code{\link{auc_score}()},
+\code{\link{case_weights}()},
+\code{\link{f_gam_auc_balanced}()},
+\code{\link{f_gam_auc_unbalanced}()},
+\code{\link{f_gam_deviance}()},
+\code{\link{f_logistic_auc_balanced}()},
+\code{\link{f_logistic_auc_unbalanced}()},
+\code{\link{f_rf_auc_balanced}()},
+\code{\link{f_rf_auc_unbalanced}()},
+\code{\link{f_rf_rsquared}()},
+\code{\link{preference_order}()}
+}
+\concept{preference_order}

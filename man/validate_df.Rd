@@ -2,22 +2,20 @@
 % Please edit documentation in R/validate.R
 \name{validate_df}
 \alias{validate_df}
-\title{Validate input data frame}
+\title{Validate Argument df}
 \usage{
 validate_df(df = NULL, min_rows = 30)
 }
 \arguments{
-\item{df}{(required; data frame or matrix) Input data frame. Default: NULL}
+\item{df}{(required; data frame, tibble, or sf) A data frame with numeric predictors, and optionally a numeric response and categorical predictors. Default: NULL.}
 
 \item{min_rows}{(required; integer) Minimum number of rows required for a pairwise correlation or a variance inflation factor analysis. Default: 30}
 }
 \value{
-The input data frame modified to comply with the requirements of the functions in this package
+data frame
 }
 \description{
-Internal function to validate and prepare the input data frame for a multicollinearity analysis.
-
-Validates a data frame to ensure it complies with the requirements of the package functions. The function performs the following actions:
+Internal function to validate the argument \code{df} and ensure it complies with the requirements of the package functions. It performs the following actions:
 \itemize{
 \item Stops if 'df' is NULL.
 \item Stops if 'df' cannot be coerced to data frame.
@@ -41,8 +39,17 @@ vi <- validate_df(
 
 #tagged as validated
 attributes(vi)$validated
-
+}
+\seealso{
+Other data_preparation: 
+\code{\link{drop_geometry_column}()},
+\code{\link{identify_non_numeric_predictors}()},
+\code{\link{identify_zero_variance_predictors}()},
+\code{\link{validate_predictors}()},
+\code{\link{validate_preference_order}()},
+\code{\link{validate_response}()}
 }
 \author{
-Blas M. Benito
+Blas M. Benito, PhD
 }
+\concept{data_preparation}

@@ -1,4 +1,4 @@
-#' Target encoding of non-numeric variables
+#' Target Encoding of Non-Numeric Variables
 #'
 #' @description
 #'
@@ -19,22 +19,16 @@
 #'
 #' The method "rnorm" has the argument `rnorm_sd_multiplier`, which multiplies the standard deviation argument of the `\link[stats]{rnorm}` function to control the spread of the encoded values between groups. Values smaller than 1 reduce the spread in the results, while values larger than 1 have the opposite effect.
 #'
-#' @param df (required; data frame, tibble, or sf) A training data frame. Default: NULL
-#' @param response (required; character string) Name of the response. Must be a column name of `df`. Default: NULL
-#' @param predictors (required; character vector) Names of all the predictors in `df`. Only character and factor predictors are processed, but all are returned in the "df" slot of the function's output.  Default: NULL
+#' @inheritParams collinear
 #' @param encoding_methods (optional; character string or vector). Name of the target encoding methods. Default: c("mean", "mean_smoothing, "rank", "loo", "rnorm")
-#' @param seed (optional; integer) Random seed to facilitate reproducibility when `white_noise` is not 0. Default: 1
-#' @param white_noise (optional; numeric) Numeric with white noise values in the range 0-1, representing a fraction of the range of the response to be added as noise to the encoded variable. Controls the variability in the encoded variables to mitigate potential overfitting. Default: `0`.
 #' @param smoothing (optional; numeric) Argument of [target_encoding_mean()] (method "mean_smoothing"). Minimum group size that keeps the mean of the group. Groups smaller than this have their means pulled towards the global mean of the response. Default: 0
+#' @param white_noise (optional; numeric) Numeric with white noise values in the range 0-1, representing a fraction of the range of the response to be added as noise to the encoded variable. Controls the variability in the encoded variables to mitigate potential overfitting. Default: `0`.
+#' @param seed (optional; integer) Random seed to facilitate reproducibility when `white_noise` is not 0. Default: 1
 #' @param rnorm_sd_multiplier (optional; numeric) Numeric with multiplier of the standard deviation of each group in the categorical variable, in the range 0-1. Controls the variability in the encoded variables to mitigate potential overfitting. Default: `1`
 #' @param replace (optional; logical) If `TRUE`, the function replaces each categorical variable with its encoded version, and returns the input data frame with the encoded variables instead of the original ones. Default: FALSE
 #' @param verbose (optional; logical) If TRUE, messages generated during the execution of the function are printed to the console Default: TRUE
 #'
-#' @return
-#'
-#' The input data frame with newly encoded columns if `replace` is `FALSE`, or the input data frame with encoded columns if `TRUE`
-#'
-#'
+#' @return data frame
 #' @examples
 #'
 #loading example data
@@ -77,7 +71,8 @@
 #'
 #'
 #' @autoglobal
-#' @author Blas M. Benito
+#' @family target_encoding
+#' @author Blas M. Benito, PhD
 #' @references
 #' \itemize{
 #'  \item Micci-Barreca, D. (2001) A Preprocessing Scheme for High-Cardinality Categorical Attributes in Classification and Prediction Problems. SIGKDD Explor. Newsl. 3, 1, 27-32 \doi{10.1145/507533.507538}
@@ -94,9 +89,9 @@ target_encoding_lab <- function(
       "rnorm"
     ),
     smoothing = 0,
-    rnorm_sd_multiplier = 0,
-    seed = 1,
     white_noise = 0,
+    seed = 1,
+    rnorm_sd_multiplier = 0,
     replace = FALSE,
     verbose = TRUE
 ){

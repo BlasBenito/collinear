@@ -9,7 +9,7 @@ f_gam_auc_unbalanced(x, y, df)
 \arguments{
 \item{x}{(required, character string) name of the predictor variable.}
 
-\item{y}{(required, character string) name of the binary response variable}
+\item{y}{(required, character string) name of the response variable}
 
 \item{df}{(required, data frame) data frame with the columns 'x' and 'y'.}
 }
@@ -38,3 +38,18 @@ if(requireNamespace(package = "mgcv", quietly = TRUE)){
 }
 
 }
+\seealso{
+Other preference_order: 
+\code{\link{auc_score}()},
+\code{\link{case_weights}()},
+\code{\link{f_gam_auc_balanced}()},
+\code{\link{f_gam_deviance}()},
+\code{\link{f_logistic_auc_balanced}()},
+\code{\link{f_logistic_auc_unbalanced}()},
+\code{\link{f_rf_auc_balanced}()},
+\code{\link{f_rf_auc_unbalanced}()},
+\code{\link{f_rf_rsquared}()},
+\code{\link{f_rsquared}()},
+\code{\link{preference_order}()}
+}
+\concept{preference_order}

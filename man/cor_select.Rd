@@ -15,25 +15,25 @@ cor_select(
 )
 }
 \arguments{
-\item{df}{(required; data frame) A data frame with numeric and/or character predictors predictors, and optionally, a response variable. Default: NULL.}
+\item{df}{(required; data frame, tibble, or sf) A data frame with numeric predictors, and optionally a numeric response and categorical predictors. Default: NULL.}
 
-\item{response}{(recommended, character string) Name of a numeric response variable. Character response variables are ignored. Please, see 'Description' to better understand how providing this argument or not leads to different results when there are character variables in 'predictors'. Default: NULL.}
+\item{response}{(optional, character string) Name of a numeric (non-numerics are ignored) response variable in \code{df}, only required if there are categorical variables named in the argument \code{predictors}. Default: NULL.}
 
-\item{predictors}{(optional; character vector) Character vector with predictor names in 'df'. If omitted, all columns of 'df' are used as predictors. Default:'NULL'}
+\item{predictors}{(optional; character vector) Names of the variables to select from \code{df}. If omitted, all numeric columns in \code{df} are used instead. If argument \code{response} is not provided, non-numeric variables are ignored. Default: NULL}
 
-\item{preference_order}{(optional; character vector) vector with column names in 'predictors' in the desired preference order, or result of the function \code{\link[=preference_order]{preference_order()}}. Allows defining a priority order for selecting predictors, which can be particularly useful when some predictors are more critical for the analysis than others. Default: NULL (predictors ordered from lower to higher sum of absolute correlation with the other predictors).}
+\item{preference_order}{(optional; character vector) Variable names in \code{predictors}. Defines a priority order, from first to last, to preserve variables during the selection process. Variables not included in this argument are ranked by their Variance Inflation Factor. See \code{\link[=preference_order]{preference_order()}}. Default: NULL}
 
-\item{cor_method}{(optional; character string) Method used to compute pairwise correlations. Accepted methods are "pearson" (with a recommended minimum of 30 rows in 'df') or "spearman" (with a recommended minimum of 10 rows in 'df'). Default: "pearson".}
+\item{cor_method}{(optional; character string) Method used to compute pairwise correlations. Either "pearson" or "spearman". Default: "pearson".}
 
-\item{max_cor}{(optional; numeric) Maximum correlation allowed between any pair of predictors. Higher values return larger number of predictors with higher multicollinearity. Default: 0.75}
+\item{max_cor}{(optional; numeric) Maximum correlation allowed between any pair of variables in \code{predictors}. Recommended values are between 0.5 and 0.9. Higher values return larger number of predictors with a higher multicollinearity. Default: \code{0.75}}
 
-\item{encoding_method}{(optional; character string). Name of the target encoding method to convert character and factor predictors to numeric. One of "mean", "rank", "loo", "rnorm" (see \code{\link[=target_encoding_lab]{target_encoding_lab()}} for further details). Default: "mean"}
+\item{encoding_method}{(optional; character string). Name of the target encoding method to transform non-numeric variables to numeric. One of "mean", "rank", "loo", "rnorm" (see \code{\link[=target_encoding_lab]{target_encoding_lab()}} for further details). Default: "mean"}
 }
 \value{
-Character vector with the names of the selected predictors.
+character vector; selected predictor names
 }
 \description{
-Applies a recursive forward selection algorithm algorithm to select predictors with a bivariate correlation with any other predictor lower than a threshold defined by the argument \code{max_cor}.
+Applies a recursive forward selection algorithm to select predictors with a bivariate correlation with any other predictor lower than a threshold defined by the argument \code{max_cor}.
 
 If the argument \code{response} is provided, all non-numeric variables in \code{predictors} are transformed into numeric using target encoding (see \code{\link[=target_encoding_lab]{target_encoding_lab()}}). Otherwise, non-numeric variables are ignored.
 
@@ -45,7 +45,7 @@ For example, if \code{predictors} is \code{c("a", "b", "c")} and \code{preferenc
 \item If their correlation is equal or above \code{max_cor}, then \code{"a"} is selected, no matter its correlation with \code{"c"},
 }
 
-If \code{preference_order} is not provided, then the predictors are ranked by their variance inflation factor as computed by \code{vif_df()}.
+If \code{preference_order} is not provided, then the predictors are ranked by the sum of their absolute pairwise correlations with the other predictors.
 }
 \examples{
 
@@ -118,7 +118,7 @@ selected.predictors
 
 #with response
 #with automated preference_order
-#restrictive max_cor and max_vif
+#restrictive max_cor
 #numerics and categorical variables in output
 preference.order <- preference_order(
   df = vi,
@@ -140,6 +140,13 @@ selected.predictors <- cor_select(
 selected.predictors
 
 }
-\author{
-Blas M. Benito
+\seealso{
+Other correlation: 
+\code{\link{cor_df}()},
+\code{\link{cor_matrix}()},
+\code{\link{cramer_v}()}
 }
+\author{
+Blas M. Benito, PhD
+}
+\concept{correlation}

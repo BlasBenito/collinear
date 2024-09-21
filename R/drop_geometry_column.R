@@ -6,9 +6,9 @@
 #' @param df (required; data frame or matrix) Input data frame. Default: NULL
 #'
 #' @return The input data frame without a geometry column
-#' @keywords internal
+#' @family data_preparation
 #' @autoglobal
-#' @author Blas M. Benito
+#' @author Blas M. Benito, PhD
 #' @export
 drop_geometry_column <- function(df){
 

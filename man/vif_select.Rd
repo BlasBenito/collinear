@@ -2,7 +2,7 @@
 % Please edit documentation in R/vif_select.R
 \name{vif_select}
 \alias{vif_select}
-\title{Automated multicollinearity reduction via Variance Inflation Factor}
+\title{Automated Multicollinearity Management via Variance Inflation Factors}
 \usage{
 vif_select(
   df = NULL,
@@ -14,39 +14,35 @@ vif_select(
 )
 }
 \arguments{
-\item{df}{(required; data frame) A data frame with numeric and/or character predictors predictors, and optionally, a response variable. Default: NULL.}
+\item{df}{(required; data frame, tibble, or sf) A data frame with numeric predictors, and optionally a numeric response and categorical predictors. Default: NULL.}
 
-\item{response}{(recommended, character string) Name of a numeric response variable. Character response variables are ignored. Please, see 'Details' to better understand how providing this argument or not leads to different results when there are character variables in 'predictors'. Default: NULL.}
+\item{response}{(optional, character string) Name of a numeric (non-numerics are ignored) response variable in \code{df}, only required if there are categorical variables named in the argument \code{predictors}. Default: NULL.}
 
-\item{predictors}{(optional; character vector) character vector with predictor names in 'df'. If omitted, all columns of 'df' are used as predictors. Default:'NULL'}
+\item{predictors}{(optional; character vector) Names of the variables to select from \code{df}. If omitted, all numeric columns in \code{df} are used instead. If argument \code{response} is not provided, non-numeric variables are ignored. Default: NULL}
 
-\item{preference_order}{(optional; character vector) vector with column names in 'predictors' in the desired preference order, or result of the function \code{\link[=preference_order]{preference_order()}}. Allows defining a priority order for selecting predictors, which can be particularly useful when some predictors are more critical for the analysis than others. Predictors not included in this argument are ranked by their Variance Inflation Factor. Default: NULL.}
+\item{preference_order}{(optional; character vector) Variable names in \code{predictors}. Defines a priority order, from first to last, to preserve variables during the selection process. Variables not included in this argument are ranked by their Variance Inflation Factor. See \code{\link[=preference_order]{preference_order()}}. Default: NULL}
 
-\item{max_vif}{(optional, numeric) Numeric with recommended values between 2.5 and 10 defining the maximum VIF allowed for any given predictor in the output dataset. Higher VIF thresholds should result in a higher number of selected variables. Default: 5.}
+\item{max_vif}{(optional, numeric) Maximum Variance Inflation Factor allowed during variable selection. Recommended values are between 2.5 and 10. Higher values return larger number of predictors with a higher multicollinearity. Default: 5.}
 
-\item{encoding_method}{(optional; character string). Name of the target encoding method to convert character and factor predictors to numeric. One of "mean", "rank", "loo", "rnorm" (see \code{\link[=target_encoding_lab]{target_encoding_lab()}} for further details). Default: "mean"}
+\item{encoding_method}{(optional; character string). Name of the target encoding method to transform non-numeric variables to numeric. One of "mean", "rank", "loo", "rnorm" (see \code{\link[=target_encoding_lab]{target_encoding_lab()}} for further details). Default: "mean"}
 }
 \value{
-Character vector with the names of the selected predictors.
+character vector; selected predictor names
 }
 \description{
 Automates multicollinearity management by selecting variables based on their Variance Inflation Factor (VIF).
-
-Warning: predictors with perfect correlation might cause errors, please use \code{\link[=cor_select]{cor_select()}} to remove perfect correlations first.
-
-The \code{\link[=vif_select]{vif_select()}} function is designed to automate the reduction of multicollinearity in a set of predictors by using Variance Inflation Factors.
-
-If the 'response' argument is provided, categorical predictors are converted to numeric via target encoding (see \code{\link[=target_encoding_lab]{target_encoding_lab()}}). If the 'response' argument is not provided, categorical variables are ignored.
 
 The Variance Inflation Factor for a given variable \code{y} is computed as \code{1/(1-R2)}, where \code{R2} is the multiple R-squared of a multiple regression model fitted using \code{y} as response and all other predictors in the input data frame as predictors. The VIF equation can be interpreted as the "rate of perfect model's R-squared to the unexplained variance of this model".
 
 The possible range of VIF values is (1, Inf]. A VIF lower than 10 suggest that removing \code{y} from the data set would reduce overall multicollinearity. The recommended thresholds for maximum VIF may vary depending on the source consulted, being the most common values, 2.5, 5, and 10.
 
+If the \code{response} argument is provided, and there are categorical variables named in the \code{predictors} argument, then these variables are transformed to numeric via Target Encoding (see \code{\link[=target_encoding_lab]{target_encoding_lab()}}). If \code{response} is not provided, then categorical variables are ignored.
+
 The function \code{\link[=vif_select]{vif_select()}} applies a recursive algorithm to remove variables with a VIF higher than a given threshold (defined by the argument \code{max_vif}).
 
 If the argument \code{response} is provided, all non-numeric variables in \code{predictors} are transformed into numeric using target encoding (see \code{\link[=target_encoding_lab]{target_encoding_lab()}}). Otherwise, non-numeric variables are ignored.
 
-The argument \code{preference_order} allows defining a preference selection order to preserve (when possible) variables that might be interesting or even required for a given analysis.
+The argument \code{preference_order} defines a ranking of preference to preserve (when possible) variables that might be interesting or even required for a given analysis.
 
 For example, if \code{predictors} is \code{c("a", "b", "c")} and \code{preference_order} is \code{c("a", "b")}, there are two possibilities:
 \itemize{
@@ -158,9 +154,14 @@ selected.predictors <- vif_select(
 selected.predictors
 
 }
+\seealso{
+Other vif: 
+\code{\link{vif_df}()}
+}
 \author{
-Blas M. Benito
+Blas M. Benito, PhD
 \itemize{
 \item David A. Belsley, D.A., Kuh, E., Welsch, R.E. (1980). Regression Diagnostics: Identifying Influential Data and Sources of Collinearity. John Wiley & Sons. \doi{10.1002/0471725153}.
 }
 }
+\concept{vif}

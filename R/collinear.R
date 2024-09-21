@@ -4,31 +4,55 @@
 #'
 #' Automates multicollinearity management in data frames with numeric and categorical predictors by combining four methods:
 #' \itemize{
-#' \item Pairwise correlation filtering: Pearson, Spearman, and Cramer's V statistics to identify pairs of highly correlated predictors.
-#' \item Variance Inflation Factor (VIF) filtering: identifies predictors that are linear combinations of other predictors.
-#' \item Target encoding: to transform categorical predictors to numeric using a numeric variable as reference.
-#' \item Flexible prioritization method: to help the user select a meaningful set of non-correlated predictors.
+#' \item Pairwise correlation filtering: Pearson, Spearman, and Cramer's V statistics to identify pairs of highly correlated predictors. See [cor_select()] and [cor_df()].
+#' \item Variance Inflation Factor (VIF) filtering: identifies predictors that are linear combinations of other predictors. See [vif_select()] and [vif_df()].
+#' \item Target encoding: to transform categorical predictors to numeric using a numeric variable as reference. See [target_encoding_lab()].
+#' \item Flexible prioritization method: to help the user select a meaningful set of non-correlated predictors. See [preference_order()].
 #' }
 #'
-#' The pairwise correlation filtering is implemented in [cor_select()]. This function applies a recursive forward selection algorithm to keep predictors with a Pearson correlation with all other selected predictors lower than the value of the argument `max_cor`.  When two predictors are correlated above this threshold, the one with the lowest preference order is removed. At this stage, if `preference_order` is NULL, predictors are ranked from lower to higher sum of absolute pairwise correlation with the other predictors.
+#' See *Details* for a deeper explanation on each method implemented here.
 #'
-#' The VIF-based filtering is implemented in [vif_select()], which removes variables and recomputes VIF scores iteratively, until all variables in the resulting selection have a VIF below the value of the argument `max_vif`. The VIF for a given variable `y` is computed as `1/(1-R2)`, where `R2` is the R-squared of a multiple regression model fitted using `y` as response against the other predictors. The equation can be interpreted as "the rate of perfect model's R-squared to the unexplained variance of this model". The possible range of VIF values is (1, Inf], but the recommended thresholds for maximum VIF (argument `max_vif`) may vary, being 2.5, 5, and 10 the values most commonly mentioned in the relevant bibliography. At this stage, if `preference_order` is NULL, predictors are ranked from lower to higher Variance Inflation Factor.
 #'
-#' When a 'response' argument is provided, categorical predictors are converted to numeric via target encoding with the function [target_encoding_lab()], and all predictors are then handled as numeric during the multicollinearity filtering. When the 'response' argument is not provided, categorical variables are ignored. However, in such case, the function [cor_select()] can handle categorical variables, albeit with a lower computation speed.
+#' @section Variance Inflation Factor:
+#'
+#' The Variance Inflation Factor for a given variable `y` is computed as `1/(1-R2)`, where `R2` is the multiple R-squared of a multiple regression model fitted using `y` as response and all other predictors in the input data frame as predictors. The VIF equation can be interpreted as the "rate of perfect model's R-squared to the unexplained variance of this model".
+#'
+#' The possible range of VIF values is (1, Inf]. A VIF lower than 10 suggest that removing `y` from the data set would reduce overall multicollinearity. The recommended thresholds for maximum VIF may vary depending on the source consulted, being the most common values, 2.5, 5, and 10.
+#'
+#' @section VIF-based Filtering:
+#'
+#' The function [vif_select()] computes Variance Inflation Factors and removes variables iteratively, until all variables in the resulting selection have a VIF below `max_vif`.
+#'
+#' If the argument `preference_order` is not provided, all variables are first ranked from lower to higher VIF, as returned by [vif_df()]., and the variable with a higher VIF above `max_vif` is removed on each iteration.
+#'
+#' If `preference_order` is defined, whenever two or more variables are above `max_vif`, the one higher in `preference_order` is preserved, and the next one with a higher VIF is removed.
+#'
+#' @section Pairwise Correlation Filtering:
+#'
+#' The function [cor_select()] applies a recursive forward selection algorithm to keep predictors with a maximum Pearson correlation with all other selected predictors lower than `max_cor`.
+#'
+#' If the argument `preference_order` is not provided, the variables are ranked from lower to higher sum of absolute pairwise correlation with all other variables. When two variables are correlated above `max_cor`, the one with the lowest preference order is removed.
+#'
+#' @section Target Encoding:
+#'
+#' When the `response` argument is provided, any non-numeric predictors are converted to numeric via target encoding with the function [target_encoding_lab()], to facilitate the handling of all predictors during the multicollinearity filtering.
+#'
+#' When the 'response' argument is not provided, categorical variables are ignored. However, in such case, the function [cor_select()] can handle categorical variables, albeit with a lower computation speed.
+#'
+#' @section Preference Order:
 #'
 #' The argument `preference_order` allows prioritizing variables that might be interesting or even required for a given analysis. If `preference_order` is not provided, then the predictors are ranked from lower to higher sum of their absolute correlations with the other predictors in [cor_select()], and by their VIF in [vif_select()], and removed one by one until the maximum R-squared of the correlation matrix is lower than `max_cor` and the maximum VIF is below `max_vif`.
 #'
-#' Please note that near-zero variance columns are identified by [identify_zero_variance_predictors()], and ignored by [collinear()], [cor_select()], and [vif_select()].
 #'
-#' @param df (required; data frame) A data frame with numeric and/or character predictors predictors, and optionally, a response variable. Default: NULL.
-#' @param response (recommended, character string) Name of a numeric response variable. Character response variables are ignored. Please, see 'Details' to better understand how providing this argument or not leads to different results when there are character variables in 'predictors'. Default: NULL.
-#' @param predictors (optional; character vector) character vector with predictor names in 'df'. If omitted, all columns of 'df' are used as predictors. Default: NULL
-#' @param preference_order  (optional; character vector) vector with column names in 'predictors' in the desired preference order, or result of the function [preference_order()]. Allows defining a priority order for selecting predictors, which can be particularly useful when some predictors are more critical for the analysis than others. Predictors not included in this argument are ranked by their Variance Inflation Factor. Default: NULL.
-#' @param cor_method (optional; character string) Method used to compute pairwise correlations. Accepted methods are "pearson" (with a recommended minimum of 30 rows in 'df') or "spearman" (with a recommended minimum of 10 rows in 'df'). Default: "pearson".
-#' @param max_cor (optional; numeric) Maximum correlation allowed between any pair of predictors. Higher values return larger number of predictors with higher multicollinearity. Default: `0.75`
-#' @param max_vif (optional, numeric) Numeric with recommended values between 2.5 and 10 defining the maximum VIF allowed for any given predictor in the output dataset. Higher VIF thresholds should result in a higher number of selected variables. Default: 5.
-#' @param encoding_method (optional; character string). Name of the target encoding method to convert character and factor predictors to numeric. One of "mean", "rank", "loo", "rnorm" (see [target_encoding_lab()] for further details). Default: "mean"
-#' @return Character vector with the names of uncorrelated predictors.
+#' @param df (required; data frame, tibble, or sf) A data frame with numeric predictors, and optionally a numeric response and categorical predictors. Default: NULL.
+#' @param response (optional, character string) Name of a numeric (non-numerics are ignored) response variable in `df`, only required if there are categorical variables named in the argument `predictors`. Default: NULL.
+#' @param predictors (optional; character vector) Names of the variables to select from `df`. If omitted, all numeric columns in `df` are used instead. If argument `response` is not provided, non-numeric variables are ignored. Default: NULL
+#' @param preference_order (optional; character vector) Variable names in `predictors`. Defines a priority order, from first to last, to preserve variables during the selection process. Variables not included in this argument are ranked by their Variance Inflation Factor. See [preference_order()]. Default: NULL
+#' @param cor_method (optional; character string) Method used to compute pairwise correlations. Either "pearson" or "spearman". Default: "pearson".
+#' @param max_cor (optional; numeric) Maximum correlation allowed between any pair of variables in `predictors`. Recommended values are between 0.5 and 0.9. Higher values return larger number of predictors with a higher multicollinearity. Default: `0.75`
+#' @param max_vif (optional, numeric) Maximum Variance Inflation Factor allowed during variable selection. Recommended values are between 2.5 and 10. Higher values return larger number of predictors with a higher multicollinearity. Default: 5.
+#' @param encoding_method (optional; character string). Name of the target encoding method to transform non-numeric variables to numeric. One of "mean", "rank", "loo", "rnorm" (see [target_encoding_lab()] for further details). Default: "mean"
+#' @return character vector; selected predictor names
 #'
 #' @examples
 #'
@@ -124,7 +148,7 @@
 #' selected.predictors
 #'
 #' @autoglobal
-#' @author Blas M. Benito
+#' @author Blas M. Benito, PhD
 #' @references
 #' \itemize{
 #'  \item David A. Belsley, D.A., Kuh, E., Welsch, R.E. (1980). Regression Diagnostics: Identifying Influential Data and Sources of Collinearity. John Wiley & Sons. \doi{10.1002/0471725153}.

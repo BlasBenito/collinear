@@ -2,20 +2,20 @@
 % Please edit documentation in R/identify.R
 \name{identify_numeric_predictors}
 \alias{identify_numeric_predictors}
-\title{Identify numeric predictors}
+\title{Identify Numeric Variables}
 \usage{
 identify_numeric_predictors(df = NULL, predictors = NULL)
 }
 \arguments{
-\item{df}{(required; data frame) A data frame with numeric and/or character predictors predictors, and optionally, a response variable. Default: NULL.}
+\item{df}{(required; data frame, tibble, or sf) A data frame with numeric predictors, and optionally a numeric response and categorical predictors. Default: NULL.}
 
-\item{predictors}{(optional; character vector) A vector with predictor names in 'df'. If omitted, all columns of 'df' are used as predictors. Default:'NULL'}
+\item{predictors}{(optional; character vector) Names of the variables to select from \code{df}. If omitted, all numeric columns in \code{df} are used instead. If argument \code{response} is not provided, non-numeric variables are ignored. Default: NULL}
 }
 \value{
-character vector with names of numeric predictors.
+character vector: names of numeric predictors
 }
 \description{
-Given 'df' and 'predictors' arguments, this function subsets and returns the numeric predictors.
+Returns the names of the numeric variables in a data frame.
 }
 \examples{
 if (interactive()) {
@@ -35,5 +35,5 @@ numeric.predictors
 }
 }
 \author{
-Blas M. Benito
+Blas M. Benito, PhD
 }

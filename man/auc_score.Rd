@@ -23,5 +23,19 @@ Computes the AUC score of binary model predictions.
    observed = c(0, 0, 1, 1),
    predicted = c(0.1, 0.6, 0.4, 0.8)
    )
-
 }
+\seealso{
+Other preference_order: 
+\code{\link{case_weights}()},
+\code{\link{f_gam_auc_balanced}()},
+\code{\link{f_gam_auc_unbalanced}()},
+\code{\link{f_gam_deviance}()},
+\code{\link{f_logistic_auc_balanced}()},
+\code{\link{f_logistic_auc_unbalanced}()},
+\code{\link{f_rf_auc_balanced}()},
+\code{\link{f_rf_auc_unbalanced}()},
+\code{\link{f_rf_rsquared}()},
+\code{\link{f_rsquared}()},
+\code{\link{preference_order}()}
+}
+\concept{preference_order}

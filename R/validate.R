@@ -1,10 +1,7 @@
-#' Validate input data frame
+#' Validate Argument df
 #'
 #' @description
-#'
-#' Internal function to validate and prepare the input data frame for a multicollinearity analysis.
-#'
-#' Validates a data frame to ensure it complies with the requirements of the package functions. The function performs the following actions:
+#' Internal function to validate the argument `df` and ensure it complies with the requirements of the package functions. It performs the following actions:
 #' \itemize{
 #'   \item Stops if 'df' is NULL.
 #'   \item Stops if 'df' cannot be coerced to data frame.
@@ -18,9 +15,9 @@
 #' }
 #'
 #'
-#' @param df (required; data frame or matrix) Input data frame. Default: NULL
+#' @inheritParams collinear
 #' @param min_rows (required; integer) Minimum number of rows required for a pairwise correlation or a variance inflation factor analysis. Default: 30
-#' @return The input data frame modified to comply with the requirements of the functions in this package
+#' @return data frame
 #' @examples
 #'
 #' data(vi)
@@ -32,9 +29,9 @@
 #'
 #' #tagged as validated
 #' attributes(vi)$validated
-#'
+#' @author Blas M. Benito, PhD
 #' @autoglobal
-#' @author Blas M. Benito
+#' @family data_preparation
 #' @export
 validate_df <- function(
     df = NULL,
@@ -166,11 +163,10 @@ validate_df <- function(
 
 }
 
-#' Validate the 'predictors' argument for analysis
+#' Validate Argument predictors
 #'
 #' @description
-#'
-#' Requires the argument 'df' to be validated with [validate_df()].
+#' Internal function to validate the `predictors` argument. Requires the argument 'df' to be validated with [validate_df()].
 #'
 #' Validates the 'predictors' argument to ensure it complies with the requirements of the package functions. It performs the following actions:
 #' \itemize{
@@ -183,13 +179,10 @@ validate_df <- function(
 #'   \item Tags the vector with the attribute `validated = TRUE` to let the package functions skip the data validation.
 #' }
 #'
-#'
-#' @param df (required; data frame) A validated data frame with numeric and/or character predictors, and optionally, a response variable. Default: NULL.
-#' @param response (optional, character string) Name of a numeric response variable. Used to remove the response from the predictors when predictors is NULL. Character response variables are ignored. Default: NULL.
-#' @param predictors (optional; character vector) character vector with predictor names in 'df'. If omitted, all columns of 'df' are used as predictors. Default:NULL
+#' @inheritParams collinear
 #' @param decimals (required, integer) Number of decimal places for the zero variance test. Smaller numbers will increase the number of variables detected as near-zero variance. Recommended values will depend on the range of the numeric variables in 'df'. Default: 4
 #'
-#' @return A character vector of validated predictor names
+#' @return character vector: predictor names
 #' @examples
 #'
 #' data(
@@ -212,7 +205,8 @@ validate_df <- function(
 #' attributes(vi_predictors)$validated
 #'
 #' @autoglobal
-#' @author Blas M. Benito
+#' @family data_preparation
+#' @author Blas M. Benito, PhD
 #' @export
 validate_predictors <- function(
     df = NULL,
@@ -332,17 +326,13 @@ validate_predictors <- function(
 }
 
 
-#' Validate the 'response' argument for target encoding of non-numeric variables
+#' Validate Argument response
 #'
 #' @description
+#' Internal function to validate the argument `response`. Requires the argument 'df' to be validated with [validate_df()].
 #'
-#' Requires the argument 'df' to be validated with [validate_df()].
-#'
-#'
-#' @param df (required; data frame) A validated data frame with numeric and/or character predictors predictors, and optionally, a response variable. Default: NULL.
-#' @param response (optional, character string) Name of a numeric response variable. Character response variables are ignored. Default: NULL.
-#' @param decimals (required, integer) number of decimal places for the zero variance test. Default: 4
-#' @return character string with name of the response
+#' @inheritParams validate_predictors
+#' @return character string: response name
 #' @examples
 #'
 #' data(
@@ -364,7 +354,8 @@ validate_predictors <- function(
 #' attributes(response)$validated
 #'
 #' @autoglobal
-#' @author Blas M. Benito
+#' @family data_preparation
+#' @author Blas M. Benito, PhD
 #' @export
 validate_response <- function(
     df = NULL,
@@ -455,6 +446,106 @@ validate_response <- function(
 
 }
 
+
+#' Validate Argument preference_order
+#'
+#' @description
+#' Internal function to validate the argument `preference_order`.
+#'
+#'
+#' @inheritParams collinear
+#' @param preference_order_auto (required, character vector) names of the predictors in the automated preference order returned by [vif_select()] or [cor_select()]
+#'
+#' @return character vector: ranked variable names
+#' @export
+#' @family data_preparation
+#' @autoglobal
+#' @examples
+#' data(
+#'   vi,
+#'   vi_predictors
+#'   )
+#'
+#' #validating example data frame
+#' vi <- validate_df(
+#'   df = vi
+#' )
+#'
+#' #validating example predictors
+#' vi_predictors <- validate_predictors(
+#'   df = vi,
+#'   predictors = vi_predictors
+#' )
+#'
+#' #tagged as validated
+#' attributes(vi_predictors)$validated
+#'
+#' #validate preference order
+#' my_order <- c(
+#'   "swi_max",
+#'   "swi_min",
+#'   "swi_deviance" #wrong one
+#' )
+#'
+#' my_order <- validate_preference_order(
+#'   predictors = vi_predictors,
+#'   preference_order = my_order,
+#'   preference_order_auto = vi_predictors
+#' )
+#'
+#' #has my_order first
+#' #excludes wrong names
+#' #all other variables ordered according to preference_order_auto
+#' my_order
+validate_preference_order <- function(
+    predictors = NULL,
+    preference_order = NULL,
+    preference_order_auto = NULL
+    ){
+
+  if(is.null(preference_order_auto)){
+    stop("Argument 'preference_order_auto' cannot be NULL.")
+  }
+
+  if(is.null(preference_order)){
+    preference_order <- preference_order_auto
+  }
+
+  #check if preference_order comes from preference_order()
+  if(is.data.frame(preference_order) == TRUE){
+    if("predictor" %in% names(preference_order)){
+      preference_order <- preference_order$predictor
+    } else {
+      stop("Argument 'preference_order' must be a data frame with the column 'predictor'.")
+    }
+  }
+
+  #subset preference_order in predictors
+  if(!is.null(predictors)){
+    preference_order <- preference_order[preference_order %in% predictors]
+  }
+
+  #if there are variables not in preference_order
+  #add them in the order of preference_order.auto
+  if(length(preference_order) < length(predictors)){
+
+    not_in_preference_order <- setdiff(
+      x = predictors,
+      y = preference_order
+    )
+
+    preference_order <- c(
+      preference_order,
+      preference_order_auto[
+        preference_order_auto %in% not_in_preference_order
+      ]
+    )
+
+  }
+
+  preference_order
+
+}
 
 
 

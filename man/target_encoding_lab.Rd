@@ -2,7 +2,7 @@
 % Please edit documentation in R/target_encoding_lab.R
 \name{target_encoding_lab}
 \alias{target_encoding_lab}
-\title{Target encoding of non-numeric variables}
+\title{Target Encoding of Non-Numeric Variables}
 \usage{
 target_encoding_lab(
   df = NULL,
@@ -10,36 +10,36 @@ target_encoding_lab(
   predictors = NULL,
   encoding_methods = c("mean", "rank", "loo", "rnorm"),
   smoothing = 0,
-  rnorm_sd_multiplier = 0,
-  seed = 1,
   white_noise = 0,
+  seed = 1,
+  rnorm_sd_multiplier = 0,
   replace = FALSE,
   verbose = TRUE
 )
 }
 \arguments{
-\item{df}{(required; data frame, tibble, or sf) A training data frame. Default: NULL}
+\item{df}{(required; data frame, tibble, or sf) A data frame with numeric predictors, and optionally a numeric response and categorical predictors. Default: NULL.}
 
-\item{response}{(required; character string) Name of the response. Must be a column name of \code{df}. Default: NULL}
+\item{response}{(optional, character string) Name of a numeric (non-numerics are ignored) response variable in \code{df}, only required if there are categorical variables named in the argument \code{predictors}. Default: NULL.}
 
-\item{predictors}{(required; character vector) Names of all the predictors in \code{df}. Only character and factor predictors are processed, but all are returned in the "df" slot of the function's output.  Default: NULL}
+\item{predictors}{(optional; character vector) Names of the variables to select from \code{df}. If omitted, all numeric columns in \code{df} are used instead. If argument \code{response} is not provided, non-numeric variables are ignored. Default: NULL}
 
 \item{encoding_methods}{(optional; character string or vector). Name of the target encoding methods. Default: c("mean", "mean_smoothing, "rank", "loo", "rnorm")}
 
 \item{smoothing}{(optional; numeric) Argument of \code{\link[=target_encoding_mean]{target_encoding_mean()}} (method "mean_smoothing"). Minimum group size that keeps the mean of the group. Groups smaller than this have their means pulled towards the global mean of the response. Default: 0}
 
-\item{rnorm_sd_multiplier}{(optional; numeric) Numeric with multiplier of the standard deviation of each group in the categorical variable, in the range 0-1. Controls the variability in the encoded variables to mitigate potential overfitting. Default: \code{1}}
+\item{white_noise}{(optional; numeric) Numeric with white noise values in the range 0-1, representing a fraction of the range of the response to be added as noise to the encoded variable. Controls the variability in the encoded variables to mitigate potential overfitting. Default: \code{0}.}
 
 \item{seed}{(optional; integer) Random seed to facilitate reproducibility when \code{white_noise} is not 0. Default: 1}
 
-\item{white_noise}{(optional; numeric) Numeric with white noise values in the range 0-1, representing a fraction of the range of the response to be added as noise to the encoded variable. Controls the variability in the encoded variables to mitigate potential overfitting. Default: \code{0}.}
+\item{rnorm_sd_multiplier}{(optional; numeric) Numeric with multiplier of the standard deviation of each group in the categorical variable, in the range 0-1. Controls the variability in the encoded variables to mitigate potential overfitting. Default: \code{1}}
 
 \item{replace}{(optional; logical) If \code{TRUE}, the function replaces each categorical variable with its encoded version, and returns the input data frame with the encoded variables instead of the original ones. Default: FALSE}
 
 \item{verbose}{(optional; logical) If TRUE, messages generated during the execution of the function are printed to the console Default: TRUE}
 }
 \value{
-The input data frame with newly encoded columns if \code{replace} is \code{FALSE}, or the input data frame with encoded columns if \code{TRUE}
+data frame
 }
 \description{
 Target encoding involves replacing the values of categorical variables with numeric ones from a "target variable", usually a model's response. Target encoding can be useful for improving the performance of machine learning models.
@@ -105,6 +105,11 @@ stats::cor(
 \item Micci-Barreca, D. (2001) A Preprocessing Scheme for High-Cardinality Categorical Attributes in Classification and Prediction Problems. SIGKDD Explor. Newsl. 3, 1, 27-32 \doi{10.1145/507533.507538}
 }
 }
-\author{
-Blas M. Benito
+\seealso{
+Other target_encoding: 
+\code{\link{target_encoding_mean}()}
 }
+\author{
+Blas M. Benito, PhD
+}
+\concept{target_encoding}

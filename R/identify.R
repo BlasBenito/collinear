@@ -1,10 +1,10 @@
-#' Identify numeric predictors
+#' Identify Numeric Variables
 #'
-#' Given 'df' and 'predictors' arguments, this function subsets and returns the numeric predictors.
+#' @description
+#' Returns the names of the numeric variables in a data frame.
 #'
-#' @param df (required; data frame) A data frame with numeric and/or character predictors predictors, and optionally, a response variable. Default: NULL.
-#' @param predictors (optional; character vector) A vector with predictor names in 'df'. If omitted, all columns of 'df' are used as predictors. Default:'NULL'
-#' @return character vector with names of numeric predictors.
+#' @inheritParams collinear
+#' @return character vector: names of numeric predictors
 #' @examples
 #' if (interactive()) {
 #'
@@ -22,7 +22,7 @@
 #'
 #' }
 #' @autoglobal
-#' @author Blas M. Benito
+#' @author Blas M. Benito, PhD
 #' @export
 identify_numeric_predictors <- function(
     df = NULL,
@@ -45,13 +45,14 @@ identify_numeric_predictors <- function(
 
 }
 
-#' Identify non-numeric predictors
+#' Identify Non-Numeric Predictors
 #'
-#' Given 'df' and 'predictors' arguments, this function subsets and returns the non-numeric (character, factor, and logical) predictors.
+#' @description
+#' Returns the names of the non-numeric predictors, if any, in a data frame.
 #'
-#' @param df (required; data frame) A data frame with numeric and/or character predictors predictors, and optionally, a response variable. Default: NULL.
-#' @param predictors (optional; character vector) A vector with predictor names in 'df'. If omitted, all columns of 'df' are used as predictors. Default:'NULL'
-#' @return character vector with names of numeric predictors.
+#'
+#' @inheritParams collinear
+#' @return character vector: names of non-numeric predictors
 #' @examples
 #'
 #' data(
@@ -67,7 +68,8 @@ identify_numeric_predictors <- function(
 #' non.numeric.predictors
 #'
 #' @autoglobal
-#' @author Blas M. Benito
+#' @family data_preparation
+#' @author Blas M. Benito, PhD
 #' @export
 identify_non_numeric_predictors <- function(
     df = NULL,
@@ -91,14 +93,15 @@ identify_non_numeric_predictors <- function(
 }
 
 
-#' Identify zero and near-zero-variance predictors
+#' Identify Zero and Near-Zero Variance Predictors
 #'
-#' Predictors a variance of zero or near zero are highly problematic for multicollinearity analysis and modelling in general. This function identifies these predictors with a level of sensitivity defined by the 'decimals' argument. Smaller number of decimals increase the number of variables detected as near zero variance. Recommended values will depend on the range of the numeric variables in 'df'.
 #'
-#' @param df (required; data frame) A data frame with numeric and/or character predictors predictors, and optionally, a response variable. Default: NULL.
-#' @param predictors (optional; character vector) A vector with predictor names in 'df'. If omitted, all columns of 'df' are used as predictors. Default:'NULL'
+#' @description
+#' Variables with a variance of zero or near-zero are highly problematic for multicollinearity analysis and modelling in general. This function identifies these variables with a level of sensitivity defined by the 'decimals' argument. Smaller number of decimals increase the number of variables detected as near zero variance. Recommended values will depend on the range of the numeric variables in 'df'.
+#'
+#' @inheritParams collinear
 #' @param decimals (required, integer) number of decimal places for the zero variance test. Default: 4
-#' @return character vector with names of zero and near-zero variance columns.
+#' @return character vector: names of zero and near-zero variance columns.
 #' @examples
 #'
 #' data(
@@ -127,7 +130,8 @@ identify_non_numeric_predictors <- function(
 #' zero.variance.predictors
 #'
 #' @autoglobal
-#' @author Blas M. Benito
+#' @family data_preparation
+#' @author Blas M. Benito, PhD
 #' @export
 identify_zero_variance_predictors <- function(
     df = NULL,

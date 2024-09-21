@@ -13,26 +13,26 @@ preference_order(
 )
 }
 \arguments{
-\item{df}{(required; data frame) A data frame with numeric and/or character predictors predictors, and optionally, a response variable. Default: NULL.}
+\item{df}{(required; data frame, tibble, or sf) A data frame with numeric predictors, and optionally a numeric response and categorical predictors. Default: NULL.}
 
-\item{response}{(required, character string) Name of a numeric response variable. Character response variables are ignored. Please, see 'Details' to better understand how providing this argument or not leads to different results when there are character variables in 'predictors'. Default: NULL.}
+\item{response}{(optional, character string) Name of a numeric (non-numerics are ignored) response variable in \code{df}, only required if there are categorical variables named in the argument \code{predictors}. Default: NULL.}
 
-\item{predictors}{(optional; character vector) character vector with predictor names in 'df'. If omitted, all columns of 'df' are used as predictors. Default:'NULL'}
+\item{predictors}{(optional; character vector) Names of the variables to select from \code{df}. If omitted, all numeric columns in \code{df} are used instead. If argument \code{response} is not provided, non-numeric variables are ignored. Default: NULL}
 
-\item{f}{(optional: function) A function that returns a value representing the relationship between a given predictor and the response. Higher values are ranked higher. The available options are:
+\item{f}{(optional: function) Function returning a numeric value representing the relationship between a given predictor in \code{predictors} and \code{response}. The available options are:
 \itemize{
-\item \code{\link[=f_rsquared]{f_rsquared()}} (default option): returns the R-squared of the correlation between a numeric response and a numeric predictor.
-\item f_gam_deviance: fits a univariate GAM model between a numeric response and a numeric predictor to return the explained deviance. Requires the package \code{mgcv}.
-\item \code{\link[=f_rf_rsquared]{f_rf_rsquared()}} also named \code{\link[=f_rf_deviance]{f_rf_deviance()}}: fits a univariate random forest model with \code{ranger::ranger()} between a numeric response and a numeric predictor to return the R-squared of the observations against the out-of-bag predictions. Requires the package \code{ranger}.
-\item \code{\link[=f_logistic_auc_balanced]{f_logistic_auc_balanced()}}: fits a logistic univariate GLM of a balanced binary response (0s and 1s) against a numeric predictor to return the Area Under the Curve of the observations against the predictors.
-\item \code{\link[=f_logistic_auc_unbalanced]{f_logistic_auc_unbalanced()}}: fits a quasibinomial univariate GLM with weighted cases of an unbalanced binary response (0s and 1s) against a numeric predictor to return the Area Under the Curve of the observations against the predictors.
-\item \code{\link[=f_gam_auc_balanced]{f_gam_auc_balanced()}}: fits a logistic univariate GAM of a balanced binary response (0s and 1s) against a numeric predictor to return the Area Under the Curve of the observations against the predictors.
-\item \code{\link[=f_gam_auc_unbalanced]{f_gam_auc_unbalanced()}}: fits a quasibinomial univariate GAM with weighted cases of an unbalanced binary response (0s and 1s) against a numeric predictor to return the Area Under the Curve of the observations against the predictors.
-\item \code{\link[=f_rf_auc_balanced]{f_rf_auc_balanced()}}: fits a random forest model of a balanced binary response (0s and 1s) against a numeric predictor to return the Area Under the Curve of the observations against the predictors.
-\item \code{\link[=f_rf_auc_unbalanced]{f_rf_auc_unbalanced()}}: fits a random forest model with weighted cases of an unbalanced binary response (0s and 1s) against a numeric predictor to return the Area Under the Curve of the observations against the predictors.
+\item \code{\link[=f_rsquared]{f_rsquared()}} (default)
+\item \code{\link[=f_gam_deviance]{f_gam_deviance()}}
+\item \code{\link[=f_rf_rsquared]{f_rf_rsquared()}}
+\item \code{\link[=f_logistic_auc_balanced]{f_logistic_auc_balanced()}}
+\item \code{\link[=f_logistic_auc_unbalanced]{f_logistic_auc_unbalanced()}}
+\item \code{\link[=f_gam_auc_balanced]{f_gam_auc_balanced()}}
+\item \code{\link[=f_gam_auc_unbalanced]{f_gam_auc_unbalanced()}}
+\item \code{\link[=f_rf_auc_balanced]{f_rf_auc_balanced()}}
+\item \code{\link[=f_rf_auc_unbalanced]{f_rf_auc_unbalanced()}}
 }}
 
-\item{encoding_method}{(optional; character string). Name of the target encoding method to convert character and factor predictors to numeric. One of "mean", "rank", "loo", "rnorm" (see \code{\link[=target_encoding_lab]{target_encoding_lab()}} for further details). Default: "mean"}
+\item{encoding_method}{(optional; character string). Name of the target encoding method to transform non-numeric variables to numeric. One of "mean", "rank", "loo", "rnorm" (see \code{\link[=target_encoding_lab]{target_encoding_lab()}} for further details). Default: "mean"}
 }
 \value{
 data frame
@@ -128,6 +128,21 @@ preference.order
 future::plan(future::sequential)
 
 }
-\author{
-Blas M. Benito
+\seealso{
+Other preference_order: 
+\code{\link{auc_score}()},
+\code{\link{case_weights}()},
+\code{\link{f_gam_auc_balanced}()},
+\code{\link{f_gam_auc_unbalanced}()},
+\code{\link{f_gam_deviance}()},
+\code{\link{f_logistic_auc_balanced}()},
+\code{\link{f_logistic_auc_unbalanced}()},
+\code{\link{f_rf_auc_balanced}()},
+\code{\link{f_rf_auc_unbalanced}()},
+\code{\link{f_rf_rsquared}()},
+\code{\link{f_rsquared}()}
 }
+\author{
+Blas M. Benito, PhD
+}
+\concept{preference_order}

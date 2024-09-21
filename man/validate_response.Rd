@@ -2,22 +2,22 @@
 % Please edit documentation in R/validate.R
 \name{validate_response}
 \alias{validate_response}
-\title{Validate the 'response' argument for target encoding of non-numeric variables}
+\title{Validate Argument response}
 \usage{
 validate_response(df = NULL, response = NULL, decimals = 4)
 }
 \arguments{
-\item{df}{(required; data frame) A validated data frame with numeric and/or character predictors predictors, and optionally, a response variable. Default: NULL.}
+\item{df}{(required; data frame, tibble, or sf) A data frame with numeric predictors, and optionally a numeric response and categorical predictors. Default: NULL.}
 
-\item{response}{(optional, character string) Name of a numeric response variable. Character response variables are ignored. Default: NULL.}
+\item{response}{(optional, character string) Name of a numeric (non-numerics are ignored) response variable in \code{df}, only required if there are categorical variables named in the argument \code{predictors}. Default: NULL.}
 
-\item{decimals}{(required, integer) number of decimal places for the zero variance test. Default: 4}
+\item{decimals}{(required, integer) Number of decimal places for the zero variance test. Smaller numbers will increase the number of variables detected as near-zero variance. Recommended values will depend on the range of the numeric variables in 'df'. Default: 4}
 }
 \value{
-character string with name of the response
+character string: response name
 }
 \description{
-Requires the argument 'df' to be validated with \code{\link[=validate_df]{validate_df()}}.
+Internal function to validate the argument \code{response}. Requires the argument 'df' to be validated with \code{\link[=validate_df]{validate_df()}}.
 }
 \examples{
 
@@ -40,6 +40,16 @@ response <- validate_response(
 attributes(response)$validated
 
 }
-\author{
-Blas M. Benito
+\seealso{
+Other data_preparation: 
+\code{\link{drop_geometry_column}()},
+\code{\link{identify_non_numeric_predictors}()},
+\code{\link{identify_zero_variance_predictors}()},
+\code{\link{validate_df}()},
+\code{\link{validate_predictors}()},
+\code{\link{validate_preference_order}()}
 }
+\author{
+Blas M. Benito, PhD
+}
+\concept{data_preparation}

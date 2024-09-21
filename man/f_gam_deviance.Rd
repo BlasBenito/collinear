@@ -14,7 +14,7 @@ f_gam_deviance(x, y, df)
 \item{df}{(required, data frame) data frame with the columns 'x' and 'y'.}
 }
 \value{
-Explained deviance
+numeric: explained deviance
 }
 \description{
 Computes the explained deviance of a response against a predictor via Generalized Additive Model (GAM). This option is slower than \code{\link[=f_rsquared]{f_rsquared()}}, but suitable if you will be fitting GAMs with the resulting preference order.
@@ -38,3 +38,18 @@ if(requireNamespace(package = "mgcv", quietly = TRUE)){
 }
 
 }
+\seealso{
+Other preference_order: 
+\code{\link{auc_score}()},
+\code{\link{case_weights}()},
+\code{\link{f_gam_auc_balanced}()},
+\code{\link{f_gam_auc_unbalanced}()},
+\code{\link{f_logistic_auc_balanced}()},
+\code{\link{f_logistic_auc_unbalanced}()},
+\code{\link{f_rf_auc_balanced}()},
+\code{\link{f_rf_auc_unbalanced}()},
+\code{\link{f_rf_rsquared}()},
+\code{\link{f_rsquared}()},
+\code{\link{preference_order}()}
+}
+\concept{preference_order}

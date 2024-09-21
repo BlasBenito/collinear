@@ -17,13 +17,7 @@
 #'     \item response' is NULL (or the name of a non-numeric column): the association between the character variables is computed using Cramer's V. This option might be problematic, because R-squared values and Cramer's V, even when having the same range between 0 and 1, are not fully comparable.
 #'   }
 #' }
-#'
-#' @param df (required; data frame) A data frame with numeric and/or character predictors, and optionally, a response variable. Default: NULL.
-#' @param response (recommended, character string) Name of a numeric response variable. Character response variables are ignored. Please, see 'Details' to better understand how providing this argument or not leads to different results when there are character variables in 'predictors'. Default: NULL.
-#' @param predictors (optional; character vector) character vector with predictor names in 'df'. If omitted, all columns of 'df' are used as predictors. Default:'NULL'
-#' @param cor_method (optional; character string) Method used to compute pairwise correlations. Accepted methods are "pearson" (with a recommended minimum of 30 rows in 'df') or "spearman" (with a recommended minimum of 10 rows in 'df'). Default: "pearson".
-#' @param encoding_method (optional; character string). Name of the target encoding method to convert character and factor predictors to numeric. One of "mean", "rank", "loo", "rnorm" (see [target_encoding_lab()] for further details). Default: "mean"
-#'
+#' @inheritParams collinear
 #' @return correlation matrix
 #'
 #' @examples
@@ -71,7 +65,8 @@
 #' m[1:5, 1:5]
 #'
 #' @autoglobal
-#' @author Blas M. Benito
+#' @family correlation
+#' @author Blas M. Benito, PhD
 #' @export
 cor_matrix <- function(
     df = NULL,

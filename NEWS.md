@@ -10,6 +10,10 @@ The function validate_df() now takes into account the number of predictors as re
 
 The function preference_order() no longer has the `workers` argument, but can accept a parallelization setup via `future::plan()` and a progress bar via de `progressr` package.
 
+New function `validate_preference_order()` added to streamline `cor_select()` and `vif_select()`.
+
+Streamlined documentation using roxygen methods to inherit sections and parameters.
+
 # collinear 1.1.1
 
 Hotfix of issue with solve(tol = 0) in systems with no large double support (noLD). This one wasn't fun.

@@ -1,24 +1,21 @@
-#' @title Automated multicollinearity reduction via Variance Inflation Factor
+#' @title Automated Multicollinearity Management via Variance Inflation Factors
 #'
 #' @description
 #'
 #' Automates multicollinearity management by selecting variables based on their Variance Inflation Factor (VIF).
 #'
-#' Warning: predictors with perfect correlation might cause errors, please use [cor_select()] to remove perfect correlations first.
-#'
-#' The [vif_select()] function is designed to automate the reduction of multicollinearity in a set of predictors by using Variance Inflation Factors.
-#'
-#' If the 'response' argument is provided, categorical predictors are converted to numeric via target encoding (see [target_encoding_lab()]). If the 'response' argument is not provided, categorical variables are ignored.
-#'
 #' The Variance Inflation Factor for a given variable `y` is computed as `1/(1-R2)`, where `R2` is the multiple R-squared of a multiple regression model fitted using `y` as response and all other predictors in the input data frame as predictors. The VIF equation can be interpreted as the "rate of perfect model's R-squared to the unexplained variance of this model".
 #'
 #' The possible range of VIF values is (1, Inf]. A VIF lower than 10 suggest that removing `y` from the data set would reduce overall multicollinearity. The recommended thresholds for maximum VIF may vary depending on the source consulted, being the most common values, 2.5, 5, and 10.
+#'
+#' If the `response` argument is provided, and there are categorical variables named in the `predictors` argument, then these variables are transformed to numeric via Target Encoding (see [target_encoding_lab()]). If `response` is not provided, then categorical variables are ignored.
+#'
 #'
 #' The function [vif_select()] applies a recursive algorithm to remove variables with a VIF higher than a given threshold (defined by the argument `max_vif`).
 #'
 #' If the argument `response` is provided, all non-numeric variables in `predictors` are transformed into numeric using target encoding (see [target_encoding_lab()]). Otherwise, non-numeric variables are ignored.
 #'
-#' The argument `preference_order` allows defining a preference selection order to preserve (when possible) variables that might be interesting or even required for a given analysis.
+#' The argument `preference_order` defines a ranking of preference to preserve (when possible) variables that might be interesting or even required for a given analysis.
 #'
 #' For example, if `predictors` is `c("a", "b", "c")` and `preference_order` is `c("a", "b")`, there are two possibilities:
 #' \itemize{
@@ -28,14 +25,8 @@
 #'
 #' If `preference_order` is not provided, then the predictors are ranked by their variance inflation factor as computed by [vif_df()].
 #'
-#'
-#' @param df (required; data frame) A data frame with numeric and/or character predictors predictors, and optionally, a response variable. Default: NULL.
-#' @param response (recommended, character string) Name of a numeric response variable. Character response variables are ignored. Please, see 'Details' to better understand how providing this argument or not leads to different results when there are character variables in 'predictors'. Default: NULL.
-#' @param predictors (optional; character vector) character vector with predictor names in 'df'. If omitted, all columns of 'df' are used as predictors. Default:'NULL'
-#' @param preference_order  (optional; character vector) vector with column names in 'predictors' in the desired preference order, or result of the function [preference_order()]. Allows defining a priority order for selecting predictors, which can be particularly useful when some predictors are more critical for the analysis than others. Predictors not included in this argument are ranked by their Variance Inflation Factor. Default: NULL.
-#' @param max_vif (optional, numeric) Numeric with recommended values between 2.5 and 10 defining the maximum VIF allowed for any given predictor in the output dataset. Higher VIF thresholds should result in a higher number of selected variables. Default: 5.
-#' @param encoding_method (optional; character string). Name of the target encoding method to convert character and factor predictors to numeric. One of "mean", "rank", "loo", "rnorm" (see [target_encoding_lab()] for further details). Default: "mean"
-#' @return Character vector with the names of the selected predictors.
+#' @inheritParams collinear
+#' @inherit collinear return
 #' @examples
 #'
 #' data(
@@ -138,7 +129,8 @@
 #' selected.predictors
 #'
 #' @autoglobal
-#' @author Blas M. Benito
+#' @family vif
+#' @author Blas M. Benito, PhD
 #' \itemize{
 #'  \item David A. Belsley, D.A., Kuh, E., Welsch, R.E. (1980). Regression Diagnostics: Identifying Influential Data and Sources of Collinearity. John Wiley & Sons. \doi{10.1002/0471725153}.
 #' }
@@ -195,55 +187,18 @@ vif_select <- function(
 
   #auto preference order
   #variables with lower sum of cor with others go higher
-  preference_order.auto <- vif_df(
+  preference_order_auto <- vif_df(
     df = df,
     response = response,
     predictors = predictors
   )$variable
 
-  #if there is no preference order
-  if(is.null(preference_order)){
-
-    preference_order <- preference_order.auto
-
-  }
-
-  #check if preference_order comes from preference_order()
-  if(is.data.frame(preference_order) == TRUE){
-    preference_order <- preference_order$predictor
-  }
-
-  #check if preference_order comes from preference_order()
-  if(is.data.frame(preference_order) == TRUE){
-    if("predictor" %in% names(preference_order)){
-      preference_order <- preference_order$predictor
-    } else {
-      stop("argument 'preference_order' must be a data frame with the column 'predictor'.")
-    }
-  }
-
-  #subset preference_order in predictors
-  if(!is.null(predictors)){
-    preference_order <- preference_order[preference_order %in% predictors]
-  }
-
-  #if there are variables not in preference_order
-  #add them in the order of preference_order.auto
-  if(length(preference_order) < length(predictors)){
-
-    not.in.preference_order <- setdiff(
-      x = predictors,
-      y = preference_order
-    )
-
-    preference_order <- c(
-      preference_order,
-      preference_order.auto[
-        preference_order.auto %in% not.in.preference_order
-      ]
-    )
-
-  }
+  #validate preference order
+  preference_order <- validate_preference_order(
+    predictors = predictors,
+    preference_order = preference_order,
+    preference_order_auto = preference_order_auto
+  )
 
   #order df according to preference order
   df <- df[, preference_order, drop = FALSE]
@@ -254,14 +209,12 @@ vif_select <- function(
     rank = seq_len(ncol(df))
   )
 
-  #iterating through reversed preference order
-  if(nrow(df.rank) > 1) {
-      for(i in seq(from = nrow(df.rank), to = 2)){
+  for(i in seq(from = nrow(df.rank), to = 2)){
 
     vif.i <- vif_df(
       df = df,
       predictors = df.rank$variable
-      ) |>
+    ) |>
       dplyr::filter(
         variable == df.rank[i, "variable"]
       ) |>
@@ -278,10 +231,7 @@ vif_select <- function(
 
     }
 
-          }
-  } else {
-      warning("Only one variable provided; no way to select.")
-      }
+  }
 
   #selected variables
   df.rank$variable

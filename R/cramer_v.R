@@ -31,7 +31,8 @@
 #' v
 #'
 #' @autoglobal
-#' @author Blas M. Benito
+#' @family correlation
+#' @author Blas M. Benito, PhD
 #' @references
 #' \itemize{
 #'  \item Cramér, H. (1946). Mathematical Methods of Statistics. Princeton: Princeton University Press, page 282 (Chapter 21. The two-dimensional case). ISBN 0-691-08004-6

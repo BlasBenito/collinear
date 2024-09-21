@@ -1,6 +1,30 @@
 # Version 1.1.2
 
-Small bug-fixes. All changes described in NEWS.md
+  + Local check and tests performed in Ubuntu 20.04.6 LTS (Focal) on R 4.4.1: 0 errors, warnings, and notes.
+  + Platform checks performed with rhub::rhub_check() for all available setups:
+    + "linux"
+    + "macos"
+    + "macos-arm64"
+    + "windows"
+    + "atlas"
+    + "c23"
+    + "clang-asan"
+    + "clang16"
+    + "clang17"
+    + "clang18"
+    + "clang19"
+    + "gcc13"
+    + "gcc14"
+    + "intel"
+    + "mkl"
+    + "nold"
+    + "nosuggests"
+    + "rchk"
+    + "ubuntu-clang"
+    + "ubuntu-gcc12"
+    + "ubuntu-next"
+    + "ubuntu-release"
+    + "valgrind"
 
 ## Local check
 
@@ -38,20 +62,35 @@ Duration: 56.7 s
 [ FAIL 0 | WARN 0 | SKIP 0 | PASS 124 ]
 
 
-## Tested Platforms
-
-I checked the system in the following platforms:
-
-  + linux
-  + macos
-  + windows
-  + ubuntu-next
-  + ubuntu-release
-  + nold
+## Platform Checks
 
 ```r
 rhub::rhub_check(
-  platforms = c("linux", "macos", "windows", "ubuntu-next", "ubuntu-release", "nold")
+  platforms = c(
+  "linux", 
+  "macos", 
+  "macos-arm64",
+  "windows", 
+  "atlas",
+  "c23",
+  "clang-asan",
+  "clang16",
+  "clang17",
+  "clang18",
+  "clang19",
+  "gcc13",
+  "gcc14",
+  "intel",
+  "mkl",
+  "nold",
+  "nosuggests",
+  "rchk",
+  "ubuntu-clang",
+  "ubuntu-gcc12",
+  "ubuntu-next", 
+  "ubuntu-release", 
+  "valgrind"
+  )
 )
 ```
 
