@@ -7,10 +7,10 @@
 drop_geometry_column(df)
 }
 \arguments{
-\item{df}{(required; data frame or matrix) Input data frame. Default: NULL}
+\item{df}{(required; data frame, tibble, or sf) A data frame with numeric predictors, and optionally a numeric response and categorical predictors. Default: NULL.}
 }
 \value{
-The input data frame without a geometry column
+data frame
 }
 \description{
 Replicates the functionality of  \verb{\link[sf]\{st_drop_geometry\}} without depending on the \code{sf} package.

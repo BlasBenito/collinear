@@ -2,9 +2,9 @@
 #'
 #' @description
 #'
-#' The [cramer_v()] function calculates bias-corrected Cramer's V, a measure of association between two categorical variables.
+#' Computes bias-corrected Cramer's V (extension of the chi-squared test), a measure of association between two categorical variables. Results are in the range 0-1, where 0 indicates no association, and 1 indicates a perfect association.
 #'
-#' Cramer's V is an extension of the chi-squared test to measure the strength of association between two categorical variables. Provides values between 0 and 1, where 0 indicates no association, and 1 indicates a perfect association. In essence, Cramer's V assesses the co-occurrence of the categories of two variables to quantify how strongly these variables are related.
+#' In essence, Cramer's V assesses the co-occurrence of the categories of two variables to quantify how strongly these variables are related.
 #'
 #' Even when its range is between 0 and 1, Cramer's V values are not directly comparable to R-squared values, and as such, a multicollinearity analysis containing both types of values must be assessed with care. It is probably preferable to convert non-numeric variables to numeric using target encoding rather before a multicollinearity analysis.
 #'
@@ -12,7 +12,7 @@
 #' @param y (required; character vector) character vector representing a categorical variable. Must have the same length as 'x'. Default: NULL
 #' @param check_input (required; logical) If FALSE, disables data checking for a slightly faster execution. Default: TRUE
 #'
-#' @return Numeric, value of Cramer's V
+#' @return numeric: Cramer's V
 #'
 #' @examples
 #'

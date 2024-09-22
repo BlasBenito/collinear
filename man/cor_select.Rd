@@ -30,23 +30,49 @@ cor_select(
 \item{encoding_method}{(optional; character string). Name of the target encoding method to transform non-numeric variables to numeric. One of "mean", "rank", "loo", "rnorm" (see \code{\link[=target_encoding_lab]{target_encoding_lab()}} for further details). Default: "mean"}
 }
 \value{
-character vector; selected predictor names
+character vector; names of selected predictors
 }
 \description{
-Applies a recursive forward selection algorithm to select predictors with a bivariate correlation with any other predictor lower than a threshold defined by the argument \code{max_cor}.
-
-If the argument \code{response} is provided, all non-numeric variables in \code{predictors} are transformed into numeric using target encoding (see \code{\link[=target_encoding_lab]{target_encoding_lab()}}). Otherwise, non-numeric variables are ignored.
-
-The argument \code{preference_order} allows defining a preference selection order to preserve (when possible) variables that might be interesting or even required for a given analysis. If NULL, predictors are ordered from lower to higher sum of their absolute pairwise correlation with the other predictors.
-
-For example, if \code{predictors} is \code{c("a", "b", "c")} and \code{preference_order} is \code{c("a", "b")}, there are two possibilities:
+Automates multicollinearity management in data frames with numeric and non-numeric predictors by combining three methods:
 \itemize{
-\item If the correlation between \code{"a"} and \code{"b"} is below \code{max_cor}, both variables are selected.
-\item If their correlation is equal or above \code{max_cor}, then \code{"a"} is selected, no matter its correlation with \code{"c"},
+\item \strong{Target Encoding}: transforms non-numeric predictors to numeric using another numeric variable (usually a model response) as reference. See \code{\link[=target_encoding_lab]{target_encoding_lab()}}.
+\item \strong{Preference Order}: method to rank and preserve relevant variables during  multicollinearity filtering. See \code{\link[=preference_order]{preference_order()}}.
+\item \strong{Pairwise Correlation Filtering}: automated logic to identify pairs of highly correlated variables.
 }
 
-If \code{preference_order} is not provided, then the predictors are ranked by the sum of their absolute pairwise correlations with the other predictors.
+This function calls these other functions:
+\itemize{
+\item \code{\link[=target_encoding_lab]{target_encoding_lab()}}: to apply target encoding, if \code{response} is provided and there are categorical variables named in \code{predictors}.
+\item \code{\link[=cor_df]{cor_df()}}: to compute bivariate correlations between all pairs of predictors.
 }
+
+Please check the sections \strong{Target Encoding}, \strong{Preference Order}, and \strong{Pairwise Correlation Filtering} at the end of this help file for further details.
+}
+\section{Target Encoding}{
+
+
+When the name of a numeric response variable is provided via the \code{response} argument, categorical predictors in \code{predictors} (or in the columns of \code{df} if \code{predictors} is NULL) are converted to numeric via \strong{target encoding} with the function \code{\link[=target_encoding_lab]{target_encoding_lab()}}. When \code{response} is NULL, \code{\link[=collinear]{collinear()}} (and \code{\link[=vif_select]{vif_select()}}) ignore categorical predictors. This feature facilitates multicollinearity filtering in data frames with mixed column types.
+}
+
+\section{Preference Order}{
+
+
+The argument \code{preference_order} helps answer the question "what variable should I remove first?". Such answer is provided as a character vector of predictor names in the order of preference (from first to last) in which they want to be preserved. This vector does not need to name all predictors in \code{predictors}, but only the relevant ones for the user.
+
+The function \code{\link[=preference_order]{preference_order()}} helps defining a quantitative criteria for preference order by assessing the relationship between each variable in \code{predictors} with a response variable.
+If the argument \verb{preference order} is not provided, \code{\link[=cor_select]{cor_select()}} ranks the predictors by the sum of their absolute pairwise correlations with the other predictors, and \code{\link[=vif_select]{vif_select()}} ranks them from lower to higher VIF.
+}
+
+\section{Pairwise Correlation Filtering}{
+
+
+The function \code{\link[=cor_select]{cor_select()}} applies a recursive forward selection algorithm to keep predictors with a maximum Pearson correlation with all other selected predictors lower than \code{max_cor}.
+
+If the argument \code{preference_order} is not provided, the predictors are ranked from lower to higher sum of absolute pairwise correlation with all other predictors.
+
+If \code{preference_order} is defined, whenever two or more variables are above \code{max_cor}, the one higher in \code{preference_order} is preserved. For example, for the predictors and preference order \eqn{a} and \eqn{b}, if their correlation is higher than \code{max_cor}, then \eqn{b} will be removed and \eqn{a} preserved. If their correlation is lower than \code{max_cor}, then both are preserved.
+}
+
 \examples{
 
 data(

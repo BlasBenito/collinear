@@ -2,7 +2,7 @@
 % Please edit documentation in R/target_encoding_lab.R
 \name{target_encoding_lab}
 \alias{target_encoding_lab}
-\title{Target Encoding of Non-Numeric Variables}
+\title{Target Encoding Lab: Transform Categorical Variables to Numeric}
 \usage{
 target_encoding_lab(
   df = NULL,
@@ -24,17 +24,17 @@ target_encoding_lab(
 
 \item{predictors}{(optional; character vector) Names of the variables to select from \code{df}. If omitted, all numeric columns in \code{df} are used instead. If argument \code{response} is not provided, non-numeric variables are ignored. Default: NULL}
 
-\item{encoding_methods}{(optional; character string or vector). Name of the target encoding methods. Default: c("mean", "mean_smoothing, "rank", "loo", "rnorm")}
+\item{encoding_methods}{(optional; character vector). Name of the target encoding methods. Default: c("mean", "rank", "loo", "rnorm")}
 
-\item{smoothing}{(optional; numeric) Argument of \code{\link[=target_encoding_mean]{target_encoding_mean()}} (method "mean_smoothing"). Minimum group size that keeps the mean of the group. Groups smaller than this have their means pulled towards the global mean of the response. Default: 0}
+\item{smoothing}{(optional; integer) Argument of the method "mean". Groups smaller than this number have their means pulled towards mean of the response across all cases. Default: 0}
 
-\item{white_noise}{(optional; numeric) Numeric with white noise values in the range 0-1, representing a fraction of the range of the response to be added as noise to the encoded variable. Controls the variability in the encoded variables to mitigate potential overfitting. Default: \code{0}.}
+\item{white_noise}{(optional; numeric) Argument of the methods "mean", "rank", and "loo". Maximum white noise to add, expressed as a fraction of the range of the response variable. Default: \code{0}.}
 
 \item{seed}{(optional; integer) Random seed to facilitate reproducibility when \code{white_noise} is not 0. Default: 1}
 
-\item{rnorm_sd_multiplier}{(optional; numeric) Numeric with multiplier of the standard deviation of each group in the categorical variable, in the range 0-1. Controls the variability in the encoded variables to mitigate potential overfitting. Default: \code{1}}
+\item{rnorm_sd_multiplier}{(optional; numeric) Argument of the "rnorm" method. Multiplier of the standard deviation of the normal distributions generating encoded values per group. Values smaller than 1 reduce the range of encode values, while values higher than 1 have the opposite effect. Default: \code{1}}
 
-\item{replace}{(optional; logical) If \code{TRUE}, the function replaces each categorical variable with its encoded version, and returns the input data frame with the encoded variables instead of the original ones. Default: FALSE}
+\item{replace}{(optional; logical) If \code{TRUE}, only the first method in \code{encoding_methods} is used, the method suffix is ignored, and the categorical variables are overwritten with their encoded versions in the output data frame. Default: FALSE}
 
 \item{verbose}{(optional; logical) If TRUE, messages generated during the execution of the function are printed to the console Default: TRUE}
 }
@@ -42,22 +42,28 @@ target_encoding_lab(
 data frame
 }
 \description{
-Target encoding involves replacing the values of categorical variables with numeric ones from a "target variable", usually a model's response. Target encoding can be useful for improving the performance of machine learning models.
+Target encoding involves replacing the values of categorical variables with numeric ones derived from a "target variable", usually a model's response.
 
-This function identifies categorical variables in the input data frame, and transforms them using a set of target-encoding methods selected by the user, and returns the input data frame with the newly encoded variables.
-
-The target encoding methods implemented in this function are:
-
+In essence, target encoding works as follows:
 \itemize{
-\item "rank": Returns the rank of the group as a integer, starting with 1 as the rank of the group with the lower mean of the response variable. The variables returned by this method are named with the suffix "__encoded_rank". This method is implemented in the function \code{\link[=target_encoding_rank]{target_encoding_rank()}}.
-\item "mean": Replaces each value of the categorical variable with the mean of the response across the category the given value belongs to. This option accepts the argument "white_noise" to limit potential overfitting. The variables returned by this method are named with the suffix "__encoded_mean". This method is implemented in the function \code{\link[=target_encoding_mean]{target_encoding_mean()}}.
-\item "rnorm": Computes the mean and standard deviation of the response for each group of the categorical variable, and uses \code{\link[=rnorm]{rnorm()}} to generate random values from a normal distribution with these parameters. The argument \code{rnorm_sd_multiplier} is used as a multiplier of the standard deviation to control the range of values produced by \code{\link[=rnorm]{rnorm()}} for each group of the categorical predictor. The variables returned by this method are named with the suffix "__encoded_rnorm".  This method is implemented in the function \code{\link[=target_encoding_rnorm]{target_encoding_rnorm()}}.
-\item "loo": This is the leave-one-out method, that replaces each categorical value with the mean of the response variable across the other cases within the same group. This method supports the \code{white_noise} argument to increase limit potential overfitting. The variables returned by this method are named with the suffix "__encoded_loo". This method is implemented in the function \code{\link[=target_encoding_loo]{target_encoding_loo()}}.
+\item 1. group all cases belonging to a unique value of the categorical variable.
+\item 2. compute a statistic of the target variable across the group cases.
+\item 3. assign the value of the statistic to the group.
 }
 
-The methods "mean" and "rank" support the \code{white_noise} argument, which is a fraction of the range of the \code{response} variable, and the maximum possible value of white noise to be added. For example, if \code{response} is within 0 and 1, a \code{white_noise} of 0.25 will add to every value of the encoded variable a random number selected from a normal distribution between -0.25 and 0.25. This argument helps control potential overfitting induced by the encoded variable.
+The methods to compute the group statistic implemented here are:
 
-The method "rnorm" has the argument \code{rnorm_sd_multiplier}, which multiplies the standard deviation argument of the \verb{\link[stats]\{rnorm\}} function to control the spread of the encoded values between groups. Values smaller than 1 reduce the spread in the results, while values larger than 1 have the opposite effect.
+\itemize{
+\item "mean" (implemented in \code{target_encoding_mean()}): Replaces categorical values with the group means of the numeric variable. It has two methods to control overfitting:
+\itemize{
+\item \code{smoothing} groups larger than this argument are encoded with the group mean, while smaller groups are encoded with a weighted mean of the group's and the global mean. This method is named "mean smoothing" in the relevant literature.
+\item \code{white_noise}: maximum white noise to be added to each case, expressed as a fraction of the observed range of the numeric variable. Non-deterministic, requires setting the \code{seed} argument for reproducibility.
+}
+Variables encoded with this method are identified with the suffix "__encoded_mean".
+\item "rank" (implemented in \code{target_encoding_rank()}): Returns the rank of the group as a integer, being 1 he group with the lower mean of the response variable. It accepts the \code{white_noise} argument to control overfitting. Variables encoded with this method are identified with the suffix "__encoded_rank".
+\item "rnorm" (implemented in \code{target_encoding_rnorm()}): Computes the mean and standard deviation of the response per group, and introduces these parameters into \code{\link[=rnorm]{rnorm()}} to generate random values from a normal distribution. The argument \code{rnorm_sd_multiplier} multiplies the standard deviation to control the range of produced values. Values smaller than 1 reduce the range of encode values. This method is non-deterministic, and requires setting the \code{seed} argument for reproducibility. Variables encoded with this method are identified with the suffix "__encoded_rnorm".
+\item "loo" (implemented in \code{target_encoding_loo()}): Known as the "leave-one-out method" in the literature, it replaces each categorical value with the mean of the response variable across all other group cases. This method controls overfitting better than "mean". Additionally, it accepts the \code{white_noise} method. Variables encoded with this method are identified with the suffix "__encoded_loo".
+}
 }
 \examples{
 
@@ -102,7 +108,7 @@ stats::cor(
 }
 \references{
 \itemize{
-\item Micci-Barreca, D. (2001) A Preprocessing Scheme for High-Cardinality Categorical Attributes in Classification and Prediction Problems. SIGKDD Explor. Newsl. 3, 1, 27-32 \doi{10.1145/507533.507538}
+\item Micci-Barreca, D. (2001) A Preprocessing Scheme for High-Cardinality Categorical Attributes in Classification and Prediction Problems. SIGKDD Explor. Newsl. 3, 1, 27-32. doi: 10.1145/507533.507538
 }
 }
 \seealso{

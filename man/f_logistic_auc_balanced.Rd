@@ -2,7 +2,7 @@
 % Please edit documentation in R/preference_order.R
 \name{f_logistic_auc_balanced}
 \alias{f_logistic_auc_balanced}
-\title{AUC of Binomial GLM with Logit Link}
+\title{AUC of Binomial GLM with Logit Link for Balance Binary Responses}
 \usage{
 f_logistic_auc_balanced(x, y, df)
 }
@@ -14,7 +14,7 @@ f_logistic_auc_balanced(x, y, df)
 \item{df}{(required, data frame) data frame with the columns 'x' and 'y'.}
 }
 \value{
-Area Under the Curve
+numeric: area under the curve
 }
 \description{
 Fits a logistic GLM model \code{y ~ x} when \code{y} is a binary response with values 0 and 1 and \code{x} is numeric. This function is suitable when the response variable is balanced. If the response is unbalanced, then \code{\link[=f_logistic_auc_unbalanced]{f_logistic_auc_unbalanced()}} should provide better results.

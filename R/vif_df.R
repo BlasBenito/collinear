@@ -4,14 +4,16 @@
 #'
 #' Computes the Variance Inflation Factor of all variables in a training data frame.
 #'
-#' This function computes the Variance Inflation Factor (VIF) in two steps:
+#' This function computes the VIF (see section **Variance Inflation Factors** below) in two steps:
 #' \itemize{
-#'   \item Applies `\link[base]{solve}` to obtain the precision matrix, which is the inverse of the covariance matrix.
-#'   \item Uses `\link[base]{diag}` to extract the diagonal of the precision matrix, which contains the variance of the prediction of each predictor from all other predictors.
+#'   \item Applies [base::solve()] to obtain the precision matrix, which is the inverse of the covariance matrix between all variables in `predictors`.
+#'   \item Uses [base::diag()] to extract the diagonal of the precision matrix, which contains the variance of the prediction of each predictor from all other predictors, and represents the VIF.
 #' }
 #'
+#' @inheritSection collinear Variance Inflation Factors
+#'
 #' @inheritParams collinear
-#' @return data frame; variable names and their VIF scores
+#' @return data frame; predictors names and VIF scores
 #'
 #' @examples
 #'
@@ -53,9 +55,7 @@
 #' @autoglobal
 #' @family vif
 #' @author Blas M. Benito, PhD
-#' \itemize{
-#'  \item David A. Belsley, D.A., Kuh, E., Welsch, R.E. (1980). Regression Diagnostics: Identifying Influential Data and Sources of Collinearity. John Wiley & Sons. \doi{10.1002/0471725153}.
-#' }
+#' @inherit vif_select references
 #' @export
 vif_df <- function(
     df = NULL,

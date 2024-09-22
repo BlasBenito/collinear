@@ -2,7 +2,7 @@
 % Please edit documentation in R/preference_order.R
 \name{f_rf_auc_balanced}
 \alias{f_rf_auc_balanced}
-\title{AUC of Random Forest model of a balanced binary response}
+\title{AUC of Random Forest Model for Balanced Binary Responses}
 \usage{
 f_rf_auc_balanced(x, y, df)
 }
@@ -14,10 +14,10 @@ f_rf_auc_balanced(x, y, df)
 \item{df}{(required, data frame) data frame with the columns 'x' and 'y'.}
 }
 \value{
-Area Under the Curve
+numeric: area under the curve
 }
 \description{
-Computes a univariate random forest model  cases via \verb{\link[ranger]\{ranger\}} and returns the Area Under the Curve on the out-of-bag data.
+Computes a univariate random forest model via \code{\link[ranger:ranger]{ranger::ranger()}} and returns the Area Under the Curve on the out-of-bag data.
 }
 \examples{
 

@@ -1,7 +1,7 @@
-#' Compute the preference order for predictors based on a user-defined function.
+#' Quantitative Preference Order for Multicollinearity Filtering
 #'
 #' @description
-#' Calculates the preference order of predictors based on a user-provided function that takes a predictor, a response, and a data frame as arguments.
+#' Calculates the preference order for multicollinearity filtering by assessing the strength of the association between all predictors and a response.
 #'
 #' Returns a data frame with the columns "predictor" and "preference". The former contains the predictors names in order, ready for the argument `preference_order` in [cor_select()], [vif_select()] and [collinear()]. The latter contains the result of the function `f` for each combination of predictor and response.
 #'
@@ -200,7 +200,7 @@ preference_order <- function(
 
 }
 
-#' R-squared between a response and a predictor
+#' R-squared Between Two Variables
 #'
 #' @description
 #' R-squared between a response and a predictor. Fastest option to compute preference order.
@@ -209,7 +209,7 @@ preference_order <- function(
 #' @param y (required, character string) name of the response variable
 #' @param df (required, data frame) data frame with the columns 'x' and 'y'.
 #'
-#' @return R-squared
+#' @return numeric: R-squared
 #' @examples
 #'
 #' data(vi)
@@ -237,9 +237,9 @@ f_rsquared <- function(x, y, df){
 
 }
 
-#' Explained Deviance from univariate GAM model
+#' Explained Deviance From a GAM Model
 #'
-#' Computes the explained deviance of a response against a predictor via Generalized Additive Model (GAM). This option is slower than [f_rsquared()], but suitable if you will be fitting GAMs with the resulting preference order.
+#' Computes the explained deviance of a response against a predictor via Generalized Additive Model (GAM). This option is slower than [f_rsquared()], but suitable when fitting GAMs with the results of a multicollinearity filtering.
 #'
 #' @inheritParams f_rsquared
 #'
@@ -252,7 +252,12 @@ f_rsquared <- function(x, y, df){
 #' vi <- vi[1:1000, ]
 #'
 #' #this example requires "mgcv" installed in the system
-#' if(requireNamespace(package = "mgcv", quietly = TRUE)){
+#' if(
+#'   requireNamespace(
+#'     package = "mgcv",
+#'    quietly = TRUE
+#'    )
+#'  ){
 #'
 #'   f_gam_deviance(
 #'     x = "growing_season_length", #predictor
@@ -295,7 +300,7 @@ f_gam_deviance <- function(x, y, df){
 #'
 #' @inheritParams f_rsquared
 #'
-#' @return R-squared
+#' @return numeric: R-squared
 #' @examples
 #'
 #' data(vi)
@@ -304,7 +309,12 @@ f_gam_deviance <- function(x, y, df){
 #' vi <- vi[1:1000, ]
 #'
 #' #this example requires "ranger" installed in the system
-#' if(requireNamespace(package = "ranger", quietly = TRUE)){
+#' if(
+#' requireNamespace(
+#'   package = "ranger",
+#'   quietly = TRUE
+#'   )
+#' ){
 #'
 #'   f_rf_rsquared(
 #'     x = "growing_season_length", #predictor
@@ -346,13 +356,13 @@ f_rf_rsquared <- function(x, y, df){
 f_rf_deviance <- f_rf_rsquared
 
 
-#' AUC of Random Forest model of an unbalanced binary response
+#' AUC of Random Forest Model for Unbalanced Binary Responses
 #'
 #' Computes a univariate random forest model with weighted cases via `\link[ranger]{ranger}` and returns the Area Under the Curve on the out-of-bag data.
 #'
 #' @inheritParams f_rsquared
 #'
-#' @return Area Under the Curve
+#' @return numeric: area under the curve
 #' @examples
 #'
 #' data(vi)
@@ -361,7 +371,12 @@ f_rf_deviance <- f_rf_rsquared
 #' vi <- vi[1:1000, ]
 #'
 #' #this example requires "ranger" installed in the system
-#' if(requireNamespace(package = "ranger", quietly = TRUE)){
+#' if(
+#'   requireNamespace(
+#'     package = "ranger",
+#'     quietly = TRUE
+#'     )
+#'   ){
 #'
 #'   f_rf_auc_unbalanced(
 #'     x = "growing_season_length", #predictor
@@ -408,13 +423,13 @@ f_rf_auc_unbalanced <- function(x, y, df){
 
 
 
-#' AUC of Random Forest model of a balanced binary response
+#' AUC of Random Forest Model for Balanced Binary Responses
 #'
-#' Computes a univariate random forest model  cases via `\link[ranger]{ranger}` and returns the Area Under the Curve on the out-of-bag data.
+#' Computes a univariate random forest model via [ranger::ranger()] and returns the Area Under the Curve on the out-of-bag data.
 #'
 #' @inheritParams f_rsquared
 #'
-#' @return Area Under the Curve
+#' @return numeric: area under the curve
 #' @examples
 #'
 #' data(vi)
@@ -468,14 +483,14 @@ f_rf_auc_balanced <- function(x, y, df){
 }
 
 
-#' AUC of Binomial GLM with Logit Link
+#' AUC of Binomial GLM with Logit Link for Balance Binary Responses
 #'
 #' Fits a logistic GLM model `y ~ x` when `y` is a binary response with values 0 and 1 and `x` is numeric. This function is suitable when the response variable is balanced. If the response is unbalanced, then [f_logistic_auc_unbalanced()] should provide better results.
 #'
 #'
 #' @inheritParams f_rsquared
 #'
-#' @return Area Under the Curve
+#' @return numeric: area under the curve
 #' @examples
 #'
 #' data(vi)
@@ -519,14 +534,14 @@ f_logistic_auc_balanced <- function(x, y, df){
 }
 
 
-#' AUC of Binomial GLM with Logit Link and Case Weights
+#' AUC of Binomial GLM with Logit Link for Unbalanced Binary Responses
 #'
-#' Fits a quasibinomial GLM model `y ~ x` with case weights when `y` is an unbalanced binary response with values 0 and 1 and `x` is numeric. It uses the function [case_weights()] to weight 0s and 1s according to their frequency within `y`.
+#' Fits a quasi-binomial GLM model `y ~ x` with case weights when `y` is an unbalanced binary response with values 0 and 1 and `x` is numeric. It uses the function [case_weights()] to weight 0s and 1s according to their frequency within `y`.
 #'
 #'
 #' @inheritParams f_rsquared
 #'
-#' @return Area Under the Curve
+#' @return numeric: area under the curve
 #' @examples
 #'
 #' data(vi)
@@ -571,14 +586,14 @@ f_logistic_auc_unbalanced <- function(x, y, df){
 }
 
 
-#' AUC of Logistic GAM Model
+#' AUC of Logistic GAM Model for Balanced Binary Responses
 #'
 #' Fits a binomial logistic Generalized Additive Model (GAM) `y ~ s(x, k = 3)` between a binary response and a numeric predictor and returns the Area Under the Curve of the observations versus the predictions.
 #'
 #'
 #' @inheritParams f_rsquared
 #'
-#' @return Area Under the Curve
+#' @return numeric: area under the curve
 #' @examples
 #'
 #' data(vi)
@@ -587,7 +602,12 @@ f_logistic_auc_unbalanced <- function(x, y, df){
 #' vi <- vi[1:1000, ]
 #'
 #' #this example requires "mgcv" installed
-#' if(requireNamespace(package = "mgcv", quietly = TRUE)){
+#' if(
+#'   requireNamespace(
+#'     package = "mgcv",
+#'     quietly = TRUE
+#'     )
+#'  ){
 #'
 #'   f_gam_auc_balanced(
 #'     x = "growing_season_length", #predictor
@@ -630,14 +650,14 @@ f_gam_auc_balanced <- function(x, y, df){
 }
 
 
-#' AUC of Logistic GAM Model with Weighted Cases
+#' AUC of Logistic GAM Model for Unbalanced Binary Responses
 #'
-#' Fits a quasibinomial logistic Generalized Additive Model (GAM) `y ~ s(x, k = 3)` with weighted cases between a binary response and a numeric predictor and returns the Area Under the Curve of the observations versus the predictions.
+#' Fits a quasi-binomial logistic Generalized Additive Model (GAM) `y ~ s(x, k = 3)` with weighted cases between a binary response and a numeric predictor and returns the Area Under the Curve of the observations versus the predictions.
 #'
 #'
 #' @inheritParams f_rsquared
 #'
-#' @return Area Under the Curve
+#' @return numeric: area under the curve
 #' @examples
 #'
 #' data(vi)
@@ -646,7 +666,12 @@ f_gam_auc_balanced <- function(x, y, df){
 #' vi <- vi[1:1000, ]
 #'
 #' #this example requires "mgcv" installed
-#' if(requireNamespace(package = "mgcv", quietly = TRUE)){
+#' if(
+#'   requireNamespace(
+#'     package = "mgcv",
+#'     quietly = TRUE
+#'     )
+#'   ){
 #'
 #'   f_gam_auc_unbalanced(
 #'     x = "growing_season_length", #predictor
@@ -694,7 +719,7 @@ f_gam_auc_unbalanced <- function(x, y, df){
 #' @description Computes the AUC score of binary model predictions.
 #' @param observed (required, integer) Numeric vector with observations. Valid values are 1 and 0. Must have the same length as `predicted`. Default: NULL
 #' @param predicted (required, numeric) Numeric vector in the range 0-1 with binary model predictions. Must have the same length as `observed`.
-#' @return AUC value.
+#' @return numeric: area under the curve
 #' @examples
 #'
 #'  out <- auc_score(

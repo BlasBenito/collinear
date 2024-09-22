@@ -16,17 +16,27 @@ vif_df(df = NULL, response = NULL, predictors = NULL, encoding_method = "mean")
 \item{encoding_method}{(optional; character string). Name of the target encoding method to transform non-numeric variables to numeric. One of "mean", "rank", "loo", "rnorm" (see \code{\link[=target_encoding_lab]{target_encoding_lab()}} for further details). Default: "mean"}
 }
 \value{
-data frame; variable names and their VIF scores
+data frame; predictors names and VIF scores
 }
 \description{
 Computes the Variance Inflation Factor of all variables in a training data frame.
 
-This function computes the Variance Inflation Factor (VIF) in two steps:
+This function computes the VIF (see section \strong{Variance Inflation Factors} below) in two steps:
 \itemize{
-\item Applies \verb{\link[base]\{solve\}} to obtain the precision matrix, which is the inverse of the covariance matrix.
-\item Uses \verb{\link[base]\{diag\}} to extract the diagonal of the precision matrix, which contains the variance of the prediction of each predictor from all other predictors.
+\item Applies \code{\link[base:solve]{base::solve()}} to obtain the precision matrix, which is the inverse of the covariance matrix between all variables in \code{predictors}.
+\item Uses \code{\link[base:diag]{base::diag()}} to extract the diagonal of the precision matrix, which contains the variance of the prediction of each predictor from all other predictors, and represents the VIF.
 }
 }
+\section{Variance Inflation Factors}{
+
+
+The Variance Inflation Factor for a given variable \eqn{a} is computed as \eqn{1/(1-R2)}, where \eqn{R2} is the multiple R-squared of a multiple regression model fitted using \eqn{a} as response and all other predictors in the input data frame as predictors, as in  \eqn{a = b + c + ...}.
+
+The square root of the VIF of \eqn{a} is the factor by which the confidence interval of the estimate for \eqn{a} in the linear model \eqn{y = a + b + c + ...}` is widened by multicollinearity in the model predictors.
+
+The range of VIF values is (1, Inf]. The recommended thresholds for maximum VIF may vary depending on the source consulted, being the most common values, 2.5, 5, and 10.
+}
+
 \examples{
 
 data(
@@ -65,14 +75,16 @@ df <- vif_df(
 df
 
 }
+\references{
+\itemize{
+\item David A. Belsley, D.A., Kuh, E., Welsch, R.E. (1980). Regression Diagnostics: Identifying Influential Data and Sources of Collinearity. John Wiley & Sons. DOI: 10.1002/0471725153.
+}
+}
 \seealso{
 Other vif: 
 \code{\link{vif_select}()}
 }
 \author{
 Blas M. Benito, PhD
-\itemize{
-\item David A. Belsley, D.A., Kuh, E., Welsch, R.E. (1980). Regression Diagnostics: Identifying Influential Data and Sources of Collinearity. John Wiley & Sons. \doi{10.1002/0471725153}.
-}
 }
 \concept{vif}

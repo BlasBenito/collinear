@@ -2,28 +2,26 @@
 #'
 #' @description
 #'
-#' Automates multicollinearity management by selecting variables based on their Variance Inflation Factor (VIF).
-#'
-#' The Variance Inflation Factor for a given variable `y` is computed as `1/(1-R2)`, where `R2` is the multiple R-squared of a multiple regression model fitted using `y` as response and all other predictors in the input data frame as predictors. The VIF equation can be interpreted as the "rate of perfect model's R-squared to the unexplained variance of this model".
-#'
-#' The possible range of VIF values is (1, Inf]. A VIF lower than 10 suggest that removing `y` from the data set would reduce overall multicollinearity. The recommended thresholds for maximum VIF may vary depending on the source consulted, being the most common values, 2.5, 5, and 10.
-#'
-#' If the `response` argument is provided, and there are categorical variables named in the `predictors` argument, then these variables are transformed to numeric via Target Encoding (see [target_encoding_lab()]). If `response` is not provided, then categorical variables are ignored.
-#'
-#'
-#' The function [vif_select()] applies a recursive algorithm to remove variables with a VIF higher than a given threshold (defined by the argument `max_vif`).
-#'
-#' If the argument `response` is provided, all non-numeric variables in `predictors` are transformed into numeric using target encoding (see [target_encoding_lab()]). Otherwise, non-numeric variables are ignored.
-#'
-#' The argument `preference_order` defines a ranking of preference to preserve (when possible) variables that might be interesting or even required for a given analysis.
-#'
-#' For example, if `predictors` is `c("a", "b", "c")` and `preference_order` is `c("a", "b")`, there are two possibilities:
+#' Automates multicollinearity management in data frames with numeric and non-numeric predictors by combining three methods:
 #' \itemize{
-#'  \item If the VIF of `"a"` is higher than the VIF of `"b"`, and both VIF values are above `max_vif`, then `"a"` is selected and `"b"` is removed.
-#'  \item If their correlation is equal or above `max_cor`, then `"a"` is selected, no matter its correlation with `"c"`,
+#' \item **Target Encoding**: transforms non-numeric predictors to numeric using another numeric variable (usually a model response) as reference. See [target_encoding_lab()].
+#' \item **Preference Order**: method to rank and preserve relevant variables during  multicollinearity filtering. See [preference_order()].
+#' \item **VIF-based filtering**: to identify and remove predictors that are linear combinations of other predictors.
 #' }
 #'
-#' If `preference_order` is not provided, then the predictors are ranked by their variance inflation factor as computed by [vif_df()].
+#' This function calls these other functions:
+#' \itemize{
+#'   \item [target_encoding_lab()]: to apply target encoding, if `response` is provided and there are categorical variables named in `predictors`.
+#'   \item [vif_df()]: generate data frames with VIF scores.
+#' }
+#'
+#' Please check the sections **Target Encoding**, **Preference Order**, **Variance Inflation Factors**, and **VIF-based Filtering** at the end of this help file for further details.
+#'
+#'
+#' @inheritSection collinear Target Encoding
+#' @inheritSection collinear Preference Order
+#' @inheritSection collinear Variance Inflation Factors
+#' @inheritSection collinear VIF-based Filtering
 #'
 #' @inheritParams collinear
 #' @inherit collinear return
@@ -131,8 +129,9 @@
 #' @autoglobal
 #' @family vif
 #' @author Blas M. Benito, PhD
+#' @references
 #' \itemize{
-#'  \item David A. Belsley, D.A., Kuh, E., Welsch, R.E. (1980). Regression Diagnostics: Identifying Influential Data and Sources of Collinearity. John Wiley & Sons. \doi{10.1002/0471725153}.
+#'  \item David A. Belsley, D.A., Kuh, E., Welsch, R.E. (1980). Regression Diagnostics: Identifying Influential Data and Sources of Collinearity. John Wiley & Sons. DOI: 10.1002/0471725153.
 #' }
 #' @export
 vif_select <- function(

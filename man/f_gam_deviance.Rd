@@ -2,7 +2,7 @@
 % Please edit documentation in R/preference_order.R
 \name{f_gam_deviance}
 \alias{f_gam_deviance}
-\title{Explained Deviance from univariate GAM model}
+\title{Explained Deviance From a GAM Model}
 \usage{
 f_gam_deviance(x, y, df)
 }
@@ -17,7 +17,7 @@ f_gam_deviance(x, y, df)
 numeric: explained deviance
 }
 \description{
-Computes the explained deviance of a response against a predictor via Generalized Additive Model (GAM). This option is slower than \code{\link[=f_rsquared]{f_rsquared()}}, but suitable if you will be fitting GAMs with the resulting preference order.
+Computes the explained deviance of a response against a predictor via Generalized Additive Model (GAM). This option is slower than \code{\link[=f_rsquared]{f_rsquared()}}, but suitable when fitting GAMs with the results of a multicollinearity filtering.
 }
 \examples{
 
@@ -27,7 +27,12 @@ data(vi)
 vi <- vi[1:1000, ]
 
 #this example requires "mgcv" installed in the system
-if(requireNamespace(package = "mgcv", quietly = TRUE)){
+if(
+  requireNamespace(
+    package = "mgcv",
+   quietly = TRUE
+   )
+ ){
 
   f_gam_deviance(
     x = "growing_season_length", #predictor

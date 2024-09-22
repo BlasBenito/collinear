@@ -12,7 +12,7 @@ auc_score(observed = NULL, predicted = NULL)
 \item{predicted}{(required, numeric) Numeric vector in the range 0-1 with binary model predictions. Must have the same length as \code{observed}.}
 }
 \value{
-AUC value.
+numeric: area under the curve
 }
 \description{
 Computes the AUC score of binary model predictions.

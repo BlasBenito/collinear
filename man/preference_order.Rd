@@ -2,7 +2,7 @@
 % Please edit documentation in R/preference_order.R
 \name{preference_order}
 \alias{preference_order}
-\title{Compute the preference order for predictors based on a user-defined function.}
+\title{Quantitative Preference Order for Multicollinearity Filtering}
 \usage{
 preference_order(
   df = NULL,
@@ -38,7 +38,7 @@ preference_order(
 data frame
 }
 \description{
-Calculates the preference order of predictors based on a user-provided function that takes a predictor, a response, and a data frame as arguments.
+Calculates the preference order for multicollinearity filtering by assessing the strength of the association between all predictors and a response.
 
 Returns a data frame with the columns "predictor" and "preference". The former contains the predictors names in order, ready for the argument \code{preference_order} in \code{\link[=cor_select]{cor_select()}}, \code{\link[=vif_select]{vif_select()}} and \code{\link[=collinear]{collinear()}}. The latter contains the result of the function \code{f} for each combination of predictor and response.
 

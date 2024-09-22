@@ -2,7 +2,7 @@
 % Please edit documentation in R/preference_order.R
 \name{f_rf_auc_unbalanced}
 \alias{f_rf_auc_unbalanced}
-\title{AUC of Random Forest model of an unbalanced binary response}
+\title{AUC of Random Forest Model for Unbalanced Binary Responses}
 \usage{
 f_rf_auc_unbalanced(x, y, df)
 }
@@ -14,7 +14,7 @@ f_rf_auc_unbalanced(x, y, df)
 \item{df}{(required, data frame) data frame with the columns 'x' and 'y'.}
 }
 \value{
-Area Under the Curve
+numeric: area under the curve
 }
 \description{
 Computes a univariate random forest model with weighted cases via \verb{\link[ranger]\{ranger\}} and returns the Area Under the Curve on the out-of-bag data.
@@ -27,7 +27,12 @@ data(vi)
 vi <- vi[1:1000, ]
 
 #this example requires "ranger" installed in the system
-if(requireNamespace(package = "ranger", quietly = TRUE)){
+if(
+  requireNamespace(
+    package = "ranger",
+    quietly = TRUE
+    )
+  ){
 
   f_rf_auc_unbalanced(
     x = "growing_season_length", #predictor

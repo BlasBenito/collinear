@@ -2,19 +2,24 @@
 #'
 #' @description
 #'
-#' Applies a recursive forward selection algorithm to select predictors with a bivariate correlation with any other predictor lower than a threshold defined by the argument `max_cor`.
-#'
-#' If the argument `response` is provided, all non-numeric variables in `predictors` are transformed into numeric using target encoding (see [target_encoding_lab()]). Otherwise, non-numeric variables are ignored.
-#'
-#' The argument `preference_order` allows defining a preference selection order to preserve (when possible) variables that might be interesting or even required for a given analysis. If NULL, predictors are ordered from lower to higher sum of their absolute pairwise correlation with the other predictors.
-#'
-#' For example, if `predictors` is `c("a", "b", "c")` and `preference_order` is `c("a", "b")`, there are two possibilities:
+#' Automates multicollinearity management in data frames with numeric and non-numeric predictors by combining three methods:
 #' \itemize{
-#'  \item If the correlation between `"a"` and `"b"` is below `max_cor`, both variables are selected.
-#'  \item If their correlation is equal or above `max_cor`, then `"a"` is selected, no matter its correlation with `"c"`,
+#' \item **Target Encoding**: transforms non-numeric predictors to numeric using another numeric variable (usually a model response) as reference. See [target_encoding_lab()].
+#' \item **Preference Order**: method to rank and preserve relevant variables during  multicollinearity filtering. See [preference_order()].
+#' \item **Pairwise Correlation Filtering**: automated logic to identify pairs of highly correlated variables.
 #' }
 #'
-#' If `preference_order` is not provided, then the predictors are ranked by the sum of their absolute pairwise correlations with the other predictors.
+#' This function calls these other functions:
+#' \itemize{
+#'   \item [target_encoding_lab()]: to apply target encoding, if `response` is provided and there are categorical variables named in `predictors`.
+#'   \item [cor_df()]: to compute bivariate correlations between all pairs of predictors.
+#' }
+#'
+#' Please check the sections **Target Encoding**, **Preference Order**, and **Pairwise Correlation Filtering** at the end of this help file for further details.
+#'
+#' @inheritSection collinear Target Encoding
+#' @inheritSection collinear Preference Order
+#' @inheritSection collinear Pairwise Correlation Filtering
 #'
 #' @inheritParams collinear
 #' @inherit collinear return

@@ -1,11 +1,10 @@
-
 #' Removes geometry column in sf data frames
 #'
 #' Replicates the functionality of  `\link[sf]{st_drop_geometry}` without depending on the `sf` package.
 #'
-#' @param df (required; data frame or matrix) Input data frame. Default: NULL
+#' @inheritParams collinear
 #'
-#' @return The input data frame without a geometry column
+#' @return data frame
 #' @family data_preparation
 #' @autoglobal
 #' @author Blas M. Benito, PhD

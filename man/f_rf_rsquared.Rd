@@ -17,7 +17,7 @@ f_rf_deviance(x, y, df)
 \item{df}{(required, data frame) data frame with the columns 'x' and 'y'.}
 }
 \value{
-R-squared
+numeric: R-squared
 }
 \description{
 Computes a univariate random forest model with \verb{\link[ranger]\{ranger\}} and returns the R-squared on the out-of-bag data.
@@ -33,7 +33,12 @@ data(vi)
 vi <- vi[1:1000, ]
 
 #this example requires "ranger" installed in the system
-if(requireNamespace(package = "ranger", quietly = TRUE)){
+if(
+requireNamespace(
+  package = "ranger",
+  quietly = TRUE
+  )
+){
 
   f_rf_rsquared(
     x = "growing_season_length", #predictor

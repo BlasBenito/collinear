@@ -1,20 +1,12 @@
 #' Target Encoding Methods
 #'
-#' @description Methods to apply target-encoding to transform categorical variables into numeric.
-#' The functions implemented are:
-#' \itemize{
-#'   \item [target_encoding_mean()]: Each category is identified by the mean of the response over the category cases. The argument `smoothing` controls pushes the mean of small groups towards the global mean to avoid overfitting. White noise can be added via the `white_noise` argument. Columns encoded with this function are identified by the suffix "__encoded_mean". If `white_noise` is used, then the amount of white noise is also added to the suffix.
-#'   \item [target_encoding_rank()]: Each category is identified by the rank of the mean of the response variable over the category cases. The category with the lower mean receives the rank 1. White noise can be added via the `white_noise` argument. Columns encoded with this function are identified by the suffix "__encoded_rank". If `white_noise` is used, then the amount of noise is also added to the suffix.
-#'   \item [target_encoding_rnorm()]: Each case in a category receives a value coming from a normal distribution with the mean and the standard deviation of the response over the cases of the category. The argument `rnorm_sd_multiplier` multiplies the standard deviation to reduce the spread of the obtained values. Columns encoded with this function are identified by the suffix "__encoded_rnorm_rnorm_sd_multiplier_X", where X is the amount of `rnorm_sd_multiplier` used.
-#'   \item [target_encoding_loo()]: The suffix "loo" stands for "leave-one-out". Each case in a category is encoded as the average of the response over the other cases of the category Columns encoded with this function are identified by the suffix "__encoded_loo".
-#' }
+#' @inherit target_encoding_lab description
 #'
 #' @inheritParams target_encoding_lab
 #' @param predictor (required; character) Name of the categorical variable to encode. Default: NULL
 #'
 #'
 #' @inherit target_encoding_lab return
-
 #'
 #' @examples
 #'
@@ -150,14 +142,8 @@
 #' @export
 #' @autoglobal
 #' @author Blas M. Benito, PhD
-#' @references
-#' \itemize{
-#'  \item Micci-Barreca, D. (2001) A Preprocessing Scheme for High-Cardinality Categorical Attributes in Classification and Prediction Problems. SIGKDD Explor. Newsl. 3, 1, 27-32 \doi{10.1145/507533.507538}
-#' }
-#' @rdname target_encoding_methods
 #' @family target_encoding
-#' @autoglobal
-#' @export
+#' @rdname target_encoding_methods
 target_encoding_mean <- function(
     df,
     response,
@@ -261,7 +247,6 @@ target_encoding_mean <- function(
   df
 
 }
-
 
 #' @rdname target_encoding_methods
 #' @autoglobal
@@ -433,6 +418,7 @@ target_encoding_rank <- function(
 }
 
 #' @rdname target_encoding_methods
+#' @family target_encoding
 #' @autoglobal
 #' @export
 target_encoding_loo <- function(
@@ -513,9 +499,9 @@ target_encoding_loo <- function(
 #' @autoglobal
 #' @export
 add_white_noise <- function(
-    df,
-    response,
-    predictor,
+    df = NULL,
+    response = NULL,
+    predictor = NULL,
     white_noise = 0.1,
     seed = 1
 ){

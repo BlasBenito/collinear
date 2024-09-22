@@ -2,7 +2,7 @@
 % Please edit documentation in R/preference_order.R
 \name{f_logistic_auc_unbalanced}
 \alias{f_logistic_auc_unbalanced}
-\title{AUC of Binomial GLM with Logit Link and Case Weights}
+\title{AUC of Binomial GLM with Logit Link for Unbalanced Binary Responses}
 \usage{
 f_logistic_auc_unbalanced(x, y, df)
 }
@@ -14,10 +14,10 @@ f_logistic_auc_unbalanced(x, y, df)
 \item{df}{(required, data frame) data frame with the columns 'x' and 'y'.}
 }
 \value{
-Area Under the Curve
+numeric: area under the curve
 }
 \description{
-Fits a quasibinomial GLM model \code{y ~ x} with case weights when \code{y} is an unbalanced binary response with values 0 and 1 and \code{x} is numeric. It uses the function \code{\link[=case_weights]{case_weights()}} to weight 0s and 1s according to their frequency within \code{y}.
+Fits a quasi-binomial GLM model \code{y ~ x} with case weights when \code{y} is an unbalanced binary response with values 0 and 1 and \code{x} is numeric. It uses the function \code{\link[=case_weights]{case_weights()}} to weight 0s and 1s according to their frequency within \code{y}.
 }
 \examples{
 

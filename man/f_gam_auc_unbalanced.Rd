@@ -2,7 +2,7 @@
 % Please edit documentation in R/preference_order.R
 \name{f_gam_auc_unbalanced}
 \alias{f_gam_auc_unbalanced}
-\title{AUC of Logistic GAM Model with Weighted Cases}
+\title{AUC of Logistic GAM Model for Unbalanced Binary Responses}
 \usage{
 f_gam_auc_unbalanced(x, y, df)
 }
@@ -14,10 +14,10 @@ f_gam_auc_unbalanced(x, y, df)
 \item{df}{(required, data frame) data frame with the columns 'x' and 'y'.}
 }
 \value{
-Area Under the Curve
+numeric: area under the curve
 }
 \description{
-Fits a quasibinomial logistic Generalized Additive Model (GAM) \code{y ~ s(x, k = 3)} with weighted cases between a binary response and a numeric predictor and returns the Area Under the Curve of the observations versus the predictions.
+Fits a quasi-binomial logistic Generalized Additive Model (GAM) \code{y ~ s(x, k = 3)} with weighted cases between a binary response and a numeric predictor and returns the Area Under the Curve of the observations versus the predictions.
 }
 \examples{
 
@@ -27,7 +27,12 @@ data(vi)
 vi <- vi[1:1000, ]
 
 #this example requires "mgcv" installed
-if(requireNamespace(package = "mgcv", quietly = TRUE)){
+if(
+  requireNamespace(
+    package = "mgcv",
+    quietly = TRUE
+    )
+  ){
 
   f_gam_auc_unbalanced(
     x = "growing_season_length", #predictor

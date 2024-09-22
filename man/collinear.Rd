@@ -33,25 +33,47 @@ collinear(
 \item{encoding_method}{(optional; character string). Name of the target encoding method to transform non-numeric variables to numeric. One of "mean", "rank", "loo", "rnorm" (see \code{\link[=target_encoding_lab]{target_encoding_lab()}} for further details). Default: "mean"}
 }
 \value{
-character vector; selected predictor names
+character vector; names of selected predictors
 }
 \description{
-Automates multicollinearity management in data frames with numeric and categorical predictors by combining four methods:
+Automates multicollinearity management in data frames with numeric and non-numeric predictors by combining four methods:
 \itemize{
-\item Pairwise correlation filtering: Pearson, Spearman, and Cramer's V statistics to identify pairs of highly correlated predictors. See \code{\link[=cor_select]{cor_select()}} and \code{\link[=cor_df]{cor_df()}}.
-\item Variance Inflation Factor (VIF) filtering: identifies predictors that are linear combinations of other predictors. See \code{\link[=vif_select]{vif_select()}} and \code{\link[=vif_df]{vif_df()}}.
-\item Target encoding: to transform categorical predictors to numeric using a numeric variable as reference. See \code{\link[=target_encoding_lab]{target_encoding_lab()}}.
-\item Flexible prioritization method: to help the user select a meaningful set of non-correlated predictors. See \code{\link[=preference_order]{preference_order()}}.
+\item \strong{Target Encoding}: transforms non-numeric predictors to numeric using another numeric variable (usually a model response) as reference. See \code{\link[=target_encoding_lab]{target_encoding_lab()}}.
+\item \strong{Preference Order}: method to rank and preserve relevant variables during  multicollinearity filtering. See \code{\link[=preference_order]{preference_order()}}.
+\item \strong{Pairwise Correlation Filtering}: automated logic to identify pairs of highly correlated variables. See \code{\link[=cor_select]{cor_select()}} and \code{\link[=cor_df]{cor_df()}}.
+\item \strong{VIF-based filtering}: to identify and remove predictors that are linear combinations of other predictors. See \code{\link[=vif_select]{vif_select()}} and \code{\link[=vif_df]{vif_df()}}.
 }
 
-See \emph{Details} for a deeper explanation on each method implemented here.
+This function calls these other functions:
+\itemize{
+\item \code{\link[=target_encoding_lab]{target_encoding_lab()}}: to apply target encoding, if \code{response} is provided and there are categorical variables named in \code{predictors}.
+\item \code{\link[=cor_select]{cor_select()}}: to apply the automated pairwise correlation filtering.
+\item \code{\link[=vif_select]{vif_select()}}: to apply the automated VIF-based filtering.
 }
-\section{Variance Inflation Factor}{
+}
+\section{Target Encoding}{
 
 
-The Variance Inflation Factor for a given variable \code{y} is computed as \code{1/(1-R2)}, where \code{R2} is the multiple R-squared of a multiple regression model fitted using \code{y} as response and all other predictors in the input data frame as predictors. The VIF equation can be interpreted as the "rate of perfect model's R-squared to the unexplained variance of this model".
+When the name of a numeric response variable is provided via the \code{response} argument, categorical predictors in \code{predictors} (or in the columns of \code{df} if \code{predictors} is NULL) are converted to numeric via \strong{target encoding} with the function \code{\link[=target_encoding_lab]{target_encoding_lab()}}. When \code{response} is NULL, \code{\link[=collinear]{collinear()}} (and \code{\link[=vif_select]{vif_select()}}) ignore categorical predictors. This feature facilitates multicollinearity filtering in data frames with mixed column types.
+}
 
-The possible range of VIF values is (1, Inf]. A VIF lower than 10 suggest that removing \code{y} from the data set would reduce overall multicollinearity. The recommended thresholds for maximum VIF may vary depending on the source consulted, being the most common values, 2.5, 5, and 10.
+\section{Preference Order}{
+
+
+The argument \code{preference_order} helps answer the question "what variable should I remove first?". Such answer is provided as a character vector of predictor names in the order of preference (from first to last) in which they want to be preserved. This vector does not need to name all predictors in \code{predictors}, but only the relevant ones for the user.
+
+The function \code{\link[=preference_order]{preference_order()}} helps defining a quantitative criteria for preference order by assessing the relationship between each variable in \code{predictors} with a response variable.
+If the argument \verb{preference order} is not provided, \code{\link[=cor_select]{cor_select()}} ranks the predictors by the sum of their absolute pairwise correlations with the other predictors, and \code{\link[=vif_select]{vif_select()}} ranks them from lower to higher VIF.
+}
+
+\section{Variance Inflation Factors}{
+
+
+The Variance Inflation Factor for a given variable \eqn{a} is computed as \eqn{1/(1-R2)}, where \eqn{R2} is the multiple R-squared of a multiple regression model fitted using \eqn{a} as response and all other predictors in the input data frame as predictors, as in  \eqn{a = b + c + ...}.
+
+The square root of the VIF of \eqn{a} is the factor by which the confidence interval of the estimate for \eqn{a} in the linear model \eqn{y = a + b + c + ...}` is widened by multicollinearity in the model predictors.
+
+The range of VIF values is (1, Inf]. The recommended thresholds for maximum VIF may vary depending on the source consulted, being the most common values, 2.5, 5, and 10.
 }
 
 \section{VIF-based Filtering}{
@@ -59,9 +81,9 @@ The possible range of VIF values is (1, Inf]. A VIF lower than 10 suggest that r
 
 The function \code{\link[=vif_select]{vif_select()}} computes Variance Inflation Factors and removes variables iteratively, until all variables in the resulting selection have a VIF below \code{max_vif}.
 
-If the argument \code{preference_order} is not provided, all variables are first ranked from lower to higher VIF, as returned by \code{\link[=vif_df]{vif_df()}}., and the variable with a higher VIF above \code{max_vif} is removed on each iteration.
+If the argument \code{preference_order} is not provided, all variables are ranked from lower to higher VIF, as returned by \code{\link[=vif_df]{vif_df()}}, and the variable with the higher VIF above \code{max_vif} is removed on each iteration.
 
-If \code{preference_order} is defined, whenever two or more variables are above \code{max_vif}, the one higher in \code{preference_order} is preserved, and the next one with a higher VIF is removed.
+If \code{preference_order} is defined, whenever two or more variables are above \code{max_vif}, the one higher in \code{preference_order} is preserved, and the next one with a higher VIF is removed. For example, for the predictors and preference order \eqn{a} and \eqn{b}, if any of their VIFs is higher than \code{max_vif}, then \eqn{b} will be removed no matter whether its VIF is lower or higher than \eqn{a}'s VIF. If their VIF scores are lower than \code{max_vif}, then both are preserved.
 }
 
 \section{Pairwise Correlation Filtering}{
@@ -69,21 +91,9 @@ If \code{preference_order} is defined, whenever two or more variables are above 
 
 The function \code{\link[=cor_select]{cor_select()}} applies a recursive forward selection algorithm to keep predictors with a maximum Pearson correlation with all other selected predictors lower than \code{max_cor}.
 
-If the argument \code{preference_order} is not provided, the variables are ranked from lower to higher sum of absolute pairwise correlation with all other variables. When two variables are correlated above \code{max_cor}, the one with the lowest preference order is removed.
-}
+If the argument \code{preference_order} is not provided, the predictors are ranked from lower to higher sum of absolute pairwise correlation with all other predictors.
 
-\section{Target Encoding}{
-
-
-When the \code{response} argument is provided, any non-numeric predictors are converted to numeric via target encoding with the function \code{\link[=target_encoding_lab]{target_encoding_lab()}}, to facilitate the handling of all predictors during the multicollinearity filtering.
-
-When the 'response' argument is not provided, categorical variables are ignored. However, in such case, the function \code{\link[=cor_select]{cor_select()}} can handle categorical variables, albeit with a lower computation speed.
-}
-
-\section{Preference Order}{
-
-
-The argument \code{preference_order} allows prioritizing variables that might be interesting or even required for a given analysis. If \code{preference_order} is not provided, then the predictors are ranked from lower to higher sum of their absolute correlations with the other predictors in \code{\link[=cor_select]{cor_select()}}, and by their VIF in \code{\link[=vif_select]{vif_select()}}, and removed one by one until the maximum R-squared of the correlation matrix is lower than \code{max_cor} and the maximum VIF is below \code{max_vif}.
+If \code{preference_order} is defined, whenever two or more variables are above \code{max_cor}, the one higher in \code{preference_order} is preserved. For example, for the predictors and preference order \eqn{a} and \eqn{b}, if their correlation is higher than \code{max_cor}, then \eqn{b} will be removed and \eqn{a} preserved. If their correlation is lower than \code{max_cor}, then both are preserved.
 }
 
 \examples{
@@ -182,8 +192,8 @@ selected.predictors
 }
 \references{
 \itemize{
-\item David A. Belsley, D.A., Kuh, E., Welsch, R.E. (1980). Regression Diagnostics: Identifying Influential Data and Sources of Collinearity. John Wiley & Sons. \doi{10.1002/0471725153}.
-\item Micci-Barreca, D. (2001) A Preprocessing Scheme for High-Cardinality Categorical Attributes in Classification and Prediction Problems. SIGKDD Explor. Newsl. 3, 1, 27-32 \doi{10.1145/507533.507538}
+\item David A. Belsley, D.A., Kuh, E., Welsch, R.E. (1980). Regression Diagnostics: Identifying Influential Data and Sources of Collinearity. John Wiley & Sons. DOI: 10.1002/0471725153.
+\item Micci-Barreca, D. (2001) A Preprocessing Scheme for High-Cardinality Categorical Attributes in Classification and Prediction Problems. SIGKDD Explor. Newsl. 3, 1, 27-32. DOI: 10.1145/507533.507538
 }
 }
 \author{

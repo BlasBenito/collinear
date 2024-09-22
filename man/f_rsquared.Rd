@@ -2,7 +2,7 @@
 % Please edit documentation in R/preference_order.R
 \name{f_rsquared}
 \alias{f_rsquared}
-\title{R-squared between a response and a predictor}
+\title{R-squared Between Two Variables}
 \usage{
 f_rsquared(x, y, df)
 }
@@ -14,7 +14,7 @@ f_rsquared(x, y, df)
 \item{df}{(required, data frame) data frame with the columns 'x' and 'y'.}
 }
 \value{
-R-squared
+numeric: R-squared
 }
 \description{
 R-squared between a response and a predictor. Fastest option to compute preference order.
