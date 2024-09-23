@@ -102,7 +102,6 @@ head(df)
 \seealso{
 Other correlation: 
 \code{\link{cor_matrix}()},
-\code{\link{cor_select}()},
 \code{\link{cramer_v}()}
 }
 \author{

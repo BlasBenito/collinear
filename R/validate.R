@@ -40,7 +40,7 @@ validate_df <- function(
 
   #handle df = NULL
   if(is.null(df)){
-    stop("argument 'df' cannot be NULL.")
+    stop("Argument 'df' cannot be NULL.")
   }
 
   #if already validated, return it
@@ -55,7 +55,7 @@ validate_df <- function(
         as.data.frame(df)
         },
       error = function(e){
-        stop("argument 'df' must be a data frame.")
+        stop("Argument 'df' must be a data frame.")
       }
     )
   }
@@ -218,11 +218,11 @@ validate_predictors <- function(
 
   # df ----
   if(is.null(df)){
-    stop("argument 'df' cannot be NULL.")
+    stop("Argument 'df' cannot be NULL.")
   }
 
   if(is.null(attr(df, "validated"))){
-    stop("argument 'df' is not validated. Please, run validate_df() before validate_predictors().")
+    stop("Argument 'df' is not validated. Please, run validate_df() before validate_predictors().")
   }
 
 
@@ -364,12 +364,12 @@ validate_response <- function(
 ){
 
   if(is.null(df)){
-    stop("argument 'df' cannot be NULL.")
+    stop("Argument 'df' cannot be NULL.")
   }
 
   #if already validated, return it
   if(is.null(attr(df, "validated"))){
-    stop("argument 'df' is not validated. Please, run validate_df() before validate_response().")
+    stop("Argument 'df' is not validated. Please, run validate_df() before validate_response().")
   }
 
   if(is.null(response)){
@@ -382,12 +382,12 @@ validate_response <- function(
   }
 
   if(is.character(response) == FALSE){
-    stop("argument 'response' must be a character string")
+    stop("Argument 'response' must be a character string")
   }
 
   if(length(response) != 1){
     if(is.required == TRUE){
-      stop("argument 'response' must be of length 1.")
+      stop("Argument 'response' must be of length 1.")
     }
   }
 

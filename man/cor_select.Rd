@@ -167,12 +167,11 @@ selected.predictors
 
 }
 \seealso{
-Other correlation: 
-\code{\link{cor_df}()},
-\code{\link{cor_matrix}()},
-\code{\link{cramer_v}()}
+Other automated_multicollinearity_analysis: 
+\code{\link{collinear}()},
+\code{\link{vif_select}()}
 }
 \author{
 Blas M. Benito, PhD
 }
-\concept{correlation}
+\concept{automated_multicollinearity_analysis}

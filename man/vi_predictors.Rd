@@ -15,5 +15,10 @@ Predictor names in data frame 'vi'
 }
 \seealso{
 \link{vi}
+
+Other example_data: 
+\code{\link{toy}},
+\code{\link{vi}}
 }
+\concept{example_data}
 \keyword{datasets}

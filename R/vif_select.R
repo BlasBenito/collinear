@@ -127,7 +127,7 @@
 #' selected.predictors
 #'
 #' @autoglobal
-#' @family vif
+#' @family automated_multicollinearity_analysis
 #' @author Blas M. Benito, PhD
 #' @references
 #' \itemize{

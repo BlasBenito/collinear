@@ -34,6 +34,17 @@ numeric.predictors
 
 }
 }
+\seealso{
+Other data_preparation: 
+\code{\link{drop_geometry_column}()},
+\code{\link{identify_non_numeric_predictors}()},
+\code{\link{identify_zero_variance_predictors}()},
+\code{\link{validate_df}()},
+\code{\link{validate_predictors}()},
+\code{\link{validate_preference_order}()},
+\code{\link{validate_response}()}
+}
 \author{
 Blas M. Benito, PhD
 }
+\concept{data_preparation}

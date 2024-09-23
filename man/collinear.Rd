@@ -196,6 +196,12 @@ selected.predictors
 \item Micci-Barreca, D. (2001) A Preprocessing Scheme for High-Cardinality Categorical Attributes in Classification and Prediction Problems. SIGKDD Explor. Newsl. 3, 1, 27-32. DOI: 10.1145/507533.507538
 }
 }
+\seealso{
+Other automated_multicollinearity_analysis: 
+\code{\link{cor_select}()},
+\code{\link{vif_select}()}
+}
 \author{
 Blas M. Benito, PhD
 }
+\concept{automated_multicollinearity_analysis}

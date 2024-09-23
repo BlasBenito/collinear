@@ -49,17 +49,17 @@ cramer_v <- function(
 
     # Check if 'x' and 'y' have the same length
     if(length(x) != length(y)){
-      stop("arguments 'x' and 'y' must have the same length.")
+      stop("Arguments 'x' and 'y' must have the same length.")
     }
 
     # Check if 'x' is not NULL
     if(is.null(x)){
-      stop("argument 'x' must not be NULL.")
+      stop("Argument 'x' must not be NULL.")
     }
 
     # Check if 'y' is not NULL
     if(is.null(y)){
-      stop("argument 'y' must not be NULL.")
+      stop("Argument 'y' must not be NULL.")
     }
 
     # Check if 'x' is a character vector
@@ -69,7 +69,7 @@ cramer_v <- function(
 
     # Check if 'y' is a character vector
     if(is.numeric(y)){
-      stop("argument 'y' must be of class 'character' or 'factor', but it is 'numeric'.")
+      stop("Argument 'y' must be of class 'character' or 'factor', but it is 'numeric'.")
     }
 
   }

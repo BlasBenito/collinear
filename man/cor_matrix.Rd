@@ -93,7 +93,6 @@ m[1:5, 1:5]
 \seealso{
 Other correlation: 
 \code{\link{cor_df}()},
-\code{\link{cor_select}()},
 \code{\link{cramer_v}()}
 }
 \author{

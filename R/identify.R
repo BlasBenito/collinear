@@ -22,6 +22,7 @@
 #'
 #' }
 #' @autoglobal
+#' @family data_preparation
 #' @author Blas M. Benito, PhD
 #' @export
 identify_numeric_predictors <- function(
@@ -30,7 +31,7 @@ identify_numeric_predictors <- function(
 ){
 
   if(is.null(df)){
-    stop("argument 'df' cannot be NULL.")
+    stop("Argument 'df' cannot be NULL.")
   }
 
   if(is.null(predictors)){
@@ -77,7 +78,7 @@ identify_non_numeric_predictors <- function(
 ){
 
   if(is.null(df)){
-    stop("argument 'df' cannot be NULL.")
+    stop("Argument 'df' cannot be NULL.")
   }
 
   if(is.null(predictors)){
@@ -140,7 +141,7 @@ identify_zero_variance_predictors <- function(
 ){
 
   if(is.null(df)){
-    stop("argument 'df' cannot be NULL.")
+    stop("Argument 'df' cannot be NULL.")
   }
 
   if(is.null(predictors)){

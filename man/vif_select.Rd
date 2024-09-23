@@ -188,10 +188,11 @@ selected.predictors
 }
 }
 \seealso{
-Other vif: 
-\code{\link{vif_df}()}
+Other automated_multicollinearity_analysis: 
+\code{\link{collinear}()},
+\code{\link{cor_select}()}
 }
 \author{
 Blas M. Benito, PhD
 }
-\concept{vif}
+\concept{automated_multicollinearity_analysis}

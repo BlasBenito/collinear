@@ -63,6 +63,7 @@ attributes(vi_predictors)$validated
 Other data_preparation: 
 \code{\link{drop_geometry_column}()},
 \code{\link{identify_non_numeric_predictors}()},
+\code{\link{identify_numeric_predictors}()},
 \code{\link{identify_zero_variance_predictors}()},
 \code{\link{validate_df}()},
 \code{\link{validate_preference_order}()},

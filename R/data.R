@@ -4,6 +4,7 @@
 #' @seealso [vi_predictors]
 #'
 #' @format Data frame with 30.000 rows and 68 columns.
+#' @family example_data
 "vi"
 
 #' Predictor names in data frame 'vi'
@@ -12,6 +13,7 @@
 #' @seealso [vi]
 #'
 #' @format Character vector with predictor names.
+#' @family example_data
 "vi_predictors"
 
 
@@ -61,4 +63,5 @@
 #' @usage data(toy)
 #'
 #' @format Data frame with 2000 rows and 5 columns.
+#' @family example_data
 "toy"

@@ -273,7 +273,7 @@ f_rsquared <- function(x, y, df){
 f_gam_deviance <- function(x, y, df){
 
   if(!requireNamespace("mgcv", quietly = TRUE)){
-    stop("the function 'f_gam_auc_unbalanced()' requires the package 'mgcv'. Please, install it first.")
+    stop("The function 'f_gam_auc_unbalanced()' requires the package 'mgcv'.")
   }
 
   data <- data.frame(
@@ -330,7 +330,7 @@ f_gam_deviance <- function(x, y, df){
 f_rf_rsquared <- function(x, y, df){
 
   if(!requireNamespace("ranger", quietly = TRUE)){
-    stop("the function 'f_fr_deviance()' requires the package 'ranger'. Please install it first.")
+    stop("The function 'f_rf_rsquared()' requires the package 'ranger'.")
   }
 
   data <- data.frame(
@@ -392,11 +392,11 @@ f_rf_deviance <- f_rf_rsquared
 f_rf_auc_unbalanced <- function(x, y, df){
 
   if(!requireNamespace("ranger", quietly = TRUE)){
-    stop("the function 'f_fr_deviance()' requires the package 'ranger'. Please install it first.")
+    stop("The function 'f_rf_auc_unbalanced()' requires the package 'ranger'.")
   }
 
   if(all(sort(unique(df[[y]])) == c(0, 1)) == FALSE){
-    stop("Argument 'response' must be the name of a binary vector with 0s and 1s")
+    stop("Argument 'response' must be the name of a binary vector with unique values 0 and 1.")
   }
 
   data <- data.frame(
@@ -454,11 +454,11 @@ f_rf_auc_unbalanced <- function(x, y, df){
 f_rf_auc_balanced <- function(x, y, df){
 
   if(!requireNamespace("ranger", quietly = TRUE)){
-    stop("the function 'f_fr_deviance()' requires the package 'ranger'. Please install it first.")
+    stop("The function 'f_rf_auc_balanced()' requires the package 'ranger'")
   }
 
   if(all(sort(unique(df[[y]])) == c(0, 1)) == FALSE){
-    stop("Argument 'response' must be the name of a binary vector with 0s and 1s")
+    stop("Argument 'response' must be the name of a binary vector with unique values 0 and 1.")
   }
 
   data <- data.frame(
@@ -510,7 +510,7 @@ f_rf_auc_balanced <- function(x, y, df){
 f_logistic_auc_balanced <- function(x, y, df){
 
   if(all(sort(unique(df[[y]])) == c(0, 1)) == FALSE){
-    stop("Argument 'response' must be the name of a binary vector with 0s and 1s")
+    stop("Argument 'response' must be the name of a binary vector with unique values 0 and 1.")
   }
 
   data <- data.frame(
@@ -561,7 +561,7 @@ f_logistic_auc_balanced <- function(x, y, df){
 f_logistic_auc_unbalanced <- function(x, y, df){
 
   if(all(sort(unique(df[[y]])) == c(0, 1)) == FALSE){
-    stop("Argument 'response' must be the name of a binary vector with 0s and 1s")
+    stop("Argument 'response' must be the name of a binary vector with unique values 0 and 1.")
   }
 
   data <- data.frame(
@@ -623,11 +623,11 @@ f_logistic_auc_unbalanced <- function(x, y, df){
 f_gam_auc_balanced <- function(x, y, df){
 
   if(!requireNamespace("mgcv", quietly = TRUE)){
-    stop("the function 'f_gam_auc_unbalanced()' requires the package 'mgcv'. Please, install it first.")
+    stop("the function 'f_gam_auc_balanced()' requires the package 'mgcv'.")
   }
 
   if(all(sort(unique(df[[y]])) == c(0, 1)) == FALSE){
-    stop("Argument 'response' must be the name of a binary vector with 0s and 1s")
+    stop("Argument 'response' must be the name of a binary vector with unique values 0 and 1.")
   }
 
   data <- data.frame(
@@ -687,11 +687,11 @@ f_gam_auc_balanced <- function(x, y, df){
 f_gam_auc_unbalanced <- function(x, y, df){
 
   if(!requireNamespace("mgcv", quietly = TRUE)){
-    stop("the function 'f_gam_auc_unbalanced()' requires the package 'mgcv'. Please, install it first.")
+    stop("the function 'f_gam_auc_unbalanced()' requires the package 'mgcv'.")
   }
 
   if(all(sort(unique(df[[y]])) == c(0, 1)) == FALSE){
-    stop("Argument 'response' must be the name of a binary vector with 0s and 1s")
+    stop("Argument 'response' must be the name of a binary vector with unique values 0 and 1.")
   }
 
   data <- data.frame(
@@ -735,17 +735,17 @@ auc_score <- function(
 ){
 
   if(is.null(observed) | is.null(predicted)){
-    stop("The arguments 'observed' and 'predicted' must not be NULL.")
+    stop("Arguments 'observed' and 'predicted' must not be NULL.")
   }
 
   #check observations
   if(all(sort(unique(observed)) == c(0, 1)) == FALSE){
-    stop("Argument 'observed' must be a integer vector with 0s and 1s")
+    stop("Argument 'observed' must be the name of a binary vector with unique values 0 and 1.")
   }
 
   #check predictions
   if(min(predicted) < 0 | max(predicted) > 1){
-    stop("Argument 'predicted' must be a numeric vector with values between 0 and 1.")
+    stop("Argument 'predicted' must be the name of a binary vector with unique values 0 and 1.")
   }
 
   #predicted values of the ones and the zeroes
@@ -794,7 +794,7 @@ case_weights <- function(
 
   #check that x is binary
   if(all(sort(unique(x)) == c(0, 1)) == FALSE){
-    stop("Argument 'x' must be a integer vector with 0s and 1s")
+    stop("Argument 'x' must be the name of a binary vector with unique values 0 and 1.")
   }
 
   #counting number of ones and zeros

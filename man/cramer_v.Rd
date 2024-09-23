@@ -48,8 +48,7 @@ v
 \seealso{
 Other correlation: 
 \code{\link{cor_df}()},
-\code{\link{cor_matrix}()},
-\code{\link{cor_select}()}
+\code{\link{cor_matrix}()}
 }
 \author{
 Blas M. Benito, PhD

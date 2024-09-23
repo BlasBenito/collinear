@@ -1,4 +1,48 @@
 url: https://blasbenito.github.io/collinear/
+
 template:
   bootstrap: 5
+
+authors:
+  Blas M. Benito:
+  href: https://blasbenito.com
+
+reference:
+
+- title: Example Data
+  desc: Real and synthetic datasets used throughout the package examples.
+- contents:
+  - has_concept("example_data")
+
+- title: Target Encoding
+  desc: Tools to transform categorical variables into numeric.
+- contents:
+  - has_concept("target_encoding")
+
+- title: Preference Order
+  desc: Quantiative prioritization of variables for a multicollinearity analysis, based on their relationship with a numeric or binary response variable.
+- contents:
+  - has_concept("preference_order")
+
+- title: Automated Multicollinearity Management
+  desc: Tools to automatically select sets of variables with a low multicollinearity.
+- contents:
+  - has_concept("automated_multicollinearity_analysis")
+
+- title: Variance Inflation Factors
+  desc: Functions implementing VIF-based methods for multicollinearity filtering.
+- contents:
+  - has_concept("vif")
+
+- title: Pairwise Correlation
+  desc: Functions implementing pairwise correlation-based methods for multicollinearity filtering.
+- contents:
+  - has_concept("correlation")
+
+- title: Data Preparation
+  desc: Internal functions for data preparation and validation.
+- contents:
+  - has_concept("data_preparation")
+
+
 

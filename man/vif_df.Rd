@@ -80,10 +80,6 @@ df
 \item David A. Belsley, D.A., Kuh, E., Welsch, R.E. (1980). Regression Diagnostics: Identifying Influential Data and Sources of Collinearity. John Wiley & Sons. DOI: 10.1002/0471725153.
 }
 }
-\seealso{
-Other vif: 
-\code{\link{vif_select}()}
-}
 \author{
 Blas M. Benito, PhD
 }

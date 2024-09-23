@@ -51,6 +51,7 @@ zero.variance.predictors
 Other data_preparation: 
 \code{\link{drop_geometry_column}()},
 \code{\link{identify_non_numeric_predictors}()},
+\code{\link{identify_numeric_predictors}()},
 \code{\link{validate_df}()},
 \code{\link{validate_predictors}()},
 \code{\link{validate_preference_order}()},

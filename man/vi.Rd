@@ -15,5 +15,10 @@ data(vi)
 }
 \seealso{
 \link{vi_predictors}
+
+Other example_data: 
+\code{\link{toy}},
+\code{\link{vi_predictors}}
 }
+\concept{example_data}
 \keyword{datasets}

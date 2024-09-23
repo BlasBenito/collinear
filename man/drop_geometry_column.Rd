@@ -18,6 +18,7 @@ Replicates the functionality of  \verb{\link[sf]\{st_drop_geometry\}} without de
 \seealso{
 Other data_preparation: 
 \code{\link{identify_non_numeric_predictors}()},
+\code{\link{identify_numeric_predictors}()},
 \code{\link{identify_zero_variance_predictors}()},
 \code{\link{validate_df}()},
 \code{\link{validate_predictors}()},

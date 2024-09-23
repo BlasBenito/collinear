@@ -54,4 +54,10 @@ toy <- vi |>
   dplyr::transmute(y, a, b, c, d)
 
 }
+\seealso{
+Other example_data: 
+\code{\link{vi}},
+\code{\link{vi_predictors}}
+}
+\concept{example_data}
 \keyword{datasets}

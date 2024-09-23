@@ -116,7 +116,7 @@
 #' selected.predictors
 #'
 #' @autoglobal
-#' @family correlation
+#' @family automated_multicollinearity_analysis
 #' @author Blas M. Benito, PhD
 #' @export
 cor_select <- function(
@@ -131,7 +131,7 @@ cor_select <- function(
 
   #checking argument max_cor
   if(max_cor < 0 || max_cor > 1){
-    stop("argument 'max_cor' must be a numeric between 0 and 1.")
+    stop("Argument 'max_cor' must be a numeric between 0 and 1.")
   }
 
   #do nothing if one predictor only
