@@ -77,7 +77,15 @@ cor_matrix <- function(
 ){
 
   #if df with predictors, compute cor data frame
-  if(all(names(df) %in% c("x", "y", "correlation")) == FALSE){
+  if(
+    all(
+      names(df) %in% c(
+        "x",
+        "y",
+        "correlation"
+        )
+      ) == FALSE
+    ){
 
     df <- cor_df(
       df = df,
@@ -90,12 +98,14 @@ cor_matrix <- function(
   }
 
   #create all possible pairs
-  df <- df |>
-    dplyr::mutate(
+  df <- rbind(
+    df,
+    data.frame(
       x = df$y,
-      y = df$x
-    ) |>
-    rbind(df)
+      y = df$x,
+      correlation = df$correlation
+    )
+  )
 
   #rows and col names
   variables <- unique(c(df$x, df$y))

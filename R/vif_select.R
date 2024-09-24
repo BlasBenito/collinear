@@ -210,23 +210,25 @@ vif_select <- function(
 
   for(i in seq(from = nrow(df.rank), to = 2)){
 
-    vif.i <- vif_df(
+    #generate VIF data frame
+    vif.i.df <- vif_df(
       df = df,
       predictors = df.rank$variable
-    ) |>
-      dplyr::filter(
-        variable == df.rank[i, "variable"]
-      ) |>
-      dplyr::pull(vif)
+    )
+
+    #extract relevant vif value
+    vif.i <- vif.i.df[
+      vif.i.df$variable == df.rank[i, "variable"],
+      "vif"
+      ]
 
     #removing var if vif is above max_vif
     if(vif.i > max_vif){
 
       #removing it from df.rank
-      df.rank <- dplyr::filter(
-        df.rank,
-        variable != df.rank[i, "variable"]
-      )
+      df.rank <- df.rank[
+        df.rank$variable != df.rank[i, "variable"],
+        ]
 
     }
 

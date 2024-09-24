@@ -67,39 +67,11 @@ cor_df <- function(
     encoding_method = "mean"
 ){
 
-  #method argument for stats::cor
-  cor_method <- match.arg(
-    arg = cor_method,
-    choices = c(
-      "pearson",
-      "spearman"
-    ),
-    several.ok = FALSE
-  )
-
-  #validate input data frame
-  df <- validate_df(
-    df = df,
-    min_rows = ifelse(
-      test = cor_method == "pearson",
-      yes = 30,
-      no = 10
-    )
-  )
-
-  response <- validate_response(
-    df = df,
-    response = response
-  )
-
-  predictors <- validate_predictors(
-    df = df,
-    response = response,
-    predictors = predictors
-  )
-
   #early output if only one predictor
-  if(length(predictors) == 1){
+  if(
+    length(predictors) == 1 &&
+    predictors %in% colnames(df)
+  ){
     return(
       data.frame(
         x = predictors,
@@ -143,22 +115,20 @@ cor_df <- function(
   )
 
   #join results
-  cor.df <- cor.list |>
-    dplyr::bind_rows() |>
-    dplyr::filter(
-      x != y
-    ) |>
-    dplyr::arrange(
-      dplyr::desc(abs(correlation))
-    ) |>
-    dplyr::mutate(
-      correlation = round(
-        x = correlation,
-        digits = 3
-      )
-    )
+  cor.df <- do.call(
+    what = "rbind",
+    args = cor.list
+  )
 
-  cor.df
+  rownames(cor.df) <- NULL
+
+  #arrange by absolute correlation values
+  cor.df[
+    order(
+      abs(cor.df$correlation),
+      decreasing = TRUE
+    ),
+  ]
 
 }
 
@@ -188,45 +158,73 @@ cor_numerics <- function(
     several.ok = FALSE
   )
 
-  predictors.numeric <- identify_numeric_predictors(
+  #validate input data frame
+  df <- validate_df(
+    df = df,
+    min_rows = ifelse(
+      test = cor_method == "pearson",
+      yes = 30,
+      no = 10
+    )
+  )
+
+  #validate predictors
+  #get numeric predictors only
+  predictors <- validate_predictors(
     df = df,
     predictors = predictors
   )
 
-  if(length(predictors.numeric) <= 1){
+  if(length(predictors) <= 1){
     return(NULL)
   }
 
-  cor.numerics <- stats::cor(
-    x = df[, predictors.numeric],
+  #correlation matrix to data frame
+  cor.df <- stats::cor(
+    x = df[, predictors],
     use = "pairwise.complete.obs",
     method = cor_method
   ) |>
-    #correlation matrix to data frame
     as.table() |>
-    as.data.frame() |>
-    dplyr::transmute(
-      x = as.character(Var1),
-      y = as.character(Var2),
-      correlation = Freq
-    ) |>
-    #remove matrix diagonal
-    dplyr::filter(
-      x != y
-    ) |>
-    #remove mirrored pairs
-    dplyr::rowwise() |>
-    dplyr::mutate(
-      pair_name = paste0(sort(c(x, y)), collapse = " ")
-    ) |>
-    dplyr::ungroup() |>
-    dplyr::distinct(
-      pair_name,
-      .keep_all = TRUE
-    ) |>
-    dplyr::select(-pair_name)
+    as.data.frame()
 
-  cor.numerics
+  #remove factors
+  cor.df$Var1 <- as.character(cor.df$Var1)
+  cor.df$Var2 <- as.character(cor.df$Var2)
+
+  #rename columns
+  colnames(cor.df) <- c(
+    "x",
+    "y",
+    "correlation"
+  )
+
+  #filter out x == y
+  cor.df <- cor.df[
+    cor.df$x != cor.df$y,
+  ]
+
+  #identify pairs
+  cor.df$pair_name <- apply(
+    X = cor.df[, c("x", "y")],
+    MARGIN = 1,
+    FUN = function(x){
+      paste0(
+        sort(x),
+        collapse = " "
+      )
+    }
+  )
+
+  #remove duplicated pairs
+  cor.df <- cor.df[
+    !duplicated(cor.df$pair_name),
+  ]
+
+  #remove pair name
+  cor.df$pair_name <- NULL
+
+  cor.df
 
 }
 
@@ -246,18 +244,6 @@ cor_numerics_and_characters <- function(
     encoding_method = "mean"
 ){
 
-  #check input data frame
-  df <- validate_df(
-    df = df,
-    min_rows = 30
-  )
-
-  #check predictors
-  predictors <- validate_predictors(
-    df = df,
-    predictors = predictors
-  )
-
   #method argument for stats::cor
   cor_method <- match.arg(
     arg = cor_method,
@@ -268,6 +254,25 @@ cor_numerics_and_characters <- function(
     several.ok = FALSE
   )
 
+  #validate input data frame
+  df <- validate_df(
+    df = df,
+    min_rows = ifelse(
+      test = cor_method == "pearson",
+      yes = 30,
+      no = 10
+    )
+  )
+
+  #validate predictors without losing non-numerics
+  #random response name to disable non-numeric filtering
+  predictors <- validate_predictors(
+    df = df,
+    response = paste0("x", Sys.time()),
+    predictors = predictors
+  )
+
+  #get numeric and character predictors
   predictors.numeric <- identify_numeric_predictors(
     df = df,
     predictors = predictors
@@ -277,54 +282,63 @@ cor_numerics_and_characters <- function(
     return(NULL)
   }
 
-  predictors.character <- identify_non_numeric_predictors(
+  predictors.non.numeric <- identify_non_numeric_predictors(
     df = df,
     predictors = predictors
   )
 
-  if(length(predictors.character) == 0){
+  if(length(predictors.non.numeric) == 0){
     return(NULL)
   }
 
   #data frame to store results
-  r.num.char <- expand.grid(
+  cor.df <- expand.grid(
     x = predictors.numeric,
-    y = predictors.character,
-    correlation = NA,
+    y = predictors.non.numeric,
     stringsAsFactors = FALSE
   )
 
-  #iterate to compute correlation
-  for(i in seq_len(nrow(r.num.char))){
+  #progress bar
+  p <- progressr::progressor(
+    steps = nrow(cor.df)
+  )
 
-    #get response and predictor to a temp data frame
-    df.i <- data.frame(
-      x = df[[r.num.char$x[i]]],
-      y = df[[r.num.char$y[i]]]
-    ) |>
-      na.omit()
+  #parallelized version
+  cor.df$correlation <- future.apply::future_apply(
+    X = cor.df,
+    MARGIN = 1,
+    FUN = function(x){
 
-    #target encode
-    df.i <- target_encoding_lab(
-      df = df.i,
-      response = "x",
-      predictors = "y",
-      encoding_methods = encoding_method,
-      replace = TRUE,
-      verbose = FALSE
-    )
+      p()
 
-    #compute correlation
-    r.num.char$correlation[i] <- stats::cor(
-      x = df.i$x,
-      y = df.i$y,
-      method = cor_method,
-      use = "pairwise.complete.obs"
-    )
+      df.x <- data.frame(
+        x = df[[x[1]]],
+        y = df[[x[2]]]
+      ) |>
+        na.omit()
 
-  }
+      #target encode
+      df.x <- target_encoding_lab(
+        df = df.x,
+        response = "x",
+        predictors = "y",
+        encoding_methods = encoding_method,
+        replace = TRUE,
+        verbose = FALSE
+      )
 
-  r.num.char
+      #compute correlation
+      stats::cor(
+        x = df.x$x,
+        y = df.x$y,
+        method = cor_method,
+        use = "pairwise.complete.obs"
+      )
+
+    }
+  )
+
+  cor.df
 
 }
 
@@ -341,36 +355,75 @@ cor_characters <- function(
     predictors
 ){
 
-  predictors.character <- identify_non_numeric_predictors(
+  #validate input data frame
+  df <- validate_df(
+    df = df,
+    min_rows = 30
+  )
+
+
+  #validate predictors without losing non-numerics
+  #random response name to disable non-numeric filtering
+  predictors <- validate_predictors(
+    df = df,
+    response = paste0("x", Sys.time()),
+    predictors = predictors
+  )
+
+  #get only non numeric predictors
+  predictors <- identify_non_numeric_predictors(
     df = df,
     predictors = predictors
   )
 
-  if(
-    length(predictors.character) <= 1
-  ){
+  #empty output if no predictors
+  if(length(predictors) <= 1){
     return(NULL)
   }
 
   #data frame to store results
-  r.char.char <- expand.grid(
-    x = predictors.character,
-    y = predictors.character,
+  cor.df <- expand.grid(
+    x = predictors,
+    y = predictors,
     correlation = NA,
     stringsAsFactors = FALSE
   )
 
-  #iterate to compute correlation
-  for(i in seq_len(nrow(r.char.char))){
+  #filter out x == y
+  cor.df <- cor.df[
+    cor.df$x != cor.df$y,
+  ]
 
-    r.char.char$correlation[i] <- cramer_v(
-      x = df[[r.char.char$x[i]]],
-      y = df[[r.char.char$y[i]]],
-      check_input = FALSE
-    )
+  #future apply
+  #progress bar
+  p <- progressr::progressor(
+    steps = nrow(cor.df)
+  )
 
-  }
+  #parallelized version
+  cor.df$correlation <- future.apply::future_apply(
+    X = cor.df,
+    MARGIN = 1,
+    FUN = function(x){
 
-  r.char.char
+      p()
+
+      df.x <- data.frame(
+        x = df[[x[1]]],
+        y = df[[x[2]]]
+      ) |>
+        na.omit()
+
+      cramer_v(
+        x = df.x$x,
+        y = df.x$y,
+        check_input = FALSE
+      )
+
+    },
+    future.seed = TRUE
+  )
+
+  cor.df
 
 }

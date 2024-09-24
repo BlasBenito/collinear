@@ -7,9 +7,8 @@ testthat::test_that("`target_encoding_lab()` works", {
     df = vi,
     response = "vi_mean",
     predictors = "koppen_zone",
-    encoding_methods = c("mean", "rank", "rnorm", "loo"),
+    encoding_methods = c("mean", "rank", "loo"),
     smoothing = c(0, 30),
-    rnorm_sd_multiplier = c(0, 0.1, 0.2),
     white_noise = c(0, 0.1, 0.2),
     verbose = FALSE
   )
@@ -29,11 +28,6 @@ testthat::test_that("`target_encoding_lab()` works", {
     )
 
   testthat::expect_true(
-    "koppen_zone__encoded_rnorm" %in% colnames(encoded_df),
-    info = "Encoded variable 'koppen_zone__encoded_rnorm' should exist."
-    )
-
-  testthat::expect_true(
     "koppen_zone__encoded_loo" %in% colnames(encoded_df),
     info = "Encoded variable 'koppen_zone__encoded_loo' should exist."
     )
@@ -45,10 +39,6 @@ testthat::test_that("`target_encoding_lab()` works", {
 
   testthat::expect_true(
     is.numeric(encoded_df$koppen_zone__encoded_rank)
-    )
-
-  testthat::expect_true(
-    is.numeric(encoded_df$koppen_zone__encoded_rnorm)
     )
 
   testthat::expect_true(

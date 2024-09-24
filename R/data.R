@@ -39,27 +39,6 @@
 #'  c       13.263
 #'  a       16.161
 #'
-#' @examples
-#'
-#' library(collinear)
-#' library(dplyr)
-#' data(vi)
-#' set.seed(1)
-#' toy <- vi |>
-#'   dplyr::slice_sample(n = 2000) |>
-#'   dplyr::transmute(
-#'     a = soil_clay,
-#'     b = humidity_range
-#'   ) |>
-#'   scale() |>
-#'   as.data.frame() |>
-#'   dplyr::mutate(
-#'     y = a * 0.75 + b * 0.25 + runif(n = dplyr::n(), min = -0.5, max = 0.5),
-#'     c = a + runif(n = dplyr::n(), min = -0.5, max = 0.5),
-#'     d = (a + b) / 2 + runif(n = dplyr::n(), min = -0.5, max = 0.5)
-#'   ) |>
-#'   dplyr::transmute(y, a, b, c, d)
-#'
 #' @usage data(toy)
 #'
 #' @format Data frame with 2000 rows and 5 columns.

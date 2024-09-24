@@ -2,7 +2,6 @@
 % Please edit documentation in R/target_encoding_methods.R
 \name{target_encoding_mean}
 \alias{target_encoding_mean}
-\alias{target_encoding_rnorm}
 \alias{target_encoding_rank}
 \alias{target_encoding_loo}
 \alias{add_white_noise}
@@ -14,16 +13,6 @@ target_encoding_mean(
   predictor,
   smoothing = 0,
   white_noise = 0,
-  seed = 1,
-  replace = FALSE,
-  verbose = TRUE
-)
-
-target_encoding_rnorm(
-  df,
-  response,
-  predictor,
-  rnorm_sd_multiplier = 1,
   seed = 1,
   replace = FALSE,
   verbose = TRUE
@@ -73,8 +62,6 @@ add_white_noise(
 \item{replace}{(optional; logical) If \code{TRUE}, only the first method in \code{encoding_methods} is used, the method suffix is ignored, and the categorical variables are overwritten with their encoded versions in the output data frame. Default: FALSE}
 
 \item{verbose}{(optional; logical) If TRUE, messages generated during the execution of the function are printed to the console Default: TRUE}
-
-\item{rnorm_sd_multiplier}{(optional; numeric) Argument of the "rnorm" method. Multiplier of the standard deviation of the normal distributions generating encoded values per group. Values smaller than 1 reduce the range of encode values, while values higher than 1 have the opposite effect. Default: \code{1}}
 }
 \value{
 data frame
@@ -99,7 +86,6 @@ The methods to compute the group statistic implemented here are:
 }
 Variables encoded with this method are identified with the suffix "__encoded_mean".
 \item "rank" (implemented in \code{target_encoding_rank()}): Returns the rank of the group as a integer, being 1 he group with the lower mean of the response variable. It accepts the \code{white_noise} argument to control overfitting. Variables encoded with this method are identified with the suffix "__encoded_rank".
-\item "rnorm" (implemented in \code{target_encoding_rnorm()}): Computes the mean and standard deviation of the response per group, and introduces these parameters into \code{\link[=rnorm]{rnorm()}} to generate random values from a normal distribution. The argument \code{rnorm_sd_multiplier} multiplies the standard deviation to control the range of produced values. Values smaller than 1 reduce the range of encode values. This method is non-deterministic, and requires setting the \code{seed} argument for reproducibility. Variables encoded with this method are identified with the suffix "__encoded_rnorm".
 \item "loo" (implemented in \code{target_encoding_loo()}): Known as the "leave-one-out method" in the literature, it replaces each categorical value with the mean of the response variable across all other group cases. This method controls overfitting better than "mean". Additionally, it accepts the \code{white_noise} method. Variables encoded with this method are identified with the suffix "__encoded_loo".
 }
 }
@@ -197,40 +183,6 @@ plot(
   ylab = "response"
 )
 
-
-#rnorm
-#-----
-
-#without sd multiplier
-df <- target_encoding_rnorm(
-  df = vi,
-  response = "vi_mean",
-  predictor = "soil_type",
-  replace = TRUE
-)
-
-plot(
-  x = df$soil_type,
-  y = df$vi_mean,
-  xlab = "encoded variable",
-  ylab = "response"
-)
-
-#with sd multiplier
-df <- target_encoding_rnorm(
-  df = vi,
-  response = "vi_mean",
-  predictor = "soil_type",
-  rnorm_sd_multiplier = 0.1,
-  replace = TRUE
-)
-
-plot(
-  x = df$soil_type,
-  y = df$vi_mean,
-  xlab = "encoded variable",
-  ylab = "response"
-)
 
 
 }

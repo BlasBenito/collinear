@@ -237,8 +237,10 @@ validate_predictors <- function(
     #response is valid, there might be target encoding later on, no numerics required
     min_numerics <- 0
 
-    #removing from df
-    df[[response]] <- NULL
+    #removing from df if predictors is NULL
+    if(is.null(predictors)){
+      df[[response]] <- NULL
+    }
 
   }
 

@@ -21,18 +21,16 @@
 #'   }
 #'   Variables encoded with this method are identified with the suffix "__encoded_mean".
 #'   \item "rank" (implemented in `target_encoding_rank()`): Returns the rank of the group as a integer, being 1 he group with the lower mean of the response variable. It accepts the `white_noise` argument to control overfitting. Variables encoded with this method are identified with the suffix "__encoded_rank".
-#'   \item "rnorm" (implemented in `target_encoding_rnorm()`): Computes the mean and standard deviation of the response per group, and introduces these parameters into [rnorm()] to generate random values from a normal distribution. The argument `rnorm_sd_multiplier` multiplies the standard deviation to control the range of produced values. Values smaller than 1 reduce the range of encode values. This method is non-deterministic, and requires setting the `seed` argument for reproducibility. Variables encoded with this method are identified with the suffix "__encoded_rnorm".
 #'   \item "loo" (implemented in `target_encoding_loo()`): Known as the "leave-one-out method" in the literature, it replaces each categorical value with the mean of the response variable across all other group cases. This method controls overfitting better than "mean". Additionally, it accepts the `white_noise` method. Variables encoded with this method are identified with the suffix "__encoded_loo".
 #' }
 #'
 #'
 #'
 #' @inheritParams collinear
-#' @param encoding_methods (optional; character vector). Name of the target encoding methods. Default: c("mean", "rank", "loo", "rnorm")
+#' @param encoding_methods (optional; character vector). Name of the target encoding methods. Default: c("mean", "loo", rank")
 #' @param smoothing (optional; integer) Argument of the method "mean". Groups smaller than this number have their means pulled towards mean of the response across all cases. Default: 0
 #' @param white_noise (optional; numeric) Argument of the methods "mean", "rank", and "loo". Maximum white noise to add, expressed as a fraction of the range of the response variable. Default: `0`.
 #' @param seed (optional; integer) Random seed to facilitate reproducibility when `white_noise` is not 0. Default: 1
-#' @param rnorm_sd_multiplier (optional; numeric) Argument of the "rnorm" method. Multiplier of the standard deviation of the normal distributions generating encoded values per group. Values smaller than 1 reduce the range of encode values, while values higher than 1 have the opposite effect. Default: `1`
 #' @param replace (optional; logical) If `TRUE`, only the first method in `encoding_methods` is used, the method suffix is ignored, and the categorical variables are overwritten with their encoded versions in the output data frame. Default: FALSE
 #' @param verbose (optional; logical) If TRUE, messages generated during the execution of the function are printed to the console Default: TRUE
 #'
@@ -55,11 +53,9 @@
 #'   predictors = "koppen_zone",
 #'   encoding_methods = c(
 #'     "mean",
-#'     "rank",
-#'     "rnorm",
-#'     "loo"
+#'     "loo",
+#'     "rank"
 #'   ),
-#'   rnorm_sd_multiplier = c(0, 0.1, 0.2),
 #'   white_noise = c(0, 0.1, 0.2)
 #' )
 #'
@@ -92,14 +88,12 @@ target_encoding_lab <- function(
     predictors = NULL,
     encoding_methods = c(
       "mean",
-      "rank",
       "loo",
-      "rnorm"
+      "rank"
     ),
     smoothing = 0,
     white_noise = 0,
     seed = 1,
-    rnorm_sd_multiplier = 0,
     replace = FALSE,
     verbose = TRUE
 ){
@@ -109,9 +103,8 @@ target_encoding_lab <- function(
     arg = encoding_methods,
     choices = c(
       "mean",
-      "rank",
       "loo",
-      "rnorm"
+      "rank"
     ),
     several.ok = TRUE
   )
@@ -148,7 +141,6 @@ target_encoding_lab <- function(
     verbose <- FALSE
     encoding_methods <- encoding_methods[1]
     white_noise <- white_noise[1]
-    rnorm_sd_multiplier <- rnorm_sd_multiplier[1]
   }
 
   #return data if all predictors are numeric
@@ -232,25 +224,6 @@ target_encoding_lab <- function(
           response = response,
           predictor = predictors.to.encode.i,
           white_noise = white_noise.i,
-          seed = seed,
-          replace = replace,
-          verbose = verbose
-        )
-
-      }
-
-    }
-
-
-    if("rnorm" %in% encoding_methods){
-
-      for(rnorm_sd_multiplier.i in rnorm_sd_multiplier){
-
-        df <- target_encoding_rnorm(
-          df = df,
-          response = response,
-          predictor = predictors.to.encode.i,
-          rnorm_sd_multiplier = rnorm_sd_multiplier.i,
           seed = seed,
           replace = replace,
           verbose = verbose

@@ -191,12 +191,11 @@ preference_order <- function(
     suppressWarnings()
 
   #reorder preference
-  preference <- preference |>
-    dplyr::arrange(
-      dplyr::desc(preference)
-    )
-
-  preference
+  preference[
+    order(
+      preference$preference,
+      decreasing = TRUE),
+    ]
 
 }
 

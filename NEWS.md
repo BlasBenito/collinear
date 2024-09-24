@@ -2,6 +2,12 @@
 
 The functions cor_select(), vif_select() and vif_df() now skip the analysis if only one predictor is available. This may happen in collinear() with highly correlated datasets, when cor_select() only returns one predictor and sends it to vif_select().
 
+Streamlined cor_df(), and fixed a bug that prevented cor_numerics_and_characters() and cor_characters() to trigger properly.
+
+Removed dplyr as dependency.
+
+Parallelized cor_numerics_and_characters() and cor_characters()
+
 All warnings in all data validation functions are now messages to ensure they are printed in the correct order.
 
 Function vif_df() now has the internal function vif_f() to compute the vif data frame, and this function is applied twice, once without modifying the correlation matrix, and if this fails, again by replacing 1 and -1 with 0.999 and -0.999 in the correlation matrix to try overcome the "singular matrix" issue.
@@ -11,6 +17,8 @@ The function validate_df() now takes into account the number of predictors as re
 The function preference_order() no longer has the `workers` argument, but can accept a parallelization setup via `future::plan()` and a progress bar via de `progressr` package.
 
 New function `validate_preference_order()` added to streamline `cor_select()` and `vif_select()`.
+
+The "rnorm" method in target_encoding_lab() was deprecated, and the function target_encoding_rnorm() removed from the package.
 
 Streamlined documentation using roxygen methods to inherit sections and parameters.
 

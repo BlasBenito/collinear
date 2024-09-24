@@ -104,40 +104,6 @@
 #' )
 #'
 #'
-#' #rnorm
-#' #-----
-#'
-#' #without sd multiplier
-#' df <- target_encoding_rnorm(
-#'   df = vi,
-#'   response = "vi_mean",
-#'   predictor = "soil_type",
-#'   replace = TRUE
-#' )
-#'
-#' plot(
-#'   x = df$soil_type,
-#'   y = df$vi_mean,
-#'   xlab = "encoded variable",
-#'   ylab = "response"
-#' )
-#'
-#' #with sd multiplier
-#' df <- target_encoding_rnorm(
-#'   df = vi,
-#'   response = "vi_mean",
-#'   predictor = "soil_type",
-#'   rnorm_sd_multiplier = 0.1,
-#'   replace = TRUE
-#' )
-#'
-#' plot(
-#'   x = df$soil_type,
-#'   y = df$vi_mean,
-#'   xlab = "encoded variable",
-#'   ylab = "response"
-#' )
-#'
 #'
 #' @export
 #' @autoglobal
@@ -251,96 +217,6 @@ target_encoding_mean <- function(
 #' @rdname target_encoding_methods
 #' @autoglobal
 #' @export
-target_encoding_rnorm <- function(
-    df,
-    response,
-    predictor,
-    rnorm_sd_multiplier = 1,
-    seed = 1,
-    replace = FALSE,
-    verbose = TRUE
-){
-
-  if(length(rnorm_sd_multiplier) > 1){
-    rnorm_sd_multiplier <- rnorm_sd_multiplier[1]
-  }
-
-
-  if(rnorm_sd_multiplier == 0){
-    rnorm_sd_multiplier <- 0.01
-    name.multiplier <- ""
-  } else {
-    name.multiplier <- paste0("__sd_multiplier_", rnorm_sd_multiplier)
-  }
-
-  encoded.variable.name <- paste0(
-    predictor,
-    "__encoded_rnorm",
-    name.multiplier
-  )
-
-  set.seed(seed)
-
-  #target encoding
-  df <- df |>
-    dplyr::group_by_at(predictor) |>
-    dplyr::mutate(
-      encoded = stats::rnorm(
-        n = dplyr::n(),
-        mean = mean(
-          get(response),
-          na.rm = TRUE
-        ),
-        sd = stats::sd(
-          get(response),
-          na.rm = TRUE
-        ) * rnorm_sd_multiplier
-      )
-    ) |>
-    dplyr::ungroup() |>
-    suppressWarnings()
-
-  #fill NAs produced in groups with one row
-  df <- df |>
-    dplyr::rowwise() |>
-    dplyr::mutate(
-      encoded = ifelse(
-        test = is.na(encoded),
-        yes = stats::rnorm(
-          n = 1,
-          mean = get(response),
-          sd = get(response)/10
-        ),
-        no = encoded
-      )
-    ) |>
-    dplyr::ungroup()
-
-  #rename encoded column
-  names(df)[names(df) == "encoded"] <- encoded.variable.name
-
-  if(verbose == TRUE && replace == FALSE){
-    message(
-      "New encoded predictor: '",
-      encoded.variable.name,
-      "'"
-    )
-  }
-
-  #replacing original variable with encoded version
-  if(replace == TRUE){
-    df[[predictor]] <- NULL
-    colnames(df)[colnames(df) == encoded.variable.name] <- predictor
-  }
-
-  df
-
-}
-
-
-#' @rdname target_encoding_methods
-#' @autoglobal
-#' @export
 target_encoding_rank <- function(
     df,
     response,
@@ -383,12 +259,24 @@ target_encoding_rank <- function(
   )
   names(df.map) <- c(predictor, encoded.variable.name)
 
+  #column order for merged df
+  df.cols <- unique(
+    c(
+      colnames(df),
+      colnames(df.map)
+    )
+  )
+
   #merge
-  df <- dplyr::inner_join(
+  df <- merge(
     x = df,
     y = df.map,
-    by = predictor
+    by = predictor,
+    sort = FALSE
   )
+
+  #reorder columns
+  df <- df[, df.cols]
 
   #add white_noise if any
   df <- add_white_noise(
@@ -447,23 +335,44 @@ target_encoding_loo <- function(
     name.noise
   )
 
+  #order data by predictor levels
+  #to facilitate next block
+  df <- df[order(df[[predictor]]), ]
+
   #leave one out
   #by group
   #sum all cases of the response
   #subtract the value of the current row
   #divide by n-1
-  df <- df |>
-    dplyr::group_by_at(predictor) |>
-    dplyr::mutate(
-      encoded =
-        (sum(get(response), na.rm = TRUE) - get(response)) /
-        (dplyr::n() - 1),
-    ) |>
-    dplyr::ungroup()
+  df$encoded <- unlist(
+    lapply(
+      X = split(
+        x = df,
+        f = df[[predictor]]
+      ),
+      FUN = function(x) {
+
+        (
+          sum(
+            x = x[[response]],
+            na.rm = TRUE
+            ) - x[[response]]
+          ) / (nrow(x) - 1)
+
+      }
+    )
+  )
 
   #fill groups with NaN or NA with the global mean
-  df[is.na(df$encoded), "encoded"] <- mean(df[[response]], na.rm = TRUE)
-  df[is.nan(df$encoded), "encoded"] <- mean(df[[response]], na.rm = TRUE)
+  df[is.na(df$encoded), "encoded"] <- mean(
+    x = df[[response]],
+    na.rm = TRUE
+  )
+
+  df[is.nan(df$encoded), "encoded"] <- mean(
+    x = df[[response]],
+    na.rm = TRUE
+  )
 
   #rename encoded column
   names(df)[names(df) == "encoded"] <- encoded.variable.name
@@ -567,8 +476,6 @@ add_white_noise <- function(
     new_min = min.white_noise,
     new_max = max.white_noise
   )
-
-
 
   #add white_noise to the given variable
   df[[predictor]] <- df[[predictor]] + noise

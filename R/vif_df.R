@@ -73,20 +73,20 @@ vif_df <- function(
       tolerance = .Machine$double.eps
     }
 
+    #compute VIF
     df <- m |>
       solve(tol = tolerance) |>
       diag() |>
-      data.frame(stringsAsFactors = FALSE) |>
-      dplyr::rename(vif = 1) |>
-      dplyr::transmute(
-        variable = colnames(m),
-        vif = round(abs(vif), 3)
-      ) |>
-      dplyr::arrange(vif)
+      data.frame(stringsAsFactors = FALSE)
 
+    #format data frame
+    colnames(df) <- "vif"
+    df$vif <- round(abs(df$vif), 3)
+    df$variable <- colnames(m)
     rownames(df) <- NULL
 
-    df
+    #arrange by VIF
+    df[order(df$vif), c("variable", "vif")]
 
   }
 
@@ -136,14 +136,14 @@ vif_df <- function(
   )
 
   #compute correlation matrix
-  cor.matrix <- stats::cor(
+  m <- stats::cor(
     x = df[, predictors.numeric, drop = FALSE],
     use = "complete.obs"
   )
 
   #first try
   vif.df <- tryCatch(
-    {vif_f(m = cor.matrix)},
+    {vif_f(m = m)},
     error = function(e) {
       return(NA)
     }
@@ -157,8 +157,8 @@ vif_df <- function(
 
         #look for perfect correlations that break solve()
         #and replace them with 0.99 or -0.99
-        cor.matrix.range <- range(
-          cor.matrix[upper.tri(cor.matrix)]
+        m.range <- range(
+          m[upper.tri(m)]
           )
 
         #maximum and minimum correlation
@@ -166,17 +166,17 @@ vif_df <- function(
         min.cor <- -max.cor
 
         #replace values
-        if(max(cor.matrix.range) > max.cor){
-          cor.matrix[cor.matrix > max.cor] <- max.cor
-          diag(cor.matrix) <- 1
+        if(max(m.range) > max.cor){
+          m[m > max.cor] <- max.cor
+          diag(m) <- 1
         }
 
-        if(min(cor.matrix.range) < min.cor){
-          cor.matrix[cor.matrix < min.cor] <- min.cor
+        if(min(m.range) < min.cor){
+          m[m < min.cor] <- min.cor
         }
 
         #compute vif with the new matrix
-        vif_f(m = cor.matrix)
+        vif_f(m = m)
 
         },
       error = function(e) {
