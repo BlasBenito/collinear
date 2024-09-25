@@ -1,5 +1,11 @@
 # collinear 1.1.2
 
+Function f_rf_rsquared() not returns the R-squared of observations vs predictions instead of the out-of-bag R-squared, to make its results comparable with all other methods returning r-squared values.
+
+Removed the alias f_rf_deviance() which called f_rf_rsquared().
+
+Function f_gam_deviance() is now f_gam_gaussian_rsquared(), and it has no longer `k = 3` as default value for in the model formula.
+
 The functions cor_select(), vif_select() and vif_df() now skip the analysis if only one predictor is available. This may happen in collinear() with highly correlated datasets, when cor_select() only returns one predictor and sends it to vif_select().
 
 Streamlined cor_df(), and fixed a bug that prevented cor_numerics_and_characters() and cor_characters() to trigger properly.

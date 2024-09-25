@@ -236,13 +236,13 @@ f_rsquared <- function(x, y, df){
 
 }
 
-#' Explained Deviance From a GAM Model
+#' R-squared From a Univariate Gaussian GAM Model
 #'
-#' Computes the explained deviance of a response against a predictor via Generalized Additive Model (GAM). This option is slower than [f_rsquared()], but suitable when fitting GAMs with the results of a multicollinearity filtering.
+#' Computes the R-squared of a univariate Generalized Additive Model (GAM) fitted with the formula `formula = y ~ s(x)` and the family `stats::gaussian(link = "identity")`.
 #'
 #' @inheritParams f_rsquared
 #'
-#' @return numeric: explained deviance
+#' @return R-squared
 #' @examples
 #'
 #' data(vi)
@@ -258,7 +258,7 @@ f_rsquared <- function(x, y, df){
 #'    )
 #'  ){
 #'
-#'   f_gam_deviance(
+#'   f_gam_gaussian_rsquared(
 #'     x = "growing_season_length", #predictor
 #'     y = "vi_mean",               #response
 #'     df = vi
@@ -269,10 +269,10 @@ f_rsquared <- function(x, y, df){
 #' @autoglobal
 #' @family preference_order
 #' @export
-f_gam_deviance <- function(x, y, df){
+f_gam_gaussian_rsquared <- function(x, y, df){
 
   if(!requireNamespace("mgcv", quietly = TRUE)){
-    stop("The function 'f_gam_auc_unbalanced()' requires the package 'mgcv'.")
+    stop("The function 'f_gam_rsquared()' requires the package 'mgcv'.")
   }
 
   data <- data.frame(
@@ -282,86 +282,29 @@ f_gam_deviance <- function(x, y, df){
     na.omit()
 
   m <- mgcv::gam(
-    formula = y ~ s(x, k = 3),
-    data = data
-  )
-
-  summary(m)$dev.expl
-
-}
-
-
-#' R-squared of Random Forest model
-#'
-#' Computes a univariate random forest model with `\link[ranger]{ranger}` and returns the R-squared on the out-of-bag data.
-#'
-#' `f_rf_rsquared()` and `f_rf_deviance()` are synonyms
-#'
-#' @inheritParams f_rsquared
-#'
-#' @return numeric: R-squared
-#' @examples
-#'
-#' data(vi)
-#'
-#' #subset to limit example run time
-#' vi <- vi[1:1000, ]
-#'
-#' #this example requires "ranger" installed in the system
-#' if(
-#' requireNamespace(
-#'   package = "ranger",
-#'   quietly = TRUE
-#'   )
-#' ){
-#'
-#'   f_rf_rsquared(
-#'     x = "growing_season_length", #predictor
-#'     y = "vi_mean",               #response
-#'     df = vi
-#'   )
-#'
-#' }
-#'
-#' @autoglobal
-#' @family preference_order
-#' @export
-f_rf_rsquared <- function(x, y, df){
-
-  if(!requireNamespace("ranger", quietly = TRUE)){
-    stop("The function 'f_rf_rsquared()' requires the package 'ranger'.")
-  }
-
-  data <- data.frame(
-    y = df[[y]],
-    x = df[[x]]
-  ) |>
-    na.omit()
-
-  m <- ranger::ranger(
-    formula = y ~ x,
+    formula = y ~ s(x),
     data = data,
-    num.threads = 1,
-    min.node.size = ceiling(nrow(data)/100),
-    seed = 1
+    family = stats::gaussian(link = "identity")
   )
 
-  m$r.squared
+  stats::cor(
+    x = data$y,
+    y = stats::predict(
+      object = m,
+      type = "response"
+      )
+  )^2
 
 }
 
-#' @rdname f_rf_rsquared
-#' @export
-f_rf_deviance <- f_rf_rsquared
 
-
-#' AUC of Random Forest Model for Unbalanced Binary Responses
+#' R-squared From a Univariate Poisson GAM Model
 #'
-#' Computes a univariate random forest model with weighted cases via `\link[ranger]{ranger}` and returns the Area Under the Curve on the out-of-bag data.
+#' Computes the R-squared of a univariate Generalized Additive Model (GAM) fitted with the formula `formula = y ~ s(x)` and the family `stats::poisson(link = "log")`.
 #'
 #' @inheritParams f_rsquared
 #'
-#' @return numeric: area under the curve
+#' @return R-squared
 #' @examples
 #'
 #' data(vi)
@@ -369,17 +312,20 @@ f_rf_deviance <- f_rf_rsquared
 #' #subset to limit example run time
 #' vi <- vi[1:1000, ]
 #'
-#' #this example requires "ranger" installed in the system
+#' #this example requires "mgcv" installed in the system
 #' if(
 #'   requireNamespace(
-#'     package = "ranger",
-#'     quietly = TRUE
-#'     )
-#'   ){
+#'     package = "mgcv",
+#'    quietly = TRUE
+#'    )
+#'  ){
 #'
-#'   f_rf_auc_unbalanced(
+#'  #simulate counts in vi$vi_mean
+#'  vi$vi_mean_count <- as.integer(vi$vi_mean * 1000)
+#'
+#'   f_gam_poisson_rsquared(
 #'     x = "growing_season_length", #predictor
-#'     y = "vi_binary",               #response
+#'     y = "vi_mean_count",         #response
 #'     df = vi
 #'   )
 #'
@@ -388,14 +334,10 @@ f_rf_deviance <- f_rf_rsquared
 #' @autoglobal
 #' @family preference_order
 #' @export
-f_rf_auc_unbalanced <- function(x, y, df){
+f_gam_poisson_rsquared <- function(x, y, df){
 
-  if(!requireNamespace("ranger", quietly = TRUE)){
-    stop("The function 'f_rf_auc_unbalanced()' requires the package 'ranger'.")
-  }
-
-  if(all(sort(unique(df[[y]])) == c(0, 1)) == FALSE){
-    stop("Argument 'response' must be the name of a binary vector with unique values 0 and 1.")
+  if(!requireNamespace("mgcv", quietly = TRUE)){
+    stop("The function 'f_gam_rsquared()' requires the package 'mgcv'.")
   }
 
   data <- data.frame(
@@ -404,186 +346,22 @@ f_rf_auc_unbalanced <- function(x, y, df){
   ) |>
     na.omit()
 
-  m <- ranger::ranger(
-    formula = y ~ x,
+  m <- mgcv::gam(
+    formula = y ~ s(x),
     data = data,
-    num.threads = 1,
-    min.node.size = ceiling(nrow(data)/100),
-    case.weights = case_weights(x = data$y),
-    seed = 1
-  )
-
-  auc_score(
-    observed = data$y,
-    predicted = m$predictions
-  )
-
-}
-
-
-
-#' AUC of Random Forest Model for Balanced Binary Responses
-#'
-#' Computes a univariate random forest model via [ranger::ranger()] and returns the Area Under the Curve on the out-of-bag data.
-#'
-#' @inheritParams f_rsquared
-#'
-#' @return numeric: area under the curve
-#' @examples
-#'
-#' data(vi)
-#'
-#' #subset to limit example run time
-#' vi <- vi[1:1000, ]
-#'
-#' #this example requires "ranger" installed in the system
-#' if(requireNamespace(package = "ranger", quietly = TRUE)){
-#'
-#'   f_rf_auc_balanced(
-#'     x = "growing_season_length", #predictor
-#'     y = "vi_binary",               #response
-#'     df = vi
-#'   )
-#'
-#' }
-#'
-#' @autoglobal
-#' @family preference_order
-#' @export
-f_rf_auc_balanced <- function(x, y, df){
-
-  if(!requireNamespace("ranger", quietly = TRUE)){
-    stop("The function 'f_rf_auc_balanced()' requires the package 'ranger'")
-  }
-
-  if(all(sort(unique(df[[y]])) == c(0, 1)) == FALSE){
-    stop("Argument 'response' must be the name of a binary vector with unique values 0 and 1.")
-  }
-
-  data <- data.frame(
-    y = df[[y]],
-    x = df[[x]]
-  ) |>
-    na.omit()
-
-  m <- ranger::ranger(
-    formula = y ~ x,
-    data = data,
-    num.threads = 1,
-    min.node.size = ceiling(nrow(data)/100),
-    seed = 1
-  )
-
-  auc_score(
-    observed = data$y,
-    predicted = m$predictions
-  )
-
-}
-
-
-#' AUC of Binomial GLM with Logit Link for Balance Binary Responses
-#'
-#' Fits a logistic GLM model `y ~ x` when `y` is a binary response with values 0 and 1 and `x` is numeric. This function is suitable when the response variable is balanced. If the response is unbalanced, then [f_logistic_auc_unbalanced()] should provide better results.
-#'
-#'
-#' @inheritParams f_rsquared
-#'
-#' @return numeric: area under the curve
-#' @examples
-#'
-#' data(vi)
-#'
-#' #subset to limit example run time
-#' vi <- vi[1:1000, ]
-#'
-#' f_logistic_auc_balanced(
-#'   x = "growing_season_length", #predictor
-#'   y = "vi_binary",             #binary response
-#'   df = vi
-#' )
-#'
-#' @autoglobal
-#' @family preference_order
-#' @export
-f_logistic_auc_balanced <- function(x, y, df){
-
-  if(all(sort(unique(df[[y]])) == c(0, 1)) == FALSE){
-    stop("Argument 'response' must be the name of a binary vector with unique values 0 and 1.")
-  }
-
-  data <- data.frame(
-    y = df[[y]],
-    x = df[[x]]
-  ) |>
-    na.omit()
-
-  m <- stats::glm(
-    formula = y ~ x,
-    data = data,
-    family = stats::binomial(link = "logit")
+    family = stats::poisson(link = "log")
   ) |>
     suppressWarnings()
 
-  auc_score(
-    observed = data$y,
-    predicted = stats::predict(m, type = "response")
-  )
+  stats::cor(
+    x = data$y,
+    y = stats::predict(
+      object = m,
+      type = "response"
+      )
+  )^2
 
 }
-
-
-#' AUC of Binomial GLM with Logit Link for Unbalanced Binary Responses
-#'
-#' Fits a quasi-binomial GLM model `y ~ x` with case weights when `y` is an unbalanced binary response with values 0 and 1 and `x` is numeric. It uses the function [case_weights()] to weight 0s and 1s according to their frequency within `y`.
-#'
-#'
-#' @inheritParams f_rsquared
-#'
-#' @return numeric: area under the curve
-#' @examples
-#'
-#' data(vi)
-#'
-#' #subset to limit example run time
-#' vi <- vi[1:1000, ]
-#'
-#' f_logistic_auc_unbalanced(
-#'   x = "growing_season_length", #predictor
-#'   y = "vi_binary",             #binary response
-#'   df = vi
-#' )
-#'
-#' @autoglobal
-#' @family preference_order
-#' @export
-f_logistic_auc_unbalanced <- function(x, y, df){
-
-  if(all(sort(unique(df[[y]])) == c(0, 1)) == FALSE){
-    stop("Argument 'response' must be the name of a binary vector with unique values 0 and 1.")
-  }
-
-  data <- data.frame(
-    y = df[[y]],
-    x = df[[x]]
-  ) |>
-    na.omit()
-
-  m <- stats::glm(
-    formula = y ~ x,
-    data = data,
-    family = stats::quasibinomial(link = "logit"),
-    weights = case_weights(x = data$y)
-  ) |>
-    suppressWarnings()
-
-  auc_score(
-    observed = data$y,
-    predicted = stats::predict(m, type = "response")
-  )
-
-}
-
 
 #' AUC of Logistic GAM Model for Balanced Binary Responses
 #'
@@ -619,10 +397,10 @@ f_logistic_auc_unbalanced <- function(x, y, df){
 #' @autoglobal
 #' @family preference_order
 #' @export
-f_gam_auc_balanced <- function(x, y, df){
+f_gam_binomial_balanced_auc <- function(x, y, df){
 
   if(!requireNamespace("mgcv", quietly = TRUE)){
-    stop("the function 'f_gam_auc_balanced()' requires the package 'mgcv'.")
+    stop("The function 'f_gam_auc_balanced()' requires the package 'mgcv'.")
   }
 
   if(all(sort(unique(df[[y]])) == c(0, 1)) == FALSE){
@@ -683,10 +461,10 @@ f_gam_auc_balanced <- function(x, y, df){
 #' @autoglobal
 #' @family preference_order
 #' @export
-f_gam_auc_unbalanced <- function(x, y, df){
+f_gam_binomial_unbalanced_auc <- function(x, y, df){
 
   if(!requireNamespace("mgcv", quietly = TRUE)){
-    stop("the function 'f_gam_auc_unbalanced()' requires the package 'mgcv'.")
+    stop("The function 'f_gam_auc_unbalanced()' requires the package 'mgcv'.")
   }
 
   if(all(sort(unique(df[[y]])) == c(0, 1)) == FALSE){
@@ -700,7 +478,7 @@ f_gam_auc_unbalanced <- function(x, y, df){
     na.omit()
 
   m <- mgcv::gam(
-    formula = y ~ s(x, k = 3),
+    formula = y ~ s(x),
     data = data,
     family = stats::quasibinomial(link = "logit"),
     weights = case_weights(x = data$y)
@@ -708,10 +486,372 @@ f_gam_auc_unbalanced <- function(x, y, df){
 
   auc_score(
     observed = data$y,
-    predicted = stats::predict(m, type = "response")
+    predicted = stats::predict(
+      object = m,
+      type = "response"
+    )
   )
 
 }
+
+
+#' R-squared of Random Forest model
+#'
+#' Computes a univariate random forest model with `\link[ranger]{ranger}` and returns the R-squared on the out-of-bag data.
+#'
+#'
+#' @inheritParams f_rsquared
+#'
+#' @return numeric: R-squared
+#' @examples
+#'
+#' data(vi)
+#'
+#' #subset to limit example run time
+#' vi <- vi[1:1000, ]
+#'
+#' #this example requires "ranger" installed in the system
+#' if(
+#' requireNamespace(
+#'   package = "ranger",
+#'   quietly = TRUE
+#'   )
+#' ){
+#'
+#'   f_rf_rsquared(
+#'     x = "growing_season_length", #predictor
+#'     y = "vi_mean",               #response
+#'     df = vi
+#'   )
+#'
+#' }
+#'
+#' @autoglobal
+#' @family preference_order
+#' @export
+f_rf_rsquared <- function(x, y, df){
+
+  if(!requireNamespace("ranger", quietly = TRUE)){
+    stop("The function 'f_rf_rsquared()' requires the package 'ranger'.")
+  }
+
+  data <- data.frame(
+    y = df[[y]],
+    x = df[[x]]
+  ) |>
+    na.omit()
+
+  m <- ranger::ranger(
+    formula = y ~ x,
+    data = data,
+    num.threads = 1,
+    min.node.size = ceiling(nrow(data)/100),
+    seed = 1
+  )
+
+  stats::cor(
+    x = data$y,
+    y = stats::predict(
+      object = m,
+      data = data
+    )$predictions
+  )^2
+
+}
+
+
+#' AUC of Random Forest Model for Unbalanced Binary Responses
+#'
+#' Computes a univariate random forest model with weighted cases via `\link[ranger]{ranger}` and returns the Area Under the Curve on the out-of-bag data.
+#'
+#' @inheritParams f_rsquared
+#'
+#' @return numeric: area under the curve
+#' @examples
+#'
+#' data(vi)
+#'
+#' #subset to limit example run time
+#' vi <- vi[1:1000, ]
+#'
+#' #this example requires "ranger" installed in the system
+#' if(
+#'   requireNamespace(
+#'     package = "ranger",
+#'     quietly = TRUE
+#'     )
+#'   ){
+#'
+#'   f_rf_auc_unbalanced(
+#'     x = "growing_season_length", #predictor
+#'     y = "vi_binary",               #response
+#'     df = vi
+#'   )
+#'
+#' }
+#'
+#' @autoglobal
+#' @family preference_order
+#' @export
+f_rf_binomial_unbalanced_auc <- function(x, y, df){
+
+  if(!requireNamespace("ranger", quietly = TRUE)){
+    stop("The function 'f_rf_auc_unbalanced()' requires the package 'ranger'.")
+  }
+
+  if(all(sort(unique(df[[y]])) == c(0, 1)) == FALSE){
+    stop("Argument 'response' must be the name of a binary vector with unique values 0 and 1.")
+  }
+
+  data <- data.frame(
+    y = df[[y]],
+    x = df[[x]]
+  ) |>
+    na.omit()
+
+  m <- ranger::ranger(
+    formula = y ~ x,
+    data = data,
+    num.threads = 1,
+    min.node.size = ceiling(nrow(data)/100),
+    case.weights = case_weights(x = data$y),
+    seed = 1
+  )
+
+  auc_score(
+    observed = data$y,
+    predicted = stats::predict(
+      object = m,
+      data = data
+    )$predictions
+  )
+
+}
+
+
+
+#' AUC of Random Forest Model for Balanced Binary Responses
+#'
+#' Computes a univariate random forest model via [ranger::ranger()] and returns the Area Under the Curve on the out-of-bag data.
+#'
+#' @inheritParams f_rsquared
+#'
+#' @return numeric: area under the curve
+#' @examples
+#'
+#' data(vi)
+#'
+#' #subset to limit example run time
+#' vi <- vi[1:1000, ]
+#'
+#' #this example requires "ranger" installed in the system
+#' if(requireNamespace(package = "ranger", quietly = TRUE)){
+#'
+#'   f_rf_auc_balanced(
+#'     x = "growing_season_length", #predictor
+#'     y = "vi_binary",               #response
+#'     df = vi
+#'   )
+#'
+#' }
+#'
+#' @autoglobal
+#' @family preference_order
+#' @export
+f_rf_binomial_balanced_auc <- function(x, y, df){
+
+  if(!requireNamespace("ranger", quietly = TRUE)){
+    stop("The function 'f_rf_auc_balanced()' requires the package 'ranger'")
+  }
+
+  if(all(sort(unique(df[[y]])) == c(0, 1)) == FALSE){
+    stop("Argument 'response' must be the name of a binary vector with unique values 0 and 1.")
+  }
+
+  data <- data.frame(
+    y = df[[y]],
+    x = df[[x]]
+  ) |>
+    na.omit()
+
+  m <- ranger::ranger(
+    formula = y ~ x,
+    data = data,
+    num.threads = 1,
+    min.node.size = ceiling(nrow(data)/100),
+    seed = 1
+  )
+
+  auc_score(
+    observed = data$y,
+    predicted = stats::predict(
+      object = m,
+      data = data
+    )$predictions
+  )
+
+}
+
+
+#' R-squared of a Univariate Second-Degree Polynomial GLM
+#'
+#' Fits a GLM model `y ~ stats::poly(x, degree = 2, raw = TRUE)` with family `stats::gaussian(link = "identity")` and returns its R-squared.
+#'
+#'
+#' @inheritParams f_rsquared
+#'
+#' @return numeric: area under the curve
+#' @examples
+#'
+#' data(vi)
+#'
+#' #subset to limit example run time
+#' vi <- vi[1:1000, ]
+#'
+#' f_logistic_auc_balanced(
+#'   x = "growing_season_length", #predictor
+#'   y = "vi_binary",             #binary response
+#'   df = vi
+#' )
+#'
+#' @autoglobal
+#' @family preference_order
+#' @export
+f_glm_gaussian_poly2_rsquared <- function(x, y, df){
+
+  data <- data.frame(
+    y = df[[y]],
+    x = df[[x]]
+  ) |>
+    na.omit()
+
+  m <- stats::glm(
+    formula = y ~ stats::poly(x, degree = 2, raw = TRUE),
+    data = data,
+    family = stats::gaussian(link = "identity")
+  ) |>
+    suppressWarnings()
+
+  stats::cor(
+    x = data$y,
+    y = stats::predict(
+      object = m,
+      type = "response"
+    )
+  )^2
+
+}
+
+#' AUC of Binomial GLM with Logit Link for Balance Binary Responses
+#'
+#' Fits a logistic GLM model `y ~ x` when `y` is a binary response with values 0 and 1 and `x` is numeric. This function is suitable when the response variable is balanced. If the response is unbalanced, then [f_logistic_auc_unbalanced()] should provide better results.
+#'
+#'
+#' @inheritParams f_rsquared
+#'
+#' @return numeric: area under the curve
+#' @examples
+#'
+#' data(vi)
+#'
+#' #subset to limit example run time
+#' vi <- vi[1:1000, ]
+#'
+#' f_logistic_auc_balanced(
+#'   x = "growing_season_length", #predictor
+#'   y = "vi_binary",             #binary response
+#'   df = vi
+#' )
+#'
+#' @autoglobal
+#' @family preference_order
+#' @export
+f_glm_binomial_balanced_auc <- function(x, y, df){
+
+  if(all(sort(unique(df[[y]])) == c(0, 1)) == FALSE){
+    stop("Argument 'response' must be the name of a binary vector with unique values 0 and 1.")
+  }
+
+  data <- data.frame(
+    y = df[[y]],
+    x = df[[x]]
+  ) |>
+    na.omit()
+
+  m <- stats::glm(
+    formula = y ~ x,
+    data = data,
+    family = stats::binomial(link = "logit")
+  ) |>
+    suppressWarnings()
+
+  auc_score(
+    observed = data$y,
+    predicted = stats::predict(
+      object = m,
+      type = "response"
+      )
+  )
+
+}
+
+
+#' AUC of Binomial GLM with Logit Link for Unbalanced Binary Responses
+#'
+#' Fits a quasi-binomial GLM model `y ~ x` with case weights when `y` is an unbalanced binary response with values 0 and 1 and `x` is numeric. It uses the function [case_weights()] to weight 0s and 1s according to their frequency within `y`.
+#'
+#'
+#' @inheritParams f_rsquared
+#'
+#' @return numeric: area under the curve
+#' @examples
+#'
+#' data(vi)
+#'
+#' #subset to limit example run time
+#' vi <- vi[1:1000, ]
+#'
+#' f_logistic_auc_unbalanced(
+#'   x = "growing_season_length", #predictor
+#'   y = "vi_binary",             #binary response
+#'   df = vi
+#' )
+#'
+#' @autoglobal
+#' @family preference_order
+#' @export
+f_glm_binomial_unbalanced_auc <- function(x, y, df){
+
+  if(all(sort(unique(df[[y]])) == c(0, 1)) == FALSE){
+    stop("Argument 'response' must be the name of a binary vector with unique values 0 and 1.")
+  }
+
+  data <- data.frame(
+    y = df[[y]],
+    x = df[[x]]
+  ) |>
+    na.omit()
+
+  m <- stats::glm(
+    formula = y ~ x,
+    data = data,
+    family = stats::quasibinomial(link = "logit"),
+    weights = case_weights(x = data$y)
+  ) |>
+    suppressWarnings()
+
+  auc_score(
+    observed = data$y,
+    predicted = stats::predict(
+      object = m,
+      type = "response"
+      )
+  )
+
+}
+
+
+
 
 
 #' @title Area Under the Receiver Operating Characteristic
