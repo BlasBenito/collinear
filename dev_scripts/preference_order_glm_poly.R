@@ -1,8 +1,93 @@
 data(vi)
 
-x = "soil_nitrogen"
-y = "vi_mean"
+x = "vi_binary"
+y = "vi_binary"
 df = vi
+
+
+f_auc <- function(x, y, df){
+
+  data <- data.frame(
+    y = df[[y]],
+    x = df[[x]]
+  ) |>
+    na.omit()
+
+  auc_score(
+    observed = data$y,
+    predicted = data$x
+  )
+
+}
+
+f_cramer_v <- function(x, y, df){
+
+  data <- data.frame(
+    y = df[[y]],
+    x = df[[x]]
+  ) |>
+    na.omit()
+
+  if(
+    any(
+      sapply(
+        X = data,
+        FUN = is.numeric
+        )
+      )
+  ){
+    stop("f_cramer_v: arguments 'x' and 'y' must be names of character or factor columns in 'df'.")
+  }
+
+  cramer_v(
+    x = data$x,
+    y = data$y,
+    check_input = FALSE
+  )
+
+}
+
+
+f_rpart_binomial_unbalanced_auc(x, y, df)
+
+f_rpart_binomial_unbalanced_auc <- function(x, y, df){
+
+  if(!requireNamespace("rpart", quietly = TRUE)){
+    stop("The function 'f_rpart_rsquared()' requires the package 'rpart'.")
+  }
+
+  data <- data.frame(
+    y = df[[y]],
+    x = df[[x]]
+  ) |>
+    na.omit()
+
+  if(all(sort(unique(data$y)) == c(0, 1)) == FALSE){
+    stop("Argument 'response' must be the name of a binary vector with unique values 0 and 1.")
+  }
+
+  m <- rpart::rpart(
+    formula = y ~ x,
+    data = data,
+    weights = case_weights(x = data$y),
+    control = rpart::rpart.control(
+      minbucket = ceiling(
+        nrow(data)/100
+        )
+    )
+  )
+
+  auc_score(
+    observed = data$y,
+    predicted = stats::predict(
+      object = m,
+      type = "vector"
+    )
+  )
+
+}
+
+
 
 f_glm_gaussian_poly2 <- function(x, y, df){
 
