@@ -21,6 +21,7 @@ preference_order(
 
 \item{f}{(optional: function) Function returning a numeric value representing the relationship between a given predictor in \code{predictors} and \code{response}. The available options are:
 \itemize{
+TODO: update this list
 \item \code{\link[=f_rsquared]{f_rsquared()}} (default)
 \item \code{\link[=f_gam_deviance]{f_gam_deviance()}}
 \item \code{\link[=f_rf_rsquared]{f_rf_rsquared()}}
@@ -130,17 +131,17 @@ future::plan(future::sequential)
 }
 \seealso{
 Other preference_order: 
-\code{\link{auc_score}()},
+\code{\link{auc}()},
 \code{\link{case_weights}()},
-\code{\link{f_gam_auc_balanced}()},
-\code{\link{f_gam_auc_unbalanced}()},
-\code{\link{f_gam_deviance}()},
-\code{\link{f_logistic_auc_balanced}()},
-\code{\link{f_logistic_auc_unbalanced}()},
-\code{\link{f_rf_auc_balanced}()},
-\code{\link{f_rf_auc_unbalanced}()},
-\code{\link{f_rf_rsquared}()},
-\code{\link{f_rsquared}()}
+\code{\link{f_cramer_v}()},
+\code{\link{f_gam_binomial_balanced_auc}()},
+\code{\link{f_gam_binomial_unbalanced_auc}()},
+\code{\link{f_gam_poisson_rsquared}()},
+\code{\link{f_glm_binomial_balanced_auc}()},
+\code{\link{f_glm_binomial_unbalanced_auc}()},
+\code{\link{f_r2_pearson}()},
+\code{\link{f_rf_binomial_balanced_auc}()},
+\code{\link{f_rf_binomial_unbalanced_auc}()}
 }
 \author{
 Blas M. Benito, PhD

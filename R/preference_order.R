@@ -180,11 +180,13 @@ preference_order <- function(
 
       p()
 
-      f(
-        x = x,
-        y = response,
-        df = df
-      )
+      df.x <- data.frame(
+        y = df[[response]],
+        x = df[[x]]
+      ) |>
+        na.omit()
+
+      f(df = df.x)
 
     }
   ) |>

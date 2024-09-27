@@ -1,39 +1,60 @@
-data(vi)
+#' #load example data
+#' data(vi)
+#'
+#' #reduce size to speed-up example
+#' vi <- vi[1:1000, ]
+#'
+#' #numeric response and predictor
+#' #to data frame without NAs
+#' df <- data.frame(
+#'   y = vi[["vi_mean"]],
+#'   x = vi[["swi_max"]]
+#' ) |>
+#'   na.omit()
+#'
+#' # Continuous response
+#'
+#' #Pearson R-squared
+#' f_r2_pearson(df = df)
+#'
+#' #Spearman R-squared
+#' f_r2_spearman(df = df)
+#'
+#' #R-squared of a gaussian gam
+#' f_r2_gam_gaussian(df = df)
+#'
+#' #gaussian glm with second-degree polynomials
+#' f_r2_glm_gaussian_poly2(df = df)
+#'
+#' #recursive partition tree
+#' f_r2_rpart(df = df)
+#'
+#' #random forest model
+#' f_r2_rf(df = df)
+#'
+#' #Count response
+#'
+#' #simulating counts in df
+#' df$y <- as.integer(df$y * 1000)
+#'
+#' #GLM model with second degree polynomials an Poisson family
+#' f_r2_glm_poisson_poly2(df = df)
+#'
+#' #GAM model with Poisson family
+#' f_r2_gam_poisson(df = df)
+#'
+#' #tree models manage counts without issues too
+#' f_r2_rpart(df = df)
+#' f_r2_rf(df = df)
+#'
 
-x = "vi_mean"
-y = "swi_max"
-df = vi
 
-df <- data.frame(
-  y = df[[y]],
-  x = df[[x]]
-) |>
+
+
+
+
+
   na.omit()
-
-library(microbenchmark)
-
-
-
-
-
-f_auc <- function(x, y, df){
-
-
-
-  auc_score(
-    observed = data$y,
-    predicted = data$x
-  )
-
-}
-
-f_cramer_v <- function(x, y, df){
-
-  data <- data.frame(
-    y = df[[y]],
-    x = df[[x]]
-  ) |>
-    na.omit()
 
   if(
     any(

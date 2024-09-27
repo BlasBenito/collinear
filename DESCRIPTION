@@ -18,9 +18,10 @@ RoxygenNote: 7.3.2
 Imports:
     progressr,
     future.apply,
-Suggests: 
-    ranger,
     mgcv,
+    rpart,
+    ranger
+Suggests: 
     future,
     testthat (>= 3.0.0),
     spelling
