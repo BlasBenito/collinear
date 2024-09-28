@@ -3,7 +3,7 @@
 \docType{data}
 \name{vi}
 \alias{vi}
-\title{30.000 records of responses and predictors all over the world}
+\title{Example Data With Different Response and Predictor Types}
 \format{
 Data frame with 30.000 rows and 68 columns.
 }
@@ -11,14 +11,25 @@ Data frame with 30.000 rows and 68 columns.
 data(vi)
 }
 \description{
-30.000 records of responses and predictors all over the world
+The response variable is a Vegetation Index encoded in different ways to help highlight the package capabilities:
+\itemize{
+\item \code{vi_numeric}: continuous vegetation index values in the range 0-1.
+\item \code{vi_counts}: simulated integer counts created by multiplying \code{vi_numeric} by 1000 and coercing the result to integer.
+\item \code{vi_binary}: simulated binomial variable created by transforming \code{vi_numeric} to zeros and ones.
+\item \code{vi_category}: character variable with the categories "very_low", "low", "medium", "high", and "very_high", with thresholds located at the quntiles ov \code{vi_numeric}.
+\item \code{vi_factor}: \code{vi_category} converted to factor.
+}
+
+The names of all predictors (continuous, integer, character, and factors) are in \link{vi_predictors}.
 }
 \seealso{
 \link{vi_predictors}
 
 Other example_data: 
 \code{\link{toy}},
-\code{\link{vi_predictors}}
+\code{\link{vi_predictors}},
+\code{\link{vi_predictors_category}},
+\code{\link{vi_predictors_numeric}}
 }
 \concept{example_data}
 \keyword{datasets}

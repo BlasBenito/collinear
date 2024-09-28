@@ -35,7 +35,9 @@ a       16.161
 \seealso{
 Other example_data: 
 \code{\link{vi}},
-\code{\link{vi_predictors}}
+\code{\link{vi_predictors}},
+\code{\link{vi_predictors_category}},
+\code{\link{vi_predictors_numeric}}
 }
 \concept{example_data}
 \keyword{datasets}

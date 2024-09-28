@@ -7,7 +7,11 @@
 f_glm_binomial_unbalanced_auc(x, y, df)
 }
 \arguments{
-\item{df}{(required, data frame) data frame with the numeric column 'x' with a continuous predictor and a continuous (including integer counts) response.}
+\item{df}{(required, data frame) with columns:
+\itemize{
+\item "x": (numeric) continuous predictor.
+\item "y" (numeric) continous response.
+}}
 }
 \value{
 numeric: area under the curve
@@ -36,9 +40,9 @@ Other preference_order:
 \code{\link{f_cramer_v}()},
 \code{\link{f_gam_binomial_balanced_auc}()},
 \code{\link{f_gam_binomial_unbalanced_auc}()},
-\code{\link{f_gam_poisson_rsquared}()},
 \code{\link{f_glm_binomial_balanced_auc}()},
-\code{\link{f_r2_pearson}()},
+\code{\link{f_r2_continuous}},
+\code{\link{f_r2_counts}},
 \code{\link{f_rf_binomial_balanced_auc}()},
 \code{\link{f_rf_binomial_unbalanced_auc}()},
 \code{\link{preference_order}()}

@@ -1,4 +1,17 @@
-#' 30.000 records of responses and predictors all over the world
+#' Example Data With Different Response and Predictor Types
+#'
+#' @description
+#'
+#' The response variable is a Vegetation Index encoded in different ways to help highlight the package capabilities:
+#' \itemize{
+#'  \item `vi_numeric`: continuous vegetation index values in the range 0-1.
+#'  \item `vi_counts`: simulated integer counts created by multiplying `vi_numeric` by 1000 and coercing the result to integer.
+#'  \item `vi_binary`: simulated binomial variable created by transforming `vi_numeric` to zeros and ones.
+#'  \item `vi_category`: character variable with the categories "very_low", "low", "medium", "high", and "very_high", with thresholds located at the quntiles ov `vi_numeric`.
+#'  \item `vi_factor`: `vi_category` converted to factor.
+#' }
+#'
+#' The names of all predictors (continuous, integer, character, and factors) are in [vi_predictors].
 #'
 #' @usage data(vi)
 #' @seealso [vi_predictors]
@@ -7,7 +20,7 @@
 #' @family example_data
 "vi"
 
-#' Predictor names in data frame 'vi'
+#' All Predictor Names in Example Data Frame vi
 #'
 #' @usage data(vi_predictors)
 #' @seealso [vi]
@@ -15,6 +28,24 @@
 #' @format Character vector with predictor names.
 #' @family example_data
 "vi_predictors"
+
+#' All Numeric Predictor Names in Example Data Frame vi
+#'
+#' @usage data(vi_predictors_numeric)
+#' @seealso [vi]
+#'
+#' @format Character vector with predictor names.
+#' @family example_data
+"vi_predictors_numeric"
+
+#' All Categorical and Factor Predictor Names in Example Data Frame vi
+#'
+#' @usage data(vi_predictors_category)
+#' @seealso [vi]
+#'
+#' @format Character vector with predictor names.
+#' @family example_data
+"vi_predictors_category"
 
 
 #' One response and four predictors with varying levels of multicollinearity
