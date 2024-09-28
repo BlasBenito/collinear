@@ -133,15 +133,11 @@ future::plan(future::sequential)
 Other preference_order: 
 \code{\link{auc}()},
 \code{\link{case_weights}()},
-\code{\link{f_cramer_v}()},
-\code{\link{f_gam_binomial_balanced_auc}()},
-\code{\link{f_gam_binomial_unbalanced_auc}()},
-\code{\link{f_glm_binomial_balanced_auc}()},
-\code{\link{f_glm_binomial_unbalanced_auc}()},
-\code{\link{f_r2_continuous}},
-\code{\link{f_r2_counts}},
-\code{\link{f_rf_binomial_balanced_auc}()},
-\code{\link{f_rf_binomial_unbalanced_auc}()}
+\code{\link{f_auc}},
+\code{\link{f_cramerv}()},
+\code{\link{f_cramerv_rf_categorical}()},
+\code{\link{f_r2}},
+\code{\link{f_r2_counts}}
 }
 \author{
 Blas M. Benito, PhD

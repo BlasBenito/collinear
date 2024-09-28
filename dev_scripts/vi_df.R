@@ -3,6 +3,13 @@ library(dplyr)
 
 data(vi)
 
+vi <- vi |>
+  dplyr::rename(
+    vi_binomial = vi_binary
+  )
+
+usethis::use_data(vi, overwrite = TRUE)
+
 colnames(vi)
 
 vi$vi_factor <- as.factor(vi$vi_category)

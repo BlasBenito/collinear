@@ -59,62 +59,42 @@ f_r2_glm_poisson_poly2(df = df)
 
 #GAM model with Poisson family
 f_r2_gam_poisson(df = df)
-
-#tree models manage counts without issues too
-f_r2_rpart(df = df)
-f_r2_rf(df = df)
 }
 \seealso{
 Other preference_order: 
 \code{\link{auc}()},
 \code{\link{case_weights}()},
-\code{\link{f_cramer_v}()},
-\code{\link{f_gam_binomial_balanced_auc}()},
-\code{\link{f_gam_binomial_unbalanced_auc}()},
-\code{\link{f_glm_binomial_balanced_auc}()},
-\code{\link{f_glm_binomial_unbalanced_auc}()},
-\code{\link{f_r2_continuous}},
-\code{\link{f_rf_binomial_balanced_auc}()},
-\code{\link{f_rf_binomial_unbalanced_auc}()},
+\code{\link{f_auc}},
+\code{\link{f_cramerv}()},
+\code{\link{f_cramerv_rf_categorical}()},
+\code{\link{f_r2}},
 \code{\link{preference_order}()}
 
 Other preference_order: 
 \code{\link{auc}()},
 \code{\link{case_weights}()},
-\code{\link{f_cramer_v}()},
-\code{\link{f_gam_binomial_balanced_auc}()},
-\code{\link{f_gam_binomial_unbalanced_auc}()},
-\code{\link{f_glm_binomial_balanced_auc}()},
-\code{\link{f_glm_binomial_unbalanced_auc}()},
-\code{\link{f_r2_continuous}},
-\code{\link{f_rf_binomial_balanced_auc}()},
-\code{\link{f_rf_binomial_unbalanced_auc}()},
+\code{\link{f_auc}},
+\code{\link{f_cramerv}()},
+\code{\link{f_cramerv_rf_categorical}()},
+\code{\link{f_r2}},
 \code{\link{preference_order}()}
 
 Other preference_order: 
 \code{\link{auc}()},
 \code{\link{case_weights}()},
-\code{\link{f_cramer_v}()},
-\code{\link{f_gam_binomial_balanced_auc}()},
-\code{\link{f_gam_binomial_unbalanced_auc}()},
-\code{\link{f_glm_binomial_balanced_auc}()},
-\code{\link{f_glm_binomial_unbalanced_auc}()},
-\code{\link{f_r2_continuous}},
-\code{\link{f_rf_binomial_balanced_auc}()},
-\code{\link{f_rf_binomial_unbalanced_auc}()},
+\code{\link{f_auc}},
+\code{\link{f_cramerv}()},
+\code{\link{f_cramerv_rf_categorical}()},
+\code{\link{f_r2}},
 \code{\link{preference_order}()}
 
 Other preference_order: 
 \code{\link{auc}()},
 \code{\link{case_weights}()},
-\code{\link{f_cramer_v}()},
-\code{\link{f_gam_binomial_balanced_auc}()},
-\code{\link{f_gam_binomial_unbalanced_auc}()},
-\code{\link{f_glm_binomial_balanced_auc}()},
-\code{\link{f_glm_binomial_unbalanced_auc}()},
-\code{\link{f_r2_continuous}},
-\code{\link{f_rf_binomial_balanced_auc}()},
-\code{\link{f_rf_binomial_unbalanced_auc}()},
+\code{\link{f_auc}},
+\code{\link{f_cramerv}()},
+\code{\link{f_cramerv_rf_categorical}()},
+\code{\link{f_r2}},
 \code{\link{preference_order}()}
 }
 \concept{preference_order}

@@ -51,8 +51,8 @@ auc <- function(
 
   #curve computation
   curve <- sum(
-    rank(c(ones, zeros))[1:n.ones]
-    ) - (n.ones * (n.ones + 1) / 2)
+    rank(c(ones, zeros))[1:ones.n]
+    ) - (ones.n * (ones.n + 1) / 2)
 
   #area under the curve
   curve / (zeros.n * ones.n)
@@ -128,7 +128,7 @@ auc <- function(
 #' #random forest model
 #' f_r2_rf(df = df)
 #' @autoglobal
-#' @rdname f_r2_continuous
+#' @rdname f_r2
 #' @family preference_order
 #' @examples
 #'
@@ -169,11 +169,11 @@ auc <- function(
 #' #random forest model
 #' f_r2_rf(df = df)
 #'
-#' @name f_r2_continuous
+#' @name f_r2
 NULL
 
 #' @autoglobal
-#' @rdname f_r2_continuous
+#' @rdname f_r2
 #' @family preference_order
 #' @export
 f_r2_pearson <- function(df){
@@ -188,7 +188,7 @@ f_r2_pearson <- function(df){
 
 
 #' @autoglobal
-#' @rdname f_r2_continuous
+#' @rdname f_r2
 #' @family preference_order
 #' @export
 f_r2_spearman <- function(df){
@@ -202,7 +202,7 @@ f_r2_spearman <- function(df){
 }
 
 #' @autoglobal
-#' @rdname f_r2_continuous
+#' @rdname f_r2
 #' @family preference_order
 #' @export
 f_r2_glm_gaussian <- function(df){
@@ -229,7 +229,7 @@ f_r2_glm_gaussian <- function(df){
 
 
 #' @autoglobal
-#' @rdname f_r2_continuous
+#' @rdname f_r2
 #' @family preference_order
 #' @export
 f_r2_glm_gaussian_poly2 <- function(df){
@@ -260,7 +260,7 @@ f_r2_glm_gaussian_poly2 <- function(df){
 
 
 #' @autoglobal
-#' @rdname f_r2_continuous
+#' @rdname f_r2
 #' @family preference_order
 #' @export
 f_r2_gam_gaussian <- function(df){
@@ -285,7 +285,7 @@ f_r2_gam_gaussian <- function(df){
 
 
 #' @autoglobal
-#' @rdname f_r2_continuous
+#' @rdname f_r2
 #' @family preference_order
 #' @export
 f_r2_rpart <- function(df){
@@ -311,7 +311,7 @@ f_r2_rpart <- function(df){
 }
 
 #' @autoglobal
-#' @rdname f_r2_continuous
+#' @rdname f_r2
 #' @family preference_order
 #' @export
 f_r2_rf <- function(df){
@@ -385,10 +385,6 @@ f_r2_rf <- function(df){
 #'
 #' #GAM model with Poisson family
 #' f_r2_gam_poisson(df = df)
-#'
-#' #tree models manage counts without issues too
-#' f_r2_rpart(df = df)
-#' f_r2_rf(df = df)
 #' @name f_r2_counts
 NULL
 
@@ -473,516 +469,354 @@ f_r2_gam_poisson <- function(df){
 
 }
 
-#' Cramer's V Between Discrete Responses and Predictors
+#' Association Between a Binomial Response and a Continuous Predictor
 #'
 #' @description
-#' Please see [cramer_v()] for details.
+#' These functions take a data frame with a binomial response "y" with unique values 1 and 0, and a continuous predictor "x", fit a univariate model, to return the Area Under the ROC Curve (AUC) of observations versus predictions:
+#' \itemize{
 #'
+#'   \item `f_auc_glm_binomial()`: AUC of a binomial response against the predictions of a GLM model with formula `y ~ x`, family `stats::quasibinomial(link = "logit")`, and weighted cases (see [case_weights()]) to control for unbalanced data.
 #'
-#' @inheritParams f_r2_pearson
+#'   \item `f_auc_glm_binomial_poly2()`: AUC of a binomial response against the predictions of a GLM model with formula `y ~ stats::poly(x, degree = 2, raw = TRUE)`, family `stats::quasibinomial(link = "logit")`, and weighted cases (see [case_weights()]) to control for unbalanced data.
 #'
+#'   \item `f_auc_gam_binomial()`: AUC  of a GAM model with formula  `y ~ s(x)`, family `stats::quasibinomial(link = "logit")`, and weighted cases.
+#'
+#'   \item `f_auc_rpart()`: AUC of a Recursive Partition Tree with weighted cases.
+#'
+#'   \item `f_auc_rf()`: AUC of a Random Forest model with weighted cases.
+#' }
+#'
+#' @param df (required, data frame) with columns:
+#' \itemize{
+#'   \item "x": (numeric) continuous predictor.
+#'   \item "y" (integer) binomial response with unique values 0 and 1.
+#' }
+#' @family preference_order
+#' @examples
+#' #load example data
+#' data(vi)
+#'
+#' #reduce size to speed-up example
+#' vi <- vi[1:1000, ]
+#'
+#' #integer counts response and continuous predictor
+#' #to data frame without NAs
+#' df <- data.frame(
+#'   y = vi[["vi_binomial"]],
+#'   x = vi[["swi_max"]]
+#' ) |>
+#'   na.omit()
+#'
+#' #AUC of GLM with binomial response and weighted cases
+#' f_auc_glm_binomial(df = df)
+#'
+#' #AUC of GLM as above plus second degree polynomials
+#' f_auc_glm_binomial_poly2(df = df)
+#'
+#' #AUC of binomial GAM with weighted cases
+#' f_auc_gam_binomial(df = df)
+#'
+#' #AUC of recursive partition tree with weighted cases
+#' f_auc_rpart(df = df)
+#'
+#' #AUC of random forest with weighted cases
+#' f_auc_rf(df = df)
+#' @name f_auc
+NULL
+
+#' @autoglobal
+#' @rdname f_auc
+#' @family preference_order
+#' @export
+f_auc_glm_binomial <- function(df){
+
+  if(all(sort(unique(df[["y"]])) == c(0, 1)) == FALSE){
+    stop("Argument 'response' must be the name of a binary vector with unique values 0 and 1.")
+  }
+
+  p <- stats::glm(
+    formula = y ~ x,
+    data = df,
+    family = stats::quasibinomial(
+      link = "logit"
+      ),
+    weights = case_weights(
+      x = df[["y"]]
+      )
+  ) |>
+    stats::predict(
+      type = "response"
+    ) |>
+    suppressWarnings() |>
+    suppressMessages()
+
+  auc(
+    o = df[["y"]],
+    p = p
+  )
+
+}
+
+
+#' @autoglobal
+#' @rdname f_auc
+#' @family preference_order
+#' @export
+f_auc_glm_binomial_poly2 <- function(df){
+
+  if(all(sort(unique(df[["y"]])) == c(0, 1)) == FALSE){
+    stop("Argument 'response' must be the name of a binary vector with unique values 0 and 1.")
+  }
+
+  p <- stats::glm(
+    formula = y ~ stats::poly(
+      x,
+      degree = 2,
+      raw = TRUE
+    ),
+    data = df,
+    family = stats::quasibinomial(
+      link = "logit"
+    ),
+    weights = case_weights(
+      x = df[["y"]]
+      )
+  ) |>
+    stats::predict(
+      type = "response"
+    ) |>
+    suppressWarnings() |>
+    suppressMessages()
+
+  auc(
+    o = df[["y"]],
+    p = p
+  )
+
+}
+
+#' @autoglobal
+#' @rdname f_auc
+#' @family preference_order
+#' @export
+f_auc_gam_binomial <- function(df){
+
+  if(all(sort(unique(df[["y"]])) == c(0, 1)) == FALSE){
+    stop("Argument 'response' must be the name of a binary vector with unique values 0 and 1.")
+  }
+
+  p <- mgcv::gam(
+    formula = y ~ s(x),
+    data = df,
+    family = stats::quasibinomial(link = "logit"),
+    weights = case_weights(
+      x = df[["y"]]
+      ),
+    select = TRUE
+  ) |>
+    stats::predict(
+      type = "response"
+    ) |>
+    suppressWarnings() |>
+    suppressMessages()
+
+  auc(
+    o = df[["y"]],
+    p = p
+  )
+
+}
+
+#' @autoglobal
+#' @rdname f_auc
+#' @family preference_order
+#' @export
+f_auc_rpart <- function(df){
+
+  if(all(sort(unique(df[["y"]])) == c(0, 1)) == FALSE){
+    stop("Argument 'response' must be the name of a binary vector with unique values 0 and 1.")
+  }
+
+  p <- rpart::rpart(
+    formula = y ~ x,
+    data = df,
+    weights = case_weights(
+      x = df[["y"]])
+    ,
+    control = rpart::rpart.control(
+      minbucket = ceiling(
+        nrow(df)/100
+      )
+    )
+  ) |>
+    stats::predict(
+      type = "vector"
+    )
+
+  auc(
+    o = df[["y"]],
+    p = p
+  )
+
+}
+
+#' @autoglobal
+#' @rdname f_auc
+#' @family preference_order
+#' @export
+f_auc_rf <- function(df){
+
+  if(all(sort(unique(df[["y"]])) == c(0, 1)) == FALSE){
+    stop("Argument 'response' must be the name of a binary vector with unique values 0 and 1.")
+  }
+
+  m <- ranger::ranger(
+    formula = y ~ x,
+    data = df,
+    case.weights = case_weights(
+      x = df[["y"]]
+      ),
+    num.threads = 1,
+    num.trees = 100,
+    min.node.size = ceiling(nrow(df)/100),
+    seed = 1
+  )
+
+  p <- stats::predict(
+    object = m,
+    data = df
+  )$predictions
+
+  auc(
+    o = df[["y"]],
+    p = p
+  )
+
+}
+
+#' Association Between a Categorical Response and a Categorical Predictor
+#'
+#' @description
+#' Computes Cramer's V, a measure of association between categorical or factor variables. Please see [cramer_v()] for further details.
+#'
+#' @param df (required, data frame) with columns:
+#' \itemize{
+#'   \item "x": (character or factor) categorical predictor.
+#'   \item "y": (character or factor) categorical response.
+#' }
 #' @return numeric: Cramer's V
 #' @examples
-#' TODO complete this example
+#' #load example data
+#' data(vi)
 #'
+#' #reduce size to speed-up example
+#' vi <- vi[1:1000, ]
+#'
+#' #categorical response and predictor
+#' #to data frame without NAs
+#' df <- data.frame(
+#'   y = vi[["vi_factor"]],
+#'   x = vi[["soil_type"]]
+#' ) |>
+#'   na.omit()
+#'
+#' #Cramer's V
+#' f_cramerv(df = df)
 #' @autoglobal
 #' @family preference_order
 #' @export
-f_cramer_v <- function(x, y, df){
-
-  data <- data.frame(
-    y = df[[y]],
-    x = df[[x]]
-  ) |>
-    na.omit()
-
-  if(
-    any(
-      sapply(
-        X = data,
-        FUN = is.numeric
-      )
-    )
-  ){
-    stop("f_cramer_v: arguments 'x' and 'y' must be names of character or factor columns in 'df'.")
-  }
+f_cramerv <- function(df){
 
   cramer_v(
-    x = data$x,
-    y = data$y,
+    x = df[["x"]],
+    y = df[["y"]],
+    check_input = FALSE
+  )
+
+}
+
+#' Association Between a Categorical Response and a Categorical or Numerical Predictor
+#'
+#' @description
+#' Computes the Cramer's V between a categorical response (of class "character" or "factor") and the prediction of a Random Forest model with a categorical or numeric predictor and weighted cases.
+#'
+#' @param df (required, data frame) with columns:
+#' \itemize{
+#'   \item "x": (character, factor, or numeric) categorical or numeric predictor.
+#'   \item "y" (character or factor) categorical response.
+#' }
+#' @return numeric: Cramer's V
+#' @examples
+
+#' #load example data
+#' data(vi)
+#'
+#' #reduce size to speed-up example
+#' vi <- vi[1:1000, ]
+#'
+#' #categorical response and predictor
+#' #to data frame without NAs
+#' df <- data.frame(
+#'   y = vi[["vi_factor"]],
+#'   x = vi[["soil_type"]]
+#' ) |>
+#'   na.omit()
+#'
+#' #Cramer's V of a Random Forest model
+#' f_cramerv_rf_categorical(df = df)
+#'
+#' #categorical response and numeric predictor
+#' df <- data.frame(
+#'   y = vi[["vi_factor"]],
+#'   x = vi[["swi_mean"]]
+#' ) |>
+#'   na.omit()
+#'
+#' f_cramerv_rf_categorical(df = df)
+
+#' @autoglobal
+#' @family preference_order
+#' @export
+f_cramerv_rf_categorical <- function(df){
+
+  df[["y"]] <- as.factor(df[["y"]])
+
+  m <- ranger::ranger(
+    formula = y ~ x,
+    data = df,
+    case.weights = case_weights(
+      x = df[["y"]]
+    ),
+    num.threads = 1,
+    num.trees = 100,
+    min.node.size = ceiling(nrow(df)/100),
+    seed = 1
+  )
+
+  p <- stats::predict(
+    object = m,
+    data = df
+  )$predictions
+
+  cramer_v(
+    x = df[["y"]],
+    y = p,
     check_input = FALSE
   )
 
 }
 
 
-#' AUC of Logistic GAM Model for Balanced Binary Responses
-#'
-#' Fits a binomial logistic Generalized Additive Model (GAM) `y ~ s(x, k = 3)` between a binary response and a numeric predictor and returns the Area Under the Curve of the observations versus the predictions.
-#'
-#'
-#' @inheritParams f_r2_pearson
-#'
-#' @return numeric: area under the curve
+#' @title Case Weights for Unbalanced Binomial or Categorical Responses
+#' @param x (required, integer, character, or factor vector) Either a binomial response with 1s and 0s, or categorical responses as characters or factors. Default: `NULL`
+#' @return numeric vector: case weights
 #' @examples
-#'
-#' data(vi)
-#'
-#' #subset to limit example run time
-#' vi <- vi[1:1000, ]
-#'
-#' #this example requires "mgcv" installed
-#' if(
-#'   requireNamespace(
-#'     package = "mgcv",
-#'     quietly = TRUE
-#'     )
-#'  ){
-#'
-#'   f_gam_auc_balanced(
-#'     x = "growing_season_length", #predictor
-#'     y = "vi_binary",               #response
-#'     df = vi
-#'   )
-#'
-#' }
-#'
-#' @autoglobal
-#' @family preference_order
-#' @export
-f_gam_binomial_balanced_auc <- function(x, y, df){
-
-  if(!requireNamespace("mgcv", quietly = TRUE)){
-    stop("The function 'f_gam_auc_balanced()' requires the package 'mgcv'.")
-  }
-
-  if(all(sort(unique(df[[y]])) == c(0, 1)) == FALSE){
-    stop("Argument 'response' must be the name of a binary vector with unique values 0 and 1.")
-  }
-
-  data <- data.frame(
-    y = df[[y]],
-    x = df[[x]]
-  ) |>
-    na.omit()
-
-  m <- mgcv::gam(
-    formula = y ~ s(x, k = 3),
-    data = data,
-    family = stats::binomial(link = "logit")
-  )
-
-  auc_score(
-    observed = data$y,
-    p = stats::predict(m, type = "response")
-  )
-
-}
-
-
-#' AUC of Logistic GAM Model for Unbalanced Binary Responses
-#'
-#' Fits a quasi-binomial logistic Generalized Additive Model (GAM) `y ~ s(x, k = 3)` with weighted cases between a binary response and a numeric predictor and returns the Area Under the Curve of the observations versus the predictions.
-#'
-#'
-#' @inheritParams f_r2_pearson
-#'
-#' @return numeric: area under the curve
-#' @examples
-#'
-#' data(vi)
-#'
-#' #subset to limit example run time
-#' vi <- vi[1:1000, ]
-#'
-#' #this example requires "mgcv" installed
-#' if(
-#'   requireNamespace(
-#'     package = "mgcv",
-#'     quietly = TRUE
-#'     )
-#'   ){
-#'
-#'   f_gam_auc_unbalanced(
-#'     x = "growing_season_length", #predictor
-#'     y = "vi_binary",               #response
-#'     df = vi
-#'   )
-#'
-#' }
-#'
-#' @autoglobal
-#' @family preference_order
-#' @export
-f_gam_binomial_unbalanced_auc <- function(x, y, df){
-
-  if(!requireNamespace("mgcv", quietly = TRUE)){
-    stop("The function 'f_gam_auc_unbalanced()' requires the package 'mgcv'.")
-  }
-
-  if(all(sort(unique(df[[y]])) == c(0, 1)) == FALSE){
-    stop("Argument 'response' must be the name of a binary vector with unique values 0 and 1.")
-  }
-
-  data <- data.frame(
-    y = df[[y]],
-    x = df[[x]]
-  ) |>
-    na.omit()
-
-  m <- mgcv::gam(
-    formula = y ~ s(x),
-    data = data,
-    family = stats::quasibinomial(link = "logit"),
-    weights = case_weights(x = data$y)
-  )
-
-  auc_score(
-    observed = data$y,
-    predicted = stats::predict(
-      object = m,
-      type = "response"
-    )
-  )
-
-}
-
-
-
-
-#' AUC of Random Forest Model for Unbalanced Binary Responses
-#'
-#' Computes a univariate random forest model with weighted cases via `\link[ranger]{ranger}` and returns the Area Under the Curve on the out-of-bag data.
-#'
-#' @inheritParams f_r2_pearson
-#'
-#' @return numeric: area under the curve
-#' @examples
-#'
-#' data(vi)
-#'
-#' #subset to limit example run time
-#' vi <- vi[1:1000, ]
-#'
-#' #this example requires "ranger" installed in the system
-#' if(
-#'   requireNamespace(
-#'     package = "ranger",
-#'     quietly = TRUE
-#'     )
-#'   ){
-#'
-#'   f_rf_auc_unbalanced(
-#'     x = "growing_season_length", #predictor
-#'     y = "vi_binary",               #response
-#'     df = vi
-#'   )
-#'
-#' }
-#'
-#' @autoglobal
-#' @family preference_order
-#' @export
-f_rf_binomial_unbalanced_auc <- function(x, y, df){
-
-  if(!requireNamespace("ranger", quietly = TRUE)){
-    stop("The function 'f_rf_auc_unbalanced()' requires the package 'ranger'.")
-  }
-
-  if(all(sort(unique(df[[y]])) == c(0, 1)) == FALSE){
-    stop("Argument 'response' must be the name of a binary vector with unique values 0 and 1.")
-  }
-
-  data <- data.frame(
-    y = df[[y]],
-    x = df[[x]]
-  ) |>
-    na.omit()
-
-  m <- ranger::ranger(
-    formula = y ~ x,
-    data = data,
-    num.threads = 1,
-    min.node.size = ceiling(nrow(data)/100),
-    case.weights = case_weights(x = data$y),
-    seed = 1
-  )
-
-  auc_score(
-    observed = data$y,
-    predicted = stats::predict(
-      object = m,
-      data = data
-    )$predictions
-  )
-
-}
-
-
-
-#' AUC of Random Forest Model for Balanced Binary Responses
-#'
-#' Computes a univariate random forest model via [ranger::ranger()] and returns the Area Under the Curve on the out-of-bag data.
-#'
-#' @inheritParams f_r2_pearson
-#'
-#' @return numeric: area under the curve
-#' @examples
-#'
-#' data(vi)
-#'
-#' #subset to limit example run time
-#' vi <- vi[1:1000, ]
-#'
-#' #this example requires "ranger" installed in the system
-#' if(requireNamespace(package = "ranger", quietly = TRUE)){
-#'
-#'   f_rf_auc_balanced(
-#'     x = "growing_season_length", #predictor
-#'     y = "vi_binary",               #response
-#'     df = vi
-#'   )
-#'
-#' }
-#'
-#' @autoglobal
-#' @family preference_order
-#' @export
-f_rf_binomial_balanced_auc <- function(x, y, df){
-
-  if(!requireNamespace("ranger", quietly = TRUE)){
-    stop("The function 'f_rf_auc_balanced()' requires the package 'ranger'")
-  }
-
-  data <- data.frame(
-    y = df[[y]],
-    x = df[[x]]
-  ) |>
-    na.omit()
-
-  if(all(sort(unique(data$y)) == c(0, 1)) == FALSE){
-    stop("Argument 'response' must be the name of a binary vector with unique values 0 and 1.")
-  }
-
-  m <- ranger::ranger(
-    formula = y ~ x,
-    data = data,
-    num.threads = 1,
-    min.node.size = ceiling(nrow(data)/100),
-    seed = 1
-  )
-
-  auc_score(
-    observed = data$y,
-    predicted = stats::predict(
-      object = m,
-      data = data
-    )$predictions
-  )
-
-}
-
-
-f_rpart_binomial_unbalanced_auc <- function(x, y, df){
-
-  if(!requireNamespace("rpart", quietly = TRUE)){
-    stop("The function 'f_rpart_rsquared()' requires the package 'rpart'.")
-  }
-
-  data <- data.frame(
-    y = df[[y]],
-    x = df[[x]]
-  ) |>
-    na.omit()
-
-  if(all(sort(unique(data$y)) == c(0, 1)) == FALSE){
-    stop("Argument 'response' must be the name of a binary vector with unique values 0 and 1.")
-  }
-
-  m <- rpart::rpart(
-    formula = y ~ x,
-    data = data,
-    weights = case_weights(x = data$y),
-    control = rpart::rpart.control(
-      minbucket = ceiling(
-        nrow(data)/100
-      )
-    )
-  )
-
-  auc_score(
-    observed = data$y,
-    predicted = stats::predict(
-      object = m,
-      type = "vector"
-    )
-  )
-
-}
-
-
-f_rpart_binomial_balanced_auc <- function(x, y, df){
-
-  if(!requireNamespace("rpart", quietly = TRUE)){
-    stop("The function 'f_rpart_rsquared()' requires the package 'rpart'.")
-  }
-
-  data <- data.frame(
-    y = df[[y]],
-    x = df[[x]]
-  ) |>
-    na.omit()
-
-  if(all(sort(unique(data$y)) == c(0, 1)) == FALSE){
-    stop("Argument 'response' must be the name of a binary vector with unique values 0 and 1.")
-  }
-
-  m <- rpart::rpart(
-    formula = y ~ x,
-    data = data,
-    control = rpart::rpart.control(
-      minbucket = ceiling(
-        nrow(data)/100
-      )
-    )
-  )
-
-  auc_score(
-    observed = data$y,
-    predicted = stats::predict(
-      object = m,
-      type = "vector"
-    )
-  )
-
-}
-
-
-#' AUC of Binomial GLM with Logit Link for Balance Binary Responses
-#'
-#' Fits a logistic GLM model `y ~ x` when `y` is a binary response with values 0 and 1 and `x` is numeric. This function is suitable when the response variable is balanced. If the response is unbalanced, then [f_logistic_auc_unbalanced()] should provide better results.
-#'
-#'
-#' @inheritParams f_r2_pearson
-#'
-#' @return numeric: area under the curve
-#' @examples
-#'
-#' data(vi)
-#'
-#' #subset to limit example run time
-#' vi <- vi[1:1000, ]
-#'
-#' f_logistic_auc_balanced(
-#'   x = "growing_season_length", #predictor
-#'   y = "vi_binary",             #binary response
-#'   df = vi
-#' )
-#'
-#' @autoglobal
-#' @family preference_order
-#' @export
-f_glm_binomial_balanced_auc <- function(x, y, df){
-
-  if(all(sort(unique(df[[y]])) == c(0, 1)) == FALSE){
-    stop("Argument 'response' must be the name of a binary vector with unique values 0 and 1.")
-  }
-
-  data <- data.frame(
-    y = df[[y]],
-    x = df[[x]]
-  ) |>
-    na.omit()
-
-  m <- stats::glm(
-    formula = y ~ x,
-    data = data,
-    family = stats::binomial(link = "logit")
-  ) |>
-    suppressWarnings()
-
-  auc_score(
-    observed = data$y,
-    predicted = stats::predict(
-      object = m,
-      type = "response"
-      )
-  )
-
-}
-
-
-#' AUC of Binomial GLM with Logit Link for Unbalanced Binary Responses
-#'
-#' Fits a quasi-binomial GLM model `y ~ x` with case weights when `y` is an unbalanced binary response with values 0 and 1 and `x` is numeric. It uses the function [case_weights()] to weight 0s and 1s according to their frequency within `y`.
-#'
-#'
-#' @inheritParams f_r2_pearson
-#'
-#' @return numeric: area under the curve
-#' @examples
-#'
-#' data(vi)
-#'
-#' #subset to limit example run time
-#' vi <- vi[1:1000, ]
-#'
-#' f_logistic_auc_unbalanced(
-#'   x = "growing_season_length", #predictor
-#'   y = "vi_binary",             #binary response
-#'   df = vi
-#' )
-#'
-#' @autoglobal
-#' @family preference_order
-#' @export
-f_glm_binomial_unbalanced_auc <- function(x, y, df){
-
-  if(all(sort(unique(df[[y]])) == c(0, 1)) == FALSE){
-    stop("Argument 'response' must be the name of a binary vector with unique values 0 and 1.")
-  }
-
-  data <- data.frame(
-    y = df[[y]],
-    x = df[[x]]
-  ) |>
-    na.omit()
-
-  m <- stats::glm(
-    formula = y ~ x,
-    data = data,
-    family = stats::quasibinomial(link = "logit"),
-    weights = case_weights(x = data$y)
-  ) |>
-    suppressWarnings()
-
-  auc_score(
-    observed = data$y,
-    predicted = stats::predict(
-      object = m,
-      type = "response"
-      )
-  )
-
-}
-
-
-
-
-
-
-
-#' @title Case Weights for Unbalanced Binary Response
-#' @param x (required, integer vector) Binary response with 1s and 0s. Default: `NULL`
-#' @return A vector with a length equal to `x` with case weights.
-#' @examples
-#' if(interactive()){
-#'
 #'  case_weights(
 #'    x = c(0, 0, 0, 1, 1)
 #'  )
 #'
-#'  }
+#'  case_weights(
+#'    x = c("a", "a", "b", "b", "c")
 #' @family preference_order
 #' @autoglobal
 #' @export
@@ -990,29 +824,17 @@ case_weights <- function(
     x = NULL
 ){
 
-  if(is.null(x)){
-    stop("Argument 'x' must not be NULL.")
-  }
+  # Convert to factor if not already
+  x <- as.factor(x)
 
-  #check that x is binary
-  if(all(sort(unique(x)) == c(0, 1)) == FALSE){
-    stop("Argument 'x' must be the name of a binary vector with unique values 0 and 1.")
-  }
-
-  #counting number of ones and zeros
+  # ocurrences per level
   n <- length(x)
-  n.1 <- sum(x)
-  n.0 <- n - n.1
+  counts <- table(x)
 
-  #computing weights
-  weight.1 <- 1/n.1
-  weight.0 <- 1/n.0
+  # weights as inverse of the counts
+  weights <- 1 / counts
 
-  #vector of weights
-  case.weights <- rep(NA, n)
-  case.weights[x == 1] <- weight.1
-  case.weights[x == 0] <- weight.0
-
-  case.weights
+  # vector of weights
+  as.numeric(weights[as.character(x)])
 
 }

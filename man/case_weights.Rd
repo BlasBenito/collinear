@@ -2,18 +2,18 @@
 % Please edit documentation in R/preference_order_methods.R
 \name{case_weights}
 \alias{case_weights}
-\title{Case Weights for Unbalanced Binary Response}
+\title{Case Weights for Unbalanced Binomial or Categorical Responses}
 \usage{
 case_weights(x = NULL)
 }
 \arguments{
-\item{x}{(required, integer vector) Binary response with 1s and 0s. Default: \code{NULL}}
+\item{x}{(required, integer, character, or factor vector) Either a binomial response with 1s and 0s, or categorical responses as characters or factors. Default: \code{NULL}}
 }
 \value{
-A vector with a length equal to \code{x} with case weights.
+numeric vector: case weights
 }
 \description{
-Case Weights for Unbalanced Binary Response
+Case Weights for Unbalanced Binomial or Categorical Responses
 }
 \examples{
 if(interactive()){
@@ -22,20 +22,20 @@ if(interactive()){
    x = c(0, 0, 0, 1, 1)
  )
 
+ case_weights(
+   x = c("a", "a", "b", "b", "c")
+ )
+
  }
 }
 \seealso{
 Other preference_order: 
 \code{\link{auc}()},
-\code{\link{f_cramer_v}()},
-\code{\link{f_gam_binomial_balanced_auc}()},
-\code{\link{f_gam_binomial_unbalanced_auc}()},
-\code{\link{f_glm_binomial_balanced_auc}()},
-\code{\link{f_glm_binomial_unbalanced_auc}()},
-\code{\link{f_r2_continuous}},
+\code{\link{f_auc}},
+\code{\link{f_cramerv}()},
+\code{\link{f_cramerv_rf_categorical}()},
+\code{\link{f_r2}},
 \code{\link{f_r2_counts}},
-\code{\link{f_rf_binomial_balanced_auc}()},
-\code{\link{f_rf_binomial_unbalanced_auc}()},
 \code{\link{preference_order}()}
 }
 \concept{preference_order}
