@@ -16,26 +16,23 @@ numeric vector: case weights
 Case Weights for Unbalanced Binomial or Categorical Responses
 }
 \examples{
-if(interactive()){
-
  case_weights(
    x = c(0, 0, 0, 1, 1)
- )
+   )
 
  case_weights(
    x = c("a", "a", "b", "b", "c")
- )
-
- }
+   )
 }
 \seealso{
 Other preference_order: 
 \code{\link{auc}()},
 \code{\link{f_auc}},
-\code{\link{f_cramerv}()},
-\code{\link{f_cramerv_rf_categorical}()},
 \code{\link{f_r2}},
 \code{\link{f_r2_counts}},
-\code{\link{preference_order}()}
+\code{\link{f_v}()},
+\code{\link{f_v_rf_categorical}()},
+\code{\link{preference_order}()},
+\code{\link{r2}()}
 }
 \concept{preference_order}

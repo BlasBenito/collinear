@@ -225,29 +225,14 @@ validate_predictors <- function(
     stop("Argument 'df' is not validated. Please, run validate_df() before validate_predictors().")
   }
 
-
-  # response ----
-  if(is.null(response)){
-
-    #no target encoding later on, 2 numeric predictors required
-    min_numerics <- 2
-
-  } else {
-
-    #response is valid, there might be target encoding later on, no numerics required
-    min_numerics <- 0
-
-    #removing from df if predictors is NULL
-    if(is.null(predictors)){
-      df[[response]] <- NULL
-    }
-
-  }
-
   # predictors ----
 
   #if predictors is NULL, use colnames(df)
   if(is.null(predictors)){
+
+    if(!is.null(response)){
+      df[[response]] <- NULL
+    }
 
     predictors <- colnames(df)
 
@@ -301,20 +286,6 @@ validate_predictors <- function(
       predictors,
       predictors.zero.variance
     )
-
-  }
-
-  #use numerics only if response is null
-  if(is.null(response)){
-
-    predictors <- identify_numeric_predictors(
-      df = df,
-      predictors = predictors
-    )
-
-    if(length(predictors) < min_numerics){
-      message("At least two numeric variables are required for a multicollinearity analysis, variable selection will be skipped.")
-    }
 
   }
 
@@ -403,29 +374,23 @@ validate_response <- function(
     return(NULL)
   }
 
-  if(is.numeric(df[[response]]) == FALSE){
-    message(
-      "The 'response' column '",
-      response,
-      "' is not numeric and will be ignored.",
-      call. = FALSE
-    )
-    return(NULL)
-  }
+  if(is.numeric(df[[response]]) == TRUE){
 
-  response.zero.variance <- identify_zero_variance_predictors(
-    df = df,
-    predictors = response,
-    decimals = 4
-  )
-
-  if(length(response.zero.variance) == 1){
-    message(
-      "The 'response' column '",
-      response,
-      "' has near-zero variance and will be ignored."
+    response.zero.variance <- identify_zero_variance_predictors(
+      df = df,
+      predictors = response,
+      decimals = 4
     )
-    return(NULL)
+
+    if(length(response.zero.variance) == 1){
+      message(
+        "The 'response' column '",
+        response,
+        "' has near-zero variance and will be ignored."
+      )
+      return(NULL)
+    }
+
   }
 
   response.na.values <- sum(is.na(df[[response]]))

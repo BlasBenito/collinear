@@ -65,36 +65,40 @@ Other preference_order:
 \code{\link{auc}()},
 \code{\link{case_weights}()},
 \code{\link{f_auc}},
-\code{\link{f_cramerv}()},
-\code{\link{f_cramerv_rf_categorical}()},
 \code{\link{f_r2}},
-\code{\link{preference_order}()}
+\code{\link{f_v}()},
+\code{\link{f_v_rf_categorical}()},
+\code{\link{preference_order}()},
+\code{\link{r2}()}
 
 Other preference_order: 
 \code{\link{auc}()},
 \code{\link{case_weights}()},
 \code{\link{f_auc}},
-\code{\link{f_cramerv}()},
-\code{\link{f_cramerv_rf_categorical}()},
 \code{\link{f_r2}},
-\code{\link{preference_order}()}
+\code{\link{f_v}()},
+\code{\link{f_v_rf_categorical}()},
+\code{\link{preference_order}()},
+\code{\link{r2}()}
 
 Other preference_order: 
 \code{\link{auc}()},
 \code{\link{case_weights}()},
 \code{\link{f_auc}},
-\code{\link{f_cramerv}()},
-\code{\link{f_cramerv_rf_categorical}()},
 \code{\link{f_r2}},
-\code{\link{preference_order}()}
+\code{\link{f_v}()},
+\code{\link{f_v_rf_categorical}()},
+\code{\link{preference_order}()},
+\code{\link{r2}()}
 
 Other preference_order: 
 \code{\link{auc}()},
 \code{\link{case_weights}()},
 \code{\link{f_auc}},
-\code{\link{f_cramerv}()},
-\code{\link{f_cramerv_rf_categorical}()},
 \code{\link{f_r2}},
-\code{\link{preference_order}()}
+\code{\link{f_v}()},
+\code{\link{f_v_rf_categorical}()},
+\code{\link{preference_order}()},
+\code{\link{r2}()}
 }
 \concept{preference_order}

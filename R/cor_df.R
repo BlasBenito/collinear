@@ -5,13 +5,13 @@
 #'
 #' Attempts to handle correlations between pairs of variables of different types, as follows:
 #' \itemize{
-#'   \item numeric vs. numeric: computed with stats::cor() with the methods "pearson" or "spearman" using [cor_numerics()].
-#'   \item numeric vs. character via [cor_numerics_and_characters()], two alternatives leading to different results:
+#'   \item numeric vs. numeric: computed with stats::cor() with the methods "pearson" or "spearman" using [cor_numeric_vs_numeric()].
+#'   \item numeric vs. character via [cor_numeric_vs_categorical()], two alternatives leading to different results:
 #'   \itemize{
 #'     \item 'response' is provided: the character variable is target-encoded as numeric using the values of the response as reference, and then its correlation with the numeric variable is computed with stats::cor(). This option generates a response-specific result suitable for training statistical and machine-learning models
 #'     \item 'response' is NULL (or the name of a non-numeric column): the character variable is target-encoded as numeric using the values of the numeric predictor (instead of the response) as reference, and then their correlation is computed with stats::cor(). This option leads to a response-agnostic result suitable for clustering problems.
 #'   }
-#'   \item character vs. character, via [cor_characters()], with two alternatives leading to different results:
+#'   \item character vs. character, via [cor_categorical_vs_categorical()], with two alternatives leading to different results:
 #'   \itemize{
 #'     \item 'response' is provided: the character variables are target-encoded as numeric using the values of the response as reference, and then their correlation is computed with stats::cor().
 #'     \item response' is NULL (or the name of a non-numeric column): the association between the character variables is computed using Cramer's V. This option might be problematic, because R-squared values and Cramer's V, even when having the same range between 0 and 1, are not fully comparable.
@@ -19,7 +19,7 @@
 #' }
 #'
 #' @inheritParams collinear
-#' @return data frame; variable pairs and their correlation
+#' @return data frame; pairwise correlations
 #'
 #' @examples
 #'
@@ -95,21 +95,21 @@ cor_df <- function(
   cor.list <- list()
 
   #correlation between numeric variables
-  cor.list[["numerics"]] <- cor_numerics(
+  cor.list[["num-vs-num"]] <- cor_numeric_vs_numeric(
     df = df,
     predictors = predictors,
     cor_method = cor_method
   )
 
   #correlation between numeric and character variables
-  cor.list[["num-char"]] <- cor_numerics_and_characters(
+  cor.list[["num-vs-cat"]] <- cor_numeric_vs_categorical(
     df = df,
     predictors = predictors,
     cor_method = cor_method
   )
 
   #correlation between characters
-  cor.list[["char-char"]] <- cor_characters(
+  cor.list[["cat-vs-cat"]] <- cor_categorical_vs_categorical(
     df = df,
     predictors = predictors
   )
@@ -135,14 +135,14 @@ cor_df <- function(
 
 
 
-#' Correlation data frame between numeric variables
+#' Pairwise Correlation Between Numeric Variables
 #'
 #' @inheritParams collinear
-#' @return data frame
+#' @inherit cor_df return
 #' @rdname cor_df
 #' @keywords internal
 #' @autoglobal
-cor_numerics <- function(
+cor_numeric_vs_numeric <- function(
     df = NULL,
     predictors = NULL,
     cor_method = "pearson"
@@ -171,6 +171,12 @@ cor_numerics <- function(
   #validate predictors
   #get numeric predictors only
   predictors <- validate_predictors(
+    df = df,
+    predictors = predictors
+  )
+
+  #identify numerics
+  predictors <- identify_numeric_predictors(
     df = df,
     predictors = predictors
   )
@@ -229,15 +235,15 @@ cor_numerics <- function(
 }
 
 
-#' Correlation data frame between numeric and character variables
+#' Pairwise Correlation Between Numeric and Categorical Variables
 #'
 #' @inheritParams collinear
 #'
-#' @return data frame
+#' @inherit cor_df return
 #' @rdname cor_df
 #' @keywords internal
 #' @autoglobal
-cor_numerics_and_characters <- function(
+cor_numeric_vs_categorical <- function(
     df = NULL,
     predictors = NULL,
     cor_method = "pearson",
@@ -342,15 +348,15 @@ cor_numerics_and_characters <- function(
 
 }
 
-#' Correlation data frame between character variables
+#' Pairwise Cramer's V Between Categorical Variables
 #'
 #' @inheritParams collinear
 #'
-#' @return data frame
+#' @inherit cor_df return
 #' @rdname cor_df
 #' @keywords internal
 #' @autoglobal
-cor_characters <- function(
+cor_categorical_vs_categorical <- function(
     df,
     predictors
 ){

@@ -2,9 +2,9 @@
 % Please edit documentation in R/cor_df.R
 \name{cor_df}
 \alias{cor_df}
-\alias{cor_numerics}
-\alias{cor_numerics_and_characters}
-\alias{cor_characters}
+\alias{cor_numeric_vs_numeric}
+\alias{cor_numeric_vs_categorical}
+\alias{cor_categorical_vs_categorical}
 \title{Pairwise Correlation Data Frame}
 \usage{
 cor_df(
@@ -15,16 +15,16 @@ cor_df(
   encoding_method = "mean"
 )
 
-cor_numerics(df = NULL, predictors = NULL, cor_method = "pearson")
+cor_numeric_vs_numeric(df = NULL, predictors = NULL, cor_method = "pearson")
 
-cor_numerics_and_characters(
+cor_numeric_vs_categorical(
   df = NULL,
   predictors = NULL,
   cor_method = "pearson",
   encoding_method = "mean"
 )
 
-cor_characters(df, predictors)
+cor_categorical_vs_categorical(df, predictors)
 }
 \arguments{
 \item{df}{(required; data frame, tibble, or sf) A data frame with numeric predictors, and optionally a numeric response and categorical predictors. Default: NULL.}
@@ -38,26 +38,20 @@ cor_characters(df, predictors)
 \item{encoding_method}{(optional; character string). Name of the target encoding method to transform non-numeric variables to numeric. One of "mean", "rank", "loo", "rnorm" (see \code{\link[=target_encoding_lab]{target_encoding_lab()}} for further details). Default: "mean"}
 }
 \value{
-data frame; variable pairs and their correlation
-
-data frame
-
-data frame
-
-data frame
+data frame; pairwise correlations
 }
 \description{
 Returns a correlation data frame between all pairs of predictors in a training data frame. If the argument  Non-numeric predictors are transformed into numeric via target encoding, using the 'response' variable as reference.
 
 Attempts to handle correlations between pairs of variables of different types, as follows:
 \itemize{
-\item numeric vs. numeric: computed with stats::cor() with the methods "pearson" or "spearman" using \code{\link[=cor_numerics]{cor_numerics()}}.
-\item numeric vs. character via \code{\link[=cor_numerics_and_characters]{cor_numerics_and_characters()}}, two alternatives leading to different results:
+\item numeric vs. numeric: computed with stats::cor() with the methods "pearson" or "spearman" using \code{\link[=cor_numeric_vs_numeric]{cor_numeric_vs_numeric()}}.
+\item numeric vs. character via \code{\link[=cor_numeric_vs_categorical]{cor_numeric_vs_categorical()}}, two alternatives leading to different results:
 \itemize{
 \item 'response' is provided: the character variable is target-encoded as numeric using the values of the response as reference, and then its correlation with the numeric variable is computed with stats::cor(). This option generates a response-specific result suitable for training statistical and machine-learning models
 \item 'response' is NULL (or the name of a non-numeric column): the character variable is target-encoded as numeric using the values of the numeric predictor (instead of the response) as reference, and then their correlation is computed with stats::cor(). This option leads to a response-agnostic result suitable for clustering problems.
 }
-\item character vs. character, via \code{\link[=cor_characters]{cor_characters()}}, with two alternatives leading to different results:
+\item character vs. character, via \code{\link[=cor_categorical_vs_categorical]{cor_categorical_vs_categorical()}}, with two alternatives leading to different results:
 \itemize{
 \item 'response' is provided: the character variables are target-encoded as numeric using the values of the response as reference, and then their correlation is computed with stats::cor().
 \item response' is NULL (or the name of a non-numeric column): the association between the character variables is computed using Cramer's V. This option might be problematic, because R-squared values and Cramer's V, even when having the same range between 0 and 1, are not fully comparable.

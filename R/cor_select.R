@@ -129,15 +129,15 @@ cor_select <- function(
     encoding_method = "mean"
 ){
 
-  #checking argument max_cor
-  if(max_cor < 0 || max_cor > 1){
-    stop("Argument 'max_cor' must be a numeric between 0 and 1.")
-  }
 
   #do nothing if one predictor only
   if(length(predictors) == 1){
-    attributes(predictors) <- NULL
     return(predictors)
+  }
+
+  #checking argument max_cor
+  if(max_cor < 0 || max_cor > 1){
+    stop("Argument 'max_cor' must be a numeric between 0 and 1.")
   }
 
   #correlation data frame
@@ -203,6 +203,13 @@ cor_select <- function(
   }
 
   #return names of selected variables
-  colnames(cor.matrix)
+  out <- colnames(cor.matrix)
+
+  attr(
+    x = out,
+    which = "validated"
+  ) <- TRUE
+
+  out
 
 }

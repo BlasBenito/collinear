@@ -2,7 +2,6 @@
 
 utils::globalVariables(c(
   "var", # <identify_zero_variance_predictors>
-  "f_rsquared", # <preference_order>
   "is.required", # <validate_response>
   NULL
 ))

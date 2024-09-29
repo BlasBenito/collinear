@@ -202,7 +202,6 @@ collinear <- function(
 
   #early output if only one predictor
   if(length(predictors) == 1){
-    attributes(predictors) <- NULL
     return(predictors)
   }
 

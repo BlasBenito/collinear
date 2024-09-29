@@ -121,6 +121,16 @@ target_encoding_lab <- function(
     response = response
   )
 
+  #return data frame if response is not numeric
+  if(!is.null(response)){
+    if(is.numeric(df[[response]]) == FALSE){
+      if(verbose == TRUE){
+        message("collinear::target_encoding_lab(): Argument 'response' is not numeric, returning 'df' without changes.")
+      }
+      return(df)
+    }
+  }
+
   #validate predictors
   predictors <- validate_predictors(
     df = df,

@@ -1,6 +1,6 @@
 Package: collinear
 Title: Automated Multicollinearity Management
-Version: 1.1.2
+Version: 1.2.0
 Authors@R: 
     person(given = "Blas M.", 
           family = "Benito", , 

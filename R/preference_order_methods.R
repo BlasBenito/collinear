@@ -9,6 +9,8 @@
 #'
 #' @return numeric: Pearson R-squared
 #' @export
+#' @autoglobal
+#' @family preference_order
 r2 <- function(
     o = NULL,
     p = NULL
@@ -265,8 +267,13 @@ f_r2_glm_gaussian_poly2 <- function(df){
 #' @export
 f_r2_gam_gaussian <- function(df){
 
+  k <- min(
+    length(unique(df[["x"]])) - 1,
+    floor(nrow(df)/10)
+  )
+
   p <- mgcv::gam(
-    formula = y ~ s(x),
+    formula = y ~ s(x, k = k),
     data = df,
     family = stats::gaussian(link = "identity"),
     select = TRUE
@@ -452,8 +459,13 @@ f_r2_glm_poisson_poly2 <- function(df){
 #' @export
 f_r2_gam_poisson <- function(df){
 
+  k <- min(
+    length(unique(df[["x"]])) - 1,
+    floor(nrow(df)/10)
+  )
+
   p <- mgcv::gam(
-    formula = y ~ s(x),
+    formula = y ~ s(x, k = k),
     data = df,
     family = stats::poisson(link = "log"),
     select = TRUE
@@ -605,8 +617,13 @@ f_auc_gam_binomial <- function(df){
     stop("Argument 'response' must be the name of a binary vector with unique values 0 and 1.")
   }
 
+  k <- min(
+    length(unique(df[["x"]])) - 1,
+    ceiling(nrow(df)/30)
+  )
+
   p <- mgcv::gam(
-    formula = y ~ s(x),
+    formula = y ~ s(x, k = k),
     data = df,
     family = stats::quasibinomial(link = "logit"),
     weights = case_weights(
@@ -721,11 +738,11 @@ f_auc_rf <- function(df){
 #'   na.omit()
 #'
 #' #Cramer's V
-#' f_cramerv(df = df)
+#' f_v(df = df)
 #' @autoglobal
 #' @family preference_order
 #' @export
-f_cramerv <- function(df){
+f_v <- function(df){
 
   cramer_v(
     x = df[["x"]],
@@ -735,7 +752,7 @@ f_cramerv <- function(df){
 
 }
 
-#' Association Between a Categorical Response and a Categorical or Numerical Predictor
+#' Association Between a Categorical Response and a Categorical or Numeric Predictor
 #'
 #' @description
 #' Computes the Cramer's V between a categorical response (of class "character" or "factor") and the prediction of a Random Forest model with a categorical or numeric predictor and weighted cases.
@@ -763,7 +780,7 @@ f_cramerv <- function(df){
 #'   na.omit()
 #'
 #' #Cramer's V of a Random Forest model
-#' f_cramerv_rf_categorical(df = df)
+#' f_v_rf_categorical(df = df)
 #'
 #' #categorical response and numeric predictor
 #' df <- data.frame(
@@ -772,12 +789,11 @@ f_cramerv <- function(df){
 #' ) |>
 #'   na.omit()
 #'
-#' f_cramerv_rf_categorical(df = df)
-
+#' f_v_rf_categorical(df = df)
 #' @autoglobal
 #' @family preference_order
 #' @export
-f_cramerv_rf_categorical <- function(df){
+f_v_rf_categorical <- function(df){
 
   df[["y"]] <- as.factor(df[["y"]])
 
@@ -813,10 +829,11 @@ f_cramerv_rf_categorical <- function(df){
 #' @examples
 #'  case_weights(
 #'    x = c(0, 0, 0, 1, 1)
-#'  )
+#'    )
 #'
 #'  case_weights(
 #'    x = c("a", "a", "b", "b", "c")
+#'    )
 #' @family preference_order
 #' @autoglobal
 #' @export

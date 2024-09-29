@@ -143,6 +143,11 @@ vif_select <- function(
     encoding_method = "mean"
 ){
 
+  #do nothing if one predictor only
+  if(length(predictors) == 1){
+    return(predictors)
+  }
+
   #checking argument max_vif
   if(max_vif < 2.5 || max_vif > 10){
     if(max_vif < 0){max_vif <- 0}
@@ -168,9 +173,14 @@ vif_select <- function(
     predictors = predictors
   )
 
-  #early output if only one predictor
-  if(length(predictors)  == 1){
-    attributes(predictors) <- NULL
+  #identify numerics
+  predictors.numeric <- identify_numeric_predictors(
+    df = df,
+    predictors = predictors
+  )
+
+  #if no numerics, return predictors
+  if(length(predictors.numeric) == 0){
     return(predictors)
   }
 
@@ -235,6 +245,13 @@ vif_select <- function(
   }
 
   #selected variables
-  df.rank$variable
+  out <- df.rank$variable
+
+  attr(
+    x = out,
+    which = "validated"
+  ) <- TRUE
+
+  out
 
 }
