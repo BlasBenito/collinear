@@ -5,13 +5,22 @@ data(vi)
 #reduce size to speed-up example
 vi <- vi[1:1000, ]
 
+default_f(
+  df = vi,
+  response = "vi_numeric",
+  predictors = vi_predictors
+)
+
 #continuous response and predictor
 #to data frame without NAs
 df <- data.frame(
-  y = vi[["vi_numeric"]],
+  y = vi[["vi_binomial"]],
   x = vi[["swi_max"]]
 ) |>
   na.omit()
+
+df[df$y == 0, "y"] <- 2.3
+df[df$y == 1, "y"] <- 6.2
 
 # Continuous response
 
