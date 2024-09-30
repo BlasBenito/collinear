@@ -2,6 +2,5 @@
 
 utils::globalVariables(c(
   "var", # <identify_zero_variance_predictors>
-  "is.required", # <validate_response>
   NULL
 ))

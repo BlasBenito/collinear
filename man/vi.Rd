@@ -28,7 +28,7 @@ The names of all predictors (continuous, integer, character, and factors) are in
 Other example_data: 
 \code{\link{toy}},
 \code{\link{vi_predictors}},
-\code{\link{vi_predictors_category}},
+\code{\link{vi_predictors_categorical}},
 \code{\link{vi_predictors_numeric}}
 }
 \concept{example_data}

@@ -36,7 +36,7 @@ a       16.161
 Other example_data: 
 \code{\link{vi}},
 \code{\link{vi_predictors}},
-\code{\link{vi_predictors_category}},
+\code{\link{vi_predictors_categorical}},
 \code{\link{vi_predictors_numeric}}
 }
 \concept{example_data}

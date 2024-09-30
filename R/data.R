@@ -45,7 +45,7 @@
 #'
 #' @format Character vector with predictor names.
 #' @family example_data
-"vi_predictors_category"
+"vi_predictors_categorical"
 
 
 #' One response and four predictors with varying levels of multicollinearity

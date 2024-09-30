@@ -40,12 +40,15 @@ validate_df <- function(
 
   #handle df = NULL
   if(is.null(df)){
-    stop("Argument 'df' cannot be NULL.")
+    stop("collinear::validate_df(): argument 'df' cannot be NULL.")
   }
 
   #if already validated, return it
-  if(!is.null(attr(df, "validated"))){
-    return(df)
+  df.validated <- attributes(df)$validated
+  if(!is.null(df.validated)){
+    if(df.validated == TRUE){
+      return(df)
+    }
   }
 
   #handle coercion to df
@@ -55,14 +58,20 @@ validate_df <- function(
         as.data.frame(df)
         },
       error = function(e){
-        stop("Argument 'df' must be a data frame.")
+        stop(
+          "collinear::validate_df(): Argument 'df' must be a data frame.",
+          call. = FALSE
+          )
       }
     )
   }
 
   #stop if no rows
   if(nrow(df) == 0){
-    stop("Argument 'df' has zero rows.")
+    stop(
+      "collinear::validate_df(): Argument 'df' has zero rows.",
+      call. = FALSE
+    )
   }
 
   #remove geometry column from df
@@ -337,12 +346,18 @@ validate_response <- function(
 ){
 
   if(is.null(df)){
-    stop("Argument 'df' cannot be NULL.")
+    stop(
+      "collinear::validate_response(): argument 'df' cannot be NULL.",
+      call. = FALSE
+      )
   }
 
-  #if already validated, return it
+  #if not validated, stop
   if(is.null(attr(df, "validated"))){
-    stop("Argument 'df' is not validated. Please, run validate_df() before validate_response().")
+    stop(
+      "collinear::validate_response(): argument 'df' must be validated with collinear::validate_df().",
+      call. = FALSE
+      )
   }
 
   if(is.null(response)){
@@ -355,19 +370,20 @@ validate_response <- function(
   }
 
   if(is.character(response) == FALSE){
-    stop("Argument 'response' must be a character string")
+    stop(
+      "collinear::validate_response(): Argument 'response' must be a character string",
+      call. = FALSE
+      )
   }
 
-  if(length(response) != 1){
-    if(is.required == TRUE){
-      stop("Argument 'response' must be of length 1.")
-    }
+  if(length(response) > 1){
+    response <- response[1]
   }
 
   #check that the response is in df
   if(!(response %in% colnames(df))){
     message(
-      "Argument 'response' with value '",
+      "collinear::validate_response(): argument 'response' with value '",
       response,
       "' is not a column name of 'df' and will be ignored."
       )
@@ -384,7 +400,7 @@ validate_response <- function(
 
     if(length(response.zero.variance) == 1){
       message(
-        "The 'response' column '",
+        "collinear::validate_response(): the 'response' column '",
         response,
         "' has near-zero variance and will be ignored."
       )
@@ -394,14 +410,17 @@ validate_response <- function(
   }
 
   response.na.values <- sum(is.na(df[[response]]))
+
   if(response.na.values > 0){
+
     message(
-      "The 'response' column '",
+      "collinear::validate_response(): the 'response' column '",
       response,
       "' has ",
       response.na.values,
       " NA values and may cause unexpected issues."
     )
+
   }
 
   attr(

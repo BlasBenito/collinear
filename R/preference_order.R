@@ -165,7 +165,8 @@ preference_order <- function(
   )
 
   if(is.null(response)){
-    stop("collinear::preference_order(): argument 'response' cannot be NULL.")
+    #TODO: define strategy when response is NULL
+    #because NULL is a valid value!
   }
 
   #check predictors

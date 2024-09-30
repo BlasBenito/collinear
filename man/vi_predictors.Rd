@@ -19,7 +19,7 @@ All Predictor Names in Example Data Frame vi
 Other example_data: 
 \code{\link{toy}},
 \code{\link{vi}},
-\code{\link{vi_predictors_category}},
+\code{\link{vi_predictors_categorical}},
 \code{\link{vi_predictors_numeric}}
 }
 \concept{example_data}

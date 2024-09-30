@@ -20,7 +20,7 @@ Other example_data:
 \code{\link{toy}},
 \code{\link{vi}},
 \code{\link{vi_predictors}},
-\code{\link{vi_predictors_category}}
+\code{\link{vi_predictors_categorical}}
 }
 \concept{example_data}
 \keyword{datasets}
