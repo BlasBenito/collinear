@@ -21,7 +21,7 @@ cor_matrix(
 
 \item{cor_method}{(optional; character string) Method used to compute pairwise correlations. Either "pearson" or "spearman". Default: "pearson".}
 
-\item{encoding_method}{(optional; character string). Name of the target encoding method to transform non-numeric variables to numeric. One of "mean", "rank", "loo", "rnorm" (see \code{\link[=target_encoding_lab]{target_encoding_lab()}} for further details). Default: "mean"}
+\item{encoding_method}{(optional; character string). Name of the target encoding method to transform non-numeric variables to numeric. One of "mean", "rank", "loo", "rnorm" (see \code{\link[=target_encoding_lab]{target_encoding_lab()}} for further details). If NULL, target encoding is ignored, and categorical predictors are ignored during the VIF analysis. Default: "mean"}
 }
 \value{
 correlation matrix

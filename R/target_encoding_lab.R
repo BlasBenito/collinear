@@ -27,7 +27,7 @@
 #'
 #'
 #' @inheritParams collinear
-#' @param encoding_methods (optional; character vector). Name of the target encoding methods. Default: c("mean", "loo", rank")
+#' @param encoding_methods (optional; character vector or NULL). Name of the target encoding methods. If NULL, target encoding is ignored, and `df` is returned with no modification. Default: c("mean", "loo", rank")
 #' @param smoothing (optional; integer) Argument of the method "mean". Groups smaller than this number have their means pulled towards mean of the response across all cases. Default: 0
 #' @param white_noise (optional; numeric) Argument of the methods "mean", "rank", and "loo". Maximum white noise to add, expressed as a fraction of the range of the response variable. Default: `0`.
 #' @param seed (optional; integer) Random seed to facilitate reproducibility when `white_noise` is not 0. Default: 1
@@ -97,6 +97,10 @@ target_encoding_lab <- function(
     replace = FALSE,
     verbose = TRUE
 ){
+
+  if(is.null(encoding_methods)){
+    return(df)
+  }
 
   #testing method argument
   encoding_methods <- match.arg(

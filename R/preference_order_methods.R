@@ -1,66 +1,5 @@
-#' Pearson's R-squared of Observations vs Predictions
-#'
-#' @description
-#' Internal function to compute the R-squared of observations versus model predictions.
-#'
-#'
-#' @param o (required, numeric vector) Observations, values of a response variable. Default: NULL
-#' @param p (required, numeric vector) Model predictions. Default: NULL
-#'
-#' @return numeric: Pearson R-squared
-#' @export
-#' @autoglobal
-#' @family preference_order
-r2 <- function(
-    o = NULL,
-    p = NULL
-){
 
-  stats::cor(
-    x = p,
-    y = o,
-    method = "pearson",
-    use = "complete.obs"
-  )^2
-
-}
-
-#' Area Under the Curve of Binomial Observations vs Probabilistic Model Predictions
-#'
-#' @description
-#' Internal function to compute the AUC of binomial models within [preference_order()]. As it is build for speed, this function does not check the inputs.
-#'
-#'
-#' @param o (required, binomial vector) Observations, values of a binomial response variable with unique values 0 and 1. Default: NULL
-#' @param p (required, numeric vector) Continuous predictions of a binomial model in the range 0-1. Default: NULL
-#'
-#' @return numeric: Area Under the Curve
-#' @export
-#' @family preference_order
-#' @autoglobal
-auc <- function(
-    o = NULL,
-    p = NULL
-){
-
-  #predicted values of the ones and the zeroes
-  ones <- p[o == 1]
-  zeros <- p[o == 0]
-
-  #lengths of each vector
-  ones.n <- length(ones)
-  zeros.n <- length(zeros)
-
-  #curve computation
-  curve <- sum(
-    rank(c(ones, zeros))[1:ones.n]
-    ) - (ones.n * (ones.n + 1) / 2)
-
-  #area under the curve
-  curve / (zeros.n * ones.n)
-
-}
-
+# NUMERIC RESPONSE ----
 
 #' Association Between a Continuous Response and a Continuous Predictor
 #'
@@ -344,6 +283,8 @@ f_r2_rf <- function(df){
 
 }
 
+# COUNTS RESPONSE ----
+
 #' Association Between a Count Response and a Continuous Predictor
 #'
 #' @description
@@ -480,6 +421,8 @@ f_r2_gam_poisson <- function(df){
   )
 
 }
+
+# BINOMIAL RESPONSE ----
 
 #' Association Between a Binomial Response and a Continuous Predictor
 #'
@@ -711,6 +654,8 @@ f_auc_rf <- function(df){
 
 }
 
+# CATEGORICAL RESPONSE ----
+
 #' Association Between a Categorical Response and a Categorical Predictor
 #'
 #' @description
@@ -823,35 +768,3 @@ f_v_rf_categorical <- function(df){
 }
 
 
-#' @title Case Weights for Unbalanced Binomial or Categorical Responses
-#' @param x (required, integer, character, or factor vector) Either a binomial response with 1s and 0s, or categorical responses as characters or factors. Default: `NULL`
-#' @return numeric vector: case weights
-#' @examples
-#'  case_weights(
-#'    x = c(0, 0, 0, 1, 1)
-#'    )
-#'
-#'  case_weights(
-#'    x = c("a", "a", "b", "b", "c")
-#'    )
-#' @family preference_order
-#' @autoglobal
-#' @export
-case_weights <- function(
-    x = NULL
-){
-
-  # Convert to factor if not already
-  x <- as.factor(x)
-
-  # ocurrences per level
-  n <- length(x)
-  counts <- table(x)
-
-  # weights as inverse of the counts
-  weights <- 1 / counts
-
-  # vector of weights
-  as.numeric(weights[as.character(x)])
-
-}

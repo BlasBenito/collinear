@@ -63,7 +63,7 @@
 #' @param cor_method (optional; character string) Method used to compute pairwise correlations. Either "pearson" or "spearman". Default: "pearson".
 #' @param max_cor (optional; numeric) Maximum correlation allowed between any pair of variables in `predictors`. Recommended values are between 0.5 and 0.9. Higher values return larger number of predictors with a higher multicollinearity. Default: `0.75`
 #' @param max_vif (optional, numeric) Maximum Variance Inflation Factor allowed during variable selection. Recommended values are between 2.5 and 10. Higher values return larger number of predictors with a higher multicollinearity. Default: 5.
-#' @param encoding_method (optional; character string). Name of the target encoding method to transform non-numeric variables to numeric. One of "mean", "rank", "loo", "rnorm" (see [target_encoding_lab()] for further details). Default: "mean"
+#' @param encoding_method (optional; character string). Name of the target encoding method to transform non-numeric variables to numeric. One of "mean", "rank", "loo", "rnorm" (see [target_encoding_lab()] for further details). If NULL, target encoding is ignored, and categorical predictors are ignored during the VIF analysis. Default: "mean"
 #' @return character vector; names of selected predictors
 #'
 #' @examples

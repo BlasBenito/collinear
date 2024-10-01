@@ -27,7 +27,7 @@ cor_select(
 
 \item{max_cor}{(optional; numeric) Maximum correlation allowed between any pair of variables in \code{predictors}. Recommended values are between 0.5 and 0.9. Higher values return larger number of predictors with a higher multicollinearity. Default: \code{0.75}}
 
-\item{encoding_method}{(optional; character string). Name of the target encoding method to transform non-numeric variables to numeric. One of "mean", "rank", "loo", "rnorm" (see \code{\link[=target_encoding_lab]{target_encoding_lab()}} for further details). Default: "mean"}
+\item{encoding_method}{(optional; character string). Name of the target encoding method to transform non-numeric variables to numeric. One of "mean", "rank", "loo", "rnorm" (see \code{\link[=target_encoding_lab]{target_encoding_lab()}} for further details). If NULL, target encoding is ignored, and categorical predictors are ignored during the VIF analysis. Default: "mean"}
 }
 \value{
 character vector; names of selected predictors

@@ -116,11 +116,13 @@ cramer_v <- function(
       min(
         c(
           (
-            xy.table.cols - ((xy.table.cols - 1)^2 /
-                               (xy.table.sum - 1))
+            xy.table.cols -
+              ((xy.table.cols - 1)^2 /
+                 (xy.table.sum - 1))
           ) - 1,
-          (xy.table.rows - ((xy.table.rows - 1)^2 /
-                              (xy.table.sum - 1))
+          (xy.table.rows -
+             ((xy.table.rows - 1)^2 /
+                (xy.table.sum - 1))
           ) - 1
         )
       )

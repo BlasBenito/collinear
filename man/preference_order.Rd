@@ -2,13 +2,13 @@
 % Please edit documentation in R/preference_order.R
 \name{preference_order}
 \alias{preference_order}
-\title{Quantitative Variable Prioritization Multicollinearity Filtering}
+\title{Quantitative Variable Prioritization for Multicollinearity Filtering}
 \usage{
 preference_order(
   df = NULL,
   response = NULL,
   predictors = NULL,
-  f = f_r2_pearson,
+  f = NULL,
   encoding_method = "mean"
 )
 }
@@ -19,21 +19,27 @@ preference_order(
 
 \item{predictors}{(optional; character vector) Names of the variables to select from \code{df}. If omitted, all numeric columns in \code{df} are used instead. If argument \code{response} is not provided, non-numeric variables are ignored. Default: NULL}
 
-\item{f}{(optional: function) Function to compute the association between each predictor in \code{predictors} and \code{response}. Default: \code{f_r2_pearson}}
+\item{f}{(optional: function) Function to compute the association between \code{response} and each predictor in \code{predictors}. If NULL (default), the function returned by \code{\link[=f_default]{f_default()}} is used:
+\itemize{
+\item \code{\link[=f_auc_rf]{f_auc_rf()}}: \code{response} is binomial.
+\item \code{\link[=f_r2_pearson]{f_r2_pearson()}}: \code{response} and \code{predictors} are numeric.
+\item \code{\link[=f_v]{f_v()}}: \code{response} and \code{predictors} are categorical.
+\item \code{\link[=f_v_rf_categorical]{f_v_rf_categorical()}}: \code{response} is categorical and \code{predictors} are numeric or mixed .
+\item \code{\link[=f_r2_rf]{f_r2_rf()}}: in all other cases.
+}
+Default: NULL}
 
-\item{encoding_method}{(optional; character string). Name of the target encoding method to transform non-numeric variables to numeric. One of "mean", "rank", "loo", "rnorm" (see \code{\link[=target_encoding_lab]{target_encoding_lab()}} for further details). Default: "mean"}
+\item{encoding_method}{(optional; character string). Name of the target encoding method to transform non-numeric variables to numeric. One of "mean", "rank", "loo", "rnorm" (see \code{\link[=target_encoding_lab]{target_encoding_lab()}} for further details). If NULL, target encoding is ignored, and categorical predictors are ignored during the VIF analysis. Default: "mean"}
 }
 \value{
 data frame
 }
 \description{
-This function ranks a set of variables by their association with a response to minimize loss of predictive power during multicollinearity filtering.
+Ranks a set of predictors by the strength of their association with a response. Aims to minimize the loss of important predictors during multicollinearity filtering.
 
-Returns a data frame with the columns "predictor", with predictor names in order of preference, and "preference", the result of a function \code{f} computing the association between each predictor and the response. This data frame, or the column "predictor" can be used as inputs for the argument \code{preference_order} in \code{\link[=cor_select]{cor_select()}}, \code{\link[=vif_select]{vif_select()}} and \code{\link[=collinear]{collinear()}}.
-
-The \code{f} functions available are:
+The strength of association between the response and each predictor is computed by the function \code{f}. The \code{f} functions available are:
 \itemize{
-\item Numeric response vs numeric predictor:
+\item \strong{Numeric response vs numeric predictor}:
 \itemize{
 \item \code{\link[=f_r2_pearson]{f_r2_pearson()}}: Pearson's R-squared.
 \item \code{\link[=f_r2_spearman]{f_r2_spearman()}}: Spearman's R-squared.
@@ -43,13 +49,13 @@ The \code{f} functions available are:
 \item \code{\link[=f_r2_rpart]{f_r2_rpart()}}: Recursive Partition Tree fitted with \code{\link[rpart:rpart]{rpart::rpart()}}.
 \item \code{\link[=f_r2_rf]{f_r2_rf()}}: Random Forest model fitted with \code{\link[ranger:ranger]{ranger::ranger()}}.
 }
-\item Integer counts response vs. numeric predictor:
+\item \strong{Integer counts response vs. numeric predictor}:
 \itemize{
 \item \code{\link[=f_r2_glm_poisson]{f_r2_glm_poisson()}}: Pearson's R-squared of a Poisson GLM.
 \item \code{\link[=f_r2_glm_poisson_poly2]{f_r2_glm_poisson_poly2()}}: Poisson GLM with second degree polynomial.
 \item \code{\link[=f_r2_gam_poisson]{f_r2_gam_poisson()}}: Poisson GAM.
 }
-\item Binomial response (1 and 0) vs. numeric predictor:
+\item \strong{Binomial response (1 and 0) vs. numeric predictor}:
 \itemize{
 \item \code{\link[=f_auc_glm_binomial]{f_auc_glm_binomial()}}: AUC of quasibinomial GLM with weighted cases.
 \item \code{\link[=f_auc_glm_binomial_poly2]{f_auc_glm_binomial_poly2()}}: As above with second degree polynomial.
@@ -57,33 +63,37 @@ The \code{f} functions available are:
 \item \code{\link[=f_auc_rpart]{f_auc_rpart()}}: Recursive Partition Tree with weighted cases.
 \item \code{\link[=f_auc_rf]{f_auc_rf()}}: Random Forest model with weighted cases.
 }
-\item Categorical response (character of factor) vs. categorical predictor:
+\item \strong{Categorical response (character of factor) vs. categorical predictor}:
 \itemize{
 \item \code{\link[=f_v]{f_v()}}: Cramer's V between two categorical variables.
 }
-\item Categorical response vs. categorical or numerical predictor:
+\item \strong{Categorical response vs. categorical or numerical predictor}:
 \itemize{
 \item \code{\link[=f_v_rf_categorical]{f_v_rf_categorical()}}: Cramer's V of a Random Forest model.
 }
 }
+
+The name of the used function is stored in the attribute "f_name" of the output data frame. It can be retrieved via \code{attributes(df)$f_name}
+
+Additionally, any custom function accepting a data frame with the columns "x" (predictor) and "y" (response) and returning a numeric indicator of association where higher numbers indicate higher association will work.
+
+This function returns a data frame with the column "predictor", with predictor names ordered by the column "preference", with the result of \code{f}. This data frame, or the column "predictor" alone, can be used as inputs for the argument \code{preference_order} in \code{\link[=collinear]{collinear()}}, \code{\link[=cor_select]{cor_select()}}, and \code{\link[=vif_select]{vif_select()}}.
 
 When the argument \code{response} is the name of a numeric column in \code{df}, then \code{\link[=target_encoding_lab]{target_encoding_lab()}} is used to transform any categorical variables named in \code{predictors} to numeric.
 
 This function supports a parallelization setup via \code{\link[future:plan]{future::plan()}} and progress bars generated by the \code{progressr} package. See examples.
 }
 \examples{
-
-
 data(
   vi,
   vi_predictors,
-  vi_predictors_category
+  vi_predictors_numeric
 )
 
 #subsets to limit example run time
 vi <- vi[1:1000, ]
 vi_predictors <- vi_predictors[1:10]
-vi_predictors_category <- vi_predictors_category[1:10]
+vi_predictors_numeric <- vi_predictors_numeric[1:10]
 
 #parallelization setup
 future::plan(
@@ -94,15 +104,21 @@ future::plan(
 #progress bar
 # progressr::handlers(global = TRUE)
 
-#numeric response
+#numeric response and mixed predictors
+#categoricals transformed to numeric via target encoding
+#applies f_r2_pearson() to compute correlation between response and predictors
 df_preference <- preference_order(
   df = vi,
   response = "vi_numeric",
   predictors = vi_predictors,
-  f = f_r2_pearson
+  encoding_method = "mean"
   )
 
+#returns data frame ordered by preference
 df_preference
+
+#name of preference function stored as attribute
+attributes(df_preference)$f_name
 
 #using it as input in collinear()
 selection <- collinear(
@@ -114,64 +130,47 @@ selection <- collinear(
 
 selection
 
-
-#count response
-df_preference <- preference_order(
+#numeric response and mixed predictors
+#disabled target encoding, categoricals used as is
+#uses f_r2_rf() to compute preference
+preference_order(
   df = vi,
-  response = "vi_counts",
+  response = "vi_numeric",
   predictors = vi_predictors,
-  f = f_r2_glm_poisson
+  encoding_method = NULL
 )
 
-df_preference
-
-#binomial response
-df_preference <- preference_order(
+#user defined f function
+#for binomial response and numeric predictors
+preference_order(
   df = vi,
   response = "vi_binomial",
-  predictors = vi_predictors,
+  predictors = vi_predictors_numeric,
   f = f_auc_glm_binomial
 )
 
-df_preference
-
-#categorical response and predictors
-df_preference <- preference_order(
+#default f function
+#for binomial response and numeric predictors
+#uses f_auc_rf()
+preference_order(
   df = vi,
-  response = "vi_category",
-  predictors = vi_predictors_category,
-  f = f_v
+  response = "vi_binomial",
+  predictors = vi_predictors_numeric,
+  f = NULL
 )
-
-df_preference
-
-#categorical response and categorical and numeric predictors
-df_preference <- preference_order(
-  df = vi,
-  response = "vi_category",
-  predictors = vi_predictors,
-  f = f_v_rf_categorical
-)
-
-df_preference
-
 
 #disable parallelization
 future::plan(future::sequential)
-
 }
 \seealso{
 Other preference_order: 
-\code{\link{auc}()},
-\code{\link{case_weights}()},
 \code{\link{default_f}()},
 \code{\link{default_f_heuristic}()},
 \code{\link{f_auc}},
 \code{\link{f_r2}},
 \code{\link{f_r2_counts}},
 \code{\link{f_v}()},
-\code{\link{f_v_rf_categorical}()},
-\code{\link{r2}()}
+\code{\link{f_v_rf_categorical}()}
 }
 \author{
 Blas M. Benito, PhD
