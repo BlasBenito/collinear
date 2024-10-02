@@ -4,12 +4,7 @@
 \alias{validate_predictors}
 \title{Validate Argument predictors}
 \usage{
-validate_predictors(
-  df = NULL,
-  response = NULL,
-  predictors = NULL,
-  decimals = 4
-)
+validate_predictors(df = NULL, response = NULL, predictors = NULL)
 }
 \arguments{
 \item{df}{(required; data frame, tibble, or sf) A data frame with numeric predictors, and optionally a numeric response and categorical predictors. Default: NULL.}
@@ -17,8 +12,6 @@ validate_predictors(
 \item{response}{(optional, character string) Name of a numeric (non-numerics are ignored) response variable in \code{df}, only required if there are categorical variables named in the argument \code{predictors}. Default: NULL.}
 
 \item{predictors}{(optional; character vector) Names of the variables to select from \code{df}. If omitted, all numeric columns in \code{df} are used instead. If argument \code{response} is not provided, non-numeric variables are ignored. Default: NULL}
-
-\item{decimals}{(required, integer) Number of decimal places for the zero variance test. Smaller numbers will increase the number of variables detected as near-zero variance. Recommended values will depend on the range of the numeric variables in 'df'. Default: 4}
 }
 \value{
 character vector: predictor names
@@ -62,9 +55,10 @@ attributes(vi_predictors)$validated
 \seealso{
 Other data_preparation: 
 \code{\link{drop_geometry_column}()},
-\code{\link{identify_non_numeric_predictors}()},
-\code{\link{identify_numeric_predictors}()},
-\code{\link{identify_zero_variance_predictors}()},
+\code{\link{identify_predictors}()},
+\code{\link{identify_predictors_categorical}()},
+\code{\link{identify_predictors_numeric}()},
+\code{\link{identify_predictors_zero_variance}()},
 \code{\link{validate_df}()},
 \code{\link{validate_preference_order}()},
 \code{\link{validate_response}()}

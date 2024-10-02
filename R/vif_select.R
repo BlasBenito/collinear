@@ -143,8 +143,10 @@ vif_select <- function(
     encoding_method = "mean"
 ){
 
-  #do nothing if one predictor only
-  if(length(predictors) == 1){
+  #do nothing if
+  #  one predictor only
+  #  max_vif is NULL
+  if(length(predictors) == 1 || is.null(max_vif)){
     return(predictors)
   }
 
@@ -174,7 +176,7 @@ vif_select <- function(
   )
 
   #identify numerics
-  predictors.numeric <- identify_numeric_predictors(
+  predictors.numeric <- identify_predictors_numeric(
     df = df,
     predictors = predictors
   )
@@ -183,16 +185,6 @@ vif_select <- function(
   if(length(predictors.numeric) == 0){
     return(predictors)
   }
-
-  #target encode character predictors
-  df <- target_encoding_lab(
-    df = df,
-    response = response,
-    predictors = predictors,
-    encoding_methods = encoding_method,
-    replace = TRUE,
-    verbose = FALSE
-  )
 
   #auto preference order
   #variables with lower sum of cor with others go higher

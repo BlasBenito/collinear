@@ -4,16 +4,12 @@
 \alias{vif_df}
 \title{Variance Inflation Factor}
 \usage{
-vif_df(df = NULL, response = NULL, predictors = NULL, encoding_method = "mean")
+vif_df(df = NULL, predictors = NULL)
 }
 \arguments{
 \item{df}{(required; data frame, tibble, or sf) A data frame with numeric predictors, and optionally a numeric response and categorical predictors. Default: NULL.}
 
-\item{response}{(optional, character string) Name of a numeric (non-numerics are ignored) response variable in \code{df}, only required if there are categorical variables named in the argument \code{predictors}. Default: NULL.}
-
 \item{predictors}{(optional; character vector) Names of the variables to select from \code{df}. If omitted, all numeric columns in \code{df} are used instead. If argument \code{response} is not provided, non-numeric variables are ignored. Default: NULL}
-
-\item{encoding_method}{(optional; character string). Name of the target encoding method to transform non-numeric variables to numeric. One of "mean", "rank", "loo", "rnorm" (see \code{\link[=target_encoding_lab]{target_encoding_lab()}} for further details). If NULL, target encoding is ignored, and categorical predictors are ignored during the VIF analysis. Default: "mean"}
 }
 \value{
 data frame; predictors names and VIF scores
@@ -41,35 +37,12 @@ The range of VIF values is (1, Inf]. The recommended thresholds for maximum VIF 
 
 data(
   vi,
-  vi_predictors
+  vi_predictors_numeric
 )
 
-#subset to limit example run time
-vi <- vi[1:1000, ]
-
-#reduce correlation in predictors with cor_select()
-vi_predictors <- cor_select(
-  df = vi,
-  response = "vi_mean",
-  predictors = vi_predictors,
-  max_cor = 0.75
-)
-
-#without response
-#only numeric predictors are returned
 df <- vif_df(
-  df = vi,
-  predictors = vi_predictors
-)
-
-df
-
-#with response
-#categorical and numeric predictors are returned
-df <- vif_df(
-  df = vi,
-  response = "vi_mean",
-  predictors = vi_predictors
+  df = vi[1:1000, ], #subset to limit run time
+  predictors = vi_predictors_numeric
 )
 
 df

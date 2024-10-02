@@ -1,4 +1,60 @@
-#' Identify Numeric Variables
+#' Identify Numeric and Categorical Predictors
+#'
+#' @description
+#' Returns a list with the names of the valid numeric predictors and the names of the valid categorical predictors
+#'
+#' @inheritParams collinear
+#' @return list: names of numeric and categorical predictors
+#' @examples
+#' if (interactive()) {
+#'
+#' data(
+#'   vi,
+#'   vi_predictors
+#' )
+#'
+#' predictors_names <- identify_predictors(
+#'   df = vi,
+#'   predictors = vi_predictors
+#' )
+#'
+#' predictors_names
+#'
+#' }
+#' @autoglobal
+#' @family data_preparation
+#' @author Blas M. Benito, PhD
+#' @export
+identify_predictors <- function(
+    df = NULL,
+    predictors = NULL
+){
+
+  predictors_numeric <- setdiff(
+    x = identify_predictors_numeric(
+      df = df,
+      predictors = predictors
+    ),
+    y = identify_predictors_zero_variance(
+      df = df,
+      predictors = predictors
+    )
+  )
+
+  predictors_categorical <- identify_predictors_categorical(
+    df = df,
+    predictors = predictors
+  )
+
+  list(
+    numeric = predictors_numeric,
+    categorical = predictors_categorical
+  )
+
+}
+
+
+#' Identify Numeric Predictors
 #'
 #' @description
 #' Returns the names of the numeric variables in a data frame.
@@ -13,7 +69,7 @@
 #'   vi_predictors
 #' )
 #'
-#' numeric.predictors <- identify_numeric_predictors(
+#' numeric.predictors <- identify_predictors_numeric(
 #'   df = vi,
 #'   predictors = vi_predictors
 #' )
@@ -25,27 +81,40 @@
 #' @family data_preparation
 #' @author Blas M. Benito, PhD
 #' @export
-identify_numeric_predictors <- function(
+identify_predictors_numeric <- function(
     df = NULL,
     predictors = NULL
 ){
 
-  df <- df[, predictors, drop = FALSE]
+  if(!is.null(predictors)){
 
-  predictors.numeric <- colnames(df)[sapply(df, is.numeric)]
+    predictors <- predictors[
+      predictors %in% colnames(df)
+    ]
 
-  predictors.numeric
+    if(length(predictors) >= 1){
+      df <- df[, predictors, drop = FALSE]
+    }
+
+  }
+
+  colnames(df)[
+    sapply(
+      X = df,
+      FUN = is.numeric
+    )
+  ]
 
 }
 
-#' Identify Non-Numeric Predictors
+#' Identify Categorical Predictors
 #'
 #' @description
-#' Returns the names of the non-numeric predictors, if any, in a data frame.
+#' Returns the names of character or factor predictors, if any.
 #'
 #'
 #' @inheritParams collinear
-#' @return character vector: names of non-numeric predictors
+#' @return character vector: categorical predictors names
 #' @examples
 #'
 #' data(
@@ -53,7 +122,7 @@ identify_numeric_predictors <- function(
 #'   vi_predictors
 #' )
 #'
-#' non.numeric.predictors <- identify_non_numeric_predictors(
+#' non.numeric.predictors <- identify_predictors_categorical(
 #'   df = vi,
 #'   predictors = vi_predictors
 #' )
@@ -64,16 +133,42 @@ identify_numeric_predictors <- function(
 #' @family data_preparation
 #' @author Blas M. Benito, PhD
 #' @export
-identify_non_numeric_predictors <- function(
+identify_predictors_categorical <- function(
     df = NULL,
     predictors = NULL
 ){
 
-  df <- df[, predictors, drop = FALSE]
+  if(!is.null(predictors)){
 
-  predictors.non.numeric <- colnames(df)[!sapply(df, is.numeric)]
+    predictors <- predictors[
+      predictors %in% colnames(df)
+    ]
 
-  predictors.non.numeric
+    if(length(predictors) >= 1){
+      df <- df[, predictors, drop = FALSE]
+    }
+
+  }
+
+  #subset categorical
+  df <- df[,
+    !sapply(
+      X = df,
+      FUN = is.numeric
+    )
+  ]
+
+  #remove constant categoricals
+  colnames(df)[
+    !sapply(
+      X = df,
+      FUN = function(x){
+        length(unique(x)) == 1
+      }
+    )
+  ]
+
+
 
 }
 
@@ -85,7 +180,7 @@ identify_non_numeric_predictors <- function(
 #' Variables with a variance of zero or near-zero are highly problematic for multicollinearity analysis and modelling in general. This function identifies these variables with a level of sensitivity defined by the 'decimals' argument. Smaller number of decimals increase the number of variables detected as near zero variance. Recommended values will depend on the range of the numeric variables in 'df'.
 #'
 #' @inheritParams collinear
-#' @param decimals (required, integer) number of decimal places for the zero variance test. Default: 4
+#' @param decimals (required, integer) Number of decimal places for the zero variance test. Smaller numbers will increase the number of variables detected as near-zero variance. Recommended values will depend on the range of the numeric variables in 'df'. Default: 4
 #' @return character vector: names of zero and near-zero variance columns.
 #' @examples
 #'
@@ -107,7 +202,7 @@ identify_non_numeric_predictors <- function(
 #' )
 #'
 #' #identify zero variance predictors
-#' zero.variance.predictors <- identify_zero_variance_predictors(
+#' zero.variance.predictors <- identify_predictors_zero_variance(
 #'   df = vi,
 #'   predictors = vi_predictors
 #' )
@@ -118,50 +213,46 @@ identify_non_numeric_predictors <- function(
 #' @family data_preparation
 #' @author Blas M. Benito, PhD
 #' @export
-identify_zero_variance_predictors <- function(
+identify_predictors_zero_variance <- function(
     df = NULL,
     predictors = NULL,
     decimals = 4
 ){
 
-  predictors.numeric <- identify_numeric_predictors(
+  predictors.numeric <- identify_predictors_numeric(
     df = df,
     predictors = predictors
   )
 
-  df <- df[, predictors.numeric, drop = FALSE]
+  if(length(predictors.numeric) >= 1){
 
-  #replace inf with NA
-  n_inf <- lapply(
-    X = df,
-    FUN = is.infinite
-  ) |>
-    unlist() |>
-    sum()
+    df <- df[, predictors.numeric, drop = FALSE]
 
-  if(n_inf > 0){
-    is.na(df) <- do.call(
-      what = cbind,
-      args = lapply(
-        X = df,
-        FUN = is.infinite
-      )
-    )
+  } else {
+
+    return(NULL)
+
   }
 
-  zero.variance.predictors <- colnames(df)[
+  #replace inf with NA
+  is.na(df) <- do.call(
+    what = cbind,
+    args = lapply(
+      X = df,
+      FUN = is.infinite
+    )
+  )
+
+  colnames(df)[
     round(
-      apply(
+      sapply(
         X = df,
-        MARGIN = 2,
         FUN = var,
         na.rm = TRUE
       ),
       decimals
     ) == 0
   ]
-
-  zero.variance.predictors
 
 }
 
@@ -220,6 +311,10 @@ identify_response_type <- function(
 ){
 
   if(is.null(df) || is.null(response)) {
+    return(NULL)
+  }
+
+  if(!response %in% colnames(df)){
     return(NULL)
   }
 
@@ -357,14 +452,28 @@ identify_response_type <- function(
 identify_predictors_type <- function(
     df = NULL,
     predictors = NULL
-    ){
+){
 
-  if(is.null(df) || is.null(predictors)) {
+  if(is.null(df)){
     return(NULL)
   }
 
+  if(is.null(predictors)){
+    return(NULL)
+  }
+
+  predictors <- predictors[
+    predictors %in% colnames(df)
+  ]
+
+  if(length(predictors) >= 1){
+
+    df <- df[, predictors, drop = FALSE]
+
+  }
+
   out <- lapply(
-    X = df[, predictors],
+    X = df,
     FUN = class
   ) |>
     unlist() |>

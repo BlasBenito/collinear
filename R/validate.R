@@ -97,7 +97,7 @@ validate_df <- function(
 
 
   #remove non-numeric columns with as many values as rows
-  non.numeric.columns <- identify_non_numeric_predictors(df)
+  non.numeric.columns <- identify_predictors_categorical(df)
 
   if(length(non.numeric.columns) > 0){
 
@@ -189,7 +189,6 @@ validate_df <- function(
 #' }
 #'
 #' @inheritParams collinear
-#' @param decimals (required, integer) Number of decimal places for the zero variance test. Smaller numbers will increase the number of variables detected as near-zero variance. Recommended values will depend on the range of the numeric variables in 'df'. Default: 4
 #'
 #' @return character vector: predictor names
 #' @examples
@@ -220,18 +219,23 @@ validate_df <- function(
 validate_predictors <- function(
     df = NULL,
     response = NULL,
-    predictors = NULL,
-    decimals = 4
+    predictors = NULL
 ){
 
 
   # df ----
   if(is.null(df)){
-    stop("Argument 'df' cannot be NULL.")
+    stop(
+      "collinear::validate_predictors(): Argument 'df' cannot be NULL.",
+      call. = FALSE
+      )
   }
 
   if(is.null(attr(df, "validated"))){
-    stop("Argument 'df' is not validated. Please, run validate_df() before validate_predictors().")
+    stop(
+      "collinear::validate_predictors(): Argument 'df' must be validated with collinear::validate_df().",
+      call. = FALSE
+      )
   }
 
   # predictors ----
@@ -256,7 +260,7 @@ validate_predictors <- function(
     if(length(predictors.missing) > 0){
 
       message(
-        "These predictors are not column names of 'df' and will be ignored:\n - ",
+        "collinear::validate_predictors(): these predictors are not column names of 'df' and will be ignored:\n - ",
         paste(
           predictors.missing,
           collapse = "\n - "
@@ -275,16 +279,15 @@ validate_predictors <- function(
 
 
   #removing zero variance predictors
-  predictors.zero.variance <- identify_zero_variance_predictors(
+  predictors.zero.variance <- identify_predictors_zero_variance(
     df = df,
-    predictors = predictors,
-    decimals = decimals
+    predictors = predictors
   )
 
   if(length(predictors.zero.variance) > 0){
 
     message(
-      "These predictors have near zero variance and will be ignored:\n - ",
+      "collinear::validate_predictors(): these predictors have near zero variance and will be ignored:\n - ",
       paste0(
         predictors.zero.variance,
         collapse = "\n - "
@@ -341,8 +344,7 @@ validate_predictors <- function(
 #' @export
 validate_response <- function(
     df = NULL,
-    response = NULL,
-    decimals = 4
+    response = NULL
 ){
 
   if(is.null(df)){
@@ -392,15 +394,14 @@ validate_response <- function(
 
   if(is.numeric(df[[response]]) == TRUE){
 
-    response.zero.variance <- identify_zero_variance_predictors(
+    response.zero.variance <- identify_predictors_zero_variance(
       df = df,
-      predictors = response,
-      decimals = 4
+      predictors = response
     )
 
     if(length(response.zero.variance) == 1){
       message(
-        "collinear::validate_response(): the 'response' column '",
+        "collinear::validate_response(): 'response' column '",
         response,
         "' has near-zero variance and will be ignored."
       )
@@ -414,7 +415,7 @@ validate_response <- function(
   if(response.na.values > 0){
 
     message(
-      "collinear::validate_response(): the 'response' column '",
+      "collinear::validate_response(): 'response' column '",
       response,
       "' has ",
       response.na.values,

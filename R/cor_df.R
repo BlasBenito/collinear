@@ -176,7 +176,7 @@ cor_numeric_vs_numeric <- function(
   )
 
   #identify numerics
-  predictors <- identify_numeric_predictors(
+  predictors <- identify_predictors_numeric(
     df = df,
     predictors = predictors
   )
@@ -279,7 +279,7 @@ cor_numeric_vs_categorical <- function(
   )
 
   #get numeric and character predictors
-  predictors.numeric <- identify_numeric_predictors(
+  predictors.numeric <- identify_predictors_numeric(
     df = df,
     predictors = predictors
   )
@@ -288,7 +288,7 @@ cor_numeric_vs_categorical <- function(
     return(NULL)
   }
 
-  predictors.non.numeric <- identify_non_numeric_predictors(
+  predictors.non.numeric <- identify_predictors_categorical(
     df = df,
     predictors = predictors
   )
@@ -377,7 +377,7 @@ cor_categorical_vs_categorical <- function(
   )
 
   #get only non numeric predictors
-  predictors <- identify_non_numeric_predictors(
+  predictors <- identify_predictors_categorical(
     df = df,
     predictors = predictors
   )

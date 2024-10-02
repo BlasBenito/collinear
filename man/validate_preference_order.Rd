@@ -64,9 +64,10 @@ my_order
 \seealso{
 Other data_preparation: 
 \code{\link{drop_geometry_column}()},
-\code{\link{identify_non_numeric_predictors}()},
-\code{\link{identify_numeric_predictors}()},
-\code{\link{identify_zero_variance_predictors}()},
+\code{\link{identify_predictors}()},
+\code{\link{identify_predictors_categorical}()},
+\code{\link{identify_predictors_numeric}()},
+\code{\link{identify_predictors_zero_variance}()},
 \code{\link{validate_df}()},
 \code{\link{validate_predictors}()},
 \code{\link{validate_response}()}

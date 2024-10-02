@@ -19,35 +19,12 @@
 #'
 #' data(
 #'   vi,
-#'   vi_predictors
+#'   vi_predictors_numeric
 #' )
 #'
-#' #subset to limit example run time
-#' vi <- vi[1:1000, ]
-#'
-#' #reduce correlation in predictors with cor_select()
-#' vi_predictors <- cor_select(
-#'   df = vi,
-#'   response = "vi_mean",
-#'   predictors = vi_predictors,
-#'   max_cor = 0.75
-#' )
-#'
-#' #without response
-#' #only numeric predictors are returned
 #' df <- vif_df(
-#'   df = vi,
-#'   predictors = vi_predictors
-#' )
-#'
-#' df
-#'
-#' #with response
-#' #categorical and numeric predictors are returned
-#' df <- vif_df(
-#'   df = vi,
-#'   response = "vi_mean",
-#'   predictors = vi_predictors
+#'   df = vi[1:1000, ], #subset to limit run time
+#'   predictors = vi_predictors_numeric
 #' )
 #'
 #' df
@@ -59,36 +36,8 @@
 #' @export
 vif_df <- function(
     df = NULL,
-    response = NULL,
-    predictors = NULL,
-    encoding_method = "mean"
+    predictors = NULL
 ){
-
-  #function to compute vif
-  vif_f <- function(m = NULL){
-
-    if(capabilities("long.double") == TRUE){
-      tolerance = 0
-    } else {
-      tolerance = .Machine$double.eps
-    }
-
-    #compute VIF
-    df <- m |>
-      solve(tol = tolerance) |>
-      diag() |>
-      data.frame(stringsAsFactors = FALSE)
-
-    #format data frame
-    colnames(df) <- "vif"
-    df$vif <- round(abs(df$vif), 3)
-    df$variable <- colnames(m)
-    rownames(df) <- NULL
-
-    #arrange by VIF
-    df[order(df$vif), c("variable", "vif")]
-
-  }
 
   #check input data frame
   df <- validate_df(
@@ -96,16 +45,9 @@ vif_df <- function(
     min_rows = 30
   )
 
-  #validate response
-  response <- validate_response(
-    df = df,
-    response = response
-  )
-
   #check predictors
   predictors <- validate_predictors(
     df = df,
-    response = response,
     predictors = predictors
   )
 
@@ -119,18 +61,8 @@ vif_df <- function(
     )
   }
 
-  #target encode character predictors
-  df <- target_encoding_lab(
-    df = df,
-    response = response,
-    predictors = predictors,
-    encoding_methods = encoding_method,
-    replace = TRUE,
-    verbose = FALSE
-  )
-
   #get numeric predictors only
-  predictors.numeric <- identify_numeric_predictors(
+  predictors.numeric <- identify_predictors_numeric(
     df = df,
     predictors = predictors
   )
@@ -143,7 +75,7 @@ vif_df <- function(
 
   #first try
   vif.df <- tryCatch(
-    {vif_f(m = m)},
+    {vif(m = m)},
     error = function(e) {
       return(NA)
     }
@@ -176,12 +108,15 @@ vif_df <- function(
         }
 
         #compute vif with the new matrix
-        vif_f(m = m)
+        vif(m = m)
 
         },
       error = function(e) {
 
-        stop("The correlation matrix is singular and cannot be solved. This issue may be fixed by removing highly correlated variables with collinear::cor_select() before the VIF analysis.")
+        stop(
+          "collinear::vif_df(): The correlation matrix is singular and cannot be solved. This issue may be fixed by removing highly correlated variables with collinear::cor_select() before the VIF analysis.",
+          call. = FALSE
+          )
 
       }
     )

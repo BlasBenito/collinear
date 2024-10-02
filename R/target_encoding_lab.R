@@ -158,7 +158,7 @@ target_encoding_lab <- function(
   }
 
   #return data if all predictors are numeric
-  predictors.to.encode <- identify_non_numeric_predictors(
+  predictors.to.encode <- identify_predictors_categorical(
     df = df,
     predictors = predictors
   )
