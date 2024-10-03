@@ -12,10 +12,10 @@ vif_df(df = NULL, predictors = NULL)
 \item{predictors}{(optional; character vector) Names of the variables to select from \code{df}. If omitted, all numeric columns in \code{df} are used instead. If argument \code{response} is not provided, non-numeric variables are ignored. Default: NULL}
 }
 \value{
-data frame; predictors names and VIF scores
+data frame; predictors names their VIFs
 }
 \description{
-Computes the Variance Inflation Factor of all variables in a training data frame.
+Computes the Variance Inflation Factor of numeric variables in a data frame.
 
 This function computes the VIF (see section \strong{Variance Inflation Factors} below) in two steps:
 \itemize{
@@ -52,8 +52,5 @@ df
 \itemize{
 \item David A. Belsley, D.A., Kuh, E., Welsch, R.E. (1980). Regression Diagnostics: Identifying Influential Data and Sources of Collinearity. John Wiley & Sons. DOI: 10.1002/0471725153.
 }
-}
-\author{
-Blas M. Benito, PhD
 }
 \concept{vif}

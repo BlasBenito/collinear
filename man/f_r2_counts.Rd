@@ -62,8 +62,6 @@ f_r2_gam_poisson(df = df)
 }
 \seealso{
 Other preference_order: 
-\code{\link{default_f}()},
-\code{\link{default_f_heuristic}()},
 \code{\link{f_auc}},
 \code{\link{f_r2}},
 \code{\link{f_v}()},
@@ -71,8 +69,6 @@ Other preference_order:
 \code{\link{preference_order}()}
 
 Other preference_order: 
-\code{\link{default_f}()},
-\code{\link{default_f_heuristic}()},
 \code{\link{f_auc}},
 \code{\link{f_r2}},
 \code{\link{f_v}()},
@@ -80,8 +76,6 @@ Other preference_order:
 \code{\link{preference_order}()}
 
 Other preference_order: 
-\code{\link{default_f}()},
-\code{\link{default_f_heuristic}()},
 \code{\link{f_auc}},
 \code{\link{f_r2}},
 \code{\link{f_v}()},
@@ -89,8 +83,6 @@ Other preference_order:
 \code{\link{preference_order}()}
 
 Other preference_order: 
-\code{\link{default_f}()},
-\code{\link{default_f_heuristic}()},
 \code{\link{f_auc}},
 \code{\link{f_r2}},
 \code{\link{f_v}()},

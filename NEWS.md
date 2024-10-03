@@ -1,6 +1,6 @@
 # collinear 1.2.0
 
-
+Function vif_select() now has a much better selection algorithm that preserves more predictors with higher preference.
 
 The functions cor_select(), vif_select() and vif_df() now skip the analysis if only one predictor. This may happen in collinear() with highly correlated datasets, when cor_select() only returns one predictor and sends it to vif_select().
 

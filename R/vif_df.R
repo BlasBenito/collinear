@@ -2,7 +2,7 @@
 #'
 #' @description
 #'
-#' Computes the Variance Inflation Factor of all variables in a training data frame.
+#' Computes the Variance Inflation Factor of numeric variables in a data frame.
 #'
 #' This function computes the VIF (see section **Variance Inflation Factors** below) in two steps:
 #' \itemize{
@@ -13,7 +13,7 @@
 #' @inheritSection collinear Variance Inflation Factors
 #'
 #' @inheritParams collinear
-#' @return data frame; predictors names and VIF scores
+#' @return data frame; predictors names their VIFs
 #'
 #' @examples
 #'
@@ -31,13 +31,42 @@
 #'
 #' @autoglobal
 #' @family vif
-#' @author Blas M. Benito, PhD
 #' @inherit vif_select references
 #' @export
 vif_df <- function(
     df = NULL,
     predictors = NULL
 ){
+
+  #internal function to compute VIF
+  #from correlation matrix
+  f_vif <- function(m = NULL){
+
+    if(capabilities("long.double") == TRUE){
+      tolerance = 0
+    } else {
+      tolerance = .Machine$double.eps
+    }
+
+    #compute VIF
+    df <- m |>
+      solve(tol = tolerance) |>
+      diag() |>
+      data.frame(stringsAsFactors = FALSE)
+
+    #format data frame
+    colnames(df) <- "vif"
+    df$vif <- round(abs(df$vif), 4)
+    df$predictor <- colnames(m)
+    rownames(df) <- NULL
+
+    #arrange by VIF
+    df[
+      order(df$vif),
+      c("predictor", "vif")
+    ]
+
+  }
 
   #check input data frame
   df <- validate_df(
@@ -55,7 +84,7 @@ vif_df <- function(
   if(length(predictors) == 1){
     return(
       data.frame(
-        variable = predictors,
+        predictor = predictors,
         vif = 0
       )
     )
@@ -75,7 +104,7 @@ vif_df <- function(
 
   #first try
   vif.df <- tryCatch(
-    {vif(m = m)},
+    {f_vif(m = m)},
     error = function(e) {
       return(NA)
     }
@@ -108,13 +137,13 @@ vif_df <- function(
         }
 
         #compute vif with the new matrix
-        vif(m = m)
+        f_vif(m = m)
 
         },
       error = function(e) {
 
         stop(
-          "collinear::vif_df(): The correlation matrix is singular and cannot be solved. This issue may be fixed by removing highly correlated variables with collinear::cor_select() before the VIF analysis.",
+          "collinear::vif_df(): The correlation matrix is singular and cannot be solved. Removing highly correlated predictors with collinear::cor_select() beforehand may help fix this issue.",
           call. = FALSE
           )
 

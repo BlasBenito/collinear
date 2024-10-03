@@ -2,55 +2,33 @@
 % Please edit documentation in R/vif_select.R
 \name{vif_select}
 \alias{vif_select}
-\title{Automated Multicollinearity Management via Variance Inflation Factors}
+\title{Automated Multicollinearity Filtering with Variance Inflation Factors}
 \usage{
-vif_select(
-  df = NULL,
-  response = NULL,
-  predictors = NULL,
-  preference_order = NULL,
-  max_vif = 5,
-  encoding_method = "mean"
-)
+vif_select(df = NULL, predictors = NULL, preference_order = NULL, max_vif = 5)
 }
 \arguments{
 \item{df}{(required; data frame, tibble, or sf) A data frame with numeric predictors, and optionally a numeric response and categorical predictors. Default: NULL.}
-
-\item{response}{(optional, character string) Name of a numeric (non-numerics are ignored) response variable in \code{df}, only required if there are categorical variables named in the argument \code{predictors}. Default: NULL.}
 
 \item{predictors}{(optional; character vector) Names of the variables to select from \code{df}. If omitted, all numeric columns in \code{df} are used instead. If argument \code{response} is not provided, non-numeric variables are ignored. Default: NULL}
 
 \item{preference_order}{(optional; character vector) Variable names in \code{predictors}. Defines a priority order, from first to last, to preserve variables during the selection process. Variables not included in this argument are ranked by their Variance Inflation Factor. See \code{\link[=preference_order]{preference_order()}}. Default: NULL}
 
-\item{max_vif}{(optional, numeric) Maximum Variance Inflation Factor allowed during variable selection. Recommended values are between 2.5 and 10. Higher values return larger number of predictors with a higher multicollinearity. Default: 5.}
-
-\item{encoding_method}{(optional; character string). Name of the target encoding method to transform non-numeric variables to numeric. One of "mean", "rank", "loo", "rnorm" (see \code{\link[=target_encoding_lab]{target_encoding_lab()}} for further details). If NULL, target encoding is ignored, and categorical predictors are ignored during the VIF analysis. Default: "mean"}
+\item{max_vif}{(optional, numeric) Maximum Variance Inflation Factor allowed during variable selection. Recommended values are between 2.5 and 10. Higher values return larger number of predictors with a higher multicollinearity. If NULL, the variance inflation analysis is disabled. Default: 5.}
 }
 \value{
 character vector; names of selected predictors
 }
 \description{
-Automates multicollinearity management in data frames with numeric and non-numeric predictors by combining three methods:
+This function automatizes multicollinearity filtering in data frames with numeric predictors by combining two methods:
 \itemize{
-\item \strong{Target Encoding}: transforms non-numeric predictors to numeric using another numeric variable (usually a model response) as reference. See \code{\link[=target_encoding_lab]{target_encoding_lab()}}.
-\item \strong{Preference Order}: method to rank and preserve relevant variables during  multicollinearity filtering. See \code{\link[=preference_order]{preference_order()}}.
-\item \strong{VIF-based filtering}: to identify and remove predictors that are linear combinations of other predictors.
+\item \strong{Preference Order}: method to rank and preserve relevant variables during  multicollinearity filtering. See argument \code{preference_order} and function \code{\link[=preference_order]{preference_order()}}.
+\item \strong{VIF-based filtering}: recursive algorithm to identify and remove predictors with a VIF above a given threshold.
 }
 
-This function calls these other functions:
-\itemize{
-\item \code{\link[=target_encoding_lab]{target_encoding_lab()}}: to apply target encoding, if \code{response} is provided and there are categorical variables named in \code{predictors}.
-\item \code{\link[=vif_df]{vif_df()}}: generate data frames with VIF scores.
+When the argument \code{preference_order} is not provided, the predictors are ranked lower to higher VIF. The predictor selection resulting from this option, albeit diverse and uncorrelated, might not be the one with the highest overall predictive power when used in a model.
+
+Please check the sections \strong{Preference Order}, \strong{Variance Inflation Factors}, and \strong{VIF-based Filtering} at the end of this help file for further details.
 }
-
-Please check the sections \strong{Target Encoding}, \strong{Preference Order}, \strong{Variance Inflation Factors}, and \strong{VIF-based Filtering} at the end of this help file for further details.
-}
-\section{Target Encoding}{
-
-
-When the name of a numeric response variable is provided via the \code{response} argument, categorical predictors in \code{predictors} (or in the columns of \code{df} if \code{predictors} is NULL) are converted to numeric via \strong{target encoding} with the function \code{\link[=target_encoding_lab]{target_encoding_lab()}}. When \code{response} is NULL, \code{\link[=collinear]{collinear()}} (and \code{\link[=vif_select]{vif_select()}}) ignore categorical predictors. This feature facilitates multicollinearity filtering in data frames with mixed column types.
-}
-
 \section{Preference Order}{
 
 
@@ -81,106 +59,116 @@ If \code{preference_order} is defined, whenever two or more variables are above 
 }
 
 \examples{
+data(vi)
 
-data(
-  vi,
-  vi_predictors
-)
-
-#subset to limit example run time
+#reduce data size
 vi <- vi[1:1000, ]
-vi_predictors <- vi_predictors[1:10]
 
-#reduce correlation in predictors with cor_select()
-vi_predictors <- cor_select(
-  df = vi,
-  response = "vi_mean",
-  predictors = vi_predictors,
-  max_cor = 0.75
-)
-
-#without response
-#without preference_order
-#permissive max_vif
-#only numeric predictors are processed
+#if argument predictors is not provided
+#all numeric variables in df are used
 selected.predictors <- vif_select(
-  df = vi,
-  predictors = vi_predictors,
-  max_vif = 10
+  df = vi
 )
 
 selected.predictors
 
-#without response
-#without preference_order
-#restrictive max_vif
-#only numeric predictors are processed
+
+#otherwise, only variables in predictors are selected
 selected.predictors <- vif_select(
   df = vi,
-  predictors = vi_predictors,
-  max_vif = 2.5
-)
-
-selected.predictors
-
-#with response
-#without preference_order
-#restrictive max_cor
-#slightly different solution than previous one
-#because categorical variables are target-enccoded
-selected.predictors <- vif_select(
-  df = vi,
-  response = "vi_mean",
-  predictors = vi_predictors,
-  max_vif = 2.5
-)
-
-selected.predictors
-
-#with response
-#with user-defined preference_order
-#restrictive max_cor
-#numerics and categorical variables in output
-selected.predictors <- vif_select(
-  df = vi,
-  response = "vi_mean",
-  predictors = vi_predictors,
-  preference_order = c(
-    "soil_type", #categorical variable
-    "soil_temperature_mean",
+  predictors = c(
     "swi_mean",
     "rainfall_mean",
-    "evapotranspiration_mean"
+    "evapotranspiration_mean",
+    "humidity_mean"
   ),
   max_vif = 2.5
 )
 
 selected.predictors
 
-
-#with response
-#with automated preference_order
-#restrictive max_cor and max_vif
-#numerics and categorical variables in output
-preference.order <- preference_order(
+#all these have a VIF lower than max_vif (2.5)
+vif_df(
   df = vi,
-  response = "vi_mean",
-  predictors = vi_predictors,
-  f = f_rsquared #cor(response, predictor)
+  predictors = selected.predictors
 )
 
-head(preference.order)
 
+#higher max_vif results in larger selection
 selected.predictors <- vif_select(
   df = vi,
-  response = "vi_mean",
-  predictors = vi_predictors,
-  preference_order = preference.order,
+  predictors = vi_predictors_numeric,
+  max_vif = 10
+)
+
+selected.predictors
+
+
+#smaller max_vif results in smaller selection
+selected.predictors <- vif_select(
+  df = vi,
+  predictors = vi_predictors_numeric,
   max_vif = 2.5
 )
 
 selected.predictors
 
+
+#using manual preference order
+selected.predictors <- vif_select(
+  df = vi,
+  predictors = vi_predictors_numeric,
+  preference_order = c(
+    "swi_mean",
+    "rainfall_mean",
+    "evapotranspiration_mean",
+    "humidity_mean"
+  ),
+  max_vif = 2.5
+)
+
+#only "humidity_mean" is lost from the results
+selected.predictors
+
+
+#using automated preference order
+df_preference <- preference_order(
+  df = vi,
+  response = "vi_numeric",
+  predictors = vi_predictors_numeric
+)
+
+df_preference
+
+selected.predictors <- vif_select(
+  df = vi,
+  predictors = vi_predictors_numeric,
+  preference_order = df_preference,
+  max_vif = 10
+)
+
+selected.predictors
+
+
+#categorical predictors are ignored
+#the function returns NA
+selected.predictors <- vif_select(
+  df = vi,
+  predictors = vi_predictors_categorical
+)
+
+selected.predictors
+
+
+#if predictors has length 1
+#selection is skipped
+#and data frame with one row is returned
+selected.predictors <- vif_select(
+  df = vi,
+  predictors = vi_predictors_numeric[1]
+)
+
+selected.predictors
 }
 \references{
 \itemize{
