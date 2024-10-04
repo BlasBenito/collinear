@@ -2,77 +2,114 @@ library(microbenchmark)
 
 # Option 1
 option1 <- function() {
-  #rank of interest
-  df.rank <- data.frame(
-    predictor = preference_order,
-    rank = seq_len(ncol(df))
+
+  #correlation matrix
+  m <- cor_matrix(
+    df = df,
+    predictors = predictors,
+    cor_method = cor_method
+  ) |>
+    abs()
+
+  #auto preference order
+  #variables with lower sum of correlation with others go higher
+  preference_order_auto <- m |>
+    colSums() |>
+    sort() |>
+    names()
+
+  #validate preference order
+  preference_order <- validate_preference_order(
+    predictors = predictors,
+    preference_order = preference_order,
+    preference_order_auto = preference_order_auto
   )
 
-  #recursive VIF filtering
-  for(i in seq(from = nrow(df.rank), to = 2)){
+  preference_order_rev <- rev(preference_order)
 
-    #generate VIF data frame
-    vif.i.df <- vif_df(
-      df = df,
-      predictors = df.rank[["predictor"]]
-    )
+  m <- m[
+    preference_order_rev,
+    preference_order_rev
+  ]
 
-    #extract relevant vif value
-    vif.i <- vif.i.df[["vif"]][
-      vif.i.df[["predictor"]] == df.rank[["predictor"]][i]
-    ]
+  #set diag to 0
+  diag(m) <- 0
 
-    #removing rank row if vif higher than max_vif
-    if(vif.i > max_vif){
-      df.rank <- df.rank[-i, ]
+  selected <- preference_order_rev
+
+  for(i in preference_order_rev){
+
+    if(max(m[selected, i]) > max_cor){
+      selected <- selected[selected != i]
     }
 
   }
-
-  #selected variables
-  out <- df.rank[["predictor"]]
 }
 
 # Option 2
 option2 <- function() {
-  #rank of interest
-  df.rank <- data.frame(
-    predictor = preference_order,
-    rank = seq_len(ncol(df)),
-    selected = TRUE
+
+  #correlation matrix
+  m <- cor_matrix(
+    df = df,
+    predictors = predictors,
+    cor_method = cor_method
+  ) |>
+    abs()
+
+  #auto preference order
+  #variables with lower sum of correlation with others go higher
+  preference_order_auto <- m |>
+    colSums() |>
+    sort() |>
+    names()
+
+  #validate preference order
+  preference_order <- validate_preference_order(
+    predictors = predictors,
+    preference_order = preference_order,
+    preference_order_auto = preference_order_auto
   )
 
-  #recursive VIF filtering
-  for(i in seq(from = nrow(df.rank), to = 2)){
+  #organize the correlation matrix according to preference_order
+  m <- m[
+    preference_order,
+    preference_order
+  ]
 
-    #generate VIF data frame
-    vif.i.df <- vif_df(
-      df = df,
-      predictors = df.rank[df.rank[["selected"]] == TRUE, "predictor"]
-    )
+  #set diag to 0
+  diag(m) <- 0
 
-    #extract relevant vif value
-    vif.i <- vif.i.df[
-      vif.i.df[["predictor"]] == df.rank[["predictor"]][i],
-      "vif"
-      ]
+  #i for first iteration
+  i <- 1
 
-    #removing rank row if vif higher than max_vif
-    if(vif.i > max_vif){
-      df.rank[["selected"]][i] <- FALSE
+  #iterate over i values
+  while(i < ncol(m)){
+
+    i <- i + 1
+
+    #remove i column and row if max > max_cor
+    if(max(m[1:i, i]) > max_cor){
+
+      #remove column
+      m <- m[-i, -i, drop = FALSE]
+
+      #break condition
+      if(ncol(m) == 1){break}
+
+      #go back one column
+      i <- i - 1
+
     }
 
   }
-
-  #selected variables
-  out <- df.rank[df.rank[["selected"]] == TRUE, "predictor"]
 }
 
 # Benchmark both options
 benchmark_result <- microbenchmark(
   option1(),
   option2(),
-  times = 50
+  times = 10
 )
 
 print(benchmark_result)

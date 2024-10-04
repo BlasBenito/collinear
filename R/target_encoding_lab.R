@@ -125,15 +125,20 @@ target_encoding_lab <- function(
     response = response
   )
 
+  if(is.null(response)){
+    if(verbose == TRUE){
+      message("collinear::target_encoding_lab(): argument 'response' is NULL, skipping target-encoding.")
+    }
+    return(df)
+  }
+
   #return data frame if response is not numeric
-  if(!is.null(response)){
-    if(is.numeric(df[[response]]) == FALSE){
+    if(!is.numeric(df[[response]])){
       if(verbose == TRUE){
-        message("collinear::target_encoding_lab(): Argument 'response' is not numeric, returning 'df' without changes.")
+        message("collinear::target_encoding_lab(): argument 'response' is not numeric, skipping target-encoding.")
       }
       return(df)
     }
-  }
 
   #validate predictors
   predictors <- validate_predictors(
@@ -142,14 +147,6 @@ target_encoding_lab <- function(
     predictors = predictors
   )
 
-  if(is.null(response)){
-    if(verbose == TRUE){
-      message("Argument 'response' is required for target encoding, but was not provided. Returning 'df' with no target-encoding.")
-    }
-    return(df)
-
-  }
-
   #if replace is true, get only first option of all inputs
   if(replace == TRUE){
     verbose <- FALSE
@@ -157,7 +154,7 @@ target_encoding_lab <- function(
     white_noise <- white_noise[1]
   }
 
-  #return data if all predictors are numeric
+  #return df if all predictors are numeric
   predictors.to.encode <- identify_predictors_categorical(
     df = df,
     predictors = predictors
@@ -166,11 +163,9 @@ target_encoding_lab <- function(
   if(length(predictors.to.encode) == 0){
 
     if(verbose == TRUE){
-      message("All predictors are numeric, nothing to do.")
+      message("collinear::target_encoding_lab(): all predictors are numeric, nothing to do.")
     }
-
     return(df)
-
   }
 
   if(verbose == TRUE){

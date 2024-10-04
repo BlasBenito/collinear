@@ -218,7 +218,6 @@ collinear <- function(
   #applying cor selection
   selected.predictors <- cor_select(
     df = df,
-    response = response,
     predictors = predictors,
     preference_order = preference_order,
     cor_method = cor_method,
@@ -228,7 +227,6 @@ collinear <- function(
   #applying vif selection
   selected.predictors <- vif_select(
     df = df,
-    response = response,
     predictors = selected.predictors,
     preference_order = preference_order,
     max_vif = max_vif

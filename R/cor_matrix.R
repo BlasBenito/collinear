@@ -1,79 +1,65 @@
-#' Correlation matrix of numeric and character variables
+#' Pairwise Correlation Matrix
 #'
-#' @description Returns a correlation matrix between all pairs of predictors in a training dataset. Non-numeric predictors are transformed into numeric via target encoding, using the 'response' variable as reference.
+#' @description
+#' If argument 'df' results from [cor_df()], transforms it to a correlation matrix. If argument 'df' is a dataframe with predictors, and the argument 'predictors' is provided then [cor_df()] is used to compute pairwise correlations, and the result is transformed to matrix.
 #'
-#' @details
-#' This function attempts to handle correlations between pairs of variables that can be of different types:
-#' \itemize{
-#'   \item numeric vs. numeric: computed with stats::cor() with the methods "pearson" or "spearman".
-#'   \item numeric vs. character, two alternatives leading to different results:
-#'   \itemize{
-#'     \item 'response' is provided: the character variable is target-encoded as numeric using the values of the response as reference, and then its correlation with the numeric variable is computed with stats::cor(). This option generates a response-specific result suitable for training statistical and machine-learning models
-#'     \item 'response' is NULL (or the name of a non-numeric column): the character variable is target-encoded as numeric using the values of the numeric predictor (instead of the response) as reference, and then their correlation is computed with stats::cor(). This option leads to a response-agnostic result suitable for clustering problems.
-#'   }
-#'   \item character vs. character, two alternatives leading to different results:
-#'   \itemize{
-#'     \item 'response' is provided: the character variables are target-encoded as numeric using the values of the response as reference, and then their correlation is computed with stats::cor().
-#'     \item response' is NULL (or the name of a non-numeric column): the association between the character variables is computed using Cramer's V. This option might be problematic, because R-squared values and Cramer's V, even when having the same range between 0 and 1, are not fully comparable.
-#'   }
-#' }
 #' @inheritParams collinear
 #' @return correlation matrix
 #'
 #' @examples
-#'
 #' data(
 #'   vi,
 #'   vi_predictors
 #' )
 #'
-#' #subset to limit example run time
+#' #reduce size of vi to speed-up example execution
 #' vi <- vi[1:1000, ]
+#'
+#' #mixed predictors
 #' vi_predictors <- vi_predictors[1:10]
 #'
-#' #convert correlation data frame to matrix
+#' #parallelization setup
+#' future::plan(
+#'   future::multisession,
+#'   workers = 2 #set to parallelly::availableWorkers() - 1
+#' )
+#'
+#' #progress bar
+#' # progressr::handlers(global = TRUE)
+#'
+#' #correlation data frame
 #' df <- cor_df(
 #'   df = vi,
 #'   predictors = vi_predictors
 #' )
 #'
+#' df
+#'
+#' #correlation matrix
 #' m <- cor_matrix(
 #'   df = df
 #' )
 #'
-#' #show first three columns and rows
-#' m[1:5, 1:5]
+#' m
 #'
-#' #generate correlation matrix directly
+#' #generating it from the original data
 #' m <- cor_matrix(
 #'   df = vi,
 #'   predictors = vi_predictors
 #' )
 #'
-#' m[1:5, 1:5]
+#' m
 #'
-#' #with response (much faster)
-#' #different solution than previous one
-#' #because target encoding is done against the response
-#' #rather than against the other numeric in the pair
-#' m <- cor_matrix(
-#'   df = vi,
-#'   response = "vi_mean",
-#'   predictors = vi_predictors
-#' )
-#'
-#' m[1:5, 1:5]
-#'
+#' #disable parallelization
+#' future::plan(future::sequential)
 #' @autoglobal
-#' @family correlation
+#' @family pairwise_correlation
 #' @author Blas M. Benito, PhD
 #' @export
 cor_matrix <- function(
     df = NULL,
-    response = NULL,
     predictors = NULL,
-    cor_method = "pearson",
-    encoding_method = "mean"
+    cor_method = "pearson"
 ){
 
   #if df with predictors, compute cor data frame
@@ -89,10 +75,8 @@ cor_matrix <- function(
 
     df <- cor_df(
       df = df,
-      response = response,
       predictors = predictors,
-      cor_method = cor_method,
-      encoding_method = encoding_method
+      cor_method = cor_method
     )
 
   }
@@ -108,7 +92,11 @@ cor_matrix <- function(
   )
 
   #rows and col names
-  variables <- unique(c(df$x, df$y))
+  variables <- sort(
+    unique(
+      c(df$x, df$y)
+      )
+    )
 
   #empty square matrix
   m <- matrix(
@@ -132,8 +120,10 @@ cor_matrix <- function(
     ] <- df$correlation
 
   #dim names
-  rownames(m) <- variables
-  colnames(m) <- variables
+  dimnames(m) <- list(
+    variables,
+    variables
+  )
 
   #replace NA in diag with 1
   diag(m) <- 1

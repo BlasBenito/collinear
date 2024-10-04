@@ -198,7 +198,6 @@ selected.predictors
 }
 \seealso{
 Other automated_multicollinearity_analysis: 
-\code{\link{cor_select}()},
 \code{\link{vif_select}()}
 }
 \author{

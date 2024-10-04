@@ -2,100 +2,76 @@
 % Please edit documentation in R/cor_matrix.R
 \name{cor_matrix}
 \alias{cor_matrix}
-\title{Correlation matrix of numeric and character variables}
+\title{Pairwise Correlation Matrix}
 \usage{
-cor_matrix(
-  df = NULL,
-  response = NULL,
-  predictors = NULL,
-  cor_method = "pearson",
-  encoding_method = "mean"
-)
+cor_matrix(df = NULL, predictors = NULL, cor_method = "pearson")
 }
 \arguments{
 \item{df}{(required; data frame, tibble, or sf) A data frame with numeric predictors, and optionally a numeric response and categorical predictors. Default: NULL.}
 
-\item{response}{(optional, character string) Name of a numeric (non-numerics are ignored) response variable in \code{df}, only required if there are categorical variables named in the argument \code{predictors}. Default: NULL.}
-
 \item{predictors}{(optional; character vector) Names of the variables to select from \code{df}. If omitted, all numeric columns in \code{df} are used instead. If argument \code{response} is not provided, non-numeric variables are ignored. Default: NULL}
 
 \item{cor_method}{(optional; character string) Method used to compute pairwise correlations. Either "pearson" or "spearman". Default: "pearson".}
-
-\item{encoding_method}{(optional; character string). Name of the target encoding method to transform non-numeric variables to numeric. One of "mean", "rank", "loo", "rnorm" (see \code{\link[=target_encoding_lab]{target_encoding_lab()}} for further details). If NULL, target encoding is ignored, and categorical predictors are ignored during the VIF analysis. Default: "mean"}
 }
 \value{
 correlation matrix
 }
 \description{
-Returns a correlation matrix between all pairs of predictors in a training dataset. Non-numeric predictors are transformed into numeric via target encoding, using the 'response' variable as reference.
-}
-\details{
-This function attempts to handle correlations between pairs of variables that can be of different types:
-\itemize{
-\item numeric vs. numeric: computed with stats::cor() with the methods "pearson" or "spearman".
-\item numeric vs. character, two alternatives leading to different results:
-\itemize{
-\item 'response' is provided: the character variable is target-encoded as numeric using the values of the response as reference, and then its correlation with the numeric variable is computed with stats::cor(). This option generates a response-specific result suitable for training statistical and machine-learning models
-\item 'response' is NULL (or the name of a non-numeric column): the character variable is target-encoded as numeric using the values of the numeric predictor (instead of the response) as reference, and then their correlation is computed with stats::cor(). This option leads to a response-agnostic result suitable for clustering problems.
-}
-\item character vs. character, two alternatives leading to different results:
-\itemize{
-\item 'response' is provided: the character variables are target-encoded as numeric using the values of the response as reference, and then their correlation is computed with stats::cor().
-\item response' is NULL (or the name of a non-numeric column): the association between the character variables is computed using Cramer's V. This option might be problematic, because R-squared values and Cramer's V, even when having the same range between 0 and 1, are not fully comparable.
-}
-}
+If argument 'df' results from \code{\link[=cor_df]{cor_df()}}, transforms it to a correlation matrix. If argument 'df' is a dataframe with predictors, and the argument 'predictors' is provided then \code{\link[=cor_df]{cor_df()}} is used to compute pairwise correlations, and the result is transformed to matrix.
 }
 \examples{
-
 data(
   vi,
   vi_predictors
 )
 
-#subset to limit example run time
+#reduce size of vi to speed-up example execution
 vi <- vi[1:1000, ]
+
+#mixed predictors
 vi_predictors <- vi_predictors[1:10]
 
-#convert correlation data frame to matrix
+#parallelization setup
+future::plan(
+  future::multisession,
+  workers = 2 #set to parallelly::availableWorkers() - 1
+)
+
+#progress bar
+# progressr::handlers(global = TRUE)
+
+#correlation data frame
 df <- cor_df(
   df = vi,
   predictors = vi_predictors
 )
 
+df
+
+#correlation matrix
 m <- cor_matrix(
   df = df
 )
 
-#show first three columns and rows
-m[1:5, 1:5]
+m
 
-#generate correlation matrix directly
+#generating it from the original data
 m <- cor_matrix(
   df = vi,
   predictors = vi_predictors
 )
 
-m[1:5, 1:5]
+m
 
-#with response (much faster)
-#different solution than previous one
-#because target encoding is done against the response
-#rather than against the other numeric in the pair
-m <- cor_matrix(
-  df = vi,
-  response = "vi_mean",
-  predictors = vi_predictors
-)
-
-m[1:5, 1:5]
-
+#disable parallelization
+future::plan(future::sequential)
 }
 \seealso{
-Other correlation: 
+Other pairwise_correlation: 
 \code{\link{cor_df}()},
-\code{\link{cramer_v}()}
+\code{\link{cor_select}()}
 }
 \author{
 Blas M. Benito, PhD
 }
-\concept{correlation}
+\concept{pairwise_correlation}

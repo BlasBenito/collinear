@@ -177,8 +177,7 @@ selected.predictors
 }
 \seealso{
 Other automated_multicollinearity_analysis: 
-\code{\link{collinear}()},
-\code{\link{cor_select}()}
+\code{\link{collinear}()}
 }
 \author{
 Blas M. Benito, PhD

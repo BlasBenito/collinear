@@ -155,7 +155,8 @@ identify_predictors_categorical <- function(
     !sapply(
       X = df,
       FUN = is.numeric
-    )
+    ),
+    drop = FALSE
   ]
 
   #remove constant categoricals
