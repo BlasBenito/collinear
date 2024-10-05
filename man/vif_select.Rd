@@ -32,10 +32,14 @@ Please check the sections \strong{Preference Order}, \strong{Variance Inflation 
 \section{Preference Order}{
 
 
-The argument \code{preference_order} helps answer the question "what variable should I remove first?". Such answer is provided as a character vector of predictor names in the order of preference (from first to last) in which they want to be preserved. This vector does not need to name all predictors in \code{predictors}, but only the relevant ones for the user.
+This feature is designed to help protect important predictors during the multicollinearity filtering. It involves the arguments \code{preference_order} and \code{f}.
 
-The function \code{\link[=preference_order]{preference_order()}} helps defining a quantitative criteria for preference order by assessing the relationship between each variable in \code{predictors} with a response variable.
-If the argument \verb{preference order} is not provided, \code{\link[=cor_select]{cor_select()}} ranks the predictors by the sum of their absolute pairwise correlations with the other predictors, and \code{\link[=vif_select]{vif_select()}} ranks them from lower to higher VIF.
+The argument \code{preference_order} accepts:
+\itemize{
+\item: A character vector of predictor names in a custom order of preference, from first to last. This vector does not need to contain all predictor names, but only the ones relevant to the user.
+\item A dataframe returned by \code{\link[=preference_order]{preference_order()}}, which ranks predictors based on their association with a response variable.
+\item If NULL, and \code{response} is provided, then \code{\link[=preference_order]{preference_order()}} is used internally to rank the predictors using the function \code{f}. If \code{f} is NULL as well, then \code{\link[=f_default]{f_default()}} selects a proper function based on the data properties.
+}
 }
 
 \section{Variance Inflation Factors}{
@@ -59,116 +63,103 @@ If \code{preference_order} is defined, whenever two or more variables are above 
 }
 
 \examples{
-data(vi)
+#subset to limit example run time
+df <- vi[1:1000, ]
+predictors <- vi_predictors[1:10]
+predictors_numeric <- vi_predictors_numeric[1:10]
 
-#reduce data size
-vi <- vi[1:1000, ]
-
-#if argument predictors is not provided
-#all numeric variables in df are used
-selected.predictors <- vif_select(
-  df = vi
+#predictors has mixed types
+sapply(
+  X = df[, predictors],
+  FUN = class
 )
 
-selected.predictors
-
-
-#otherwise, only variables in predictors are selected
-selected.predictors <- vif_select(
-  df = vi,
-  predictors = c(
-    "swi_mean",
-    "rainfall_mean",
-    "evapotranspiration_mean",
-    "humidity_mean"
-  ),
+#categorical predictors are ignored
+x <- vif_select(
+  df = df,
+  predictors = predictors,
   max_vif = 2.5
 )
 
-selected.predictors
+x
 
 #all these have a VIF lower than max_vif (2.5)
 vif_df(
-  df = vi,
-  predictors = selected.predictors
+  df = df,
+  predictors = x
 )
 
 
 #higher max_vif results in larger selection
-selected.predictors <- vif_select(
-  df = vi,
-  predictors = vi_predictors_numeric,
+x <- vif_select(
+  df = df,
+  predictors = predictors_numeric,
   max_vif = 10
 )
 
-selected.predictors
+x
 
 
 #smaller max_vif results in smaller selection
-selected.predictors <- vif_select(
-  df = vi,
-  predictors = vi_predictors_numeric,
+x <- vif_select(
+  df = df,
+  predictors = predictors_numeric,
   max_vif = 2.5
 )
 
-selected.predictors
+x
 
 
-#using manual preference order
-selected.predictors <- vif_select(
-  df = vi,
-  predictors = vi_predictors_numeric,
+#custom preference order
+x <- vif_select(
+  df = df,
+  predictors = predictors_numeric,
   preference_order = c(
     "swi_mean",
-    "rainfall_mean",
-    "evapotranspiration_mean",
-    "humidity_mean"
+    "soil_temperature_mean",
+    "topo_elevation"
   ),
   max_vif = 2.5
 )
 
-#only "humidity_mean" is lost from the results
-selected.predictors
-
+x
 
 #using automated preference order
 df_preference <- preference_order(
-  df = vi,
+  df = df,
   response = "vi_numeric",
-  predictors = vi_predictors_numeric
+  predictors = predictors_numeric
 )
 
-df_preference
-
-selected.predictors <- vif_select(
-  df = vi,
-  predictors = vi_predictors_numeric,
+x <- vif_select(
+  df = df,
+  predictors = predictors_numeric,
   preference_order = df_preference,
-  max_vif = 10
+  max_vif = 2.5
 )
 
-selected.predictors
+x
 
 
 #categorical predictors are ignored
 #the function returns NA
-selected.predictors <- vif_select(
-  df = vi,
+x <- vif_select(
+  df = df,
   predictors = vi_predictors_categorical
 )
 
-selected.predictors
+x
 
 
 #if predictors has length 1
 #selection is skipped
 #and data frame with one row is returned
-selected.predictors <- vif_select(
-  df = vi,
-  predictors = vi_predictors_numeric[1]
+x <- vif_select(
+  df = df,
+  predictors = predictors_numeric[1]
 )
 
-selected.predictors
+x
 }
 \references{
 \itemize{

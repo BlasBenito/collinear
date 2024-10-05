@@ -40,16 +40,15 @@ If \code{preference_order} is defined, whenever two or more variables are above 
 }
 
 \examples{
-data(
-  vi,
-  vi_predictors
+#subset to limit example run time
+df <- vi[1:1000, ]
+predictors <- vi_predictors[1:10]
+
+#predictors has mixed types
+sapply(
+  X = df[, predictors],
+  FUN = class
 )
-
-#reduce size of vi to speed-up example execution
-vi <- vi[1:1000, ]
-
-#mixed predictors
-vi_predictors <- vi_predictors[1:10]
 
 #parallelization setup
 future::plan(
@@ -61,18 +60,18 @@ future::plan(
 # progressr::handlers(global = TRUE)
 
 #without preference order
-selected_predictors <- cor_select(
-  df = vi,
-  predictors = vi_predictors,
+x <- cor_select(
+  df = df,
+  predictors = predictors,
   max_cor = 0.75
 )
 
-selected_predictors
+x
 
-#with manual preference order
-selected_predictors <- cor_select(
-  df = vi,
-  predictors = vi_predictors,
+#with custom preference order
+x <- cor_select(
+  df = df,
+  predictors = predictors,
   preference_order = c(
     "swi_mean",
     "soil_type"
@@ -80,12 +79,12 @@ selected_predictors <- cor_select(
   max_cor = 0.75
 )
 
-selected_predictors
+x
 
 #soil_type dissappears because its correlation
 #with swi_mean is above max_cor
 cor_df(
-  df = vi,
+  df = df,
   predictors = c(
     "swi_mean",
     "soil_type"
@@ -96,19 +95,22 @@ cor_df(
 #with automated preference order
 #using a response variable
 df_preference <- preference_order(
-  df = vi,
+  df = df,
   response = "vi_numeric",
-  predictors = vi_predictors
+  predictors = predictors
 )
 
-selected_predictors <- cor_select(
-  df = vi,
-  predictors = vi_predictors,
+x <- cor_select(
+  df = df,
+  predictors = predictors,
   preference_order = df_preference,
   max_cor = 0.75
 )
 
-selected_predictors
+x
+
+#resetting to sequential processing
+future::plan(future::sequential)
 }
 \seealso{
 Other pairwise_correlation: 

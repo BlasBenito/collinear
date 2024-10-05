@@ -20,116 +20,103 @@
 #' @inheritParams collinear
 #' @inherit collinear return
 #' @examples
-#' data(vi)
+#' #subset to limit example run time
+#' df <- vi[1:1000, ]
+#' predictors <- vi_predictors[1:10]
+#' predictors_numeric <- vi_predictors_numeric[1:10]
 #'
-#' #reduce data size
-#' vi <- vi[1:1000, ]
-#'
-#' #if argument predictors is not provided
-#' #all numeric variables in df are used
-#' selected.predictors <- vif_select(
-#'   df = vi
+#' #predictors has mixed types
+#' sapply(
+#'   X = df[, predictors],
+#'   FUN = class
 #' )
 #'
-#' selected.predictors
-#'
-#'
-#' #otherwise, only variables in predictors are selected
-#' selected.predictors <- vif_select(
-#'   df = vi,
-#'   predictors = c(
-#'     "swi_mean",
-#'     "rainfall_mean",
-#'     "evapotranspiration_mean",
-#'     "humidity_mean"
-#'   ),
+#' #categorical predictors are ignored
+#' x <- vif_select(
+#'   df = df,
+#'   predictors = predictors,
 #'   max_vif = 2.5
 #' )
 #'
-#' selected.predictors
+#' x
 #'
 #' #all these have a VIF lower than max_vif (2.5)
 #' vif_df(
-#'   df = vi,
-#'   predictors = selected.predictors
+#'   df = df,
+#'   predictors = x
 #' )
 #'
 #'
 #' #higher max_vif results in larger selection
-#' selected.predictors <- vif_select(
-#'   df = vi,
-#'   predictors = vi_predictors_numeric,
+#' x <- vif_select(
+#'   df = df,
+#'   predictors = predictors_numeric,
 #'   max_vif = 10
 #' )
 #'
-#' selected.predictors
+#' x
 #'
 #'
 #' #smaller max_vif results in smaller selection
-#' selected.predictors <- vif_select(
-#'   df = vi,
-#'   predictors = vi_predictors_numeric,
+#' x <- vif_select(
+#'   df = df,
+#'   predictors = predictors_numeric,
 #'   max_vif = 2.5
 #' )
 #'
-#' selected.predictors
+#' x
 #'
 #'
-#' #using manual preference order
-#' selected.predictors <- vif_select(
-#'   df = vi,
-#'   predictors = vi_predictors_numeric,
+#' #custom preference order
+#' x <- vif_select(
+#'   df = df,
+#'   predictors = predictors_numeric,
 #'   preference_order = c(
 #'     "swi_mean",
-#'     "rainfall_mean",
-#'     "evapotranspiration_mean",
-#'     "humidity_mean"
+#'     "soil_temperature_mean",
+#'     "topo_elevation"
 #'   ),
 #'   max_vif = 2.5
 #' )
 #'
-#' #only "humidity_mean" is lost from the results
-#' selected.predictors
-#'
+#' x
 #'
 #' #using automated preference order
 #' df_preference <- preference_order(
-#'   df = vi,
+#'   df = df,
 #'   response = "vi_numeric",
-#'   predictors = vi_predictors_numeric
+#'   predictors = predictors_numeric
 #' )
 #'
-#' df_preference
-#'
-#' selected.predictors <- vif_select(
-#'   df = vi,
-#'   predictors = vi_predictors_numeric,
+#' x <- vif_select(
+#'   df = df,
+#'   predictors = predictors_numeric,
 #'   preference_order = df_preference,
-#'   max_vif = 10
+#'   max_vif = 2.5
 #' )
 #'
-#' selected.predictors
+#' x
 #'
 #'
 #' #categorical predictors are ignored
 #' #the function returns NA
-#' selected.predictors <- vif_select(
-#'   df = vi,
+#' x <- vif_select(
+#'   df = df,
 #'   predictors = vi_predictors_categorical
 #' )
 #'
-#' selected.predictors
+#' x
 #'
 #'
 #' #if predictors has length 1
 #' #selection is skipped
 #' #and data frame with one row is returned
-#' selected.predictors <- vif_select(
-#'   df = vi,
-#'   predictors = vi_predictors_numeric[1]
+#' x <- vif_select(
+#'   df = df,
+#'   predictors = predictors_numeric[1]
 #' )
 #'
-#' selected.predictors
+#' x
 #' @autoglobal
 #' @family automated_multicollinearity_analysis
 #' @author Blas M. Benito, PhD

@@ -1,15 +1,10 @@
-data(
-  vi,
-  vi_predictors
-)
-
 #subset to limit example run time
-vi <- vi[1:1000, ]
-vi_predictors <- vi_predictors[1:10]
+df <- vi[1:1000, ]
+predictors <- vi_predictors[1:10]
 
-#vi_predictors has mixed types
+#predictors has mixed types
 sapply(
-  X = vi[, vi_predictors],
+  X = df[, predictors],
   FUN = class
 )
 
@@ -17,11 +12,11 @@ sapply(
 #--------------------------------
 #  no target encoding
 #  no preference order
-#  correlation analysis includes categoricals
-# vif analysis ignores categoricals
+#  all predictors filtered by correlation
+#  only numerics filtered by VIF
 x <- collinear(
-  df = vi,
-  predictors = vi_predictors,
+  df = df,
+  predictors = predictors,
   max_cor = 0.75, #default
   max_vif = 5     #default
   )
@@ -30,14 +25,14 @@ x
 
 #all correlations below max_cor
 cor_df(
-  df = vi,
+  df = df,
   predictors = x
 )
 
 #all vif below max vif
 #ignores categoricals
 vif_df(
-  df = vi,
+  df = df,
   predictors = x
 )
 
@@ -45,86 +40,97 @@ vif_df(
 #with numeric response
 #--------------------------------
 
-#target encoding transforms categoricals to numeric
-#all variables go through VIF analysis
-#automated preference order
+#  target encoding
+#  automated preference order
+#  all predictors filtered by correlation and VIF
 x <- collinear(
-  df = vi,
+  df = df,
   response = "vi_numeric",
-  predictors = vi_predictors
+  predictors = predictors
 )
 
 x
 
-#disabled target encoding
-#only numeric variables go through VIF analysis
-#automated preference order
+#disabling target encoding
+# x <- collinear(
+#   df = vi,
+#   response = "vi_numeric",
+#   predictors = predictors_mixed,
+#   encoding_method = NULL
+# )
+#
+# x
+
+#with custom preference order
 x <- collinear(
-  df = vi,
+  df = df,
   response = "vi_numeric",
-  predictors = vi_predictors,
-  encoding_method = NULL
-)
-
-x
-
-
-
-
-
-#with response
-#without preference_order
-#restrictive max_cor and max_vif
-#numerics and categorical variables in output
-selected.predictors <- collinear(
-  df = vi,
-  response = "vi_mean",
-  predictors = vi_predictors,
-  max_cor = 0.5,
-  max_vif = 2.5
-)
-
-selected.predictors
-
-#with response
-#with user-defined preference_order
-#restrictive max_cor and max_vif
-#numerics and categorical variables in output
-selected.predictors <- collinear(
-  df = vi,
-  response = "vi_mean",
-  predictors = vi_predictors,
+  predictors = predictors,
   preference_order = c(
-    "soil_temperature_mean",
     "swi_mean",
-    "rainfall_mean",
-    "evapotranspiration_mean"
-  ),
-  max_cor = 0.5,
-  max_vif = 2.5
+    "soil_type",
+    "koppen_zone"
+  )
 )
 
-selected.predictors
+x
 
-
-#with response
-#with automated preference_order
-#restrictive max_cor and max_vif
-#numerics and categorical variables in output
-preference.order <- preference_order(
-  df = vi,
-  response = "vi_mean",
-  predictors = vi_predictors,
-  f = f_rsquared, #cor(response, predictor)
+#with quantitative preference order
+preference_df <- preference_order(
+  df = df,
+  response = "vi_numeric",
+  predictors = predictors
 )
 
-selected.predictors <- collinear(
-  df = vi,
-  response = "vi_mean",
-  predictors = vi_predictors,
-  preference_order = preference.order,
-  max_cor = 0.5,
-  max_vif = 2.5
+x <- collinear(
+  df = df,
+  response = "vi_numeric",
+  predictors = predictors,
+  preference_order = preference_df
 )
 
-selected.predictors
+x
+
+#with binomial response
+#--------------------------------
+
+#  target encoding
+#  automated preference order (different f function)
+#  all predictors filtered by correlation and VIF
+x <- collinear(
+  df = df,
+  response = "vi_binomial",
+  predictors = predictors
+)
+
+x
+
+
+#with counts response
+#--------------------------------
+
+#  target encoding
+#  automated preference order (different f function)
+#  all predictors filtered by correlation and VIF
+x <- collinear(
+  df = df,
+  response = "vi_counts",
+  predictors = predictors
+)
+
+x
+
+#with categorical response
+#--------------------------------
+
+#  target encoding
+#  automated preference order (different f function)
+# all predictors filtered by correlation
+# numeric predictors filtered by VIF
+x <- collinear(
+  df = df,
+  response = "vi_category",
+  predictors = predictors
+)
+
+x
