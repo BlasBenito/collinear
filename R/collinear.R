@@ -63,7 +63,7 @@
 #' @param cor_method (optional; character string) Method used to compute pairwise correlations. Either "pearson" or "spearman". Default: "pearson".
 #' @param max_cor (optional; numeric) Maximum correlation allowed between any pair of variables in `predictors`. Recommended values are between 0.5 and 0.9. Higher values return larger number of predictors with a higher multicollinearity. If NULL, the pairwise correlation analysis is disabled. Default: `0.75`
 #' @param max_vif (optional, numeric) Maximum Variance Inflation Factor allowed during variable selection. Recommended values are between 2.5 and 10. Higher values return larger number of predictors with a higher multicollinearity. If NULL, the variance inflation analysis is disabled. Default: 5.
-#' @param encoding_method (optional; character string). Name of the target encoding method to transform non-numeric variables to numeric. One of "mean", "rank", "loo", "rnorm" (see [target_encoding_lab()] for further details). If NULL, target encoding is ignored, and categorical predictors are ignored during the VIF analysis. Default: "mean"
+#' @param encoding_method (optional; character string). Name of the target encoding method. One of: "mean" (default), "rank", "loo". If NULL, target encoding is disabled. Default: "mean"
 #' @return character vector; names of selected predictors
 #'
 #' @examples
@@ -205,7 +205,10 @@ collinear <- function(
     return(predictors)
   }
 
-  #target encode character predictors
+  #transform categorical to numerics
+  #ignores if:
+  # response == NULL
+  # encoding_method == NULL
   df <- target_encoding_lab(
     df = df,
     response = response,
@@ -215,8 +218,20 @@ collinear <- function(
     verbose = FALSE
   )
 
-  #applying cor selection
-  selected.predictors <- cor_select(
+  #preference order
+  if(is.null(preference_order)){
+
+    preference_order <- preference_order(
+      df = df,
+      response = response,
+      predictors = predictors,
+      f = NULL
+    )
+
+  }
+
+  #pairwise correlation filtering
+  selection.cor <- cor_select(
     df = df,
     predictors = predictors,
     preference_order = preference_order,
@@ -224,15 +239,36 @@ collinear <- function(
     max_cor = max_cor
   )
 
-  #applying vif selection
-  selected.predictors <- vif_select(
+  #separate numeric and categorical predictors
+  selection.cor.type <- identify_predictors(
     df = df,
-    predictors = selected.predictors,
+    predictors = selection.cor
+  )
+
+  #applying vif selection
+  selection.vif <- vif_select(
+    df = df,
+    predictors = selection.cor.type$numeric,
     preference_order = preference_order,
     max_vif = max_vif
   )
 
-  selected.predictors
+  selection <- c(
+    selection.vif,
+    selection.cor.type$categorical
+  )
 
+  #order as in preference order
+  if(!is.null(preference_order)){
+
+    if(is.data.frame(preference_order)){
+      preference_order <- preference_order$predictor
+    }
+
+    selection <- selection[order(match(selection, preference_order))]
+
+  }
+
+  selection
 
 }

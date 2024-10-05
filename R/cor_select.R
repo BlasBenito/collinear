@@ -90,7 +90,7 @@ cor_select <- function(
 ){
 
   #do nothing if one predictor only
-  if(length(predictors) == 1){
+  if(length(predictors) == 1 ||is.null(max_cor)){
     return(predictors)
   }
 
