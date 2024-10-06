@@ -1,11 +1,12 @@
 testthat::test_that("`target_encoding_lab()` works", {
+
   data(vi, vi_predictors)
   vi <- vi[1:1000, ]
 
   # Call the target_encoding_lab function
   encoded_df <- target_encoding_lab(
     df = vi,
-    response = "vi_mean",
+    response = "vi_numeric",
     predictors = "koppen_zone",
     encoding_methods = c("mean", "rank", "loo"),
     smoothing = c(0, 30),

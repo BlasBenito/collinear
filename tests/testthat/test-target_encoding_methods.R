@@ -3,13 +3,9 @@ testthat::test_that("`target_encoding_methods()` works", {
   data(vi)
 
   #target_encoding_mean
-  testthat::expect_true(
-    is.character(vi$soil_type)
-  )
-
   df <- target_encoding_mean(
     df = vi,
-    response = "vi_mean",
+    response = "vi_numeric",
     predictor = "soil_type",
     smoothing = 0,
     white_noise = 0.1,
@@ -27,7 +23,7 @@ testthat::test_that("`target_encoding_methods()` works", {
 
   df <- target_encoding_mean(
     df = vi,
-    response = "vi_mean",
+    response = "vi_numeric",
     predictor = "soil_type",
     smoothing = 30,
     white_noise = 0.1,
@@ -46,7 +42,7 @@ testthat::test_that("`target_encoding_methods()` works", {
   #target_encoding_rank
   df <- target_encoding_rank(
     df = vi,
-    response = "vi_mean",
+    response = "vi_numeric",
     predictor = "soil_type",
     replace = FALSE,
     verbose = FALSE
@@ -64,7 +60,7 @@ testthat::test_that("`target_encoding_methods()` works", {
   #target_encoding_loo
   df <- target_encoding_loo(
     df = vi,
-    response = "vi_mean",
+    response = "vi_numeric",
     predictor = "soil_type",
     white_noise = 0.1,
     replace = FALSE,

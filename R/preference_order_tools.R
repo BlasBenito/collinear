@@ -43,6 +43,21 @@ auc <- function(
     p = NULL
 ){
 
+  if(is.null(o)){
+    stop(
+      "collinear::auc(): argument 'o' cannot be NULL.",
+      call. = FALSE
+    )
+  }
+
+
+  if(is.null(p)){
+    stop(
+      "collinear::auc(): argument 'p' cannot be NULL.",
+      call. = FALSE
+    )
+  }
+
   #predicted values of the ones and the zeroes
   ones <- p[o == 1]
   zeros <- p[o == 0]
@@ -50,6 +65,13 @@ auc <- function(
   #lengths of each vector
   ones.n <- length(ones)
   zeros.n <- length(zeros)
+
+  if(sum(c(ones.n, zeros.n)) == 0){
+    stop(
+      "collinear::auc(): argument 'o' must be a binomial vector of 0s and 1s.",
+      call. = FALSE
+      )
+  }
 
   #curve computation
   curve <- sum(
@@ -78,6 +100,13 @@ auc <- function(
 case_weights <- function(
     x = NULL
 ){
+
+  if(is.null(x)){
+    stop(
+      "collinear::case_weights(): argument 'x' cannot be NULL.",
+      call. = FALSE
+    )
+  }
 
   # weights per class
   # as inverse of the counts

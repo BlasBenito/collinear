@@ -82,10 +82,13 @@ testthat::test_that("`vif_select()` works", {
   # categorical only ----
   predictors <- vi_predictors_categorical[1:5]
 
-  x <- vif_select(
-    df = df,
-    predictors = predictors
+  testthat::expect_message(
+    x <- vif_select(
+      df = df,
+      predictors = predictors
+    )
   )
+
 
   testthat::expect_true(
     is.na(x)
@@ -131,10 +134,14 @@ testthat::test_that("`vif_select()` works", {
   #single predictor
   predictors <- vi_predictors_numeric[1]
 
-  x <- vif_select(
-    df = vi[1:1000, ],
-    predictors = predictors
-  )
+  testthat::expect_message(
+    x <- vif_select(
+      df = vi[1:1000, ],
+      predictors = predictors
+    )
+  ) |>
+    suppressMessages()
+
 
   testthat::expect_true(
     x == predictors

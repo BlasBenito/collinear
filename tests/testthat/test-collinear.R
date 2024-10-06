@@ -192,7 +192,8 @@ testthat::test_that("`collinear()` works", {
       encoding_method = NULL,
       max_vif = NULL
     )
-  )
+  ) |>
+    suppressMessages()
 
   testthat::expect_message(
     y <- cor_select(
@@ -248,7 +249,8 @@ testthat::test_that("`collinear()` works", {
       response = "vi_factor",
       predictors = predictors
     )
-  )
+  ) |>
+    suppressMessages()
 
   testthat::expect_true(
     is.character(x)
@@ -303,10 +305,10 @@ testthat::test_that("`collinear()` works", {
   #single predictor
   predictors <- vi_predictors_numeric[1]
 
-    x <- collinear(
-      df = vi[1:1000, ],
-      predictors = predictors
-    )
+  x <- collinear(
+    df = vi[1:1000, ],
+    predictors = predictors
+  )
 
   testthat::expect_true(
     x == predictors
