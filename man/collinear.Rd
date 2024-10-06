@@ -266,7 +266,4 @@ future::plan(future::sequential)
 Other automated_multicollinearity_analysis: 
 \code{\link{vif_select}()}
 }
-\author{
-Blas M. Benito, PhD
-}
 \concept{automated_multicollinearity_analysis}

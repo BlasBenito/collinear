@@ -20,11 +20,7 @@ Other data_preparation:
 \code{\link{identify_predictors}()},
 \code{\link{identify_predictors_categorical}()},
 \code{\link{identify_predictors_numeric}()},
-\code{\link{identify_predictors_zero_variance}()},
-\code{\link{validate_df}()},
-\code{\link{validate_predictors}()},
-\code{\link{validate_preference_order}()},
-\code{\link{validate_response}()}
+\code{\link{identify_predictors_zero_variance}()}
 }
 \author{
 Blas M. Benito, PhD

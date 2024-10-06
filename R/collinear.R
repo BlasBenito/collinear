@@ -221,7 +221,6 @@
 #' future::plan(future::sequential)
 #'
 #' @autoglobal
-#' @author Blas M. Benito, PhD
 #' @references
 #' \itemize{
 #'  \item David A. Belsley, D.A., Kuh, E., Welsch, R.E. (1980). Regression Diagnostics: Identifying Influential Data and Sources of Collinearity. John Wiley & Sons. DOI: 10.1002/0471725153.
@@ -243,12 +242,7 @@ collinear <- function(
 
   #validate input data frame
   df <- validate_df(
-    df = df,
-    min_rows = ifelse(
-      test = cor_method == "pearson",
-      yes = 30,
-      no = 10
-    )
+    df = df
   )
 
   response <- validate_response(
@@ -293,6 +287,12 @@ collinear <- function(
   }
 
   #pairwise correlation filter
+  predictors <- validate_data_cor(
+    df = df,
+    predictors = predictors,
+    function_name = "collinear::collinear()"
+  )
+
   selection.cor <- cor_select(
     df = df,
     predictors = predictors,
@@ -308,9 +308,15 @@ collinear <- function(
   )
 
   #vif filter
-  selection.vif <- vif_select(
+  predictors.vif <- validate_data_vif(
     df = df,
     predictors = selection.cor.type$numeric,
+    function_name = "collinear::collinear()"
+  )
+
+  selection.vif <- vif_select(
+    df = df,
+    predictors = predictors.vif,
     preference_order = preference_order,
     max_vif = max_vif
   )
@@ -320,7 +326,8 @@ collinear <- function(
     selection.vif,
     selection.cor.type$categorical
   ) |>
-    unique()
+    unique() |>
+    na.omit()
 
   #order as in preference order
   if(!is.null(preference_order)){

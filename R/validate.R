@@ -8,7 +8,6 @@
 #'   \item Stops if 'df' has zero rows.
 #'   \item Removes geometry column if the input data frame is an "sf" object.
 #'   \item Removes non-numeric columns with as many unique values as rows df has.
-#'   \item Print messages if number of rows of 'df' is lower than 'min_rows'.
 #'   \item Converts logical columns to numeric.
 #'   \item Converts factor and ordered columns to character.
 #'   \item Tags the data frame with the attribute `validated = TRUE` to let the package functions skip the data validation.
@@ -16,7 +15,6 @@
 #'
 #'
 #' @inheritParams collinear
-#' @param min_rows (required; integer) Minimum number of rows required for a pairwise correlation or a variance inflation factor analysis. Default: 30
 #' @return data frame
 #' @examples
 #'
@@ -29,18 +27,19 @@
 #'
 #' #tagged as validated
 #' attributes(vi)$validated
-#' @author Blas M. Benito, PhD
 #' @autoglobal
-#' @family data_preparation
+#' @family data_validation
 #' @export
 validate_df <- function(
-    df = NULL,
-    min_rows = 30
+    df = NULL
 ){
 
   #handle df = NULL
   if(is.null(df)){
-    stop("collinear::validate_df(): argument 'df' cannot be NULL.")
+    stop(
+      "collinear::validate_df(): argument 'df' cannot be NULL.",
+      call. = FALSE
+      )
   }
 
   #if already validated, return it
@@ -56,12 +55,12 @@ validate_df <- function(
     df <- tryCatch(
       {
         as.data.frame(df)
-        },
+      },
       error = function(e){
         stop(
           "collinear::validate_df(): Argument 'df' must be a data frame.",
           call. = FALSE
-          )
+        )
       }
     )
   }
@@ -150,19 +149,6 @@ validate_df <- function(
     how = "replace"
   )
 
-  #number of rows must be > min_rows
-  min_rows <- max(min_rows, ncol(df) + 1)
-
-  if(nrow(df) < min_rows){
-
-    message(
-      "The number of rows in 'df' should be higher than ",
-      min_rows,
-      " to ensure a successful multicollinearity analysis."
-    )
-
-  }
-
   attr(
     x = df,
     which = "validated"
@@ -213,8 +199,7 @@ validate_df <- function(
 #' attributes(vi_predictors)$validated
 #'
 #' @autoglobal
-#' @family data_preparation
-#' @author Blas M. Benito, PhD
+#' @family data_validation
 #' @export
 validate_predictors <- function(
     df = NULL,
@@ -226,16 +211,16 @@ validate_predictors <- function(
   # df ----
   if(is.null(df)){
     stop(
-      "collinear::validate_predictors(): Argument 'df' cannot be NULL.",
+      "collinear::validate_predictors(): argument 'df' cannot be NULL.",
       call. = FALSE
-      )
+    )
   }
 
   if(is.null(attr(df, "validated"))){
     stop(
-      "collinear::validate_predictors(): Argument 'df' must be validated with collinear::validate_df().",
+      "collinear::validate_predictors(): argument 'df' must be validated with collinear::validate_df().",
       call. = FALSE
-      )
+    )
   }
 
   # predictors ----
@@ -277,29 +262,34 @@ validate_predictors <- function(
 
   }
 
-
   #removing zero variance predictors
-  predictors.zero.variance <- identify_predictors_zero_variance(
-    df = df,
-    predictors = predictors
-  )
+  if(nrow(df) >= 10){
 
-  if(length(predictors.zero.variance) > 0){
+    predictors.zero.variance <- identify_predictors_zero_variance(
+      df = df,
+      predictors = predictors
+    )
 
-    message(
-      "collinear::validate_predictors(): these predictors have near zero variance and will be ignored:\n - ",
-      paste0(
-        predictors.zero.variance,
-        collapse = "\n - "
+    if(length(predictors.zero.variance) > 0){
+
+      message(
+        "collinear::validate_predictors(): these predictors have near zero variance and will be ignored:\n - ",
+        paste0(
+          predictors.zero.variance,
+          collapse = "\n - "
+        )
       )
-    )
 
-    predictors <- setdiff(
-      predictors,
-      predictors.zero.variance
-    )
+      predictors <- setdiff(
+        predictors,
+        predictors.zero.variance
+      )
+
+    }
 
   }
+
+
 
   attr(
     x = predictors,
@@ -339,8 +329,7 @@ validate_predictors <- function(
 #' attributes(response)$validated
 #'
 #' @autoglobal
-#' @family data_preparation
-#' @author Blas M. Benito, PhD
+#' @family data_validation
 #' @export
 validate_response <- function(
     df = NULL,
@@ -351,7 +340,7 @@ validate_response <- function(
     stop(
       "collinear::validate_response(): argument 'df' cannot be NULL.",
       call. = FALSE
-      )
+    )
   }
 
   #if not validated, stop
@@ -359,7 +348,7 @@ validate_response <- function(
     stop(
       "collinear::validate_response(): argument 'df' must be validated with collinear::validate_df().",
       call. = FALSE
-      )
+    )
   }
 
   if(is.null(response)){
@@ -375,7 +364,7 @@ validate_response <- function(
     stop(
       "collinear::validate_response(): Argument 'response' must be a character string",
       call. = FALSE
-      )
+    )
   }
 
   if(length(response) > 1){
@@ -388,7 +377,7 @@ validate_response <- function(
       "collinear::validate_response(): argument 'response' with value '",
       response,
       "' is not a column name of 'df' and will be ignored."
-      )
+    )
     return(NULL)
   }
 
@@ -445,7 +434,7 @@ validate_response <- function(
 #'
 #' @return character vector: ranked variable names
 #' @export
-#' @family data_preparation
+#' @family data_validation
 #' @autoglobal
 #' @examples
 #' data(
@@ -488,7 +477,7 @@ validate_preference_order <- function(
     predictors = NULL,
     preference_order = NULL,
     preference_order_auto = NULL
-    ){
+){
 
   if(is.null(preference_order_auto)){
     stop("Argument 'preference_order_auto' cannot be NULL.")
@@ -535,8 +524,97 @@ validate_preference_order <- function(
 }
 
 
+#' Validate Data for VIF Analysis
+#'
+#' @description
+#' Internal function to assess whether the input arguments `df` and `predictors` result in data dimensions suitable for a VIF analysis.
+#'
+#' If the number of rows in `df` is smaller than 10 times the length of `predictors`, the function either issues a message and restricts `predictors` to a manageable number, or returns an error.
+#'
+#'
+#' @inheritParams collinear
+#' @param function_name (optional, character string) Name of the function performing the check. Default: "collinear::vif_df()"
+#'
+#' @return character vector: predictors names
+#' @export
+#' @family data_validation
+#' @autoglobal
+validate_data_vif <- function(
+    df = NULL,
+    predictors = NULL,
+    function_name = "collinear::vif_df()"
+){
+
+  #minimum number of required rows
+  min.rows <- length(predictors) * 10
+
+  #manageable number of predictors with rows in df
+  min.predictors <- floor(nrow(df)/10)
+
+  #if fewer rows than required
+  if(nrow(df) <= min.rows){
+
+    if(min.predictors > 1){
+
+      #restrict predictors to a manageable number
+      predictors <- predictors[1:min.predictors]
+
+      message(
+        function_name,
+        ": reliable VIF computation requires >=10 rows per predictor in 'df'. Analysis restricted to these predictors: '",
+        paste(predictors, collapse = "', '"),
+        "'."
+      )
+
+    } else {
+
+      stop(
+        function_name,
+        ": At least 10 rows per predictor are required. VIF computation is not feasible with this data size.",
+        call. = FALSE
+      )
+
+    }
+
+  }
+
+  predictors
+
+}
 
 
+#' Validate Data for Correlation Analysis
+#'
+#' @description
+#' Internal function to assess whether the input arguments `df` and `predictors` result in data dimensions suitable for pairwise correlation analysis.
+#'
+#' If the number of rows in `df` is smaller than 10, an error is issued.
+#'
+#' @inheritParams collinear
+#' @param function_name (optional, character string) Name of the function performing the check. Default: "collinear::cor_df()"
+#'
+#' @return character vector: predictors names
+#' @export
+#' @family data_validation
+#' @autoglobal
+validate_data_cor <- function(
+    df = NULL,
+    predictors = NULL,
+    function_name = "collinear::cor_df()"
+){
 
+  if(nrow(df) < 10) {
+
+    stop(
+      function_name,
+      ": At least 10 rows are required to compute reliable pairwise correlations. Analysis is not feasible with this data size.",
+      call. = FALSE
+    )
+
+  }
+
+  predictors
+
+}
 
 

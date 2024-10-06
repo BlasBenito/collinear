@@ -87,7 +87,4 @@ Other pairwise_correlation:
 \code{\link{cor_matrix}()},
 \code{\link{cor_select}()}
 }
-\author{
-Blas M. Benito, PhD
-}
 \concept{pairwise_correlation}

@@ -61,7 +61,6 @@
 #'
 #'
 #' #with automated preference order
-#' #using a response variable
 #' df_preference <- preference_order(
 #'   df = df,
 #'   response = "vi_numeric",
@@ -92,13 +91,33 @@ cor_select <- function(
 ){
 
   #do nothing if one predictor only
-  if(length(predictors) == 1 ||is.null(max_cor)){
+  if(is.null(max_cor)){
     return(predictors)
   }
 
   #checking argument max_cor
   if(max_cor < 0 || max_cor > 1){
     stop("Argument 'max_cor' must be a numeric between 0 and 1.")
+  }
+
+  #validate input data frame
+  df <- validate_df(
+    df = df
+  )
+
+  predictors <- validate_predictors(
+    df = df,
+    predictors = predictors
+  )
+
+  predictors <- validate_data_cor(
+    df = df,
+    predictors = predictors,
+    function_name = "collinear::cor_select()"
+  )
+
+  if(length(predictors) == 1){
+    return(predictors)
   }
 
   #correlation matrix

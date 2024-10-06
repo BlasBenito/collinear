@@ -45,7 +45,6 @@
 #'
 #' @autoglobal
 #' @family pairwise_correlation
-#' @author Blas M. Benito, PhD
 #' @export
 cor_df <- function(
     df = NULL,
@@ -55,17 +54,18 @@ cor_df <- function(
 
   #validate input data frame
   df <- validate_df(
-    df = df,
-    min_rows = ifelse(
-      test = cor_method == "pearson",
-      yes = 30,
-      no = 10
-    )
+    df = df
   )
 
   predictors <- validate_predictors(
     df = df,
     predictors = predictors
+  )
+
+  predictors <- validate_data_cor(
+    df = df,
+    predictors = predictors,
+    function_name = "collinear::cor_df()"
   )
 
   #early output if only one predictor
@@ -141,12 +141,7 @@ cor_numeric_vs_numeric <- function(
 
   #validate input data frame
   df <- validate_df(
-    df = df,
-    min_rows = ifelse(
-      test = cor_method == "pearson",
-      yes = 30,
-      no = 10
-    )
+    df = df
   )
 
   #validate predictors
@@ -232,12 +227,7 @@ cor_numeric_vs_categorical <- function(
 
   #validate input data frame
   df <- validate_df(
-    df = df,
-    min_rows = ifelse(
-      test = cor_method == "pearson",
-      yes = 30,
-      no = 10
-    )
+    df = df
   )
 
   #validate predictors without losing non-numerics
@@ -329,8 +319,7 @@ cor_categorical_vs_categorical <- function(
 
   #validate input data frame
   df <- validate_df(
-    df = df,
-    min_rows = 30
+    df = df
   )
 
   #validate predictors without losing non-numerics

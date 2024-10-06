@@ -3,13 +3,14 @@ testthat::test_that("`preference_order()` works", {
   data(
     vi,
     vi_predictors,
-    vi_predictors_category
+    vi_predictors_categorical
   )
 
   #subsets to limit example run time
   vi <- vi[1:1000, ]
   vi_predictors <- vi_predictors[1:10]
-  vi_predictors_category <- vi_predictors_category[1:10]
+  vi_predictors_numeric <- vi_predictors_numeric[1:10]
+  vi_predictors_categorical <- vi_predictors_categorical[1:10]
 
   #numeric response
   df_preference <- preference_order(
@@ -96,7 +97,7 @@ testthat::test_that("`preference_order()` works", {
   df_preference <- preference_order(
     df = vi,
     response = "vi_category",
-    predictors = vi_predictors_category,
+    predictors = vi_predictors_categorical,
     f = f_v
   )
 

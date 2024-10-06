@@ -70,8 +70,7 @@ vif_df <- function(
 
   #check input data frame
   df <- validate_df(
-    df = df,
-    min_rows = 30
+    df = df
   )
 
   #check predictors
@@ -80,25 +79,37 @@ vif_df <- function(
     predictors = predictors
   )
 
-  #early output if only one predictor
+  #get numeric predictors only
+  predictors <- identify_predictors_numeric(
+    df = df,
+    predictors = predictors
+  )
+
+  #validate data dimensions
+  predictors <- validate_data_vif(
+    df = df,
+    predictors = predictors,
+    function_name = "collinear::vif_df()"
+  )
+
+  #if no numerics, return predictors
+  if(length(predictors) == 0){
+    message("collinear::vif_df(): no numeric predictors available, returning NA.")
+    return(NA)
+  }
+
   if(length(predictors) == 1){
     return(
       data.frame(
-        predictor = predictors,
+        variable = predictors,
         vif = 0
       )
     )
   }
 
-  #get numeric predictors only
-  predictors.numeric <- identify_predictors_numeric(
-    df = df,
-    predictors = predictors
-  )
-
   #compute correlation matrix
   m <- stats::cor(
-    x = df[, predictors.numeric, drop = FALSE],
+    x = df[, predictors, drop = FALSE],
     use = "complete.obs"
   )
 

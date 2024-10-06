@@ -115,8 +115,7 @@ target_encoding_lab <- function(
 
   #validate input data frame
   df <- validate_df(
-    df = df,
-    min_rows = 30
+    df = df
   )
 
   #validate response

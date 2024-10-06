@@ -53,17 +53,11 @@ attributes(vi_predictors)$validated
 
 }
 \seealso{
-Other data_preparation: 
-\code{\link{drop_geometry_column}()},
-\code{\link{identify_predictors}()},
-\code{\link{identify_predictors_categorical}()},
-\code{\link{identify_predictors_numeric}()},
-\code{\link{identify_predictors_zero_variance}()},
+Other data_validation: 
+\code{\link{validate_data_cor}()},
+\code{\link{validate_data_vif}()},
 \code{\link{validate_df}()},
 \code{\link{validate_preference_order}()},
 \code{\link{validate_response}()}
 }
-\author{
-Blas M. Benito, PhD
-}
-\concept{data_preparation}
+\concept{data_validation}

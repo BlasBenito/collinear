@@ -88,6 +88,10 @@ identify_predictors_numeric <- function(
 
   if(!is.null(predictors)){
 
+    if(length(predictors) == 0){
+      return(predictors)
+    }
+
     predictors <- predictors[
       predictors %in% colnames(df)
     ]

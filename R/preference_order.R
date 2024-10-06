@@ -140,8 +140,7 @@ preference_order <- function(
 
   #check input data frame
   df <- validate_df(
-    df = df,
-    min_rows = 30
+    df = df
   )
 
   #check response

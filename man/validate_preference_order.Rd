@@ -62,14 +62,11 @@ my_order <- validate_preference_order(
 my_order
 }
 \seealso{
-Other data_preparation: 
-\code{\link{drop_geometry_column}()},
-\code{\link{identify_predictors}()},
-\code{\link{identify_predictors_categorical}()},
-\code{\link{identify_predictors_numeric}()},
-\code{\link{identify_predictors_zero_variance}()},
+Other data_validation: 
+\code{\link{validate_data_cor}()},
+\code{\link{validate_data_vif}()},
 \code{\link{validate_df}()},
 \code{\link{validate_predictors}()},
 \code{\link{validate_response}()}
 }
-\concept{data_preparation}
+\concept{data_validation}

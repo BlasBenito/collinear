@@ -4,12 +4,10 @@
 \alias{validate_df}
 \title{Validate Argument df}
 \usage{
-validate_df(df = NULL, min_rows = 30)
+validate_df(df = NULL)
 }
 \arguments{
 \item{df}{(required; data frame, tibble, or sf) A data frame with numeric predictors, and optionally a numeric response and categorical predictors. Default: NULL.}
-
-\item{min_rows}{(required; integer) Minimum number of rows required for a pairwise correlation or a variance inflation factor analysis. Default: 30}
 }
 \value{
 data frame
@@ -22,7 +20,6 @@ Internal function to validate the argument \code{df} and ensure it complies with
 \item Stops if 'df' has zero rows.
 \item Removes geometry column if the input data frame is an "sf" object.
 \item Removes non-numeric columns with as many unique values as rows df has.
-\item Print messages if number of rows of 'df' is lower than 'min_rows'.
 \item Converts logical columns to numeric.
 \item Converts factor and ordered columns to character.
 \item Tags the data frame with the attribute \code{validated = TRUE} to let the package functions skip the data validation.
@@ -41,17 +38,11 @@ vi <- validate_df(
 attributes(vi)$validated
 }
 \seealso{
-Other data_preparation: 
-\code{\link{drop_geometry_column}()},
-\code{\link{identify_predictors}()},
-\code{\link{identify_predictors_categorical}()},
-\code{\link{identify_predictors_numeric}()},
-\code{\link{identify_predictors_zero_variance}()},
+Other data_validation: 
+\code{\link{validate_data_cor}()},
+\code{\link{validate_data_vif}()},
 \code{\link{validate_predictors}()},
 \code{\link{validate_preference_order}()},
 \code{\link{validate_response}()}
 }
-\author{
-Blas M. Benito, PhD
-}
-\concept{data_preparation}
+\concept{data_validation}

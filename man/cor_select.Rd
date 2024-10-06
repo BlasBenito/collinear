@@ -93,7 +93,6 @@ cor_df(
 
 
 #with automated preference order
-#using a response variable
 df_preference <- preference_order(
   df = df,
   response = "vi_numeric",

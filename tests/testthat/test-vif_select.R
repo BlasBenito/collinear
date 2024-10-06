@@ -1,56 +1,143 @@
 testthat::test_that("`vif_select()` works", {
-  data(vi, vi_predictors)
-  vi <- vi[1:1000, ]
 
-  #create a few perfect correlations in vi
-  #reduce correlation in predictors with cor_select()
-  vi_predictors <- cor_select(
-    df = vi,
-    response = "vi_mean",
-    predictors = vi_predictors,
-    max_cor = 0.75
+  predictors <- vi_predictors[1:10]
+  df <- vi[1:1000, ]
+
+  # mixed types ----
+  x <- vif_select(
+    df = df,
+    predictors = predictors
   )
 
-  # Test with only numeric predictors
-  selected_predictors <- vif_select(
-    df = vi,
-    predictors = vi_predictors,
-    max_vif = 10
+  testthat::expect_true(
+    is.character(x)
+  )
+
+  testthat::expect_true(
+    all(x %in% predictors)
+  )
+
+  testthat::expect_true(
+    length(predictors) > length(x)
+  )
+
+  #custom preference order
+  preference_order <- c(
+    "swi_mean",
+    "topo_elevation"
+  )
+
+  x <- vif_select(
+    df = df,
+    predictors = predictors,
+    preference_order = preference_order
+  )
+
+  testthat::expect_true(
+    is.character(x)
+  )
+
+  testthat::expect_true(
+    all(x %in% predictors)
+  )
+
+  testthat::expect_true(
+    length(predictors) > length(x)
+  )
+
+  testthat::expect_true(
+    all(preference_order[1] == x[1])
+  )
+
+  #automated preference order
+  preference_order <- preference_order(
+    df = df,
+    response = "vi_numeric",
+    predictors = predictors
+  ) |>
+    suppressMessages()
+
+  x <- vif_select(
+    df = df,
+    predictors = predictors,
+    preference_order = preference_order
+  )
+
+  testthat::expect_true(
+    is.character(x)
+  )
+
+  testthat::expect_true(
+    all(x %in% predictors)
+  )
+
+  testthat::expect_true(
+    length(predictors) > length(x)
+  )
+
+  testthat::expect_true(
+    all(preference_order$predictor[1] == x[1])
+  )
+
+  # categorical only ----
+  predictors <- vi_predictors_categorical[1:5]
+
+  x <- vif_select(
+    df = df,
+    predictors = predictors
+  )
+
+  testthat::expect_true(
+    is.na(x)
+  )
+
+  # edge cases ----
+
+  #no df
+  testthat::expect_error(
+    x <- vif_select(
+      df = NULL,
+      predictors = NULL
     )
+  )
 
-  # Check that the result is a character vector
-  testthat::expect_true(is.character(selected_predictors))
-  testthat::expect_true(all(selected_predictors %in% vi_predictors))
-
-  # Test with response variable included
-  selected_predictors <- vif_select(
-    df = vi,
-    response = "vi_mean",
-    predictors = vi_predictors,
-    max_vif = 2.5
+  #predictors only
+  testthat::expect_error(
+    x <- vif_select(
+      df = NULL,
+      predictors = vi_predictors
     )
+  )
 
-  # Check that the result is a character vector
-  testthat::expect_true(is.character(selected_predictors))
-  testthat::expect_true(all(selected_predictors %in% vi_predictors))
-
-  # Test with a user-defined preference order
-  user_preference_order <- c(
-    "soil_type",
-    "soil_temperature_mean",
-    "swi_mean", "rainfall_mean",
-    "evapotranspiration_mean"
+  #few rows
+  testthat::expect_error(
+    x <- vif_select(
+      df = vi[1, ],
+      predictors = vi_predictors
     )
+  )
 
-  selected_predictors3<- vif_select(
-    df = vi, response = "vi_mean",
-    predictors = vi_predictors,
-    preference_order = user_preference_order,
-    max_vif = 2.5
-    )
 
-  # Check that the result is a character vector
-  testthat::expect_true(is.character(selected_predictors))
-  testthat::expect_true(all(selected_predictors %in% vi_predictors))
+  #no predictors
+  x <- vif_select(
+    df = df[, 1:5],
+    predictors = NULL
+  )
+
+  testthat::expect_true(
+    all(x %in% colnames(df)[1:5])
+  )
+
+  #single predictor
+  predictors <- vi_predictors_numeric[1]
+
+  x <- vif_select(
+    df = vi[1:1000, ],
+    predictors = predictors
+  )
+
+  testthat::expect_true(
+    x == predictors
+  )
 
 })
