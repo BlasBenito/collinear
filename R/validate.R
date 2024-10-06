@@ -322,7 +322,7 @@ validate_predictors <- function(
 #' #validating example predictors
 #' response <- validate_response(
 #'   df = vi,
-#'   response = "vi_mean"
+#'   response = "vi_numeric"
 #' )
 #'
 #' #tagged as validated

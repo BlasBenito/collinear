@@ -22,14 +22,14 @@
 #' #without noise
 #' df <- target_encoding_mean(
 #'   df = vi,
-#'   response = "vi_mean",
+#'   response = "vi_numeric",
 #'   predictor = "soil_type",
 #'   replace = TRUE
 #' )
 #'
 #' plot(
 #'   x = df$soil_type,
-#'   y = df$vi_mean,
+#'   y = df$vi_numeric,
 #'   xlab = "encoded variable",
 #'   ylab = "response"
 #' )
@@ -37,7 +37,7 @@
 #' #with noise
 #' df <- target_encoding_mean(
 #'   df = vi,
-#'   response = "vi_mean",
+#'   response = "vi_numeric",
 #'   predictor = "soil_type",
 #'   white_noise = 0.1,
 #'   replace = TRUE
@@ -45,7 +45,7 @@
 #'
 #' plot(
 #'   x = df$soil_type,
-#'   y = df$vi_mean,
+#'   y = df$vi_numeric,
 #'   xlab = "encoded variable",
 #'   ylab = "response"
 #' )
@@ -56,14 +56,14 @@
 #'
 #' df <- target_encoding_rank(
 #'   df = vi,
-#'   response = "vi_mean",
+#'   response = "vi_numeric",
 #'   predictor = "soil_type",
 #'   replace = TRUE
 #' )
 #'
 #' plot(
 #'   x = df$soil_type,
-#'   y = df$vi_mean,
+#'   y = df$vi_numeric,
 #'   xlab = "encoded variable",
 #'   ylab = "response"
 #' )
@@ -75,14 +75,14 @@
 #' #without noise
 #' df <- target_encoding_loo(
 #'   df = vi,
-#'   response = "vi_mean",
+#'   response = "vi_numeric",
 #'   predictor = "soil_type",
 #'   replace = TRUE
 #' )
 #'
 #' plot(
 #'   x = df$soil_type,
-#'   y = df$vi_mean,
+#'   y = df$vi_numeric,
 #'   xlab = "encoded variable",
 #'   ylab = "response"
 #' )
@@ -90,7 +90,7 @@
 #' #with noise
 #' df <- target_encoding_loo(
 #'   df = vi,
-#'   response = "vi_mean",
+#'   response = "vi_numeric",
 #'   predictor = "soil_type",
 #'   white_noise = 0.1,
 #'   replace = TRUE
@@ -98,7 +98,7 @@
 #'
 #' plot(
 #'   x = df$soil_type,
-#'   y = df$vi_mean,
+#'   y = df$vi_numeric,
 #'   xlab = "encoded variable",
 #'   ylab = "response"
 #' )

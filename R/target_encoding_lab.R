@@ -49,7 +49,7 @@
 #' #applying all methods for a continuous response
 #' df <- target_encoding_lab(
 #'   df = vi,
-#'   response = "vi_mean",
+#'   response = "vi_numeric",
 #'   predictors = "koppen_zone",
 #'   encoding_methods = c(
 #'     "mean",
@@ -68,7 +68,7 @@
 #'
 #' #correlation between encoded predictors and the response
 #' stats::cor(
-#'   x = df[["vi_mean"]],
+#'   x = df[["vi_numeric"]],
 #'   y = df[, predictors.encoded],
 #'   use = "pairwise.complete.obs"
 #' )

@@ -40,7 +40,7 @@
 
 #' All Categorical and Factor Predictor Names in Example Data Frame vi
 #'
-#' @usage data(vi_predictors_category)
+#' @usage data(vi_predictors_categorical)
 #' @seealso [vi]
 #'
 #' @format Character vector with predictor names.

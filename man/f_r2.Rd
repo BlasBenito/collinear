@@ -64,7 +64,7 @@ vi <- vi[1:1000, ]
 #numeric response and predictor
 #to data frame without NAs
 df <- data.frame(
-  y = vi[["vi_mean"]],
+  y = vi[["vi_numeric"]],
   x = vi[["swi_max"]]
 ) |>
   na.omit()

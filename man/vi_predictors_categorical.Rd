@@ -8,7 +8,7 @@
 Character vector with predictor names.
 }
 \usage{
-data(vi_predictors_category)
+data(vi_predictors_categorical)
 }
 \description{
 All Categorical and Factor Predictor Names in Example Data Frame vi

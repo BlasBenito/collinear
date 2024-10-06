@@ -204,7 +204,6 @@ vif_select <- function(
   #vector of candidate variables
   preference_order_candidates <- preference_order[-1]
 
-  #TODO: choose forward or backward option
   #forward recursive VIF filtering
   while(length(preference_order_candidates) > 0){
 
@@ -229,36 +228,6 @@ vif_select <- function(
     preference_order_candidates <- preference_order_candidates[-1]
 
   }
-
-  # #rank of interest
-  # df.rank <- data.frame(
-  #   predictor = preference_order,
-  #   rank = seq_len(ncol(df))
-  # )
-  #
-  # #backwards recursive VIF filtering
-  # for(i in seq(from = nrow(df.rank), to = 2)){
-  #
-  #   #generate VIF data frame
-  #   vif.i.df <- vif_df(
-  #     df = df,
-  #     predictors = df.rank[["predictor"]]
-  #   )
-  #
-  #   #extract relevant vif value
-  #   vif.i <- vif.i.df[["vif"]][
-  #     vif.i.df[["predictor"]] == df.rank[["predictor"]][i]
-  #     ]
-  #
-  #   #removing rank row if vif higher than max_vif
-  #   if(vif.i > max_vif){
-  #     df.rank <- df.rank[-i, ]
-  #   }
-  #
-  # }
-  #
-  # #selected variables
-  # out <- df.rank[["predictor"]]
 
   attr(
     x = preference_order_selected,
