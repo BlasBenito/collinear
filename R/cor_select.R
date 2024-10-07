@@ -21,7 +21,7 @@
 #' #parallelization setup
 #' future::plan(
 #'   future::multisession,
-#'   workers = 2 #set to parallelly::availableWorkers() - 1
+#'   workers = 2 #set to parallelly::availableCores() - 1
 #' )
 #'
 #' #progress bar
@@ -97,7 +97,10 @@ cor_select <- function(
 
   #checking argument max_cor
   if(max_cor < 0 || max_cor > 1){
-    stop("Argument 'max_cor' must be a numeric between 0 and 1.")
+    stop(
+      "collinear::cor_select(): argument 'max_cor' must be a numeric between 0 and 1.",
+      call. = FALSE
+      )
   }
 
   #validate input data frame

@@ -49,27 +49,42 @@ cramer_v <- function(
 
     # Check if 'x' and 'y' have the same length
     if(length(x) != length(y)){
-      stop("Arguments 'x' and 'y' must have the same length.")
+      stop(
+        "collinear::cramer_v(): arguments 'x' and 'y' must have the same length.",
+        call. = FALSE
+        )
     }
 
     # Check if 'x' is not NULL
     if(is.null(x)){
-      stop("Argument 'x' must not be NULL.")
+      stop(
+        "collinear::cramer_v(): argument 'x' must not be NULL.",
+        call. = FALSE
+      )
     }
 
     # Check if 'y' is not NULL
     if(is.null(y)){
-      stop("Argument 'y' must not be NULL.")
+      stop(
+        "collinear::cramer_v(): argument 'y' must not be NULL.",
+        call. = FALSE
+      )
     }
 
     # Check if 'x' is a character vector
     if(is.numeric(x)){
-      stop("Argument 'x' must be of class 'character' or 'factor', but it is 'numeric'.")
+      stop(
+        "collinear::cramer_v(): argument 'x' must be of class 'character' or 'factor', but it is 'numeric'.",
+        call. = FALSE
+      )
     }
 
     # Check if 'y' is a character vector
     if(is.numeric(y)){
-      stop("Argument 'y' must be of class 'character' or 'factor', but it is 'numeric'.")
+      stop(
+        "collinear::cramer_v(): argument 'y' must be of class 'character' or 'factor', but it is 'numeric'.",
+        call. = FALSE
+      )
     }
 
   }

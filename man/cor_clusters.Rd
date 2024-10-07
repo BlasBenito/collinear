@@ -42,3 +42,10 @@ df_clusters <- cor_clusters(
 )
 
 }
+\seealso{
+Other pairwise_correlation: 
+\code{\link{cor_df}()},
+\code{\link{cor_matrix}()},
+\code{\link{cor_select}()}
+}
+\concept{pairwise_correlation}

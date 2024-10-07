@@ -1,7 +1,7 @@
 #' Pairwise Correlation Matrix
 #'
 #' @description
-#' If argument 'df' results from [cor_df()], transforms it to a correlation matrix. If argument 'df' is a dataframe with predictors, and the argument 'predictors' is provided then [cor_df()] is used to compute pairwise correlations, and the result is transformed to matrix.
+#' If argument 'df' results from [cor_df()], transforms it to a correlation matrix. If argument 'df' is a data frame with predictors, and the argument 'predictors' is provided then [cor_df()] is used to compute pairwise correlations, and the result is transformed to matrix.
 #'
 #' @inheritParams collinear
 #' @return correlation matrix
@@ -21,7 +21,7 @@
 #' #parallelization setup
 #' future::plan(
 #'   future::multisession,
-#'   workers = 2 #set to parallelly::availableWorkers() - 1
+#'   workers = 2 #set to parallelly::availableCores() - 1
 #' )
 #'
 #' #progress bar

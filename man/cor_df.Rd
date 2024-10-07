@@ -72,18 +72,22 @@ future::plan(future::sequential)
 }
 \seealso{
 Other pairwise_correlation: 
+\code{\link{cor_clusters}()},
 \code{\link{cor_matrix}()},
 \code{\link{cor_select}()}
 
 Other pairwise_correlation: 
+\code{\link{cor_clusters}()},
 \code{\link{cor_matrix}()},
 \code{\link{cor_select}()}
 
 Other pairwise_correlation: 
+\code{\link{cor_clusters}()},
 \code{\link{cor_matrix}()},
 \code{\link{cor_select}()}
 
 Other pairwise_correlation: 
+\code{\link{cor_clusters}()},
 \code{\link{cor_matrix}()},
 \code{\link{cor_select}()}
 }

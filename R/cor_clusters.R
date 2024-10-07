@@ -3,16 +3,14 @@
 #' @description
 #' Computes the correlation matrix with [cor_df()] and [cor_matrix()], transforms it to a dist object, computes a clustering solution with [stats::hclust()], and applies [stats::cutree()] to separate groups based on the value of the argument `max_cor`.
 #'
-#' Returns a dataframe with predictor names and their clusters, and optionally, prints a dendrogram of the clustering solution.
+#' Returns a data frame with predictor names and their clusters, and optionally, prints a dendrogram of the clustering solution.
 #'
 #'
 #' @inheritParams collinear
 #' @param method (optional, character string) Argument of [stats::hclust()] defining the agglomerative method. One of: "ward.D", "ward.D2", "single", "complete", "average" (= UPGMA), "mcquitty" (= WPGMA), "median" (= WPGMC) or "centroid" (= UPGMC). Unambiguous abbreviations are accepted as well. Default: "complete".
 #' @param plot (optional, logical) If TRUE, the clustering is plotted. Default: FALSE
 #'
-#' @return dataframe: predictor names and their clusters
-#' @export
-#' @autoglobal
+#' @return data frame: predictor names and their clusters
 #' @examples
 #'
 #' df_clusters <- cor_clusters(
@@ -20,6 +18,9 @@
 #'   predictors = vi_predictors[1:15]
 #' )
 #'
+#' @export
+#' @family pairwise_correlation
+#' @autoglobal
 cor_clusters <- function(
     df = NULL,
     predictors = NULL,

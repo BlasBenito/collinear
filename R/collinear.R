@@ -21,7 +21,7 @@
 #' The argument `preference_order` accepts:
 #' \itemize{
 #'   \item: A character vector of predictor names in a custom order of preference, from first to last. This vector does not need to contain all predictor names, but only the ones relevant to the user.
-#'   \item A dataframe returned by [preference_order()], which ranks predictors based on their association with a response variable.
+#'   \item A data frame returned by [preference_order()], which ranks predictors based on their association with a response variable.
 #'   \item If NULL, and `response` is provided, then [preference_order()] is used internally to rank the predictors using the function `f`. If `f` is NULL as well, then [f_default()] selects a proper function based on the data properties.
 #' }
 #'
@@ -74,7 +74,7 @@
 #' #parallelization setup
 #' future::plan(
 #'   future::multisession,
-#'   workers = 2 #set to parallelly::availableWorkers() - 1
+#'   workers = 2 #set to parallelly::availableCores() - 1
 #' )
 #'
 #' #progress bar

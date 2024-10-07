@@ -68,6 +68,7 @@ future::plan(future::sequential)
 }
 \seealso{
 Other pairwise_correlation: 
+\code{\link{cor_clusters}()},
 \code{\link{cor_df}()},
 \code{\link{cor_select}()}
 }

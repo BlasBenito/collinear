@@ -485,10 +485,6 @@ NULL
 #' @export
 f_auc_glm_binomial <- function(df){
 
-  if(all(sort(unique(df[["y"]])) == c(0, 1)) == FALSE){
-    stop("Argument 'response' must be the name of a binary vector with unique values 0 and 1.")
-  }
-
   p <- stats::glm(
     formula = y ~ x,
     data = df,
@@ -518,10 +514,6 @@ f_auc_glm_binomial <- function(df){
 #' @family preference_order
 #' @export
 f_auc_glm_binomial_poly2 <- function(df){
-
-  if(all(sort(unique(df[["y"]])) == c(0, 1)) == FALSE){
-    stop("Argument 'response' must be the name of a binary vector with unique values 0 and 1.")
-  }
 
   p <- stats::glm(
     formula = y ~ stats::poly(
@@ -556,10 +548,6 @@ f_auc_glm_binomial_poly2 <- function(df){
 #' @export
 f_auc_gam_binomial <- function(df){
 
-  if(all(sort(unique(df[["y"]])) == c(0, 1)) == FALSE){
-    stop("Argument 'response' must be the name of a binary vector with unique values 0 and 1.")
-  }
-
   k <- min(
     length(unique(df[["x"]])) - 1,
     ceiling(nrow(df)/30)
@@ -593,10 +581,6 @@ f_auc_gam_binomial <- function(df){
 #' @export
 f_auc_rpart <- function(df){
 
-  if(all(sort(unique(df[["y"]])) == c(0, 1)) == FALSE){
-    stop("Argument 'response' must be the name of a binary vector with unique values 0 and 1.")
-  }
-
   p <- rpart::rpart(
     formula = y ~ x,
     data = df,
@@ -625,10 +609,6 @@ f_auc_rpart <- function(df){
 #' @family preference_order
 #' @export
 f_auc_rf <- function(df){
-
-  if(all(sort(unique(df[["y"]])) == c(0, 1)) == FALSE){
-    stop("Argument 'response' must be the name of a binary vector with unique values 0 and 1.")
-  }
 
   m <- ranger::ranger(
     formula = y ~ x,

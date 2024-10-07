@@ -1,30 +1,61 @@
 # collinear 1.2.0
 
-Function vif_select() now has a much better selection algorithm that preserves more predictors with higher preference.
+**Warning**: This version includes several breaking changes.
 
-The functions cor_select(), vif_select() and vif_df() now skip the analysis if only one predictor. This may happen in collinear() with highly correlated datasets, when cor_select() only returns one predictor and sends it to vif_select().
+## Main Changes
 
-Streamlined cor_df(), and fixed a bug that prevented cor_numerics_vs_categorics() and cor_categorics_vs_categorics() to trigger properly.
+### Function `preference_order()`
 
-Removed dplyr as dependency.
+- Now accepts **categorical responses** (class character or factor) as input to the `response` argument, in addition to numeric, binomial (1s and 0s), and integer counts.
+- Parallelization setup is now managed via `future::plan()` and a progress bar via `progressr::handlers()`. As a result, the `workers` argument has been removed.
+- All functions used as input for the `f` argument of `preference_order()` have been rewritten and renamed for clarity:
+  - The first part of the name after the `f_` prefix indicates the metric used to compute association: `r2` for R-squared, `auc` for area under the curve in binomial responses, and `v` for Cramer's V in categorical responses.
+  - The second part of the name indicates the model used to compute association: `spearman`, `pearson`, and `v` for direct association; `glm` for GLMs; `gam` for GAMs; `rf` for Random Forest models; and `rpart` for Recursive Partition Trees.
+  - The third part of the name indicates the family used in GLMs or GAMs: `gaussian` for numeric responses, `binomial` for binomial responses, and `poisson` for integer counts.
+  - If `poly2` appears in the name, it indicates that second-degree polynomials are used to build the model.
+  
+- A new function `f_default()` determines an appropriate default for `f` when `f = NULL`, based on the response and predictors. It uses the decision rules in the data frame returned by `f_default_rules()`. In any case, `f_default()` prints a message with the selected function name.
 
-Added mgcv, rpart, and ranger to Imports
+### Function `collinear()`
 
-Parallelized cor_numerics_vs_categorical() and cor_categorical_vs_categorical()
+- Parallelization setup is now managed via `future::plan()` and a progress bar via `progressr::handlers()`. This setup is leveraged by `preference_order()` and `cor_select()`.
+- Now accepts **categorical responses** (class character or factor) as input to the `response` argument, in addition to numeric, binomial (1s and 0s), and integer counts. However, target encoding only runs for numeric, binomial, or integer responses.
+- Categorical predictors in `predictors` are excluded from the VIF analysis but are still returned in the output if they pass the pairwise correlation analysis.
+- `preference_order()` is now run internally before multicollinearity filtering. As a result, the `f` argument has been added to the function's signature. If `f` is `NULL`, it is selected via `f_default()` (see details above).
+- The new functions `validate_data_cor()` and `validate_data_vif()` are called to ensure that the data is suitable for pairwise correlation or VIF-based multicollinearity filtering.
+- Target encoding can be disabled by setting the `encoding_method` argument to `NULL`.
+- VIF filtering can be disabled by setting `max_vif` to `NULL`.
+- Pairwise correlation filtering can be disabled by setting `max_cor` to `NULL`.
 
-All warnings in all data validation functions are now messages to ensure they are printed in the correct order.
+### Function `cor_select()`
 
-Function vif_df() now has the internal function vif_f() to compute the vif data frame, and this function is applied twice, once without modifying the correlation matrix, and if this fails, again by replacing 1 and -1 with 0.999 and -0.999 in the correlation matrix to try overcome the "singular matrix" issue.
+- A new forward selection algorithm ensures that the most important predictors are retained after multicollinearity filtering when `preference_order` is used.
+- Parallelization setup is now managed via `future::plan()` and a progress bar via `progressr::handlers()`. This setup is leveraged by `cor_numeric_vs_categorical()` and `cor_categorical_vs_categorical()` to speed up the pairwise correlation computation.
+- Target encoding, along with the `response` and `encoding_method` arguments, has been removed from the function. This change also applies to `cor_df()`.
+- A new function `validate_data_cor()` ensures the data is appropriate for analysis.
 
-The function validate_df() now takes into account the number of predictors as reference, along with min_rows, to warn the user about potential issues in the multicollinearity analysis due to the data frame dimensions.
+### Function `cor_df()`
 
-The function preference_order() no longer has the `workers` argument, but can accept a parallelization setup via `future::plan()` and a progress bar via de `progressr` package.
+- Fixed a bug that prevented `cor_numerics_vs_categorics()` and `cor_categorics_vs_categorics()` from triggering properly.
 
-New function `validate_preference_order()` added to streamline `cor_select()` and `vif_select()`.
+### Function `vif_select()`
 
-The "rnorm" method in target_encoding_lab() was deprecated, and the function target_encoding_rnorm() removed from the package.
+- A new forward selection algorithm better preserves predictors with higher preference when `preference_order` is used.
+- Target encoding, along with the `response` and `encoding_method` arguments, has been removed from the function. This change also applies to `vif_df()`. As a result, `vif_select()` now only accepts numeric predictors, but these can still be transformed using `target_encoding_lab()`.
 
-Streamlined documentation using roxygen methods to inherit sections and parameters.
+### Function `target_encoding_lab()`
+
+- The "rnorm" method has been deprecated, and the function `target_encoding_rnorm()` has been removed from the package.
+
+## Other Changes
+
+- Added the function `cor_clusters()` to group predictors via `stats::hclust()` their pairwise correlation matrix.
+- Streamlined the package documentation using roxygen methods to inherit sections and parameters.
+- Removed `dplyr` as a dependency.
+- Added `mgcv`, `rpart`, and `ranger` to Imports.
+- All warnings in data validation functions have been converted to messages, which now indicate the function that generated them. This helps with debugging and ensures that messages and warnings are printed in the correct order.
+
+
 
 # collinear 1.1.1
 

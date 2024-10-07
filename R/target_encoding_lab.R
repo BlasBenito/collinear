@@ -170,7 +170,7 @@ target_encoding_lab <- function(
   if(verbose == TRUE){
     if(length(predictors.to.encode) > 1){
       message(
-        "\nEncoding the predictors:\n",
+        "\n collinear::target_encoding_lab(): encoding the predictors:\n",
         paste0(
           predictors.to.encode,
           collapse = "\n"
@@ -179,7 +179,7 @@ target_encoding_lab <- function(
       )
     } else {
       message(
-        "\nEncoding the predictor: ",
+        "\n collinear::target_encoding_lab(): encoding the predictor: ",
         predictors.to.encode,
         "\n"
       )

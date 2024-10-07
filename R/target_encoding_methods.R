@@ -198,7 +198,7 @@ target_encoding_mean <- function(
 
   if(verbose == TRUE && replace == FALSE){
     message(
-      "New encoded predictor: '",
+      "collinear::target_encoding_mean(): new encoded predictor: '",
       encoded.variable.name,
       "'"
     )
@@ -289,7 +289,7 @@ target_encoding_rank <- function(
 
   if(verbose == TRUE && replace == FALSE){
     message(
-      "New encoded predictor: '",
+      "collinear::target_encoding_rank(): new encoded predictor: '",
       encoded.variable.name,
       "'"
     )
@@ -388,7 +388,7 @@ target_encoding_loo <- function(
 
   if(verbose == TRUE && replace == FALSE){
     message(
-      "New encoded predictor: '",
+      "collinear::target_encoding_loo(): new encoded predictor: '",
       encoded.variable.name,
       "'"
     )

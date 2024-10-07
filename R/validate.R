@@ -58,7 +58,7 @@ validate_df <- function(
       },
       error = function(e){
         stop(
-          "collinear::validate_df(): Argument 'df' must be a data frame.",
+          "collinear::validate_df(): argument 'df' must be a data frame.",
           call. = FALSE
         )
       }
@@ -68,7 +68,7 @@ validate_df <- function(
   #stop if no rows
   if(nrow(df) == 0){
     stop(
-      "collinear::validate_df(): Argument 'df' has zero rows.",
+      "collinear::validate_df(): argument 'df' has zero rows.",
       call. = FALSE
     )
   }
@@ -116,7 +116,7 @@ validate_df <- function(
 
     if(length(columns.to.remove) > 0){
       message(
-        "The column/s ",
+        "collinear::validate_df(): the column/s ",
         paste0(columns.to.remove, collapse = ", "),
         " have as many unique values as rows in 'df' and will be ignored."
       )
@@ -289,8 +289,6 @@ validate_predictors <- function(
 
   }
 
-
-
   attr(
     x = predictors,
     which = "validated"
@@ -362,7 +360,7 @@ validate_response <- function(
 
   if(is.character(response) == FALSE){
     stop(
-      "collinear::validate_response(): Argument 'response' must be a character string",
+      "collinear::validate_response(): argument 'response' must be a character string",
       call. = FALSE
     )
   }
@@ -480,7 +478,10 @@ validate_preference_order <- function(
 ){
 
   if(is.null(preference_order_auto)){
-    stop("Argument 'preference_order_auto' cannot be NULL.")
+    stop(
+      "collinear::validate_preference_order(): argument 'preference_order_auto' cannot be NULL.",
+      call. = FALSE
+      )
   }
 
   if(is.null(preference_order)){
@@ -492,7 +493,10 @@ validate_preference_order <- function(
     if("predictor" %in% names(preference_order)){
       preference_order <- preference_order$predictor
     } else {
-      stop("Argument 'preference_order' must be a data frame with the column 'predictor'.")
+      stop(
+        "collinear::validate_preference_order(): argument 'preference_order' must be a data frame with the column 'predictor'.",
+        call. = FALSE
+        )
     }
   }
 

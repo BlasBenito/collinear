@@ -154,7 +154,7 @@ vif_df <- function(
       error = function(e) {
 
         stop(
-          "collinear::vif_df(): The correlation matrix is singular and cannot be solved. Removing highly correlated predictors with collinear::cor_select() beforehand may help fix this issue.",
+          "collinear::vif_df(): the correlation matrix is singular and cannot be solved.",
           call. = FALSE
           )
 
