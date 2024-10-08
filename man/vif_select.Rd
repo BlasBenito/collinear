@@ -37,7 +37,7 @@ This feature is designed to help protect important predictors during the multico
 The argument \code{preference_order} accepts:
 \itemize{
 \item: A character vector of predictor names in a custom order of preference, from first to last. This vector does not need to contain all predictor names, but only the ones relevant to the user.
-\item A dataframe returned by \code{\link[=preference_order]{preference_order()}}, which ranks predictors based on their association with a response variable.
+\item A data frame returned by \code{\link[=preference_order]{preference_order()}}, which ranks predictors based on their association with a response variable.
 \item If NULL, and \code{response} is provided, then \code{\link[=preference_order]{preference_order()}} is used internally to rank the predictors using the function \code{f}. If \code{f} is NULL as well, then \code{\link[=f_default]{f_default()}} selects a proper function based on the data properties.
 }
 }

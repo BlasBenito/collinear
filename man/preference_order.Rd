@@ -88,7 +88,7 @@ vi_predictors_numeric <- vi_predictors_numeric[1:10]
 #parallelization setup
 future::plan(
   future::multisession,
-  workers = 2 #set to parallelly::availableWorkers() - 1
+  workers = 2 #set to parallelly::availableCores() - 1
 )
 
 #progress bar

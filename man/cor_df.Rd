@@ -30,7 +30,7 @@ cor_categorical_vs_categorical(df, predictors)
 data frame; pairwise correlation
 }
 \description{
-Returns a pairwise correlation dataframe for different types of variables:
+Returns a pairwise correlation data frame for different types of variables:
 \itemize{
 \item \strong{numeric vs. numeric}: as computed with \code{\link[stats:cor]{stats::cor()}} using the methods "pearson" or "spearman", via \code{\link[=cor_numeric_vs_numeric]{cor_numeric_vs_numeric()}}.
 \item \strong{numeric vs. categorical}: the function \code{\link[=cor_numeric_vs_categorical]{cor_numeric_vs_categorical()}} target-encodes the categorical variable using the numeric variable as reference with \code{\link[=target_encoding_lab]{target_encoding_lab()}} and the method "mean", and then their correlation is computed with \code{\link[stats:cor]{stats::cor()}}.
@@ -52,7 +52,7 @@ vi_predictors <- vi_predictors[1:10]
 #parallelization setup
 future::plan(
   future::multisession,
-  workers = 2 #set to parallelly::availableWorkers() - 1
+  workers = 2 #set to parallelly::availableCores() - 1
 )
 
 #progress bar
