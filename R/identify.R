@@ -30,36 +30,27 @@ identify_predictors <- function(
     predictors = NULL
 ){
 
-  predictors_numeric <- setdiff(
-    x = identify_predictors_numeric(
+  list(
+    numeric = identify_predictors_numeric(
       df = df,
       predictors = predictors
     ),
-    y = identify_predictors_zero_variance(
+    categorical = identify_predictors_categorical(
       df = df,
       predictors = predictors
     )
   )
 
-  predictors_categorical <- identify_predictors_categorical(
-    df = df,
-    predictors = predictors
-  )
-
-  list(
-    numeric = predictors_numeric,
-    categorical = predictors_categorical
-  )
-
 }
 
 
-#' Identify Numeric Predictors
+#' Identify Valid Numeric Predictors
 #'
 #' @description
-#' Returns the names of the numeric variables in a data frame.
+#' Returns the names of valid numeric predictors. Ignores predictors with constant values or with near-zero variance.
 #'
 #' @inheritParams collinear
+#' @param decimals (required, integer) Number of decimal places for the zero variance test. Smaller numbers will increase the number of variables detected as near-zero variance. Recommended values will depend on the range of the numeric variables in 'df'. Default: 4
 #' @return character vector: names of numeric predictors
 #' @examples
 #' if (interactive()) {
@@ -83,10 +74,15 @@ identify_predictors <- function(
 #' @export
 identify_predictors_numeric <- function(
     df = NULL,
-    predictors = NULL
+    predictors = NULL,
+    decimals = 4
 ){
 
   if(!is.null(predictors)){
+
+    if(length(predictors) == 0){
+      return(predictors)
+    }
 
     predictors <- predictors[
       predictors %in% colnames(df)
@@ -98,12 +94,41 @@ identify_predictors_numeric <- function(
 
   }
 
-  colnames(df)[
+  #get numeric predictors
+  predictors <- predictors[
     sapply(
       X = df[, predictors, drop = FALSE],
       FUN = is.numeric
     )
   ]
+
+  if(length(predictors) == 0){
+    return(predictors)
+  }
+
+  #replace Inf with NA
+  df <- df[, predictors, drop = FALSE]
+  is.na(df) <- do.call(
+    what = cbind,
+    args = lapply(
+      X = df,
+      FUN = is.infinite
+    )
+  )
+
+  #ignore constant and near-zero variance predictors
+  predictors <- predictors[
+    !round(
+      sapply(
+        X = df,
+        FUN = stats::var,
+        na.rm = TRUE
+      ),
+      decimals
+    ) == 0
+  ]
+
+  predictors
 
 }
 
@@ -140,6 +165,10 @@ identify_predictors_categorical <- function(
 
   if(!is.null(predictors)){
 
+    if(length(predictors) == 0){
+      return(predictors)
+    }
+
     predictors <- predictors[
       predictors %in% colnames(df)
     ]
@@ -164,7 +193,7 @@ identify_predictors_categorical <- function(
   #remove constant categoricals
   predictors <- predictors[
     !sapply(
-      X = df[, predictors],
+      X = df[, predictors, drop = FALSE],
       FUN = function(x){
         length(unique(x)) == 1
       }
@@ -174,7 +203,7 @@ identify_predictors_categorical <- function(
   #remove categoricals with as many values as rows
   predictors <- predictors[
     !sapply(
-      X = df[, predictors],
+      X = df[, predictors, drop = FALSE],
       FUN = function(x) length(unique(x)) == length(x)
     )
   ]
@@ -230,20 +259,34 @@ identify_predictors_zero_variance <- function(
     decimals = 4
 ){
 
-  predictors.numeric <- identify_predictors_numeric(
-    df = df,
-    predictors = predictors
-  )
+  if(!is.null(predictors)){
 
-  if(length(predictors.numeric) >= 1){
+    if(length(predictors) == 0){
+      return(predictors)
+    }
 
-    df <- df[, predictors.numeric, drop = FALSE]
+    predictors <- predictors[
+      predictors %in% colnames(df)
+    ]
 
   } else {
 
-    return(NULL)
+    predictors <- colnames(df)
 
   }
+
+  predictors <- predictors[
+    sapply(
+      X = df[, predictors, drop = FALSE],
+      FUN = is.numeric
+    )
+  ]
+
+  if(length(predictors) == 0){
+    return(predictors)
+  }
+
+  df <- df[, predictors, drop = FALSE]
 
   #replace inf with NA
   is.na(df) <- do.call(
@@ -258,7 +301,7 @@ identify_predictors_zero_variance <- function(
     round(
       sapply(
         X = df,
-        FUN = var,
+        FUN = stats::var,
         na.rm = TRUE
       ),
       decimals

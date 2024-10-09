@@ -94,7 +94,7 @@ predictors.encoded <- grep(
 #correlation between encoded predictors and the response
 stats::cor(
   x = df[["vi_numeric"]],
-  y = df[, predictors.encoded],
+  y = df[, predictors.encoded, drop = FALSE],
   use = "pairwise.complete.obs"
 )
 

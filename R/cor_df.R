@@ -114,6 +114,7 @@ cor_df <- function(
       abs(cor.df$correlation),
       decreasing = TRUE
     ),
+    , drop = FALSE
   ]
 
 
@@ -163,7 +164,7 @@ cor_numeric_vs_numeric <- function(
 
   #correlation matrix to data frame
   cor.df <- stats::cor(
-    x = df[, predictors],
+    x = df[, predictors, drop = FALSE],
     use = "pairwise.complete.obs",
     method = cor_method
   ) |>
@@ -184,11 +185,12 @@ cor_numeric_vs_numeric <- function(
   #filter out x == y
   cor.df <- cor.df[
     cor.df$x != cor.df$y,
+    , drop = FALSE
   ]
 
   #identify pairs
   cor.df$pair_name <- apply(
-    X = cor.df[, c("x", "y")],
+    X = cor.df[, c("x", "y"), drop = FALSE],
     MARGIN = 1,
     FUN = function(x){
       paste0(
@@ -201,6 +203,7 @@ cor_numeric_vs_numeric <- function(
   #remove duplicated pairs
   cor.df <- cor.df[
     !duplicated(cor.df$pair_name),
+    , drop = FALSE
   ]
 
   #remove pair name
@@ -352,6 +355,7 @@ cor_categorical_vs_categorical <- function(
   #filter out x == y
   cor.df <- cor.df[
     cor.df$x != cor.df$y,
+    , drop = FALSE
   ]
 
   #future apply

@@ -2,20 +2,22 @@
 % Please edit documentation in R/identify.R
 \name{identify_predictors_numeric}
 \alias{identify_predictors_numeric}
-\title{Identify Numeric Predictors}
+\title{Identify Valid Numeric Predictors}
 \usage{
-identify_predictors_numeric(df = NULL, predictors = NULL)
+identify_predictors_numeric(df = NULL, predictors = NULL, decimals = 4)
 }
 \arguments{
 \item{df}{(required; data frame, tibble, or sf) A data frame with numeric predictors, and optionally a numeric response and categorical predictors. Default: NULL.}
 
 \item{predictors}{(optional; character vector) Names of the variables to select from \code{df}. If omitted, all numeric columns in \code{df} are used instead. If argument \code{response} is not provided, non-numeric variables are ignored. Default: NULL}
+
+\item{decimals}{(required, integer) Number of decimal places for the zero variance test. Smaller numbers will increase the number of variables detected as near-zero variance. Recommended values will depend on the range of the numeric variables in 'df'. Default: 4}
 }
 \value{
 character vector: names of numeric predictors
 }
 \description{
-Returns the names of the numeric variables in a data frame.
+Returns the names of valid numeric predictors. Ignores predictors with constant values or with near-zero variance.
 }
 \examples{
 if (interactive()) {

@@ -46,7 +46,7 @@ predictors <- vi_predictors[1:10]
 
 #predictors has mixed types
 sapply(
-  X = df[, predictors],
+  X = df[, predictors, drop = FALSE],
   FUN = class
 )
 

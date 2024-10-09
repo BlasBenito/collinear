@@ -87,7 +87,7 @@ testthat::test_that("`vif_df()` works", {
   predictors <- vi_predictors_numeric[1:5]
 
   vif.df <- vif_df(
-    df = df[, predictors],
+    df = df[, predictors, drop = FALSE],
     predictors = NULL
   )
 

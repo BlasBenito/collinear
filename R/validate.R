@@ -230,9 +230,10 @@ validate_predictors <- function(
 
   }
 
-  #removing zero variance predictors
+
   if(nrow(df) >= 10){
 
+    #removing zero variance predictors
     predictors.zero.variance <- identify_predictors_zero_variance(
       df = df,
       predictors = predictors
@@ -255,10 +256,36 @@ validate_predictors <- function(
 
     }
 
+    #removing constant categoricals
+    predictors.constant <- predictors[
+      apply(
+        X = df[, predictors, drop = FALSE],
+        MARGIN = 2,
+        FUN = function(x){
+          length(unique(x)) == 1
+        }
+      ) |>
+        unlist()
+    ]
+
+    if(length(predictors.constant) > 0){
+
+      message(
+        "collinear::validate_predictors(): these predictors have constant values and will be ignored:\n - ",
+        paste0(
+          predictors.constant,
+          collapse = "\n - "
+        )
+      )
+
+      predictors <- setdiff(
+        predictors,
+        predictors.constant
+      )
+
+    }
+
   }
-
-
-  #TODO: apply identify_predictors_categorical() to select valid categorical predictors
 
   attr(
     x = predictors,
@@ -350,6 +377,7 @@ validate_response <- function(
     return(NULL)
   }
 
+  #check that it has not near-zero variance
   if(is.numeric(df[[response]]) == TRUE){
 
     response.zero.variance <- identify_predictors_zero_variance(
@@ -368,6 +396,17 @@ validate_response <- function(
 
   }
 
+  #check that it is not constant
+  if(length(unique(df[[response]])) == 1){
+    message(
+      "collinear::validate_response(): 'response' column '",
+      response,
+      "' has constant values and will be ignored."
+    )
+    return(NULL)
+  }
+
+  #chedk NA
   response.na.values <- sum(is.na(df[[response]]))
 
   if(response.na.values > 0){

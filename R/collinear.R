@@ -86,7 +86,7 @@
 #'
 #' #predictors has mixed types
 #' sapply(
-#'   X = df[, predictors],
+#'   X = df[, predictors, drop = FALSE],
 #'   FUN = class
 #' )
 #'

@@ -44,8 +44,8 @@ cor_df(
 
 #separate df train and df test
 train <- sample(x = seq_len(nrow(df)), size = 1500)
-df_train <- df[train, ]
-df_test <- df[-train, ]
+df_train <- df[train, , drop = FALSE]
+df_test <- df[-train, , drop = FALSE]
 
 
 
