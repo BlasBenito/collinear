@@ -2,7 +2,7 @@
 % Please edit documentation in R/identify.R
 \name{identify_predictors_categorical}
 \alias{identify_predictors_categorical}
-\title{Identify Categorical Predictors}
+\title{Identify Valid Categorical Predictors}
 \usage{
 identify_predictors_categorical(df = NULL, predictors = NULL)
 }
@@ -15,7 +15,7 @@ identify_predictors_categorical(df = NULL, predictors = NULL)
 character vector: categorical predictors names
 }
 \description{
-Returns the names of character or factor predictors, if any.
+Returns the names of character or factor predictors, if any. Removes categorical predictors with constant values, or with as many unique values as rows are in the input data frame.
 }
 \examples{
 

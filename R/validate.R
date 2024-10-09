@@ -94,38 +94,6 @@ validate_df <- function(
     )
   }
 
-
-  #remove non-numeric columns with as many values as rows
-  non.numeric.columns <- identify_predictors_categorical(df)
-
-  if(length(non.numeric.columns) > 0){
-
-    non.numeric.columns.unique.values <- lapply(
-      X = non.numeric.columns,
-      FUN = function(x) length(unique(df[[x]]))
-    ) |>
-      unlist()
-
-    names(non.numeric.columns.unique.values) <- non.numeric.columns
-
-    columns.to.remove <- names(
-      non.numeric.columns.unique.values[
-        non.numeric.columns.unique.values == nrow(df)
-      ]
-    )
-
-    if(length(columns.to.remove) > 0){
-      message(
-        "collinear::validate_df(): the column/s ",
-        paste0(columns.to.remove, collapse = ", "),
-        " have as many unique values as rows in 'df' and will be ignored."
-      )
-    }
-
-    df <- df[, !(colnames(df) %in% columns.to.remove), drop = FALSE]
-
-  }
-
   #convert types
 
   #logical to numeric
@@ -288,6 +256,9 @@ validate_predictors <- function(
     }
 
   }
+
+
+  #TODO: apply identify_predictors_categorical() to select valid categorical predictors
 
   attr(
     x = predictors,

@@ -88,33 +88,29 @@ identify_predictors_numeric <- function(
 
   if(!is.null(predictors)){
 
-    if(length(predictors) == 0){
-      return(predictors)
-    }
-
     predictors <- predictors[
       predictors %in% colnames(df)
     ]
 
-    if(length(predictors) >= 1){
-      df <- df[, predictors, drop = FALSE]
-    }
+  } else {
+
+    predictors <- colnames(df)
 
   }
 
   colnames(df)[
     sapply(
-      X = df,
+      X = df[, predictors, drop = FALSE],
       FUN = is.numeric
     )
   ]
 
 }
 
-#' Identify Categorical Predictors
+#' Identify Valid Categorical Predictors
 #'
 #' @description
-#' Returns the names of character or factor predictors, if any.
+#' Returns the names of character or factor predictors, if any. Removes categorical predictors with constant values, or with as many unique values as rows are in the input data frame.
 #'
 #'
 #' @inheritParams collinear
@@ -148,32 +144,42 @@ identify_predictors_categorical <- function(
       predictors %in% colnames(df)
     ]
 
-    if(length(predictors) >= 1){
-      df <- df[, predictors, drop = FALSE]
-    }
+  } else {
+
+    predictors <- colnames(df)
 
   }
 
   #subset categorical
-  df <- df[,
+  predictors <- predictors[
     !sapply(
-      X = df,
+      X = df[, predictors, drop = FALSE],
       FUN = is.numeric
-    ),
-    drop = FALSE
+    )
   ]
 
+  #remove NA
+  predictors <- na.omit(predictors)
+
   #remove constant categoricals
-  colnames(df)[
+  predictors <- predictors[
     !sapply(
-      X = df,
+      X = df[, predictors],
       FUN = function(x){
         length(unique(x)) == 1
       }
     )
   ]
 
+  #remove categoricals with as many values as rows
+  predictors <- predictors[
+    !sapply(
+      X = df[, predictors],
+      FUN = function(x) length(unique(x)) == length(x)
+    )
+  ]
 
+  predictors
 
 }
 

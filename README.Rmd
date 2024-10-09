@@ -166,10 +166,10 @@ selected_predictors <- collinear(
 selected_predictors
 ```
 
-The function has returned a vector of predictors with a pairwise correlation lower than 0.75 and a VIF lower than 5. The code below shows the pairwise correlations and the VIF scores of the selected predictors.
+The function returns a vector of predictor ordered by preference with a pairwise correlation lower than 0.75 and a VIF lower than 5. The code below shows the pairwise correlations and the VIF scores of the selected predictors.
 
 ```{r}
-#need to encode categorical predictors to obtain same results!
+#categorical predictors require target-encoding to mimic behavior of collinear()
 df <- target_encoding_lab(
   df = vi,
   response = "vi_numeric",
@@ -196,6 +196,12 @@ vif_df(
 ## `collinear()` Step by Step
 
 This section describes the steps `collinear()` follows to deliver its results.
+
+### Data Validation
+
+There are several functions called within `collinear()` to validate the input data:
+
+  + `validate_df()`: checks basic details about the input data frame
 
 #### Preference order
 
