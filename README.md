@@ -17,38 +17,40 @@ status](https://www.r-pkg.org/badges/version/collinear)](https://cran.r-project.
 
 <!-- badges: end -->
 
+## Warning
+
+version 1.2.0 of `collinear` comes with a few changes that may break
+existing workflows. Additionally, due to improvements in the automated
+selection algorithms, results from previous versions will not be
+reproducible.
+
 ## Summary
 
 The R package `collinear` combines four methods to facilitate
-multicollinearity management:
+multicollinearity management in data frames for statistical and machine
+learning modeling:
 
-- **Target Encoding**: General method to transform categorical variables
-  to numeric. Only relevant when a numeric response is available, and
-  there are categorical predictors in the target data frame.
-- **Preference Order**: Method to rank predictors by their univariate
-  association with a response variable of any type. The resulting
-  ranking is used to preserve important variables during
+- **Target Encoding**: Transforms categorical variables to numeric when
+  a numeric response is provided.
+- **Preference Order**: Ranks predictors by their univariate association
+  with a response variable to preserve the most important ones during
   multicollinearity filtering.
 - **Pairwise Correlation Filtering**: Automated multicollinearity
   filtering algorithm based on pairwise correlations between predictors.
   It can handle numeric and categorical predictors independently of
   target encoding.
 - **Variance Inflation Factor Filtering**: Automated multicollinearity
-  filtering based on Variance Inflation Factors. It can only handle
-  numeric predictors, unless target encoding has been applied to the
-  target dataset.
+  filtering of numeric predictors based on Variance Inflation Factors.
 
-All these methods are integrated in the function
-[`collinear()`](#collinear()), which is designed as an all-in-one tool
-for multicollinearity filtering. Additionally, the package offers other
-functions that may be useful to build custom workflows:
+These methods are integrated in the function `collinear()`, which is
+designed as an all-in-one tool for multicollinearity filtering. Other
+relevant functions in the package are:
 
-- `cor_select()`: automated pairwise correlation filtering.
-- `vif_select()`: automated VIF-based multicollinearity filtering.
 - `preference_order()`: automated predictors ranking based on their
   univariate association with a response variable.
 - `target_encoding_lab()`: transformation of categorical predictors into
   numeric by using a numeric response variable as reference.
+- `cor_select()`: automated pairwise correlation filtering.
 - `cor_df()`: generates a data frame of pairwise correlation scores of
   numeric and categorical predictors.
 - `cor_matrix()`: converts a pairwise correlation data frame into a
@@ -56,6 +58,7 @@ functions that may be useful to build custom workflows:
   a data frame and a set of predictors.
 - `cor_clusters()`: groups predictors in clusters based on their
   pairwise correlations.
+- `vif_select()`: automated VIF-based multicollinearity filtering.
 - `vif_df()`: computes a data frame of variance inflation factors.
 
 ## Citation
@@ -95,84 +98,89 @@ remotes::install_github(
   )
 ```
 
-## Getting Started
+The packages required for this tutorial are:
 
-This section shows the basic usage of the package.
+## Example Data
 
-``` r
-library(collinear)
-library(dplyr)
-library(future)
-library(parallelly)
-```
-
-### Example Data
-
-The package contains a example data frame named `vi`, with 30.000 rows
-and 67 columns with response variables of different types and a mixture
-of numeric and categorical predictors.
+The data frame `vi`, with 30.000 rows and 67 columns, contains response
+variables of different types and a mixture of numeric and categorical
+predictors.
 
 The responses are:
 
-- `vi_numeric`: numeric continuous variable, values of a vegetation
-  index (all other responses are derived from this one).
+- `vi_numeric`: numeric variable, values of a vegetation index (all
+  other responses are derived from this one).
 - `vi_counts`: integer counts.
 - `vi_binomial`: binomial variable (ones and zeros).
 - `vi_category`: character variable with 5 categories from “very_low” to
   “very_high”.
 - `vi_factor`: as `vi_category`, but coded as a factor.
 
-The predictor variables are stored in the following objects:
+The predictors are stored in the following objects:
 
 - `vi_predictors`: 61 predictors of mixed types.
 - `vi_predictors_numeric`: 49 predictors of classes numeric and integer.
 - `vi_predictors_categorical`: 12 predictors of the classes character
   and factor.
 
-### `collinear()`
+## Getting Started
 
-This function performs all steps required for and easy multicollinearity
-management. It has the following arguments:
+The function `collinear()` contains the full logics for
+multicollinearity management in most use cases.
+
+It has the following arguments:
+
+| **Argument**       | **Description**                                                                  | **Dependencies/Defaults**                                                     |
+|--------------------|----------------------------------------------------------------------------------|-------------------------------------------------------------------------------|
+| `df`               | Data frame with predictors (numeric/categorical) and optional response variable. | Required.                                                                     |
+| `response`         | Response variable (continuous, binomial, integer, or categorical).               | Defaults to `NULL`. Enables target encoding and preference order computation. |
+| `predictors`       | Names of target predictors.                                                      | Defaults to all columns in `df` except `response`.                            |
+| `encoding_method`  | Target encoding method for categorical predictors.                               | Requires numeric `response`. Disabled if `NULL`.                              |
+| `preference_order` | Predictor ranking (custom vector or output of `preference_order()`).             | Defaults to `NULL`. Computed if `response` is provided.                       |
+| `f`                | Function to compute association between response and predictors.                 | Defaults to `f_default()` if `preference_order = NULL`.                       |
+| `cor_method`       | Pairwise correlation method.                                                     | Requires `max_cor` to be set.                                                 |
+| `max_cor`          | Maximum allowable pairwise correlation between predictors.                       | Disabled if `NULL`.                                                           |
+| `max_vif`          | Maximum Variance Inflation Factor for predictors.                                | Disabled if `NULL`.                                                           |
 
 - **Input data**:
-  - `df` (required): Data frame with numeric and/or categorical
-    predictors, and optionally a response variable.
-  - `response` (optional): Name of a categorical, numeric, binomial, or
-    integer response variable. The value of this argument defines the
-    function behavior:
-    - If NULL: target encoding and preference order are disabled.
-    - Otherwise:
-      - If `preference_order = NULL`: preference order is computed
-        automatically.
-      - If numeric and `encoding_method != NULL`: target encoding
-        transforms categorical predictors to numeric.
-  - `predictors` (optional): Names of predictors involved in the
-    multicollinearity filtering. If not provided, all columns in `df`
-    but `response` (if provided) are used as predictors.
+  - `df` (data frame, required): with numeric and/or categorical
+    predictors, and preferably, a response variable.
+  - `response` (character, optional): Name of a continuous, binomial,
+    integer, or categorical response variable.
+    - If `NULL` (default): target encoding and the automated computation
+      of preference order are disabled.
+    - If provided and `preference_order = NULL`: automated computation
+      of preference order.
+    - If it names a numeric column and `encoding_method` is not NULL:
+      target encoding is applied to categorical predictors, if any.
+  - `predictors` (character vector, optional): Names of the target
+    predictors. If NULL, all column names in `df` but `response` are
+    used instead.
 - **Target encoding**:
-  - `encoding_method` (optional, depends on `response`): Name of the
-    method to transform categorical predictors into numeric. If NULL, or
-    `response` is not numeric, target encoding is disabled.  
+  - `encoding_method` (character, optional, requires a numeric
+    `response`): Name of the target encoding method. If NULL, target
+    encoding is disabled.
 - **Preference order**:
-  - `preference_order` (optional, depends on `response`): Ignored if
-    argument `response` is not provided. Otherwise, valid values are:
+  - `preference_order` (character vector or data frame, optional):
+    predictors ranked in order of importance.
+    - NULL (default): if a `response` of any type is provided,
+      preference order is computed internally.
     - Character vector: predictor names in a custom preference order.
     - Data frame: result of `preference_order()`.
-    - NULL: if `response` is provided, then preference order is computed
-      automatically by calling to `preference_order()`.
-  - `f` (optional, function name): Function used to compute preference
-    order. Functions designed for this argument are named `f_...()`. If
-    NULL, a default one based on the nature of the input data is
-    selected by `f_default()`.
+  - `f` (function name, optional, requires `preference_order = NULL`):
+    Function to compute the association between the response and each
+    predictor. If NULL (default), a function appropriate for the given
+    data is selected by `f_default()`.
 - **Multicollinearity filtering**:
-  - `cor_method` (optional): pairwise correlation method.
-  - `max_cor` (optional): Maximum pairwise correlation between
+  - `cor_method` (character, optional, requires `max_cor != NULL`):
+    pairwise correlation method.
+  - `max_cor` (numeric, optional): Maximum pairwise correlation between
     predictors. If NULL, the pairwise correlation filtering is disabled.
-  - `max_vif` (optional): Maximum Variance Inflation Factor of all
-    predictors. If NULL, the VIF-based filtering is disabled.
+  - `max_vif` (numeric, optional): Maximum Variance Inflation Factor of
+    any predictor. If NULL, the VIF-based filtering is disabled.
 
 The example below shows all full call to the function on the `vi` data
-frame.
+frame with a numeric response and predictors of mixed types.
 
 ``` r
 #parallelization setup
@@ -197,49 +205,48 @@ selected_predictors <- collinear(
 selected_predictors
 ```
 
-The function has returned a list of predictors that should have a
-correlation lower than 0.75 with each other, and a VIF lower than 5.
-Let’s see if that’s true.
-
-The function `cor_df()` returns a data frame with pairwise correlations,
-arranged by the absolute value of the correlation.
+The function returns a vector of predictor ordered by preference with a
+pairwise correlation lower than 0.75 and a VIF lower than 5. The code
+below shows the pairwise correlations and the VIF scores of the selected
+predictors.
 
 ``` r
-#need to encode categorical vi_predictors to obtain same results!
+#categorical predictors require target-encoding to mimic behavior of collinear()
 df <- target_encoding_lab(
   df = vi,
   response = "vi_numeric",
-  predictors = vi_predictors,
+  predictors = selected_predictors,
   encoding_method = "mean",
   replace = TRUE
 )
 
 #pairwise correlation data frame
-selected_predictors_cor <- cor_df(
+cor_df(
   df = df,
   predictors = selected_predictors
 )
-head(selected_predictors_cor)
-```
 
-The data frame above shows that the maximum correlation between two of
-the selected predictors is below 0.75, so the pairwise correlation
-filtering implemented in `collinear()` works as expected.
-
-The function `vif_df()` returns a data frame with the VIF scores of the
-selected predictors.
-
-``` r
-selected_predictors_vif <- vif_df(
+#vif data frame
+vif_df(
   df = df, #data frame with encoded categoricals
   predictors = selected_predictors
-)
-selected_predictors_vif
+) |> 
+  dplyr::arrange(
+    dplyr::desc(vif)
+  )
 ```
 
-The output shows that the maximum VIF is 4.8, which shows that the VIF
-multicollinearity filtering implemented in `collinear()` is working as
-expected.
+## `collinear()` Step by Step
+
+This section describes the steps `collinear()` follows to deliver its
+results.
+
+### Data Validation
+
+There are several functions called within `collinear()` to validate the
+input data:
+
+- `validate_df()`: checks basic details about the input data frame
 
 #### Preference order
 
