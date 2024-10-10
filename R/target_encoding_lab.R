@@ -32,7 +32,6 @@
 #' @param white_noise (optional; numeric) Argument of the methods "mean", "rank", and "loo". Maximum white noise to add, expressed as a fraction of the range of the response variable. Default: `0`.
 #' @param seed (optional; integer) Random seed to facilitate reproducibility when `white_noise` is not 0. Default: 1
 #' @param replace (optional; logical) If `TRUE`, only the first method in `encoding_methods` is used, the method suffix is ignored, and the categorical variables are overwritten with their encoded versions in the output data frame. Default: FALSE
-#' @param verbose (optional; logical) If TRUE, messages generated during the execution of the function are printed to the console Default: TRUE
 #'
 #' @return data frame
 #' @examples
@@ -95,7 +94,7 @@ target_encoding_lab <- function(
     white_noise = 0,
     seed = 1,
     replace = FALSE,
-    verbose = TRUE
+    quiet = FALSE
 ){
 
   if(is.null(encoding_methods)){
@@ -125,7 +124,7 @@ target_encoding_lab <- function(
   )
 
   if(is.null(response)){
-    if(verbose == TRUE){
+    if(quiet == FALSE){
       message("collinear::target_encoding_lab(): argument 'response' is NULL, skipping target-encoding.")
     }
     return(df)
@@ -133,7 +132,7 @@ target_encoding_lab <- function(
 
   #return data frame if response is not numeric
     if(!is.numeric(df[[response]])){
-      if(verbose == TRUE){
+      if(quiet == FALSE){
         message("collinear::target_encoding_lab(): argument 'response' is not numeric, skipping target-encoding.")
       }
       return(df)
@@ -161,13 +160,13 @@ target_encoding_lab <- function(
 
   if(length(predictors.to.encode) == 0){
 
-    if(verbose == TRUE){
+    if(quiet == FALSE){
       message("collinear::target_encoding_lab(): all predictors are numeric, nothing to do.")
     }
     return(df)
   }
 
-  if(verbose == TRUE){
+  if(quiet == FALSE){
     if(length(predictors.to.encode) > 1){
       message(
         "\n collinear::target_encoding_lab(): encoding the predictors:\n",

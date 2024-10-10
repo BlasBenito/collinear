@@ -136,34 +136,20 @@ vif_select <- function(
   #  one predictor only
   #  max_vif is NULL
   if(is.null(max_vif)){
-    message("collinear::vif_select(): multicollinearity filter disabled (max_vif = NULL), returning all predictors.")
     return(predictors)
   }
 
   #checking argument max_vif
-  if(max_vif < 2.5 || max_vif > 10){
-    if(max_vif < 0){max_vif <- 0}
-    message("collinear::vif_select(): recommended values for 'max_vif' are between 2.5 and 10.")
+  if(
+    !is.numeric(max_vif) ||
+    length(max_vif) != 1 ||
+    max_vif < 2.5 ||
+    max_vif > 10){
+    message("collinear::vif_select(): invalid 'max_vif', resetting it to 5.")
+    max_vif <- 5
   }
 
-  #check input data frame
-  df <- validate_df(
-    df = df
-  )
-
-  #check predictors
-  predictors <- validate_predictors(
-    df = df,
-    predictors = predictors
-  )
-
-  #identify numerics
-  predictors <- identify_predictors_numeric(
-    df = df,
-    predictors = predictors
-  )
-
-  #validate data dimensions
+  #validate data
   predictors <- validate_data_vif(
     df = df,
     predictors = predictors,
@@ -171,13 +157,7 @@ vif_select <- function(
   )
 
   #if no numerics, return predictors
-  if(length(predictors) == 0){
-    message("collinear::vif_select(): no numeric predictors available, returning NA.")
-    return(NA)
-  }
-
-  if(length(predictors) == 1){
-    message("collinear::vif_select(): only one numeric predictor available, skipping multicollinearity filtering.")
+  if(length(predictors) <= 1){
     return(predictors)
   }
 
@@ -218,10 +198,12 @@ vif_select <- function(
 
     #add candidate to selected
     if(max(vif.df[["vif"]]) <= max_vif){
+
       preference_order_selected <- c(
         preference_order_selected,
         preference_order_candidates[1]
       )
+
     }
 
     #remove candidate

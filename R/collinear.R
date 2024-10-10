@@ -67,6 +67,7 @@
 #' @param cor_method (optional; character string) Method used to compute pairwise correlations. Either "pearson" or "spearman". Default: "pearson".
 #' @param max_cor (optional; numeric) Maximum correlation allowed between any pair of variables in `predictors`. Recommended values are between 0.5 and 0.9. Higher values return larger number of predictors with a higher multicollinearity. If NULL, the pairwise correlation analysis is disabled. Default: `0.75`
 #' @param max_vif (optional, numeric) Maximum Variance Inflation Factor allowed during variable selection. Recommended values are between 2.5 and 10. Higher values return larger number of predictors with a higher multicollinearity. If NULL, the variance inflation analysis is disabled. Default: 5.
+#' @param quiet (optional; logical) If FALSE, messages generated during the execution of the function are printed to the console Default: FALSE
 #' @return character vector; names of selected predictors
 #'
 #' @examples
@@ -237,7 +238,8 @@ collinear <- function(
     f = NULL,
     cor_method = "pearson",
     max_cor = 0.75,
-    max_vif = 5
+    max_vif = 5,
+    quiet = FALSE
 ){
 
   #validate input data frame
@@ -256,13 +258,19 @@ collinear <- function(
     predictors = predictors
   )
 
-  #early output if only one predictor
-  if(length(predictors) == 1){
+  if(all(is.null(c(max_cor, max_vif))) == TRUE){
+    message("collinear::collinear(): arguments 'max_cor' and 'max_vif' are NULL, multicollinearity filtering is disabled, returning all predictors.")
     return(predictors)
   }
 
-  #transform categorical to numerics
-  #ignores if:
+  #early output if only one predictor
+  if(length(predictors) == 1){
+    message("collinear::collinear(): only one predictor available, skipping multicollinearity filtering and returning the predictor.")
+    return(predictors)
+  }
+
+  # target encoding ----
+  #ignored if:
   # response == NULL
   # encoding_method == NULL
   df <- target_encoding_lab(
@@ -271,70 +279,93 @@ collinear <- function(
     predictors = predictors,
     encoding_methods = encoding_method,
     replace = TRUE,
-    verbose = FALSE
+    quiet = quiet
   )
 
-  #preference order
-  if(is.null(preference_order)){
+  # preference order ----
+  if(
+    is.null(preference_order) &&
+    !is.null(response)
+    ){
 
     preference_order <- preference_order(
       df = df,
       response = response,
       predictors = predictors,
       f = NULL
-    )
+    )$predictor
 
-  }
-
-  #pairwise correlation filter
-  predictors <- validate_data_cor(
-    df = df,
-    predictors = predictors,
-    function_name = "collinear::collinear()"
-  )
-
-  selection.cor <- cor_select(
-    df = df,
-    predictors = predictors,
-    preference_order = preference_order,
-    cor_method = cor_method,
-    max_cor = max_cor
-  )
-
-  #separate numeric and categorical
-  selection.cor.type <- identify_predictors(
-    df = df,
-    predictors = selection.cor
-  )
-
-  #vif filter
-  predictors.vif <- validate_data_vif(
-    df = df,
-    predictors = selection.cor.type$numeric,
-    function_name = "collinear::collinear()"
-  )
-
-  selection.vif <- vif_select(
-    df = df,
-    predictors = predictors.vif,
-    preference_order = preference_order,
-    max_vif = max_vif
-  )
-
-  #merge selections
-  selection <- c(
-    selection.vif,
-    selection.cor.type$categorical
-  ) |>
-    unique() |>
-    na.omit()
-
-  #order as in preference order
-  if(!is.null(preference_order)){
+  } else {
 
     if(is.data.frame(preference_order)){
       preference_order <- preference_order$predictor
     }
+
+  }
+
+  #starting selection vector
+  selection <- predictors
+
+  # pairwise correlation filter ----
+  if(!is.null(max_cor)){
+
+    #validate data
+    predictors <- validate_data_cor(
+      df = df,
+      predictors = predictors,
+      function_name = "collinear::collinear()"
+    )
+
+    if(length(predictors) > 1){
+
+      selection <- cor_select(
+        df = df,
+        predictors = predictors,
+        preference_order = preference_order,
+        cor_method = cor_method,
+        max_cor = max_cor
+      )
+
+    }
+
+  }
+
+
+
+  #vif filter
+  if(!is.null(max_vif)){
+
+    #separate numeric and categorical
+    selection.type <- identify_predictors(
+      df = df,
+      predictors = selection
+    )
+
+    predictors.vif <- validate_data_vif(
+      df = df,
+      predictors = selection.type$numeric,
+      function_name = "collinear::collinear()"
+    )
+
+    selection.vif <- vif_select(
+      df = df,
+      predictors = predictors.vif,
+      preference_order = preference_order,
+      max_vif = max_vif
+    )
+
+    #merge selections
+    selection <- c(
+      selection.vif,
+      selection.type$categorical
+    ) |>
+      unique() |>
+      na.omit()
+
+  }
+
+  #order as in preference order
+  if(!is.null(preference_order)){
 
     selection <- selection[order(match(selection, preference_order))]
 

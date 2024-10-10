@@ -96,30 +96,23 @@ cor_select <- function(
   }
 
   #checking argument max_cor
-  if(max_cor < 0 || max_cor > 1){
-    stop(
-      "collinear::cor_select(): argument 'max_cor' must be a numeric between 0 and 1.",
-      call. = FALSE
-      )
+  if(
+    !is.numeric(max_cor) ||
+    length(max_cor) != 1 ||
+    max_cor < 0.1 ||
+    max_cor > 1){
+    message("collinear::cor_select(): invalid 'max_cor', resetting it to 0.75.")
+    max_cor <- 0.75
   }
 
-  #validate input data frame
-  df <- validate_df(
-    df = df
-  )
-
-  predictors <- validate_predictors(
-    df = df,
-    predictors = predictors
-  )
-
+  #validate input data
   predictors <- validate_data_cor(
     df = df,
     predictors = predictors,
     function_name = "collinear::cor_select()"
   )
 
-  if(length(predictors) == 1){
+  if(length(predictors) <= 1){
     return(predictors)
   }
 

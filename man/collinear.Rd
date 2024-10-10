@@ -13,7 +13,8 @@ collinear(
   f = NULL,
   cor_method = "pearson",
   max_cor = 0.75,
-  max_vif = 5
+  max_vif = 5,
+  quiet = FALSE
 )
 }
 \arguments{
@@ -42,6 +43,8 @@ Default: NULL}
 \item{max_cor}{(optional; numeric) Maximum correlation allowed between any pair of variables in \code{predictors}. Recommended values are between 0.5 and 0.9. Higher values return larger number of predictors with a higher multicollinearity. If NULL, the pairwise correlation analysis is disabled. Default: \code{0.75}}
 
 \item{max_vif}{(optional, numeric) Maximum Variance Inflation Factor allowed during variable selection. Recommended values are between 2.5 and 10. Higher values return larger number of predictors with a higher multicollinearity. If NULL, the variance inflation analysis is disabled. Default: 5.}
+
+\item{quiet}{(optional; logical) If FALSE, messages generated during the execution of the function are printed to the console Default: FALSE}
 }
 \value{
 character vector; names of selected predictors

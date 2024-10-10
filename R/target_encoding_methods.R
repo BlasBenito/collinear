@@ -118,7 +118,7 @@ target_encoding_mean <- function(
     white_noise = 0,
     seed = 1,
     replace = FALSE,
-    verbose = TRUE
+    quiet = TRUE
 ){
 
   if(length(white_noise) > 1){
@@ -196,7 +196,7 @@ target_encoding_mean <- function(
     seed = seed
   )
 
-  if(verbose == TRUE && replace == FALSE){
+  if(quiet == FALSE && replace == FALSE){
     message(
       "collinear::target_encoding_mean(): new encoded predictor: '",
       encoded.variable.name,
@@ -287,7 +287,7 @@ target_encoding_rank <- function(
     seed = seed
   )
 
-  if(verbose == TRUE && replace == FALSE){
+  if(quiet == FALSE && replace == FALSE){
     message(
       "collinear::target_encoding_rank(): new encoded predictor: '",
       encoded.variable.name,
@@ -386,7 +386,7 @@ target_encoding_loo <- function(
     seed = seed
   )
 
-  if(verbose == TRUE && replace == FALSE){
+  if(quiet == FALSE && replace == FALSE){
     message(
       "collinear::target_encoding_loo(): new encoded predictor: '",
       encoded.variable.name,

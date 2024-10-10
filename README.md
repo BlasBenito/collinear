@@ -133,51 +133,14 @@ It has the following arguments:
 | **Argument**       | **Description**                                                                  | **Dependencies/Defaults**                                                     |
 |--------------------|----------------------------------------------------------------------------------|-------------------------------------------------------------------------------|
 | `df`               | Data frame with predictors (numeric/categorical) and optional response variable. | Required.                                                                     |
-| `response`         | Response variable (continuous, binomial, integer, or categorical).               | Defaults to `NULL`. Enables target encoding and preference order computation. |
+| `response`         | Response name (continuous, binomial, integer, or categorical).                   | Defaults to `NULL`. Enables target encoding and preference order computation. |
 | `predictors`       | Names of target predictors.                                                      | Defaults to all columns in `df` except `response`.                            |
 | `encoding_method`  | Target encoding method for categorical predictors.                               | Requires numeric `response`. Disabled if `NULL`.                              |
-| `preference_order` | Predictor ranking (custom vector or output of `preference_order()`).             | Defaults to `NULL`. Computed if `response` is provided.                       |
-| `f`                | Function to compute association between response and predictors.                 | Defaults to `f_default()` if `preference_order = NULL`.                       |
-| `cor_method`       | Pairwise correlation method.                                                     | Requires `max_cor` to be set.                                                 |
-| `max_cor`          | Maximum allowable pairwise correlation between predictors.                       | Disabled if `NULL`.                                                           |
-| `max_vif`          | Maximum Variance Inflation Factor for predictors.                                | Disabled if `NULL`.                                                           |
-
-- **Input data**:
-  - `df` (data frame, required): with numeric and/or categorical
-    predictors, and preferably, a response variable.
-  - `response` (character, optional): Name of a continuous, binomial,
-    integer, or categorical response variable.
-    - If `NULL` (default): target encoding and the automated computation
-      of preference order are disabled.
-    - If provided and `preference_order = NULL`: automated computation
-      of preference order.
-    - If it names a numeric column and `encoding_method` is not NULL:
-      target encoding is applied to categorical predictors, if any.
-  - `predictors` (character vector, optional): Names of the target
-    predictors. If NULL, all column names in `df` but `response` are
-    used instead.
-- **Target encoding**:
-  - `encoding_method` (character, optional, requires a numeric
-    `response`): Name of the target encoding method. If NULL, target
-    encoding is disabled.
-- **Preference order**:
-  - `preference_order` (character vector or data frame, optional):
-    predictors ranked in order of importance.
-    - NULL (default): if a `response` of any type is provided,
-      preference order is computed internally.
-    - Character vector: predictor names in a custom preference order.
-    - Data frame: result of `preference_order()`.
-  - `f` (function name, optional, requires `preference_order = NULL`):
-    Function to compute the association between the response and each
-    predictor. If NULL (default), a function appropriate for the given
-    data is selected by `f_default()`.
-- **Multicollinearity filtering**:
-  - `cor_method` (character, optional, requires `max_cor != NULL`):
-    pairwise correlation method.
-  - `max_cor` (numeric, optional): Maximum pairwise correlation between
-    predictors. If NULL, the pairwise correlation filtering is disabled.
-  - `max_vif` (numeric, optional): Maximum Variance Inflation Factor of
-    any predictor. If NULL, the VIF-based filtering is disabled.
+| `preference_order` | Predictor ranking (custom vector or output of `preference_order()`).             | Defaults to `NULL`. Computed internally if `response` is provided.            |
+| `f`                | Function to compute preference order.                                            | Defaults to `f_default()` if `preference_order = NULL`.                       |
+| `cor_method`       | Pairwise correlation method.                                                     | Ignored if `max_cor` is `NULL`.                                               |
+| `max_cor`          | Maximum allowed pairwise correlation.                                            | Disabled if `NULL`.                                                           |
+| `max_vif`          | Maximum allowed VIF.                                                             | Disabled if `NULL`.                                                           |
 
 The example below shows all full call to the function on the `vi` data
 frame with a numeric response and predictors of mixed types.

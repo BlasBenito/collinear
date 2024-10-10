@@ -559,6 +559,36 @@ validate_data_vif <- function(
     function_name = "collinear::vif_df()"
 ){
 
+  df <- validate_df(
+    df = df
+  )
+
+  predictors <- validate_predictors(
+    df = df,
+    predictors = predictors
+  )
+
+  predictors.numeric <- identify_predictors_numeric(
+    df = df,
+    predictors = predictors
+  )
+
+  if(length(predictors.numeric) == 0){
+    message(
+      function_name,
+      ": no numeric predictors available, skipping VIF-based filtering."
+    )
+    return(predictors)
+  }
+
+  if(length(predictors.numeric) == 1){
+    message(
+      function_name,
+      ": only one predictor available, skipping VIF-based filtering."
+    )
+    return(predictors)
+  }
+
   #minimum number of required rows
   min.rows <- length(predictors) * 10
 
@@ -575,18 +605,21 @@ validate_data_vif <- function(
 
       message(
         function_name,
-        ": reliable VIF computation requires >=10 rows per predictor in 'df'. Analysis restricted to these predictors: '",
+        ": VIF computation requires >=10 rows in 'df' per predictor. VIF analysis will be performed for these predictors: '",
         paste(predictors, collapse = "', '"),
         "'."
       )
 
+      return(predictors)
+
     } else {
 
-      stop(
+      message(
         function_name,
-        ": At least 10 rows per predictor are required. VIF computation is not feasible with this data size.",
-        call. = FALSE
+        ": at least 10 rows per predictor are required, skipping VIF filtering."
       )
+
+      return(character())
 
     }
 
@@ -617,13 +650,39 @@ validate_data_cor <- function(
     function_name = "collinear::cor_df()"
 ){
 
+  df <- validate_df(
+    df = df
+  )
+
+  predictors <- validate_predictors(
+    df = df,
+    predictors = predictors
+  )
+
+  if(length(predictors) == 0){
+    message(
+      function_name,
+      ": no predictors available, skipping pairwise correlation filtering."
+    )
+    return(predictors)
+  }
+
+  if(length(predictors.numeric) == 1){
+    message(
+      function_name,
+      ": only one predictor available, skipping pairwise correlation filtering."
+    )
+    return(predictors)
+  }
+
   if(nrow(df) < 10) {
 
-    stop(
+    message(
       function_name,
-      ": At least 10 rows are required to compute reliable pairwise correlations. Analysis is not feasible with this data size.",
-      call. = FALSE
+      ": at least 10 rows per predictor are required, skipping pairwise correlation filtering."
     )
+
+    return(character())
 
   }
 

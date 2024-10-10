@@ -13,7 +13,7 @@ target_encoding_lab(
   white_noise = 0,
   seed = 1,
   replace = FALSE,
-  verbose = TRUE
+  quiet = FALSE
 )
 }
 \arguments{
@@ -33,7 +33,7 @@ target_encoding_lab(
 
 \item{replace}{(optional; logical) If \code{TRUE}, only the first method in \code{encoding_methods} is used, the method suffix is ignored, and the categorical variables are overwritten with their encoded versions in the output data frame. Default: FALSE}
 
-\item{verbose}{(optional; logical) If TRUE, messages generated during the execution of the function are printed to the console Default: TRUE}
+\item{quiet}{(optional; logical) If FALSE, messages generated during the execution of the function are printed to the console Default: FALSE}
 }
 \value{
 data frame
