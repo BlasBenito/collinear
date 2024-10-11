@@ -35,7 +35,8 @@
 #' @export
 vif_df <- function(
     df = NULL,
-    predictors = NULL
+    predictors = NULL,
+    quiet = FALSE
 ){
 
   #internal function to compute VIF
@@ -70,13 +71,15 @@ vif_df <- function(
 
   #check input data frame
   df <- validate_df(
-    df = df
+    df = df,
+    quiet = quiet
   )
 
   #check predictors
   predictors <- validate_predictors(
     df = df,
-    predictors = predictors
+    predictors = predictors,
+    quiet = quiet
   )
 
   #get numeric predictors only
