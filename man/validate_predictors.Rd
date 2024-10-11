@@ -4,7 +4,12 @@
 \alias{validate_predictors}
 \title{Validate Argument predictors}
 \usage{
-validate_predictors(df = NULL, response = NULL, predictors = NULL)
+validate_predictors(
+  df = NULL,
+  response = NULL,
+  predictors = NULL,
+  quiet = FALSE
+)
 }
 \arguments{
 \item{df}{(required; data frame, tibble, or sf) A data frame with numeric predictors, and optionally a numeric response and categorical predictors. Default: NULL.}
@@ -12,6 +17,8 @@ validate_predictors(df = NULL, response = NULL, predictors = NULL)
 \item{response}{(optional, character string) Name of a numeric (non-numerics are ignored) response variable in \code{df}, only required if there are categorical variables named in the argument \code{predictors}. Default: NULL.}
 
 \item{predictors}{(optional; character vector) Names of the variables to select from \code{df}. If omitted, all numeric columns in \code{df} are used instead. If argument \code{response} is not provided, non-numeric variables are ignored. Default: NULL}
+
+\item{quiet}{(optional; logical) If FALSE, messages generated during the execution of the function are printed to the console Default: FALSE}
 }
 \value{
 character vector: predictor names

@@ -150,7 +150,8 @@ f_default <- function(
 
   response_type <- identify_response_type(
     df = df,
-    response = response
+    response = response,
+    quiet = quiet
   )
 
   if(response_type == "unknown"){

@@ -88,10 +88,13 @@ testthat::test_that("`cor_df()` works", {
   #single predictor
   predictors <- vi_predictors[1]
 
-  cor.df <- cor_df(
-    df = df,
-    predictors = predictors
-  )
+  testthat::expect_message(
+    cor.df <- cor_df(
+      df = df,
+      predictors = predictors
+    )
+  ) |>
+    suppressMessages()
 
   testthat::expect_true(
     is.data.frame(cor.df)

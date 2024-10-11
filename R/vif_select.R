@@ -129,7 +129,8 @@ vif_select <- function(
     df = NULL,
     predictors = NULL,
     preference_order = NULL,
-    max_vif = 5
+    max_vif = 5,
+    quiet = FALSE
 ){
 
   #do nothing if
@@ -146,7 +147,13 @@ vif_select <- function(
     max_vif < 2.5 ||
     max_vif > 10
   ){
-    message("collinear::vif_select(): invalid 'max_vif', resetting it to 5.")
+
+    if(quiet == FALSE){
+
+      message("collinear::vif_select(): invalid 'max_vif', resetting it to 5.")
+
+    }
+
     max_vif <- 5
   }
 
@@ -154,7 +161,8 @@ vif_select <- function(
   predictors <- validate_data_vif(
     df = df,
     predictors = predictors,
-    function_name = "collinear::vif_select()"
+    function_name = "collinear::vif_select()",
+    quiet = quiet
   )
 
   #if no numerics, return predictors
@@ -166,7 +174,8 @@ vif_select <- function(
   #variables with lower sum of cor with others go higher
   preference_order_auto <- vif_df(
     df = df,
-    predictors = predictors
+    predictors = predictors,
+    quiet = quiet
   )$predictor
 
   #validate preference order
@@ -194,7 +203,8 @@ vif_select <- function(
       predictors = c(
         preference_order_selected,
         preference_order_candidates[1]
-      )
+      ),
+      quiet = quiet
     )
 
     #add candidate to selected

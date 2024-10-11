@@ -4,10 +4,14 @@ testthat::test_that("`vif_select()` works", {
   df <- vi[1:1000, ]
 
   # mixed types ----
-  x <- vif_select(
-    df = df,
-    predictors = predictors
-  )
+  testthat::expect_message(
+    x <- vif_select(
+      df = df,
+      predictors = predictors
+    )
+  ) |>
+    suppressMessages()
+
 
   testthat::expect_true(
     is.character(x)
@@ -27,11 +31,15 @@ testthat::test_that("`vif_select()` works", {
     "topo_elevation"
   )
 
-  x <- vif_select(
-    df = df,
-    predictors = predictors,
-    preference_order = preference_order
-  )
+  testthat::expect_message(
+    x <- vif_select(
+      df = df,
+      predictors = predictors,
+      preference_order = preference_order
+    )
+  ) |>
+    suppressMessages()
+
 
   testthat::expect_true(
     is.character(x)
@@ -57,11 +65,14 @@ testthat::test_that("`vif_select()` works", {
   ) |>
     suppressMessages()
 
-  x <- vif_select(
-    df = df,
-    predictors = predictors,
-    preference_order = preference_order
-  )
+  testthat::expect_message(
+    x <- vif_select(
+      df = df,
+      predictors = predictors,
+      preference_order = preference_order
+    )
+  ) |>
+    suppressMessages()
 
   testthat::expect_true(
     is.character(x)
@@ -113,7 +124,7 @@ testthat::test_that("`vif_select()` works", {
   )
 
   #few rows
-  testthat::expect_message(
+  testthat::expect_error(
     x <- vif_select(
       df = vi[1, ],
       predictors = vi_predictors

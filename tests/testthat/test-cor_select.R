@@ -139,9 +139,11 @@ testthat::test_that("`cor_select()` works", {
   #single predictor
   predictors <- vi_predictors_categorical[1]
 
-  x <- cor_select(
-    df = vi[1:1000, ],
-    predictors = predictors
+  testthat::expect_message(
+    x <- cor_select(
+      df = vi[1:1000, ],
+      predictors = predictors
+    )
   )
 
   testthat::expect_true(

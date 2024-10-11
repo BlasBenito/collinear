@@ -141,20 +141,23 @@ preference_order <- function(
 
   #check input data frame
   df <- validate_df(
-    df = df
+    df = df,
+    quiet = quiet
   )
 
   #check response
   response <- validate_response(
     df = df,
-    response = response
+    response = response,
+    quiet = quiet
   )
 
   #check predictors
   predictors <- validate_predictors(
     df = df,
     response = response,
-    predictors = predictors
+    predictors = predictors,
+    quiet = quiet
   )
 
   #early output if only one predictor

@@ -69,36 +69,25 @@ vif_df <- function(
 
   }
 
-  #check input data frame
-  df <- validate_df(
-    df = df,
-    quiet = quiet
-  )
-
-  #check predictors
-  predictors <- validate_predictors(
-    df = df,
-    predictors = predictors,
-    quiet = quiet
-  )
-
-  #get numeric predictors only
-  predictors <- identify_predictors_numeric(
-    df = df,
-    predictors = predictors
-  )
-
   #validate data dimensions
   predictors <- validate_data_vif(
     df = df,
     predictors = predictors,
-    function_name = "collinear::vif_df()"
+    function_name = "collinear::vif_df()",
+    quiet = quiet
   )
 
   #if no numerics, return predictors
   if(length(predictors) == 0){
-    message("collinear::vif_df(): no numeric predictors available, returning NA.")
-    return(NA)
+    if(quiet == FALSE){
+      message("collinear::vif_df(): no numeric predictors available.")
+    }
+    return(
+      data.frame(
+        variable = NA,
+        vif = NA
+      )
+    )
   }
 
   if(length(predictors) == 1){

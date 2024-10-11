@@ -4,7 +4,13 @@
 \alias{vif_select}
 \title{Automated Multicollinearity Filtering with Variance Inflation Factors}
 \usage{
-vif_select(df = NULL, predictors = NULL, preference_order = NULL, max_vif = 5)
+vif_select(
+  df = NULL,
+  predictors = NULL,
+  preference_order = NULL,
+  max_vif = 5,
+  quiet = FALSE
+)
 }
 \arguments{
 \item{df}{(required; data frame, tibble, or sf) A data frame with numeric predictors, and optionally a numeric response and categorical predictors. Default: NULL.}
@@ -14,6 +20,8 @@ vif_select(df = NULL, predictors = NULL, preference_order = NULL, max_vif = 5)
 \item{preference_order}{(optional; character vector) Variable names in \code{predictors}. Defines a priority order, from first to last, to preserve variables during the selection process. Variables not included in this argument are ranked by their Variance Inflation Factor. See \code{\link[=preference_order]{preference_order()}}. Default: NULL}
 
 \item{max_vif}{(optional, numeric) Maximum Variance Inflation Factor allowed during variable selection. Recommended values are between 2.5 and 10. Higher values return larger number of predictors with a higher multicollinearity. If NULL, the variance inflation analysis is disabled. Default: 5.}
+
+\item{quiet}{(optional; logical) If FALSE, messages generated during the execution of the function are printed to the console Default: FALSE}
 }
 \value{
 character vector; names of selected predictors

@@ -7,7 +7,8 @@
 validate_data_cor(
   df = NULL,
   predictors = NULL,
-  function_name = "collinear::cor_df()"
+  function_name = "collinear::cor_df()",
+  quiet = FALSE
 )
 }
 \arguments{
@@ -16,6 +17,8 @@ validate_data_cor(
 \item{predictors}{(optional; character vector) Names of the variables to select from \code{df}. If omitted, all numeric columns in \code{df} are used instead. If argument \code{response} is not provided, non-numeric variables are ignored. Default: NULL}
 
 \item{function_name}{(optional, character string) Name of the function performing the check. Default: "collinear::cor_df()"}
+
+\item{quiet}{(optional; logical) If FALSE, messages generated during the execution of the function are printed to the console Default: FALSE}
 }
 \value{
 character vector: predictors names

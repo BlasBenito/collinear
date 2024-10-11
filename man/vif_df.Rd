@@ -4,12 +4,14 @@
 \alias{vif_df}
 \title{Variance Inflation Factor}
 \usage{
-vif_df(df = NULL, predictors = NULL)
+vif_df(df = NULL, predictors = NULL, quiet = FALSE)
 }
 \arguments{
 \item{df}{(required; data frame, tibble, or sf) A data frame with numeric predictors, and optionally a numeric response and categorical predictors. Default: NULL.}
 
 \item{predictors}{(optional; character vector) Names of the variables to select from \code{df}. If omitted, all numeric columns in \code{df} are used instead. If argument \code{response} is not provided, non-numeric variables are ignored. Default: NULL}
+
+\item{quiet}{(optional; logical) If FALSE, messages generated during the execution of the function are printed to the console Default: FALSE}
 }
 \value{
 data frame; predictors names their VIFs

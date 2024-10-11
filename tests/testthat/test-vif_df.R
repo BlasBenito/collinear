@@ -25,10 +25,13 @@ testthat::test_that("`vif_df()` works", {
   predictors <- vi_predictors[1:10]
   df <- vi[1:1000, ]
 
-  vif.df <- vif_df(
-    df = df,
-    predictors = predictors
-  )
+  testthat::expect_message(
+    vif.df <- vif_df(
+      df = df,
+      predictors = predictors
+    )
+  ) |>
+    suppressMessages()
 
   testthat::expect_true(
     is.data.frame(vif.df)
@@ -50,10 +53,15 @@ testthat::test_that("`vif_df()` works", {
       df = df,
       predictors = predictors
     )
+  ) |>
+    suppressMessages()
+
+  testthat::expect_true(
+    is.data.frame(vif.df)
   )
 
   testthat::expect_true(
-    is.na(vif.df)
+    all(is.na(vif.df[1, ]))
   )
 
   # edge cases ----
@@ -100,10 +108,14 @@ testthat::test_that("`vif_df()` works", {
   #single predictor
   predictors <- vi_predictors_numeric[1]
 
-  vif.df <- vif_df(
-    df = df,
-    predictors = predictors
-  )
+  testthat::expect_message(
+    vif.df <- vif_df(
+      df = df,
+      predictors = predictors
+    )
+  ) |>
+    suppressMessages()
+
 
   testthat::expect_true(
     is.data.frame(vif.df)

@@ -114,13 +114,15 @@ target_encoding_lab <- function(
 
   #validate input data frame
   df <- validate_df(
-    df = df
+    df = df,
+    quiet = quiet
   )
 
   #validate response
   response <- validate_response(
     df = df,
-    response = response
+    response = response,
+    quiet = quiet
   )
 
   if(is.null(response)){
@@ -142,7 +144,8 @@ target_encoding_lab <- function(
   predictors <- validate_predictors(
     df = df,
     response = response,
-    predictors = predictors
+    predictors = predictors,
+    quiet = quiet
   )
 
   #if replace is true, get only first option of all inputs

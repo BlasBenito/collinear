@@ -244,28 +244,37 @@ collinear <- function(
 
   #validate input data frame
   df <- validate_df(
-    df = df
+    df = df,
+    quiet = quiet
   )
 
   response <- validate_response(
     df = df,
-    response = response
+    response = response,
+    quiet = quiet
   )
 
   predictors <- validate_predictors(
     df = df,
     response = response,
-    predictors = predictors
+    predictors = predictors,
+    quiet = quiet
   )
 
   if(all(is.null(c(max_cor, max_vif))) == TRUE){
-    message("collinear::collinear(): arguments 'max_cor' and 'max_vif' are NULL, multicollinearity filtering is disabled, returning all predictors.")
+
+    if(quiet == FALSE){
+      message("collinear::collinear(): arguments 'max_cor' and 'max_vif' are NULL, multicollinearity filtering is disabled, returning all predictors.")
+    }
+
     return(predictors)
   }
 
   #early output if only one predictor
   if(length(predictors) == 1){
-    message("collinear::collinear(): only one predictor available, skipping multicollinearity filtering and returning the predictor.")
+    if(quiet == FALSE){
+      message("collinear::collinear(): only one predictor available, skipping multicollinearity filtering and returning the predictor.")
+    }
     return(predictors)
   }
 
@@ -292,7 +301,8 @@ collinear <- function(
       df = df,
       response = response,
       predictors = predictors,
-      f = NULL
+      f = NULL,
+      quiet = quiet
     )$predictor
 
   } else {
@@ -313,7 +323,8 @@ collinear <- function(
     predictors <- validate_data_cor(
       df = df,
       predictors = predictors,
-      function_name = "collinear::collinear()"
+      function_name = "collinear::collinear()",
+      quiet = quiet
     )
 
     if(length(predictors) > 1){
@@ -323,7 +334,8 @@ collinear <- function(
         predictors = predictors,
         preference_order = preference_order,
         cor_method = cor_method,
-        max_cor = max_cor
+        max_cor = max_cor,
+        quiet = quiet
       )
 
     }
@@ -344,14 +356,16 @@ collinear <- function(
     predictors.vif <- validate_data_vif(
       df = df,
       predictors = selection.type$numeric,
-      function_name = "collinear::collinear()"
+      function_name = "collinear::collinear()",
+      quiet = quiet
     )
 
     selection.vif <- vif_select(
       df = df,
       predictors = predictors.vif,
       preference_order = preference_order,
-      max_vif = max_vif
+      max_vif = max_vif,
+      quiet = quiet
     )
 
     #merge selections

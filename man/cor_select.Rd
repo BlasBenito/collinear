@@ -9,7 +9,8 @@ cor_select(
   predictors = NULL,
   preference_order = NULL,
   cor_method = "pearson",
-  max_cor = 0.75
+  max_cor = 0.75,
+  quiet = FALSE
 )
 }
 \arguments{
@@ -22,6 +23,8 @@ cor_select(
 \item{cor_method}{(optional; character string) Method used to compute pairwise correlations. Either "pearson" or "spearman". Default: "pearson".}
 
 \item{max_cor}{(optional; numeric) Maximum correlation allowed between any pair of variables in \code{predictors}. Recommended values are between 0.5 and 0.9. Higher values return larger number of predictors with a higher multicollinearity. If NULL, the pairwise correlation analysis is disabled. Default: \code{0.75}}
+
+\item{quiet}{(optional; logical) If FALSE, messages generated during the execution of the function are printed to the console Default: FALSE}
 }
 \value{
 character vector; names of selected predictors

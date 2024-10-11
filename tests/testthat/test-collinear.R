@@ -88,7 +88,7 @@ testthat::test_that("`collinear()` works", {
       df = df,
       response = "vi_numeric",
       predictors = predictors,
-      quiet = TRUE
+      quiet = FALSE
     )
   )
 
@@ -109,7 +109,8 @@ testthat::test_that("`collinear()` works", {
     x <- collinear(
       df = df,
       response = "vi_binomial",
-      predictors = predictors
+      predictors = predictors,
+      quiet = FALSE
     )
   )
 
@@ -129,7 +130,8 @@ testthat::test_that("`collinear()` works", {
     x <- collinear(
       df = df,
       response = "vi_counts",
-      predictors = predictors
+      predictors = predictors,
+      quiet = FALSE
     )
   )
 
@@ -149,9 +151,11 @@ testthat::test_that("`collinear()` works", {
     x <- collinear(
       df = df,
       response = "vi_category",
-      predictors = predictors
+      predictors = predictors,
+      quiet = FALSE
     )
-  )
+  ) |>
+    suppressMessages()
 
   testthat::expect_true(
     is.character(x)
@@ -169,9 +173,11 @@ testthat::test_that("`collinear()` works", {
     x <- collinear(
       df = df,
       response = "vi_factor",
-      predictors = predictors
+      predictors = predictors,
+      quiet = FALSE
     )
-  )
+  ) |>
+    suppressMessages()
 
   testthat::expect_true(
     is.character(x)
@@ -194,7 +200,8 @@ testthat::test_that("`collinear()` works", {
       response = "vi_numeric",
       predictors = predictors,
       encoding_method = NULL,
-      max_vif = NULL
+      max_vif = NULL,
+      quiet = FALSE
     )
   ) |>
     suppressMessages()
@@ -207,7 +214,8 @@ testthat::test_that("`collinear()` works", {
         df = df,
         response = "vi_numeric",
         predictors = predictors
-      )
+      ),
+      quiet = FALSE
     )
   )
 
@@ -224,7 +232,8 @@ testthat::test_that("`collinear()` works", {
       response = "vi_numeric",
       predictors = predictors,
       encoding_method = NULL,
-      max_cor = NULL
+      max_cor = NULL,
+      quiet = FALSE
     )
   )
 
@@ -236,7 +245,8 @@ testthat::test_that("`collinear()` works", {
         df = df,
         response = "vi_numeric",
         predictors = predictors
-      )
+      ),
+      quiet = FALSE
     )
   )
 
@@ -251,7 +261,8 @@ testthat::test_that("`collinear()` works", {
     x <- collinear(
       df = df,
       response = "vi_factor",
-      predictors = predictors
+      predictors = predictors,
+      quiet = FALSE
     )
   ) |>
     suppressMessages()
@@ -291,15 +302,16 @@ testthat::test_that("`collinear()` works", {
   testthat::expect_error(
     x <- collinear(
       df = vi[1, ],
-      predictors = vi_predictors
+      predictors = vi_predictors,
+      quiet = TRUE
     )
   )
-
 
   #no predictors
   x <- collinear(
     df = df[, 1:5],
-    predictors = NULL
+    predictors = NULL,
+    quiet = TRUE
   )
 
   testthat::expect_true(
@@ -309,10 +321,13 @@ testthat::test_that("`collinear()` works", {
   #single predictor
   predictors <- vi_predictors_numeric[1]
 
-  x <- collinear(
-    df = vi[1:1000, ],
-    predictors = predictors
+  testthat::expect_message(
+    x <- collinear(
+      df = vi[1:1000, ],
+      predictors = predictors
+    )
   )
+
 
   testthat::expect_true(
     x == predictors

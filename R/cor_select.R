@@ -87,7 +87,8 @@ cor_select <- function(
     predictors = NULL,
     preference_order = NULL,
     cor_method = "pearson",
-    max_cor = 0.75
+    max_cor = 0.75,
+    quiet = FALSE
 ){
 
   #do nothing if one predictor only
@@ -115,7 +116,8 @@ cor_select <- function(
   predictors <- validate_data_cor(
     df = df,
     predictors = predictors,
-    function_name = "collinear::cor_select()"
+    function_name = "collinear::cor_select()",
+    quiet = quiet
   )
 
   if(length(predictors) <= 1){

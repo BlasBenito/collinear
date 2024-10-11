@@ -40,7 +40,7 @@ validate_df <- function(
     stop(
       "collinear::validate_df(): argument 'df' cannot be NULL.",
       call. = FALSE
-      )
+    )
   }
 
   #if already validated, return it
@@ -520,15 +520,14 @@ validate_response <- function(
 validate_preference_order <- function(
     predictors = NULL,
     preference_order = NULL,
-    preference_order_auto = NULL,
-    quiet = FALSE
+    preference_order_auto = NULL
 ){
 
   if(is.null(preference_order_auto)){
     stop(
       "collinear::validate_preference_order(): argument 'preference_order_auto' cannot be NULL.",
       call. = FALSE
-      )
+    )
   }
 
   if(is.null(preference_order)){
@@ -543,7 +542,7 @@ validate_preference_order <- function(
       stop(
         "collinear::validate_preference_order(): argument 'preference_order' must be a data frame with the column 'predictor'.",
         call. = FALSE
-        )
+      )
     }
   }
 
@@ -598,46 +597,23 @@ validate_data_vif <- function(
 ){
 
   df <- validate_df(
-    df = df
+    df = df,
+    quiet = quiet
   )
 
   predictors <- validate_predictors(
     df = df,
-    predictors = predictors
+    predictors = predictors,
+    quiet = quiet
   )
 
-  predictors.numeric <- identify_predictors_numeric(
+  predictors_arg <- predictors
+
+  predictors <- identify_predictors_numeric(
     df = df,
     predictors = predictors
   )
 
-  if(length(predictors.numeric) == 0){
-
-    if(quiet == FALSE){
-
-      message(
-        function_name,
-        ": no numeric predictors available, skipping VIF-based filtering."
-      )
-
-    }
-
-    return(character())
-  }
-
-  if(length(predictors.numeric) == 1){
-
-    if(quiet == FALSE){
-
-      message(
-        function_name,
-        ": only one predictor available, skipping VIF-based filtering."
-      )
-
-    }
-
-    return(predictors)
-  }
 
   #minimum number of required rows
   min.rows <- length(predictors) * 10
@@ -653,31 +629,71 @@ validate_data_vif <- function(
       #restrict predictors to a manageable number
       predictors <- predictors[1:min.predictors]
 
-      if(quiet == FALSE){
-
-        message(
-          function_name,
-          ": VIF computation requires >=10 rows in 'df' per predictor. VIF analysis will be performed for these predictors: '",
-          paste(predictors, collapse = "', '"),
-          "'."
-        )
-
-      }
+      warning(
+        function_name,
+        ": VIF computation requires >=10 rows in 'df' per predictor. VIF analysis will be performed for these predictors: '",
+        paste(predictors, collapse = "', '"),
+        "'.",
+        call. = FALSE
+      )
 
       return(predictors)
 
     } else {
 
-      if(quiet == FALSE){
+      stop(
+        function_name,
+        ": at least 10 rows per predictor are required for VIF-based multicollinearity filtering.",
+        call. = FALSE
+      )
 
-        message(
-          function_name,
-          ": at least 10 rows per predictor are required, skipping VIF filtering."
-        )
+    }
 
-      }
+  }
 
-      return(character())
+  if(length(predictors) == 0){
+
+    if(quiet == FALSE){
+
+      message(
+        function_name,
+        ": no numeric predictors available, skipping VIF-based filtering."
+      )
+
+    }
+
+    return(character())
+  }
+
+  if(length(predictors) == 1){
+
+    if(quiet == FALSE){
+
+      message(
+        function_name,
+        ": only one predictor available, skipping VIF-based filtering."
+      )
+
+    }
+
+    return(predictors)
+  }
+
+  if(length(predictors) < length(predictors_arg)){
+
+    predictors_lost <- setdiff(
+      x = predictors_arg,
+      y = predictors
+    )
+
+    if(quiet == FALSE){
+
+      message(
+        function_name,
+        ": these predictors are not numeric and will be ignored: \n - ",
+        paste(predictors_lost, collapse = "\n - "),
+        "."
+      )
 
     }
 
@@ -710,12 +726,24 @@ validate_data_cor <- function(
 ){
 
   df <- validate_df(
-    df = df
+    df = df,
+    quiet = quiet
   )
+
+  if(nrow(df) < 10) {
+
+    stop(
+      function_name,
+      ": at least 10 rows per predictor are required, skipping pairwise correlation filtering.",
+      call. = FALSE
+    )
+
+  }
 
   predictors <- validate_predictors(
     df = df,
-    predictors = predictors
+    predictors = predictors,
+    quiet = quiet
   )
 
   if(length(predictors) == 0){
@@ -742,21 +770,6 @@ validate_data_cor <- function(
 
     }
     return(predictors)
-  }
-
-  if(nrow(df) < 10) {
-
-    if(quiet == FALSE){
-
-      message(
-        function_name,
-        ": at least 10 rows per predictor are required, skipping pairwise correlation filtering."
-      )
-
-    }
-
-    return(character())
-
   }
 
   predictors

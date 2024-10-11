@@ -49,27 +49,36 @@
 cor_df <- function(
     df = NULL,
     predictors = NULL,
-    cor_method = "pearson"
+    cor_method = "pearson",
+    quiet = FALSE
 ){
 
   #validate input data frame
-  df <- validate_df(
-    df = df
-  )
-
-  predictors <- validate_predictors(
-    df = df,
-    predictors = predictors
-  )
-
   predictors <- validate_data_cor(
     df = df,
     predictors = predictors,
-    function_name = "collinear::cor_df()"
+    function_name = "collinear::cor_df()",
+    quiet = quiet
   )
+
+  #if no numerics, return predictors
+  if(length(predictors) == 0){
+    if(quiet == FALSE){
+      message("collinear::cor_df(): no predictors provided, skipping correlation analysis.")
+    }
+    return(
+      data.frame(
+        variable = NA,
+        vif = NA
+      )
+    )
+  }
 
   #early output if only one predictor
   if(length(predictors) == 1){
+    if(quiet == FALSE){
+      message("collinear::cor_df(): only one predictor provided, skipping correlation analysis.")
+    }
     return(
       data.frame(
         x = predictors,
@@ -86,20 +95,23 @@ cor_df <- function(
   cor.list[["num-vs-num"]] <- cor_numeric_vs_numeric(
     df = df,
     predictors = predictors,
-    cor_method = cor_method
+    cor_method = cor_method,
+    quiet = quiet
   )
 
   #correlation between numeric and character variables
   cor.list[["num-vs-cat"]] <- cor_numeric_vs_categorical(
     df = df,
     predictors = predictors,
-    cor_method = cor_method
+    cor_method = cor_method,
+    quiet = quiet
   )
 
   #correlation between characters
   cor.list[["cat-vs-cat"]] <- cor_categorical_vs_categorical(
     df = df,
-    predictors = predictors
+    predictors = predictors,
+    quiet = quiet
   )
 
   #join results
@@ -138,19 +150,22 @@ cor_df <- function(
 cor_numeric_vs_numeric <- function(
     df = NULL,
     predictors = NULL,
-    cor_method = "pearson"
+    cor_method = "pearson",
+    quiet = FALSE
 ){
 
   #validate input data frame
   df <- validate_df(
-    df = df
+    df = df,
+    quiet = quiet
   )
 
   #validate predictors
   #get numeric predictors only
   predictors <- validate_predictors(
     df = df,
-    predictors = predictors
+    predictors = predictors,
+    quiet = quiet
   )
 
   #identify numerics
@@ -227,12 +242,14 @@ cor_numeric_vs_numeric <- function(
 cor_numeric_vs_categorical <- function(
     df = NULL,
     predictors = NULL,
-    cor_method = "pearson"
+    cor_method = "pearson",
+    quiet = FALSE
 ){
 
   #validate input data frame
   df <- validate_df(
-    df = df
+    df = df,
+    quiet = quiet
   )
 
   #validate predictors without losing non-numerics
@@ -240,7 +257,8 @@ cor_numeric_vs_categorical <- function(
   predictors <- validate_predictors(
     df = df,
     response = paste0("x", Sys.time()),
-    predictors = predictors
+    predictors = predictors,
+    quiet = quiet
   )
 
   #identify numeric and categorical predictors
@@ -319,13 +337,15 @@ cor_numeric_vs_categorical <- function(
 #' @family pairwise_correlation
 #' @autoglobal
 cor_categorical_vs_categorical <- function(
-    df,
-    predictors
+    df = NULL,
+    predictors = NULL,
+    quiet = FALSE
 ){
 
   #validate input data frame
   df <- validate_df(
-    df = df
+    df = df,
+    quiet = quiet
   )
 
   #validate predictors without losing non-numerics
@@ -333,7 +353,8 @@ cor_categorical_vs_categorical <- function(
   predictors <- validate_predictors(
     df = df,
     response = paste0("x", Sys.time()),
-    predictors = predictors
+    predictors = predictors,
+    quiet = quiet
   )
 
   #get only non numeric predictors

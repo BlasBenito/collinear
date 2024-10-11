@@ -4,7 +4,13 @@
 \alias{preference_order}
 \title{Quantitative Variable Prioritization for Multicollinearity Filtering}
 \usage{
-preference_order(df = NULL, response = NULL, predictors = NULL, f = NULL)
+preference_order(
+  df = NULL,
+  response = NULL,
+  predictors = NULL,
+  f = NULL,
+  quiet = FALSE
+)
 }
 \arguments{
 \item{df}{(required; data frame, tibble, or sf) A data frame with numeric predictors, and optionally a numeric response and categorical predictors. Default: NULL.}
@@ -22,6 +28,8 @@ preference_order(df = NULL, response = NULL, predictors = NULL, f = NULL)
 \item \code{\link[=f_r2_rf]{f_r2_rf()}}: in all other cases.
 }
 Default: NULL}
+
+\item{quiet}{(optional; logical) If FALSE, messages generated during the execution of the function are printed to the console Default: FALSE}
 }
 \value{
 data frame
