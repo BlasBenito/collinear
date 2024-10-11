@@ -11,7 +11,7 @@ testthat::test_that("`target_encoding_lab()` works", {
     encoding_methods = c("mean", "rank", "loo"),
     smoothing = c(0, 30),
     white_noise = c(0, 0.1, 0.2),
-    verbose = FALSE
+    quiet = TRUE
   )
 
   # Check if the result is a data frame

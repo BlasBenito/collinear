@@ -10,7 +10,7 @@ testthat::test_that("`target_encoding_methods()` works", {
     smoothing = 0,
     white_noise = 0.1,
     replace = FALSE,
-    verbose = FALSE
+    quiet = TRUE
   )
 
   testthat::expect_true(
@@ -28,7 +28,7 @@ testthat::test_that("`target_encoding_methods()` works", {
     smoothing = 30,
     white_noise = 0.1,
     replace = FALSE,
-    verbose = FALSE
+    quiet = TRUE
   )
 
   testthat::expect_true(
@@ -45,7 +45,7 @@ testthat::test_that("`target_encoding_methods()` works", {
     response = "vi_numeric",
     predictor = "soil_type",
     replace = FALSE,
-    verbose = FALSE
+    quiet = TRUE
   )
 
   testthat::expect_true(
@@ -64,7 +64,7 @@ testthat::test_that("`target_encoding_methods()` works", {
     predictor = "soil_type",
     white_noise = 0.1,
     replace = FALSE,
-    verbose = FALSE
+    quiet = TRUE
   )
 
   testthat::expect_true(

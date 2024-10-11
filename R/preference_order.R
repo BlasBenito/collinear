@@ -131,7 +131,8 @@ preference_order <- function(
     df = NULL,
     response = NULL,
     predictors = NULL,
-    f = NULL
+    f = NULL,
+    quiet = FALSE
 ){
 
   if(is.null(response)){
@@ -168,7 +169,8 @@ preference_order <- function(
     f_name <- f_default(
       df = df,
       response = response,
-      predictors = predictors
+      predictors = predictors,
+      quiet = quiet
     )
 
     #as function

@@ -224,7 +224,7 @@ target_encoding_rank <- function(
     white_noise = 0,
     seed = 1,
     replace = FALSE,
-    verbose = TRUE
+    quiet = FALSE
 ){
 
   if(length(white_noise) > 1){
@@ -316,7 +316,7 @@ target_encoding_loo <- function(
     white_noise = 0,
     seed = 1,
     replace = FALSE,
-    verbose = TRUE
+    quiet = FALSE
 ){
 
   if(length(white_noise) > 1){

@@ -144,7 +144,8 @@ vif_select <- function(
     !is.numeric(max_vif) ||
     length(max_vif) != 1 ||
     max_vif < 2.5 ||
-    max_vif > 10){
+    max_vif > 10
+  ){
     message("collinear::vif_select(): invalid 'max_vif', resetting it to 5.")
     max_vif <- 5
   }

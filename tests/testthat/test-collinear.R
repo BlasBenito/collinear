@@ -6,7 +6,8 @@ testthat::test_that("`collinear()` works", {
   # mixed types ----
   x <- collinear(
     df = df,
-    predictors = predictors
+    predictors = predictors,
+    quiet = TRUE
   )
 
   testthat::expect_true(
@@ -30,7 +31,8 @@ testthat::test_that("`collinear()` works", {
   x <- collinear(
     df = df,
     predictors = predictors,
-    preference_order = preference_order
+    preference_order = preference_order,
+    quiet = TRUE
   )
 
   testthat::expect_true(
@@ -60,7 +62,8 @@ testthat::test_that("`collinear()` works", {
   x <- collinear(
     df = df,
     predictors = predictors,
-    preference_order = preference_order
+    preference_order = preference_order,
+    quiet = TRUE
   )
 
   testthat::expect_true(
@@ -84,7 +87,8 @@ testthat::test_that("`collinear()` works", {
     x <- collinear(
       df = df,
       response = "vi_numeric",
-      predictors = predictors
+      predictors = predictors,
+      quiet = TRUE
     )
   )
 

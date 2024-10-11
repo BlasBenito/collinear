@@ -25,7 +25,7 @@ target_encoding_rank(
   white_noise = 0,
   seed = 1,
   replace = FALSE,
-  verbose = TRUE
+  quiet = FALSE
 )
 
 target_encoding_loo(
@@ -35,7 +35,7 @@ target_encoding_loo(
   white_noise = 0,
   seed = 1,
   replace = FALSE,
-  verbose = TRUE
+  quiet = FALSE
 )
 
 add_white_noise(

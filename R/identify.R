@@ -361,7 +361,8 @@ identify_predictors_zero_variance <- function(
 #' @autoglobal
 identify_response_type <- function(
     df = NULL,
-    response = NULL
+    response = NULL,
+    quiet = FALSE
 ){
 
   if(is.null(df) || is.null(response)) {
@@ -403,9 +404,13 @@ identify_response_type <- function(
 
       } else if (x_length <= 5) {
 
-        message(
-          "collinear::identify_response_type(): argument 'response' names a numeric non-integer column with 5 or fewer values. Please consider recoding it as integer or categorical, or select a different response column.",
-        )
+        if(quiet == FALSE){
+
+          message(
+            "collinear::identify_response_type(): argument 'response' names a numeric non-integer column with 5 or fewer values. Please consider recoding it as integer or categorical, or select a different response column.",
+          )
+
+        }
 
         return("continuous-low")
 

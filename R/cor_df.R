@@ -132,6 +132,7 @@ cor_df <- function(
 #' @inheritParams collinear
 #' @inherit cor_df return
 #' @rdname cor_df
+#' @export
 #' @family pairwise_correlation
 #' @autoglobal
 cor_numeric_vs_numeric <- function(
@@ -220,6 +221,7 @@ cor_numeric_vs_numeric <- function(
 #'
 #' @inherit cor_df return
 #' @rdname cor_df
+#' @export
 #' @family pairwise_correlation
 #' @autoglobal
 cor_numeric_vs_categorical <- function(
@@ -313,6 +315,7 @@ cor_numeric_vs_categorical <- function(
 #'
 #' @inherit cor_df return
 #' @rdname cor_df
+#' @export
 #' @family pairwise_correlation
 #' @autoglobal
 cor_categorical_vs_categorical <- function(

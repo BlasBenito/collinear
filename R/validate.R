@@ -31,7 +31,8 @@
 #' @family data_validation
 #' @export
 validate_df <- function(
-    df = NULL
+    df = NULL,
+    quiet = FALSE
 ){
 
   #handle df = NULL
@@ -172,7 +173,8 @@ validate_df <- function(
 validate_predictors <- function(
     df = NULL,
     response = NULL,
-    predictors = NULL
+    predictors = NULL,
+    quiet = FALSE
 ){
 
 
@@ -212,13 +214,17 @@ validate_predictors <- function(
 
     if(length(predictors.missing) > 0){
 
-      message(
-        "collinear::validate_predictors(): these predictors are not column names of 'df' and will be ignored:\n - ",
-        paste(
-          predictors.missing,
-          collapse = "\n - "
+      if(quiet == FALSE){
+
+        message(
+          "collinear::validate_predictors(): these predictors are not column names of 'df' and will be ignored:\n - ",
+          paste(
+            predictors.missing,
+            collapse = "\n - "
+          )
         )
-      )
+
+      }
 
       #getting predictors in df only
       predictors <- intersect(
@@ -241,13 +247,17 @@ validate_predictors <- function(
 
     if(length(predictors.zero.variance) > 0){
 
-      message(
-        "collinear::validate_predictors(): these predictors have near zero variance and will be ignored:\n - ",
-        paste0(
-          predictors.zero.variance,
-          collapse = "\n - "
+      if(quiet == FALSE){
+
+        message(
+          "collinear::validate_predictors(): these predictors have near zero variance and will be ignored:\n - ",
+          paste0(
+            predictors.zero.variance,
+            collapse = "\n - "
+          )
         )
-      )
+
+      }
 
       predictors <- setdiff(
         predictors,
@@ -270,13 +280,17 @@ validate_predictors <- function(
 
     if(length(predictors.constant) > 0){
 
-      message(
-        "collinear::validate_predictors(): these predictors have constant values and will be ignored:\n - ",
-        paste0(
-          predictors.constant,
-          collapse = "\n - "
+      if(quiet == FALSE){
+
+        message(
+          "collinear::validate_predictors(): these predictors have constant values and will be ignored:\n - ",
+          paste0(
+            predictors.constant,
+            collapse = "\n - "
+          )
         )
-      )
+
+      }
 
       predictors <- setdiff(
         predictors,
@@ -329,7 +343,8 @@ validate_predictors <- function(
 #' @export
 validate_response <- function(
     df = NULL,
-    response = NULL
+    response = NULL,
+    quiet = FALSE
 ){
 
   if(is.null(df)){
@@ -369,11 +384,16 @@ validate_response <- function(
 
   #check that the response is in df
   if(!(response %in% colnames(df))){
-    message(
-      "collinear::validate_response(): argument 'response' with value '",
-      response,
-      "' is not a column name of 'df' and will be ignored."
-    )
+
+    if(quiet == FALSE){
+
+      message(
+        "collinear::validate_response(): argument 'response' with value '",
+        response,
+        "' is not a column name of 'df' and will be ignored."
+      )
+
+    }
     return(NULL)
   }
 
@@ -386,11 +406,16 @@ validate_response <- function(
     )
 
     if(length(response.zero.variance) == 1){
-      message(
-        "collinear::validate_response(): 'response' column '",
-        response,
-        "' has near-zero variance and will be ignored."
-      )
+
+      if(quiet == FALSE){
+
+        message(
+          "collinear::validate_response(): 'response' column '",
+          response,
+          "' has near-zero variance and will be ignored."
+        )
+
+      }
       return(NULL)
     }
 
@@ -398,12 +423,19 @@ validate_response <- function(
 
   #check that it is not constant
   if(length(unique(df[[response]])) == 1){
-    message(
-      "collinear::validate_response(): 'response' column '",
-      response,
-      "' has constant values and will be ignored."
-    )
+
+    if(quiet == FALSE){
+
+      message(
+        "collinear::validate_response(): 'response' column '",
+        response,
+        "' has constant values and will be ignored."
+      )
+
+    }
+
     return(NULL)
+
   }
 
   #chedk NA
@@ -411,13 +443,17 @@ validate_response <- function(
 
   if(response.na.values > 0){
 
-    message(
-      "collinear::validate_response(): 'response' column '",
-      response,
-      "' has ",
-      response.na.values,
-      " NA values and may cause unexpected issues."
-    )
+    if(quiet == FALSE){
+
+      message(
+        "collinear::validate_response(): 'response' column '",
+        response,
+        "' has ",
+        response.na.values,
+        " NA values and may cause unexpected issues."
+      )
+
+    }
 
   }
 
@@ -484,7 +520,8 @@ validate_response <- function(
 validate_preference_order <- function(
     predictors = NULL,
     preference_order = NULL,
-    preference_order_auto = NULL
+    preference_order_auto = NULL,
+    quiet = FALSE
 ){
 
   if(is.null(preference_order_auto)){
@@ -556,7 +593,8 @@ validate_preference_order <- function(
 validate_data_vif <- function(
     df = NULL,
     predictors = NULL,
-    function_name = "collinear::vif_df()"
+    function_name = "collinear::vif_df()",
+    quiet = FALSE
 ){
 
   df <- validate_df(
@@ -574,18 +612,30 @@ validate_data_vif <- function(
   )
 
   if(length(predictors.numeric) == 0){
-    message(
-      function_name,
-      ": no numeric predictors available, skipping VIF-based filtering."
-    )
-    return(predictors)
+
+    if(quiet == FALSE){
+
+      message(
+        function_name,
+        ": no numeric predictors available, skipping VIF-based filtering."
+      )
+
+    }
+
+    return(character())
   }
 
   if(length(predictors.numeric) == 1){
-    message(
-      function_name,
-      ": only one predictor available, skipping VIF-based filtering."
-    )
+
+    if(quiet == FALSE){
+
+      message(
+        function_name,
+        ": only one predictor available, skipping VIF-based filtering."
+      )
+
+    }
+
     return(predictors)
   }
 
@@ -603,21 +653,29 @@ validate_data_vif <- function(
       #restrict predictors to a manageable number
       predictors <- predictors[1:min.predictors]
 
-      message(
-        function_name,
-        ": VIF computation requires >=10 rows in 'df' per predictor. VIF analysis will be performed for these predictors: '",
-        paste(predictors, collapse = "', '"),
-        "'."
-      )
+      if(quiet == FALSE){
+
+        message(
+          function_name,
+          ": VIF computation requires >=10 rows in 'df' per predictor. VIF analysis will be performed for these predictors: '",
+          paste(predictors, collapse = "', '"),
+          "'."
+        )
+
+      }
 
       return(predictors)
 
     } else {
 
-      message(
-        function_name,
-        ": at least 10 rows per predictor are required, skipping VIF filtering."
-      )
+      if(quiet == FALSE){
+
+        message(
+          function_name,
+          ": at least 10 rows per predictor are required, skipping VIF filtering."
+        )
+
+      }
 
       return(character())
 
@@ -647,7 +705,8 @@ validate_data_vif <- function(
 validate_data_cor <- function(
     df = NULL,
     predictors = NULL,
-    function_name = "collinear::cor_df()"
+    function_name = "collinear::cor_df()",
+    quiet = FALSE
 ){
 
   df <- validate_df(
@@ -660,27 +719,41 @@ validate_data_cor <- function(
   )
 
   if(length(predictors) == 0){
-    message(
-      function_name,
-      ": no predictors available, skipping pairwise correlation filtering."
-    )
+
+    if(quiet == FALSE){
+
+      message(
+        function_name,
+        ": no predictors available, skipping pairwise correlation filtering."
+      )
+
+    }
     return(predictors)
   }
 
-  if(length(predictors.numeric) == 1){
-    message(
-      function_name,
-      ": only one predictor available, skipping pairwise correlation filtering."
-    )
+  if(length(predictors) == 1){
+
+    if(quiet == FALSE){
+
+      message(
+        function_name,
+        ": only one predictor available, skipping pairwise correlation filtering."
+      )
+
+    }
     return(predictors)
   }
 
   if(nrow(df) < 10) {
 
-    message(
-      function_name,
-      ": at least 10 rows per predictor are required, skipping pairwise correlation filtering."
-    )
+    if(quiet == FALSE){
+
+      message(
+        function_name,
+        ": at least 10 rows per predictor are required, skipping pairwise correlation filtering."
+      )
+
+    }
 
     return(character())
 

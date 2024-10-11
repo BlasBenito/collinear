@@ -380,7 +380,7 @@ df <- target_encoding_lab(
   ),
   seed = 1,
   white_noise = c(0, 0.01, 0.1),
-  verbose = TRUE
+  quiet = FALSE
 )
 ```
 

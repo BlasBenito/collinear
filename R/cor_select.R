@@ -101,7 +101,13 @@ cor_select <- function(
     length(max_cor) != 1 ||
     max_cor < 0.1 ||
     max_cor > 1){
-    message("collinear::cor_select(): invalid 'max_cor', resetting it to 0.75.")
+
+    if(quiet == FALSE){
+
+      message("collinear::cor_select(): invalid 'max_cor', resetting it to 0.75.")
+
+    }
+
     max_cor <- 0.75
   }
 

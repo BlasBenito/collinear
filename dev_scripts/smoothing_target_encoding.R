@@ -14,7 +14,7 @@ target_encoding_mean <- function(
     white_noise = 0,
     seed = 1,
     replace = FALSE,
-    verbose = TRUE
+    quiet = FALSE
 ){
 
   #new variable name

@@ -147,7 +147,7 @@ target_encoding_lab <- function(
 
   #if replace is true, get only first option of all inputs
   if(replace == TRUE){
-    verbose <- FALSE
+    quiet <- TRUE
     encoding_methods <- encoding_methods[1]
     white_noise <- white_noise[1]
   }
@@ -200,7 +200,7 @@ target_encoding_lab <- function(
           white_noise = white_noise.i,
           seed = seed,
           replace = replace,
-          verbose = verbose
+          quiet = quiet
         )
 
       }
@@ -217,7 +217,7 @@ target_encoding_lab <- function(
             white_noise = white_noise.i,
             seed = seed,
             replace = replace,
-            verbose = verbose
+            quiet = quiet
           )
 
         }
@@ -233,7 +233,7 @@ target_encoding_lab <- function(
           white_noise = white_noise.i,
           seed = seed,
           replace = replace,
-          verbose = verbose
+          quiet = quiet
         )
 
       }

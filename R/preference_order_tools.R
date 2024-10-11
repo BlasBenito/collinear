@@ -137,7 +137,8 @@ case_weights <- function(
 f_default <- function(
     df = NULL,
     response = NULL,
-    predictors = NULL
+    predictors = NULL,
+    quiet = FALSE
 ){
 
   if(is.null(df) || is.null(response) || is.null(predictors)) {
@@ -178,11 +179,16 @@ f_default <- function(
     "name"
   ]
 
-  message(
-    "collinear::f_default(): selected f function: '",
-    f_name,
-    "()'."
-  )
+  if(quiet == FALSE){
+
+    message(
+      "collinear::f_default(): selected f function: '",
+      f_name,
+      "()'."
+    )
+
+  }
+
 
   f_name
 

@@ -91,7 +91,7 @@ testthat::test_that("`vif_select()` works", {
 
 
   testthat::expect_true(
-    is.na(x)
+    length(x) == 0
   )
 
   # edge cases ----
@@ -113,7 +113,7 @@ testthat::test_that("`vif_select()` works", {
   )
 
   #few rows
-  testthat::expect_error(
+  testthat::expect_message(
     x <- vif_select(
       df = vi[1, ],
       predictors = vi_predictors
