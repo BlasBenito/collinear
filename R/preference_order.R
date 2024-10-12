@@ -135,6 +135,11 @@ preference_order <- function(
     quiet = FALSE
 ){
 
+  if(!is.logical(quiet)){
+    message("collinear::preference_order(): argument 'quiet' must be logical, resetting it to FALSE.")
+    quiet <- FALSE
+  }
+
   if(is.null(response)){
     return(NULL)
   }

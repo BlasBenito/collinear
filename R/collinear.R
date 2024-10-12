@@ -242,40 +242,9 @@ collinear <- function(
     quiet = FALSE
 ){
 
-  #validate input data frame
-  df <- validate_df(
-    df = df,
-    quiet = quiet
-  )
-
-  response <- validate_response(
-    df = df,
-    response = response,
-    quiet = quiet
-  )
-
-  predictors <- validate_predictors(
-    df = df,
-    response = response,
-    predictors = predictors,
-    quiet = quiet
-  )
-
-  if(all(is.null(c(max_cor, max_vif))) == TRUE){
-
-    if(quiet == FALSE){
-      message("collinear::collinear(): arguments 'max_cor' and 'max_vif' are NULL, multicollinearity filtering is disabled, returning all predictors.")
-    }
-
-    return(predictors)
-  }
-
-  #early output if only one predictor
-  if(length(predictors) == 1){
-    if(quiet == FALSE){
-      message("collinear::collinear(): only one predictor available, skipping multicollinearity filtering and returning the predictor.")
-    }
-    return(predictors)
+  if(!is.logical(quiet)){
+    message("collinear::collinear(): argument 'quiet' must be logical, resetting it to FALSE.")
+    quiet <- FALSE
   }
 
   # target encoding ----
@@ -286,7 +255,7 @@ collinear <- function(
     df = df,
     response = response,
     predictors = predictors,
-    encoding_methods = encoding_method,
+    encoding_methods = encoding_method[1],
     replace = TRUE,
     quiet = quiet
   )
@@ -295,7 +264,7 @@ collinear <- function(
   if(
     is.null(preference_order) &&
     !is.null(response)
-    ){
+  ){
 
     preference_order <- preference_order(
       df = df,
@@ -317,66 +286,38 @@ collinear <- function(
   selection <- predictors
 
   # pairwise correlation filter ----
-  if(!is.null(max_cor)){
-
-    #validate data
-    predictors <- validate_data_cor(
-      df = df,
-      predictors = predictors,
-      function_name = "collinear::collinear()",
-      quiet = quiet
-    )
-
-    if(length(predictors) > 1){
-
-      selection <- cor_select(
-        df = df,
-        predictors = predictors,
-        preference_order = preference_order,
-        cor_method = cor_method,
-        max_cor = max_cor,
-        quiet = quiet
-      )
-
-    }
-
-  }
-
-
+  selection <- cor_select(
+    df = df,
+    predictors = predictors,
+    preference_order = preference_order,
+    cor_method = cor_method,
+    max_cor = max_cor,
+    quiet = quiet
+  )
 
   #vif filter
-  if(!is.null(max_vif)){
 
-    #separate numeric and categorical
-    selection.type <- identify_predictors(
-      df = df,
-      predictors = selection
-    )
+  #separate numeric and categorical
+  selection.type <- identify_predictors(
+    df = df,
+    predictors = selection
+  )
 
-    predictors.vif <- validate_data_vif(
-      df = df,
-      predictors = selection.type$numeric,
-      function_name = "collinear::collinear()",
-      quiet = quiet
-    )
+  selection.vif <- vif_select(
+    df = df,
+    predictors = selection.type$numeric,
+    preference_order = preference_order,
+    max_vif = max_vif,
+    quiet = quiet
+  )
 
-    selection.vif <- vif_select(
-      df = df,
-      predictors = predictors.vif,
-      preference_order = preference_order,
-      max_vif = max_vif,
-      quiet = quiet
-    )
-
-    #merge selections
-    selection <- c(
-      selection.vif,
-      selection.type$categorical
-    ) |>
-      unique() |>
-      na.omit()
-
-  }
+  #merge selections
+  selection <- c(
+    selection.vif,
+    selection.type$categorical
+  ) |>
+    unique() |>
+    na.omit()
 
   #order as in preference order
   if(!is.null(preference_order)){

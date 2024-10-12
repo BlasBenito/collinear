@@ -39,6 +39,11 @@ vif_df <- function(
     quiet = FALSE
 ){
 
+  if(!is.logical(quiet)){
+    message("collinear::vif_df(): argument 'quiet' must be logical, resetting it to FALSE.")
+    quiet <- FALSE
+  }
+
   #internal function to compute VIF
   #from correlation matrix
   f_vif <- function(m = NULL){

@@ -28,9 +28,9 @@
 #'
 #' @inheritParams collinear
 #' @param encoding_methods (optional; character vector or NULL). Name of the target encoding methods. If NULL, target encoding is ignored, and `df` is returned with no modification. Default: c("mean", "loo", rank")
-#' @param smoothing (optional; integer) Argument of the method "mean". Groups smaller than this number have their means pulled towards mean of the response across all cases. Default: 0
-#' @param white_noise (optional; numeric) Argument of the methods "mean", "rank", and "loo". Maximum white noise to add, expressed as a fraction of the range of the response variable. Default: `0`.
-#' @param seed (optional; integer) Random seed to facilitate reproducibility when `white_noise` is not 0. Default: 1
+#' @param smoothing (optional; integer vector) Argument of the method "mean". Groups smaller than this number have their means pulled towards the mean of the response across all cases. Default: 0
+#' @param white_noise (optional; numeric vector) Argument of the methods "mean", "rank", and "loo". Maximum white noise to add, expressed as a fraction of the range of the response variable. Default: `0`.
+#' @param seed (optional; integer vector) Random seed to facilitate reproducibility when `white_noise` is not 0. Default: 1
 #' @param replace (optional; logical) If `TRUE`, only the first method in `encoding_methods` is used, the method suffix is ignored, and the categorical variables are overwritten with their encoded versions in the output data frame. Default: FALSE
 #'
 #' @return data frame
@@ -97,28 +97,113 @@ target_encoding_lab <- function(
     quiet = FALSE
 ){
 
-  if(is.null(encoding_methods)){
-    return(df)
+  # quiet
+  if(!is.logical(quiet)){
+    message("collinear::target_encoding_lab(): argument 'quiet' must be logical, resetting it to FALSE.")
+    quiet <- FALSE
   }
 
-  #testing method argument
-  encoding_methods <- match.arg(
-    arg = encoding_methods,
-    choices = c(
-      "mean",
-      "loo",
-      "rank"
-    ),
-    several.ok = TRUE
+  # encoding_methods ----
+  if(is.null(encoding_methods)){
+
+    if(quiet == FALSE){
+
+      message(
+        "collinear::target_encoding_lab(): argument 'encoding_method' is NULL, skipping target encoding."
+      )
+
+    }
+
+    return(df)
+
+  }
+
+  methods <- c(
+    "mean",
+    "loo",
+    "rank"
   )
 
-  #validate input data frame
+  encoding_methods <- intersect(
+    x = encoding_methods,
+    y = methods
+  )
+
+  if(length(encoding_methods) == 0){
+
+    if(quiet == FALSE){
+
+      message(
+        "collinear::target_encoding_lab(): argument 'encoding_methods' not valid, resetting it to 'mean'."
+      )
+
+    }
+
+    encoding_methods <- "mean"
+
+  }
+
+  # replace ----
+  if(!is.logical(replace) == FALSE){
+
+    if(quiet == FALSE){
+      message("collinear::target_encoding_lab(): argument 'replace' must be logical, resetting it to FALSE.")
+    }
+
+    replace <- FALSE
+
+  }
+
+  if(replace == TRUE){
+
+    if(length(encoding_methods) > 1){
+
+      if(quiet == FALSE){
+
+        message(
+          "collinear::target_encoding_lab(): only one encoding method allowed when 'replace = TRUE', using method: '",
+          encoding_methods[1], "'."
+        )
+
+      }
+
+      encoding_methods <- encoding_methods[1]
+
+    }
+
+    if(length(white_noise) > 1){
+
+      if(quiet == FALSE){
+
+        message("collinear::target_encoding_lab(): only one 'white_noise' value allowed when 'replace = TRUE', using value: ", white_noise[1], ".")
+
+      }
+
+      white_noise <- white_noise[1]
+
+    }
+
+    if(length(smoothing) > 1){
+
+      if(quiet == FALSE){
+
+        message("collinear::target_encoding_lab(): only one 'smoothing' value allowed when 'replace = TRUE', using value: ", smoothing[1], ".")
+
+      }
+
+      smoothing <- smoothing[1]
+
+    }
+
+  }
+
+  # validate df ----
   df <- validate_df(
     df = df,
     quiet = quiet
   )
 
-  #validate response
+  # validate response ----
   response <- validate_response(
     df = df,
     response = response,
@@ -126,21 +211,31 @@ target_encoding_lab <- function(
   )
 
   if(is.null(response)){
+
     if(quiet == FALSE){
+
       message("collinear::target_encoding_lab(): argument 'response' is NULL, skipping target-encoding.")
+
     }
+
     return(df)
+
   }
 
   #return data frame if response is not numeric
-    if(!is.numeric(df[[response]])){
-      if(quiet == FALSE){
-        message("collinear::target_encoding_lab(): argument 'response' is not numeric, skipping target-encoding.")
-      }
-      return(df)
+  if(!is.numeric(df[[response]])){
+
+    if(quiet == FALSE){
+
+      message("collinear::target_encoding_lab(): argument 'response' is not numeric, skipping target-encoding.")
+
     }
 
-  #validate predictors
+    return(df)
+
+  }
+
+  # validate predictors ----
   predictors <- validate_predictors(
     df = df,
     response = response,
@@ -148,102 +243,69 @@ target_encoding_lab <- function(
     quiet = quiet
   )
 
-  #if replace is true, get only first option of all inputs
-  if(replace == TRUE){
-    quiet <- TRUE
-    encoding_methods <- encoding_methods[1]
-    white_noise <- white_noise[1]
-  }
-
-  #return df if all predictors are numeric
-  predictors.to.encode <- identify_predictors_categorical(
+  #identify categorical predictors
+  predictors <- identify_predictors_categorical(
     df = df,
     predictors = predictors
   )
 
-  if(length(predictors.to.encode) == 0){
+  if(length(predictors) == 0){
 
     if(quiet == FALSE){
-      message("collinear::target_encoding_lab(): all predictors are numeric, nothing to do.")
+      message("collinear::target_encoding_lab(): no categorical predictors available, skipping target encoding.")
     }
     return(df)
   }
 
   if(quiet == FALSE){
-    if(length(predictors.to.encode) > 1){
-      message(
-        "\n collinear::target_encoding_lab(): encoding the predictors:\n",
-        paste0(
-          predictors.to.encode,
-          collapse = "\n"
-        ),
-        "\n"
+
+    message(
+      "\n collinear::target_encoding_lab(): encoding categorical predictors:\n - ",
+      paste0(
+        predictors,
+        collapse = "\n - "
       )
-    } else {
-      message(
-        "\n collinear::target_encoding_lab(): encoding the predictor: ",
-        predictors.to.encode,
-        "\n"
-      )
-    }
+    )
+
   }
 
-  #iterating over categorical variables
-  for(predictors.to.encode.i in predictors.to.encode){
+  #combinations of arguments
+  combinations.df <- expand.grid(
+    predictor = predictors,
+    white_noise = white_noise,
+    smoothing = smoothing,
+    seed = seed,
+    method = encoding_methods,
+    stringsAsFactors = FALSE
+  )
 
-    for(white_noise.i in white_noise){
+  #TODO: seems to produce duplicated columns, check the issue!
+  for(i in seq_len(nrow(combinations.df))){
 
-      #rank method
-      if("rank" %in% encoding_methods){
+    #get current row
+    args <- combinations.df[i, ]
 
-        df <- target_encoding_rank(
-          df = df,
-          response = response,
-          predictor = predictors.to.encode.i,
-          white_noise = white_noise.i,
-          seed = seed,
-          replace = replace,
-          quiet = quiet
+    #get encoding function
+    f <- get(
+      x = paste0(
+        "target_encoding_",
+        args[["method"]]
         )
+      )
 
-      }
+    #encode df
+    df <- f(
+      df = df,
+      response = response,
+      predictor = args[["predictor"]],
+      smoothing = args[["smoothing"]],
+      white_noise = args[["white_noise"]],
+      seed = args[["seed"]],
+      replace = replace,
+      quiet = quiet
+    )
 
-      if("mean" %in% encoding_methods){
-
-        for(smoothing.i in smoothing){
-
-          df <- target_encoding_mean(
-            df = df,
-            response = response,
-            predictor = predictors.to.encode.i,
-            smoothing = smoothing.i,
-            white_noise = white_noise.i,
-            seed = seed,
-            replace = replace,
-            quiet = quiet
-          )
-
-        }
-
-      }
-
-      if("loo" %in% encoding_methods){
-
-        df <- target_encoding_loo(
-          df = df,
-          response = response,
-          predictor = predictors.to.encode.i,
-          white_noise = white_noise.i,
-          seed = seed,
-          replace = replace,
-          quiet = quiet
-        )
-
-      }
-
-    }
-
-  } #end of iteration over predictors
+  }
 
   df
 

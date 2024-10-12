@@ -91,6 +91,11 @@ cor_select <- function(
     quiet = FALSE
 ){
 
+  if(!is.logical(quiet)){
+    message("collinear::cor_select(): argument 'quiet' must be logical, resetting it to FALSE.")
+    quiet <- FALSE
+  }
+
   #do nothing if one predictor only
   if(is.null(max_cor)){
     return(predictors)
@@ -122,6 +127,12 @@ cor_select <- function(
 
   if(length(predictors) <= 1){
     return(predictors)
+  }
+
+  if(quiet == FALSE){
+
+    message("collinear::cor_select(): running pairwise correlation filtering.")
+
   }
 
   #correlation matrix
@@ -177,6 +188,15 @@ cor_select <- function(
 
   #reverse to order as preference order
   selected <- rev(selected)
+
+  if(quiet == FALSE){
+
+    message(
+      "collinear::cor_select(): the selected predictors are: \n - ",
+      paste(selected, collapse = "\n - ")
+    )
+
+  }
 
   attr(
     x = selected,

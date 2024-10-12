@@ -133,6 +133,11 @@ vif_select <- function(
     quiet = FALSE
 ){
 
+  if(!is.logical(quiet)){
+    message("collinear::vif_select(): argument 'quiet' must be logical, resetting it to FALSE.")
+    quiet <- FALSE
+  }
+
   #do nothing if
   #  one predictor only
   #  max_vif is NULL
@@ -168,6 +173,12 @@ vif_select <- function(
   #if no numerics, return predictors
   if(length(predictors) <= 1){
     return(predictors)
+  }
+
+  if(quiet == FALSE){
+
+    message("collinear::vif_select(): running VIF-based filtering.")
+
   }
 
   #auto preference order
@@ -219,6 +230,15 @@ vif_select <- function(
 
     #remove candidate
     preference_order_candidates <- preference_order_candidates[-1]
+
+  }
+
+  if(quiet == FALSE){
+
+    message(
+      "collinear::vif_select(): the selected predictors are: \n - ",
+      paste(preference_order_selected, collapse = "\n - ")
+    )
 
   }
 

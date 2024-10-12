@@ -25,11 +25,11 @@ target_encoding_lab(
 
 \item{encoding_methods}{(optional; character vector or NULL). Name of the target encoding methods. If NULL, target encoding is ignored, and \code{df} is returned with no modification. Default: c("mean", "loo", rank")}
 
-\item{smoothing}{(optional; integer) Argument of the method "mean". Groups smaller than this number have their means pulled towards mean of the response across all cases. Default: 0}
+\item{smoothing}{(optional; integer vector) Argument of the method "mean". Groups smaller than this number have their means pulled towards the mean of the response across all cases. Default: 0}
 
-\item{white_noise}{(optional; numeric) Argument of the methods "mean", "rank", and "loo". Maximum white noise to add, expressed as a fraction of the range of the response variable. Default: \code{0}.}
+\item{white_noise}{(optional; numeric vector) Argument of the methods "mean", "rank", and "loo". Maximum white noise to add, expressed as a fraction of the range of the response variable. Default: \code{0}.}
 
-\item{seed}{(optional; integer) Random seed to facilitate reproducibility when \code{white_noise} is not 0. Default: 1}
+\item{seed}{(optional; integer vector) Random seed to facilitate reproducibility when \code{white_noise} is not 0. Default: 1}
 
 \item{replace}{(optional; logical) If \code{TRUE}, only the first method in \code{encoding_methods} is used, the method suffix is ignored, and the categorical variables are overwritten with their encoded versions in the output data frame. Default: FALSE}
 

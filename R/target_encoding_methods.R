@@ -4,6 +4,9 @@
 #'
 #' @inheritParams target_encoding_lab
 #' @param predictor (required; character) Name of the categorical variable to encode. Default: NULL
+#' @param smoothing (optional; integer) Groups smaller than this number have their means pulled towards the mean of the response across all cases. Ignored by `target_encoding_rank()` and `target_encoding_loo()`. Default: 0
+#' @param white_noise (optional; numeric) Maximum white noise to add, expressed as a fraction of the range of the response variable. Default: `0`.
+#' @param seed (optional; integer) Random seed to facilitate reproducibility when `white_noise` is not 0. Added to the new column name when `replace = FALSE`. Default: 1.
 #'
 #'
 #' @inherit target_encoding_lab return
@@ -121,8 +124,21 @@ target_encoding_mean <- function(
     quiet = TRUE
 ){
 
+  if(!is.logical(quiet)){
+    message("collinear::target_encoding_mean(): argument 'quiet' must be logical, resetting it to FALSE.")
+    quiet <- FALSE
+  }
+
+  if(!is.numeric(white_noise)){
+    white_noise <- 0
+  }
+
   if(length(white_noise) > 1){
     white_noise <- white_noise[1]
+  }
+
+  if(!is.numeric(smoothing)){
+    smoothing <- 0
   }
 
   if(length(smoothing) > 1){
@@ -134,9 +150,18 @@ target_encoding_mean <- function(
   }
 
   if(white_noise == 0){
+
     name.noise <- ""
+
   } else {
-    name.noise <- paste0("__noise_", white_noise)
+
+    name.noise <- paste0(
+      "__noise_",
+      white_noise,
+      "__seed_",
+      seed
+      )
+
   }
 
   if(smoothing == 0){
@@ -196,18 +221,22 @@ target_encoding_mean <- function(
     seed = seed
   )
 
-  if(quiet == FALSE && replace == FALSE){
-    message(
-      "collinear::target_encoding_mean(): new encoded predictor: '",
-      encoded.variable.name,
-      "'"
-    )
-  }
-
   #replacing original variable with encoded version
   if(replace == TRUE){
+
     df[[predictor]] <- NULL
     colnames(df)[colnames(df) == encoded.variable.name] <- predictor
+
+  } else {
+
+    if(quiet == FALSE){
+      message(
+        "collinear::target_encoding_mean(): new encoded predictor: '",
+        encoded.variable.name,
+        "'"
+      )
+    }
+
   }
 
   df
@@ -221,20 +250,35 @@ target_encoding_rank <- function(
     df,
     response,
     predictor,
+    smoothing = 0,
     white_noise = 0,
     seed = 1,
     replace = FALSE,
     quiet = FALSE
 ){
 
+  if(!is.logical(quiet)){
+    message("collinear::target_encoding_rank(): argument 'quiet' must be logical, resetting it to FALSE.")
+    quiet <- FALSE
+  }
+
   if(length(white_noise) > 1){
     white_noise <- white_noise[1]
   }
 
   if(white_noise == 0){
+
     name.noise <- ""
+
   } else {
-    name.noise <- paste0("__noise_", white_noise)
+
+    name.noise <- paste0(
+      "__noise_",
+      white_noise,
+      "__seed_",
+      seed
+    )
+
   }
 
   encoded.variable.name <- paste0(
@@ -287,18 +331,22 @@ target_encoding_rank <- function(
     seed = seed
   )
 
-  if(quiet == FALSE && replace == FALSE){
-    message(
-      "collinear::target_encoding_rank(): new encoded predictor: '",
-      encoded.variable.name,
-      "'"
-    )
-  }
-
   #replacing original variable with encoded version
   if(replace == TRUE){
+
     df[[predictor]] <- NULL
     colnames(df)[colnames(df) == encoded.variable.name] <- predictor
+
+  } else {
+
+    if(quiet == FALSE){
+      message(
+        "collinear::target_encoding_rank(): new encoded predictor: '",
+        encoded.variable.name,
+        "'"
+      )
+    }
+
   }
 
   df
@@ -313,20 +361,35 @@ target_encoding_loo <- function(
     df,
     response,
     predictor,
+    smoothing = 0,
     white_noise = 0,
     seed = 1,
     replace = FALSE,
     quiet = FALSE
 ){
 
+  if(!is.logical(quiet)){
+    message("collinear::target_encoding_loo(): argument 'quiet' must be logical, resetting it to FALSE.")
+    quiet <- FALSE
+  }
+
   if(length(white_noise) > 1){
     white_noise <- white_noise[1]
   }
 
   if(white_noise == 0){
+
     name.noise <- ""
+
   } else {
-    name.noise <- paste0("__noise_", white_noise)
+
+    name.noise <- paste0(
+      "__noise_",
+      white_noise,
+      "__seed_",
+      seed
+    )
+
   }
 
   encoded.variable.name <- paste0(
@@ -386,18 +449,23 @@ target_encoding_loo <- function(
     seed = seed
   )
 
-  if(quiet == FALSE && replace == FALSE){
-    message(
-      "collinear::target_encoding_loo(): new encoded predictor: '",
-      encoded.variable.name,
-      "'"
-    )
-  }
-
   #replacing original variable with encoded version
   if(replace == TRUE){
+
     df[[predictor]] <- NULL
     colnames(df)[colnames(df) == encoded.variable.name] <- predictor
+
+  } else {
+
+    if(quiet == FALSE){
+      message(
+        "collinear::target_encoding_loo(): new encoded predictor: '",
+        encoded.variable.name,
+        "'"
+      )
+
+    }
+
   }
 
   df

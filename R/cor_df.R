@@ -53,6 +53,11 @@ cor_df <- function(
     quiet = FALSE
 ){
 
+  if(!is.logical(quiet)){
+    message("collinear::cor_df(): argument 'quiet' must be logical, resetting it to FALSE.")
+    quiet <- FALSE
+  }
+
   #validate input data frame
   predictors <- validate_data_cor(
     df = df,

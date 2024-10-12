@@ -22,6 +22,7 @@ target_encoding_rank(
   df,
   response,
   predictor,
+  smoothing = 0,
   white_noise = 0,
   seed = 1,
   replace = FALSE,
@@ -32,6 +33,7 @@ target_encoding_loo(
   df,
   response,
   predictor,
+  smoothing = 0,
   white_noise = 0,
   seed = 1,
   replace = FALSE,
@@ -53,11 +55,11 @@ add_white_noise(
 
 \item{predictor}{(required; character) Name of the categorical variable to encode. Default: NULL}
 
-\item{smoothing}{(optional; integer) Argument of the method "mean". Groups smaller than this number have their means pulled towards mean of the response across all cases. Default: 0}
+\item{smoothing}{(optional; integer) Groups smaller than this number have their means pulled towards the mean of the response across all cases. Ignored by \code{target_encoding_rank()} and \code{target_encoding_loo()}. Default: 0}
 
-\item{white_noise}{(optional; numeric) Argument of the methods "mean", "rank", and "loo". Maximum white noise to add, expressed as a fraction of the range of the response variable. Default: \code{0}.}
+\item{white_noise}{(optional; numeric) Maximum white noise to add, expressed as a fraction of the range of the response variable. Default: \code{0}.}
 
-\item{seed}{(optional; integer) Random seed to facilitate reproducibility when \code{white_noise} is not 0. Default: 1}
+\item{seed}{(optional; integer) Random seed to facilitate reproducibility when \code{white_noise} is not 0. Added to the new column name when \code{replace = FALSE}. Default: 1.}
 
 \item{replace}{(optional; logical) If \code{TRUE}, only the first method in \code{encoding_methods} is used, the method suffix is ignored, and the categorical variables are overwritten with their encoded versions in the output data frame. Default: FALSE}
 

@@ -59,7 +59,7 @@ validate_df <- function(
       },
       error = function(e){
         stop(
-          "collinear::validate_df(): argument 'df' must be a data frame.",
+          "collinear::validate_df(): argument 'df' must be data frame or coercible to data frame.",
           call. = FALSE
         )
       }
@@ -75,9 +75,12 @@ validate_df <- function(
   }
 
   #remove geometry column from df
-  df <- drop_geometry_column(df = df)
+  df <- drop_geometry_column(
+    df = df,
+    quiet = quiet
+  )
 
-  #replace inf with NA
+  # replace inf with NA ----
   n_inf <- lapply(
     X = df,
     FUN = is.infinite
@@ -86,6 +89,15 @@ validate_df <- function(
     sum()
 
   if(n_inf > 0){
+
+    if(quiet == FALSE){
+
+      message(
+        "collinear::validate_df(): replacing ", n_inf, " Inf value/s with NA."
+      )
+
+    }
+
     is.na(df) <- do.call(
       what = cbind,
       args = lapply(
@@ -93,30 +105,38 @@ validate_df <- function(
         FUN = is.infinite
       )
     )
+
   }
 
-  #convert types
+  # logical to numeric ----
+  logical_columns <- colnames(df)[
+    sapply(
+      X = df,
+      FUN = is.logical
+    )
+  ]
 
-  #logical to numeric
-  df <- rapply(
-    object = df,
-    f = as.numeric,
-    classes = c(
-      "logical"
-    ),
-    how = "replace"
-  )
+  if(length(logical_columns) > 0){
 
-  #factors and ordered to characters
-  df <- rapply(
-    object = df,
-    f = as.character,
-    classes = c(
-      "factor",
-      "ordered"
-    ),
-    how = "replace"
-  )
+    if(quiet == FALSE){
+
+      message(
+        "collinear::validate_df(): converting these logical column/s to numeric: \n - ",
+        paste0(logical_columns, collapse = "\n - ")
+      )
+
+    }
+
+    df <- rapply(
+      object = df,
+      f = as.numeric,
+      classes = c(
+        "logical"
+      ),
+      how = "replace"
+    )
+
+  }
 
   attr(
     x = df,
@@ -186,12 +206,10 @@ validate_predictors <- function(
     )
   }
 
-  if(is.null(attr(df, "validated"))){
-    stop(
-      "collinear::validate_predictors(): argument 'df' must be validated with collinear::validate_df().",
-      call. = FALSE
-    )
-  }
+  df <- validate_df(
+    df = df,
+    quiet = quiet
+  )
 
   # predictors ----
 
@@ -217,7 +235,7 @@ validate_predictors <- function(
       if(quiet == FALSE){
 
         message(
-          "collinear::validate_predictors(): these predictors are not column names of 'df' and will be ignored:\n - ",
+          "collinear::validate_predictors(): these 'predictors' are not column names of 'df' and will be ignored:\n - ",
           paste(
             predictors.missing,
             collapse = "\n - "
@@ -347,23 +365,8 @@ validate_response <- function(
     quiet = FALSE
 ){
 
-  if(is.null(df)){
-    stop(
-      "collinear::validate_response(): argument 'df' cannot be NULL.",
-      call. = FALSE
-    )
-  }
-
-  #if not validated, stop
-  if(is.null(attr(df, "validated"))){
-    stop(
-      "collinear::validate_response(): argument 'df' must be validated with collinear::validate_df().",
-      call. = FALSE
-    )
-  }
-
   if(is.null(response)){
-    return(NULL)
+    return(response)
   }
 
   #if already validated, return it
@@ -371,12 +374,10 @@ validate_response <- function(
     return(response)
   }
 
-  if(is.character(response) == FALSE){
-    stop(
-      "collinear::validate_response(): argument 'response' must be a character string",
-      call. = FALSE
-    )
-  }
+  df <- validate_df(
+    df = df,
+    quiet = quiet
+  )
 
   if(length(response) > 1){
     response <- response[1]
@@ -388,9 +389,7 @@ validate_response <- function(
     if(quiet == FALSE){
 
       message(
-        "collinear::validate_response(): argument 'response' with value '",
-        response,
-        "' is not a column name of 'df' and will be ignored."
+        "collinear::validate_response(): argument 'response' is not a column name of 'df' and will be ignored."
       )
 
     }
