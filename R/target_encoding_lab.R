@@ -65,13 +65,6 @@
 #'   value = TRUE
 #' )
 #'
-#' #correlation between encoded predictors and the response
-#' stats::cor(
-#'   x = df[["vi_numeric"]],
-#'   y = df[, predictors.encoded, drop = FALSE],
-#'   use = "pairwise.complete.obs"
-#' )
-#'
 #'
 #' @autoglobal
 #' @family target_encoding
@@ -279,33 +272,91 @@ target_encoding_lab <- function(
     stringsAsFactors = FALSE
   )
 
-  #TODO: seems to produce duplicated columns, check the issue!
-  for(i in seq_len(nrow(combinations.df))){
+  #add ID to DF
+  df$id.. <- seq_len(nrow(df))
 
-    #get current row
-    args <- combinations.df[i, ]
+  #original data frame names
+  df_names <- colnames(df)
 
-    #get encoding function
-    f <- get(
-      x = paste0(
-        "target_encoding_",
-        args[["method"]]
+  #TODO: review and simplify this logic if possible
+
+  #parallel encoding
+  encoded_list <- future.apply::future_apply(
+    X = combinations.df,
+    MARGIN = 1,
+    FUN = function(x){
+
+      #testing vector
+      # x <- c("biogeo_ecoregion", "0", "0", "1", "mean")
+      # names(x) <- c("predictor", "white_noise", "smoothing", "seed", "method")
+
+      f <- get(
+        x = paste0(
+          "target_encoding_",
+          x[["method"]]
         )
       )
 
-    #encode df
-    df <- f(
-      df = df,
-      response = response,
-      predictor = args[["predictor"]],
-      smoothing = args[["smoothing"]],
-      white_noise = args[["white_noise"]],
-      seed = args[["seed"]],
-      replace = replace,
-      quiet = quiet
+      #encode df
+      df.i <- f(
+        df = df,
+        response = response,
+        predictor = x["predictor"],
+        smoothing = as.integer(x["smoothing"]),
+        white_noise = as.numeric(x["white_noise"]),
+        seed = as.integer(x["seed"]),
+        replace = replace,
+        quiet = quiet
+      )
+
+      if(replace == FALSE){
+
+        df_new_column <- setdiff(
+          x = colnames(df.i),
+          y = df_names
+        )
+
+        df.i <- df.i[, c("id..", df_new_column)]
+
+      } else {
+
+        df.i <- df.i[, c("id..", x["predictor"]), drop = FALSE]
+
+      }
+
+      #arrange by id
+      df.i[
+        order(
+          abs(df.i$id..)
+        ),
+        , drop = FALSE
+      ]
+
+    }
+  )
+
+  #merge by ID
+  encoded_df <- Reduce(
+    f = function(x, y){merge(x, y, by = "id..")},
+    x = encoded_list
     )
 
+  #remove original predictors
+  if(replace == TRUE){
+
+    df <- df[, !(colnames(df) %in% predictors), drop = FALSE]
+
   }
+
+  #merge encoded data
+  df <- merge(
+    x = df,
+    y = encoded_df,
+    by = "id.."
+  )
+
+  #remove id
+  df$id.. <- NULL
 
   df
 

@@ -114,9 +114,9 @@
 #' @family target_encoding
 #' @rdname target_encoding_methods
 target_encoding_mean <- function(
-    df,
-    response,
-    predictor,
+    df = NULL,
+    response = NULL,
+    predictor = NULL,
     smoothing = 0,
     white_noise = 0,
     seed = 1,
@@ -129,25 +129,16 @@ target_encoding_mean <- function(
     quiet <- FALSE
   }
 
-  if(!is.numeric(white_noise)){
-    white_noise <- 0
+  white_noise <- as.numeric(white_noise)[1]
+
+  smoothing <- as.integer(smoothing)[1]
+
+  #checking smoothing parameter
+  if(smoothing > nrow(df)){
+    smoothing <- nrow(df)
   }
 
-  if(length(white_noise) > 1){
-    white_noise <- white_noise[1]
-  }
-
-  if(!is.numeric(smoothing)){
-    smoothing <- 0
-  }
-
-  if(length(smoothing) > 1){
-    smoothing <- smoothing[1]
-  }
-
-  if(smoothing < 0){
-    smoothing <- 0
-  }
+  seed <- as.integer(smoothing)[1]
 
   if(white_noise == 0){
 
@@ -178,15 +169,18 @@ target_encoding_mean <- function(
   )
 
   #checking smoothing parameter
-  if(smoothing < 0 ){
-    smoothing <- 0
-  }
-  if(smoothing > nrow(df)){
-    smoothing <- nrow(df)
-  }
+  #get NAs a group
+  df[[predictor]] <- replace(
+    x = df[[predictor]],
+    list = is.na(df[[predictor]]),
+    values = "NA"
+  )
 
   #global response mean
-  global_response_mean <- mean(df[[response]], na.rm = TRUE)
+  global_response_mean <- mean(
+    x = df[[response]],
+    na.rm = TRUE
+    )
 
   #mean encoding when smoothing > 0
   if(smoothing == 0){
@@ -211,7 +205,6 @@ target_encoding_mean <- function(
 
   }
 
-
   #add white_noise if any
   df <- add_white_noise(
     df = df,
@@ -225,6 +218,7 @@ target_encoding_mean <- function(
   if(replace == TRUE){
 
     df[[predictor]] <- NULL
+
     colnames(df)[colnames(df) == encoded.variable.name] <- predictor
 
   } else {
@@ -247,9 +241,9 @@ target_encoding_mean <- function(
 #' @autoglobal
 #' @export
 target_encoding_rank <- function(
-    df,
-    response,
-    predictor,
+    df = NULL,
+    response = NULL,
+    predictor = NULL,
     smoothing = 0,
     white_noise = 0,
     seed = 1,
@@ -261,6 +255,10 @@ target_encoding_rank <- function(
     message("collinear::target_encoding_rank(): argument 'quiet' must be logical, resetting it to FALSE.")
     quiet <- FALSE
   }
+
+  white_noise <- as.numeric(white_noise)[1]
+
+  seed <- as.integer(smoothing)[1]
 
   if(length(white_noise) > 1){
     white_noise <- white_noise[1]
@@ -285,6 +283,13 @@ target_encoding_rank <- function(
     predictor,
     "__encoded_rank",
     name.noise
+  )
+
+  #get NAs a group
+  df[[predictor]] <- replace(
+    x = df[[predictor]],
+    list = is.na(df[[predictor]]),
+    values = "NA"
   )
 
   #aggregate by groups
@@ -358,9 +363,9 @@ target_encoding_rank <- function(
 #' @autoglobal
 #' @export
 target_encoding_loo <- function(
-    df,
-    response,
-    predictor,
+    df = NULL,
+    response = NULL,
+    predictor = NULL,
     smoothing = 0,
     white_noise = 0,
     seed = 1,
@@ -373,9 +378,9 @@ target_encoding_loo <- function(
     quiet <- FALSE
   }
 
-  if(length(white_noise) > 1){
-    white_noise <- white_noise[1]
-  }
+  white_noise <- as.numeric(white_noise)[1]
+
+  seed <- as.integer(smoothing)[1]
 
   if(white_noise == 0){
 
@@ -397,6 +402,13 @@ target_encoding_loo <- function(
     "__encoded_loo",
     name.noise
   )
+
+  #get NAs a group
+  df[[predictor]] <- replace(
+    x = df[[predictor]],
+    list = is.na(df[[predictor]]),
+    values = "NA"
+    )
 
   #order data by predictor levels
   #to facilitate next block
