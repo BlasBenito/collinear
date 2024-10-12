@@ -8,9 +8,9 @@
 \title{Target Encoding Methods}
 \usage{
 target_encoding_mean(
-  df,
-  response,
-  predictor,
+  df = NULL,
+  response = NULL,
+  predictor = NULL,
   smoothing = 0,
   white_noise = 0,
   seed = 1,
@@ -19,9 +19,9 @@ target_encoding_mean(
 )
 
 target_encoding_rank(
-  df,
-  response,
-  predictor,
+  df = NULL,
+  response = NULL,
+  predictor = NULL,
   smoothing = 0,
   white_noise = 0,
   seed = 1,
@@ -30,9 +30,9 @@ target_encoding_rank(
 )
 
 target_encoding_loo(
-  df,
-  response,
-  predictor,
+  df = NULL,
+  response = NULL,
+  predictor = NULL,
   smoothing = 0,
   white_noise = 0,
   seed = 1,

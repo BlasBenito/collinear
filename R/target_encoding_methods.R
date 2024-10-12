@@ -138,49 +138,22 @@ target_encoding_mean <- function(
     smoothing <- nrow(df)
   }
 
-  seed <- as.integer(smoothing)[1]
+  seed <- as.integer(seed)[1]
 
-  if(white_noise == 0){
-
-    name.noise <- ""
-
-  } else {
-
-    name.noise <- paste0(
-      "__noise_",
-      white_noise,
-      "__seed_",
-      seed
-      )
-
-  }
-
-  if(smoothing == 0){
-    name.smoothing <- ""
-  } else {
-    name.smoothing <- paste0("__smoothing_", smoothing)
-  }
-
-  encoded.variable.name <- paste0(
-    predictor,
-    "__encoded_mean",
-    name.smoothing,
-    name.noise
+  encoded.variable.name <- encoded_predictor_name(
+    predictor = predictor,
+    encoding_method = "mean",
+    smoothing = smoothing,
+    white_noise = white_noise,
+    seed = seed
   )
 
-  #checking smoothing parameter
   #get NAs a group
   df[[predictor]] <- replace(
     x = df[[predictor]],
     list = is.na(df[[predictor]]),
     values = "NA"
   )
-
-  #global response mean
-  global_response_mean <- mean(
-    x = df[[response]],
-    na.rm = TRUE
-    )
 
   #mean encoding when smoothing > 0
   if(smoothing == 0){
@@ -193,6 +166,13 @@ target_encoding_mean <- function(
 
   } else {
 
+    #global response mean
+    global_response_mean <- mean(
+      x = df[[response]],
+      na.rm = TRUE
+    )
+
+    #encoding
     df[[encoded.variable.name]] <- stats::ave(
       x = df[[response]],
       df[[predictor]],
@@ -260,29 +240,13 @@ target_encoding_rank <- function(
 
   seed <- as.integer(smoothing)[1]
 
-  if(length(white_noise) > 1){
-    white_noise <- white_noise[1]
-  }
 
-  if(white_noise == 0){
-
-    name.noise <- ""
-
-  } else {
-
-    name.noise <- paste0(
-      "__noise_",
-      white_noise,
-      "__seed_",
-      seed
-    )
-
-  }
-
-  encoded.variable.name <- paste0(
-    predictor,
-    "__encoded_rank",
-    name.noise
+  encoded.variable.name <- encoded_predictor_name(
+    predictor = predictor,
+    encoding_method = "rank",
+    smoothing = smoothing,
+    white_noise = white_noise,
+    seed = seed
   )
 
   #get NAs a group
@@ -382,25 +346,12 @@ target_encoding_loo <- function(
 
   seed <- as.integer(smoothing)[1]
 
-  if(white_noise == 0){
-
-    name.noise <- ""
-
-  } else {
-
-    name.noise <- paste0(
-      "__noise_",
-      white_noise,
-      "__seed_",
-      seed
-    )
-
-  }
-
-  encoded.variable.name <- paste0(
-    predictor,
-    "__encoded_loo",
-    name.noise
+  encoded.variable.name <- encoded_predictor_name(
+    predictor = predictor,
+    encoding_method = "loo",
+    smoothing = smoothing,
+    white_noise = white_noise,
+    seed = seed
   )
 
   #get NAs a group
@@ -562,5 +513,62 @@ add_white_noise <- function(
 
   #return df
   df
+
+}
+
+
+#' Name of Target-Encoded Predictor
+#
+#' @inheritParams target_encoding_mean
+#' @param encoding_method (required, string) Name of the encoding method. One of: "mean", "rank", or "loo". Default: "mean"
+#'
+#' @return string: predictor name
+#' @export
+#' @autoglobal
+encoded_predictor_name <- function(
+    predictor = NULL,
+    encoding_method = "mean",
+    smoothing = 0,
+    white_noise = 0,
+    seed = 1
+){
+
+  #dev args
+  predictor <- "koppen_zone"
+  encoding_method <- "mean"
+  smoothing <- 0
+  white_noise <- 0.2
+  seed <- 2
+
+
+  #name of smoothing method
+  #only for "mean" and smoothing != 0
+  name.smoothing <- ifelse(
+    test = encoding_method == "mean" && smoothing != 0,
+    yes = paste0("__smoothing_", smoothing),
+    no = ""
+  )
+
+  #name for white noise
+  name.noise <- ifelse(
+    test = white_noise != 0,
+    yes = paste0(
+      "__noise_",
+      white_noise,
+      "__seed_",
+      seed
+    ),
+    no = ""
+  )
+
+  #predictor name
+  paste0(
+    predictor,
+    "__",
+    encoding_method,
+    name.smoothing,
+    name.noise
+  )
+
 
 }
