@@ -255,8 +255,8 @@ collinear <- function(
     df = df,
     response = response,
     predictors = predictors,
-    encoding_methods = encoding_method[1],
-    replace = TRUE,
+    methods = encoding_method[1],
+    overwrite = TRUE,
     quiet = quiet
   )
 

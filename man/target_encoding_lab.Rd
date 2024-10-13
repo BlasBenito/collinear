@@ -8,11 +8,11 @@ target_encoding_lab(
   df = NULL,
   response = NULL,
   predictors = NULL,
-  encoding_methods = c("mean", "loo", "rank"),
+  methods = c("mean", "loo", "rank"),
   smoothing = 0,
   white_noise = 0,
-  seed = 1,
-  replace = FALSE,
+  seed = 0,
+  overwrite = FALSE,
   quiet = FALSE
 )
 }
@@ -23,15 +23,15 @@ target_encoding_lab(
 
 \item{predictors}{(optional; character vector) Names of the variables to select from \code{df}. If omitted, all numeric columns in \code{df} are used instead. If argument \code{response} is not provided, non-numeric variables are ignored. Default: NULL}
 
-\item{encoding_methods}{(optional; character vector or NULL). Name of the target encoding methods. If NULL, target encoding is ignored, and \code{df} is returned with no modification. Default: c("mean", "loo", rank")}
+\item{methods}{(optional; character vector or NULL). Name of the target encoding methods. If NULL, target encoding is ignored, and \code{df} is returned with no modification. Default: c("mean", "loo", rank")}
 
 \item{smoothing}{(optional; integer vector) Argument of the method "mean". Groups smaller than this number have their means pulled towards the mean of the response across all cases. Default: 0}
 
-\item{white_noise}{(optional; numeric vector) Argument of the methods "mean", "rank", and "loo". Maximum white noise to add, expressed as a fraction of the range of the response variable. Default: \code{0}.}
+\item{white_noise}{(optional; numeric vector) Argument of the methods "mean", "rank", and "loo". Maximum white noise to add, expressed as a fraction of the range of the response variable. Range from 0 to 1. Default: \code{0}.}
 
-\item{seed}{(optional; integer vector) Random seed to facilitate reproducibility when \code{white_noise} is not 0. Default: 1}
+\item{seed}{(optional; integer vector) Random seed to facilitate reproducibility when \code{white_noise} is not 0. If NULL, the function selects one at random, and the selected seed does not appear in the encoded variable names. Default: 0}
 
-\item{replace}{(optional; logical) If \code{TRUE}, only the first method in \code{encoding_methods} is used, the method suffix is ignored, and the categorical variables are overwritten with their encoded versions in the output data frame. Default: FALSE}
+\item{overwrite}{(optional; logical) If \code{TRUE}, the original predictors in \code{df} are overwritten with their encoded versions, but only one encoding method, smoothing, white noise, and seed are allowed. Otherwise, encoded predictors with their descriptive names are added to \code{df}. Default: FALSE}
 
 \item{quiet}{(optional; logical) If FALSE, messages generated during the execution of the function are printed to the console Default: FALSE}
 }
@@ -51,14 +51,14 @@ In essence, target encoding works as follows:
 The methods to compute the group statistic implemented here are:
 
 \itemize{
-\item "mean" (implemented in \code{target_encoding_mean()}): Replaces categorical values with the group means of the numeric variable. It has two methods to control overfitting:
+\item "mean" (implemented in \code{target_encoding_mean()}): Encodes categorical values with the group means of the response. It has two methods to control overfitting:
 \itemize{
 \item \code{smoothing} groups larger than this argument are encoded with the group mean, while smaller groups are encoded with a weighted mean of the group's and the global mean. This method is named "mean smoothing" in the relevant literature.
 \item \code{white_noise}: maximum white noise to be added to each case, expressed as a fraction of the observed range of the numeric variable. Non-deterministic, requires setting the \code{seed} argument for reproducibility.
 }
 Variables encoded with this method are identified with the suffix "__encoded_mean".
 \item "rank" (implemented in \code{target_encoding_rank()}): Returns the rank of the group as a integer, being 1 he group with the lower mean of the response variable. It accepts the \code{white_noise} argument to control overfitting. Variables encoded with this method are identified with the suffix "__encoded_rank".
-\item "loo" (implemented in \code{target_encoding_loo()}): Known as the "leave-one-out method" in the literature, it replaces each categorical value with the mean of the response variable across all other group cases. This method controls overfitting better than "mean". Additionally, it accepts the \code{white_noise} method. Variables encoded with this method are identified with the suffix "__encoded_loo".
+\item "loo" (implemented in \code{target_encoding_loo()}): Known as the "leave-one-out method" in the literature, it encodes each categorical value with the mean of the response variable across all other group cases. This method controls overfitting better than "mean". Additionally, it accepts the \code{white_noise} method. Variables encoded with this method are identified with the suffix "__encoded_loo".
 }
 }
 \examples{
@@ -76,7 +76,7 @@ df <- target_encoding_lab(
   df = vi,
   response = "vi_numeric",
   predictors = "koppen_zone",
-  encoding_methods = c(
+  methods = c(
     "mean",
     "loo",
     "rank"

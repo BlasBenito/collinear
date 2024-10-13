@@ -8,29 +8,28 @@ testthat::test_that("`target_encoding_lab()` works", {
     df = vi,
     response = "vi_numeric",
     predictors = "koppen_zone",
-    encoding_methods = c("mean", "rank", "loo"),
+    methods = c("mean", "rank", "loo"),
     smoothing = c(0, 30),
     white_noise = c(0, 0.1, 0.2),
     quiet = TRUE
   )
 
   # Check if the result is a data frame
-  testthat::expect_true(is.data.frame(encoded_df), info = "Result should be a data frame.")
+  testthat::expect_true(
+    is.data.frame(encoded_df)
+    )
 
   # Check if the encoded variables have been added
   testthat::expect_true(
-    "koppen_zone__encoded_mean" %in% colnames(encoded_df),
-    info = "Encoded variable 'koppen_zone__encoded_mean' should exist."
+    "koppen_zone__encoded_mean" %in% colnames(encoded_df)
     )
 
   testthat::expect_true(
-    "koppen_zone__encoded_rank" %in% colnames(encoded_df),
-    info = "Encoded variable 'koppen_zone__encoded_rank' should exist."
+    "koppen_zone__encoded_rank" %in% colnames(encoded_df)
     )
 
   testthat::expect_true(
-    "koppen_zone__encoded_loo" %in% colnames(encoded_df),
-    info = "Encoded variable 'koppen_zone__encoded_loo' should exist."
+    "koppen_zone__encoded_loo" %in% colnames(encoded_df)
     )
 
   # Check if encoding methods have been applied

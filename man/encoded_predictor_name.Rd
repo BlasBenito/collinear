@@ -13,15 +13,15 @@ encoded_predictor_name(
 )
 }
 \arguments{
-\item{predictor}{(required; character) Name of the categorical variable to encode. Default: NULL}
+\item{predictor}{(required; character) Name of the categorical predictor to encode. Default: NULL}
 
 \item{encoding_method}{(required, string) Name of the encoding method. One of: "mean", "rank", or "loo". Default: "mean"}
 
 \item{smoothing}{(optional; integer) Groups smaller than this number have their means pulled towards the mean of the response across all cases. Ignored by \code{target_encoding_rank()} and \code{target_encoding_loo()}. Default: 0}
 
-\item{white_noise}{(optional; numeric) Maximum white noise to add, expressed as a fraction of the range of the response variable. Default: \code{0}.}
+\item{white_noise}{(optional; numeric vector) Argument of the methods "mean", "rank", and "loo". Maximum white noise to add, expressed as a fraction of the range of the response variable. Range from 0 to 1. Default: \code{0}.}
 
-\item{seed}{(optional; integer) Random seed to facilitate reproducibility when \code{white_noise} is not 0. Added to the new column name when \code{replace = FALSE}. Default: 1.}
+\item{seed}{(optional; integer vector) Random seed to facilitate reproducibility when \code{white_noise} is not 0. If NULL, the function selects one at random, and the selected seed does not appear in the encoded variable names. Default: 0}
 }
 \value{
 string: predictor name

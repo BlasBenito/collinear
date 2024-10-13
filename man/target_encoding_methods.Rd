@@ -11,33 +11,24 @@ target_encoding_mean(
   df = NULL,
   response = NULL,
   predictor = NULL,
-  smoothing = 0,
-  white_noise = 0,
-  seed = 1,
-  replace = FALSE,
-  quiet = TRUE
+  encoded_name = NULL,
+  smoothing = 0
 )
 
 target_encoding_rank(
   df = NULL,
   response = NULL,
   predictor = NULL,
-  smoothing = 0,
-  white_noise = 0,
-  seed = 1,
-  replace = FALSE,
-  quiet = FALSE
+  encoded_name = NULL,
+  smoothing = 0
 )
 
 target_encoding_loo(
   df = NULL,
   response = NULL,
   predictor = NULL,
-  smoothing = 0,
-  white_noise = 0,
-  seed = 1,
-  replace = FALSE,
-  quiet = FALSE
+  encoded_name = NULL,
+  smoothing = 0
 )
 
 add_white_noise(
@@ -53,17 +44,13 @@ add_white_noise(
 
 \item{response}{(optional, character string) Name of a numeric (non-numerics are ignored) response variable in \code{df}, only required if there are categorical variables named in the argument \code{predictors}. Default: NULL.}
 
-\item{predictor}{(required; character) Name of the categorical variable to encode. Default: NULL}
+\item{predictor}{(required; character) Name of the categorical predictor to encode. Default: NULL}
 
 \item{smoothing}{(optional; integer) Groups smaller than this number have their means pulled towards the mean of the response across all cases. Ignored by \code{target_encoding_rank()} and \code{target_encoding_loo()}. Default: 0}
 
-\item{white_noise}{(optional; numeric) Maximum white noise to add, expressed as a fraction of the range of the response variable. Default: \code{0}.}
+\item{white_noise}{(optional; numeric vector) Argument of the methods "mean", "rank", and "loo". Maximum white noise to add, expressed as a fraction of the range of the response variable. Range from 0 to 1. Default: \code{0}.}
 
-\item{seed}{(optional; integer) Random seed to facilitate reproducibility when \code{white_noise} is not 0. Added to the new column name when \code{replace = FALSE}. Default: 1.}
-
-\item{replace}{(optional; logical) If \code{TRUE}, only the first method in \code{encoding_methods} is used, the method suffix is ignored, and the categorical variables are overwritten with their encoded versions in the output data frame. Default: FALSE}
-
-\item{quiet}{(optional; logical) If FALSE, messages generated during the execution of the function are printed to the console Default: FALSE}
+\item{seed}{(optional; integer vector) Random seed to facilitate reproducibility when \code{white_noise} is not 0. If NULL, the function selects one at random, and the selected seed does not appear in the encoded variable names. Default: 0}
 }
 \value{
 data frame
@@ -81,14 +68,14 @@ In essence, target encoding works as follows:
 The methods to compute the group statistic implemented here are:
 
 \itemize{
-\item "mean" (implemented in \code{target_encoding_mean()}): Replaces categorical values with the group means of the numeric variable. It has two methods to control overfitting:
+\item "mean" (implemented in \code{target_encoding_mean()}): Encodes categorical values with the group means of the response. It has two methods to control overfitting:
 \itemize{
 \item \code{smoothing} groups larger than this argument are encoded with the group mean, while smaller groups are encoded with a weighted mean of the group's and the global mean. This method is named "mean smoothing" in the relevant literature.
 \item \code{white_noise}: maximum white noise to be added to each case, expressed as a fraction of the observed range of the numeric variable. Non-deterministic, requires setting the \code{seed} argument for reproducibility.
 }
 Variables encoded with this method are identified with the suffix "__encoded_mean".
 \item "rank" (implemented in \code{target_encoding_rank()}): Returns the rank of the group as a integer, being 1 he group with the lower mean of the response variable. It accepts the \code{white_noise} argument to control overfitting. Variables encoded with this method are identified with the suffix "__encoded_rank".
-\item "loo" (implemented in \code{target_encoding_loo()}): Known as the "leave-one-out method" in the literature, it replaces each categorical value with the mean of the response variable across all other group cases. This method controls overfitting better than "mean". Additionally, it accepts the \code{white_noise} method. Variables encoded with this method are identified with the suffix "__encoded_loo".
+\item "loo" (implemented in \code{target_encoding_loo()}): Known as the "leave-one-out method" in the literature, it encodes each categorical value with the mean of the response variable across all other group cases. This method controls overfitting better than "mean". Additionally, it accepts the \code{white_noise} method. Variables encoded with this method are identified with the suffix "__encoded_loo".
 }
 }
 \examples{
@@ -105,8 +92,7 @@ vi <- vi[1:1000, ]
 df <- target_encoding_mean(
   df = vi,
   response = "vi_numeric",
-  predictor = "soil_type",
-  replace = TRUE
+  predictor = "soil_type"
 )
 
 plot(
@@ -120,9 +106,7 @@ plot(
 df <- target_encoding_mean(
   df = vi,
   response = "vi_numeric",
-  predictor = "soil_type",
-  white_noise = 0.1,
-  replace = TRUE
+  predictor = "soil_type"
 )
 
 plot(
@@ -139,8 +123,7 @@ plot(
 df <- target_encoding_rank(
   df = vi,
   response = "vi_numeric",
-  predictor = "soil_type",
-  replace = TRUE
+  predictor = "soil_type"
 )
 
 plot(
@@ -158,8 +141,7 @@ plot(
 df <- target_encoding_loo(
   df = vi,
   response = "vi_numeric",
-  predictor = "soil_type",
-  replace = TRUE
+  predictor = "soil_type"
 )
 
 plot(
@@ -173,9 +155,7 @@ plot(
 df <- target_encoding_loo(
   df = vi,
   response = "vi_numeric",
-  predictor = "soil_type",
-  white_noise = 0.1,
-  replace = TRUE
+  predictor = "soil_type"
 )
 
 plot(
@@ -194,8 +174,5 @@ Other target_encoding:
 
 Other target_encoding: 
 \code{\link{target_encoding_lab}()}
-}
-\author{
-Blas M. Benito, PhD
 }
 \concept{target_encoding}

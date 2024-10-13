@@ -312,8 +312,8 @@ cor_numeric_vs_categorical <- function(
         df = df.x,
         response = "x",
         predictors = "y",
-        encoding_methods = "mean",
-        replace = TRUE,
+        methods = "mean",
+        overwrite = TRUE,
         quiet = TRUE
       )
 

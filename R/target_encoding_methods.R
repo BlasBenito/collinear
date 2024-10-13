@@ -3,10 +3,8 @@
 #' @inherit target_encoding_lab description
 #'
 #' @inheritParams target_encoding_lab
-#' @param predictor (required; character) Name of the categorical variable to encode. Default: NULL
+#' @param predictor (required; character) Name of the categorical predictor to encode. Default: NULL
 #' @param smoothing (optional; integer) Groups smaller than this number have their means pulled towards the mean of the response across all cases. Ignored by `target_encoding_rank()` and `target_encoding_loo()`. Default: 0
-#' @param white_noise (optional; numeric) Maximum white noise to add, expressed as a fraction of the range of the response variable. Default: `0`.
-#' @param seed (optional; integer) Random seed to facilitate reproducibility when `white_noise` is not 0. Added to the new column name when `overwrite = FALSE`. Default: 1.
 #'
 #'
 #' @inherit target_encoding_lab return
@@ -26,8 +24,7 @@
 #' df <- target_encoding_mean(
 #'   df = vi,
 #'   response = "vi_numeric",
-#'   predictor = "soil_type",
-#'   overwrite = TRUE
+#'   predictor = "soil_type"
 #' )
 #'
 #' plot(
@@ -41,9 +38,7 @@
 #' df <- target_encoding_mean(
 #'   df = vi,
 #'   response = "vi_numeric",
-#'   predictor = "soil_type",
-#'   white_noise = 0.1,
-#'   overwrite = TRUE
+#'   predictor = "soil_type"
 #' )
 #'
 #' plot(
@@ -60,8 +55,7 @@
 #' df <- target_encoding_rank(
 #'   df = vi,
 #'   response = "vi_numeric",
-#'   predictor = "soil_type",
-#'   overwrite = TRUE
+#'   predictor = "soil_type"
 #' )
 #'
 #' plot(
@@ -79,8 +73,7 @@
 #' df <- target_encoding_loo(
 #'   df = vi,
 #'   response = "vi_numeric",
-#'   predictor = "soil_type",
-#'   overwrite = TRUE
+#'   predictor = "soil_type"
 #' )
 #'
 #' plot(
@@ -94,9 +87,7 @@
 #' df <- target_encoding_loo(
 #'   df = vi,
 #'   response = "vi_numeric",
-#'   predictor = "soil_type",
-#'   white_noise = 0.1,
-#'   overwrite = TRUE
+#'   predictor = "soil_type"
 #' )
 #'
 #' plot(
@@ -110,50 +101,21 @@
 #'
 #' @export
 #' @autoglobal
-#' @author Blas M. Benito, PhD
 #' @family target_encoding
 #' @rdname target_encoding_methods
 target_encoding_mean <- function(
     df = NULL,
     response = NULL,
     predictor = NULL,
-    smoothing = 0,
-    white_noise = 0,
-    seed = 1,
-    overwrite = FALSE,
-    quiet = TRUE
+    encoded_name = NULL,
+    smoothing = 0
 ){
 
-  white_noise <- as.numeric(white_noise)[1]
-
-  smoothing <- as.integer(smoothing)[1]
-
-  #checking smoothing parameter
-  if(smoothing > nrow(df)){
-    smoothing <- nrow(df)
-  }
-
-  seed <- as.integer(seed)[1]
-
-  encoded.variable.name <- encoded_predictor_name(
-    predictor = predictor,
-    encoding_method = "mean",
-    smoothing = smoothing,
-    white_noise = white_noise,
-    seed = seed
-  )
-
-  #get NAs a group
-  df[[predictor]] <- replace(
-    x = df[[predictor]],
-    list = is.na(df[[predictor]]),
-    values = "NA"
-  )
 
   #mean encoding when smoothing > 0
   if(smoothing == 0){
 
-    df[[encoded.variable.name]] <- stats::ave(
+    df[[encoded_name]] <- stats::ave(
       x = df[[response]],
       df[[predictor]],
       FUN = function(x) mean(x, na.rm = TRUE)
@@ -168,7 +130,7 @@ target_encoding_mean <- function(
     )
 
     #encoding
-    df[[encoded.variable.name]] <- stats::ave(
+    df[[encoded_name]] <- stats::ave(
       x = df[[response]],
       df[[predictor]],
       FUN = function(x) {
@@ -177,34 +139,6 @@ target_encoding_mean <- function(
         (n * mean_x + smoothing * global_response_mean) / (n + smoothing)
       }
     )
-
-  }
-
-  #add white_noise if any
-  df <- add_white_noise(
-    df = df,
-    response = response,
-    predictor = encoded.variable.name,
-    white_noise = white_noise,
-    seed = seed
-  )
-
-  #replacing original variable with encoded version
-  if(overwrite == TRUE){
-
-    df[[predictor]] <- NULL
-
-    colnames(df)[colnames(df) == encoded.variable.name] <- predictor
-
-  } else {
-
-    if(quiet == FALSE){
-      message(
-        "collinear::target_encoding_mean(): new encoded predictor: '",
-        encoded.variable.name,
-        "'"
-      )
-    }
 
   }
 
@@ -219,37 +153,9 @@ target_encoding_rank <- function(
     df = NULL,
     response = NULL,
     predictor = NULL,
-    smoothing = 0,
-    white_noise = 0,
-    seed = 1,
-    overwrite = FALSE,
-    quiet = FALSE
+    encoded_name = NULL,
+    smoothing = 0
 ){
-
-  if(!is.logical(quiet)){
-    message("collinear::target_encoding_rank(): argument 'quiet' must be logical, resetting it to FALSE.")
-    quiet <- FALSE
-  }
-
-  white_noise <- as.numeric(white_noise)[1]
-
-  seed <- as.integer(smoothing)[1]
-
-
-  encoded.variable.name <- encoded_predictor_name(
-    predictor = predictor,
-    encoding_method = "rank",
-    smoothing = smoothing,
-    white_noise = white_noise,
-    seed = seed
-  )
-
-  #get NAs a group
-  df[[predictor]] <- replace(
-    x = df[[predictor]],
-    list = is.na(df[[predictor]]),
-    values = "NA"
-  )
 
   #aggregate by groups
   df.map <- tapply(
@@ -265,7 +171,7 @@ target_encoding_rank <- function(
     names(df.map),
     seq_along(df.map) #rank column
   )
-  names(df.map) <- c(predictor, encoded.variable.name)
+  names(df.map) <- c(predictor, encoded_name)
 
   #column order for merged df
   df.cols <- unique(
@@ -286,33 +192,6 @@ target_encoding_rank <- function(
   #reorder columns
   df <- df[, df.cols]
 
-  #add white_noise if any
-  df <- add_white_noise(
-    df = df,
-    response = response,
-    predictor = encoded.variable.name,
-    white_noise = white_noise,
-    seed = seed
-  )
-
-  #replacing original variable with encoded version
-  if(overwrite == TRUE){
-
-    df[[predictor]] <- NULL
-    colnames(df)[colnames(df) == encoded.variable.name] <- predictor
-
-  } else {
-
-    if(quiet == FALSE){
-      message(
-        "collinear::target_encoding_rank(): new encoded predictor: '",
-        encoded.variable.name,
-        "'"
-      )
-    }
-
-  }
-
   df
 
 }
@@ -325,36 +204,12 @@ target_encoding_loo <- function(
     df = NULL,
     response = NULL,
     predictor = NULL,
-    smoothing = 0,
-    white_noise = 0,
-    seed = 1,
-    overwrite = FALSE,
-    quiet = FALSE
+    encoded_name = NULL,
+    smoothing = 0
 ){
 
-  if(!is.logical(quiet)){
-    message("collinear::target_encoding_loo(): argument 'quiet' must be logical, resetting it to FALSE.")
-    quiet <- FALSE
-  }
-
-  white_noise <- as.numeric(white_noise)[1]
-
-  seed <- as.integer(smoothing)[1]
-
-  encoded.variable.name <- encoded_predictor_name(
-    predictor = predictor,
-    encoding_method = "loo",
-    smoothing = smoothing,
-    white_noise = white_noise,
-    seed = seed
-  )
-
-  #get NAs a group
-  df[[predictor]] <- replace(
-    x = df[[predictor]],
-    list = is.na(df[[predictor]]),
-    values = "NA"
-    )
+  #add id column to facilitate reordering
+  df$id.. <- seq_len(nrow(df))
 
   #order data by predictor levels
   #to facilitate next block
@@ -396,35 +251,9 @@ target_encoding_loo <- function(
   )
 
   #rename encoded column
-  names(df)[names(df) == "encoded"] <- encoded.variable.name
+  names(df)[names(df) == "encoded"] <- encoded_name
 
-  #add white_noise if any
-  df <- add_white_noise(
-    df = df,
-    response = response,
-    predictor = encoded.variable.name,
-    white_noise = white_noise,
-    seed = seed
-  )
-
-  #replacing original variable with encoded version
-  if(overwrite == TRUE){
-
-    df[[predictor]] <- NULL
-    colnames(df)[colnames(df) == encoded.variable.name] <- predictor
-
-  } else {
-
-    if(quiet == FALSE){
-      message(
-        "collinear::target_encoding_loo(): new encoded predictor: '",
-        encoded.variable.name,
-        "'"
-      )
-
-    }
-
-  }
+  df <- df[order(df[["id.."]]), ]
 
   df
 
@@ -440,18 +269,6 @@ add_white_noise <- function(
     white_noise = 0.1,
     seed = 1
 ){
-
-  if(length(white_noise) > 1){
-    white_noise <- white_noise[1]
-  }
-
-  if(white_noise < 0){
-    white_noise <- 0
-  }
-
-  if(white_noise > 1){
-    white_noise <- 1
-  }
 
   if(white_noise == 0){
     return(df)
@@ -555,7 +372,7 @@ encoded_predictor_name <- function(
   )
 
   #name for seed
-  if(!is.null(seed)){
+  if(!is.null(seed) && white_noise != 0){
 
     name.seed <- ifelse(
       test = seed != 0,
