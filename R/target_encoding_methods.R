@@ -6,7 +6,7 @@
 #' @param predictor (required; character) Name of the categorical variable to encode. Default: NULL
 #' @param smoothing (optional; integer) Groups smaller than this number have their means pulled towards the mean of the response across all cases. Ignored by `target_encoding_rank()` and `target_encoding_loo()`. Default: 0
 #' @param white_noise (optional; numeric) Maximum white noise to add, expressed as a fraction of the range of the response variable. Default: `0`.
-#' @param seed (optional; integer) Random seed to facilitate reproducibility when `white_noise` is not 0. Added to the new column name when `replace = FALSE`. Default: 1.
+#' @param seed (optional; integer) Random seed to facilitate reproducibility when `white_noise` is not 0. Added to the new column name when `overwrite = FALSE`. Default: 1.
 #'
 #'
 #' @inherit target_encoding_lab return
@@ -27,7 +27,7 @@
 #'   df = vi,
 #'   response = "vi_numeric",
 #'   predictor = "soil_type",
-#'   replace = TRUE
+#'   overwrite = TRUE
 #' )
 #'
 #' plot(
@@ -43,7 +43,7 @@
 #'   response = "vi_numeric",
 #'   predictor = "soil_type",
 #'   white_noise = 0.1,
-#'   replace = TRUE
+#'   overwrite = TRUE
 #' )
 #'
 #' plot(
@@ -61,7 +61,7 @@
 #'   df = vi,
 #'   response = "vi_numeric",
 #'   predictor = "soil_type",
-#'   replace = TRUE
+#'   overwrite = TRUE
 #' )
 #'
 #' plot(
@@ -80,7 +80,7 @@
 #'   df = vi,
 #'   response = "vi_numeric",
 #'   predictor = "soil_type",
-#'   replace = TRUE
+#'   overwrite = TRUE
 #' )
 #'
 #' plot(
@@ -96,7 +96,7 @@
 #'   response = "vi_numeric",
 #'   predictor = "soil_type",
 #'   white_noise = 0.1,
-#'   replace = TRUE
+#'   overwrite = TRUE
 #' )
 #'
 #' plot(
@@ -120,14 +120,9 @@ target_encoding_mean <- function(
     smoothing = 0,
     white_noise = 0,
     seed = 1,
-    replace = FALSE,
+    overwrite = FALSE,
     quiet = TRUE
 ){
-
-  if(!is.logical(quiet)){
-    message("collinear::target_encoding_mean(): argument 'quiet' must be logical, resetting it to FALSE.")
-    quiet <- FALSE
-  }
 
   white_noise <- as.numeric(white_noise)[1]
 
@@ -195,7 +190,7 @@ target_encoding_mean <- function(
   )
 
   #replacing original variable with encoded version
-  if(replace == TRUE){
+  if(overwrite == TRUE){
 
     df[[predictor]] <- NULL
 
@@ -227,7 +222,7 @@ target_encoding_rank <- function(
     smoothing = 0,
     white_noise = 0,
     seed = 1,
-    replace = FALSE,
+    overwrite = FALSE,
     quiet = FALSE
 ){
 
@@ -301,7 +296,7 @@ target_encoding_rank <- function(
   )
 
   #replacing original variable with encoded version
-  if(replace == TRUE){
+  if(overwrite == TRUE){
 
     df[[predictor]] <- NULL
     colnames(df)[colnames(df) == encoded.variable.name] <- predictor
@@ -333,7 +328,7 @@ target_encoding_loo <- function(
     smoothing = 0,
     white_noise = 0,
     seed = 1,
-    replace = FALSE,
+    overwrite = FALSE,
     quiet = FALSE
 ){
 
@@ -413,7 +408,7 @@ target_encoding_loo <- function(
   )
 
   #replacing original variable with encoded version
-  if(replace == TRUE){
+  if(overwrite == TRUE){
 
     df[[predictor]] <- NULL
     colnames(df)[colnames(df) == encoded.variable.name] <- predictor
@@ -534,11 +529,11 @@ encoded_predictor_name <- function(
 ){
 
   #dev args
-  predictor <- "koppen_zone"
-  encoding_method <- "mean"
-  smoothing <- 0
-  white_noise <- 0.2
-  seed <- 2
+  # predictor <- "koppen_zone"
+  # encoding_method <- "mean"
+  # smoothing <- 0
+  # white_noise <- 0.2
+  # seed <- 2
 
 
   #name of smoothing method
@@ -554,21 +549,38 @@ encoded_predictor_name <- function(
     test = white_noise != 0,
     yes = paste0(
       "__noise_",
-      white_noise,
-      "__seed_",
-      seed
+      white_noise
     ),
     no = ""
   )
 
+  #name for seed
+  if(!is.null(seed)){
+
+    name.seed <- ifelse(
+      test = seed != 0,
+      yes = paste0(
+        "__seed_",
+        seed
+      ),
+      no = ""
+    )
+
+  } else {
+
+    name.seed <- ""
+
+  }
+
+
   #predictor name
   paste0(
     predictor,
-    "__",
+    "__encoded_",
     encoding_method,
     name.smoothing,
-    name.noise
+    name.noise,
+    name.seed
   )
-
 
 }

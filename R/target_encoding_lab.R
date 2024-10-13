@@ -14,24 +14,24 @@
 #' The methods to compute the group statistic implemented here are:
 #'
 #' \itemize{
-#'   \item "mean" (implemented in `target_encoding_mean()`): Replaces categorical values with the group means of the numeric variable. It has two methods to control overfitting:
+#'   \item "mean" (implemented in `target_encoding_mean()`): Encodes categorical values with the group means of the response. It has two methods to control overfitting:
 #'   \itemize{
 #'      \item `smoothing` groups larger than this argument are encoded with the group mean, while smaller groups are encoded with a weighted mean of the group's and the global mean. This method is named "mean smoothing" in the relevant literature.
 #'      \item `white_noise`: maximum white noise to be added to each case, expressed as a fraction of the observed range of the numeric variable. Non-deterministic, requires setting the `seed` argument for reproducibility.
 #'   }
 #'   Variables encoded with this method are identified with the suffix "__encoded_mean".
 #'   \item "rank" (implemented in `target_encoding_rank()`): Returns the rank of the group as a integer, being 1 he group with the lower mean of the response variable. It accepts the `white_noise` argument to control overfitting. Variables encoded with this method are identified with the suffix "__encoded_rank".
-#'   \item "loo" (implemented in `target_encoding_loo()`): Known as the "leave-one-out method" in the literature, it replaces each categorical value with the mean of the response variable across all other group cases. This method controls overfitting better than "mean". Additionally, it accepts the `white_noise` method. Variables encoded with this method are identified with the suffix "__encoded_loo".
+#'   \item "loo" (implemented in `target_encoding_loo()`): Known as the "leave-one-out method" in the literature, it encodes each categorical value with the mean of the response variable across all other group cases. This method controls overfitting better than "mean". Additionally, it accepts the `white_noise` method. Variables encoded with this method are identified with the suffix "__encoded_loo".
 #' }
 #'
 #'
 #'
 #' @inheritParams collinear
-#' @param encoding_methods (optional; character vector or NULL). Name of the target encoding methods. If NULL, target encoding is ignored, and `df` is returned with no modification. Default: c("mean", "loo", rank")
+#' @param methods (optional; character vector or NULL). Name of the target encoding methods. If NULL, target encoding is ignored, and `df` is returned with no modification. Default: c("mean", "loo", rank")
 #' @param smoothing (optional; integer vector) Argument of the method "mean". Groups smaller than this number have their means pulled towards the mean of the response across all cases. Default: 0
-#' @param white_noise (optional; numeric vector) Argument of the methods "mean", "rank", and "loo". Maximum white noise to add, expressed as a fraction of the range of the response variable. Default: `0`.
-#' @param seed (optional; integer vector) Random seed to facilitate reproducibility when `white_noise` is not 0. Default: 1
-#' @param replace (optional; logical) If `TRUE`, only the first method in `encoding_methods` is used, the method suffix is ignored, and the categorical variables are overwritten with their encoded versions in the output data frame. Default: FALSE
+#' @param white_noise (optional; numeric vector) Argument of the methods "mean", "rank", and "loo". Maximum white noise to add, expressed as a fraction of the range of the response variable. Range from 0 to 1. Default: `0`.
+#' @param seed (optional; integer vector) Random seed to facilitate reproducibility when `white_noise` is not 0. If NULL, the function selects one at random, and the selected seed does not appear in the encoded variable names. Default: 0
+#' @param overwrite (optional; logical) If `TRUE`, the original predictors in `df` are overwritten with their encoded versions, but only one encoding method, smoothing, white noise, and seed are allowed. Otherwise, encoded predictors with their descriptive names are added to `df`. Default: FALSE
 #'
 #' @return data frame
 #' @examples
@@ -50,7 +50,7 @@
 #'   df = vi,
 #'   response = "vi_numeric",
 #'   predictors = "koppen_zone",
-#'   encoding_methods = c(
+#'   methods = c(
 #'     "mean",
 #'     "loo",
 #'     "rank"
@@ -78,26 +78,26 @@ target_encoding_lab <- function(
     df = NULL,
     response = NULL,
     predictors = NULL,
-    encoding_methods = c(
+    methods = c(
       "mean",
       "loo",
       "rank"
     ),
     smoothing = 0,
     white_noise = 0,
-    seed = 1,
-    replace = FALSE,
+    seed = 0,
+    overwrite = FALSE,
     quiet = FALSE
 ){
 
-  # quiet
+  # quiet ----
   if(!is.logical(quiet)){
     message("collinear::target_encoding_lab(): argument 'quiet' must be logical, resetting it to FALSE.")
     quiet <- FALSE
   }
 
-  # encoding_methods ----
-  if(is.null(encoding_methods)){
+  # early stops ----
+  if(is.null(methods)){
 
     if(quiet == FALSE){
 
@@ -111,90 +111,34 @@ target_encoding_lab <- function(
 
   }
 
-  methods <- c(
-    "mean",
-    "loo",
-    "rank"
-  )
-
-  encoding_methods <- intersect(
-    x = encoding_methods,
-    y = methods
-  )
-
-  if(length(encoding_methods) == 0){
-
-    if(quiet == FALSE){
-
-      message(
-        "collinear::target_encoding_lab(): argument 'encoding_methods' not valid, resetting it to 'mean'."
-      )
-
-    }
-
-    encoding_methods <- "mean"
-
-  }
-
-  # replace ----
-  if(!is.logical(replace) == FALSE){
-
-    if(quiet == FALSE){
-      message("collinear::target_encoding_lab(): argument 'replace' must be logical, resetting it to FALSE.")
-    }
-
-    replace <- FALSE
-
-  }
-
-  if(replace == TRUE){
-
-    if(length(encoding_methods) > 1){
-
-      if(quiet == FALSE){
-
-        message(
-          "collinear::target_encoding_lab(): only one encoding method allowed when 'replace = TRUE', using method: '",
-          encoding_methods[1], "'."
-        )
-
-      }
-
-      encoding_methods <- encoding_methods[1]
-
-    }
-
-    if(length(white_noise) > 1){
-
-      if(quiet == FALSE){
-
-        message("collinear::target_encoding_lab(): only one 'white_noise' value allowed when 'replace = TRUE', using value: ", white_noise[1], ".")
-
-      }
-
-      white_noise <- white_noise[1]
-
-    }
-
-    if(length(smoothing) > 1){
-
-      if(quiet == FALSE){
-
-        message("collinear::target_encoding_lab(): only one 'smoothing' value allowed when 'replace = TRUE', using value: ", smoothing[1], ".")
-
-      }
-
-      smoothing <- smoothing[1]
-
-    }
-
-  }
-
   # validate df ----
   df <- validate_df(
     df = df,
     quiet = quiet
   )
+
+  # validate predictors
+    # validate predictors ----
+  predictors <- validate_predictors(
+    df = df,
+    response = response,
+    predictors = predictors,
+    quiet = quiet
+  )
+
+  #identify categorical predictors
+  predictors <- identify_predictors_categorical(
+    df = df,
+    predictors = predictors
+  )
+
+  if(length(predictors) == 0){
+
+    if(quiet == FALSE){
+      message("collinear::target_encoding_lab(): no categorical predictors available, skipping target encoding.")
+    }
+    return(df)
+  }
 
   # validate response ----
   response <- validate_response(
@@ -245,10 +189,141 @@ target_encoding_lab <- function(
   if(length(predictors) == 0){
 
     if(quiet == FALSE){
+
       message("collinear::target_encoding_lab(): no categorical predictors available, skipping target encoding.")
+
     }
+
     return(df)
+
   }
+
+  # numeric args ----
+
+  ## white noise ----
+  white_noise <- as.numeric(white_noise)
+
+  white_noise <- white_noise[white_noise >= 0 & white_noise <= 1]
+
+  if(length(white_noise) == 0){
+    white_noise <- 0
+  }
+
+  ## smoothing ----
+  smoothing <- as.integer(smoothing)
+
+  smoothing <- smoothing[smoothing >= 0 & smoothing <= nrow(df)]
+
+  if(length(smoothing) == 0){
+    smoothing <- 0
+  }
+
+  ## seed ----
+  if(!is.null(seed)){
+    seed_ <- as.integer(seed)
+  } else {
+    seed_ <- sample.int(
+      x = .Machine$integer.max,
+      size = 1
+      )
+  }
+
+  # methods ----
+  valid_methods <- c(
+    "mean",
+    "loo",
+    "rank"
+  )
+
+  methods <- intersect(
+    x = methods,
+    y = valid_methods
+  )
+
+  if(length(methods) == 0){
+
+    if(quiet == FALSE){
+
+      message(
+        "collinear::target_encoding_lab(): argument 'methods' not valid, resetting it to default values."
+      )
+
+    }
+
+    methods <- valid_methods
+
+  }
+
+  # overwrite ----
+  if(!is.logical(overwrite) == FALSE){
+
+    if(quiet == FALSE){
+      message("collinear::target_encoding_lab(): argument 'overwrite' must be logical, resetting it to FALSE.")
+    }
+
+    overwrite <- FALSE
+
+  }
+
+  if(overwrite == TRUE){
+
+    if(length(methods) > 1){
+
+      if(quiet == FALSE){
+
+        message(
+          "collinear::target_encoding_lab(): only one encoding method allowed when 'overwrite = TRUE', using method: '",
+          methods[1], "'."
+        )
+
+      }
+
+      methods <- methods[1]
+
+    }
+
+    if(length(white_noise) > 1){
+
+      if(quiet == FALSE){
+
+        message("collinear::target_encoding_lab(): only one 'white_noise' value allowed when 'overwrite = TRUE', using value: ", white_noise[1], ".")
+
+      }
+
+      white_noise <- white_noise[1]
+
+    }
+
+    if(length(smoothing) > 1){
+
+      if(quiet == FALSE){
+
+        message("collinear::target_encoding_lab(): only one 'smoothing' value allowed when 'overwrite = TRUE', using value: ", smoothing[1], ".")
+
+      }
+
+      smoothing <- smoothing[1]
+
+    }
+
+    if(length(seed_) > 1){
+
+      if(quiet == FALSE){
+
+        message("collinear::target_encoding_lab(): only one 'seed' value allowed when 'overwrite = TRUE', using value: ", seed_[1], ".")
+
+      }
+
+      seed_ <- seed_[1]
+
+    }
+
+  }
+
+
+
+
+
 
   if(quiet == FALSE){
 
@@ -268,7 +343,7 @@ target_encoding_lab <- function(
     white_noise = white_noise,
     smoothing = smoothing,
     seed = seed,
-    method = encoding_methods,
+    method = methods,
     stringsAsFactors = FALSE
   )
 
@@ -305,11 +380,11 @@ target_encoding_lab <- function(
         smoothing = as.integer(x["smoothing"]),
         white_noise = as.numeric(x["white_noise"]),
         seed = as.integer(x["seed"]),
-        replace = replace,
+        overwrite = overwrite,
         quiet = quiet
       )
 
-      if(replace == FALSE){
+      if(overwrite == FALSE){
 
         df_new_column <- setdiff(
           x = colnames(df.i),
@@ -342,7 +417,7 @@ target_encoding_lab <- function(
     )
 
   #remove original predictors
-  if(replace == TRUE){
+  if(overwrite == TRUE){
 
     df <- df[, !(colnames(df) %in% predictors), drop = FALSE]
 
