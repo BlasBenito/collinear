@@ -44,7 +44,9 @@ add_white_noise(
 
 \item{response}{(optional, character string) Name of a numeric (non-numerics are ignored) response variable in \code{df}, only required if there are categorical variables named in the argument \code{predictors}. Default: NULL.}
 
-\item{predictor}{(required; character) Name of the categorical predictor to encode. Default: NULL}
+\item{predictor}{(required; string) Name of the categorical predictor to encode. Default: NULL}
+
+\item{encoded_name}{(required, string) Name of the encoded predictor. Default: NULL}
 
 \item{smoothing}{(optional; integer) Groups smaller than this number have their means pulled towards the mean of the response across all cases. Ignored by \code{target_encoding_rank()} and \code{target_encoding_loo()}. Default: 0}
 
@@ -56,27 +58,7 @@ add_white_noise(
 data frame
 }
 \description{
-Target encoding involves replacing the values of categorical variables with numeric ones derived from a "target variable", usually a model's response.
-
-In essence, target encoding works as follows:
-\itemize{
-\item 1. group all cases belonging to a unique value of the categorical variable.
-\item 2. compute a statistic of the target variable across the group cases.
-\item 3. assign the value of the statistic to the group.
-}
-
-The methods to compute the group statistic implemented here are:
-
-\itemize{
-\item "mean" (implemented in \code{target_encoding_mean()}): Encodes categorical values with the group means of the response. It has two methods to control overfitting:
-\itemize{
-\item \code{smoothing} groups larger than this argument are encoded with the group mean, while smaller groups are encoded with a weighted mean of the group's and the global mean. This method is named "mean smoothing" in the relevant literature.
-\item \code{white_noise}: maximum white noise to be added to each case, expressed as a fraction of the observed range of the numeric variable. Non-deterministic, requires setting the \code{seed} argument for reproducibility.
-}
-Variables encoded with this method are identified with the suffix "__encoded_mean".
-\item "rank" (implemented in \code{target_encoding_rank()}): Returns the rank of the group as a integer, being 1 he group with the lower mean of the response variable. It accepts the \code{white_noise} argument to control overfitting. Variables encoded with this method are identified with the suffix "__encoded_rank".
-\item "loo" (implemented in \code{target_encoding_loo()}): Known as the "leave-one-out method" in the literature, it encodes each categorical value with the mean of the response variable across all other group cases. This method controls overfitting better than "mean". Additionally, it accepts the \code{white_noise} method. Variables encoded with this method are identified with the suffix "__encoded_loo".
-}
+Target Encoding Methods
 }
 \examples{
 
@@ -92,30 +74,16 @@ vi <- vi[1:1000, ]
 df <- target_encoding_mean(
   df = vi,
   response = "vi_numeric",
-  predictor = "soil_type"
+  predictor = "soil_type",
+  encoded_name = "soil_type_encoded"
 )
 
 plot(
-  x = df$soil_type,
+  x = df$soil_type_encoded,
   y = df$vi_numeric,
   xlab = "encoded variable",
   ylab = "response"
 )
-
-#with noise
-df <- target_encoding_mean(
-  df = vi,
-  response = "vi_numeric",
-  predictor = "soil_type"
-)
-
-plot(
-  x = df$soil_type,
-  y = df$vi_numeric,
-  xlab = "encoded variable",
-  ylab = "response"
-)
-
 
 #group rank
 #----------
@@ -123,11 +91,12 @@ plot(
 df <- target_encoding_rank(
   df = vi,
   response = "vi_numeric",
-  predictor = "soil_type"
+  predictor = "soil_type",
+  encoded_name = "soil_type_encoded"
 )
 
 plot(
-  x = df$soil_type,
+  x = df$soil_type_encoded,
   y = df$vi_numeric,
   xlab = "encoded variable",
   ylab = "response"
@@ -141,32 +110,16 @@ plot(
 df <- target_encoding_loo(
   df = vi,
   response = "vi_numeric",
-  predictor = "soil_type"
+  predictor = "soil_type",
+  encoded_name = "soil_type_encoded"
 )
 
 plot(
-  x = df$soil_type,
+  x = df$soil_type_encoded,
   y = df$vi_numeric,
   xlab = "encoded variable",
   ylab = "response"
 )
-
-#with noise
-df <- target_encoding_loo(
-  df = vi,
-  response = "vi_numeric",
-  predictor = "soil_type"
-)
-
-plot(
-  x = df$soil_type,
-  y = df$vi_numeric,
-  xlab = "encoded variable",
-  ylab = "response"
-)
-
-
-
 }
 \seealso{
 Other target_encoding: 

@@ -245,7 +245,7 @@ target_encoding_lab <- function(
     seed <- as.integer(seed)
   } else {
     seed <- sample.int(
-      x = .Machine$integer.max,
+      n = .Machine$integer.max,
       size = 1
       )
   }
@@ -457,7 +457,7 @@ target_encoding_lab <- function(
       df.i[, predictor.i, drop = FALSE]
 
     }, #end of lambda function
-    future.seed=TRUE
+    future.seed = TRUE
   ) #end of loop
 
   # encoded predictors ----

@@ -61,9 +61,9 @@ testthat::test_that("`vif_select()` works", {
   preference_order <- preference_order(
     df = df,
     response = "vi_numeric",
-    predictors = predictors
-  ) |>
-    suppressMessages()
+    predictors = predictors,
+    quiet = TRUE
+  )
 
   testthat::expect_message(
     x <- vif_select(
@@ -135,7 +135,8 @@ testthat::test_that("`vif_select()` works", {
   #no predictors
   x <- vif_select(
     df = df[, 1:5],
-    predictors = NULL
+    predictors = NULL,
+    quiet = TRUE
   )
 
   testthat::expect_true(

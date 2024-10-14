@@ -90,7 +90,8 @@ testthat::test_that("`collinear()` works", {
       predictors = predictors,
       quiet = FALSE
     )
-  )
+  ) |>
+    suppressMessages()
 
   testthat::expect_true(
     is.character(x)
@@ -112,7 +113,8 @@ testthat::test_that("`collinear()` works", {
       predictors = predictors,
       quiet = FALSE
     )
-  )
+  ) |>
+    suppressMessages()
 
   testthat::expect_true(
     is.character(x)
@@ -133,7 +135,8 @@ testthat::test_that("`collinear()` works", {
       predictors = predictors,
       quiet = FALSE
     )
-  )
+  ) |>
+    suppressMessages()
 
   testthat::expect_true(
     is.character(x)
@@ -217,7 +220,8 @@ testthat::test_that("`collinear()` works", {
       ),
       quiet = FALSE
     )
-  )
+  ) |>
+    suppressMessages()
 
   testthat::expect_true(
     all(x == y)
@@ -226,29 +230,35 @@ testthat::test_that("`collinear()` works", {
   #disabling cor and target encoding
   predictors <- vi_predictors_numeric[1:10]
 
+  preference_order <- preference_order(
+    df = df,
+    response = "vi_numeric",
+    predictors = predictors
+  ) |>
+    suppressMessages()
+
   testthat::expect_message(
     x <- collinear(
       df = df,
       response = "vi_numeric",
       predictors = predictors,
+      preference_order = preference_order,
       encoding_method = NULL,
       max_cor = NULL,
       quiet = FALSE
     )
-  )
+  ) |>
+    suppressMessages()
 
   testthat::expect_message(
     y <- vif_select(
       df = df,
       predictors = predictors,
-      preference_order = preference_order(
-        df = df,
-        response = "vi_numeric",
-        predictors = predictors
-      ),
+      preference_order = preference_order,
       quiet = FALSE
     )
-  )
+  ) |>
+    suppressMessages()
 
   testthat::expect_true(
     all(x == y)
@@ -326,7 +336,8 @@ testthat::test_that("`collinear()` works", {
       df = vi[1:1000, ],
       predictors = predictors
     )
-  )
+  ) |>
+    suppressMessages()
 
 
   testthat::expect_true(

@@ -1,9 +1,9 @@
 #' Target Encoding Methods
 #'
-#' @inherit target_encoding_lab description
 #'
 #' @inheritParams target_encoding_lab
-#' @param predictor (required; character) Name of the categorical predictor to encode. Default: NULL
+#' @param predictor (required; string) Name of the categorical predictor to encode. Default: NULL
+#' @param encoded_name (required, string) Name of the encoded predictor. Default: NULL
 #' @param smoothing (optional; integer) Groups smaller than this number have their means pulled towards the mean of the response across all cases. Ignored by `target_encoding_rank()` and `target_encoding_loo()`. Default: 0
 #'
 #'
@@ -24,30 +24,16 @@
 #' df <- target_encoding_mean(
 #'   df = vi,
 #'   response = "vi_numeric",
-#'   predictor = "soil_type"
+#'   predictor = "soil_type",
+#'   encoded_name = "soil_type_encoded"
 #' )
 #'
 #' plot(
-#'   x = df$soil_type,
+#'   x = df$soil_type_encoded,
 #'   y = df$vi_numeric,
 #'   xlab = "encoded variable",
 #'   ylab = "response"
 #' )
-#'
-#' #with noise
-#' df <- target_encoding_mean(
-#'   df = vi,
-#'   response = "vi_numeric",
-#'   predictor = "soil_type"
-#' )
-#'
-#' plot(
-#'   x = df$soil_type,
-#'   y = df$vi_numeric,
-#'   xlab = "encoded variable",
-#'   ylab = "response"
-#' )
-#'
 #'
 #' #group rank
 #' #----------
@@ -55,11 +41,12 @@
 #' df <- target_encoding_rank(
 #'   df = vi,
 #'   response = "vi_numeric",
-#'   predictor = "soil_type"
+#'   predictor = "soil_type",
+#'   encoded_name = "soil_type_encoded"
 #' )
 #'
 #' plot(
-#'   x = df$soil_type,
+#'   x = df$soil_type_encoded,
 #'   y = df$vi_numeric,
 #'   xlab = "encoded variable",
 #'   ylab = "response"
@@ -73,32 +60,16 @@
 #' df <- target_encoding_loo(
 #'   df = vi,
 #'   response = "vi_numeric",
-#'   predictor = "soil_type"
+#'   predictor = "soil_type",
+#'   encoded_name = "soil_type_encoded"
 #' )
 #'
 #' plot(
-#'   x = df$soil_type,
+#'   x = df$soil_type_encoded,
 #'   y = df$vi_numeric,
 #'   xlab = "encoded variable",
 #'   ylab = "response"
 #' )
-#'
-#' #with noise
-#' df <- target_encoding_loo(
-#'   df = vi,
-#'   response = "vi_numeric",
-#'   predictor = "soil_type"
-#' )
-#'
-#' plot(
-#'   x = df$soil_type,
-#'   y = df$vi_numeric,
-#'   xlab = "encoded variable",
-#'   ylab = "response"
-#' )
-#'
-#'
-#'
 #' @export
 #' @autoglobal
 #' @family target_encoding
@@ -111,6 +82,12 @@ target_encoding_mean <- function(
     smoothing = 0
 ){
 
+  if(is.null(encoded_name)){
+    stop(
+      "collinear::target_encoding_mean() argument 'encoded_name' is required.",
+      call. = FALSE
+    )
+  }
 
   #mean encoding when smoothing > 0
   if(smoothing == 0){
@@ -156,6 +133,13 @@ target_encoding_rank <- function(
     encoded_name = NULL,
     smoothing = 0
 ){
+
+  if(is.null(encoded_name)){
+    stop(
+      "collinear::target_encoding_mean() argument 'encoded_name' is required.",
+      call. = FALSE
+    )
+  }
 
   #aggregate by groups
   df.map <- tapply(
@@ -207,6 +191,13 @@ target_encoding_loo <- function(
     encoded_name = NULL,
     smoothing = 0
 ){
+
+  if(is.null(encoded_name)){
+    stop(
+      "collinear::target_encoding_mean() argument 'encoded_name' is required.",
+      call. = FALSE
+    )
+  }
 
   #add id column to facilitate reordering
   df$id.. <- seq_len(nrow(df))

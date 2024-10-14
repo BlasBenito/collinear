@@ -325,7 +325,8 @@ cor_numeric_vs_categorical <- function(
         use = "pairwise.complete.obs"
       )
 
-    }
+    }, #end of lambda function
+    future.seed = TRUE
   )
 
   cor.df

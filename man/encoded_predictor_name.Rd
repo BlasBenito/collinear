@@ -13,7 +13,7 @@ encoded_predictor_name(
 )
 }
 \arguments{
-\item{predictor}{(required; character) Name of the categorical predictor to encode. Default: NULL}
+\item{predictor}{(required; string) Name of the categorical predictor to encode. Default: NULL}
 
 \item{encoding_method}{(required, string) Name of the encoding method. One of: "mean", "rank", or "loo". Default: "mean"}
 

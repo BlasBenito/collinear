@@ -4,10 +4,20 @@ testthat::test_that("`cor_select()` works", {
   df <- vi[1:1000, ]
 
   # mixed types ----
+  testthat::expect_message(
+    x <- cor_select(
+      df = df,
+      predictors = predictors
+    )
+  ) |>
+    suppressMessages()
+
   x <- cor_select(
     df = df,
-    predictors = predictors
+    predictors = predictors,
+    quiet = TRUE
   )
+
 
   testthat::expect_true(
     is.character(x)
@@ -30,7 +40,8 @@ testthat::test_that("`cor_select()` works", {
   x <- cor_select(
     df = df,
     predictors = predictors,
-    preference_order = preference_order
+    preference_order = preference_order,
+    quiet = TRUE
   )
 
   testthat::expect_true(
@@ -53,14 +64,15 @@ testthat::test_that("`cor_select()` works", {
   preference_order <- preference_order(
     df = df,
     response = "vi_numeric",
-    predictors = predictors
-  ) |>
-    suppressMessages()
+    predictors = predictors,
+    quiet = TRUE
+  )
 
   x <- cor_select(
     df = df,
     predictors = predictors,
-    preference_order = preference_order
+    preference_order = preference_order,
+    quiet = TRUE
   )
 
   testthat::expect_true(
@@ -84,7 +96,8 @@ testthat::test_that("`cor_select()` works", {
 
   x <- cor_select(
     df = df,
-    predictors = predictors
+    predictors = predictors,
+    quiet = TRUE
   )
 
   testthat::expect_true(
@@ -129,7 +142,8 @@ testthat::test_that("`cor_select()` works", {
   #no predictors
   x <- cor_select(
     df = df[, 1:5],
-    predictors = NULL
+    predictors = NULL,
+    quiet = TRUE
   )
 
   testthat::expect_true(
@@ -144,7 +158,8 @@ testthat::test_that("`cor_select()` works", {
       df = vi[1:1000, ],
       predictors = predictors
     )
-  )
+  ) |>
+    suppressMessages()
 
   testthat::expect_true(
     is.character(x)

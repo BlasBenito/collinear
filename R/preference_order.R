@@ -215,7 +215,8 @@ preference_order <- function(
           na.omit()
         )
 
-    }
+    }, #end of lambda function
+    future.seed = TRUE
   ) |>
     unlist() |>
     suppressWarnings()
