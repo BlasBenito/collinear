@@ -1,12 +1,15 @@
 #' Pairwise Correlation Data Frame
 #'
 #' @description
-#' Returns a pairwise correlation data frame for different types of variables:
+#'
+#' Computes a pairwise correlation data frame. Implements methods to compare different types of predictors:
 #' \itemize{
 #'   \item **numeric vs. numeric**: as computed with [stats::cor()] using the methods "pearson" or "spearman", via [cor_numeric_vs_numeric()].
 #'   \item **numeric vs. categorical**: the function [cor_numeric_vs_categorical()] target-encodes the categorical variable using the numeric variable as reference with [target_encoding_lab()] and the method "mean", and then their correlation is computed with [stats::cor()].
 #'   \item **categorical vs. categorical**: the function [cor_categorical_vs_categorical()] computes Cramer's V (see [cramer_v()]) as indicator of the association between character or factor variables. However, take in mind that Cramer's V is not directly comparable with R-squared, even when having the same range from zero to one. It is always recommended to target-encode categorical variables with [target_encoding_lab()] before the pairwise correlation analysis.
 #'   }
+#'
+#' Accepts a parallelization setup via [future::plan()] and a progress bar via [progressr::handlers()] (see examples).
 #'
 #' @inheritParams collinear
 #' @return data frame; pairwise correlation

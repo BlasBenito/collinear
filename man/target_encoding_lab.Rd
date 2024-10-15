@@ -60,6 +60,8 @@ Variables encoded with this method are identified with the suffix "__encoded_mea
 \item "rank" (implemented in \code{target_encoding_rank()}): Returns the rank of the group as a integer, being 1 he group with the lower mean of the response variable. It accepts the \code{white_noise} argument to control overfitting. Variables encoded with this method are identified with the suffix "__encoded_rank".
 \item "loo" (implemented in \code{target_encoding_loo()}): Known as the "leave-one-out method" in the literature, it encodes each categorical value with the mean of the response variable across all other group cases. This method controls overfitting better than "mean". Additionally, it accepts the \code{white_noise} method. Variables encoded with this method are identified with the suffix "__encoded_loo".
 }
+
+Accepts a parallelization setup via \code{\link[future:plan]{future::plan()}} and a progress bar via \code{\link[progressr:handlers]{progressr::handlers()}} (see examples).
 }
 \examples{
 

@@ -10,6 +10,8 @@
 #' \item **VIF filtering**: Automated algorithm to identify and remove numeric predictors that are linear combinations of other predictors. See [vif_select()] and [vif_df()].
 #' }
 #'
+#' Accepts a parallelization setup via [future::plan()] and a progress bar via [progressr::handlers()] (see examples).
+#'
 #' @section Target Encoding:
 #'
 #' When the argument `response` names a **numeric response variable**, categorical predictors in `predictors` (or in the columns of `df` if `predictors` is NULL) are converted to numeric via **target encoding** with the function [target_encoding_lab()]. When `response` is NULL or names a categorical variable, target-encoding is skipped. This feature facilitates multicollinearity filtering in data frames with mixed column types.

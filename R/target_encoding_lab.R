@@ -24,7 +24,7 @@
 #'   \item "loo" (implemented in `target_encoding_loo()`): Known as the "leave-one-out method" in the literature, it encodes each categorical value with the mean of the response variable across all other group cases. This method controls overfitting better than "mean". Additionally, it accepts the `white_noise` method. Variables encoded with this method are identified with the suffix "__encoded_loo".
 #' }
 #'
-#'
+#' Accepts a parallelization setup via [future::plan()] and a progress bar via [progressr::handlers()] (see examples).
 #'
 #' @inheritParams collinear
 #' @param methods (optional; character vector or NULL). Name of the target encoding methods. If NULL, target encoding is ignored, and `df` is returned with no modification. Default: c("mean", "loo", rank")
@@ -133,8 +133,7 @@ target_encoding_lab <- function(
     quiet = quiet
   )
 
-  # validate predictors
-    # validate predictors ----
+  # validate predictors ----
   predictors <- validate_predictors(
     df = df,
     response = response,
@@ -216,143 +215,19 @@ target_encoding_lab <- function(
 
   }
 
-  # numeric args ----
-
-  ## white noise ----
-  if(is.null(white_noise)){
-    white_noise <- 0
-  }
-
-  white_noise <- as.numeric(white_noise)
-
-  white_noise <- white_noise[white_noise >= 0 & white_noise <= 1]
-
-  if(length(white_noise) == 0){
-    white_noise <- 0
-  }
-
-  ## smoothing ----
-  smoothing <- as.integer(smoothing)
-
-  smoothing <- smoothing[smoothing >= 0 & smoothing <= nrow(df)]
-
-  if(length(smoothing) == 0){
-    smoothing <- 0
-  }
-
-  ## seed ----
-  if(!is.null(seed)){
-    seed <- as.integer(seed)
-  } else {
-    seed <- sample.int(
-      n = .Machine$integer.max,
-      size = 1
-      )
-  }
-
-  # methods ----
-  valid_methods <- c(
-    "mean",
-    "loo",
-    "rank"
+  # validate all other args ----
+  args <- validate_encoding_arguments(
+    predictors = predictors,
+    methods = methods,
+    smoothing = smoothing,
+    white_noise = white_noise,
+    seed = seed,
+    overwrite = overwrite,
+    quiet = quiet
   )
 
-  methods <- intersect(
-    x = methods,
-    y = valid_methods
-  )
-
-  if(length(methods) == 0){
-
-    if(quiet == FALSE){
-
-      message(
-        "collinear::target_encoding_lab(): argument 'methods' not valid, resetting it to default values."
-      )
-
-    }
-
-    methods <- valid_methods
-
-  }
-
-  # overwrite ----
-  if(is.logical(overwrite) == FALSE){
-
-    if(quiet == FALSE){
-      message("collinear::target_encoding_lab(): argument 'overwrite' must be logical, resetting it to FALSE.")
-    }
-
-    overwrite <- FALSE
-
-  }
-
-  if(overwrite == TRUE){
-
-    if(length(methods) > 1){
-
-      if(quiet == FALSE){
-
-        message(
-          "collinear::target_encoding_lab(): only one encoding method allowed when 'overwrite = TRUE', using method: '",
-          methods[1], "'."
-        )
-
-      }
-
-      methods <- methods[1]
-
-    }
-
-    if(length(white_noise) > 1){
-
-      if(quiet == FALSE){
-
-        message("collinear::target_encoding_lab(): only one 'white_noise' value allowed when 'overwrite = TRUE', using value: ", white_noise[1], ".")
-
-      }
-
-      white_noise <- white_noise[1]
-
-    }
-
-    if(length(smoothing) > 1){
-
-      if(quiet == FALSE){
-
-        message("collinear::target_encoding_lab(): only one 'smoothing' value allowed when 'overwrite = TRUE', using value: ", smoothing[1], ".")
-
-      }
-
-      smoothing <- smoothing[1]
-
-    }
-
-    if(length(seed) > 1){
-
-      if(quiet == FALSE){
-
-        message("collinear::target_encoding_lab(): only one 'seed' value allowed when 'overwrite = TRUE', using value: ", seed[1], ".")
-
-      }
-
-      seed <- seed[1]
-
-    }
-
-  }
-
-  if(quiet == FALSE){
-
-    message(
-      "\n collinear::target_encoding_lab(): encoding categorical predictors:\n - ",
-      paste0(
-        predictors,
-        collapse = "\n - "
-      )
-    )
-
-  }
+  #make validated args available
+  list2env(x = args)
 
   # target-encoding ----
   combinations.df <- expand.grid(

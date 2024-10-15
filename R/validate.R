@@ -776,3 +776,176 @@ validate_data_cor <- function(
 }
 
 
+#' Validates Arguments of `target_encoding_lab()`
+#'
+#' @description
+#' Internal function to validate configuration arguments for [target_encoding_lab()].
+#'
+#'
+#' @inheritParams target_encoding_lab
+#' @return list
+#' @export
+#' @autoglobal
+#' @family data_validation
+#' @examples
+#' validate_encoding_arguments()
+validate_encoding_arguments <- function(
+    predictors = NULL,
+    methods = c(
+      "mean",
+      "loo",
+      "rank"
+    ),
+    smoothing = 0,
+    white_noise = 0,
+    seed = 0,
+    overwrite = FALSE,
+    quiet = FALSE
+){
+
+  ## white noise ----
+  if(is.null(white_noise)){
+    white_noise <- 0
+  }
+
+  white_noise <- as.numeric(white_noise)
+
+  white_noise <- white_noise[white_noise >= 0 & white_noise <= 1]
+
+  if(length(white_noise) == 0){
+    white_noise <- 0
+  }
+
+  ## smoothing ----
+  smoothing <- as.integer(smoothing)
+
+  smoothing <- smoothing[smoothing >= 0 & smoothing <= nrow(df)]
+
+  if(length(smoothing) == 0){
+    smoothing <- 0
+  }
+
+  ## seed ----
+  if(!is.null(seed)){
+    seed <- as.integer(seed)
+  } else {
+    seed <- sample.int(
+      n = .Machine$integer.max,
+      size = 1
+    )
+  }
+
+  # methods ----
+  valid_methods <- c(
+    "mean",
+    "loo",
+    "rank"
+  )
+
+  methods <- intersect(
+    x = methods,
+    y = valid_methods
+  )
+
+  if(length(methods) == 0){
+
+    if(quiet == FALSE){
+
+      message(
+        "collinear::target_encoding_lab(): argument 'methods' not valid, resetting it to default values."
+      )
+
+    }
+
+    methods <- valid_methods
+
+  }
+
+  # overwrite ----
+  if(is.logical(overwrite) == FALSE){
+
+    if(quiet == FALSE){
+      message("collinear::target_encoding_lab(): argument 'overwrite' must be logical, resetting it to FALSE.")
+    }
+
+    overwrite <- FALSE
+
+  }
+
+  if(overwrite == TRUE){
+
+    if(length(methods) > 1){
+
+      if(quiet == FALSE){
+
+        message(
+          "collinear::target_encoding_lab(): only one encoding method allowed when 'overwrite = TRUE', using method: '",
+          methods[1], "'."
+        )
+
+      }
+
+      methods <- methods[1]
+
+    }
+
+    if(length(white_noise) > 1){
+
+      if(quiet == FALSE){
+
+        message("collinear::target_encoding_lab(): only one 'white_noise' value allowed when 'overwrite = TRUE', using value: ", white_noise[1], ".")
+
+      }
+
+      white_noise <- white_noise[1]
+
+    }
+
+    if(length(smoothing) > 1){
+
+      if(quiet == FALSE){
+
+        message("collinear::target_encoding_lab(): only one 'smoothing' value allowed when 'overwrite = TRUE', using value: ", smoothing[1], ".")
+
+      }
+
+      smoothing <- smoothing[1]
+
+    }
+
+    if(length(seed) > 1){
+
+      if(quiet == FALSE){
+
+        message("collinear::target_encoding_lab(): only one 'seed' value allowed when 'overwrite = TRUE', using value: ", seed[1], ".")
+
+      }
+
+      seed <- seed[1]
+
+    }
+
+  }
+
+  if(quiet == FALSE){
+
+    message(
+      "\n collinear::target_encoding_lab(): encoding categorical predictors:\n - ",
+      paste0(
+        predictors,
+        collapse = "\n - "
+      )
+    )
+
+  }
+
+  list(
+    methods = methods,
+    smoothing = smoothing,
+    white_noise = white_noise,
+    seed = seed,
+    overwrite = overwrite
+  )
+
+
+}

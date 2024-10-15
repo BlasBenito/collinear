@@ -2,7 +2,7 @@
 % Please edit documentation in R/cor_clusters.R
 \name{cor_clusters}
 \alias{cor_clusters}
-\title{Clustering from Pairwise Correlation Matrix}
+\title{Hierarchical Clustering from a Pairwise Correlation Matrix}
 \usage{
 cor_clusters(
   df = NULL,
@@ -30,16 +30,30 @@ cor_clusters(
 data frame: predictor names and their clusters
 }
 \description{
-Computes the correlation matrix with \code{\link[=cor_df]{cor_df()}} and \code{\link[=cor_matrix]{cor_matrix()}}, transforms it to a dist object, computes a clustering solution with \code{\link[stats:hclust]{stats::hclust()}}, and applies \code{\link[stats:cutree]{stats::cutree()}} to separate groups based on the value of the argument \code{max_cor}.
+Hierarchical clustering of predictors from their pairwise correlation matrix. Computes the correlation matrix with \code{\link[=cor_df]{cor_df()}} and \code{\link[=cor_matrix]{cor_matrix()}}, transforms it to a dist object, computes a clustering solution with \code{\link[stats:hclust]{stats::hclust()}}, and applies \code{\link[stats:cutree]{stats::cutree()}} to separate groups based on the value of the argument \code{max_cor}.
 
 Returns a data frame with predictor names and their clusters, and optionally, prints a dendrogram of the clustering solution.
+
+Accepts a parallelization setup via \code{\link[future:plan]{future::plan()}} and a progress bar via \code{\link[progressr:handlers]{progressr::handlers()}} (see examples).
 }
 \examples{
+
+#parallelization setup
+future::plan(
+  future::multisession,
+  workers = 2 #set to parallelly::availableCores() - 1
+)
+
+#progress bar
+# progressr::handlers(global = TRUE)
 
 df_clusters <- cor_clusters(
   df = vi[1:1000, ],
   predictors = vi_predictors[1:15]
 )
+
+#disable parallelization
+future::plan(future::sequential)
 
 }
 \seealso{

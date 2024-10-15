@@ -66,6 +66,7 @@ Other data_validation:
 \code{\link{validate_data_cor}()},
 \code{\link{validate_data_vif}()},
 \code{\link{validate_df}()},
+\code{\link{validate_encoding_arguments}()},
 \code{\link{validate_predictors}()},
 \code{\link{validate_response}()}
 }

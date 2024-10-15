@@ -2,7 +2,10 @@
 #'
 #' @description
 #'
+#' Implements a recursive forward selection algorithm to keep predictors with a maximum pairwise correlation with all other selected predictors lower than a given threshold. Uses [cor_df()] underneath, and as such, can handle diferent combinations of predictor types.
+#'
 #' Please check the section **Pairwise Correlation Filtering** at the end of this help file for further details.
+#'
 #' @inheritSection collinear Pairwise Correlation Filtering
 #'
 #' @inheritParams collinear

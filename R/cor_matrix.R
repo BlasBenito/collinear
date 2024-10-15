@@ -3,6 +3,8 @@
 #' @description
 #' If argument 'df' results from [cor_df()], transforms it to a correlation matrix. If argument 'df' is a dataframe with predictors, and the argument 'predictors' is provided then [cor_df()] is used to compute pairwise correlations, and the result is transformed to matrix.
 #'
+#' Accepts a parallelization setup via [future::plan()] and a progress bar via [progressr::handlers()] (see examples).
+#'
 #' @inheritParams collinear
 #' @return correlation matrix
 #'

@@ -32,6 +32,7 @@ If the number of rows in \code{df} is smaller than 10 times the length of \code{
 Other data_validation: 
 \code{\link{validate_data_cor}()},
 \code{\link{validate_df}()},
+\code{\link{validate_encoding_arguments}()},
 \code{\link{validate_predictors}()},
 \code{\link{validate_preference_order}()},
 \code{\link{validate_response}()}

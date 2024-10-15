@@ -18,6 +18,8 @@ correlation matrix
 }
 \description{
 If argument 'df' results from \code{\link[=cor_df]{cor_df()}}, transforms it to a correlation matrix. If argument 'df' is a dataframe with predictors, and the argument 'predictors' is provided then \code{\link[=cor_df]{cor_df()}} is used to compute pairwise correlations, and the result is transformed to matrix.
+
+Accepts a parallelization setup via \code{\link[future:plan]{future::plan()}} and a progress bar via \code{\link[progressr:handlers]{progressr::handlers()}} (see examples).
 }
 \examples{
 data(

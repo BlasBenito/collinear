@@ -57,6 +57,8 @@ Automates multicollinearity management in data frames with numeric and non-numer
 \item \strong{Pairwise Correlation Filtering}: Automated multicollinearity filtering via pairwise correlation. Correlations between numeric and categoricals  predictors are computed by target-encoding the categorical against the predictor, and correlations between categoricals are computed via Cramer's V. See \code{\link[=cor_select]{cor_select()}}, \code{\link[=cor_df]{cor_df()}}, and \code{\link[=cramer_v]{cramer_v()}} for further details.
 \item \strong{VIF filtering}: Automated algorithm to identify and remove numeric predictors that are linear combinations of other predictors. See \code{\link[=vif_select]{vif_select()}} and \code{\link[=vif_df]{vif_df()}}.
 }
+
+Accepts a parallelization setup via \code{\link[future:plan]{future::plan()}} and a progress bar via \code{\link[progressr:handlers]{progressr::handlers()}} (see examples).
 }
 \section{Target Encoding}{
 
