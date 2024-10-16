@@ -21,7 +21,7 @@ drop_geometry_column <- function(
 
     if(quiet == FALSE){
 
-      message("collinear::drop_geometry_column(): dropping geometry column from 'df'.")
+      message("\ncollinear::drop_geometry_column(): dropping geometry column from 'df'.")
 
     }
 

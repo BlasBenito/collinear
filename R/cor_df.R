@@ -57,7 +57,7 @@ cor_df <- function(
 ){
 
   if(!is.logical(quiet)){
-    message("collinear::cor_df(): argument 'quiet' must be logical, resetting it to FALSE.")
+    message("\ncollinear::cor_df(): argument 'quiet' must be logical, resetting it to FALSE.")
     quiet <- FALSE
   }
 
@@ -72,7 +72,7 @@ cor_df <- function(
   #if no numerics, return predictors
   if(length(predictors) == 0){
     if(quiet == FALSE){
-      message("collinear::cor_df(): no predictors provided, skipping correlation analysis.")
+      message("\ncollinear::cor_df(): no predictors provided, skipping correlation analysis.")
     }
     return(
       data.frame(
@@ -85,7 +85,7 @@ cor_df <- function(
   #early output if only one predictor
   if(length(predictors) == 1){
     if(quiet == FALSE){
-      message("collinear::cor_df(): only one predictor provided, skipping correlation analysis.")
+      message("\ncollinear::cor_df(): only one predictor provided, skipping correlation analysis.")
     }
     return(
       data.frame(
@@ -301,6 +301,8 @@ cor_numeric_vs_categorical <- function(
     X = cor.df,
     MARGIN = 1,
     FUN = function(x){
+
+      #x <- c("topo_slope", "koppen_zone")
 
       p()
 

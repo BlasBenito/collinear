@@ -93,7 +93,7 @@ validate_df <- function(
     if(quiet == FALSE){
 
       message(
-        "collinear::validate_df(): replacing ", n_inf, " Inf value/s with NA."
+        "\ncollinear::validate_df(): replacing ", n_inf, " Inf value/s with NA."
       )
 
     }
@@ -121,7 +121,7 @@ validate_df <- function(
     if(quiet == FALSE){
 
       message(
-        "collinear::validate_df(): converting these logical column/s to numeric: \n - ",
+        "\ncollinear::validate_df(): converting these logical column/s to numeric: \n - ",
         paste0(logical_columns, collapse = "\n - ")
       )
 
@@ -235,7 +235,7 @@ validate_predictors <- function(
       if(quiet == FALSE){
 
         message(
-          "collinear::validate_predictors(): these 'predictors' are not column names of 'df' and will be ignored:\n - ",
+          "\ncollinear::validate_predictors(): these 'predictors' are not column names of 'df' and will be ignored:\n - ",
           paste(
             predictors.missing,
             collapse = "\n - "
@@ -268,7 +268,7 @@ validate_predictors <- function(
       if(quiet == FALSE){
 
         message(
-          "collinear::validate_predictors(): these predictors have near zero variance and will be ignored:\n - ",
+          "\ncollinear::validate_predictors(): these predictors have near zero variance and will be ignored:\n - ",
           paste0(
             predictors.zero.variance,
             collapse = "\n - "
@@ -301,7 +301,7 @@ validate_predictors <- function(
       if(quiet == FALSE){
 
         message(
-          "collinear::validate_predictors(): these predictors have constant values and will be ignored:\n - ",
+          "\ncollinear::validate_predictors(): these predictors have constant values and will be ignored:\n - ",
           paste0(
             predictors.constant,
             collapse = "\n - "
@@ -389,7 +389,7 @@ validate_response <- function(
     if(quiet == FALSE){
 
       message(
-        "collinear::validate_response(): argument 'response' is not a column name of 'df' and will be ignored."
+        "\ncollinear::validate_response(): argument 'response' is not a column name of 'df' and will be ignored."
       )
 
     }
@@ -409,7 +409,7 @@ validate_response <- function(
       if(quiet == FALSE){
 
         message(
-          "collinear::validate_response(): 'response' column '",
+          "\ncollinear::validate_response(): 'response' column '",
           response,
           "' has near-zero variance and will be ignored."
         )
@@ -426,7 +426,7 @@ validate_response <- function(
     if(quiet == FALSE){
 
       message(
-        "collinear::validate_response(): 'response' column '",
+        "\ncollinear::validate_response(): 'response' column '",
         response,
         "' has constant values and will be ignored."
       )
@@ -445,7 +445,7 @@ validate_response <- function(
     if(quiet == FALSE){
 
       message(
-        "collinear::validate_response(): 'response' column '",
+        "\ncollinear::validate_response(): 'response' column '",
         response,
         "' has ",
         response.na.values,
@@ -474,6 +474,7 @@ validate_response <- function(
 #'
 #' @inheritParams collinear
 #' @param preference_order_auto (required, character vector) names of the predictors in the automated preference order returned by [vif_select()] or [cor_select()]
+#' @param function_name (optional, character string) Name of the function performing the check. Default: "collinear::validate_preference_order()"
 #'
 #' @return character vector: ranked variable names
 #' @export
@@ -519,27 +520,46 @@ validate_response <- function(
 validate_preference_order <- function(
     predictors = NULL,
     preference_order = NULL,
-    preference_order_auto = NULL
+    preference_order_auto = NULL,
+    function_name = "collinear::validate_preference_order()",
+    quiet = FALSE
 ){
 
   if(is.null(preference_order_auto)){
     stop(
-      "collinear::validate_preference_order(): argument 'preference_order_auto' cannot be NULL.",
+      function_name,
+      ": argument 'preference_order_auto' cannot be NULL.",
       call. = FALSE
     )
   }
 
   if(is.null(preference_order)){
-    preference_order <- preference_order_auto
+
+    if(quiet == FALSE){
+
+      message(
+        "\n",
+        function_name,
+        ": argument 'preference_order' is NULL, ranking predictors from lower to higher multicollinearity."
+      )
+
+    }
+
+    return(preference_order_auto)
+
   }
 
   #check if preference_order comes from preference_order()
   if(is.data.frame(preference_order) == TRUE){
+
     if("predictor" %in% names(preference_order)){
+
       preference_order <- preference_order$predictor
+
     } else {
       stop(
-        "collinear::validate_preference_order(): argument 'preference_order' must be a data frame with the column 'predictor'.",
+        function_name,
+        ": argument 'preference_order' must be a data frame with the column 'predictor'.",
         call. = FALSE
       )
     }
@@ -582,7 +602,7 @@ validate_preference_order <- function(
 #'
 #'
 #' @inheritParams collinear
-#' @param function_name (optional, character string) Name of the function performing the check. Default: "collinear::vif_df()"
+#' @param function_name (optional, character string) Name of the function performing the check. Default: "collinear::validate_data_vif()"
 #'
 #' @return character vector: predictors names
 #' @export
@@ -591,7 +611,7 @@ validate_preference_order <- function(
 validate_data_vif <- function(
     df = NULL,
     predictors = NULL,
-    function_name = "collinear::vif_df()",
+    function_name = "collinear::validate_data_vif()",
     quiet = FALSE
 ){
 
@@ -655,6 +675,7 @@ validate_data_vif <- function(
     if(quiet == FALSE){
 
       message(
+        "\n",
         function_name,
         ": no numeric predictors available, skipping VIF-based filtering."
       )
@@ -669,6 +690,7 @@ validate_data_vif <- function(
     if(quiet == FALSE){
 
       message(
+        "\n",
         function_name,
         ": only one predictor available, skipping VIF-based filtering."
       )
@@ -688,6 +710,7 @@ validate_data_vif <- function(
     if(quiet == FALSE){
 
       message(
+        "\n",
         function_name,
         ": these predictors are not numeric and will be ignored: \n - ",
         paste(predictors_lost, collapse = "\n - "),
@@ -711,7 +734,7 @@ validate_data_vif <- function(
 #' If the number of rows in `df` is smaller than 10, an error is issued.
 #'
 #' @inheritParams collinear
-#' @param function_name (optional, character string) Name of the function performing the check. Default: "collinear::cor_df()"
+#' @param function_name (optional, character string) Name of the function performing the check. Default: "collinear::validate_data_cor()"
 #'
 #' @return character vector: predictors names
 #' @export
@@ -720,7 +743,7 @@ validate_data_vif <- function(
 validate_data_cor <- function(
     df = NULL,
     predictors = NULL,
-    function_name = "collinear::cor_df()",
+    function_name = "collinear::validate_data_cor()",
     quiet = FALSE
 ){
 
@@ -750,6 +773,7 @@ validate_data_cor <- function(
     if(quiet == FALSE){
 
       message(
+        "\n",
         function_name,
         ": no predictors available, skipping pairwise correlation filtering."
       )
@@ -763,6 +787,7 @@ validate_data_cor <- function(
     if(quiet == FALSE){
 
       message(
+        "\n",
         function_name,
         ": only one predictor available, skipping pairwise correlation filtering."
       )
@@ -852,7 +877,7 @@ validate_encoding_arguments <- function(
     if(quiet == FALSE){
 
       message(
-        "collinear::target_encoding_lab(): argument 'methods' not valid, resetting it to default values."
+        "\ncollinear::target_encoding_lab(): argument 'methods' not valid, resetting it to default values."
       )
 
     }
@@ -865,7 +890,7 @@ validate_encoding_arguments <- function(
   if(is.logical(overwrite) == FALSE){
 
     if(quiet == FALSE){
-      message("collinear::target_encoding_lab(): argument 'overwrite' must be logical, resetting it to FALSE.")
+      message("\ncollinear::target_encoding_lab(): argument 'overwrite' must be logical, resetting it to FALSE.")
     }
 
     overwrite <- FALSE
@@ -879,7 +904,7 @@ validate_encoding_arguments <- function(
       if(quiet == FALSE){
 
         message(
-          "collinear::target_encoding_lab(): only one encoding method allowed when 'overwrite = TRUE', using method: '",
+          "\ncollinear::target_encoding_lab(): only one encoding method allowed when 'overwrite = TRUE', using method: '",
           methods[1], "'."
         )
 
@@ -893,7 +918,7 @@ validate_encoding_arguments <- function(
 
       if(quiet == FALSE){
 
-        message("collinear::target_encoding_lab(): only one 'white_noise' value allowed when 'overwrite = TRUE', using value: ", white_noise[1], ".")
+        message("\ncollinear::target_encoding_lab(): only one 'white_noise' value allowed when 'overwrite = TRUE', using value: ", white_noise[1], ".")
 
       }
 
@@ -905,7 +930,7 @@ validate_encoding_arguments <- function(
 
       if(quiet == FALSE){
 
-        message("collinear::target_encoding_lab(): only one 'smoothing' value allowed when 'overwrite = TRUE', using value: ", smoothing[1], ".")
+        message("\ncollinear::target_encoding_lab(): only one 'smoothing' value allowed when 'overwrite = TRUE', using value: ", smoothing[1], ".")
 
       }
 
@@ -917,7 +942,7 @@ validate_encoding_arguments <- function(
 
       if(quiet == FALSE){
 
-        message("collinear::target_encoding_lab(): only one 'seed' value allowed when 'overwrite = TRUE', using value: ", seed[1], ".")
+        message("\ncollinear::target_encoding_lab(): only one 'seed' value allowed when 'overwrite = TRUE', using value: ", seed[1], ".")
 
       }
 
@@ -930,7 +955,7 @@ validate_encoding_arguments <- function(
   if(quiet == FALSE){
 
     message(
-      "\n collinear::target_encoding_lab(): encoding categorical predictors:\n - ",
+      "\ncollinear::target_encoding_lab(): encoding categorical predictors:\n - ",
       paste0(
         predictors,
         collapse = "\n - "

@@ -95,13 +95,21 @@ cor_select <- function(
 ){
 
   if(!is.logical(quiet)){
-    message("collinear::cor_select(): argument 'quiet' must be logical, resetting it to FALSE.")
+    message("\ncollinear::cor_select(): argument 'quiet' must be logical, resetting it to FALSE.")
     quiet <- FALSE
   }
 
   #do nothing if one predictor only
   if(is.null(max_cor)){
+
+    if(quiet == FALSE){
+
+      message("\ncollinear::cor_select(): argument 'max_cor' is NULL, skipping pairwise correlation filtering.")
+
+    }
+
     return(predictors)
+
   }
 
   #checking argument max_cor
@@ -113,7 +121,7 @@ cor_select <- function(
 
     if(quiet == FALSE){
 
-      message("collinear::cor_select(): invalid 'max_cor', resetting it to 0.75.")
+      message("\ncollinear::cor_select(): invalid 'max_cor', resetting it to 0.75.")
 
     }
 
@@ -132,19 +140,33 @@ cor_select <- function(
     return(predictors)
   }
 
+  #correlation matrix
   if(quiet == FALSE){
 
-    message("collinear::cor_select(): running pairwise correlation filtering.")
+    message("\ncollinear::cor_select(): computing pairwise correlation matrix.")
 
   }
 
-  #correlation matrix
   m <- cor_matrix(
     df = df,
     predictors = predictors,
     cor_method = cor_method
   ) |>
     abs()
+
+  #test to skip computation if needed
+  if(max(m[upper.tri(x = m)]) <= max_cor){
+
+    if(quiet == FALSE){
+
+      message("\ncollinear::cor_select(): maximum pairwise correlation is <= ", max_cor, ", skipping pairwise correlation filtering.")
+
+    }
+
+    return(predictors)
+
+  }
+
 
   #auto preference order
   #variables with lower sum of correlation with others go higher
@@ -158,15 +180,23 @@ cor_select <- function(
   preference_order <- validate_preference_order(
     predictors = predictors,
     preference_order = preference_order,
-    preference_order_auto = preference_order_auto
+    preference_order_auto = preference_order_auto,
+    function_name = "collinear::cor_select()"
   ) |>
     rev()
+
+
+  if(quiet == FALSE){
+
+    message("\ncollinear::cor_select(): running pairwise correlation filtering.")
+
+  }
 
   #organize the correlation matrix according to preference_order
   m <- m[
     preference_order,
     preference_order
-    ]
+  ]
 
   #set diag to 0
   diag(m) <- 0
@@ -195,7 +225,7 @@ cor_select <- function(
   if(quiet == FALSE){
 
     message(
-      "collinear::cor_select(): the selected predictors are: \n - ",
+      "\ncollinear::cor_select(): selected predictors: \n - ",
       paste(selected, collapse = "\n - ")
     )
 

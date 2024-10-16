@@ -108,7 +108,7 @@ target_encoding_lab <- function(
 
   # quiet ----
   if(!is.logical(quiet)){
-    message("collinear::target_encoding_lab(): argument 'quiet' must be logical, resetting it to FALSE.")
+    message("\ncollinear::target_encoding_lab(): argument 'quiet' must be logical, resetting it to FALSE.")
     quiet <- FALSE
   }
 
@@ -118,7 +118,7 @@ target_encoding_lab <- function(
     if(quiet == FALSE){
 
       message(
-        "collinear::target_encoding_lab(): argument 'encoding_method' is NULL, skipping target encoding."
+        "\ncollinear::target_encoding_lab(): argument 'encoding_method' is NULL, skipping target encoding."
       )
 
     }
@@ -150,7 +150,7 @@ target_encoding_lab <- function(
   if(length(predictors) == 0){
 
     if(quiet == FALSE){
-      message("collinear::target_encoding_lab(): no categorical predictors available, skipping target encoding.")
+      message("\ncollinear::target_encoding_lab(): no categorical predictors available, skipping target encoding.")
     }
 
     return(df)
@@ -168,7 +168,7 @@ target_encoding_lab <- function(
 
     if(quiet == FALSE){
 
-      message("collinear::target_encoding_lab(): argument 'response' is NULL, skipping target-encoding.")
+      message("\ncollinear::target_encoding_lab(): argument 'response' is NULL, skipping target-encoding.")
 
     }
 
@@ -181,7 +181,7 @@ target_encoding_lab <- function(
 
     if(quiet == FALSE){
 
-      message("collinear::target_encoding_lab(): argument 'response' is not numeric, skipping target-encoding.")
+      message("\ncollinear::target_encoding_lab(): argument 'response' is not numeric, skipping target-encoding.")
 
     }
 
@@ -207,7 +207,7 @@ target_encoding_lab <- function(
 
     if(quiet == FALSE){
 
-      message("collinear::target_encoding_lab(): no categorical predictors available, skipping target encoding.")
+      message("\ncollinear::target_encoding_lab(): no categorical predictors available, skipping target encoding.")
 
     }
 

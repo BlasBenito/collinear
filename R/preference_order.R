@@ -136,11 +136,18 @@ preference_order <- function(
 ){
 
   if(!is.logical(quiet)){
-    message("collinear::preference_order(): argument 'quiet' must be logical, resetting it to FALSE.")
+    message("\ncollinear::preference_order(): argument 'quiet' must be logical, resetting it to FALSE.")
     quiet <- FALSE
   }
 
   if(is.null(response)){
+
+    if(quiet == FALSE){
+
+      message("\ncollinear::preference_order(): argument 'response' is NULL, skipping computation of preference order.")
+
+    }
+
     return(NULL)
   }
 
@@ -199,6 +206,12 @@ preference_order <- function(
   p <- progressr::progressor(
     steps = nrow(preference)
   )
+
+  if(quiet == FALSE){
+
+    message("\ncollinear::preference_order(): computing preference order.")
+
+  }
 
   #computing preference order
   preference$preference <- future.apply::future_lapply(

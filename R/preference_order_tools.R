@@ -183,7 +183,7 @@ f_default <- function(
   if(quiet == FALSE){
 
     message(
-      "collinear::f_default(): selected f function: '",
+      "\ncollinear::f_default(): selected f function: '",
       f_name,
       "()'."
     )

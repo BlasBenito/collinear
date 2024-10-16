@@ -134,7 +134,7 @@ vif_select <- function(
 ){
 
   if(!is.logical(quiet)){
-    message("collinear::vif_select(): argument 'quiet' must be logical, resetting it to FALSE.")
+    message("\ncollinear::vif_select(): argument 'quiet' must be logical, resetting it to FALSE.")
     quiet <- FALSE
   }
 
@@ -142,6 +142,13 @@ vif_select <- function(
   #  one predictor only
   #  max_vif is NULL
   if(is.null(max_vif)){
+
+    if(quiet == FALSE){
+
+      message("\ncollinear::vif_select(): argument 'max_vif' is NULL, skipping VIF-based filtering.")
+
+    }
+
     return(predictors)
   }
 
@@ -155,7 +162,7 @@ vif_select <- function(
 
     if(quiet == FALSE){
 
-      message("collinear::vif_select(): invalid 'max_vif', resetting it to 5.")
+      message("\ncollinear::vif_select(): invalid 'max_vif', resetting it to 5.")
 
     }
 
@@ -175,25 +182,41 @@ vif_select <- function(
     return(predictors)
   }
 
-  if(quiet == FALSE){
-
-    message("collinear::vif_select(): running VIF-based filtering.")
-
-  }
-
   #auto preference order
-  #variables with lower sum of cor with others go higher
   preference_order_auto <- vif_df(
     df = df,
     predictors = predictors,
     quiet = quiet
-  )$predictor
+  )
+
+  if(max(preference_order_auto$vif) <= max_vif){
+
+    if(quiet == FALSE){
+
+      message("\ncollinear::vif_select(): maximum VIF is <= ", max_vif, ", skipping VIF-based filtering.")
+
+    }
+
+    return(predictors)
+
+  }
+
+
+  if(quiet == FALSE){
+
+    message("\ncollinear::vif_select(): running VIF-based filtering.")
+
+  }
+
+  #because vif_df returns higher VIF first
+  preference_order_auto <- rev(preference_order_auto$predictor)
 
   #validate preference order
   preference_order <- validate_preference_order(
     predictors = predictors,
     preference_order = preference_order,
-    preference_order_auto = preference_order_auto
+    preference_order_auto = preference_order_auto,
+    function_name = "collinear::vif_select()"
   )
 
   #subset df to preference order
@@ -236,7 +259,7 @@ vif_select <- function(
   if(quiet == FALSE){
 
     message(
-      "collinear::vif_select(): the selected predictors are: \n - ",
+      "\ncollinear::vif_select(): selected predictors: \n - ",
       paste(preference_order_selected, collapse = "\n - ")
     )
 

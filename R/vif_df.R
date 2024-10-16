@@ -40,7 +40,7 @@ vif_df <- function(
 ){
 
   if(!is.logical(quiet)){
-    message("collinear::vif_df(): argument 'quiet' must be logical, resetting it to FALSE.")
+    message("\ncollinear::vif_df(): argument 'quiet' must be logical, resetting it to FALSE.")
     quiet <- FALSE
   }
 
@@ -68,7 +68,10 @@ vif_df <- function(
 
     #arrange by VIF
     df[
-      order(df$vif),
+      order(
+        df$vif,
+        decreasing = TRUE
+        ),
       c("predictor", "vif")
     ]
 
@@ -85,7 +88,7 @@ vif_df <- function(
   #if no numerics, return predictors
   if(length(predictors) == 0){
     if(quiet == FALSE){
-      message("collinear::vif_df(): no numeric predictors available.")
+      message("\ncollinear::vif_df(): no numeric predictors available.")
     }
     return(
       data.frame(

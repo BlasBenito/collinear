@@ -140,7 +140,7 @@
 #' # x <- collinear(
 #' #   df = vi,
 #' #   response = "vi_numeric",
-#' #   predictors = predictors_mixed,
+#' #   predictors = predictors,
 #' #   encoding_method = NULL
 #' # )
 #' #
@@ -245,7 +245,7 @@ collinear <- function(
 ){
 
   if(!is.logical(quiet)){
-    message("collinear::collinear(): argument 'quiet' must be logical, resetting it to FALSE.")
+    message("\ncollinear::collinear(): argument 'quiet' must be logical, resetting it to FALSE.")
     quiet <- FALSE
   }
 
@@ -263,10 +263,7 @@ collinear <- function(
   )
 
   # preference order ----
-  if(
-    is.null(preference_order) &&
-    !is.null(response)
-  ){
+  if(is.null(preference_order)){
 
     preference_order <- preference_order(
       df = df,
@@ -276,11 +273,12 @@ collinear <- function(
       quiet = quiet
     )$predictor
 
-  } else {
+  } else if (
+    is.data.frame(preference_order) &&
+    "predictor" %in% names(preference_order)
+  ){
 
-    if(is.data.frame(preference_order)){
-      preference_order <- preference_order$predictor
-    }
+    preference_order <- preference_order$predictor
 
   }
 
@@ -288,7 +286,7 @@ collinear <- function(
   selection <- predictors
 
   # pairwise correlation filter ----
-  selection <- cor_select(
+  selection.cor <- cor_select(
     df = df,
     predictors = predictors,
     preference_order = preference_order,
@@ -300,14 +298,28 @@ collinear <- function(
   #vif filter
 
   #separate numeric and categorical
-  selection.type <- identify_predictors(
-    df = df,
-    predictors = selection
-  )
+  if(!is.null(max_cor)){
 
+    selection.cor.type <- identify_predictors(
+      df = df,
+      predictors = selection.cor
+    )
+
+    selection.cor.numeric <- selection.cor.type$numeric
+    selection.cor.categorical <- selection.cor.type$categorical
+    preference_order <- selection.cor.numeric
+
+  } else {
+
+    selection.cor.numeric <- predictors
+    selection.cor.categorical <- NULL
+
+  }
+
+  #run vif filtering
   selection.vif <- vif_select(
     df = df,
-    predictors = selection.type$numeric,
+    predictors = selection.cor.numeric,
     preference_order = preference_order,
     max_vif = max_vif,
     quiet = quiet
@@ -316,15 +328,31 @@ collinear <- function(
   #merge selections
   selection <- c(
     selection.vif,
-    selection.type$categorical
+    selection.cor.categorical
   ) |>
     unique() |>
     na.omit()
 
   #order as in preference order
-  if(!is.null(preference_order)){
+  if(all(selection %in% preference_order)){
 
     selection <- selection[order(match(selection, preference_order))]
+
+  }
+
+  #message if vif_select() did nothing
+  if(
+    (
+      length(selection.vif) < length(selection.cor.numeric) ||
+        length(selection) == length(predictors)
+    ) &&
+    quiet == FALSE
+  ){
+
+    message(
+      "\ncollinear::collinear(): selected predictors: \n - ",
+      paste(selection, collapse = "\n - ")
+    )
 
   }
 

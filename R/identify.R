@@ -407,7 +407,7 @@ identify_response_type <- function(
         if(quiet == FALSE){
 
           message(
-            "collinear::identify_response_type(): argument 'response' names a numeric non-integer column with 5 or fewer values. Please consider recoding it as integer or categorical, or select a different response column.",
+            "\ncollinear::identify_response_type(): argument 'response' names a numeric non-integer column with 5 or fewer values. Please consider recoding it as integer or categorical, or select a different response column.",
           )
 
         }
