@@ -32,17 +32,6 @@ x <- collinear(
 
 x
 
-#VIF filtering only
-#--------------------------------
-#  no target encoding
-#  no preference order
-#  only numerics filtered by VIF
-x <- collinear(
-  df = df,
-  predictors = predictors,
-  max_cor = NULL
-)
-
 #all correlations below max_cor
 cor_df(
   df = df,
@@ -54,6 +43,29 @@ cor_df(
 vif_df(
   df = df,
   predictors = x
+)
+
+
+#VIF filtering only
+#--------------------------------
+#  no target encoding
+#  no preference order
+#  only numerics filtered by VIF
+x <- collinear(
+  df = df,
+  predictors = predictors,
+  max_cor = NULL
+)
+
+#correlation filtering only
+#--------------------------------
+#  no target encoding
+#  no preference order
+#  all predictors filtered by correlation
+x <- collinear(
+  df = df,
+  predictors = predictors,
+  max_vif = NULL
 )
 
 
@@ -111,11 +123,11 @@ x <- collinear(
 #  target encoding
 #  automated preference order (different f function)
 #  all predictors filtered by correlation and VIF
-x <- collinear(
-  df = df,
-  response = "vi_binomial",
-  predictors = predictors
-)
+# x <- collinear(
+#   df = df,
+#   response = "vi_binomial",
+#   predictors = predictors
+# )
 
 
 
@@ -125,11 +137,11 @@ x <- collinear(
 #  target encoding
 #  automated preference order (different f function)
 #  all predictors filtered by correlation and VIF
-x <- collinear(
-  df = df,
-  response = "vi_counts",
-  predictors = predictors
-)
+# x <- collinear(
+#   df = df,
+#   response = "vi_counts",
+#   predictors = predictors
+# )
 
 #with categorical response
 #--------------------------------
@@ -138,12 +150,13 @@ x <- collinear(
 #  automated preference order (different f function)
 # all predictors filtered by correlation
 # numeric predictors filtered by VIF
-x <- collinear(
-  df = df,
-  response = "vi_category",
-  predictors = predictors
-)
+# x <- collinear(
+#   df = df,
+#   response = "vi_category",
+#   predictors = predictors
+# )
 
 
 #resetting to sequential processing
 future::plan(future::sequential)
+

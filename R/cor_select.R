@@ -137,7 +137,9 @@ cor_select <- function(
   )
 
   if(length(predictors) <= 1){
+
     return(predictors)
+
   }
 
   #correlation matrix

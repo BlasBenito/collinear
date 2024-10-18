@@ -73,15 +73,14 @@
 #' @return character vector; names of selected predictors
 #'
 #' @examples
-#'
 #' #parallelization setup
 #' future::plan(
 #'   future::multisession,
-#'   workers = 2 #set to parallelly::availableCores() - 1
+#'   workers = 3 #set to parallelly::availableCores() - 1
 #' )
 #'
 #' #progress bar
-#' # progressr::handlers(global = TRUE)
+#' progressr::handlers(global = TRUE)
 #'
 #' #subset to limit example run time
 #' df <- vi[1:1000, ]
@@ -98,12 +97,12 @@
 #' #  no target encoding
 #' #  no preference order
 #' #  all predictors filtered by correlation
-#' #  only numerics filtered by VIF
+#' #  VIF filtering not required
 #' x <- collinear(
 #'   df = df,
 #'   predictors = predictors,
 #'   max_cor = 0.75, #default
-#'   max_vif = 5     #default
+#'   max_vif = 5    #default
 #'   )
 #'
 #' x
@@ -122,6 +121,29 @@
 #' )
 #'
 #'
+#' #VIF filtering only
+#' #--------------------------------
+#' #  no target encoding
+#' #  no preference order
+#' #  only numerics filtered by VIF
+#' # x <- collinear(
+#' #   df = df,
+#' #   predictors = predictors,
+#' #   max_cor = NULL
+#' # )
+#'
+#' #correlation filtering only
+#' #--------------------------------
+#' #  no target encoding
+#' #  no preference order
+#' #  all predictors filtered by correlation
+#' # x <- collinear(
+#' #   df = df,
+#' #   predictors = predictors,
+#' #   max_vif = NULL
+#' # )
+#'
+#'
 #' #with numeric response
 #' #--------------------------------
 #'
@@ -134,17 +156,14 @@
 #'   predictors = predictors
 #' )
 #'
-#' x
-#'
 #' #disabling target encoding
+#' #commented because it is much slower
 #' # x <- collinear(
-#' #   df = vi,
+#' #   df = df,
 #' #   response = "vi_numeric",
 #' #   predictors = predictors,
 #' #   encoding_method = NULL
 #' # )
-#' #
-#' # x
 #'
 #' #with custom preference order
 #' x <- collinear(
@@ -157,8 +176,6 @@
 #'     "koppen_zone"
 #'   )
 #' )
-#'
-#' x
 #'
 #' #with quantitative preference order
 #' preference_df <- preference_order(
@@ -174,7 +191,6 @@
 #'   preference_order = preference_df
 #' )
 #'
-#' x
 #'
 #' #with binomial response
 #' #--------------------------------
@@ -182,13 +198,12 @@
 #' #  target encoding
 #' #  automated preference order (different f function)
 #' #  all predictors filtered by correlation and VIF
-#' x <- collinear(
-#'   df = df,
-#'   response = "vi_binomial",
-#'   predictors = predictors
-#' )
+#' # x <- collinear(
+#' #   df = df,
+#' #   response = "vi_binomial",
+#' #   predictors = predictors
+#' # )
 #'
-#' x
 #'
 #'
 #' #with counts response
@@ -197,13 +212,11 @@
 #' #  target encoding
 #' #  automated preference order (different f function)
 #' #  all predictors filtered by correlation and VIF
-#' x <- collinear(
-#'   df = df,
-#'   response = "vi_counts",
-#'   predictors = predictors
-#' )
-#'
-#' x
+#' # x <- collinear(
+#' #   df = df,
+#' #   response = "vi_counts",
+#' #   predictors = predictors
+#' # )
 #'
 #' #with categorical response
 #' #--------------------------------
@@ -212,13 +225,12 @@
 #' #  automated preference order (different f function)
 #' # all predictors filtered by correlation
 #' # numeric predictors filtered by VIF
-#' x <- collinear(
-#'   df = df,
-#'   response = "vi_category",
-#'   predictors = predictors
-#' )
+#' # x <- collinear(
+#' #   df = df,
+#' #   response = "vi_category",
+#' #   predictors = predictors
+#' # )
 #'
-#' x
 #'
 #' #resetting to sequential processing
 #' future::plan(future::sequential)
@@ -248,6 +260,26 @@ collinear <- function(
     message("\ncollinear::collinear(): argument 'quiet' must be logical, resetting it to FALSE.")
     quiet <- FALSE
   }
+
+  #validate df
+  df <- validate_df(
+    df = df,
+    quiet = quiet
+  )
+
+  #validate response
+  response <- validate_response(
+    df = df,
+    response = response,
+    quiet = quiet
+  )
+
+  #validate predictors
+  predictors <- validate_predictors(
+    df = df,
+    response = response,
+    predictors = predictors
+  )
 
   # target encoding ----
   #ignored if:
@@ -282,11 +314,8 @@ collinear <- function(
 
   }
 
-  #starting selection vector
-  selection <- predictors
-
   # pairwise correlation filter ----
-  selection.cor <- cor_select(
+  selection <- cor_select(
     df = df,
     predictors = predictors,
     preference_order = preference_order,
@@ -297,29 +326,29 @@ collinear <- function(
 
   #vif filter
 
-  #separate numeric and categorical
-  if(!is.null(max_cor)){
+  #initialize selection.numeric
+  selection.numeric <- selection
+  selection.categorical <- NULL
 
-    selection.cor.type <- identify_predictors(
+  #if cor_select() filtered predictors
+  if(is.null(max_cor) == FALSE){
+
+    #separate numeric and categorical
+    selection.type <- identify_predictors(
       df = df,
-      predictors = selection.cor
+      predictors = selection
     )
 
-    selection.cor.numeric <- selection.cor.type$numeric
-    selection.cor.categorical <- selection.cor.type$categorical
-    preference_order <- selection.cor.numeric
-
-  } else {
-
-    selection.cor.numeric <- predictors
-    selection.cor.categorical <- NULL
+    #store numeric and categorical
+    selection.numeric <- selection.type$numeric
+    selection.categorical <- selection.type$categorical
 
   }
 
   #run vif filtering
   selection.vif <- vif_select(
     df = df,
-    predictors = selection.cor.numeric,
+    predictors = selection.numeric,
     preference_order = preference_order,
     max_vif = max_vif,
     quiet = quiet
@@ -328,24 +357,22 @@ collinear <- function(
   #merge selections
   selection <- c(
     selection.vif,
-    selection.cor.categorical
+    selection.categorical
   ) |>
     unique() |>
     na.omit()
 
   #order as in preference order
   if(all(selection %in% preference_order)){
-
     selection <- selection[order(match(selection, preference_order))]
-
   }
 
   #message if vif_select() did nothing
   if(
     (
-      length(selection.vif) < length(selection.cor.numeric) ||
-        length(selection) == length(predictors)
-    ) &&
+      !is.null(selection.categorical) &&
+      !all(selection.vif %in% selection)
+      ) &&
     quiet == FALSE
   ){
 
@@ -355,6 +382,11 @@ collinear <- function(
     )
 
   }
+
+  attr(
+    x = selection,
+    which = "validated"
+  ) <- TRUE
 
   selection
 

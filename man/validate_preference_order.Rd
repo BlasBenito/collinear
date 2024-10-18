@@ -7,7 +7,9 @@
 validate_preference_order(
   predictors = NULL,
   preference_order = NULL,
-  preference_order_auto = NULL
+  preference_order_auto = NULL,
+  function_name = "collinear::validate_preference_order()",
+  quiet = FALSE
 )
 }
 \arguments{
@@ -16,6 +18,10 @@ validate_preference_order(
 \item{preference_order}{(optional; character vector) Variable names in \code{predictors}. Defines a priority order, from first to last, to preserve variables during the selection process. Variables not included in this argument are ranked by their Variance Inflation Factor. See \code{\link[=preference_order]{preference_order()}}. Default: NULL}
 
 \item{preference_order_auto}{(required, character vector) names of the predictors in the automated preference order returned by \code{\link[=vif_select]{vif_select()}} or \code{\link[=cor_select]{cor_select()}}}
+
+\item{function_name}{(optional, character string) Name of the function performing the check. Default: "collinear::validate_preference_order()"}
+
+\item{quiet}{(optional; logical) If FALSE, messages generated during the execution of the function are printed to the console Default: FALSE}
 }
 \value{
 character vector: ranked variable names

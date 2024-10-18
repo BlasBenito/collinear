@@ -110,15 +110,14 @@ If \code{preference_order} is defined, whenever two or more variables are above 
 }
 
 \examples{
-
 #parallelization setup
 future::plan(
   future::multisession,
-  workers = 2 #set to parallelly::availableCores() - 1
+  workers = 3 #set to parallelly::availableCores() - 1
 )
 
 #progress bar
-# progressr::handlers(global = TRUE)
+progressr::handlers(global = TRUE)
 
 #subset to limit example run time
 df <- vi[1:1000, ]
@@ -135,12 +134,12 @@ sapply(
 #  no target encoding
 #  no preference order
 #  all predictors filtered by correlation
-#  only numerics filtered by VIF
+#  VIF filtering not required
 x <- collinear(
   df = df,
   predictors = predictors,
   max_cor = 0.75, #default
-  max_vif = 5     #default
+  max_vif = 5    #default
   )
 
 x
@@ -159,6 +158,29 @@ vif_df(
 )
 
 
+#VIF filtering only
+#--------------------------------
+#  no target encoding
+#  no preference order
+#  only numerics filtered by VIF
+# x <- collinear(
+#   df = df,
+#   predictors = predictors,
+#   max_cor = NULL
+# )
+
+#correlation filtering only
+#--------------------------------
+#  no target encoding
+#  no preference order
+#  all predictors filtered by correlation
+# x <- collinear(
+#   df = df,
+#   predictors = predictors,
+#   max_vif = NULL
+# )
+
+
 #with numeric response
 #--------------------------------
 
@@ -171,17 +193,14 @@ x <- collinear(
   predictors = predictors
 )
 
-x
-
 #disabling target encoding
+#commented because it is much slower
 # x <- collinear(
-#   df = vi,
+#   df = df,
 #   response = "vi_numeric",
-#   predictors = predictors_mixed,
+#   predictors = predictors,
 #   encoding_method = NULL
 # )
-#
-# x
 
 #with custom preference order
 x <- collinear(
@@ -194,8 +213,6 @@ x <- collinear(
     "koppen_zone"
   )
 )
-
-x
 
 #with quantitative preference order
 preference_df <- preference_order(
@@ -211,7 +228,6 @@ x <- collinear(
   preference_order = preference_df
 )
 
-x
 
 #with binomial response
 #--------------------------------
@@ -219,13 +235,12 @@ x
 #  target encoding
 #  automated preference order (different f function)
 #  all predictors filtered by correlation and VIF
-x <- collinear(
-  df = df,
-  response = "vi_binomial",
-  predictors = predictors
-)
+# x <- collinear(
+#   df = df,
+#   response = "vi_binomial",
+#   predictors = predictors
+# )
 
-x
 
 
 #with counts response
@@ -234,13 +249,11 @@ x
 #  target encoding
 #  automated preference order (different f function)
 #  all predictors filtered by correlation and VIF
-x <- collinear(
-  df = df,
-  response = "vi_counts",
-  predictors = predictors
-)
-
-x
+# x <- collinear(
+#   df = df,
+#   response = "vi_counts",
+#   predictors = predictors
+# )
 
 #with categorical response
 #--------------------------------
@@ -249,13 +262,12 @@ x
 #  automated preference order (different f function)
 # all predictors filtered by correlation
 # numeric predictors filtered by VIF
-x <- collinear(
-  df = df,
-  response = "vi_category",
-  predictors = predictors
-)
+# x <- collinear(
+#   df = df,
+#   response = "vi_category",
+#   predictors = predictors
+# )
 
-x
 
 #resetting to sequential processing
 future::plan(future::sequential)

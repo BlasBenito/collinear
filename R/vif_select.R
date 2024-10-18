@@ -179,7 +179,9 @@ vif_select <- function(
 
   #if no numerics, return predictors
   if(length(predictors) <= 1){
+
     return(predictors)
+
   }
 
   #auto preference order
