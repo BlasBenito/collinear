@@ -27,7 +27,8 @@
 #' Accepts a parallelization setup via [future::plan()] and a progress bar via [progressr::handlers()] (see examples).
 #'
 #' @inheritParams collinear
-#' @param methods (optional; character vector or NULL). Name of the target encoding methods. If NULL, target encoding is ignored, and `df` is returned with no modification. Default: c("mean", "loo", rank")
+#' @param response (optional, character string) Name of a numeric response variable in `df`. Default: NULL.
+#' @param methods (optional; character vector or NULL). Name of the target encoding methods. If NULL, target encoding is ignored, and `df` is returned with no modification. Default: c("loo", "mean", "rank")
 #' @param smoothing (optional; integer vector) Argument of the method "mean". Groups smaller than this number have their means pulled towards the mean of the response across all cases. Default: 0
 #' @param white_noise (optional; numeric vector) Argument of the methods "mean", "rank", and "loo". Maximum white noise to add, expressed as a fraction of the range of the response variable. Range from 0 to 1. Default: `0`.
 #' @param seed (optional; integer vector) Random seed to facilitate reproducibility when `white_noise` is not 0. If NULL, the function selects one at random, and the selected seed does not appear in the encoded variable names. Default: 0
@@ -79,8 +80,8 @@ target_encoding_lab <- function(
     response = NULL,
     predictors = NULL,
     methods = c(
-      "mean",
       "loo",
+      "mean",
       "rank"
     ),
     smoothing = 0,
@@ -89,21 +90,6 @@ target_encoding_lab <- function(
     overwrite = FALSE,
     quiet = FALSE
 ){
-
-  #dev args
-  # df <- vi[1:1000, ]
-  # response <- "vi_numeric"
-  # predictors <- vi_predictors_categorical[1:2]
-  # methods <- c(
-  #   "mean",
-  #   "loo",
-  #   "rank"
-  # )
-  # smoothing <- c(10, 20)
-  # white_noise <- c(0.1, 0.2)
-  # seed <- c(1, 2)
-  # overwrite <- TRUE
-  # quiet <- FALSE
 
 
   # quiet ----

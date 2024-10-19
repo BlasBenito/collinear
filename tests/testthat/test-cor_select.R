@@ -65,7 +65,8 @@ testthat::test_that("`cor_select()` works", {
     df = df,
     response = "vi_numeric",
     predictors = predictors,
-    quiet = TRUE
+    quiet = TRUE,
+    warn_limit = NULL
   )
 
   x <- cor_select(

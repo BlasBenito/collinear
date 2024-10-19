@@ -8,7 +8,7 @@ target_encoding_lab(
   df = NULL,
   response = NULL,
   predictors = NULL,
-  methods = c("mean", "loo", "rank"),
+  methods = c("loo", "mean", "rank"),
   smoothing = 0,
   white_noise = 0,
   seed = 0,
@@ -19,11 +19,11 @@ target_encoding_lab(
 \arguments{
 \item{df}{(required; data frame, tibble, or sf) A data frame with numeric predictors, and optionally a numeric response and categorical predictors. Default: NULL.}
 
-\item{response}{(optional, character string) Name of a numeric (non-numerics are ignored) response variable in \code{df}, only required if there are categorical variables named in the argument \code{predictors}. Default: NULL.}
+\item{response}{(optional, character string) Name of a numeric response variable in \code{df}. Default: NULL.}
 
 \item{predictors}{(optional; character vector) Names of the variables to select from \code{df}. If omitted, all numeric columns in \code{df} are used instead. If argument \code{response} is not provided, non-numeric variables are ignored. Default: NULL}
 
-\item{methods}{(optional; character vector or NULL). Name of the target encoding methods. If NULL, target encoding is ignored, and \code{df} is returned with no modification. Default: c("mean", "loo", rank")}
+\item{methods}{(optional; character vector or NULL). Name of the target encoding methods. If NULL, target encoding is ignored, and \code{df} is returned with no modification. Default: c("loo", "mean", "rank")}
 
 \item{smoothing}{(optional; integer vector) Argument of the method "mean". Groups smaller than this number have their means pulled towards the mean of the response across all cases. Default: 0}
 

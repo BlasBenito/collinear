@@ -41,7 +41,7 @@ data frame; pairwise correlation
 Computes a pairwise correlation data frame. Implements methods to compare different types of predictors:
 \itemize{
 \item \strong{numeric vs. numeric}: as computed with \code{\link[stats:cor]{stats::cor()}} using the methods "pearson" or "spearman", via \code{\link[=cor_numeric_vs_numeric]{cor_numeric_vs_numeric()}}.
-\item \strong{numeric vs. categorical}: the function \code{\link[=cor_numeric_vs_categorical]{cor_numeric_vs_categorical()}} target-encodes the categorical variable using the numeric variable as reference with \code{\link[=target_encoding_lab]{target_encoding_lab()}} and the method "mean", and then their correlation is computed with \code{\link[stats:cor]{stats::cor()}}.
+\item \strong{numeric vs. categorical}: the function \code{\link[=cor_numeric_vs_categorical]{cor_numeric_vs_categorical()}} target-encodes the categorical variable using the numeric variable as reference with \code{\link[=target_encoding_lab]{target_encoding_lab()}} and the method "loo" (leave-one-out), and then their correlation is computed with \code{\link[stats:cor]{stats::cor()}}.
 \item \strong{categorical vs. categorical}: the function \code{\link[=cor_categorical_vs_categorical]{cor_categorical_vs_categorical()}} computes Cramer's V (see \code{\link[=cramer_v]{cramer_v()}}) as indicator of the association between character or factor variables. However, take in mind that Cramer's V is not directly comparable with R-squared, even when having the same range from zero to one. It is always recommended to target-encode categorical variables with \code{\link[=target_encoding_lab]{target_encoding_lab()}} before the pairwise correlation analysis.
 }
 

@@ -34,7 +34,7 @@
 #' x <- cor_select(
 #'   df = df,
 #'   predictors = predictors,
-#'   max_cor = 0.75
+#'   cor_max = 0.75
 #' )
 #'
 #' x
@@ -47,13 +47,13 @@
 #'     "swi_mean",
 #'     "soil_type"
 #'   ),
-#'   max_cor = 0.75
+#'   cor_max = 0.75
 #' )
 #'
 #' x
 #'
 #' #soil_type dissappears because its correlation
-#' #with swi_mean is above max_cor
+#' #with swi_mean is above cor_max
 #' cor_df(
 #'   df = df,
 #'   predictors = c(
@@ -74,7 +74,7 @@
 #'   df = df,
 #'   predictors = predictors,
 #'   preference_order = df_preference,
-#'   max_cor = 0.75
+#'   cor_max = 0.75
 #' )
 #'
 #' x
@@ -90,7 +90,7 @@ cor_select <- function(
     predictors = NULL,
     preference_order = NULL,
     cor_method = "pearson",
-    max_cor = 0.75,
+    cor_max = 0.75,
     quiet = FALSE
 ){
 
@@ -100,11 +100,11 @@ cor_select <- function(
   }
 
   #do nothing if one predictor only
-  if(is.null(max_cor)){
+  if(is.null(cor_max)){
 
     if(quiet == FALSE){
 
-      message("\ncollinear::cor_select(): argument 'max_cor' is NULL, skipping pairwise correlation filtering.")
+      message("\ncollinear::cor_select(): argument 'cor_max' is NULL, skipping pairwise correlation filtering.")
 
     }
 
@@ -112,20 +112,20 @@ cor_select <- function(
 
   }
 
-  #checking argument max_cor
+  #checking argument cor_max
   if(
-    !is.numeric(max_cor) ||
-    length(max_cor) != 1 ||
-    max_cor < 0.1 ||
-    max_cor > 1){
+    !is.numeric(cor_max) ||
+    length(cor_max) != 1 ||
+    cor_max < 0.1 ||
+    cor_max > 1){
 
     if(quiet == FALSE){
 
-      message("\ncollinear::cor_select(): invalid 'max_cor', resetting it to 0.75.")
+      message("\ncollinear::cor_select(): invalid 'cor_max', resetting it to 0.75.")
 
     }
 
-    max_cor <- 0.75
+    cor_max <- 0.75
   }
 
   #validate input data
@@ -137,9 +137,7 @@ cor_select <- function(
   )
 
   if(length(predictors) <= 1){
-
     return(predictors)
-
   }
 
   #correlation matrix
@@ -157,11 +155,11 @@ cor_select <- function(
     abs()
 
   #test to skip computation if needed
-  if(max(m[upper.tri(x = m)]) <= max_cor){
+  if(max(m[upper.tri(x = m)]) <= cor_max){
 
     if(quiet == FALSE){
 
-      message("\ncollinear::cor_select(): maximum pairwise correlation is <= ", max_cor, ", skipping pairwise correlation filtering.")
+      message("\ncollinear::cor_select(): maximum pairwise correlation is <= ", cor_max, ", skipping pairwise correlation filtering.")
 
     }
 
@@ -183,7 +181,8 @@ cor_select <- function(
     predictors = predictors,
     preference_order = preference_order,
     preference_order_auto = preference_order_auto,
-    function_name = "collinear::cor_select()"
+    function_name = "collinear::cor_select()",
+    quiet = quiet
   ) |>
     rev()
 
@@ -206,10 +205,11 @@ cor_select <- function(
   #vector of selected variables
   selected <- preference_order
 
+  #iterate over candidate variables
   for(candidate in preference_order){
 
     #if candidate vs selected is over the cor threshold
-    if(max(m[selected, candidate]) > max_cor){
+    if(max(m[selected, candidate]) > cor_max){
 
       #remove candidate
       selected <- setdiff(

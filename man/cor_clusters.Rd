@@ -8,7 +8,7 @@ cor_clusters(
   df = NULL,
   predictors = NULL,
   cor_method = "pearson",
-  max_cor = 0.75,
+  cor_max = 0.75,
   method = "complete",
   plot = FALSE
 )
@@ -20,7 +20,7 @@ cor_clusters(
 
 \item{cor_method}{(optional; character string) Method used to compute pairwise correlations. Either "pearson" or "spearman". Default: "pearson".}
 
-\item{max_cor}{(optional; numeric) Maximum correlation allowed between any pair of variables in \code{predictors}. Recommended values are between 0.5 and 0.9. Higher values return larger number of predictors with a higher multicollinearity. If NULL, the pairwise correlation analysis is disabled. Default: \code{0.75}}
+\item{cor_max}{(optional; numeric) Maximum correlation allowed between any pair of variables in \code{predictors}. Recommended values are between 0.5 and 0.9. Higher values return larger number of predictors with a higher multicollinearity. If NULL, the pairwise correlation analysis is disabled. Default: \code{0.75}}
 
 \item{method}{(optional, character string) Argument of \code{\link[stats:hclust]{stats::hclust()}} defining the agglomerative method. One of: "ward.D", "ward.D2", "single", "complete", "average" (= UPGMA), "mcquitty" (= WPGMA), "median" (= WPGMC) or "centroid" (= UPGMC). Unambiguous abbreviations are accepted as well. Default: "complete".}
 
@@ -30,7 +30,7 @@ cor_clusters(
 data frame: predictor names and their clusters
 }
 \description{
-Hierarchical clustering of predictors from their pairwise correlation matrix. Computes the correlation matrix with \code{\link[=cor_df]{cor_df()}} and \code{\link[=cor_matrix]{cor_matrix()}}, transforms it to a dist object, computes a clustering solution with \code{\link[stats:hclust]{stats::hclust()}}, and applies \code{\link[stats:cutree]{stats::cutree()}} to separate groups based on the value of the argument \code{max_cor}.
+Hierarchical clustering of predictors from their pairwise correlation matrix. Computes the correlation matrix with \code{\link[=cor_df]{cor_df()}} and \code{\link[=cor_matrix]{cor_matrix()}}, transforms it to a dist object, computes a clustering solution with \code{\link[stats:hclust]{stats::hclust()}}, and applies \code{\link[stats:cutree]{stats::cutree()}} to separate groups based on the value of the argument \code{cor_max}.
 
 Returns a data frame with predictor names and their clusters, and optionally, prints a dendrogram of the clustering solution.
 

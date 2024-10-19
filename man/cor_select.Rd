@@ -9,7 +9,7 @@ cor_select(
   predictors = NULL,
   preference_order = NULL,
   cor_method = "pearson",
-  max_cor = 0.75,
+  cor_max = 0.75,
   quiet = FALSE
 )
 }
@@ -22,12 +22,15 @@ cor_select(
 
 \item{cor_method}{(optional; character string) Method used to compute pairwise correlations. Either "pearson" or "spearman". Default: "pearson".}
 
-\item{max_cor}{(optional; numeric) Maximum correlation allowed between any pair of variables in \code{predictors}. Recommended values are between 0.5 and 0.9. Higher values return larger number of predictors with a higher multicollinearity. If NULL, the pairwise correlation analysis is disabled. Default: \code{0.75}}
+\item{cor_max}{(optional; numeric) Maximum correlation allowed between any pair of variables in \code{predictors}. Recommended values are between 0.5 and 0.9. Higher values return larger number of predictors with a higher multicollinearity. If NULL, the pairwise correlation analysis is disabled. Default: \code{0.75}}
 
 \item{quiet}{(optional; logical) If FALSE, messages generated during the execution of the function are printed to the console Default: FALSE}
 }
 \value{
-character vector; names of selected predictors
+\itemize{
+\item character vector if \code{response} is NULL or is a string.
+\item named list if \code{response} is a character vector.
+}
 }
 \description{
 Implements a recursive forward selection algorithm to keep predictors with a maximum pairwise correlation with all other selected predictors lower than a given threshold. Uses \code{\link[=cor_df]{cor_df()}} underneath, and as such, can handle diferent combinations of predictor types.
@@ -37,11 +40,11 @@ Please check the section \strong{Pairwise Correlation Filtering} at the end of t
 \section{Pairwise Correlation Filtering}{
 
 
-The function \code{\link[=cor_select]{cor_select()}} applies a recursive forward selection algorithm to keep predictors with a maximum Pearson correlation with all other selected predictors lower than \code{max_cor}.
+The function \code{\link[=cor_select]{cor_select()}} applies a recursive forward selection algorithm to keep predictors with a maximum Pearson correlation with all other selected predictors lower than \code{cor_max}.
 
 If the argument \code{preference_order} is not provided, the predictors are ranked from lower to higher sum of absolute pairwise correlation with all other predictors.
 
-If \code{preference_order} is defined, whenever two or more variables are above \code{max_cor}, the one higher in \code{preference_order} is preserved. For example, for the predictors and preference order \eqn{a} and \eqn{b}, if their correlation is higher than \code{max_cor}, then \eqn{b} will be removed and \eqn{a} preserved. If their correlation is lower than \code{max_cor}, then both are preserved.
+If \code{preference_order} is defined, whenever two or more variables are above \code{cor_max}, the one higher in \code{preference_order} is preserved. For example, for the predictors and preference order \eqn{a} and \eqn{b}, if their correlation is higher than \code{cor_max}, then \eqn{b} will be removed and \eqn{a} preserved. If their correlation is lower than \code{cor_max}, then both are preserved.
 }
 
 \examples{
@@ -68,7 +71,7 @@ future::plan(
 x <- cor_select(
   df = df,
   predictors = predictors,
-  max_cor = 0.75
+  cor_max = 0.75
 )
 
 x
@@ -81,13 +84,13 @@ x <- cor_select(
     "swi_mean",
     "soil_type"
   ),
-  max_cor = 0.75
+  cor_max = 0.75
 )
 
 x
 
 #soil_type dissappears because its correlation
-#with swi_mean is above max_cor
+#with swi_mean is above cor_max
 cor_df(
   df = df,
   predictors = c(
@@ -108,7 +111,7 @@ x <- cor_select(
   df = df,
   predictors = predictors,
   preference_order = df_preference,
-  max_cor = 0.75
+  cor_max = 0.75
 )
 
 x

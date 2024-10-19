@@ -17,7 +17,7 @@ validate_encoding_arguments(
 \arguments{
 \item{predictors}{(optional; character vector) Names of the variables to select from \code{df}. If omitted, all numeric columns in \code{df} are used instead. If argument \code{response} is not provided, non-numeric variables are ignored. Default: NULL}
 
-\item{methods}{(optional; character vector or NULL). Name of the target encoding methods. If NULL, target encoding is ignored, and \code{df} is returned with no modification. Default: c("mean", "loo", rank")}
+\item{methods}{(optional; character vector or NULL). Name of the target encoding methods. If NULL, target encoding is ignored, and \code{df} is returned with no modification. Default: c("loo", "mean", "rank")}
 
 \item{smoothing}{(optional; integer vector) Argument of the method "mean". Groups smaller than this number have their means pulled towards the mean of the response across all cases. Default: 0}
 

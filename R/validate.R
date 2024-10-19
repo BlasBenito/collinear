@@ -224,6 +224,19 @@ validate_predictors <- function(
 
   } else {
 
+    #remove response from predictors
+    if(
+      !is.null(response) &&
+      response %in% predictors
+      ){
+
+      predictors <- setdiff(
+        x = predictors,
+        y = response
+      )
+
+    }
+
     #identify wrongly named predictors
     predictors.missing <- setdiff(
       x = predictors,

@@ -55,9 +55,10 @@ testthat::test_that("`collinear()` works", {
   preference_order <- preference_order(
     df = df,
     response = "vi_numeric",
-    predictors = predictors
-  ) |>
-    suppressMessages()
+    predictors = predictors,
+    warn_limit = NULL,
+    quiet = TRUE
+  )
 
   x <- collinear(
     df = df,
@@ -88,10 +89,22 @@ testthat::test_that("`collinear()` works", {
       df = df,
       response = "vi_numeric",
       predictors = predictors,
-      quiet = FALSE
+      quiet = FALSE,
+      preference_warn_limit = NULL
     )
   ) |>
     suppressMessages()
+
+  testthat::expect_warning(
+    x <- collinear(
+      df = df,
+      response = "vi_numeric",
+      predictors = predictors,
+      quiet = TRUE,
+      preference_warn_limit = 0.8
+    )
+  ) |>
+    suppressWarnings()
 
   testthat::expect_true(
     is.character(x)
@@ -111,7 +124,8 @@ testthat::test_that("`collinear()` works", {
       df = df,
       response = "vi_binomial",
       predictors = predictors,
-      quiet = FALSE
+      quiet = FALSE,
+      preference_warn_limit = NULL
     )
   ) |>
     suppressMessages()
@@ -133,7 +147,8 @@ testthat::test_that("`collinear()` works", {
       df = df,
       response = "vi_counts",
       predictors = predictors,
-      quiet = FALSE
+      quiet = FALSE,
+      preference_warn_limit = NULL
     )
   ) |>
     suppressMessages()
@@ -155,7 +170,8 @@ testthat::test_that("`collinear()` works", {
       df = df,
       response = "vi_category",
       predictors = predictors,
-      quiet = FALSE
+      quiet = FALSE,
+      preference_warn_limit = NULL
     )
   ) |>
     suppressMessages()
@@ -177,7 +193,8 @@ testthat::test_that("`collinear()` works", {
       df = df,
       response = "vi_factor",
       predictors = predictors,
-      quiet = FALSE
+      quiet = FALSE,
+      preference_warn_limit = NULL
     )
   ) |>
     suppressMessages()
@@ -203,8 +220,9 @@ testthat::test_that("`collinear()` works", {
       response = "vi_numeric",
       predictors = predictors,
       encoding_method = NULL,
-      max_vif = NULL,
-      quiet = FALSE
+      vif_max = NULL,
+      quiet = FALSE,
+      preference_warn_limit = NULL
     )
   ) |>
     suppressMessages()
@@ -216,7 +234,8 @@ testthat::test_that("`collinear()` works", {
       preference_order = preference_order(
         df = df,
         response = "vi_numeric",
-        predictors = predictors
+        predictors = predictors,
+        warn_limit = NULL
       ),
       quiet = FALSE
     )
@@ -244,8 +263,9 @@ testthat::test_that("`collinear()` works", {
       predictors = predictors,
       preference_order = preference_order,
       encoding_method = NULL,
-      max_cor = NULL,
-      quiet = FALSE
+      cor_max = NULL,
+      quiet = FALSE,
+      preference_warn_limit = NULL
     )
   ) |>
     suppressMessages()
@@ -272,7 +292,8 @@ testthat::test_that("`collinear()` works", {
       df = df,
       response = "vi_factor",
       predictors = predictors,
-      quiet = FALSE
+      quiet = FALSE,
+      preference_warn_limit = NULL
     )
   ) |>
     suppressMessages()

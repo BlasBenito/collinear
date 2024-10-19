@@ -8,27 +8,30 @@ collinear(
   df = NULL,
   response = NULL,
   predictors = NULL,
-  encoding_method = "mean",
+  encoding_method = "loo",
   preference_order = NULL,
-  f = NULL,
+  preference_warn_limit = 0.8,
+  preference_f = NULL,
   cor_method = "pearson",
-  max_cor = 0.75,
-  max_vif = 5,
+  cor_max = 0.75,
+  vif_max = 5,
   quiet = FALSE
 )
 }
 \arguments{
 \item{df}{(required; data frame, tibble, or sf) A data frame with numeric predictors, and optionally a numeric response and categorical predictors. Default: NULL.}
 
-\item{response}{(optional, character string) Name of a numeric (non-numerics are ignored) response variable in \code{df}, only required if there are categorical variables named in the argument \code{predictors}. Default: NULL.}
+\item{response}{(optional, character string or vector) Name/s of response variable/s in \code{df}. Used in target encoding when it names a numeric variable, and in the computation of preference order if \code{preference_order = NULL}. Default: NULL.}
 
 \item{predictors}{(optional; character vector) Names of the variables to select from \code{df}. If omitted, all numeric columns in \code{df} are used instead. If argument \code{response} is not provided, non-numeric variables are ignored. Default: NULL}
 
-\item{encoding_method}{(optional; character string). Name of the target encoding method. One of: "mean" (default), "rank", "loo". If NULL, target encoding is disabled. Default: "mean"}
+\item{encoding_method}{(optional; character string). Name of the target encoding method. One of: "loo", "mean", or "rank". If NULL, target encoding is disabled. Default: "loo"}
 
 \item{preference_order}{(optional; character vector) Variable names in \code{predictors}. Defines a priority order, from first to last, to preserve variables during the selection process. Variables not included in this argument are ranked by their Variance Inflation Factor. See \code{\link[=preference_order]{preference_order()}}. Default: NULL}
 
-\item{f}{(optional: function) Function to compute preference order. If NULL (default), the output of \code{\link[=f_default]{f_default()}} for the given data is used:
+\item{preference_warn_limit}{(optional, numeric) Preference value (R-squared, AUC, or Cramer's V) over which a warning flagging suspicious predictors is issued. Disabled if NULL. Default: 0.8}
+
+\item{preference_f}{(optional: function) Function to compute preference order. If NULL (default), the output of \code{\link[=f_default]{f_default()}} for the given data is used:
 \itemize{
 \item \code{\link[=f_auc_rf]{f_auc_rf()}}: \code{response} is binomial.
 \item \code{\link[=f_r2_pearson]{f_r2_pearson()}}: \code{response} and \code{predictors} are numeric.
@@ -40,14 +43,17 @@ Default: NULL}
 
 \item{cor_method}{(optional; character string) Method used to compute pairwise correlations. Either "pearson" or "spearman". Default: "pearson".}
 
-\item{max_cor}{(optional; numeric) Maximum correlation allowed between any pair of variables in \code{predictors}. Recommended values are between 0.5 and 0.9. Higher values return larger number of predictors with a higher multicollinearity. If NULL, the pairwise correlation analysis is disabled. Default: \code{0.75}}
+\item{cor_max}{(optional; numeric) Maximum correlation allowed between any pair of variables in \code{predictors}. Recommended values are between 0.5 and 0.9. Higher values return larger number of predictors with a higher multicollinearity. If NULL, the pairwise correlation analysis is disabled. Default: \code{0.75}}
 
-\item{max_vif}{(optional, numeric) Maximum Variance Inflation Factor allowed during variable selection. Recommended values are between 2.5 and 10. Higher values return larger number of predictors with a higher multicollinearity. If NULL, the variance inflation analysis is disabled. Default: 5.}
+\item{vif_max}{(optional, numeric) Maximum Variance Inflation Factor allowed during variable selection. Recommended values are between 2.5 and 10. Higher values return larger number of predictors with a higher multicollinearity. If NULL, the variance inflation analysis is disabled. Default: 5.}
 
 \item{quiet}{(optional; logical) If FALSE, messages generated during the execution of the function are printed to the console Default: FALSE}
 }
 \value{
-character vector; names of selected predictors
+\itemize{
+\item character vector if \code{response} is NULL or is a string.
+\item named list if \code{response} is a character vector.
+}
 }
 \description{
 Automates multicollinearity management in data frames with numeric and non-numeric predictors by combining four methods:
@@ -59,6 +65,8 @@ Automates multicollinearity management in data frames with numeric and non-numer
 }
 
 Accepts a parallelization setup via \code{\link[future:plan]{future::plan()}} and a progress bar via \code{\link[progressr:handlers]{progressr::handlers()}} (see examples).
+
+Unlike all other package functions, \code{collinear()} accepts a character vector as input for the argument \code{response}. When more than one response is provided, the output is a named list, with each element named after the given response contains a character vector of filtered predictors.
 }
 \section{Target Encoding}{
 
@@ -92,21 +100,21 @@ The range of VIF values is (1, Inf]. The recommended thresholds for maximum VIF 
 \section{VIF-based Filtering}{
 
 
-The function \code{\link[=vif_select]{vif_select()}} computes Variance Inflation Factors and removes variables iteratively, until all variables in the resulting selection have a VIF below \code{max_vif}.
+The function \code{\link[=vif_select]{vif_select()}} computes Variance Inflation Factors and removes variables iteratively, until all variables in the resulting selection have a VIF below \code{vif_max}.
 
-If the argument \code{preference_order} is not provided, all variables are ranked from lower to higher VIF, as returned by \code{\link[=vif_df]{vif_df()}}, and the variable with the higher VIF above \code{max_vif} is removed on each iteration.
+If the argument \code{preference_order} is not provided, all variables are ranked from lower to higher VIF, as returned by \code{\link[=vif_df]{vif_df()}}, and the variable with the higher VIF above \code{vif_max} is removed on each iteration.
 
-If \code{preference_order} is defined, whenever two or more variables are above \code{max_vif}, the one higher in \code{preference_order} is preserved, and the next one with a higher VIF is removed. For example, for the predictors and preference order \eqn{a} and \eqn{b}, if any of their VIFs is higher than \code{max_vif}, then \eqn{b} will be removed no matter whether its VIF is lower or higher than \eqn{a}'s VIF. If their VIF scores are lower than \code{max_vif}, then both are preserved.
+If \code{preference_order} is defined, whenever two or more variables are above \code{vif_max}, the one higher in \code{preference_order} is preserved, and the next one with a higher VIF is removed. For example, for the predictors and preference order \eqn{a} and \eqn{b}, if any of their VIFs is higher than \code{vif_max}, then \eqn{b} will be removed no matter whether its VIF is lower or higher than \eqn{a}'s VIF. If their VIF scores are lower than \code{vif_max}, then both are preserved.
 }
 
 \section{Pairwise Correlation Filtering}{
 
 
-The function \code{\link[=cor_select]{cor_select()}} applies a recursive forward selection algorithm to keep predictors with a maximum Pearson correlation with all other selected predictors lower than \code{max_cor}.
+The function \code{\link[=cor_select]{cor_select()}} applies a recursive forward selection algorithm to keep predictors with a maximum Pearson correlation with all other selected predictors lower than \code{cor_max}.
 
 If the argument \code{preference_order} is not provided, the predictors are ranked from lower to higher sum of absolute pairwise correlation with all other predictors.
 
-If \code{preference_order} is defined, whenever two or more variables are above \code{max_cor}, the one higher in \code{preference_order} is preserved. For example, for the predictors and preference order \eqn{a} and \eqn{b}, if their correlation is higher than \code{max_cor}, then \eqn{b} will be removed and \eqn{a} preserved. If their correlation is lower than \code{max_cor}, then both are preserved.
+If \code{preference_order} is defined, whenever two or more variables are above \code{cor_max}, the one higher in \code{preference_order} is preserved. For example, for the predictors and preference order \eqn{a} and \eqn{b}, if their correlation is higher than \code{cor_max}, then \eqn{b} will be removed and \eqn{a} preserved. If their correlation is lower than \code{cor_max}, then both are preserved.
 }
 
 \examples{
@@ -138,13 +146,13 @@ sapply(
 x <- collinear(
   df = df,
   predictors = predictors,
-  max_cor = 0.75, #default
-  max_vif = 5    #default
+  cor_max = 0.75, #default
+  vif_max = 5    #default
   )
 
 x
 
-#all correlations below max_cor
+#all correlations below cor_max
 cor_df(
   df = df,
   predictors = x
@@ -166,7 +174,7 @@ vif_df(
 # x <- collinear(
 #   df = df,
 #   predictors = predictors,
-#   max_cor = NULL
+#   cor_max = NULL
 # )
 
 #correlation filtering only
@@ -177,7 +185,7 @@ vif_df(
 # x <- collinear(
 #   df = df,
 #   predictors = predictors,
-#   max_vif = NULL
+#   vif_max = NULL
 # )
 
 

@@ -138,9 +138,9 @@ It has the following arguments:
 | `encoding_method`  | Target encoding method for categorical predictors.                               | Requires numeric `response`. Disabled if `NULL`.                              |
 | `preference_order` | Predictor ranking (custom vector or output of `preference_order()`).             | Defaults to `NULL`. Computed internally if `response` is provided.            |
 | `f`                | Function to compute preference order.                                            | Defaults to `f_default()` if `preference_order = NULL`.                       |
-| `cor_method`       | Pairwise correlation method.                                                     | Ignored if `max_cor` is `NULL`.                                               |
-| `max_cor`          | Maximum allowed pairwise correlation.                                            | Disabled if `NULL`.                                                           |
-| `max_vif`          | Maximum allowed VIF.                                                             | Disabled if `NULL`.                                                           |
+| `cor_method`       | Pairwise correlation method.                                                     | Ignored if `cor_max` is `NULL`.                                               |
+| `cor_max`          | Maximum allowed pairwise correlation.                                            | Disabled if `NULL`.                                                           |
+| `vif_max`          | Maximum allowed VIF.                                                             | Disabled if `NULL`.                                                           |
 
 The example below shows all full call to the function on the `vi` data
 frame with a numeric response and predictors of mixed types.
@@ -161,8 +161,8 @@ selected_predictors <- collinear(
   preference_order = NULL,
   f = NULL,
   cor_method = "pearson",
-  max_cor = 0.75,
-  max_vif = 5
+  cor_max = 0.75,
+  vif_max = 5
 )
 
 selected_predictors
@@ -248,7 +248,7 @@ Notice that in the output, two of the variables in `preference_order`
 are selected (“soil_temperature_mean” and “soil_type”), but one was
 removed (“soil_temperature_max”). This happens because at some point in
 the selection, the VIF of “soil_temperature_mean” and
-“soil_temperature_max” was higher than `max_vif`, and the one with lower
+“soil_temperature_max” was higher than `vif_max`, and the one with lower
 preference was removed.
 
 ##### Quantitative preference order

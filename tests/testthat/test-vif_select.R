@@ -62,7 +62,8 @@ testthat::test_that("`vif_select()` works", {
     df = df,
     response = "vi_numeric",
     predictors = predictors,
-    quiet = TRUE
+    quiet = TRUE,
+    warn_limit = NULL
   )
 
   testthat::expect_message(

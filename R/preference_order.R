@@ -48,6 +48,17 @@
 #' Accepts a parallelization setup via [future::plan()] and a progress bar via [progressr::handlers()] (see examples).
 #'
 #' @inheritParams collinear
+#' @param response (optional, character string) Name of a response variable in `df`. Accepted types are numeric, integer, binomial, character and factor. Default: NULL.
+#' @param f (optional: function) Function to compute preference order. If NULL (default), the output of [f_default()] for the given data is used:
+#' \itemize{
+#'   \item [f_auc_rf()]: `response` is binomial.
+#'   \item [f_r2_pearson()]: `response` and `predictors` are numeric.
+#'   \item [f_v()]: `response` and `predictors` are categorical.
+#'   \item [f_v_rf_categorical()]: `response` is categorical and `predictors` are numeric or mixed .
+#'   \item [f_r2_rf()]: in all other cases.
+#' }
+#' Default: NULL
+#' @param warn_limit (optional, numeric) Preference value (R-squared, AUC, or Cramer's V) over which a warning flagging suspicious predictors is issued. Disabled if NULL. Default: 0.8
 #' @family preference_order
 #' @return data frame
 #' @examples
@@ -132,7 +143,8 @@ preference_order <- function(
     response = NULL,
     predictors = NULL,
     f = NULL,
-    quiet = FALSE
+    quiet = FALSE,
+    warn_limit = 0.8
 ){
 
   if(!is.logical(quiet)){
@@ -240,6 +252,33 @@ preference_order <- function(
       preference$preference,
       decreasing = TRUE),
   ]
+
+  #assess extreme associations
+  if(is.numeric(warn_limit)){
+
+    preference_extreme <- preference[preference$preference > warn_limit, ]
+
+    if(nrow(preference_extreme) > 0){
+
+      warning(
+        "collinear::preference_order(): predictors with associations to '",
+        response,
+        "' higher than ",
+        warn_limit,
+        ": \n - ",
+        paste0(
+          preference_extreme$predictor,
+          ": ",
+          round(preference_extreme$preference, 2),
+          collapse = "\n - "
+        ),
+        call. = FALSE
+      )
+
+    }
+
+
+  }
 
   attr(
     x = preference,

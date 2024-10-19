@@ -18,9 +18,11 @@ testthat::test_that("`preference_order()` works", {
       df = vi,
       response = "vi_numeric",
       predictors = vi_predictors,
-      f = NULL
+      f = NULL,
+      warn_limit = NULL
     )
-  )
+  ) |>
+    suppressMessages()
 
   testthat::expect_true(
     is.data.frame(df_preference)
@@ -46,7 +48,9 @@ testthat::test_that("`preference_order()` works", {
     df = vi,
     response = "vi_counts",
     predictors = vi_predictors_numeric,
-    f = f_r2_glm_poisson
+    f = f_r2_glm_poisson,
+    warn_limit = NULL,
+    quiet = TRUE
   )
 
   testthat::expect_true(
@@ -77,7 +81,9 @@ testthat::test_that("`preference_order()` works", {
     df = vi,
     response = "vi_binomial",
     predictors = vi_predictors_numeric,
-    f = f_auc_glm_binomial
+    f = f_auc_glm_binomial,
+    warn_limit = NULL,
+    quiet = TRUE
   )
 
   testthat::expect_true(
@@ -107,7 +113,9 @@ testthat::test_that("`preference_order()` works", {
     df = vi,
     response = "vi_category",
     predictors = vi_predictors_categorical,
-    f = f_v
+    f = f_v,
+    warn_limit = NULL,
+    quiet = TRUE
   )
 
   testthat::expect_true(
@@ -139,7 +147,9 @@ testthat::test_that("`preference_order()` works", {
     df = vi,
     response = "vi_category",
     predictors = vi_predictors_numeric,
-    f = f_v_rf_categorical
+    f = f_v_rf_categorical,
+    warn_limit = NULL,
+    quiet = TRUE
   )
 
   testthat::expect_true(

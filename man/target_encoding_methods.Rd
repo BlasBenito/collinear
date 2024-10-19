@@ -42,7 +42,7 @@ add_white_noise(
 \arguments{
 \item{df}{(required; data frame, tibble, or sf) A data frame with numeric predictors, and optionally a numeric response and categorical predictors. Default: NULL.}
 
-\item{response}{(optional, character string) Name of a numeric (non-numerics are ignored) response variable in \code{df}, only required if there are categorical variables named in the argument \code{predictors}. Default: NULL.}
+\item{response}{(optional, character string) Name of a numeric response variable in \code{df}. Default: NULL.}
 
 \item{predictor}{(required; string) Name of the categorical predictor to encode. Default: NULL}
 

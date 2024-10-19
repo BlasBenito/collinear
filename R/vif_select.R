@@ -35,33 +35,33 @@
 #' x <- vif_select(
 #'   df = df,
 #'   predictors = predictors,
-#'   max_vif = 2.5
+#'   vif_max = 2.5
 #' )
 #'
 #' x
 #'
-#' #all these have a VIF lower than max_vif (2.5)
+#' #all these have a VIF lower than vif_max (2.5)
 #' vif_df(
 #'   df = df,
 #'   predictors = x
 #' )
 #'
 #'
-#' #higher max_vif results in larger selection
+#' #higher vif_max results in larger selection
 #' x <- vif_select(
 #'   df = df,
 #'   predictors = predictors_numeric,
-#'   max_vif = 10
+#'   vif_max = 10
 #' )
 #'
 #' x
 #'
 #'
-#' #smaller max_vif results in smaller selection
+#' #smaller vif_max results in smaller selection
 #' x <- vif_select(
 #'   df = df,
 #'   predictors = predictors_numeric,
-#'   max_vif = 2.5
+#'   vif_max = 2.5
 #' )
 #'
 #' x
@@ -76,7 +76,7 @@
 #'     "soil_temperature_mean",
 #'     "topo_elevation"
 #'   ),
-#'   max_vif = 2.5
+#'   vif_max = 2.5
 #' )
 #'
 #' x
@@ -92,7 +92,7 @@
 #'   df = df,
 #'   predictors = predictors_numeric,
 #'   preference_order = df_preference,
-#'   max_vif = 2.5
+#'   vif_max = 2.5
 #' )
 #'
 #' x
@@ -129,7 +129,7 @@ vif_select <- function(
     df = NULL,
     predictors = NULL,
     preference_order = NULL,
-    max_vif = 5,
+    vif_max = 5,
     quiet = FALSE
 ){
 
@@ -140,33 +140,33 @@ vif_select <- function(
 
   #do nothing if
   #  one predictor only
-  #  max_vif is NULL
-  if(is.null(max_vif)){
+  #  vif_max is NULL
+  if(is.null(vif_max)){
 
     if(quiet == FALSE){
 
-      message("\ncollinear::vif_select(): argument 'max_vif' is NULL, skipping VIF-based filtering.")
+      message("\ncollinear::vif_select(): argument 'vif_max' is NULL, skipping VIF-based filtering.")
 
     }
 
     return(predictors)
   }
 
-  #checking argument max_vif
+  #checking argument vif_max
   if(
-    !is.numeric(max_vif) ||
-    length(max_vif) != 1 ||
-    max_vif < 2.5 ||
-    max_vif > 10
+    !is.numeric(vif_max) ||
+    length(vif_max) != 1 ||
+    vif_max < 2.5 ||
+    vif_max > 10
   ){
 
     if(quiet == FALSE){
 
-      message("\ncollinear::vif_select(): invalid 'max_vif', resetting it to 5.")
+      message("\ncollinear::vif_select(): invalid 'vif_max', resetting it to 5.")
 
     }
 
-    max_vif <- 5
+    vif_max <- 5
   }
 
   #validate data
@@ -191,11 +191,11 @@ vif_select <- function(
     quiet = quiet
   )
 
-  if(max(preference_order_auto$vif) <= max_vif){
+  if(max(preference_order_auto$vif) <= vif_max){
 
     if(quiet == FALSE){
 
-      message("\ncollinear::vif_select(): maximum VIF is <= ", max_vif, ", skipping VIF-based filtering.")
+      message("\ncollinear::vif_select(): maximum VIF is <= ", vif_max, ", skipping VIF-based filtering.")
 
     }
 
@@ -244,7 +244,7 @@ vif_select <- function(
     )
 
     #add candidate to selected
-    if(max(vif.df[["vif"]]) <= max_vif){
+    if(max(vif.df[["vif"]]) <= vif_max){
 
       preference_order_selected <- c(
         preference_order_selected,

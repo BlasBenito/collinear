@@ -9,13 +9,14 @@ preference_order(
   response = NULL,
   predictors = NULL,
   f = NULL,
-  quiet = FALSE
+  quiet = FALSE,
+  warn_limit = 0.8
 )
 }
 \arguments{
 \item{df}{(required; data frame, tibble, or sf) A data frame with numeric predictors, and optionally a numeric response and categorical predictors. Default: NULL.}
 
-\item{response}{(optional, character string) Name of a numeric (non-numerics are ignored) response variable in \code{df}, only required if there are categorical variables named in the argument \code{predictors}. Default: NULL.}
+\item{response}{(optional, character string) Name of a response variable in \code{df}. Accepted types are numeric, integer, binomial, character and factor. Default: NULL.}
 
 \item{predictors}{(optional; character vector) Names of the variables to select from \code{df}. If omitted, all numeric columns in \code{df} are used instead. If argument \code{response} is not provided, non-numeric variables are ignored. Default: NULL}
 
@@ -30,6 +31,8 @@ preference_order(
 Default: NULL}
 
 \item{quiet}{(optional; logical) If FALSE, messages generated during the execution of the function are printed to the console Default: FALSE}
+
+\item{warn_limit}{(optional, numeric) Preference value (R-squared, AUC, or Cramer's V) over which a warning flagging suspicious predictors is issued. Disabled if NULL. Default: 0.8}
 }
 \value{
 data frame

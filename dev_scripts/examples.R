@@ -237,7 +237,7 @@ selected.predictors <- cor_select(
   response = "vi_mean", #don't forget the response!
   predictors = vi_predictors,
   preference_order = preference.order,
-  max_cor = 0.75
+  cor_max = 0.75
   )
 
 selected.predictors
@@ -249,7 +249,7 @@ selected.predictors.cor <- cor_df(
   predictors = selected.predictors
 )
 
-#all correlations below max_cor
+#all correlations below cor_max
 selected.predictors.cor
 
 #USING A CUSTOM FUNCTION
@@ -314,47 +314,47 @@ vi <- vi[1:1000, ]
 
 #without response
 #without preference_order
-#permissive max_cor and max_vif
+#permissive cor_max and vif_max
 #only numeric variables in output
 selected.predictors <- collinear(
   df = vi,
   predictors = vi_predictors,
-  max_cor = 0.8,
-  max_vif = 10
+  cor_max = 0.8,
+  vif_max = 10
   )
 
 selected.predictors
 
 #without response
 #without preference_order
-#restrictive max_cor and max_vif
+#restrictive cor_max and vif_max
 #only numeric variables in output
 selected.predictors <- collinear(
   df = vi,
   predictors = vi_predictors,
-  max_cor = 0.5,
-  max_vif = 2.5
+  cor_max = 0.5,
+  vif_max = 2.5
 )
 
 selected.predictors
 
 #with response
 #without preference_order
-#restrictive max_cor and max_vif
+#restrictive cor_max and vif_max
 #numerics and categorical variables in output
 selected.predictors <- collinear(
   df = vi,
   response = "vi_mean",
   predictors = vi_predictors,
-  max_cor = 0.5,
-  max_vif = 2.5
+  cor_max = 0.5,
+  vif_max = 2.5
 )
 
 selected.predictors
 
 #with response
 #with user-defined preference_order
-#restrictive max_cor and max_vif
+#restrictive cor_max and vif_max
 #numerics and categorical variables in output
 selected.predictors <- collinear(
   df = vi,
@@ -366,8 +366,8 @@ selected.predictors <- collinear(
     "rainfall_mean",
     "evapotranspiration_mean"
   ),
-  max_cor = 0.5,
-  max_vif = 2.5
+  cor_max = 0.5,
+  vif_max = 2.5
 )
 
 selected.predictors
@@ -375,7 +375,7 @@ selected.predictors
 
 #with response
 #with automated preference_order
-#restrictive max_cor and max_vif
+#restrictive cor_max and vif_max
 #numerics and categorical variables in output
 preference.order <- preference_order(
   df = vi,
@@ -389,8 +389,8 @@ selected.predictors <- collinear(
   response = "vi_mean",
   predictors = vi_predictors,
   preference_order = preference.order,
-  max_cor = 0.5,
-  max_vif = 2.5
+  cor_max = 0.5,
+  vif_max = 2.5
 )
 
 selected.predictors
@@ -412,29 +412,29 @@ vi_predictors <- vi_predictors[1:10]
 
 #without response
 #without preference_order
-#permissive max_cor
+#permissive cor_max
 selected.predictors <- cor_select(
   df = vi,
   predictors = vi_predictors,
-  max_cor = 0.8
+  cor_max = 0.8
 )
 
 selected.predictors
 
 #without response
 #without preference_order
-#restrictive max_cor
+#restrictive cor_max
 selected.predictors <- cor_select(
   df = vi,
   predictors = vi_predictors,
-  max_cor = 0.5
+  cor_max = 0.5
 )
 
 selected.predictors
 
 #with response
 #without preference_order
-#restrictive max_cor
+#restrictive cor_max
 #slightly different solution than previous one
 #because here target encoding is done against the response
 #while before was done pairwise against each numeric predictor
@@ -442,14 +442,14 @@ selected.predictors <- cor_select(
   df = vi,
   response = "vi_mean",
   predictors = vi_predictors,
-  max_cor = 0.5
+  cor_max = 0.5
 )
 
 selected.predictors
 
 #with response
 #with user-defined preference_order
-#restrictive max_cor
+#restrictive cor_max
 #numerics and categorical variables in output
 selected.predictors <- cor_select(
   df = vi,
@@ -462,7 +462,7 @@ selected.predictors <- cor_select(
     "rainfall_mean",
     "evapotranspiration_mean"
   ),
-  max_cor = 0.5
+  cor_max = 0.5
 )
 
 selected.predictors
@@ -470,7 +470,7 @@ selected.predictors
 
 #with response
 #with automated preference_order
-#restrictive max_cor and max_vif
+#restrictive cor_max and vif_max
 #numerics and categorical variables in output
 preference.order <- preference_order(
   df = vi,
@@ -486,7 +486,7 @@ selected.predictors <- cor_select(
   response = "vi_mean",
   predictors = vi_predictors,
   preference_order = preference.order,
-  max_cor = 0.5
+  cor_max = 0.5
 )
 
 selected.predictors
@@ -628,45 +628,45 @@ vi_predictors <- vi_predictors[1:10]
 
 #without response
 #without preference_order
-#permissive max_vif
+#permissive vif_max
 #only numeric predictors are processed
 selected.predictors <- vif_select(
   df = vi,
   predictors = vi_predictors,
-  max_vif = 10
+  vif_max = 10
 )
 
 selected.predictors
 
 #without response
 #without preference_order
-#restrictive max_vif
+#restrictive vif_max
 #only numeric predictors are processed
 selected.predictors <- vif_select(
   df = vi,
   predictors = vi_predictors,
-  max_vif = 2.5
+  vif_max = 2.5
 )
 
 selected.predictors
 
 #with response
 #without preference_order
-#restrictive max_cor
+#restrictive cor_max
 #slightly different solution than previous one
 #because categorical variables are target-enccoded
 selected.predictors <- vif_select(
   df = vi,
   response = "vi_mean",
   predictors = vi_predictors,
-  max_vif = 2.5
+  vif_max = 2.5
 )
 
 selected.predictors
 
 #with response
 #with user-defined preference_order
-#restrictive max_cor
+#restrictive cor_max
 #numerics and categorical variables in output
 selected.predictors <- vif_select(
   df = vi,
@@ -679,7 +679,7 @@ selected.predictors <- vif_select(
     "rainfall_mean",
     "evapotranspiration_mean"
   ),
-  max_vif = 2.5
+  vif_max = 2.5
 )
 
 selected.predictors
@@ -687,7 +687,7 @@ selected.predictors
 
 #with response
 #with automated preference_order
-#restrictive max_cor and max_vif
+#restrictive cor_max and vif_max
 #numerics and categorical variables in output
 preference.order <- preference_order(
   df = vi,
@@ -703,7 +703,7 @@ selected.predictors <- vif_select(
   response = "vi_mean",
   predictors = vi_predictors,
   preference_order = preference.order,
-  max_vif = 2.5
+  vif_max = 2.5
 )
 
 selected.predictors
