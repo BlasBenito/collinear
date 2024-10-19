@@ -10,8 +10,8 @@ collinear(
   predictors = NULL,
   encoding_method = "loo",
   preference_order = NULL,
-  preference_warn_limit = 0.8,
   preference_f = NULL,
+  preference_warn_limit = 0.8,
   cor_method = "pearson",
   cor_max = 0.75,
   vif_max = 5,
@@ -29,8 +29,6 @@ collinear(
 
 \item{preference_order}{(optional; character vector) Variable names in \code{predictors}. Defines a priority order, from first to last, to preserve variables during the selection process. Variables not included in this argument are ranked by their Variance Inflation Factor. See \code{\link[=preference_order]{preference_order()}}. Default: NULL}
 
-\item{preference_warn_limit}{(optional, numeric) Preference value (R-squared, AUC, or Cramer's V) over which a warning flagging suspicious predictors is issued. Disabled if NULL. Default: 0.8}
-
 \item{preference_f}{(optional: function) Function to compute preference order. If NULL (default), the output of \code{\link[=f_default]{f_default()}} for the given data is used:
 \itemize{
 \item \code{\link[=f_auc_rf]{f_auc_rf()}}: \code{response} is binomial.
@@ -40,6 +38,8 @@ collinear(
 \item \code{\link[=f_r2_rf]{f_r2_rf()}}: in all other cases.
 }
 Default: NULL}
+
+\item{preference_warn_limit}{(optional, numeric) Preference value (R-squared, AUC, or Cramer's V) over which a warning flagging suspicious predictors is issued. Disabled if NULL. Default: 0.8}
 
 \item{cor_method}{(optional; character string) Method used to compute pairwise correlations. Either "pearson" or "spearman". Default: "pearson".}
 
@@ -236,6 +236,17 @@ x <- collinear(
   preference_order = preference_df
 )
 
+
+#with several responses
+#--------------------------------
+x <- collinear(
+    df = df,
+    response = c("vi_binomial", "vi_numeric"),
+    predictors = predictors
+  )
+
+#result is a named list
+x
 
 #with binomial response
 #--------------------------------

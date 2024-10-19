@@ -200,6 +200,17 @@
 #' )
 #'
 #'
+#' #with several responses
+#' #--------------------------------
+#' x <- collinear(
+#'     df = df,
+#'     response = c("vi_binomial", "vi_numeric"),
+#'     predictors = predictors
+#'   )
+#'
+#' #result is a named list
+#' x
+#'
 #' #with binomial response
 #' #--------------------------------
 #'
