@@ -16,7 +16,7 @@ preference_order(
 \arguments{
 \item{df}{(required; data frame, tibble, or sf) A data frame with numeric predictors, and optionally a numeric response and categorical predictors. Default: NULL.}
 
-\item{response}{(optional, character string) Name of a response variable in \code{df}. Accepted types are numeric, integer, binomial, character and factor. Default: NULL.}
+\item{response}{(optional, character string or vector) Name/s of response variable/s in \code{df}. Used in target encoding when it names a numeric variable, and in the computation of preference order if \code{preference_order = NULL}. Default: NULL.}
 
 \item{predictors}{(optional; character vector) Names of the variables to select from \code{df}. If omitted, all numeric columns in \code{df} are used instead. If argument \code{response} is not provided, non-numeric variables are ignored. Default: NULL}
 
@@ -85,12 +85,6 @@ This function returns a data frame with the column "predictor", with predictor n
 Accepts a parallelization setup via \code{\link[future:plan]{future::plan()}} and a progress bar via \code{\link[progressr:handlers]{progressr::handlers()}} (see examples).
 }
 \examples{
-data(
-  vi,
-  vi_predictors,
-  vi_predictors_numeric
-)
-
 #subsets to limit example run time
 vi <- vi[1:1000, ]
 vi_predictors <- vi_predictors[1:10]
@@ -106,38 +100,34 @@ future::plan(
 # progressr::handlers(global = TRUE)
 
 #numeric response and predictors
+#selects f automatically depending on data features
 #applies f_r2_pearson() to compute correlation between response and predictors
 df_preference <- preference_order(
   df = vi,
   response = "vi_numeric",
-  predictors = vi_predictors_numeric
+  predictors = vi_predictors_numeric,
+  f = NULL
   )
 
 #returns data frame ordered by preference
 df_preference
 
-#name of preference function stored as attribute
-attributes(df_preference)$f_name
-
-#using it as input in collinear()
-selection <- collinear(
+#several responses
+list_preference <- preference_order(
   df = vi,
-  response = "vi_numeric",
-  predictors = vi_predictors_numeric,
-  preference_order = df_preference
-)
-
-selection
-
-#numeric response and mixed predictors
-#uses f_r2_rf() to compute preference
-preference_order(
-  df = vi,
-  response = "vi_numeric",
+  response = c(
+    "vi_numeric",
+    "vi_category",
+  ),
   predictors = vi_predictors
 )
 
-#user defined f function
+#returns a named list
+names(list_preference)
+list_preference[[1]]
+list_preference[[2]]
+
+#f function selected by user
 #for binomial response and numeric predictors
 preference_order(
   df = vi,
@@ -146,15 +136,6 @@ preference_order(
   f = f_auc_glm_binomial
 )
 
-#default f function
-#for binomial response and numeric predictors
-#uses f_auc_rf()
-preference_order(
-  df = vi,
-  response = "vi_binomial",
-  predictors = vi_predictors_numeric,
-  f = NULL
-)
 
 #disable parallelization
 future::plan(future::sequential)

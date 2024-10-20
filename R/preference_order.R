@@ -48,7 +48,6 @@
 #' Accepts a parallelization setup via [future::plan()] and a progress bar via [progressr::handlers()] (see examples).
 #'
 #' @inheritParams collinear
-#' @param response (optional, character string) Name of a response variable in `df`. Accepted types are numeric, integer, binomial, character and factor. Default: NULL.
 #' @param f (optional: function) Function to compute preference order. If NULL (default), the output of [f_default()] for the given data is used:
 #' \itemize{
 #'   \item [f_auc_rf()]: `response` is binomial.
@@ -62,12 +61,6 @@
 #' @family preference_order
 #' @return data frame
 #' @examples
-#' data(
-#'   vi,
-#'   vi_predictors,
-#'   vi_predictors_numeric
-#' )
-#'
 #' #subsets to limit example run time
 #' vi <- vi[1:1000, ]
 #' vi_predictors <- vi_predictors[1:10]
@@ -83,38 +76,34 @@
 #' # progressr::handlers(global = TRUE)
 #'
 #' #numeric response and predictors
+#' #selects f automatically depending on data features
 #' #applies f_r2_pearson() to compute correlation between response and predictors
 #' df_preference <- preference_order(
 #'   df = vi,
 #'   response = "vi_numeric",
-#'   predictors = vi_predictors_numeric
+#'   predictors = vi_predictors_numeric,
+#'   f = NULL
 #'   )
 #'
 #' #returns data frame ordered by preference
 #' df_preference
 #'
-#' #name of preference function stored as attribute
-#' attributes(df_preference)$f_name
-#'
-#' #using it as input in collinear()
-#' selection <- collinear(
+#' #several responses
+#' list_preference <- preference_order(
 #'   df = vi,
-#'   response = "vi_numeric",
-#'   predictors = vi_predictors_numeric,
-#'   preference_order = df_preference
-#' )
-#'
-#' selection
-#'
-#' #numeric response and mixed predictors
-#' #uses f_r2_rf() to compute preference
-#' preference_order(
-#'   df = vi,
-#'   response = "vi_numeric",
+#'   response = c(
+#'     "vi_numeric",
+#'     "vi_category",
+#'   ),
 #'   predictors = vi_predictors
 #' )
 #'
-#' #user defined f function
+#' #returns a named list
+#' names(list_preference)
+#' list_preference[[1]]
+#' list_preference[[2]]
+#'
+#' #f function selected by user
 #' #for binomial response and numeric predictors
 #' preference_order(
 #'   df = vi,
@@ -123,15 +112,6 @@
 #'   f = f_auc_glm_binomial
 #' )
 #'
-#' #default f function
-#' #for binomial response and numeric predictors
-#' #uses f_auc_rf()
-#' preference_order(
-#'   df = vi,
-#'   response = "vi_binomial",
-#'   predictors = vi_predictors_numeric,
-#'   f = NULL
-#' )
 #'
 #' #disable parallelization
 #' future::plan(future::sequential)
@@ -169,122 +149,149 @@ preference_order <- function(
     quiet = quiet
   )
 
-  #check response
-  response <- validate_response(
-    df = df,
-    response = response,
-    quiet = quiet
+  #managing multiple responses
+  responses <- intersect(
+    x = colnames(df),
+    y = response
   )
+  rm(response)
 
-  #check predictors
-  predictors <- validate_predictors(
-    df = df,
-    response = response,
-    predictors = predictors,
-    quiet = quiet
-  )
+  #copy of predictors
+  predictors_user <- predictors
 
-  #early output if only one predictor
-  if(length(predictors) == 1){
-    return(predictors)
-  }
+  #copy of f
+  f_user <- f
 
-  #select f function
-  if(is.null(f)){
+  #output list
+  out <- list()
 
-    #get function name
-    f_name <- f_default(
+  #iterating over responses
+  for(response in responses){
+
+    #check response
+    response <- validate_response(
       df = df,
       response = response,
-      predictors = predictors,
       quiet = quiet
     )
 
-    #as function
-    f <- get(f_name)
+    if(quiet == FALSE){
 
-  } else {
-
-    f_name <- deparse(substitute(f))
-
-  }
-
-  #data frame to store results
-  preference <- data.frame(
-    predictor = predictors
-  )
-
-  #progress bar
-  p <- progressr::progressor(
-    steps = nrow(preference)
-  )
-
-  if(quiet == FALSE){
-
-    message("\ncollinear::preference_order(): computing preference order.")
-
-  }
-
-  #computing preference order
-  preference$preference <- future.apply::future_lapply(
-    X = preference$predictor,
-    FUN = function(x){
-
-      p()
-
-      f(
-        df = data.frame(
-          y = df[[response]],
-          x = df[[x]]
-        ) |>
-          na.omit()
-        )
-
-    }, #end of lambda function
-    future.seed = TRUE
-  ) |>
-    unlist() |>
-    suppressWarnings()
-
-  #reorder preference
-  preference <- preference[
-    order(
-      preference$preference,
-      decreasing = TRUE),
-  ]
-
-  #assess extreme associations
-  if(is.numeric(warn_limit)){
-
-    preference_extreme <- preference[preference$preference > warn_limit, ]
-
-    if(nrow(preference_extreme) > 0){
-
-      warning(
-        "collinear::preference_order(): predictors with associations to '",
-        response,
-        "' higher than ",
-        warn_limit,
-        ": \n - ",
-        paste0(
-          preference_extreme$predictor,
-          ": ",
-          round(preference_extreme$preference, 2),
-          collapse = "\n - "
-        ),
-        call. = FALSE
-      )
+      message("\ncollinear::preference_order(): computing preference order for response: '", response, "'." )
 
     }
 
+    #check predictors
+    predictors <- validate_predictors(
+      df = df,
+      response = response,
+      predictors = predictors_user,
+      quiet = quiet
+    )
 
+    #select f function
+    if(is.null(f_user)){
+
+      #get function name
+      f_name <- f_default(
+        df = df,
+        response = response,
+        predictors = predictors,
+        quiet = quiet
+      )
+
+      #as function
+      f <- get(f_name)
+
+    } else {
+
+      f <- f_user
+      f_name <- deparse(substitute(f))
+
+    }
+
+    #data frame to store results
+    preference <- data.frame(
+      response = rep(
+        x = response,
+        times = length(predictors)
+        ),
+      predictor = predictors,
+      f = rep(
+        x = f_name,
+        times = length(predictors)
+      )
+    )
+
+    #progress bar
+    p <- progressr::progressor(
+      steps = nrow(preference)
+    )
+
+    #computing preference order
+    preference$preference <- future.apply::future_lapply(
+      X = preference$predictor,
+      FUN = function(x){
+
+        # p()
+
+        f(
+          df = data.frame(
+            y = df[[response]],
+            x = df[[x]]
+          ) |>
+            na.omit()
+        )
+
+      }, #end of lambda function
+      future.seed = TRUE
+    ) |>
+      unlist() |>
+      suppressWarnings()
+
+    #reorder preference
+    preference <- preference[
+      order(
+        preference$preference,
+        decreasing = TRUE),
+    ]
+
+    #assess extreme associations
+    if(is.numeric(warn_limit)){
+
+      preference_extreme <- preference[preference$preference > warn_limit, ]
+
+      if(nrow(preference_extreme) > 0){
+
+        message(
+          "collinear::preference_order(): [WARNING] predictors with associations to '",
+          response,
+          "' higher than ",
+          warn_limit,
+          ": \n - ",
+          paste0(
+            preference_extreme$predictor,
+            ": ",
+            round(preference_extreme$preference, 2),
+            collapse = "\n - "
+          ),
+          call. = FALSE
+        )
+
+      }
+
+
+    }
+
+    out[[response]] <- preference
+
+  } #end of loop
+
+
+  if(is.list(out) && length(out) == 1){
+    out <- out[[1]]
   }
 
-  attr(
-    x = preference,
-    which = "f_name"
-    ) <- f_name
-
-  preference
+  out
 
 }

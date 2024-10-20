@@ -241,7 +241,10 @@ x <- collinear(
 #--------------------------------
 x <- collinear(
     df = df,
-    response = c("vi_binomial", "vi_numeric"),
+    response = c(
+      "vi_binomial",
+      "vi_numeric"
+      ),
     predictors = predictors
   )
 

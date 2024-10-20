@@ -204,7 +204,10 @@
 #' #--------------------------------
 #' x <- collinear(
 #'     df = df,
-#'     response = c("vi_binomial", "vi_numeric"),
+#'     response = c(
+#'       "vi_binomial",
+#'       "vi_numeric"
+#'       ),
 #'     predictors = predictors
 #'   )
 #'
@@ -367,9 +370,10 @@ collinear <- function(
     )
 
     # preference order ----
-    if(is.null(preference_order_user)){
+    preference_order <-
+      if(is.null(preference_order_user)){
 
-      preference_order <- preference_order(
+      preference_order(
         df = df,
         response = response,
         predictors = predictors,
@@ -381,13 +385,21 @@ collinear <- function(
     } else if (
       is.data.frame(preference_order_user) &&
       "predictor" %in% names(preference_order_user)
-    ){
+      ){
 
-      preference_order <- preference_order_user$predictor
+      preference_order_user$predictor
 
-    } else if (is.vector(preference_order_user)) {
+    } else if (is.list(preference_order_user)){
 
-      preference_order <- preference_order_user
+      preference_order_user[[response]]$predictor
+
+    } else if (is.vector(preference_order_user)){
+
+      preference_order_user
+
+    } else {
+
+      NULL
 
     }
 
@@ -472,6 +484,8 @@ collinear <- function(
     } else {
       out[[1]] <- selection
     }
+
+    rm(selection)
 
   } #end of loop
 

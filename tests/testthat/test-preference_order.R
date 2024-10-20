@@ -1,5 +1,12 @@
 testthat::test_that("`preference_order()` works", {
 
+  expected_colnames <- c(
+    "response",
+    "predictor",
+    "f",
+    "preference"
+  )
+
   data(
     vi,
     vi_predictors,
@@ -11,6 +18,35 @@ testthat::test_that("`preference_order()` works", {
   vi_predictors <- vi_predictors[1:10]
   vi_predictors_numeric <- vi_predictors_numeric[1:10]
   vi_predictors_categorical <- vi_predictors_categorical[1:10]
+
+  #several responses
+  responses <- c(
+    "vi_numeric",
+    "vi_counts",
+    "vi_binomial",
+    "vi_category",
+    "vi_factor"
+  )
+
+  df_preference <- preference_order(
+    df = vi,
+    response = responses,
+    predictors = vi_predictors,
+    quiet = TRUE,
+    warn_limit = NULL
+  )
+
+  testthat::expect_true(
+    is.list(df_preference)
+  )
+
+  testthat::expect_true(
+    all(names(df_preference) %in% responses)
+  )
+
+  testthat::expect_true(
+    all(colnames(df_preference[[1]]) %in% expected_colnames)
+  )
 
   #numeric response
   testthat::expect_message(
@@ -29,7 +65,7 @@ testthat::test_that("`preference_order()` works", {
   )
 
   testthat::expect_true(
-    ncol(df_preference) == 2
+    ncol(df_preference) == 4
   )
 
 
@@ -38,9 +74,8 @@ testthat::test_that("`preference_order()` works", {
   )
 
   testthat::expect_true(
-    all(colnames(df_preference) %in% c("predictor", "preference"))
+    all(colnames(df_preference) %in% expected_colnames)
   )
-
 
 
   #count response
@@ -71,8 +106,9 @@ testthat::test_that("`preference_order()` works", {
   )
 
   testthat::expect_true(
-    all(colnames(df_preference) %in% c("predictor", "preference"))
+    all(colnames(df_preference) %in% expected_colnames)
   )
+
 
 
 
@@ -104,8 +140,9 @@ testthat::test_that("`preference_order()` works", {
   )
 
   testthat::expect_true(
-    all(colnames(df_preference) %in% c("predictor", "preference"))
+    all(colnames(df_preference) %in% expected_colnames)
   )
+
 
 
   #categorical response and predictors
@@ -136,11 +173,8 @@ testthat::test_that("`preference_order()` works", {
   )
 
   testthat::expect_true(
-    all(colnames(df_preference) %in% c("predictor", "preference"))
+    all(colnames(df_preference) %in% expected_colnames)
   )
-
-
-
 
   #categorical response and categorical and numeric predictors
   df_preference <- preference_order(
@@ -170,7 +204,8 @@ testthat::test_that("`preference_order()` works", {
   )
 
   testthat::expect_true(
-    all(colnames(df_preference) %in% c("predictor", "preference"))
+    all(colnames(df_preference) %in% expected_colnames)
   )
+
 
 })

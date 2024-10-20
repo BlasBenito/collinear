@@ -1,7 +1,45 @@
 testthat::test_that("`collinear()` works", {
 
-  predictors <- vi_predictors[1:10]
+  data(vi, vi_predictors)
+
+  predictors <- vi_predictors[1:20]
   df <- vi[1:1000, ]
+
+  # several responses ----
+  responses <- c(
+    "vi_numeric",
+    "vi_counts",
+    "vi_binomial",
+    "vi_category",
+    "vi_factor"
+  )
+
+  preference_list <- preference_order(
+    df = df,
+    response = responses,
+    predictors = predictors,
+    f = NULL,
+    warn_limit = NULL,
+    quiet = TRUE
+  )
+
+  x <- collinear(
+    df = df,
+    response = responses,
+    predictors = predictors,
+    preference_order = preference_list,
+    preference_warn_limit = NULL,
+    quiet = TRUE
+  )
+
+  testthat::expect_true(
+    is.list(x)
+  )
+
+  testthat::expect_true(
+    all(names(x) %in% responses)
+  )
+
 
   # mixed types ----
   x <- collinear(
@@ -105,99 +143,6 @@ testthat::test_that("`collinear()` works", {
     )
   ) |>
     suppressWarnings()
-
-  testthat::expect_true(
-    is.character(x)
-  )
-
-  testthat::expect_true(
-    all(x %in% predictors)
-  )
-
-  testthat::expect_true(
-    length(predictors) > length(x)
-  )
-
-
-  testthat::expect_message(
-    x <- collinear(
-      df = df,
-      response = "vi_binomial",
-      predictors = predictors,
-      quiet = FALSE,
-      preference_warn_limit = NULL
-    )
-  ) |>
-    suppressMessages()
-
-  testthat::expect_true(
-    is.character(x)
-  )
-
-  testthat::expect_true(
-    all(x %in% predictors)
-  )
-
-  testthat::expect_true(
-    length(predictors) > length(x)
-  )
-
-  testthat::expect_message(
-    x <- collinear(
-      df = df,
-      response = "vi_counts",
-      predictors = predictors,
-      quiet = FALSE,
-      preference_warn_limit = NULL
-    )
-  ) |>
-    suppressMessages()
-
-  testthat::expect_true(
-    is.character(x)
-  )
-
-  testthat::expect_true(
-    all(x %in% predictors)
-  )
-
-  testthat::expect_true(
-    length(predictors) > length(x)
-  )
-
-  testthat::expect_message(
-    x <- collinear(
-      df = df,
-      response = "vi_category",
-      predictors = predictors,
-      quiet = FALSE,
-      preference_warn_limit = NULL
-    )
-  ) |>
-    suppressMessages()
-
-  testthat::expect_true(
-    is.character(x)
-  )
-
-  testthat::expect_true(
-    all(x %in% predictors)
-  )
-
-  testthat::expect_true(
-    length(predictors) > length(x)
-  )
-
-  testthat::expect_message(
-    x <- collinear(
-      df = df,
-      response = "vi_factor",
-      predictors = predictors,
-      quiet = FALSE,
-      preference_warn_limit = NULL
-    )
-  ) |>
-    suppressMessages()
 
   testthat::expect_true(
     is.character(x)
