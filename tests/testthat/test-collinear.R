@@ -133,7 +133,7 @@ testthat::test_that("`collinear()` works", {
   ) |>
     suppressMessages()
 
-  testthat::expect_warning(
+  testthat::expect_message(
     x <- collinear(
       df = df,
       response = "vi_numeric",
@@ -142,7 +142,7 @@ testthat::test_that("`collinear()` works", {
       preference_warn_limit = 0.8
     )
   ) |>
-    suppressWarnings()
+    suppressMessages()
 
   testthat::expect_true(
     is.character(x)

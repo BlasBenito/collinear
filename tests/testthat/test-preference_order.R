@@ -65,9 +65,8 @@ testthat::test_that("`preference_order()` works", {
   )
 
   testthat::expect_true(
-    ncol(df_preference) == 4
+    ncol(df_preference) == length(expected_colnames)
   )
-
 
   testthat::expect_true(
     nrow(df_preference) == length(vi_predictors)
@@ -93,7 +92,7 @@ testthat::test_that("`preference_order()` works", {
   )
 
   testthat::expect_true(
-    ncol(df_preference) == 2
+    ncol(df_preference) == length(expected_colnames)
   )
 
 
@@ -127,7 +126,7 @@ testthat::test_that("`preference_order()` works", {
   )
 
   testthat::expect_true(
-    ncol(df_preference) == 2
+    ncol(df_preference) == length(expected_colnames)
   )
 
 
@@ -160,7 +159,7 @@ testthat::test_that("`preference_order()` works", {
   )
 
   testthat::expect_true(
-    ncol(df_preference) == 2
+    ncol(df_preference) == length(expected_colnames)
   )
 
 
@@ -191,7 +190,7 @@ testthat::test_that("`preference_order()` works", {
   )
 
   testthat::expect_true(
-    ncol(df_preference) == 2
+    ncol(df_preference) == length(expected_colnames)
   )
 
 

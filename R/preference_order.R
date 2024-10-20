@@ -161,6 +161,7 @@ preference_order <- function(
 
   #copy of f
   f_user <- f
+  f_user_name <- deparse(substitute(f))
 
   #output list
   out <- list()
@@ -206,7 +207,7 @@ preference_order <- function(
     } else {
 
       f <- f_user
-      f_name <- deparse(substitute(f))
+      f_name <- f_user_name
 
     }
 

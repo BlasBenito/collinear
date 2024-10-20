@@ -134,11 +134,15 @@ testthat::test_that("`vif_select()` works", {
 
 
   #no predictors
-  x <- vif_select(
-    df = df[, 1:5],
-    predictors = NULL,
-    quiet = TRUE
-  )
+  testthat::expect_message(
+    x <- vif_select(
+      df = df[, 1:5],
+      predictors = NULL,
+      preference_order = NULL,
+      quiet = TRUE
+    )
+  ) |>
+    suppressMessages()
 
   testthat::expect_true(
     all(x %in% colnames(df)[1:5])
