@@ -29,7 +29,7 @@ f_r2_rf(df)
 \item{df}{(required, data frame) with columns:
 \itemize{
 \item "x": (numeric) continuous predictor.
-\item "y" (numeric) continous response.
+\item "y" (numeric) continuous response.
 }}
 }
 \value{

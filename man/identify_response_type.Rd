@@ -14,7 +14,7 @@ identify_response_type(df = NULL, response = NULL, quiet = FALSE)
 \item{quiet}{(optional; logical) If FALSE, messages generated during the execution of the function are printed to the console Default: FALSE}
 }
 \value{
-character string: respnose type
+character string: response type
 }
 \description{
 Internal function to identify the type of response variable. Supported types are:

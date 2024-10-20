@@ -121,7 +121,7 @@ The predictors are stored in the following objects:
 
 ## Getting Started
 
-The function `collinear()` contains the full logics for multicollinearity management in most use cases.
+The function `collinear()` contains the full logic for multicollinearity management in most use cases.
 
 It has the following arguments:
 

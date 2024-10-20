@@ -7,7 +7,7 @@
 #'  \item `vi_numeric`: continuous vegetation index values in the range 0-1.
 #'  \item `vi_counts`: simulated integer counts created by multiplying `vi_numeric` by 1000 and coercing the result to integer.
 #'  \item `vi_binomial`: simulated binomial variable created by transforming `vi_numeric` to zeros and ones.
-#'  \item `vi_category`: character variable with the categories "very_low", "low", "medium", "high", and "very_high", with thresholds located at the quntiles ov `vi_numeric`.
+#'  \item `vi_category`: character variable with the categories "very_low", "low", "medium", "high", and "very_high", with thresholds located at the quantiles of `vi_numeric`.
 #'  \item `vi_factor`: `vi_category` converted to factor.
 #' }
 #'

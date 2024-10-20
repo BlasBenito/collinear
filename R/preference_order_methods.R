@@ -26,7 +26,7 @@
 #' @param df (required, data frame) with columns:
 #' \itemize{
 #'   \item "x": (numeric) continuous predictor.
-#'   \item "y" (numeric) continous response.
+#'   \item "y" (numeric) continuous response.
 #' }
 #'
 #' @return numeric: R-squared

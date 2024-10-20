@@ -66,7 +66,7 @@ Automates multicollinearity management in data frames with numeric and non-numer
 
 Accepts a parallelization setup via \code{\link[future:plan]{future::plan()}} and a progress bar via \code{\link[progressr:handlers]{progressr::handlers()}} (see examples).
 
-Unlike all other package functions, \code{collinear()} accepts a character vector as input for the argument \code{response}. When more than one response is provided, the output is a named list, with each element named after the given response contains a character vector of filtered predictors.
+Accepts a character vector of response variables as input for the argument \code{response}. When more than one response is provided, the output is a named list of character.
 }
 \section{Target Encoding}{
 
@@ -121,61 +121,59 @@ If \code{preference_order} is defined, whenever two or more variables are above 
 #parallelization setup
 future::plan(
   future::multisession,
-  workers = 3 #set to parallelly::availableCores() - 1
+  workers = 2 #set to parallelly::availableCores() - 1
 )
 
 #progress bar
-progressr::handlers(global = TRUE)
+#progressr::handlers(global = TRUE)
 
 #subset to limit example run time
-df <- vi[1:1000, ]
-predictors <- vi_predictors[1:10]
+df <- vi[1:500, ]
 
 #predictors has mixed types
-sapply(
-  X = df[, predictors, drop = FALSE],
-  FUN = class
-)
+predictors <- vi_predictors[1:8]
 
-#without response
+#minimalistic
 #--------------------------------
 #  no target encoding
 #  no preference order
 #  all predictors filtered by correlation
-#  VIF filtering not required
+#  VIF filtering skipped (not required)
 x <- collinear(
-  df = df,
-  predictors = predictors,
-  cor_max = 0.75, #default
-  vif_max = 5    #default
-  )
+  df = df[, predictors]
+)
 
-x
+#also:
+# x <- collinear(
+#   df = df,
+#   predictors = predictors,
+#   )
 
 #all correlations below cor_max
-cor_df(
-  df = df,
-  predictors = x
-)
+# cor_df(
+#   df = df,
+#   predictors = x
+# )
 
 #all vif below max vif
 #ignores categoricals
-vif_df(
-  df = df,
-  predictors = x
-)
-
+# vif_df(
+#   df = df,
+#   predictors = x
+# )
 
 #VIF filtering only
 #--------------------------------
-#  no target encoding
-#  no preference order
-#  only numerics filtered by VIF
+# no target encoding
+# no preference order
+# only numerics filtered by VIF
+# but VIF not required
 # x <- collinear(
 #   df = df,
 #   predictors = predictors,
 #   cor_max = NULL
 # )
+
 
 #correlation filtering only
 #--------------------------------
@@ -191,7 +189,6 @@ vif_df(
 
 #with numeric response
 #--------------------------------
-
 #  target encoding
 #  automated preference order
 #  all predictors filtered by correlation and VIF
@@ -201,7 +198,9 @@ x <- collinear(
   predictors = predictors
 )
 
+
 #disabling target encoding
+#--------------------------------
 #commented because it is much slower
 # x <- collinear(
 #   df = df,
@@ -210,7 +209,10 @@ x <- collinear(
 #   encoding_method = NULL
 # )
 
+
 #with custom preference order
+#--------------------------------
+#koppen_zone lost due to collinearity with swi_mean and soil_type
 x <- collinear(
   df = df,
   response = "vi_numeric",
@@ -222,7 +224,8 @@ x <- collinear(
   )
 )
 
-#with quantitative preference order
+#pre-computed preference order
+#--------------------------------
 preference_df <- preference_order(
   df = df,
   response = "vi_numeric",
@@ -242,53 +245,14 @@ x <- collinear(
 x <- collinear(
     df = df,
     response = c(
-      "vi_binomial",
-      "vi_numeric"
+      "vi_counts",
+      "vi_category"
       ),
     predictors = predictors
   )
 
 #result is a named list
 x
-
-#with binomial response
-#--------------------------------
-
-#  target encoding
-#  automated preference order (different f function)
-#  all predictors filtered by correlation and VIF
-# x <- collinear(
-#   df = df,
-#   response = "vi_binomial",
-#   predictors = predictors
-# )
-
-
-
-#with counts response
-#--------------------------------
-
-#  target encoding
-#  automated preference order (different f function)
-#  all predictors filtered by correlation and VIF
-# x <- collinear(
-#   df = df,
-#   response = "vi_counts",
-#   predictors = predictors
-# )
-
-#with categorical response
-#--------------------------------
-
-#  target encoding
-#  automated preference order (different f function)
-# all predictors filtered by correlation
-# numeric predictors filtered by VIF
-# x <- collinear(
-#   df = df,
-#   response = "vi_category",
-#   predictors = predictors
-# )
 
 
 #resetting to sequential processing

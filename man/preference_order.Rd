@@ -35,7 +35,7 @@ Default: NULL}
 \item{warn_limit}{(optional, numeric) Preference value (R-squared, AUC, or Cramer's V) over which a warning flagging suspicious predictors is issued. Disabled if NULL. Default: 0.8}
 }
 \value{
-data frame
+data frame: columns are "response", "predictor", "f" (function name), and "preference".
 }
 \description{
 Ranks a set of predictors by the strength of their association with a response. Aims to minimize the loss of important predictors during multicollinearity filtering.
@@ -83,12 +83,14 @@ Additionally, any custom function accepting a data frame with the columns "x" (p
 This function returns a data frame with the column "predictor", with predictor names ordered by the column "preference", with the result of \code{f}. This data frame, or the column "predictor" alone, can be used as inputs for the argument \code{preference_order} in \code{\link[=collinear]{collinear()}}, \code{\link[=cor_select]{cor_select()}}, and \code{\link[=vif_select]{vif_select()}}.
 
 Accepts a parallelization setup via \code{\link[future:plan]{future::plan()}} and a progress bar via \code{\link[progressr:handlers]{progressr::handlers()}} (see examples).
+
+Accepts a character vector of response variables as input for the argument \code{response}. When more than one response is provided, the output is a named list of preference data frames.
 }
 \examples{
 #subsets to limit example run time
-vi <- vi[1:1000, ]
-vi_predictors <- vi_predictors[1:10]
-vi_predictors_numeric <- vi_predictors_numeric[1:10]
+df <- vi[1:1000, ]
+predictors <- vi_predictors[1:10]
+predictors_numeric <- vi_predictors_numeric[1:10]
 
 #parallelization setup
 future::plan(
@@ -100,41 +102,54 @@ future::plan(
 # progressr::handlers(global = TRUE)
 
 #numeric response and predictors
+#------------------------------------------------
 #selects f automatically depending on data features
 #applies f_r2_pearson() to compute correlation between response and predictors
 df_preference <- preference_order(
-  df = vi,
+  df = df,
   response = "vi_numeric",
-  predictors = vi_predictors_numeric,
+  predictors = predictors_numeric,
   f = NULL
   )
 
 #returns data frame ordered by preference
 df_preference
 
+
 #several responses
-list_preference <- preference_order(
-  df = vi,
-  response = c(
-    "vi_numeric",
-    "vi_category",
-  ),
-  predictors = vi_predictors
+#------------------------------------------------
+responses <- c(
+  "vi_category",
+  "vi_counts"
+)
+
+preference_list <- preference_order(
+  df = df,
+  response = responses,
+  predictors = predictors
 )
 
 #returns a named list
-names(list_preference)
-list_preference[[1]]
-list_preference[[2]]
+names(preference_list)
+preference_list[[1]]
+preference_list[[2]]
+
+#can be used in collinear()
+# x <- collinear(
+#   df = df,
+#   response = responses,
+#   predictors = predictors,
+#   preference_order = preference_list
+# )
 
 #f function selected by user
 #for binomial response and numeric predictors
-preference_order(
-  df = vi,
-  response = "vi_binomial",
-  predictors = vi_predictors_numeric,
-  f = f_auc_glm_binomial
-)
+# preference_order(
+#   df = vi,
+#   response = "vi_binomial",
+#   predictors = predictors_numeric,
+#   f = f_auc_glm_binomial
+# )
 
 
 #disable parallelization

@@ -195,7 +195,10 @@ vif_select <- function(
 
     if(quiet == FALSE){
 
-      message("\ncollinear::vif_select(): maximum VIF is <= ", vif_max, ", skipping VIF-based filtering.")
+      message(
+        "\ncollinear::vif_select(): maximum VIF in 'predictors' is <= ", vif_max, ". Selected predictors:  \n - ",
+        paste(predictors, collapse = "\n - ")
+        )
 
     }
 
