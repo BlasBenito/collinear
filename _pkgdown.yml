@@ -9,21 +9,6 @@ authors:
 
 reference:
 
-- title: Example Data
-  desc: Real and synthetic datasets used throughout the package examples.
-- contents:
-  - has_concept("example_data")
-
-- title: Target Encoding
-  desc: Tools to transform categorical variables into numeric.
-- contents:
-  - has_concept("target_encoding")
-
-- title: Preference Order
-  desc: Quantiative prioritization of variables for a multicollinearity analysis, based on their relationship with a numeric or binary response variable.
-- contents:
-  - has_concept("preference_order")
-
 - title: Automated Multicollinearity Management
   desc: Tools to automatically select sets of variables with a low multicollinearity.
 - contents:
@@ -37,11 +22,30 @@ reference:
 - title: Pairwise Correlation
   desc: Functions implementing pairwise correlation-based methods for multicollinearity filtering.
 - contents:
-  - has_concept("correlation")
+  - has_concept("pairwise_correlation")
+
+- title: Target Encoding
+  desc: Tools to transform categorical variables into numeric.
+- contents:
+  - has_concept("target_encoding")
+  - has_concept("target_encoding_tools")
+
+- title: Preference Order
+  desc: Quantiative prioritization of variables for a multicollinearity analysis, based on their relationship with a numeric or binary response variable.
+- contents:
+  - has_concept("preference_order")
+  - has_concept("preference_order_tools")
+
+- title: Example Data
+  desc: Real and synthetic datasets used throughout the package examples.
+- contents:
+  - has_concept("example_data")
 
 - title: Data Preparation
   desc: Internal functions for data preparation and validation.
 - contents:
+  - has_concept("data_validation")
+  - has_concept("data_types")
   - has_concept("data_preparation")
 
 

@@ -31,7 +31,7 @@
 #' v
 #'
 #' @autoglobal
-#' @family correlation
+#' @family pairwise_correlation
 #' @author Blas M. Benito, PhD
 #' @references
 #' \itemize{

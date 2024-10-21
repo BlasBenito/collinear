@@ -22,7 +22,7 @@
 #'
 #' }
 #' @autoglobal
-#' @family data_preparation
+#' @family data_types
 #' @author Blas M. Benito, PhD
 #' @export
 identify_predictors <- function(
@@ -69,7 +69,7 @@ identify_predictors <- function(
 #'
 #' }
 #' @autoglobal
-#' @family data_preparation
+#' @family data_types
 #' @author Blas M. Benito, PhD
 #' @export
 identify_predictors_numeric <- function(
@@ -155,7 +155,7 @@ identify_predictors_numeric <- function(
 #' non.numeric.predictors
 #'
 #' @autoglobal
-#' @family data_preparation
+#' @family data_types
 #' @author Blas M. Benito, PhD
 #' @export
 identify_predictors_categorical <- function(
@@ -250,7 +250,7 @@ identify_predictors_categorical <- function(
 #' zero.variance.predictors
 #'
 #' @autoglobal
-#' @family data_preparation
+#' @family data_types
 #' @author Blas M. Benito, PhD
 #' @export
 identify_predictors_zero_variance <- function(
@@ -358,6 +358,7 @@ identify_predictors_zero_variance <- function(
 #' )
 #'
 #' @export
+#' @family data_types
 #' @autoglobal
 identify_response_type <- function(
     df = NULL,
@@ -490,6 +491,7 @@ identify_response_type <- function(
 #'
 #' @return character string: predictors type
 #' @export
+#' @family data_types
 #' @autoglobal
 #' @examples
 #'

@@ -19,7 +19,7 @@ status](https://www.r-pkg.org/badges/version/collinear)](https://cran.r-project.
 
 ## Warning
 
-version 1.2.0 of `collinear` comes with a few changes that may break
+version 2.0.0 of `collinear` comes with a few changes that may break
 existing workflows. Additionally, due to improvements in the automated
 selection algorithms, results from previous versions will not be
 reproducible.
@@ -69,6 +69,34 @@ it as:
 *Blas M. Benito (2024). collinear: R Package for Seamless
 Multicollinearity Management. Version 1.2.0. doi:
 10.5281/zenodo.10039489*
+
+## Main Improvements in Version 2.0.0
+
+1.  **Expanded Functionality**:
+    - Functions now support both categorical and numeric responses and
+      predictors. Multiple response variables are accepted, returning
+      named lists for convenient multi-response handling.
+2.  **Robust Selection Algorithms**:
+    - New forward selection algorithms for `vif_select()` and
+      `cor_select()` retain more important predictors during
+      multicollinearity filtering.
+3.  **Refined `preference_order()`**:
+    - All `f` functions have been renamed and extended. Metric and model
+      combinations are now clear (e.g., `r2_spearman`,
+      `auc_glm_binomial`), and `warn_limit` alerts users when predictors
+      show suspiciously high association with the response.
+4.  **Simplified Target Encoding**:
+    - Target encoding is now streamlined, with “loo” (leave-one-out) as
+      the default method, enhancing efficiency and performance across
+      different datasets.
+5.  **Improved Validation**:
+    - Functions `validate_data_vif()` and `validate_data_cor()` ensure
+      the data is suitable for analysis, preventing errors like running
+      VIF on data with more columns than rows.
+6.  **Parallelization & Progress Bars**:
+    - Functions leverage `future::plan()` for parallel processing and
+      `progressr::handlers()` for real-time progress updates, improving
+      speed and user experience on large datasets.
 
 ## Install
 
@@ -125,22 +153,62 @@ The predictors are stored in the following objects:
 
 ## Getting Started
 
-The function `collinear()` contains the full logics for
-multicollinearity management in most use cases.
+The function `collinear()` contains the full logic for multicollinearity
+management in most use cases.
 
 It has the following arguments:
 
-| **Argument**       | **Description**                                                                  | **Dependencies/Defaults**                                                     |
-|--------------------|----------------------------------------------------------------------------------|-------------------------------------------------------------------------------|
-| `df`               | Data frame with predictors (numeric/categorical) and optional response variable. | Required.                                                                     |
-| `response`         | Response name (continuous, binomial, integer, or categorical).                   | Defaults to `NULL`. Enables target encoding and preference order computation. |
-| `predictors`       | Names of target predictors.                                                      | Defaults to all columns in `df` except `response`.                            |
-| `encoding_method`  | Target encoding method for categorical predictors.                               | Requires numeric `response`. Disabled if `NULL`.                              |
-| `preference_order` | Predictor ranking (custom vector or output of `preference_order()`).             | Defaults to `NULL`. Computed internally if `response` is provided.            |
-| `f`                | Function to compute preference order.                                            | Defaults to `f_default()` if `preference_order = NULL`.                       |
-| `cor_method`       | Pairwise correlation method.                                                     | Ignored if `cor_max` is `NULL`.                                               |
-| `cor_max`          | Maximum allowed pairwise correlation.                                            | Disabled if `NULL`.                                                           |
-| `vif_max`          | Maximum allowed VIF.                                                             | Disabled if `NULL`.                                                           |
+| **Argument** | **Description** | **Dependencies/Defaults** |
+|----|----|----|
+| `df` | Data frame with predictors (numeric/categorical) and optional response variable. | Required. |
+| `response` | Response name (continuous, binomial, integer, or categorical). | Defaults to `NULL`. Enables target encoding and preference order computation. |
+| `predictors` | Names of target predictors. | Defaults to all columns in `df` except `response`. |
+| `encoding_method` | Target encoding method for categorical predictors. | Requires numeric `response`. Disabled if `NULL`. |
+| `preference_order` | Predictor ranking (custom vector or output of `preference_order()`). | Defaults to `NULL`. Computed internally if `response` is provided. |
+| `f` | Function to compute preference order. | Defaults to `f_default()` if `preference_order = NULL`. |
+| `cor_method` | Pairwise correlation method. | Ignored if `cor_max` is `NULL`. |
+| `cor_max` | Maximum allowed pairwise correlation. | Disabled if `NULL`. |
+| `vif_max` | Maximum allowed VIF. | Disabled if `NULL`. |
+
+The dependencies between arguments might seem rather complex at first,
+but they can be summarized in a couple of principles and use-case
+scenarios.
+
+Principles:
+
+- VIF-based filtering ignores categorical predictors.
+
+``` r
+collinear(
+  df = vi,
+  predictors = vi_predictors_categorical,
+  cor_max = NULL
+)
+```
+
+- Correlation filtering supports categorical predictors.
+- Categorical predictors are target-encoded as numeric when `response`
+  is numeric and `encoding_method` is not NULL.
+- Pairwise correlation filtering results on categorical predictors
+  change if target-encoding is applied
+
+Scenarios:
+
+- “I want to keep my categorical predictors categorical” and/or “I
+  dislike that target encoding non-sense”: set `encoding_method` to
+  `NULL`.
+
+- “I know what predictors I’d like to preserve”: add them as a character
+  vector in `preference_order`.
+
+- “I don’t know what predictors are important”: provide `response` and
+  set `preference_order` to NULL, and `collinear()` will figure it out.
+
+- No response available:
+
+- no response, no preference_order, categorical predictors: predictors
+  ranked from lower to higher Cramer’s V with others and filtered with
+  pairwise correlation.
 
 The example below shows all full call to the function on the `vi` data
 frame with a numeric response and predictors of mixed types.
@@ -422,7 +490,7 @@ df <- target_encoding_lab(
   ),
   seed = 1,
   white_noise = c(0, 0.01, 0.1),
-  verbose = TRUE
+  quiet = FALSE
 )
 ```
 

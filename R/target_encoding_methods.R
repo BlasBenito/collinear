@@ -136,7 +136,7 @@ target_encoding_rank <- function(
 
   if(is.null(encoded_name)){
     stop(
-      "collinear::target_encoding_mean() argument 'encoded_name' is required.",
+      "collinear::target_encoding_rank() argument 'encoded_name' is required.",
       call. = FALSE
     )
   }
@@ -194,7 +194,7 @@ target_encoding_loo <- function(
 
   if(is.null(encoded_name)){
     stop(
-      "collinear::target_encoding_mean() argument 'encoded_name' is required.",
+      "collinear::target_encoding_loo() argument 'encoded_name' is required.",
       call. = FALSE
     )
   }
@@ -250,9 +250,18 @@ target_encoding_loo <- function(
 
 }
 
-#' @rdname target_encoding_methods
-#' @autoglobal
+
+#' Add White Noise to Encoded Predictor
+#'
+#' @description
+#' Internal function to add white noise to a encoded predictor to reduce the risk of overfitting when used in a model along with the response.
+#'
+#' @inheritParams target_encoding_lab
+#'
+#' @return data frame
+#' @family target_encoding_tools
 #' @export
+#' @autoglobal
 add_white_noise <- function(
     df = NULL,
     response = NULL,
@@ -327,6 +336,7 @@ add_white_noise <- function(
 #'
 #' @return string: predictor name
 #' @export
+#' @family target_encoding_tools
 #' @autoglobal
 encoded_predictor_name <- function(
     predictor = NULL,

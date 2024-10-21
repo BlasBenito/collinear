@@ -48,13 +48,14 @@ zero.variance.predictors
 
 }
 \seealso{
-Other data_preparation: 
-\code{\link{drop_geometry_column}()},
+Other data_types: 
 \code{\link{identify_predictors}()},
 \code{\link{identify_predictors_categorical}()},
-\code{\link{identify_predictors_numeric}()}
+\code{\link{identify_predictors_numeric}()},
+\code{\link{identify_predictors_type}()},
+\code{\link{identify_response_type}()}
 }
 \author{
 Blas M. Benito, PhD
 }
-\concept{data_preparation}
+\concept{data_types}

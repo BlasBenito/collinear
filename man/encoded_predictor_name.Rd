@@ -18,10 +18,6 @@ encoded_predictor_name(
 \item{encoding_method}{(required, string) Name of the encoding method. One of: "mean", "rank", or "loo". Default: "mean"}
 
 \item{smoothing}{(optional; integer) Groups smaller than this number have their means pulled towards the mean of the response across all cases. Ignored by \code{target_encoding_rank()} and \code{target_encoding_loo()}. Default: 0}
-
-\item{white_noise}{(optional; numeric vector) Argument of the methods "mean", "rank", and "loo". Maximum white noise to add, expressed as a fraction of the range of the response variable. Range from 0 to 1. Default: \code{0}.}
-
-\item{seed}{(optional; integer vector) Random seed to facilitate reproducibility when \code{white_noise} is not 0. If NULL, the function selects one at random, and the selected seed does not appear in the encoded variable names. Default: 0}
 }
 \value{
 string: predictor name
@@ -29,3 +25,8 @@ string: predictor name
 \description{
 Name of Target-Encoded Predictor
 }
+\seealso{
+Other target_encoding_tools: 
+\code{\link{add_white_noise}()}
+}
+\concept{target_encoding_tools}

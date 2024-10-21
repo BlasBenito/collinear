@@ -84,21 +84,25 @@ future::plan(future::sequential)
 Other pairwise_correlation: 
 \code{\link{cor_clusters}()},
 \code{\link{cor_matrix}()},
-\code{\link{cor_select}()}
+\code{\link{cor_select}()},
+\code{\link{cramer_v}()}
 
 Other pairwise_correlation: 
 \code{\link{cor_clusters}()},
 \code{\link{cor_matrix}()},
-\code{\link{cor_select}()}
+\code{\link{cor_select}()},
+\code{\link{cramer_v}()}
 
 Other pairwise_correlation: 
 \code{\link{cor_clusters}()},
 \code{\link{cor_matrix}()},
-\code{\link{cor_select}()}
+\code{\link{cor_select}()},
+\code{\link{cramer_v}()}
 
 Other pairwise_correlation: 
 \code{\link{cor_clusters}()},
 \code{\link{cor_matrix}()},
-\code{\link{cor_select}()}
+\code{\link{cor_select}()},
+\code{\link{cramer_v}()}
 }
 \concept{pairwise_correlation}

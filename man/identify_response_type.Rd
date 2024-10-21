@@ -57,3 +57,12 @@ identify_response_type(
 )
 
 }
+\seealso{
+Other data_types: 
+\code{\link{identify_predictors}()},
+\code{\link{identify_predictors_categorical}()},
+\code{\link{identify_predictors_numeric}()},
+\code{\link{identify_predictors_type}()},
+\code{\link{identify_predictors_zero_variance}()}
+}
+\concept{data_types}

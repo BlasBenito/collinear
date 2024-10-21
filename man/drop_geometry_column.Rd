@@ -17,13 +17,6 @@ data frame
 \description{
 Replicates the functionality of  \code{sf::st_drop_geometry()} without depending on the \code{sf} package.
 }
-\seealso{
-Other data_preparation: 
-\code{\link{identify_predictors}()},
-\code{\link{identify_predictors_categorical}()},
-\code{\link{identify_predictors_numeric}()},
-\code{\link{identify_predictors_zero_variance}()}
-}
 \author{
 Blas M. Benito, PhD
 }

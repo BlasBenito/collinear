@@ -37,7 +37,7 @@ knitr::opts_chunk$set(
 
 ## Warning
 
-version 1.2.0 of `collinear` comes with a few changes that may break existing workflows. Additionally, due to improvements in the automated selection algorithms, results from previous versions will not be reproducible. 
+version 2.0.0 of `collinear` comes with a few changes that may break existing workflows. Additionally, due to improvements in the automated selection algorithms, results from previous versions will not be reproducible. Please read the changelog for futher details.
 
 ## Summary
 
@@ -64,6 +64,29 @@ These methods are integrated in the function `collinear()`, which is designed as
 If you found this package useful during your research work, please cite it as:
 
 *Blas M. Benito (2024). collinear: R Package for Seamless Multicollinearity Management. Version 1.2.0. doi: 10.5281/zenodo.10039489*
+
+## Main Improvements in Version 2.0.0
+
+1. **Expanded Functionality**: 
+   - Functions now support both categorical and numeric responses and predictors. Multiple response variables are accepted, returning named lists for convenient multi-response handling.
+   
+2. **Robust Selection Algorithms**: 
+   - New forward selection algorithms for `vif_select()` and `cor_select()` retain more important predictors during multicollinearity filtering.
+
+3. **Refined `preference_order()`**:
+   - New `f` functions to cover most use-cases. New naming schema to make metric and model combinations more clear (e.g., `r2_spearman`, `auc_glm_binomial`), and new argument `warn_limit` alerts users when predictors show suspiciously high association with the response.
+   
+4. **Simplified Target Encoding**:
+   - Target encoding is now streamlined, with "loo" (leave-one-out) as the default method, enhancing efficiency and performance across different datasets.
+
+5. **Improved Validation**: 
+   - Functions `validate_data_vif()` and `validate_data_cor()` ensure the data is suitable for analysis, preventing errors like running VIF on data with more columns than rows.
+
+6. **Parallelization and Progress Bars**: 
+   - Functions leverage `future::plan()` for parallel processing and `progressr::handlers()` for real-time progress updates, improving speed and user experience on large datasets.
+
+  
+
 
 ## Install
 

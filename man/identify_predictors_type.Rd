@@ -41,3 +41,12 @@ identify_predictors_type(
 )
 
 }
+\seealso{
+Other data_types: 
+\code{\link{identify_predictors}()},
+\code{\link{identify_predictors_categorical}()},
+\code{\link{identify_predictors_numeric}()},
+\code{\link{identify_predictors_zero_variance}()},
+\code{\link{identify_response_type}()}
+}
+\concept{data_types}

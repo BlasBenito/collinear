@@ -4,7 +4,6 @@
 \alias{target_encoding_mean}
 \alias{target_encoding_rank}
 \alias{target_encoding_loo}
-\alias{add_white_noise}
 \title{Target Encoding Methods}
 \usage{
 target_encoding_mean(
@@ -30,14 +29,6 @@ target_encoding_loo(
   encoded_name = NULL,
   smoothing = 0
 )
-
-add_white_noise(
-  df = NULL,
-  response = NULL,
-  predictor = NULL,
-  white_noise = 0.1,
-  seed = 1
-)
 }
 \arguments{
 \item{df}{(required; data frame, tibble, or sf) A data frame with numeric predictors, and optionally a numeric response and categorical predictors. Default: NULL.}
@@ -49,10 +40,6 @@ add_white_noise(
 \item{encoded_name}{(required, string) Name of the encoded predictor. Default: NULL}
 
 \item{smoothing}{(optional; integer) Groups smaller than this number have their means pulled towards the mean of the response across all cases. Ignored by \code{target_encoding_rank()} and \code{target_encoding_loo()}. Default: 0}
-
-\item{white_noise}{(optional; numeric vector) Argument of the methods "mean", "rank", and "loo". Maximum white noise to add, expressed as a fraction of the range of the response variable. Range from 0 to 1. Default: \code{0}.}
-
-\item{seed}{(optional; integer vector) Random seed to facilitate reproducibility when \code{white_noise} is not 0. If NULL, the function selects one at random, and the selected seed does not appear in the encoded variable names. Default: 0}
 }
 \value{
 data frame

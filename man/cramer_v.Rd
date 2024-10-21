@@ -45,7 +45,14 @@ v
 \item Cramér, H. (1946). Mathematical Methods of Statistics. Princeton: Princeton University Press, page 282 (Chapter 21. The two-dimensional case). ISBN 0-691-08004-6
 }
 }
+\seealso{
+Other pairwise_correlation: 
+\code{\link{cor_clusters}()},
+\code{\link{cor_df}()},
+\code{\link{cor_matrix}()},
+\code{\link{cor_select}()}
+}
 \author{
 Blas M. Benito, PhD
 }
-\concept{correlation}
+\concept{pairwise_correlation}
