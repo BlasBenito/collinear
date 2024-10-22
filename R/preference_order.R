@@ -95,7 +95,7 @@
 #' #several responses
 #' #------------------------------------------------
 #' responses <- c(
-#'   "vi_category",
+#'   "vi_categorical",
 #'   "vi_counts"
 #' )
 #'

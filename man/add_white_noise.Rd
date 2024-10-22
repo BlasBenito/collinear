@@ -8,7 +8,7 @@ add_white_noise(
   df = NULL,
   response = NULL,
   predictor = NULL,
-  white_noise = 0.1,
+  white_noise = 0,
   seed = 1
 )
 }
@@ -16,6 +16,8 @@ add_white_noise(
 \item{df}{(required; data frame, tibble, or sf) A data frame with numeric predictors, and optionally a numeric response and categorical predictors. Default: NULL.}
 
 \item{response}{(optional, character string) Name of a numeric response variable in \code{df}. Default: NULL.}
+
+\item{predictor}{(required, string) Name of a target-encoded predictor. Default: NULL}
 
 \item{white_noise}{(optional; numeric vector) Argument of the methods "mean", "rank", and "loo". Maximum white noise to add, expressed as a fraction of the range of the response variable. Range from 0 to 1. Default: \code{0}.}
 

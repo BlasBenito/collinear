@@ -12,12 +12,12 @@ usethis::use_data(vi, overwrite = TRUE)
 
 colnames(vi)
 
-vi$vi_factor <- as.factor(vi$vi_category)
+vi$vi_factor <- as.factor(vi$vi_categorical)
 
 vi <- vi |>
   dplyr::relocate(
     vi_factor,
-    .after = vi_category
+    .after = vi_categorical
   )
 
 vi$soil_type <- as.factor(vi$soil_type)
@@ -26,7 +26,7 @@ vi <- vi |>
   dplyr::mutate(
     vi_numeric = vi_mean,
     vi_counts = as.integer(vi_mean * 1000),
-    vi_category = dplyr::case_when(
+    vi_categorical = dplyr::case_when(
       vi_mean >= quantile(vi_mean, 0.8)  ~ "very_high",
       vi_mean >= quantile(vi_mean, 0.6)  ~ "high",
       vi_mean >= quantile(vi_mean, 0.4)  ~ "medium",
@@ -38,7 +38,7 @@ vi <- vi |>
     vi_numeric,
     vi_counts,
     vi_binary,
-    vi_category,
+    vi_categorical,
     .before = vi_mean
   ) |>
   dplyr::select(

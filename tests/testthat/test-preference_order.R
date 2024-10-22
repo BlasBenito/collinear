@@ -24,7 +24,7 @@ testthat::test_that("`preference_order()` works", {
     "vi_numeric",
     "vi_counts",
     "vi_binomial",
-    "vi_category",
+    "vi_categorical",
     "vi_factor"
   )
 
@@ -147,7 +147,7 @@ testthat::test_that("`preference_order()` works", {
   #categorical response and predictors
   df_preference <- preference_order(
     df = vi,
-    response = "vi_category",
+    response = "vi_categorical",
     predictors = vi_predictors_categorical,
     f = f_v,
     warn_limit = NULL,
@@ -178,7 +178,7 @@ testthat::test_that("`preference_order()` works", {
   #categorical response and categorical and numeric predictors
   df_preference <- preference_order(
     df = vi,
-    response = "vi_category",
+    response = "vi_categorical",
     predictors = vi_predictors_numeric,
     f = f_v_rf_categorical,
     warn_limit = NULL,

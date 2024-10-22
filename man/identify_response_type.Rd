@@ -48,7 +48,7 @@ identify_response_type(
 
 identify_response_type(
   df = vi,
-  response = "vi_category"
+  response = "vi_categorical"
 )
 
 identify_response_type(

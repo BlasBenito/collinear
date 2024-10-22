@@ -5,7 +5,34 @@ template:
 
 authors:
   Blas M. Benito:
-  href: https://blasbenito.com
+    href: https://blasbenito.com
+
+articles:
+
+- title: "Blog Posts"
+  navbar: "Blog Posts"
+  contents:
+  - multicollinearity_blog_post
+  - vif_blog_post
+  - target_encoding_blog_post
+
+external-articles:
+
+  - name: multicollinearity_blog_post
+    title: "Multicollinearity Hinders Model Interpretability"
+    description: "This post delves into the intricacies of model interpretation under the influence of multicollinearity, and use R and a toy data set to demonstrate how this phenomenon impacts both linear and machine learning models."
+    href: https://www.blasbenito.com/post/multicollinearity-model-interpretability/
+
+  - name: vif_blog_post
+    title: "Everything About Variance Inflation Factors"
+    description: "This post dives deep Variance Inflation Factors (VIF) and their crucial role in identifying multicollinearity within linear models. It uses R code extensively to illustrate various concepts, making it a practical guide for those well-versed in R."
+    href: https://www.blasbenito.com/post/variance-inflation-factor/
+
+  - name: target_encoding_blog_post
+    title: "Mapping Categorical Predictors to Numeric"
+    description: "This post focuses on the complexities of dealing with categorical predictors using methods such as one-hot encoding (please don’t) or target encoding, and provides insights into its mechanisms and quirks."
+    href: https://www.blasbenito.com/post/target-encoding/
+
 
 reference:
 

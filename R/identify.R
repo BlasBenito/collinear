@@ -349,7 +349,7 @@ identify_predictors_zero_variance <- function(
 #'
 #' identify_response_type(
 #'   df = vi,
-#'   response = "vi_category"
+#'   response = "vi_categorical"
 #' )
 #'
 #' identify_response_type(

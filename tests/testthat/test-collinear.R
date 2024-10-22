@@ -10,7 +10,7 @@ testthat::test_that("`collinear()` works", {
     "vi_numeric",
     "vi_counts",
     "vi_binomial",
-    "vi_category",
+    "vi_categorical",
     "vi_factor"
   )
 

@@ -209,7 +209,7 @@
 #'     df = df,
 #'     response = c(
 #'       "vi_counts",
-#'       "vi_category"
+#'       "vi_categorical"
 #'       ),
 #'     predictors = predictors
 #'   )

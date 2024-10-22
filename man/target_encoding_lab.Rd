@@ -51,14 +51,9 @@ In essence, target encoding works as follows:
 The methods to compute the group statistic implemented here are:
 
 \itemize{
-\item "mean" (implemented in \code{target_encoding_mean()}): Encodes categorical values with the group means of the response. It has two methods to control overfitting:
-\itemize{
-\item \code{smoothing} groups larger than this argument are encoded with the group mean, while smaller groups are encoded with a weighted mean of the group's and the global mean. This method is named "mean smoothing" in the relevant literature.
-\item \code{white_noise}: maximum white noise to be added to each case, expressed as a fraction of the observed range of the numeric variable. Non-deterministic, requires setting the \code{seed} argument for reproducibility.
-}
-Variables encoded with this method are identified with the suffix "__encoded_mean".
-\item "rank" (implemented in \code{target_encoding_rank()}): Returns the rank of the group as a integer, being 1 he group with the lower mean of the response variable. It accepts the \code{white_noise} argument to control overfitting. Variables encoded with this method are identified with the suffix "__encoded_rank".
-\item "loo" (implemented in \code{target_encoding_loo()}): Known as the "leave-one-out method" in the literature, it encodes each categorical value with the mean of the response variable across all other group cases. This method controls overfitting better than "mean". Additionally, it accepts the \code{white_noise} method. Variables encoded with this method are identified with the suffix "__encoded_loo".
+\item "mean" (implemented in \code{target_encoding_mean()}): Encodes categorical values with the group means of the response. Variables encoded with this method are identified with the suffix "__encoded_mean". It has a method to control overfitting implemented via the argument \code{smoothing}. The integer value of this argument indicates a threshold in number of rows. Groups above this threshold are encoded with the group mean, while groups below it are encoded with a weighted mean of the group's mean and the global mean. This method is named "mean smoothing" in the relevant literature.
+\item "rank" (implemented in \code{target_encoding_rank()}): Returns the rank of the group as a integer, being 1 he group with the lower mean of the response variable. Variables encoded with this method are identified with the suffix "__encoded_rank".
+\item "loo" (implemented in \code{target_encoding_loo()}): Known as the "leave-one-out method" in the literature, it encodes each categorical value with the mean of the response variable across all other group cases. This method controls overfitting better than "mean". Variables encoded with this method are identified with the suffix "__encoded_loo".
 }
 
 Accepts a parallelization setup via \code{\link[future:plan]{future::plan()}} and a progress bar via \code{\link[progressr:handlers]{progressr::handlers()}} (see examples).

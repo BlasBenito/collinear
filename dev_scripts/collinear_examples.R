@@ -152,7 +152,7 @@ x <- collinear(
 # numeric predictors filtered by VIF
 # x <- collinear(
 #   df = df,
-#   response = "vi_category",
+#   response = "vi_categorical",
 #   predictors = predictors
 # )
 

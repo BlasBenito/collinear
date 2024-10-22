@@ -15,11 +15,11 @@ testthat::test_that("`case_weights()` works", {
 
   #multinomial weights
   weights <- case_weights(
-    x = vi$vi_category
+    x = vi$vi_categorical
   )
 
   testthat::expect_true(
-    all(names(weights) %in% unique(vi$vi_category))
+    all(names(weights) %in% unique(vi$vi_categorical))
   )
 
   testthat::expect_error(

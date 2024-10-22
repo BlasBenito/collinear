@@ -257,7 +257,7 @@ target_encoding_loo <- function(
 #' Internal function to add white noise to a encoded predictor to reduce the risk of overfitting when used in a model along with the response.
 #'
 #' @inheritParams target_encoding_lab
-#'
+#' @param predictor (required, string) Name of a target-encoded predictor. Default: NULL
 #' @return data frame
 #' @family target_encoding_tools
 #' @export
@@ -266,7 +266,7 @@ add_white_noise <- function(
     df = NULL,
     response = NULL,
     predictor = NULL,
-    white_noise = 0.1,
+    white_noise = 0,
     seed = 1
 ){
 
@@ -333,7 +333,8 @@ add_white_noise <- function(
 #
 #' @inheritParams target_encoding_mean
 #' @param encoding_method (required, string) Name of the encoding method. One of: "mean", "rank", or "loo". Default: "mean"
-#'
+#' @param white_noise (optional; numeric vector) Argument of the methods "mean", "rank", and "loo". Maximum white noise to add, expressed as a fraction of the range of the response variable. Range from 0 to 1. Default: `0`.
+#' @param seed (optional; integer vector) Random seed to facilitate reproducibility when `white_noise` is not 0. If NULL, the function selects one at random, and the selected seed does not appear in the encoded variable names. Default: 0
 #' @return string: predictor name
 #' @export
 #' @family target_encoding_tools

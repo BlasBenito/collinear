@@ -178,10 +178,10 @@ x
 }
 }
 \seealso{
-Other automated_multicollinearity_analysis: 
-\code{\link{collinear}()}
+Other vif: 
+\code{\link{vif_df}()}
 }
 \author{
 Blas M. Benito, PhD
 }
-\concept{automated_multicollinearity_analysis}
+\concept{vif}
