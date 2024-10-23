@@ -49,22 +49,29 @@
 #'
 #' The function [cor_select()] applies a recursive forward selection algorithm to keep predictors with a maximum Pearson correlation with all other selected predictors lower than `cor_max`.
 #'
-#' If the argument `preference_order` is not provided, the predictors are ranked from lower to higher sum of absolute pairwise correlation with all other predictors.
+#' If the argument `preference_order` is NULL, the predictors are ranked from lower to higher sum of absolute pairwise correlation with all other predictors.
 #'
 #' If `preference_order` is defined, whenever two or more variables are above `cor_max`, the one higher in `preference_order` is preserved. For example, for the predictors and preference order \eqn{a} and \eqn{b}, if their correlation is higher than `cor_max`, then \eqn{b} will be removed and \eqn{a} preserved. If their correlation is lower than `cor_max`, then both are preserved.
 #'
 #'
 #' @param df (required; data frame, tibble, or sf) A data frame with numeric predictors, and optionally a numeric response and categorical predictors. Default: NULL.
-#' @param response (optional, character string or vector) Name/s of response variable/s in `df`. Used in target encoding when it names a numeric variable, and in the computation of preference order if `preference_order = NULL`. Default: NULL.
+#' @param response (optional, character string or vector) Name/s of response variable/s in `df`. Used in target encoding when it names a numeric variable and there are categorical predictors, and to compute preference order. Default: NULL.
 #' @param predictors (optional; character vector) Names of the variables to select from `df`. If omitted, all numeric columns in `df` are used instead. If argument `response` is not provided, non-numeric variables are ignored. Default: NULL
 #' @param encoding_method (optional; character string). Name of the target encoding method. One of: "loo", "mean", or "rank". If NULL, target encoding is disabled. Default: "loo"
-#' @param preference_order (optional; character vector) Variable names in `predictors`. Defines a priority order, from first to last, to preserve variables during the selection process. Variables not included in this argument are ranked by their Variance Inflation Factor. See [preference_order()]. Default: NULL
+#' @param preference_order (optional; string, character vector, output of [preference_order()]). Defines a priority order, from first to last, to preserve predictors during the selection process. Accepted inputs are:
+#' \itemize{
+#'   \item **"auto"** (default): if `response` is not NULL, calls [preference_order()] for internal computation.
+#'   \item **character vector**: predictor names in a custom preference order.
+#'   \item **data frame**: output of [preference_order()] from `response` of length one.
+#'   \item **named list**: output of [preference_order()] from `response` of length two or more.
+#'   \item **NULL**: disabled.
+#' }. Default: "auto"
 #' @param preference_f (optional: function) Function to compute preference order. If NULL (default), the output of [f_default()] for the given data is used:
 #' \itemize{
-#'   \item [f_auc_rf()]: `response` is binomial.
-#'   \item [f_r2_pearson()]: `response` and `predictors` are numeric.
-#'   \item [f_v()]: `response` and `predictors` are categorical.
-#'   \item [f_v_rf_categorical()]: `response` is categorical and `predictors` are numeric or mixed .
+#'   \item [f_auc_rf()]: if `response` is binomial.
+#'   \item [f_r2_pearson()]: if `response` and `predictors` are numeric.
+#'   \item [f_v()]: if `response` and `predictors` are categorical.
+#'   \item [f_v_rf_categorical()]: if `response` is categorical and `predictors` are numeric or mixed .
 #'   \item [f_r2_rf()]: in all other cases.
 #' }
 #' Default: NULL
@@ -234,7 +241,7 @@ collinear <- function(
     response = NULL,
     predictors = NULL,
     encoding_method = "loo",
-    preference_order = NULL,
+    preference_order = "auto",
     preference_f = NULL,
     preference_warn_limit = 0.8,
     cor_method = "pearson",
@@ -260,12 +267,6 @@ collinear <- function(
     y = response
   )
   rm(response)
-
-  #copy of preference order
-  preference_order_user <- preference_order
-
-  #copy of predictors
-  predictors_user <- predictors
 
   #output list
   out <- list()
@@ -317,7 +318,7 @@ collinear <- function(
     predictors <- validate_predictors(
       df = df,
       response = response,
-      predictors = predictors_user
+      predictors = predictors
     )
 
     # target encoding ----
@@ -334,38 +335,53 @@ collinear <- function(
     )
 
     # preference order ----
+
+    #class and length
+    preference_order_user <- preference_order
+    preference_order_class <- class(preference_order)
+
     preference_order <-
-      if(is.null(preference_order_user)){
+      if(preference_order_class == "character"){
 
-      preference_order(
-        df = df,
-        response = response,
-        predictors = predictors,
-        f = preference_f,
-        quiet = quiet,
-        warn_limit = preference_warn_limit
-      )$predictor
+        if(preference_order_user[1] == "auto"){
 
-    } else if (
-      is.data.frame(preference_order_user) &&
-      "predictor" %in% names(preference_order_user)
+          preference_order(
+            df = df,
+            response = response,
+            predictors = predictors,
+            f = preference_f,
+            quiet = quiet,
+            warn_limit = preference_warn_limit
+          )$predictor
+
+        } else {
+
+          preference_order_user
+
+        }
+
+      } else if(
+        preference_order_class == "data.frame" &&
+        "predictor" %in% colnames(preference_order_user)
+        ){
+
+        preference_order_user$predictor
+
+      } else if(
+        preference_order_class == "list"
       ){
 
-      preference_order_user$predictor
+        if(response %in% names(preference_order_user)){
+          preference_order_user[[response]]$predictor
+        } else {
+          preference_order_user[[1]]$predictor
+        }
 
-    } else if (is.list(preference_order_user)){
+      } else {
 
-      preference_order_user[[response]]$predictor
+        NULL
 
-    } else if (is.vector(preference_order_user)){
-
-      preference_order_user
-
-    } else {
-
-      NULL
-
-    }
+      }
 
     # correlation filter ----
     selection <- cor_select(
@@ -378,7 +394,6 @@ collinear <- function(
     )
 
     # vif filter ----
-
 
     #selection by numeric and categorial
     if(is.null(cor_max)){

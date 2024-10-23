@@ -9,7 +9,7 @@ f_default(df = NULL, response = NULL, predictors = NULL, quiet = FALSE)
 \arguments{
 \item{df}{(required; data frame, tibble, or sf) A data frame with numeric predictors, and optionally a numeric response and categorical predictors. Default: NULL.}
 
-\item{response}{(optional, character string or vector) Name/s of response variable/s in \code{df}. Used in target encoding when it names a numeric variable, and in the computation of preference order if \code{preference_order = NULL}. Default: NULL.}
+\item{response}{(optional, character string or vector) Name/s of response variable/s in \code{df}. Used in target encoding when it names a numeric variable and there are categorical predictors, and to compute preference order. Default: NULL.}
 
 \item{predictors}{(optional; character vector) Names of the variables to select from \code{df}. If omitted, all numeric columns in \code{df} are used instead. If argument \code{response} is not provided, non-numeric variables are ignored. Default: NULL}
 

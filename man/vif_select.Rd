@@ -17,7 +17,14 @@ vif_select(
 
 \item{predictors}{(optional; character vector) Names of the variables to select from \code{df}. If omitted, all numeric columns in \code{df} are used instead. If argument \code{response} is not provided, non-numeric variables are ignored. Default: NULL}
 
-\item{preference_order}{(optional; character vector) Variable names in \code{predictors}. Defines a priority order, from first to last, to preserve variables during the selection process. Variables not included in this argument are ranked by their Variance Inflation Factor. See \code{\link[=preference_order]{preference_order()}}. Default: NULL}
+\item{preference_order}{(optional; string, character vector, output of \code{\link[=preference_order]{preference_order()}}). Defines a priority order, from first to last, to preserve predictors during the selection process. Accepted inputs are:
+\itemize{
+\item \strong{"auto"} (default): if \code{response} is not NULL, calls \code{\link[=preference_order]{preference_order()}} for internal computation.
+\item \strong{character vector}: predictor names in a custom preference order.
+\item \strong{data frame}: output of \code{\link[=preference_order]{preference_order()}} from \code{response} of length one.
+\item \strong{named list}: output of \code{\link[=preference_order]{preference_order()}} from \code{response} of length two or more.
+\item \strong{NULL}: disabled.
+}. Default: "auto"}
 
 \item{vif_max}{(optional, numeric) Maximum Variance Inflation Factor allowed during variable selection. Recommended values are between 2.5 and 10. Higher values return larger number of predictors with a higher multicollinearity. If NULL, the variance inflation analysis is disabled. Default: 5.}
 

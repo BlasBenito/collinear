@@ -9,7 +9,7 @@ collinear(
   response = NULL,
   predictors = NULL,
   encoding_method = "loo",
-  preference_order = NULL,
+  preference_order = "auto",
   preference_f = NULL,
   preference_warn_limit = 0.8,
   cor_method = "pearson",
@@ -21,20 +21,27 @@ collinear(
 \arguments{
 \item{df}{(required; data frame, tibble, or sf) A data frame with numeric predictors, and optionally a numeric response and categorical predictors. Default: NULL.}
 
-\item{response}{(optional, character string or vector) Name/s of response variable/s in \code{df}. Used in target encoding when it names a numeric variable, and in the computation of preference order if \code{preference_order = NULL}. Default: NULL.}
+\item{response}{(optional, character string or vector) Name/s of response variable/s in \code{df}. Used in target encoding when it names a numeric variable and there are categorical predictors, and to compute preference order. Default: NULL.}
 
 \item{predictors}{(optional; character vector) Names of the variables to select from \code{df}. If omitted, all numeric columns in \code{df} are used instead. If argument \code{response} is not provided, non-numeric variables are ignored. Default: NULL}
 
 \item{encoding_method}{(optional; character string). Name of the target encoding method. One of: "loo", "mean", or "rank". If NULL, target encoding is disabled. Default: "loo"}
 
-\item{preference_order}{(optional; character vector) Variable names in \code{predictors}. Defines a priority order, from first to last, to preserve variables during the selection process. Variables not included in this argument are ranked by their Variance Inflation Factor. See \code{\link[=preference_order]{preference_order()}}. Default: NULL}
+\item{preference_order}{(optional; string, character vector, output of \code{\link[=preference_order]{preference_order()}}). Defines a priority order, from first to last, to preserve predictors during the selection process. Accepted inputs are:
+\itemize{
+\item \strong{"auto"} (default): if \code{response} is not NULL, calls \code{\link[=preference_order]{preference_order()}} for internal computation.
+\item \strong{character vector}: predictor names in a custom preference order.
+\item \strong{data frame}: output of \code{\link[=preference_order]{preference_order()}} from \code{response} of length one.
+\item \strong{named list}: output of \code{\link[=preference_order]{preference_order()}} from \code{response} of length two or more.
+\item \strong{NULL}: disabled.
+}. Default: "auto"}
 
 \item{preference_f}{(optional: function) Function to compute preference order. If NULL (default), the output of \code{\link[=f_default]{f_default()}} for the given data is used:
 \itemize{
-\item \code{\link[=f_auc_rf]{f_auc_rf()}}: \code{response} is binomial.
-\item \code{\link[=f_r2_pearson]{f_r2_pearson()}}: \code{response} and \code{predictors} are numeric.
-\item \code{\link[=f_v]{f_v()}}: \code{response} and \code{predictors} are categorical.
-\item \code{\link[=f_v_rf_categorical]{f_v_rf_categorical()}}: \code{response} is categorical and \code{predictors} are numeric or mixed .
+\item \code{\link[=f_auc_rf]{f_auc_rf()}}: if \code{response} is binomial.
+\item \code{\link[=f_r2_pearson]{f_r2_pearson()}}: if \code{response} and \code{predictors} are numeric.
+\item \code{\link[=f_v]{f_v()}}: if \code{response} and \code{predictors} are categorical.
+\item \code{\link[=f_v_rf_categorical]{f_v_rf_categorical()}}: if \code{response} is categorical and \code{predictors} are numeric or mixed .
 \item \code{\link[=f_r2_rf]{f_r2_rf()}}: in all other cases.
 }
 Default: NULL}
@@ -112,7 +119,7 @@ If \code{preference_order} is defined, whenever two or more variables are above 
 
 The function \code{\link[=cor_select]{cor_select()}} applies a recursive forward selection algorithm to keep predictors with a maximum Pearson correlation with all other selected predictors lower than \code{cor_max}.
 
-If the argument \code{preference_order} is not provided, the predictors are ranked from lower to higher sum of absolute pairwise correlation with all other predictors.
+If the argument \code{preference_order} is NULL, the predictors are ranked from lower to higher sum of absolute pairwise correlation with all other predictors.
 
 If \code{preference_order} is defined, whenever two or more variables are above \code{cor_max}, the one higher in \code{preference_order} is preserved. For example, for the predictors and preference order \eqn{a} and \eqn{b}, if their correlation is higher than \code{cor_max}, then \eqn{b} will be removed and \eqn{a} preserved. If their correlation is lower than \code{cor_max}, then both are preserved.
 }

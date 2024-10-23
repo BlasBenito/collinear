@@ -18,7 +18,14 @@ cor_select(
 
 \item{predictors}{(optional; character vector) Names of the variables to select from \code{df}. If omitted, all numeric columns in \code{df} are used instead. If argument \code{response} is not provided, non-numeric variables are ignored. Default: NULL}
 
-\item{preference_order}{(optional; character vector) Variable names in \code{predictors}. Defines a priority order, from first to last, to preserve variables during the selection process. Variables not included in this argument are ranked by their Variance Inflation Factor. See \code{\link[=preference_order]{preference_order()}}. Default: NULL}
+\item{preference_order}{(optional; string, character vector, output of \code{\link[=preference_order]{preference_order()}}). Defines a priority order, from first to last, to preserve predictors during the selection process. Accepted inputs are:
+\itemize{
+\item \strong{"auto"} (default): if \code{response} is not NULL, calls \code{\link[=preference_order]{preference_order()}} for internal computation.
+\item \strong{character vector}: predictor names in a custom preference order.
+\item \strong{data frame}: output of \code{\link[=preference_order]{preference_order()}} from \code{response} of length one.
+\item \strong{named list}: output of \code{\link[=preference_order]{preference_order()}} from \code{response} of length two or more.
+\item \strong{NULL}: disabled.
+}. Default: "auto"}
 
 \item{cor_method}{(optional; character string) Method used to compute pairwise correlations. Either "pearson" or "spearman". Default: "pearson".}
 
@@ -42,7 +49,7 @@ Please check the section \strong{Pairwise Correlation Filtering} at the end of t
 
 The function \code{\link[=cor_select]{cor_select()}} applies a recursive forward selection algorithm to keep predictors with a maximum Pearson correlation with all other selected predictors lower than \code{cor_max}.
 
-If the argument \code{preference_order} is not provided, the predictors are ranked from lower to higher sum of absolute pairwise correlation with all other predictors.
+If the argument \code{preference_order} is NULL, the predictors are ranked from lower to higher sum of absolute pairwise correlation with all other predictors.
 
 If \code{preference_order} is defined, whenever two or more variables are above \code{cor_max}, the one higher in \code{preference_order} is preserved. For example, for the predictors and preference order \eqn{a} and \eqn{b}, if their correlation is higher than \code{cor_max}, then \eqn{b} will be removed and \eqn{a} preserved. If their correlation is lower than \code{cor_max}, then both are preserved.
 }

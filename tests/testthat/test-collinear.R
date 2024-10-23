@@ -14,6 +14,7 @@ testthat::test_that("`collinear()` works", {
     "vi_factor"
   )
 
+  #external preference order
   preference_list <- preference_order(
     df = df,
     response = responses,
@@ -38,6 +39,25 @@ testthat::test_that("`collinear()` works", {
 
   testthat::expect_true(
     all(names(x) %in% responses)
+  )
+
+  #preference order auto
+  #should give the same results, but somehow it does not
+  y <- collinear(
+    df = df,
+    response = responses,
+    predictors = predictors,
+    preference_order = "auto",
+    preference_warn_limit = NULL,
+    quiet = TRUE
+  )
+
+  testthat::expect_true(
+    is.list(y)
+  )
+
+  testthat::expect_true(
+    all(names(y) %in% responses)
   )
 
 

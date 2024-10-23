@@ -97,6 +97,10 @@ cor_clusters <- function(
 
   }
 
-  df_clusters[order(df_clusters$cluster), ]
+  df_clusters <- df_clusters[order(df_clusters$cluster), ]
+
+  rownames(df_clusters) <- NULL
+
+  df_clusters
 
 }

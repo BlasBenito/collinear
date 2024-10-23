@@ -249,7 +249,7 @@ preference_order <- function(
       X = preference$predictor,
       FUN = function(x){
 
-        # p()
+        p()
 
         f(
           df = data.frame(
