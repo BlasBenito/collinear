@@ -96,7 +96,7 @@ remotes::install_github(
 
 The packages required for this tutorial are:
 
-```{r, message = FALSE, warning = FALSE, include = FALSE}
+```{r packages, message = FALSE, warning = FALSE, include = FALSE}
 library(collinear)
 library(dplyr)
 library(future)
@@ -107,14 +107,14 @@ library(parallelly)
 
 Most functions in the package now accept a parallelization setup and progress bars:
 
-```{r}
+```{r parallelization}
 future::plan(
   future::multisession,
   workers = parallelly::availableCores() - 1
   )
 
 #NOTE: progress bars do not work in .Rmd files
-progressr::handlers(global = TRUE)
+#progressr::handlers(global = TRUE)
 ```
 
 
@@ -122,7 +122,7 @@ progressr::handlers(global = TRUE)
 
 The data frame `vi` consists of 30,000 rows and 67 columns, featuring various response types and a mix of numeric and categorical predictors. The code below makes it smaller to accelerate this tutorial.
 
-```{r}
+```{r make_vi_smaller}
 set.seed(1)
 vi <- dplyr::slice_sample(vi, n = 5000)
 ```
@@ -132,9 +132,9 @@ The response columns, all derived from the same data, have descriptive names: `v
 
 Predictor names are grouped in character vectors: `vi_predictors_numeric` (49 numeric and integer predictors), `vi_predictors_categorical` (12 character and factor predictors), and `vi_predictors` containing them all.
 
-The plot below shows the hierarchical clustering of the correlation matrix between predictors in `vi`. Clustering groups are defined at a correlation higher than 0.5.
+The plot below shows the hierarchical clustering of the correlation matrix between predictors in `vi`.
 
-```{r cluster_plot, fig.width=12, fig.height=5, warning = FALSE}
+```{r figure_1, fig.width=12, fig.height=5, warning = FALSE, fig.cap="Figure 1: groups of predictors in the data frame vi with a correlation higher than 0.5."}
 df_clusters <- collinear::cor_clusters(
   df = vi, 
   predictors = vi_predictors, 
@@ -143,36 +143,39 @@ df_clusters <- collinear::cor_clusters(
   )
 ```
 
-
 ## Using `collinear()`
 
-The function `collinear()` implements four functionalities that are enabled/disabled as follows
+The function `collinear()` is designed as a complete tool for multicollinearity management. As such, it provides access to the key functionalities offered by this package. The table below shows these functionalities, the functions implementing them, their requirements, and how to disable them within `collinear()`.
 
-| **Functionality** | **Enabled** | **Disabled** |
-|-------------------|-------------|--------------|
-| target-encoding   | numeric `response` and categorical `predictors` | `response = NULL` or `encoding_method = NULL`|
-| preference order | numeric orcategorical `response` | `response = NULL` or `preference_order = NULL`|
-| correlation filtering | numeric and/or categorical `predictors` | `cor_max = NULL` |
-| correlation filtering | numeric `predictors` | `vif_max = NULL` |
+| **Functionality** |**Function**|**Requirements** | **Disable** |
+|-------------------|------------|-----------------|--------------|
+| categorical predictors <br> to numeric|`target_encoding_lab()` | - numeric `response` <br> - categorical `predictors` | - `response = NULL` <br> - `encoding_method = NULL`|
+| rank and preserve <br> important predictors | `preference_order()` | any `response` | - `response = NULL` <br> - `preference_order = NULL`|
+| reduce <br> pairwise correlation | `cor_select()` | any `predictors` | `cor_max = NULL` |
+| reduce <br> variance inflation | `vif_select()`| numeric `predictors` | `vif_max = NULL` |
 
-
+The code below shows a full call to `collinear()` with a numeric response and mixed predictor types.
 
 ```{r}
-#multicollinearity filtering
-selected_predictors <- collinear(
+selection <- collinear::collinear(
   df = vi,
   response = "vi_numeric",
   predictors = vi_predictors,
-  encoding_method = "mean",
-  preference_order = NULL,
-  f = NULL,
+  encoding_method = "loo",
+  preference_order = "auto",
+  preference_f = NULL,
+  preference_warn_limit = 0.8,
   cor_method = "pearson",
   cor_max = 0.75,
-  vif_max = 5
+  vif_max = 5,
+  quiet = FALSE
 )
-
-selected_predictors
 ```
+
+
+
+
+
 
 The function returns a vector of predictor ordered by preference with a pairwise correlation lower than 0.75 and a VIF lower than 5. The code below shows the pairwise correlations and the VIF scores of the selected predictors.
 

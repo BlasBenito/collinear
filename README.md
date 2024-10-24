@@ -110,7 +110,7 @@ future::plan(
   )
 
 #NOTE: progress bars do not work in .Rmd files
-progressr::handlers(global = TRUE)
+#progressr::handlers(global = TRUE)
 ```
 
 ## Example Data
@@ -135,8 +135,7 @@ Predictor names are grouped in character vectors:
 `vi_predictors` containing them all.
 
 The plot below shows the hierarchical clustering of the correlation
-matrix between predictors in `vi`. Clustering groups are defined at a
-correlation higher than 0.5.
+matrix between predictors in `vi`.
 
 ``` r
 df_clusters <- collinear::cor_clusters(
@@ -149,76 +148,17 @@ df_clusters <- collinear::cor_clusters(
 
 ## Using `collinear()`
 
-The function `collinear()` implements four functionalities that are
-enabled/disabled as follows
+The function `collinear()` implements four functionalities to streamline
+multicollinearity management
 
-| **Functionality**     | **Enabled**                                        | **Disabled**                                   |
-|-----------------------|----------------------------------------------------|------------------------------------------------|
-| target-encoding       | numeric `response` and categorical in `predictors` | `response = NULL` or `encoding_method = NULL`  |
-| preference order      | numeric or categorical `response`                  | `response = NULL` or `preference_order = NULL` |
-| correlation filtering | numeric and/or categorical `predictors`            | `cor_max = NULL`                               |
-| correlation filtering | numeric `predictors`                               | `vif_max = NULL`                               |
-
-| **Argument**       | **Description**                                                    | **Functionality**                                                                              |
-|--------------------|--------------------------------------------------------------------|------------------------------------------------------------------------------------------------|
-| `response`         | Vector of response names (numeric and/or categorical)              | If provided, enables preference order; if numeric enables target encoding.                     |
-| `predictors`       | Predictors names (numeric and/or categorical); All columns in `df` | If any categorical, and numeric response, triggers target encoding.                            |
-| `encoding_method`  | Target encoding method for categorical predictors; “loo”           | Disabled if `NULL`; triggered if numeric response and categorical predictors.                  |
-| `preference_order` | Predictors ranking (`preference_order()` output or vector); NULL   | Computed internally if NULL and `response` of any type is provided.                            |
-| `preference_f`     | Function to compute preference order; NULL                         | If NULL and `preference_order = NULL`, a proper option is selected depending on data features. |
-| `cor_max`          | Maximum allowed pairwise correlation; 0.75                         | Correlation filtering disabled if `NULL`.                                                      |
-| `vif_max`          | Maximum allowed VIF; 5                                             | VIF filtering disabled if `NULL`.                                                              |
-
-The dependencies between arguments might seem rather complex at first,
-but they can be summarized in a couple of principles and use-case
-scenarios.
-
-Principles:
-
-- VIF-based filtering ignores categorical predictors.
+| **Functionality** | **Function** | **Requirements** | **Disable** |
+|----|----|----|----|
+| categorical predictors <br> to numeric | `target_encoding_lab()` | \- numeric `response` <br> - categorical `predictors` | \- `response = NULL` <br> - `encoding_method = NULL` |
+| rank and preserve <br> important predictors | `preference_order()` | any `response` | \- `response = NULL` <br> - `preference_order = NULL` |
+| reduce <br> pairwise correlation | `cor_select()` | any `predictors` | `cor_max = NULL` |
+| reduce <br> variance inflation | `vif_select()` | numeric `predictors` | `vif_max = NULL` |
 
 ``` r
-collinear(
-  df = vi,
-  predictors = vi_predictors_categorical,
-  cor_max = NULL
-)
-```
-
-- Correlation filtering supports categorical predictors.
-- Categorical predictors are target-encoded as numeric when `response`
-  is numeric and `encoding_method` is not NULL.
-- Pairwise correlation filtering results on categorical predictors
-  change if target-encoding is applied
-
-Scenarios:
-
-- “I want to keep my categorical predictors categorical” and/or “I
-  dislike that target encoding non-sense”: set `encoding_method` to
-  `NULL`.
-
-- “I know what predictors I’d like to preserve”: add them as a character
-  vector in `preference_order`.
-
-- “I don’t know what predictors are important”: provide `response` and
-  set `preference_order` to NULL, and `collinear()` will figure it out.
-
-- No response available:
-
-- no response, no preference_order, categorical predictors: predictors
-  ranked from lower to higher Cramer’s V with others and filtered with
-  pairwise correlation.
-
-The example below shows all full call to the function on the `vi` data
-frame with a numeric response and predictors of mixed types.
-
-``` r
-#parallelization setup
-future::plan(
-  future::multisession,
-  workers = parallelly::availableCores() - 1
-  )
-
 #multicollinearity filtering
 selected_predictors <- collinear(
   df = vi,

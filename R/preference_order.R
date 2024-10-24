@@ -280,7 +280,7 @@ preference_order <- function(
       if(nrow(preference_extreme) > 0){
 
         message(
-          "collinear::preference_order(): [WARNING] predictors with associations to '",
+          "\ncollinear::preference_order(): [WARNING] predictors with associations to '",
           response,
           "' higher than ",
           warn_limit,
