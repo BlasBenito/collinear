@@ -105,8 +105,15 @@ target_encoding_lab <- function(
     quiet = quiet
   )
 
-  #make validated args available
-  list2env(x = args)
+  #reassign args
+  df <- args$df
+  response <- args$response
+  predictors <- args$predictors
+  methods <- args$methods
+  smoothing <- args$smoothing
+  white_noise <- args$white_noise
+  seed <- args$seed
+  overwrite <- args$overwrite
 
   # early stops ----
   if(
