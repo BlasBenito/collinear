@@ -86,118 +86,16 @@ target_encoding_lab <- function(
     quiet = FALSE
 ){
 
-
   # quiet ----
   if(!is.logical(quiet)){
     message("\ncollinear::target_encoding_lab(): argument 'quiet' must be logical, resetting it to FALSE.")
     quiet <- FALSE
   }
 
-  # early stops ----
-  if(is.null(methods)){
-
-    if(quiet == FALSE){
-
-      message(
-        "\ncollinear::target_encoding_lab(): argument 'encoding_method' is NULL, skipping target encoding."
-      )
-
-    }
-
-    return(df)
-
-  }
-
-  # validate df ----
-  df <- validate_df(
-    df = df,
-    quiet = quiet
-  )
-
-  # validate predictors ----
-  predictors <- validate_predictors(
-    df = df,
-    response = response,
-    predictors = predictors,
-    quiet = quiet
-  )
-
-  #identify categorical predictors
-  predictors <- identify_predictors_categorical(
-    df = df,
-    predictors = predictors
-  )
-
-  if(length(predictors) == 0){
-
-    if(quiet == FALSE){
-      message("\ncollinear::target_encoding_lab(): no categorical predictors available, skipping target encoding.")
-    }
-
-    return(df)
-
-  }
-
-  # validate response ----
-  response <- validate_response(
-    df = df,
-    response = response,
-    quiet = quiet
-  )
-
-  if(is.null(response)){
-
-    if(quiet == FALSE){
-
-      message("\ncollinear::target_encoding_lab(): argument 'response' is NULL, skipping target-encoding.")
-
-    }
-
-    return(df)
-
-  }
-
-  #return data frame if response is not numeric
-  if(!is.numeric(df[[response]])){
-
-    if(quiet == FALSE){
-
-      message("\ncollinear::target_encoding_lab(): argument 'response' is not numeric, skipping target-encoding.")
-
-    }
-
-    return(df)
-
-  }
-
-  # validate predictors ----
-  predictors <- validate_predictors(
-    df = df,
-    response = response,
-    predictors = predictors,
-    quiet = quiet
-  )
-
-  #identify categorical predictors
-  predictors <- identify_predictors_categorical(
-    df = df,
-    predictors = predictors
-  )
-
-  if(length(predictors) == 0){
-
-    if(quiet == FALSE){
-
-      message("\ncollinear::target_encoding_lab(): no categorical predictors available, skipping target encoding.")
-
-    }
-
-    return(df)
-
-  }
-
   # validate all other args ----
   args <- validate_encoding_arguments(
+    df = df,
+    response = response,
     predictors = predictors,
     methods = methods,
     smoothing = smoothing,
@@ -209,6 +107,36 @@ target_encoding_lab <- function(
 
   #make validated args available
   list2env(x = args)
+
+  # early stops ----
+  if(
+    is.null(df) ||
+    is.null(response) ||
+    length(predictors) == 0 ||
+    is.null(methods) ||
+    (
+      !is.null(response) &&
+      !is.null(df) &&
+      !is.numeric(df[[response]])
+    )
+  ){
+    return(df)
+  }
+
+  #message to start encoding
+  if(quiet == FALSE){
+
+    message(
+      "\ncollinear::target_encoding_lab(): using response '",
+      response,
+      "' to encode categorical predictors:\n - ",
+      paste0(
+        predictors,
+        collapse = "\n - "
+      )
+    )
+
+  }
 
   # target-encoding ----
   combinations.df <- expand.grid(

@@ -50,7 +50,7 @@
 #' Accepts a character vector of response variables as input for the argument `response`. When more than one response is provided, the output is a named list of preference data frames.
 #'
 #' @inheritParams collinear
-#' @param f (optional: function) Function to compute preference order. If NULL (default), the output of [f_default()] for the given data is used:
+#' @param f (optional: function) Function to compute preference order. If "auto" (default) or NULL, the output of [f_auto()] for the given data is used:
 #' \itemize{
 #'   \item [f_auc_rf()]: `response` is binomial.
 #'   \item [f_r2_pearson()]: `response` and `predictors` are numeric.
@@ -137,9 +137,9 @@ preference_order <- function(
     df = NULL,
     response = NULL,
     predictors = NULL,
-    f = NULL,
-    quiet = FALSE,
-    warn_limit = 0.8
+    f = "auto",
+    warn_limit = 0.8,
+    quiet = FALSE
 ){
 
   if(!is.logical(quiet)){
@@ -206,10 +206,15 @@ preference_order <- function(
     )
 
     #select f function
-    if(is.null(f_user)){
+    if(is.null(f_user) ||
+       (
+         is.character(f_user) &&
+        f_user == "auto"
+        )
+       ){
 
       #get function name
-      f_name <- f_default(
+      f_name <- f_auto(
         df = df,
         response = response,
         predictors = predictors,

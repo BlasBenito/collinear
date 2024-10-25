@@ -57,7 +57,10 @@ If \code{preference_order} is defined, whenever two or more variables are above 
 \examples{
 #subset to limit example run time
 df <- vi[1:1000, ]
-predictors <- vi_predictors[1:10]
+
+#only numeric predictors only to speed-up examples
+#categorical predictors are supported, but result in a slower analysis
+predictors <- vi_predictors_numeric[1:8]
 
 #predictors has mixed types
 sapply(
@@ -81,7 +84,6 @@ x <- cor_select(
   cor_max = 0.75
 )
 
-x
 
 #with custom preference order
 x <- cor_select(
@@ -92,18 +94,6 @@ x <- cor_select(
     "soil_type"
   ),
   cor_max = 0.75
-)
-
-x
-
-#soil_type dissappears because its correlation
-#with swi_mean is above cor_max
-cor_df(
-  df = df,
-  predictors = c(
-    "swi_mean",
-    "soil_type"
-  )
 )
 
 
@@ -120,8 +110,6 @@ x <- cor_select(
   preference_order = df_preference,
   cor_max = 0.75
 )
-
-x
 
 #resetting to sequential processing
 future::plan(future::sequential)

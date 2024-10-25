@@ -124,7 +124,7 @@ The data frame `vi` consists of 30,000 rows and 67 columns, featuring various re
 
 ```{r make_vi_smaller}
 set.seed(1)
-vi <- dplyr::slice_sample(vi, n = 5000)
+vi <- dplyr::slice_sample(vi, n = 1000)
 ```
 
 

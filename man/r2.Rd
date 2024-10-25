@@ -21,7 +21,7 @@ Internal function to compute the R-squared of observations versus model predicti
 Other preference_order_tools: 
 \code{\link{auc}()},
 \code{\link{case_weights}()},
-\code{\link{f_default}()},
-\code{\link{f_default_rules}()}
+\code{\link{f_auto}()},
+\code{\link{f_auto_rules}()}
 }
 \concept{preference_order_tools}

@@ -16,7 +16,7 @@
   - The model family for GLMs or GAMs: `gaussian` for numeric responses, `binomial` for binomial responses, and `poisson` for integer counts.
   - The term `poly2` for GLMs with second-degree polynomials.
   
-- When `f = NULL`, the function `f_default()` determines an appropriate default adapted to the types of the response and predictors.
+- When `f = NULL`, the function `f_auto()` determines an appropriate default adapted to the types of the response and predictors.
 
 - Now issues a warning if predictors show a suspiciously high association with the response. The sensitivity of this test is controlled by the new argument `warn_limit`.
 

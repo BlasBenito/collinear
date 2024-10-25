@@ -8,9 +8,9 @@ preference_order(
   df = NULL,
   response = NULL,
   predictors = NULL,
-  f = NULL,
-  quiet = FALSE,
-  warn_limit = 0.8
+  f = "auto",
+  warn_limit = 0.8,
+  quiet = FALSE
 )
 }
 \arguments{
@@ -20,7 +20,7 @@ preference_order(
 
 \item{predictors}{(optional; character vector) Names of the variables to select from \code{df}. If omitted, all numeric columns in \code{df} are used instead. If argument \code{response} is not provided, non-numeric variables are ignored. Default: NULL}
 
-\item{f}{(optional: function) Function to compute preference order. If NULL (default), the output of \code{\link[=f_default]{f_default()}} for the given data is used:
+\item{f}{(optional: function) Function to compute preference order. If "auto" (default) or NULL, the output of \code{\link[=f_auto]{f_auto()}} for the given data is used:
 \itemize{
 \item \code{\link[=f_auc_rf]{f_auc_rf()}}: \code{response} is binomial.
 \item \code{\link[=f_r2_pearson]{f_r2_pearson()}}: \code{response} and \code{predictors} are numeric.
@@ -30,9 +30,9 @@ preference_order(
 }
 Default: NULL}
 
-\item{quiet}{(optional; logical) If FALSE, messages generated during the execution of the function are printed to the console Default: FALSE}
-
 \item{warn_limit}{(optional, numeric) Preference value (R-squared, AUC, or Cramer's V) over which a warning flagging suspicious predictors is issued. Disabled if NULL. Default: 0.8}
+
+\item{quiet}{(optional; logical) If FALSE, messages generated during the execution of the function are printed to the console Default: FALSE}
 }
 \value{
 data frame: columns are "response", "predictor", "f" (function name), and "preference".

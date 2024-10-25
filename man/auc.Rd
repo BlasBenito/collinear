@@ -20,8 +20,8 @@ Internal function to compute the AUC of binomial models within \code{\link[=pref
 \seealso{
 Other preference_order_tools: 
 \code{\link{case_weights}()},
-\code{\link{f_default}()},
-\code{\link{f_default_rules}()},
+\code{\link{f_auto}()},
+\code{\link{f_auto_rules}()},
 \code{\link{r2}()}
 }
 \concept{preference_order_tools}

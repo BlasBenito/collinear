@@ -199,13 +199,6 @@ validate_predictors <- function(
 
 
   # df ----
-  if(is.null(df)){
-    stop(
-      "collinear::validate_predictors(): argument 'df' cannot be NULL.",
-      call. = FALSE
-    )
-  }
-
   df <- validate_df(
     df = df,
     quiet = quiet
@@ -826,8 +819,14 @@ validate_data_cor <- function(
 #' @autoglobal
 #' @family data_validation
 #' @examples
-#' validate_encoding_arguments()
+#' validate_encoding_arguments(
+#'   df = vi,
+#'   response = "vi_numeric",
+#'   predictors = vi_predictors
+#'   )
 validate_encoding_arguments <- function(
+    df = NULL,
+    response = NULL,
     predictors = NULL,
     methods = c(
       "mean",
@@ -840,6 +839,97 @@ validate_encoding_arguments <- function(
     overwrite = FALSE,
     quiet = FALSE
 ){
+
+  # early stops ----
+
+  ## methods is NULL ----
+  if(is.null(methods)){
+
+    if(quiet == FALSE){
+
+      message(
+        "\ncollinear::target_encoding_lab(): argument 'encoding_method' is NULL, skipping target encoding."
+      )
+
+    }
+
+    return(
+      list(
+        df = df
+      )
+    )
+
+  }
+
+  ## df ----
+  df <- validate_df(
+    df = df,
+    quiet = quiet
+  )
+
+  ## response ----
+  response <- validate_response(
+    df = df,
+    response = response,
+    quiet = quiet
+  )
+
+  if(is.null(response)){
+
+    if(quiet == FALSE){
+
+      message("\ncollinear::target_encoding_lab(): argument 'response' is NULL, skipping target-encoding.")
+
+    }
+
+    return(
+      list(
+        response = NULL
+      )
+    )
+
+  }
+
+  if(!is.numeric(df[[response]])){
+
+    if(quiet == FALSE){
+
+      message("\ncollinear::target_encoding_lab(): argument 'response' is not numeric, skipping target-encoding.")
+
+    }
+
+    return(df)
+
+  }
+
+  ## predictors ----
+  predictors <- validate_predictors(
+    df = df,
+    response = response,
+    predictors = predictors,
+    quiet = quiet
+  )
+
+  #identify categorical predictors
+  predictors <- identify_predictors_categorical(
+    df = df,
+    predictors = predictors
+  )
+
+  if(length(predictors) == 0){
+
+    if(quiet == FALSE){
+      message("\ncollinear::target_encoding_lab(): argument 'predictors' is empty, skipping target encoding.")
+    }
+
+    return(
+      list(
+        predictors = predictors
+      )
+    )
+
+  }
+
 
   ## white noise ----
   if(is.null(white_noise)){
@@ -890,7 +980,9 @@ validate_encoding_arguments <- function(
     if(quiet == FALSE){
 
       message(
-        "\ncollinear::target_encoding_lab(): argument 'methods' not valid, resetting it to default values."
+        "\ncollinear::target_encoding_lab(): argument 'methods' not valid, resetting it to: '",
+        paste(valid_methods, collapse = "', '"),
+        "'."
       )
 
     }
@@ -965,19 +1057,9 @@ validate_encoding_arguments <- function(
 
   }
 
-  if(quiet == FALSE){
-
-    message(
-      "\ncollinear::target_encoding_lab(): encoding categorical predictors:\n - ",
-      paste0(
-        predictors,
-        collapse = "\n - "
-      )
-    )
-
-  }
-
   list(
+    response = response,
+    predictors = predictors,
     methods = methods,
     smoothing = smoothing,
     white_noise = white_noise,

@@ -10,7 +10,7 @@ collinear(
   predictors = NULL,
   encoding_method = "loo",
   preference_order = "auto",
-  preference_f = NULL,
+  preference_f = "auto",
   preference_warn_limit = 0.8,
   cor_method = "pearson",
   cor_max = 0.75,
@@ -36,7 +36,7 @@ collinear(
 \item \strong{NULL}: disabled.
 }. Default: "auto"}
 
-\item{preference_f}{(optional: function) Function to compute preference order. If NULL (default), the output of \code{\link[=f_default]{f_default()}} for the given data is used:
+\item{preference_f}{(optional: function) Function to compute preference order. If "auto" (default) or NULL, the output of \code{\link[=f_auto]{f_auto()}} for the given data is used:
 \itemize{
 \item \code{\link[=f_auc_rf]{f_auc_rf()}}: if \code{response} is binomial.
 \item \code{\link[=f_r2_pearson]{f_r2_pearson()}}: if \code{response} and \code{predictors} are numeric.
@@ -66,7 +66,7 @@ Default: NULL}
 Automates multicollinearity management in data frames with numeric and non-numeric predictors by combining four methods:
 \itemize{
 \item \strong{Target Encoding}: When a numeric \code{response} is provided and \code{encoding_method} is not NULL, it transforms categorical predictors (classes "character" and "factor") to numeric using the response values as reference. See \code{\link[=target_encoding_lab]{target_encoding_lab()}} for further details.
-\item \strong{Preference Order}: When a response of any type is provided via \code{response}, the association between the response and each predictor is computed with an appropriate function (see \code{\link[=preference_order]{preference_order()}} and \code{\link[=f_default]{f_default()}}), and all predictors are ranked from higher to lower association. This rank is used to preserve important predictors during the multicollinearity filtering.
+\item \strong{Preference Order}: When a response of any type is provided via \code{response}, the association between the response and each predictor is computed with an appropriate function (see \code{\link[=preference_order]{preference_order()}} and \code{\link[=f_auto]{f_auto()}}), and all predictors are ranked from higher to lower association. This rank is used to preserve important predictors during the multicollinearity filtering.
 \item \strong{Pairwise Correlation Filtering}: Automated multicollinearity filtering via pairwise correlation. Correlations between numeric and categoricals  predictors are computed by target-encoding the categorical against the predictor, and correlations between categoricals are computed via Cramer's V. See \code{\link[=cor_select]{cor_select()}}, \code{\link[=cor_df]{cor_df()}}, and \code{\link[=cramer_v]{cramer_v()}} for further details.
 \item \strong{VIF filtering}: Automated algorithm to identify and remove numeric predictors that are linear combinations of other predictors. See \code{\link[=vif_select]{vif_select()}} and \code{\link[=vif_df]{vif_df()}}.
 }
@@ -90,7 +90,7 @@ The argument \code{preference_order} accepts:
 \itemize{
 \item: A character vector of predictor names in a custom order of preference, from first to last. This vector does not need to contain all predictor names, but only the ones relevant to the user.
 \item A data frame returned by \code{\link[=preference_order]{preference_order()}}, which ranks predictors based on their association with a response variable.
-\item If NULL, and \code{response} is provided, then \code{\link[=preference_order]{preference_order()}} is used internally to rank the predictors using the function \code{f}. If \code{f} is NULL as well, then \code{\link[=f_default]{f_default()}} selects a proper function based on the data properties.
+\item If NULL, and \code{response} is provided, then \code{\link[=preference_order]{preference_order()}} is used internally to rank the predictors using the function \code{f}. If \code{f} is NULL as well, then \code{\link[=f_auto]{f_auto()}} selects a proper function based on the data properties.
 }
 }
 
@@ -156,43 +156,6 @@ x <- collinear(
 #   predictors = predictors,
 #   )
 
-#all correlations below cor_max
-# cor_df(
-#   df = df,
-#   predictors = x
-# )
-
-#all vif below max vif
-#ignores categoricals
-# vif_df(
-#   df = df,
-#   predictors = x
-# )
-
-#VIF filtering only
-#--------------------------------
-# no target encoding
-# no preference order
-# only numerics filtered by VIF
-# but VIF not required
-# x <- collinear(
-#   df = df,
-#   predictors = predictors,
-#   cor_max = NULL
-# )
-
-
-#correlation filtering only
-#--------------------------------
-#  no target encoding
-#  no preference order
-#  all predictors filtered by correlation
-# x <- collinear(
-#   df = df,
-#   predictors = predictors,
-#   vif_max = NULL
-# )
-
 
 #with numeric response
 #--------------------------------
@@ -206,20 +169,8 @@ x <- collinear(
 )
 
 
-#disabling target encoding
-#--------------------------------
-#commented because it is much slower
-# x <- collinear(
-#   df = df,
-#   response = "vi_numeric",
-#   predictors = predictors,
-#   encoding_method = NULL
-# )
-
-
 #with custom preference order
 #--------------------------------
-#koppen_zone lost due to collinearity with swi_mean and soil_type
 x <- collinear(
   df = df,
   response = "vi_numeric",
