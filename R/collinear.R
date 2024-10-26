@@ -271,14 +271,11 @@ collinear <- function(
       quiet = quiet
     )
 
-    if(is.null(df.response)){
-      df.response <- df
-    }
-
     # preference order ----
 
     #class and length
     preference_order_user <- preference_order
+
     preference_order_class <- class(preference_order)
 
     preference_order <-
@@ -325,7 +322,7 @@ collinear <- function(
       }
 
     # correlation filter ----
-    selection <- cor_select(
+    selection.cor <- cor_select(
       df = df.response,
       predictors = predictors.response,
       preference_order = preference_order,
@@ -337,19 +334,21 @@ collinear <- function(
     # vif filter ----
 
     #selection by numeric and categorial
+    #this section lets vif_select() yield a message
+    #about the categorical variables it is ignoring
     if(is.null(cor_max)){
 
-      selection.type <- list(
-        numeric = selection,
+      selection.cor.type <- list(
+        numeric = selection.cor,
         categorical = NULL
       )
 
     } else {
 
       #separate numeric and categorical
-      selection.type <- identify_predictors(
+      selection.cor.type <- identify_predictors(
         df = df.response,
-        predictors = selection
+        predictors = selection.cor
       )
 
     }
@@ -357,7 +356,7 @@ collinear <- function(
     #run vif filtering
     selection.vif <- vif_select(
       df = df.response,
-      predictors = selection.type$numeric,
+      predictors = selection.cor.type$numeric,
       preference_order = preference_order,
       vif_max = vif_max,
       quiet = quiet
@@ -366,7 +365,7 @@ collinear <- function(
     #merge selections
     selection <- c(
       selection.vif,
-      selection.type$categorical
+      selection.cor.type$categorical
     ) |>
       unique() |>
       na.omit()
@@ -381,8 +380,9 @@ collinear <- function(
     #message with selection if required
     if(
       (
-        length(selection.type$categorical) > 0 &&
-        !is.null(vif_max)
+        length(selection.cor.type$categorical) > 0 &&
+        !is.null(vif_max) &&
+        any(!selection.cor.type$numeric %in% selection.vif)
       ) &&
       quiet == FALSE
     ){

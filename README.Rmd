@@ -172,8 +172,8 @@ selection <- collinear::collinear(
   preference_f = "auto",
   preference_warn_limit = 0.8,
   cor_method = "pearson",
-  cor_max = 0.75,
-  vif_max = 5,
+  cor_max = 0.5,
+  vif_max = 2.5,
   quiet = FALSE
 )
 ```

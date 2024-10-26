@@ -57,7 +57,7 @@ testthat::test_that("`cor_select()` works", {
   )
 
   testthat::expect_true(
-    all(preference_order[1] == x[1])
+    preference_order[1] == x[1]
   )
 
   #automated preference order

@@ -105,7 +105,8 @@ cor_select <- function(
     !is.numeric(cor_max) ||
     length(cor_max) != 1 ||
     cor_max < 0.1 ||
-    cor_max > 1){
+    cor_max > 1
+    ){
 
     if(quiet == FALSE){
 
@@ -164,22 +165,13 @@ cor_select <- function(
     names()
 
   #validate preference order
-  #return reversed to facilitate next operation
   preference_order <- validate_preference_order(
     predictors = predictors,
     preference_order = preference_order,
     preference_order_auto = preference_order_auto,
     function_name = "collinear::cor_select()",
     quiet = quiet
-  ) |>
-    rev()
-
-
-  if(quiet == FALSE){
-
-    message("\ncollinear::cor_select(): running pairwise correlation filtering.")
-
-  }
+  )
 
   #organize the correlation matrix according to preference_order
   m <- m[
@@ -190,27 +182,25 @@ cor_select <- function(
   #set diag to 0
   diag(m) <- 0
 
-  #vector of selected variables
-  selected <- preference_order
+  #vectors with selected and candidates
+  selected <- preference_order[1]
+  candidates <- preference_order[-1]
 
   #iterate over candidate variables
-  for(candidate in preference_order){
+  for(candidate in candidates){
 
-    #if candidate vs selected is over the cor threshold
-    if(max(m[selected, candidate]) > cor_max){
+    #if candidate keeps correlation below the threshold
+    if(max(m[selected, candidate]) <= cor_max){
 
-      #remove candidate
-      selected <- setdiff(
-        x = selected,
-        y = candidate
-      )
+      #add candidate to selected
+      selected <- c(
+        selected,
+        candidate
+        )
 
     }
 
   }
-
-  #reverse to order as preference order
-  selected <- rev(selected)
 
   if(quiet == FALSE){
 

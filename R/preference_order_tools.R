@@ -183,7 +183,7 @@ f_auto <- function(
   if(quiet == FALSE){
 
     message(
-      "\ncollinear::f_auto(): selected f function: '",
+      "\ncollinear::f_auto(): selected function: '",
       f_name,
       "()'."
     )

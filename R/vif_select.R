@@ -207,13 +207,6 @@ vif_select <- function(
 
   }
 
-
-  if(quiet == FALSE){
-
-    message("\ncollinear::vif_select(): running VIF-based filtering.")
-
-  }
-
   #because vif_df returns higher VIF first
   preference_order_auto <- rev(preference_order_auto$predictor)
 
@@ -225,40 +218,74 @@ vif_select <- function(
     function_name = "collinear::vif_select()"
   )
 
-  #subset df to preference order
-  df <- df[, preference_order, drop = FALSE]
+  #fast function to compute max vif
+  if(capabilities("long.double") == TRUE){
+    tolerance = 0
+  } else {
+    tolerance = .Machine$double.eps
+  }
 
-  #vector of selected variables
-  preference_order_selected <- preference_order[1]
+  max_vif <- function(
+    df = NULL,
+    predictors = NULL,
+    tolerance = NULL
+  ){
 
-  #vector of candidate variables
-  preference_order_candidates <- preference_order[-1]
+    stats::cor(
+      x = df[, predictors, drop = FALSE],
+      use = "complete.obs"
+    ) |>
+      solve(tol = tolerance) |>
+      diag() |>
+      max()
 
-  #forward recursive VIF filtering
-  while(length(preference_order_candidates) > 0){
+  }
 
-    #generate VIF data frame
-    vif.df <- vif_df(
-      df = df,
-      predictors = c(
-        preference_order_selected,
-        preference_order_candidates[1]
-      ),
-      quiet = quiet
+  #vectors with selected and candidates
+  selected <- preference_order[1]
+  candidates <- preference_order[-1]
+
+  #iterate over candidate variables
+  for(candidate in candidates){
+
+    #use fast option first
+    #use slow option if error
+    vif.max <- tryCatch(
+      {
+        #fast option as default
+        max_vif(
+          df = df,
+          predictors = c(
+            selected,
+            candidate
+          ),
+          tolerance = tolerance
+        )
+      },
+      error = function(e) {
+        #slower option on error
+        vif.df <- vif_df(
+          df = df,
+          predictors = c(
+            selected,
+            candidate
+          )
+        )
+        return(max(vif.df$vif))
+      }
     )
 
-    #add candidate to selected
-    if(max(vif.df[["vif"]]) <= vif_max){
 
-      preference_order_selected <- c(
-        preference_order_selected,
-        preference_order_candidates[1]
+    #if candidate keeps vif below the threshold
+    if(vif.max <= vif_max){
+
+      #add candidate to selected
+      selected <- c(
+        selected,
+        candidate
       )
 
     }
-
-    #remove candidate
-    preference_order_candidates <- preference_order_candidates[-1]
 
   }
 
@@ -266,16 +293,16 @@ vif_select <- function(
 
     message(
       "\ncollinear::vif_select(): selected predictors: \n - ",
-      paste(preference_order_selected, collapse = "\n - ")
+      paste(selected, collapse = "\n - ")
     )
 
   }
 
   attr(
-    x = preference_order_selected,
+    x = selected,
     which = "validated"
   ) <- TRUE
 
-  preference_order_selected
+  selected
 
 }
