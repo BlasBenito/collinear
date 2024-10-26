@@ -1058,6 +1058,7 @@ validate_encoding_arguments <- function(
   }
 
   list(
+    df = df,
     response = response,
     predictors = predictors,
     methods = methods,

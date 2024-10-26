@@ -198,7 +198,7 @@ preference_order <- function(
     }
 
     #check predictors
-    predictors <- validate_predictors(
+    predictors.response <- validate_predictors(
       df = df,
       response = response,
       predictors = predictors_user,
@@ -217,7 +217,7 @@ preference_order <- function(
       f_name <- f_auto(
         df = df,
         response = response,
-        predictors = predictors,
+        predictors = predictors.response,
         quiet = quiet
       )
 
@@ -235,12 +235,12 @@ preference_order <- function(
     preference <- data.frame(
       response = rep(
         x = response,
-        times = length(predictors)
+        times = length(predictors.response)
         ),
-      predictor = predictors,
+      predictor = predictors.response,
       f = rep(
         x = f_name,
-        times = length(predictors)
+        times = length(predictors.response)
       )
     )
 

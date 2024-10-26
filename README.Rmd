@@ -145,7 +145,7 @@ df_clusters <- collinear::cor_clusters(
 
 ## Using `collinear()`
 
-The function `collinear()` is designed as a complete tool for multicollinearity management. As such, it provides access to the key functionalities offered by this package. The table below shows these functionalities, the functions implementing them, their requirements, and how to disable them within `collinear()`.
+The function `collinear()` provides access to the key functionalities of this package. The table below shows these functionalities, the functions implementing them, their requirements, and how to disable them within `collinear()`.
 
 | **Functionality** |**Function**|**Requirements** | **Disable** |
 |-------------------|------------|-----------------|--------------|
@@ -154,16 +154,19 @@ The function `collinear()` is designed as a complete tool for multicollinearity 
 | reduce <br> pairwise correlation | `cor_select()` | any `predictors` | `cor_max = NULL` |
 | reduce <br> variance inflation | `vif_select()`| numeric `predictors` | `vif_max = NULL` |
 
-The code below shows a full call to `collinear()` with a numeric response and mixed predictor types.
+The code below shows a full call to `collinear()` with two responses and mixed predictor types.
 
 ```{r}
 selection <- collinear::collinear(
   df = vi,
-  response = "vi_numeric",
+  response = c(
+    "vi_numeric",
+    "vi_categorical"
+    ),
   predictors = vi_predictors,
   encoding_method = "loo",
   preference_order = "auto",
-  preference_f = NULL,
+  preference_f = "auto",
   preference_warn_limit = 0.8,
   cor_method = "pearson",
   cor_max = 0.75,

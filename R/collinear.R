@@ -261,7 +261,7 @@ collinear <- function(
     #ignored if:
     # response == NULL
     # encoding_method == NULL
-    df <- target_encoding_lab(
+    df.response <- target_encoding_lab(
       df = df,
       response = response,
       predictors = predictors,
@@ -282,7 +282,7 @@ collinear <- function(
         if(preference_order_user[1] == "auto"){
 
           preference_order(
-            df = df,
+            df = df.response,
             response = response,
             predictors = predictors,
             f = preference_f,
@@ -321,7 +321,7 @@ collinear <- function(
 
     # correlation filter ----
     selection <- cor_select(
-      df = df,
+      df = df.response,
       predictors = predictors,
       preference_order = preference_order,
       cor_method = cor_method,
@@ -343,7 +343,7 @@ collinear <- function(
 
       #separate numeric and categorical
       selection.type <- identify_predictors(
-        df = df,
+        df = df.response,
         predictors = selection
       )
 
@@ -351,7 +351,7 @@ collinear <- function(
 
     #run vif filtering
     selection.vif <- vif_select(
-      df = df,
+      df = df.response,
       predictors = selection.type$numeric,
       preference_order = preference_order,
       vif_max = vif_max,
