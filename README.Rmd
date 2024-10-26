@@ -101,11 +101,12 @@ library(collinear)
 library(dplyr)
 library(future)
 library(parallelly)
+library(kableExtra)
 ```
 
-## Parallelization Setup
+## Parallelization Setup and Progress Bars
 
-Most functions in the package now accept a parallelization setup and progress bars:
+Most functions in the package now accept a parallelization setup via `future::plan()` and progress bars via `progressr::handlers()`. However, progress bars are ignored in this tutorial because they don't work in Rmarkdown.
 
 ```{r parallelization}
 future::plan(
@@ -113,7 +114,6 @@ future::plan(
   workers = parallelly::availableCores() - 1
   )
 
-#NOTE: progress bars do not work in .Rmd files
 #progressr::handlers(global = TRUE)
 ```
 
@@ -135,31 +135,11 @@ The response columns, all derived from the same data, have descriptive names: `v
 
 Predictor names are grouped in character vectors: `vi_predictors_numeric` (49 numeric and integer predictors), `vi_predictors_categorical` (12 character and factor predictors), and `vi_predictors` containing them all.
 
-The plot below shows the hierarchical clustering of the correlation matrix between predictors in `vi`.
-
-```{r figure_1, fig.width=12, fig.height=5, warning = FALSE, fig.cap="Figure 1: groups of predictors in the data frame vi with a correlation higher than 0.5."}
-df_clusters <- collinear::cor_clusters(
-  df = df, 
-  predictors = vi_predictors, 
-  cor_max = 0.5,
-  plot = TRUE
-  )
-```
-
 ## Using `collinear()`
 
-The function `collinear()` provides access to the key functionalities of this package. The table below shows these functionalities, the functions implementing them, their requirements, and how to disable them within `collinear()`.
+The function `collinear()` provides access to the key functionalities of this package. The code below shows a call to `collinear()` with two responses and mixed predictor types.
 
-| **Functionality** |**Function**|**Requirements** | **Disable** |
-|-------------------|------------|-----------------|--------------|
-| categorical predictors <br> to numeric|`target_encoding_lab()` | - numeric `response` <br> - categorical `predictors` | - `response = NULL` <br> - `encoding_method = NULL`|
-| rank and preserve <br> important predictors | `preference_order()` | any `response` | - `response = NULL` <br> - `preference_order = NULL`|
-| reduce <br> pairwise correlation | `cor_select()` | any `predictors` | `cor_max = NULL` |
-| reduce <br> variance inflation | `vif_select()`| numeric `predictors` | `vif_max = NULL` |
-
-The code below shows a full call to `collinear()` with two responses and mixed predictor types.
-
-```{r}
+```{r collinear_demo}
 selection <- collinear::collinear(
   df = df,
   response = c(
@@ -167,63 +147,83 @@ selection <- collinear::collinear(
     "vi_categorical"
     ),
   predictors = vi_predictors,
-  encoding_method = "loo",
-  preference_order = "auto",
-  preference_f = "auto",
-  preference_warn_limit = 0.8,
-  cor_method = "pearson",
-  cor_max = 0.5,
-  vif_max = 2.5,
   quiet = FALSE
 )
 ```
 
-The function returns a vector of predictor names.
+The function returns a named list of vectors with predictor names when more than one response is provided, and a character vector otherwise. The predictor names are returned in the same order as the preference order. Then, when `response` is provided, the output of `collinear()` contains non-collinear variables ordered by the strength of their univariate association with the `response`. Otherwise the predictors are ordered from lower to higher multicollinearity with all other predictors. 
 
 ```{r}
 selection
 ```
+### How It Works
 
+The table below shows the functions called directly by `collinear()`, and their functionality, data requirements, and settings required to disable them.
 
+| **Function**           | **Functionality**                            | **Requirements**                  | **Disabled**                              |
+|------------------------|----------------------------------------------|-----------------------------------|------------------------------------------|
+| `target_encoding_lab()`| categorical predictors <br> to numeric       | - numeric `response` <br> - categorical `predictors` | - `response = NULL` <br> - `encoding_method = NULL` |
+| `preference_order()`   | rank and preserve <br> important predictors  | any `response`                    | - `response = NULL` <br> - `preference_order = NULL` |
+| `cor_select()`         | reduce <br> pairwise correlation             | any `predictors`                  | `cor_max = NULL`                         |
+| `vif_select()`         | reduce <br> variance inflation               | numeric `predictors`              | `vif_max = NULL`                         |
 
+The next sections follow the processing of the `response` "vi_numeric" through all these functions.
 
+#### `target_encoding_lab()`
 
-The function returns a vector of predictor ordered by preference with a pairwise correlation lower than 0.75 and a VIF lower than 5. The code below shows the pairwise correlations and the VIF scores of the selected predictors.
+When a numeric `response` is provided, this function transforms any categorical `predictors` to numeric.
+
+For example, the categorical predictor "koppen_zone" has character values.
 
 ```{r}
-#categorical predictors require target-encoding to mimic behavior of collinear()
-df <- target_encoding_lab(
-  df = vi,
-  response = "vi_numeric",
-  predictors = selected_predictors,
-  encoding_method = "mean",
-  replace = TRUE
-)
-
-#pairwise correlation data frame
-cor_df(
-  df = df,
-  predictors = selected_predictors
-)
-
-#vif data frame
-vif_df(
-  df = df, #data frame with encoded categoricals
-  predictors = selected_predictors
-) |> 
-  dplyr::arrange(
-    dplyr::desc(vif)
-  )
+head(unique(df$koppen_zone))
 ```
-## `collinear()` Step by Step
+The code chunk below creates a little toy data frame to show a clear example of this behavior.
 
-This section describes the steps `collinear()` follows to deliver its results.
+```{r}
+df_toy <- df |> 
+  dplyr::select(vi_numeric, koppen_zone) |> 
+  dplyr::filter(koppen_zone %in% c("Af", "BSh")) |> 
+  dplyr::group_by(koppen_zone) |> 
+  dplyr::slice_head(n = 5) |> 
+  dplyr::ungroup()
+```
 
-### Data Validation
+```{r, echo = FALSE}
+kableExtra::kbl(df_toy) |> 
+  kableExtra::kable_styling()
+```
 
-There are several functions called within `collinear()` to validate the input data:
+When introducing this predictor in `target_encoding_lab()` with the method "loo" (leave-one-out), the data frame is grouped by the levels of the predictor, and each value in a group is re-mapped as the average of the `response` across all other cases of the same group.
 
-  + `validate_df()`: checks basic details about the input data frame
+```{r}
+df_toy <- target_encoding_lab(
+  df = df_toy,
+  response = "vi_numeric",
+  predictors = "koppen_zone",
+  method = "loo",
+  overwrite = TRUE,
+  quiet = TRUE
+)
+```
+
+The resulting data frame shows the variable "koppen_zone" re-mapped as numeric, and ready for a multicollinearity analysis.
+
+```{r, echo = FALSE}
+kableExtra::kbl(df_toy) |> 
+  kableExtra::kable_styling()
+```
+This transformation method allows applying a consistent multicollinearity filtering to both categorical and numeric predictors.
+
+When this method is disabled or the response is not numeric, `cor_select()` becomes much slower, and `vif_select()` ignores all categorical predictors.
+
+#### `preference_order()`
+
+#### `cor_select()` 
+
+#### `vif_select()` 
+
+
 
 #### Preference order
 

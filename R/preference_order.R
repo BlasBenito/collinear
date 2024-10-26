@@ -193,8 +193,7 @@ preference_order <- function(
 
     if(quiet == FALSE){
 
-      message("\ncollinear::preference_order(): processing response '", response, "'." )
-      message("---------------------------------------------------------------")
+      message("\ncollinear::preference_order(): ranking predictors for response '", response, "'." )
 
     }
 

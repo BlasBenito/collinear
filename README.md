@@ -98,10 +98,12 @@ remotes::install_github(
 
 The packages required for this tutorial are:
 
-## Parallelization Setup
+## Parallelization Setup and Progress Bars
 
-Most functions in the package now accept a parallelization setup and
-progress bars:
+Most functions in the package now accept a parallelization setup via
+`future::plan()` and progress bars via `progressr::handlers()`. However,
+progress bars are ignored in this tutorial because they don’t work in
+Rmarkdown.
 
 ``` r
 future::plan(
@@ -109,7 +111,6 @@ future::plan(
   workers = parallelly::availableCores() - 1
   )
 
-#NOTE: progress bars do not work in .Rmd files
 #progressr::handlers(global = TRUE)
 ```
 
@@ -121,7 +122,10 @@ The code below makes it smaller to accelerate this tutorial.
 
 ``` r
 set.seed(1)
-vi <- dplyr::slice_sample(vi, n = 5000)
+df <- dplyr::slice_sample(
+  vi, 
+  n = 5000
+  )
 ```
 
 The response columns, all derived from the same data, have descriptive
@@ -134,46 +138,57 @@ Predictor names are grouped in character vectors:
 `vi_predictors_categorical` (12 character and factor predictors), and
 `vi_predictors` containing them all.
 
-The plot below shows the hierarchical clustering of the correlation
-matrix between predictors in `vi`.
-
-``` r
-df_clusters <- collinear::cor_clusters(
-  df = vi, 
-  predictors = vi_predictors, 
-  cor_max = 0.5,
-  plot = TRUE
-  )
-```
-
 ## Using `collinear()`
 
-The function `collinear()` implements four functionalities to streamline
-multicollinearity management
-
-| **Functionality** | **Function** | **Requirements** | **Disable** |
-|----|----|----|----|
-| categorical predictors <br> to numeric | `target_encoding_lab()` | \- numeric `response` <br> - categorical `predictors` | \- `response = NULL` <br> - `encoding_method = NULL` |
-| rank and preserve <br> important predictors | `preference_order()` | any `response` | \- `response = NULL` <br> - `preference_order = NULL` |
-| reduce <br> pairwise correlation | `cor_select()` | any `predictors` | `cor_max = NULL` |
-| reduce <br> variance inflation | `vif_select()` | numeric `predictors` | `vif_max = NULL` |
+The function `collinear()` provides access to the key functionalities of
+this package. The code below shows a call to `collinear()` with two
+responses and mixed predictor types.
 
 ``` r
-#multicollinearity filtering
-selected_predictors <- collinear(
-  df = vi,
-  response = "vi_numeric",
+selection <- collinear::collinear(
+  df = df,
+  response = c(
+    "vi_numeric",
+    "vi_categorical"
+    ),
   predictors = vi_predictors,
-  encoding_method = "mean",
-  preference_order = NULL,
-  f = NULL,
-  cor_method = "pearson",
-  cor_max = 0.75,
-  vif_max = 5
+  quiet = FALSE
 )
-
-selected_predictors
 ```
+
+The function returns a named list when more than one response is
+provided, and a character vector otherwise
+
+``` r
+selection
+```
+
+### How It Works
+
+The functionalities of `collinear()` are implemented in other functions
+
+- `collinear::target_encoding_lab()`: if `response` is numeric and there
+  are categorical `predictors`.
+
+The predictors selected for each response are quite similar, but you may
+have noticed that the processing of “vi_categorical” was much slower.
+
+The table below shows these functionalities, the functions implementing
+them, their requirements, and how to disable them within `collinear()`.
+
+| **Function**            | **Functionality**                           | **Requirements**                                      | **Disable**                                           |
+|-------------------------|---------------------------------------------|-------------------------------------------------------|-------------------------------------------------------|
+| `target_encoding_lab()` | categorical predictors <br> to numeric      | \- numeric `response` <br> - categorical `predictors` | \- `response = NULL` <br> - `encoding_method = NULL`  |
+| `preference_order()`    | rank and preserve <br> important predictors | any `response`                                        | \- `response = NULL` <br> - `preference_order = NULL` |
+| `cor_select()`          | reduce <br> pairwise correlation            | any `predictors`                                      | `cor_max = NULL`                                      |
+| `vif_select()`          | reduce <br> variance inflation              | numeric `predictors`                                  | `vif_max = NULL`                                      |
+
+| **Functionality**                           | **Function**            | **Requirements**                                      | **Disable**                                           |
+|---------------------------------------------|-------------------------|-------------------------------------------------------|-------------------------------------------------------|
+| categorical predictors <br> to numeric      | `target_encoding_lab()` | \- numeric `response` <br> - categorical `predictors` | \- `response = NULL` <br> - `encoding_method = NULL`  |
+| rank and preserve <br> important predictors | `preference_order()`    | any `response`                                        | \- `response = NULL` <br> - `preference_order = NULL` |
+| reduce <br> pairwise correlation            | `cor_select()`          | any `predictors`                                      | `cor_max = NULL`                                      |
+| reduce <br> variance inflation              | `vif_select()`          | numeric `predictors`                                  | `vif_max = NULL`                                      |
 
 The function returns a vector of predictor ordered by preference with a
 pairwise correlation lower than 0.75 and a VIF lower than 5. The code

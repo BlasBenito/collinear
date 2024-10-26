@@ -219,6 +219,10 @@ collinear <- function(
   )
   rm(response)
 
+  #save copy of the original preference order
+  preference_order_user <- preference_order
+  preference_order_class <- class(preference_order)
+
   #output list
   out <- list()
 
@@ -272,11 +276,6 @@ collinear <- function(
     )
 
     # preference order ----
-
-    #class and length
-    preference_order_user <- preference_order
-
-    preference_order_class <- class(preference_order)
 
     preference_order <-
       if(preference_order_class == "character"){
