@@ -171,14 +171,14 @@ The next sections follow the processing of the `response` "vi_numeric" through a
 
 #### `target_encoding_lab()`
 
-When a numeric `response` is provided, this function transforms any categorical `predictors` to numeric.
+This function requires a numeric `response` to transform categorical `predictors` to numeric. This transformation method allows applying the same multicollinearity filtering methods to all predictors. 
 
-For example, the categorical predictor "koppen_zone" has character values.
+The categorical predictor "koppen_zone" has character values indicating different climate zones.
 
 ```{r}
 head(unique(df$koppen_zone))
 ```
-The code chunk below creates a little toy data frame to show a clear example of this behavior.
+The code chunk below creates a little toy data frame with two of these Koppen groups and the response "vi_numeric".
 
 ```{r}
 df_toy <- df |> 
@@ -193,8 +193,7 @@ df_toy <- df |>
 kableExtra::kbl(df_toy) |> 
   kableExtra::kable_styling()
 ```
-
-When introducing this predictor in `target_encoding_lab()` with the method "loo" (leave-one-out), the data frame is grouped by the levels of the predictor, and each value in a group is re-mapped as the average of the `response` across all other cases of the same group.
+When introducing "koppen_zone" in `target_encoding_lab()` with the method "loo" (leave-one-out), the data frame is grouped by the levels of the predictor, and each value in a group is re-mapped as the average of the `response` across all other group cases.
 
 ```{r}
 df_toy <- target_encoding_lab(
@@ -213,11 +212,14 @@ The resulting data frame shows the variable "koppen_zone" re-mapped as numeric, 
 kableExtra::kbl(df_toy) |> 
   kableExtra::kable_styling()
 ```
-This transformation method allows applying a consistent multicollinearity filtering to both categorical and numeric predictors.
 
-When this method is disabled or the response is not numeric, `cor_select()` becomes much slower, and `vif_select()` ignores all categorical predictors.
+When this method is disabled or the response is not numeric, `cor_select()` becomes much slower (because uses more complex methods to achieve a solution), and `vif_select()` ignores all categorical predictors.
 
 #### `preference_order()`
+
+This function ranks predictors by the strength of their association with the response. The ranked predictors are considered by `cor_select()` and `vif_select()` to help preserve as many relevant predictors as possible during multicollinearity filtering.
+
+
 
 #### `cor_select()` 
 

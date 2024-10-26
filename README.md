@@ -156,8 +156,14 @@ selection <- collinear::collinear(
 )
 ```
 
-The function returns a named list when more than one response is
-provided, and a character vector otherwise
+The function returns a named list of vectors with predictor names when
+more than one response is provided, and a character vector otherwise.
+The predictor names are returned in the same order as the preference
+order. Then, when `response` is provided, the output of `collinear()`
+contains non-collinear variables ordered by the strength of their
+univariate association with the `response`. Otherwise the predictors are
+ordered from lower to higher multicollinearity with all other
+predictors.
 
 ``` r
 selection
@@ -165,73 +171,74 @@ selection
 
 ### How It Works
 
-The functionalities of `collinear()` are implemented in other functions
+The table below shows the functions called directly by `collinear()`,
+and their functionality, data requirements, and settings required to
+disable them.
 
-- `collinear::target_encoding_lab()`: if `response` is numeric and there
-  are categorical `predictors`.
-
-The predictors selected for each response are quite similar, but you may
-have noticed that the processing of “vi_categorical” was much slower.
-
-The table below shows these functionalities, the functions implementing
-them, their requirements, and how to disable them within `collinear()`.
-
-| **Function**            | **Functionality**                           | **Requirements**                                      | **Disable**                                           |
+| **Function**            | **Functionality**                           | **Requirements**                                      | **Disabled**                                          |
 |-------------------------|---------------------------------------------|-------------------------------------------------------|-------------------------------------------------------|
 | `target_encoding_lab()` | categorical predictors <br> to numeric      | \- numeric `response` <br> - categorical `predictors` | \- `response = NULL` <br> - `encoding_method = NULL`  |
 | `preference_order()`    | rank and preserve <br> important predictors | any `response`                                        | \- `response = NULL` <br> - `preference_order = NULL` |
 | `cor_select()`          | reduce <br> pairwise correlation            | any `predictors`                                      | `cor_max = NULL`                                      |
 | `vif_select()`          | reduce <br> variance inflation              | numeric `predictors`                                  | `vif_max = NULL`                                      |
 
-| **Functionality**                           | **Function**            | **Requirements**                                      | **Disable**                                           |
-|---------------------------------------------|-------------------------|-------------------------------------------------------|-------------------------------------------------------|
-| categorical predictors <br> to numeric      | `target_encoding_lab()` | \- numeric `response` <br> - categorical `predictors` | \- `response = NULL` <br> - `encoding_method = NULL`  |
-| rank and preserve <br> important predictors | `preference_order()`    | any `response`                                        | \- `response = NULL` <br> - `preference_order = NULL` |
-| reduce <br> pairwise correlation            | `cor_select()`          | any `predictors`                                      | `cor_max = NULL`                                      |
-| reduce <br> variance inflation              | `vif_select()`          | numeric `predictors`                                  | `vif_max = NULL`                                      |
+The next sections follow the processing of the `response` “vi_numeric”
+through all these functions.
 
-The function returns a vector of predictor ordered by preference with a
-pairwise correlation lower than 0.75 and a VIF lower than 5. The code
-below shows the pairwise correlations and the VIF scores of the selected
-predictors.
+#### `target_encoding_lab()`
+
+This function requires a numeric `response` to transform categorical
+`predictors` to numeric. This transformation method allows applying the
+same multicollinearity filtering methods to all predictors.
+
+The categorical predictor “koppen_zone” has character values indicating
+different climate zones.
 
 ``` r
-#categorical predictors require target-encoding to mimic behavior of collinear()
-df <- target_encoding_lab(
-  df = vi,
-  response = "vi_numeric",
-  predictors = selected_predictors,
-  encoding_method = "mean",
-  replace = TRUE
-)
-
-#pairwise correlation data frame
-cor_df(
-  df = df,
-  predictors = selected_predictors
-)
-
-#vif data frame
-vif_df(
-  df = df, #data frame with encoded categoricals
-  predictors = selected_predictors
-) |> 
-  dplyr::arrange(
-    dplyr::desc(vif)
-  )
+head(unique(df$koppen_zone))
 ```
 
-## `collinear()` Step by Step
+The code chunk below creates a little toy data frame with two of these
+Koppen groups and the response “vi_numeric”.
 
-This section describes the steps `collinear()` follows to deliver its
-results.
+``` r
+df_toy <- df |> 
+  dplyr::select(vi_numeric, koppen_zone) |> 
+  dplyr::filter(koppen_zone %in% c("Af", "BSh")) |> 
+  dplyr::group_by(koppen_zone) |> 
+  dplyr::slice_head(n = 5) |> 
+  dplyr::ungroup()
+```
 
-### Data Validation
+When introducing “koppen_zone” in `target_encoding_lab()` with the
+method “loo” (leave-one-out), the data frame is grouped by the levels of
+the predictor, and each value in a group is re-mapped as the average of
+the `response` across all other group cases.
 
-There are several functions called within `collinear()` to validate the
-input data:
+``` r
+df_toy <- target_encoding_lab(
+  df = df_toy,
+  response = "vi_numeric",
+  predictors = "koppen_zone",
+  method = "loo",
+  overwrite = TRUE,
+  quiet = TRUE
+)
+```
 
-- `validate_df()`: checks basic details about the input data frame
+The resulting data frame shows the variable “koppen_zone” re-mapped as
+numeric, and ready for a multicollinearity analysis.
+
+When this method is disabled or the response is not numeric,
+`cor_select()` becomes much slower (because uses more complex methods to
+achieve a solution), and `vif_select()` ignores all categorical
+predictors.
+
+#### `preference_order()`
+
+#### `cor_select()`
+
+#### `vif_select()`
 
 #### Preference order
 
