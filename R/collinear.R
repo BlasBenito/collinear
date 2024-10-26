@@ -244,14 +244,15 @@ collinear <- function(
 
       if(quiet == FALSE){
 
-        message("collinear::collinear(): processing response: '", response, "'." )
+        message("\ncollinear::collinear(): processing response '", response, "'." )
+        message("---------------------------------------------------------------")
 
       }
 
     }
 
     #reset and validate predictors
-    predictors <- validate_predictors(
+    predictors.response <- validate_predictors(
       df = df,
       response = response,
       predictors = predictors
@@ -264,11 +265,15 @@ collinear <- function(
     df.response <- target_encoding_lab(
       df = df,
       response = response,
-      predictors = predictors,
+      predictors = predictors.response,
       methods = encoding_method[1],
       overwrite = TRUE,
       quiet = quiet
     )
+
+    if(is.null(df.response)){
+      df.response <- df
+    }
 
     # preference order ----
 
@@ -284,7 +289,7 @@ collinear <- function(
           preference_order(
             df = df.response,
             response = response,
-            predictors = predictors,
+            predictors = predictors.response,
             f = preference_f,
             quiet = quiet,
             warn_limit = preference_warn_limit
@@ -322,7 +327,7 @@ collinear <- function(
     # correlation filter ----
     selection <- cor_select(
       df = df.response,
-      predictors = predictors,
+      predictors = predictors.response,
       preference_order = preference_order,
       cor_method = cor_method,
       cor_max = cor_max,

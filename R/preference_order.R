@@ -193,7 +193,8 @@ preference_order <- function(
 
     if(quiet == FALSE){
 
-      message("\ncollinear::preference_order(): computing preference order for response: '", response, "'." )
+      message("\ncollinear::preference_order(): processing response '", response, "'." )
+      message("---------------------------------------------------------------")
 
     }
 

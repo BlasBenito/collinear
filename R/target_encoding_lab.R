@@ -106,7 +106,9 @@ target_encoding_lab <- function(
   )
 
   #reassign args
-  df <- args$df
+  if(is.data.frame(args$df)){
+    df <- args$df
+  }
   response <- args$response
   predictors <- args$predictors
   methods <- args$methods
@@ -117,13 +119,11 @@ target_encoding_lab <- function(
 
   # early stops ----
   if(
-    is.null(df) ||
     is.null(response) ||
     length(predictors) == 0 ||
     is.null(methods) ||
     (
       !is.null(response) &&
-      !is.null(df) &&
       !is.numeric(df[[response]])
     )
   ){
