@@ -151,11 +151,14 @@ selection <- collinear::collinear(
 )
 ```
 
-The function returns a named list of vectors with predictor names when more than one response is provided, and a character vector otherwise. The predictor names are returned in the same order as the preference order. Then, when `response` is provided, the output of `collinear()` contains non-collinear variables ordered by the strength of their univariate association with the `response`. Otherwise the predictors are ordered from lower to higher multicollinearity with all other predictors. 
+The function returns a named list of vectors with predictor names when more than one response is provided, and a character vector otherwise.  
 
 ```{r}
 selection
 ```
+
+The predictor names are returned in the same order as the preference order. If `response` is provided, `collinear()` returns non-collinear variables ordered by their association with `response`. Otherwise, the predictors are ordered from lower to higher multicollinearity.
+
 ### How It Works
 
 The table below shows the functions called directly by `collinear()`, and their functionality, data requirements, and settings required to disable them.
@@ -167,9 +170,13 @@ The table below shows the functions called directly by `collinear()`, and their 
 | `cor_select()`         | reduce <br> pairwise correlation             | any `predictors`                  | `cor_max = NULL`                         |
 | `vif_select()`         | reduce <br> variance inflation               | numeric `predictors`              | `vif_max = NULL`                         |
 
-The next sections follow the processing of the `response` "vi_numeric" through all these functions.
+The next sections follow the processing of the responses "vi_numeric" and "vi_character" through all these functions.
 
 #### `target_encoding_lab()`
+
+Arguments in `collinear():
+
+  + `encoding_method = "loo"`
 
 This function requires a numeric `response` to transform categorical `predictors` to numeric. This transformation method allows applying the same multicollinearity filtering methods to all predictors. 
 

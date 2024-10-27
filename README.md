@@ -158,16 +158,15 @@ selection <- collinear::collinear(
 
 The function returns a named list of vectors with predictor names when
 more than one response is provided, and a character vector otherwise.
-The predictor names are returned in the same order as the preference
-order. Then, when `response` is provided, the output of `collinear()`
-contains non-collinear variables ordered by the strength of their
-univariate association with the `response`. Otherwise the predictors are
-ordered from lower to higher multicollinearity with all other
-predictors.
 
 ``` r
 selection
 ```
+
+The predictor names are returned in the same order as the preference
+order. If `response` is provided, `collinear()` returns non-collinear
+variables ordered by their association with `response`. Otherwise, the
+predictors are ordered from lower to higher multicollinearity.
 
 ### How It Works
 
@@ -175,17 +174,21 @@ The table below shows the functions called directly by `collinear()`,
 and their functionality, data requirements, and settings required to
 disable them.
 
-| **Function**            | **Functionality**                           | **Requirements**                                      | **Disabled**                                          |
-|-------------------------|---------------------------------------------|-------------------------------------------------------|-------------------------------------------------------|
-| `target_encoding_lab()` | categorical predictors <br> to numeric      | \- numeric `response` <br> - categorical `predictors` | \- `response = NULL` <br> - `encoding_method = NULL`  |
-| `preference_order()`    | rank and preserve <br> important predictors | any `response`                                        | \- `response = NULL` <br> - `preference_order = NULL` |
-| `cor_select()`          | reduce <br> pairwise correlation            | any `predictors`                                      | `cor_max = NULL`                                      |
-| `vif_select()`          | reduce <br> variance inflation              | numeric `predictors`                                  | `vif_max = NULL`                                      |
+| **Function**            | **Functionality**                           | **Requirements**                                      | **Disabled**                                                                       |
+|-------------------------|---------------------------------------------|-------------------------------------------------------|------------------------------------------------------------------------------------|
+| `target_encoding_lab()` | categorical predictors <br> to numeric      | \- numeric `response` <br> - categorical `predictors` | \- `response = NULL` <br> - categorical `response` <br> - `encoding_method = NULL` |
+| `preference_order()`    | rank and preserve <br> important predictors | any `response`                                        | \- `response = NULL` <br> - `preference_order = NULL`                              |
+| `cor_select()`          | reduce <br> pairwise correlation            | any `predictors`                                      | `cor_max = NULL`                                                                   |
+| `vif_select()`          | reduce <br> variance inflation              | numeric `predictors`                                  | `vif_max = NULL`                                                                   |
 
-The next sections follow the processing of the `response` “vi_numeric”
-through all these functions.
+The next sections follow the processing of the responses “vi_numeric”
+and “vi_character” through all these functions.
 
 #### `target_encoding_lab()`
+
+- Requirements: numeric `response`.
+- Arguments and default values:
+  - `encoding_method`: controls
 
 This function requires a numeric `response` to transform categorical
 `predictors` to numeric. This transformation method allows applying the
@@ -235,6 +238,11 @@ achieve a solution), and `vif_select()` ignores all categorical
 predictors.
 
 #### `preference_order()`
+
+This function ranks predictors by the strength of their association with
+the response. The ranked predictors are considered by `cor_select()` and
+`vif_select()` to help preserve as many relevant predictors as possible
+during multicollinearity filtering.
 
 #### `cor_select()`
 
