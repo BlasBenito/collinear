@@ -61,32 +61,28 @@ f_r2_glm_poisson_poly2(df = df)
 f_r2_gam_poisson(df = df)
 }
 \seealso{
-Other preference_order: 
+Other preference_order_functions: 
 \code{\link{f_auc}},
 \code{\link{f_r2}},
 \code{\link{f_v}()},
-\code{\link{f_v_rf_categorical}()},
-\code{\link{preference_order}()}
+\code{\link{f_v_rf_categorical}()}
 
-Other preference_order: 
+Other preference_order_functions: 
 \code{\link{f_auc}},
 \code{\link{f_r2}},
 \code{\link{f_v}()},
-\code{\link{f_v_rf_categorical}()},
-\code{\link{preference_order}()}
+\code{\link{f_v_rf_categorical}()}
 
-Other preference_order: 
+Other preference_order_functions: 
 \code{\link{f_auc}},
 \code{\link{f_r2}},
 \code{\link{f_v}()},
-\code{\link{f_v_rf_categorical}()},
-\code{\link{preference_order}()}
+\code{\link{f_v_rf_categorical}()}
 
-Other preference_order: 
+Other preference_order_functions: 
 \code{\link{f_auc}},
 \code{\link{f_r2}},
 \code{\link{f_v}()},
-\code{\link{f_v_rf_categorical}()},
-\code{\link{preference_order}()}
+\code{\link{f_v_rf_categorical}()}
 }
-\concept{preference_order}
+\concept{preference_order_functions}

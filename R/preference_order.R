@@ -59,7 +59,7 @@
 #'   \item [f_r2_rf()]: in all other cases.
 #' }
 #' Default: NULL
-#' @param warn_limit (optional, numeric) Preference value (R-squared, AUC, or Cramer's V) over which a warning flagging suspicious predictors is issued. Disabled if NULL. Default: 0.8
+#' @param warn_limit (optional, numeric) Preference value (R-squared, AUC, or Cramer's V) over which a warning flagging suspicious predictors is issued. Disabled if NULL. Default: 0.95
 #' @family preference_order
 #' @return data frame: columns are "response", "predictor", "f" (function name), and "preference".
 #' @examples
@@ -138,7 +138,7 @@ preference_order <- function(
     response = NULL,
     predictors = NULL,
     f = "auto",
-    warn_limit = 0.8,
+    warn_limit = 0.95,
     quiet = FALSE
 ){
 
@@ -277,29 +277,33 @@ preference_order <- function(
         decreasing = TRUE),
     ]
 
+    rownames(preference) <- NULL
+
     #assess extreme associations
-    if(is.numeric(warn_limit)){
+    if(
+      is.numeric(warn_limit) &&
+      quiet == FALSE
+      ){
 
       preference_extreme <- preference[preference$preference > warn_limit, ]
 
       if(nrow(preference_extreme) > 0){
 
-        message(
-          "\ncollinear::preference_order(): [WARNING] predictors with associations to '",
-          response,
-          "' higher than ",
-          warn_limit,
-          ": \n - ",
-          paste0(
-            preference_extreme$predictor,
-            ": ",
-            round(preference_extreme$preference, 2),
-            collapse = "\n - "
-          )
-        )
+         message(
+           "\ncollinear::preference_order(): [WARNING] predictors with associations to '",
+           response,
+           "' higher than ",
+           warn_limit,
+           ": \n - ",
+           paste0(
+             preference_extreme$predictor,
+             ": ",
+             round(preference_extreme$preference, 2),
+             collapse = "\n - "
+           )
+         )
 
       }
-
 
     }
 

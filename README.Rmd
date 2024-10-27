@@ -67,14 +67,14 @@ If you find this package useful, please cite:
 
 The package `collinear` can be installed from CRAN.
 
-```{r}
+```{r, eval = FALSE}
 install.packages("collinear")
 ```
 
 
 The development version can be installed from GitHub.
 
-```{r}
+```{r, eval = FALSE}
 remotes::install_github(
   repo = "blasbenito/collinear", 
   ref = "development"
@@ -85,7 +85,7 @@ remotes::install_github(
 Previous versions are in the “archive_xxx” branches of the GitHub
 repository.
 
-```{r}
+```{r, eval = FALSE}
 remotes::install_github(
   repo = "blasbenito/collinear", 
   ref = "archive_v1.1.1"
@@ -161,7 +161,7 @@ The predictor names are returned in the same order as the preference order. If `
 
 ### How It Works
 
-The table below shows the functions called directly by `collinear()`, and their functionality, data requirements, and settings required to disable them.
+The table below shows the functions called directly by `collinear()`, their functionality, data requirements, and how to disable them.
 
 | **Function**           | **Functionality**                            | **Requirements**                  | **Disabled**                              |
 |------------------------|----------------------------------------------|-----------------------------------|------------------------------------------|
@@ -170,22 +170,15 @@ The table below shows the functions called directly by `collinear()`, and their 
 | `cor_select()`         | reduce <br> pairwise correlation             | any `predictors`                  | `cor_max = NULL`                         |
 | `vif_select()`         | reduce <br> variance inflation               | numeric `predictors`              | `vif_max = NULL`                         |
 
-The next sections follow the processing of the responses "vi_numeric" and "vi_character" through all these functions.
+The next sections follow the processing of the responses "vi_numeric" and "vi_character" through these functions.
 
 #### `target_encoding_lab()`
 
-Arguments in `collinear():
+This function requires a numeric `response` to transform categorical `predictors` to numeric. This transformation allows applying the same multicollinearity filtering methods to all predictors. 
 
-  + `encoding_method = "loo"`
+In `collinear()`, this functionality is controlled by the argument `encoding_method`, which defines the encoding method, or disables the functionality entirely when `NULL`.
 
-This function requires a numeric `response` to transform categorical `predictors` to numeric. This transformation method allows applying the same multicollinearity filtering methods to all predictors. 
-
-The categorical predictor "koppen_zone" has character values indicating different climate zones.
-
-```{r}
-head(unique(df$koppen_zone))
-```
-The code chunk below creates a little toy data frame with two of these Koppen groups and the response "vi_numeric".
+The code chunk below creates an example data frame with two levels of the categorical predictor "koppen_zone" and the response "vi_numeric".
 
 ```{r}
 df_toy <- df |> 
@@ -200,10 +193,12 @@ df_toy <- df |>
 kableExtra::kbl(df_toy) |> 
   kableExtra::kable_styling()
 ```
-When introducing "koppen_zone" in `target_encoding_lab()` with the method "loo" (leave-one-out), the data frame is grouped by the levels of the predictor, and each value in a group is re-mapped as the average of the `response` across all other group cases.
+When introducing this data frame into `target_encoding_lab()` with the method "loo" (leave-one-out), the data frame is grouped by the levels of "koppen_zone", and each value in a group is encoded as the average of `response` across all other group cases. 
+
+The methods "mean" and "rank" are also available through the argument `encoding_method` of `collinear()`. Please check the documentation of `target_encoding_lab()` for further details.
 
 ```{r}
-df_toy <- target_encoding_lab(
+df_toy <- collinear::target_encoding_lab(
   df = df_toy,
   response = "vi_numeric",
   predictors = "koppen_zone",
@@ -213,20 +208,98 @@ df_toy <- target_encoding_lab(
 )
 ```
 
-The resulting data frame shows the variable "koppen_zone" re-mapped as numeric, and ready for a multicollinearity analysis.
+The function output shows "koppen_zone" encoded as numeric, and ready for a multicollinearity analysis along with other numeric predictors.
 
 ```{r, echo = FALSE}
 kableExtra::kbl(df_toy) |> 
   kableExtra::kable_styling()
 ```
+In the example call to `collinear()` shown above, target encoding is executed for "vi_numeric", resulting in zero categorical predictors.
 
-When this method is disabled or the response is not numeric, `cor_select()` becomes much slower (because uses more complex methods to achieve a solution), and `vif_select()` ignores all categorical predictors.
+```{r}
+df_vi_numeric <- collinear::target_encoding_lab(
+  df = df,
+  response = "vi_numeric",
+  predictors = vi_predictors,
+  method = "loo",
+  overwrite = TRUE,
+  quiet = TRUE
+)
+
+#find categorical predictors
+collinear::identify_predictors_categorical(
+  df = df_vi_numeric,
+  predictors = vi_predictors
+)
+```
+On the other hand, target encoding is ignored for the categorical `response` "vi_categorical", resulting in 12 categorical predictors to be handled by the multicollinearity analysis.
+
+```{r}
+df_vi_categorical <- df
+
+collinear::identify_predictors_categorical(
+  df = df_vi_categorical,
+  predictors = vi_predictors
+)
+```
 
 #### `preference_order()`
 
-This function ranks predictors by the strength of their association with the response. The ranked predictors are considered by `cor_select()` and `vif_select()` to help preserve as many relevant predictors as possible during multicollinearity filtering.
+This function ranks predictors by the strength of their association to the response to help preserve a relevant subset during multicollinearity filtering.
 
+Three arguments control this feature in `collinear()`:
 
+  + `preference_order`: Either a pre-computed or custom ranking of predictors, or "auto" to let `collinear()` handle it internally.
+  + `preference_f`: Function to compute the association between `response` and `predictors` (check `help(preference_order)`, which lists the available options). If "auto" (default), then `f_auto()` selects one based on the data features.
+  + `preference_warn_limit`: If not `NULL`, this feature helps identifying predictors that are suspiciously similar to the response.
+  
+Preference order is computed as follows for the `response` "vi_numeric":
+
+```{r}
+preference_vi_numeric <- collinear::preference_order(
+  df = df_vi_numeric,
+  response = "vi_numeric",
+  predictors = vi_predictors,
+  f = "auto",
+  warn_limit = 0.95,
+  quiet = FALSE
+)
+```
+When all variables are numeric, `f_auto()` selects `f_r2_pearson()` to compute the Pearson correlation between `response` and `predictors`. 
+
+The function returns the data frame shown below, ordered by the value of the column "preference".
+
+```{r, echo = FALSE}
+kableExtra::kbl(preference_vi_numeric) |> 
+  kableExtra::kable_styling()
+```
+
+The column "predictor" shown above aligns in order with the output of `collinear()` for the response "vi_numeric".
+
+```{r}
+selection$vi_numeric
+```
+
+If the choice made by `f_auto()` to compute associations between `response` and `predictors` is deemed inappropriate, there are many other options available, or the user can create a custom one tailored to the given data.
+
+For example, if the relationship between `response` and `predictors` is expected to be non-linear, a univariate random forest model could be used to compute preference order.
+
+```{r}
+preference_gam <- collinear::preference_order(
+  df = df_vi_numeric,
+  response = "vi_numeric",
+  predictors = vi_predictors,
+  f = f_r2_gam_gaussian,
+  warn_limit = 0.95,
+  quiet = FALSE
+)
+```
+Changes in the `f` function may indeed change the preference order, and result in a completely different predictor selection returned by `collinear()`.
+
+```{r, echo = FALSE}
+kableExtra::kbl(preference_gam) |> 
+  kableExtra::kable_styling()
+```
 
 #### `cor_select()` 
 

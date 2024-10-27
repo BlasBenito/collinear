@@ -47,11 +47,10 @@ df <- data.frame(
 f_v_rf_categorical(df = df)
 }
 \seealso{
-Other preference_order: 
+Other preference_order_functions: 
 \code{\link{f_auc}},
 \code{\link{f_r2}},
 \code{\link{f_r2_counts}},
-\code{\link{f_v}()},
-\code{\link{preference_order}()}
+\code{\link{f_v}()}
 }
-\concept{preference_order}
+\concept{preference_order_functions}

@@ -75,7 +75,7 @@
 #'   \item [f_r2_rf()]: in all other cases.
 #' }
 #' Default: NULL
-#' @param preference_warn_limit (optional, numeric) Preference value (R-squared, AUC, or Cramer's V) over which a warning flagging suspicious predictors is issued. Disabled if NULL. Default: 0.8
+#' @param preference_warn_limit (optional, numeric) Preference value over which a warning flagging suspicious predictors is issued. Disabled if NULL. Default: 0.95
 #' @param cor_method (optional; character string) Method used to compute pairwise correlations. Either "pearson" or "spearman". Default: "pearson".
 #' @param cor_max (optional; numeric) Maximum correlation allowed between any pair of variables in `predictors`. Recommended values are between 0.5 and 0.9. Higher values return larger number of predictors with a higher multicollinearity. If NULL, the pairwise correlation analysis is disabled. Default: `0.75`
 #' @param vif_max (optional, numeric) Maximum Variance Inflation Factor allowed during variable selection. Recommended values are between 2.5 and 10. Higher values return larger number of predictors with a higher multicollinearity. If NULL, the variance inflation analysis is disabled. Default: 5.
@@ -194,7 +194,7 @@ collinear <- function(
     encoding_method = "loo",
     preference_order = "auto",
     preference_f = "auto",
-    preference_warn_limit = 0.8,
+    preference_warn_limit = 0.95,
     cor_method = "pearson",
     cor_max = 0.75,
     vif_max = 5,

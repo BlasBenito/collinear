@@ -70,7 +70,7 @@
 #' f_r2_rf(df = df)
 #' @autoglobal
 #' @rdname f_r2
-#' @family preference_order
+#' @family preference_order_functions
 #' @examples
 #'
 #' #load example data
@@ -115,7 +115,7 @@ NULL
 
 #' @autoglobal
 #' @rdname f_r2
-#' @family preference_order
+#' @family preference_order_functions
 #' @export
 f_r2_pearson <- function(df){
 
@@ -130,7 +130,7 @@ f_r2_pearson <- function(df){
 
 #' @autoglobal
 #' @rdname f_r2
-#' @family preference_order
+#' @family preference_order_functions
 #' @export
 f_r2_spearman <- function(df){
 
@@ -144,7 +144,7 @@ f_r2_spearman <- function(df){
 
 #' @autoglobal
 #' @rdname f_r2
-#' @family preference_order
+#' @family preference_order_functions
 #' @export
 f_r2_glm_gaussian <- function(df){
 
@@ -171,7 +171,7 @@ f_r2_glm_gaussian <- function(df){
 
 #' @autoglobal
 #' @rdname f_r2
-#' @family preference_order
+#' @family preference_order_functions
 #' @export
 f_r2_glm_gaussian_poly2 <- function(df){
 
@@ -202,13 +202,12 @@ f_r2_glm_gaussian_poly2 <- function(df){
 
 #' @autoglobal
 #' @rdname f_r2
-#' @family preference_order
+#' @family preference_order_functions
 #' @export
 f_r2_gam_gaussian <- function(df){
 
-  k <- min(
-    length(unique(df[["x"]])) - 1,
-    floor(nrow(df)/10)
+  k <- k_auto(
+    df = df
   )
 
   p <- mgcv::gam(
@@ -232,7 +231,7 @@ f_r2_gam_gaussian <- function(df){
 
 #' @autoglobal
 #' @rdname f_r2
-#' @family preference_order
+#' @family preference_order_functions
 #' @export
 f_r2_rpart <- function(df){
 
@@ -258,7 +257,7 @@ f_r2_rpart <- function(df){
 
 #' @autoglobal
 #' @rdname f_r2
-#' @family preference_order
+#' @family preference_order_functions
 #' @export
 f_r2_rf <- function(df){
 
@@ -308,7 +307,7 @@ f_r2_rf <- function(df){
 #'   \item "y" (integer) counts response.
 #' }
 #' @rdname f_r2_counts
-#' @family preference_order
+#' @family preference_order_functions
 #' @examples
 #'
 #' #load example data
@@ -339,7 +338,7 @@ NULL
 
 #' @autoglobal
 #' @rdname f_r2_counts
-#' @family preference_order
+#' @family preference_order_functions
 #' @export
 f_r2_glm_poisson <- function(df){
 
@@ -365,7 +364,7 @@ f_r2_glm_poisson <- function(df){
 
 #' @autoglobal
 #' @rdname f_r2_counts
-#' @family preference_order
+#' @family preference_order_functions
 #' @export
 f_r2_glm_poisson_poly2 <- function(df){
 
@@ -396,13 +395,12 @@ f_r2_glm_poisson_poly2 <- function(df){
 
 #' @autoglobal
 #' @rdname f_r2_counts
-#' @family preference_order
+#' @family preference_order_functions
 #' @export
 f_r2_gam_poisson <- function(df){
 
-  k <- min(
-    length(unique(df[["x"]])) - 1,
-    floor(nrow(df)/10)
+  k <- k_auto(
+    df = df
   )
 
   p <- mgcv::gam(
@@ -446,7 +444,7 @@ f_r2_gam_poisson <- function(df){
 #'   \item "x": (numeric) continuous predictor.
 #'   \item "y" (integer) binomial response with unique values 0 and 1.
 #' }
-#' @family preference_order
+#' @family preference_order_functions
 #' @examples
 #' #load example data
 #' data(vi)
@@ -481,7 +479,7 @@ NULL
 
 #' @autoglobal
 #' @rdname f_auc
-#' @family preference_order
+#' @family preference_order_functions
 #' @export
 f_auc_glm_binomial <- function(df){
 
@@ -511,7 +509,7 @@ f_auc_glm_binomial <- function(df){
 
 #' @autoglobal
 #' @rdname f_auc
-#' @family preference_order
+#' @family preference_order_functions
 #' @export
 f_auc_glm_binomial_poly2 <- function(df){
 
@@ -544,13 +542,12 @@ f_auc_glm_binomial_poly2 <- function(df){
 
 #' @autoglobal
 #' @rdname f_auc
-#' @family preference_order
+#' @family preference_order_functions
 #' @export
 f_auc_gam_binomial <- function(df){
 
-  k <- min(
-    length(unique(df[["x"]])) - 1,
-    ceiling(nrow(df)/30)
+  k <- k_auto(
+    df = df
   )
 
   p <- mgcv::gam(
@@ -577,7 +574,7 @@ f_auc_gam_binomial <- function(df){
 
 #' @autoglobal
 #' @rdname f_auc
-#' @family preference_order
+#' @family preference_order_functions
 #' @export
 f_auc_rpart <- function(df){
 
@@ -606,7 +603,7 @@ f_auc_rpart <- function(df){
 
 #' @autoglobal
 #' @rdname f_auc
-#' @family preference_order
+#' @family preference_order_functions
 #' @export
 f_auc_rf <- function(df){
 
@@ -665,7 +662,7 @@ f_auc_rf <- function(df){
 #' #Cramer's V
 #' f_v(df = df)
 #' @autoglobal
-#' @family preference_order
+#' @family preference_order_functions
 #' @export
 f_v <- function(df){
 
@@ -716,7 +713,7 @@ f_v <- function(df){
 #'
 #' f_v_rf_categorical(df = df)
 #' @autoglobal
-#' @family preference_order
+#' @family preference_order_functions
 #' @export
 f_v_rf_categorical <- function(df){
 

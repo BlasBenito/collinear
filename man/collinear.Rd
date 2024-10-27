@@ -11,7 +11,7 @@ collinear(
   encoding_method = "loo",
   preference_order = "auto",
   preference_f = "auto",
-  preference_warn_limit = 0.8,
+  preference_warn_limit = 0.95,
   cor_method = "pearson",
   cor_max = 0.75,
   vif_max = 5,
@@ -46,7 +46,7 @@ collinear(
 }
 Default: NULL}
 
-\item{preference_warn_limit}{(optional, numeric) Preference value (R-squared, AUC, or Cramer's V) over which a warning flagging suspicious predictors is issued. Disabled if NULL. Default: 0.8}
+\item{preference_warn_limit}{(optional, numeric) Preference value over which a warning flagging suspicious predictors is issued. Disabled if NULL. Default: 0.95}
 
 \item{cor_method}{(optional; character string) Method used to compute pairwise correlations. Either "pearson" or "spearman". Default: "pearson".}
 

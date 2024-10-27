@@ -22,6 +22,7 @@ Other preference_order_tools:
 \code{\link{auc}()},
 \code{\link{case_weights}()},
 \code{\link{f_auto}()},
-\code{\link{f_auto_rules}()}
+\code{\link{f_auto_rules}()},
+\code{\link{k_auto}()}
 }
 \concept{preference_order_tools}

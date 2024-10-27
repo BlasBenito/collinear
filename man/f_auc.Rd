@@ -72,46 +72,40 @@ f_auc_rpart(df = df)
 f_auc_rf(df = df)
 }
 \seealso{
-Other preference_order: 
+Other preference_order_functions: 
 \code{\link{f_r2}},
 \code{\link{f_r2_counts}},
 \code{\link{f_v}()},
-\code{\link{f_v_rf_categorical}()},
-\code{\link{preference_order}()}
+\code{\link{f_v_rf_categorical}()}
 
-Other preference_order: 
+Other preference_order_functions: 
 \code{\link{f_r2}},
 \code{\link{f_r2_counts}},
 \code{\link{f_v}()},
-\code{\link{f_v_rf_categorical}()},
-\code{\link{preference_order}()}
+\code{\link{f_v_rf_categorical}()}
 
-Other preference_order: 
+Other preference_order_functions: 
 \code{\link{f_r2}},
 \code{\link{f_r2_counts}},
 \code{\link{f_v}()},
-\code{\link{f_v_rf_categorical}()},
-\code{\link{preference_order}()}
+\code{\link{f_v_rf_categorical}()}
 
-Other preference_order: 
+Other preference_order_functions: 
 \code{\link{f_r2}},
 \code{\link{f_r2_counts}},
 \code{\link{f_v}()},
-\code{\link{f_v_rf_categorical}()},
-\code{\link{preference_order}()}
+\code{\link{f_v_rf_categorical}()}
 
-Other preference_order: 
+Other preference_order_functions: 
 \code{\link{f_r2}},
 \code{\link{f_r2_counts}},
 \code{\link{f_v}()},
-\code{\link{f_v_rf_categorical}()},
-\code{\link{preference_order}()}
+\code{\link{f_v_rf_categorical}()}
 
-Other preference_order: 
+Other preference_order_functions: 
 \code{\link{f_r2}},
 \code{\link{f_r2_counts}},
 \code{\link{f_v}()},
-\code{\link{f_v_rf_categorical}()},
-\code{\link{preference_order}()}
+\code{\link{f_v_rf_categorical}()}
 }
-\concept{preference_order}
+\concept{preference_order_functions}

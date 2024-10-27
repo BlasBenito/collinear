@@ -58,10 +58,11 @@ reference:
   - has_concept("target_encoding_tools")
 
 - title: Preference Order
-  desc: Quantiative prioritization of variables for a multicollinearity analysis, based on their relationship with a numeric or binary response variable.
+  desc: Rank predictors by their association to a response to preserve important ones during multicollinearity filtering.
 - contents:
   - has_concept("preference_order")
   - has_concept("preference_order_tools")
+  - has_concept("preference_order_functions")
 
 - title: Example Data
   desc: Real and synthetic datasets used throughout the package examples.

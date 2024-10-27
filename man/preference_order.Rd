@@ -9,7 +9,7 @@ preference_order(
   response = NULL,
   predictors = NULL,
   f = "auto",
-  warn_limit = 0.8,
+  warn_limit = 0.95,
   quiet = FALSE
 )
 }
@@ -30,7 +30,7 @@ preference_order(
 }
 Default: NULL}
 
-\item{warn_limit}{(optional, numeric) Preference value (R-squared, AUC, or Cramer's V) over which a warning flagging suspicious predictors is issued. Disabled if NULL. Default: 0.8}
+\item{warn_limit}{(optional, numeric) Preference value (R-squared, AUC, or Cramer's V) over which a warning flagging suspicious predictors is issued. Disabled if NULL. Default: 0.95}
 
 \item{quiet}{(optional; logical) If FALSE, messages generated during the execution of the function are printed to the console Default: FALSE}
 }
@@ -154,14 +154,6 @@ preference_list[[2]]
 
 #disable parallelization
 future::plan(future::sequential)
-}
-\seealso{
-Other preference_order: 
-\code{\link{f_auc}},
-\code{\link{f_r2}},
-\code{\link{f_r2_counts}},
-\code{\link{f_v}()},
-\code{\link{f_v_rf_categorical}()}
 }
 \author{
 Blas M. Benito, PhD

@@ -158,7 +158,7 @@ testthat::test_that("`collinear()` works", {
       df = df,
       response = "vi_numeric",
       predictors = predictors,
-      quiet = TRUE,
+      quiet = FALSE,
       preference_warn_limit = 0.8
     )
   ) |>
