@@ -8,7 +8,6 @@ cor_select(
   df = NULL,
   predictors = NULL,
   preference_order = NULL,
-  cor_method = "pearson",
   cor_max = 0.75,
   quiet = FALSE
 )
@@ -26,8 +25,6 @@ cor_select(
 \item \strong{named list}: output of \code{\link[=preference_order]{preference_order()}} from \code{response} of length two or more.
 \item \strong{NULL}: disabled.
 }. Default: "auto"}
-
-\item{cor_method}{(optional; character string) Method used to compute pairwise correlations. Either "pearson" or "spearman". Default: "pearson".}
 
 \item{cor_max}{(optional; numeric) Maximum correlation allowed between any pair of variables in \code{predictors}. Recommended values are between 0.5 and 0.9. Higher values return larger number of predictors with a higher multicollinearity. If NULL, the pairwise correlation analysis is disabled. Default: \code{0.75}}
 

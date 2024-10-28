@@ -52,7 +52,6 @@
 cor_df <- function(
     df = NULL,
     predictors = NULL,
-    cor_method = "pearson",
     quiet = FALSE
 ){
 
@@ -103,7 +102,6 @@ cor_df <- function(
   cor.list[["num-vs-num"]] <- cor_numeric_vs_numeric(
     df = df,
     predictors = predictors,
-    cor_method = cor_method,
     quiet = quiet
   )
 
@@ -111,7 +109,6 @@ cor_df <- function(
   cor.list[["num-vs-cat"]] <- cor_numeric_vs_categorical(
     df = df,
     predictors = predictors,
-    cor_method = cor_method,
     quiet = quiet
   )
 
@@ -158,7 +155,6 @@ cor_df <- function(
 cor_numeric_vs_numeric <- function(
     df = NULL,
     predictors = NULL,
-    cor_method = "pearson",
     quiet = FALSE
 ){
 
@@ -190,7 +186,7 @@ cor_numeric_vs_numeric <- function(
   cor.df <- stats::cor(
     x = df[, predictors, drop = FALSE],
     use = "pairwise.complete.obs",
-    method = cor_method
+    method = "pearson"
   ) |>
     as.table() |>
     as.data.frame()
@@ -250,7 +246,6 @@ cor_numeric_vs_numeric <- function(
 cor_numeric_vs_categorical <- function(
     df = NULL,
     predictors = NULL,
-    cor_method = "pearson",
     quiet = FALSE
 ){
 
@@ -326,8 +321,8 @@ cor_numeric_vs_categorical <- function(
       stats::cor(
         x = df.x$x,
         y = df.x$y,
-        method = cor_method,
-        use = "pairwise.complete.obs"
+        use = "pairwise.complete.obs",
+        method = "pearson"
       )
 
     }, #end of lambda function

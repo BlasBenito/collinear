@@ -59,7 +59,7 @@
 #'   \item [f_r2_rf()]: in all other cases.
 #' }
 #' Default: NULL
-#' @param warn_limit (optional, numeric) Preference value (R-squared, AUC, or Cramer's V) over which a warning flagging suspicious predictors is issued. Disabled if NULL. Default: 0.95
+#' @param warn_limit (optional, numeric) Preference value (R-squared, AUC, or Cramer's V) over which a warning flagging suspicious predictors is issued. Disabled if NULL. Default: NULL
 #' @family preference_order
 #' @return data frame: columns are "response", "predictor", "f" (function name), and "preference".
 #' @examples
@@ -138,7 +138,7 @@ preference_order <- function(
     response = NULL,
     predictors = NULL,
     f = "auto",
-    warn_limit = 0.95,
+    warn_limit = NULL,
     quiet = FALSE
 ){
 

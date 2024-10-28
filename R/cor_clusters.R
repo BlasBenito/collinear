@@ -38,7 +38,6 @@
 cor_clusters <- function(
     df = NULL,
     predictors = NULL,
-    cor_method = "pearson",
     cor_max = 0.75,
     method = "complete",
     plot = FALSE
@@ -46,8 +45,7 @@ cor_clusters <- function(
 
   m <- cor_matrix(
     df = df,
-    predictors = predictors,
-    cor_method = cor_method
+    predictors = predictors
   )
 
   m <- stats::as.dist(1 - abs(m))

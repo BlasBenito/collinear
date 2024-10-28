@@ -7,7 +7,6 @@
 cor_clusters(
   df = NULL,
   predictors = NULL,
-  cor_method = "pearson",
   cor_max = 0.75,
   method = "complete",
   plot = FALSE
@@ -17,8 +16,6 @@ cor_clusters(
 \item{df}{(required; data frame, tibble, or sf) A data frame with numeric predictors, and optionally a numeric response and categorical predictors. Default: NULL.}
 
 \item{predictors}{(optional; character vector) Names of the variables to select from \code{df}. If omitted, all numeric columns in \code{df} are used instead. If argument \code{response} is not provided, non-numeric variables are ignored. Default: NULL}
-
-\item{cor_method}{(optional; character string) Method used to compute pairwise correlations. Either "pearson" or "spearman". Default: "pearson".}
 
 \item{cor_max}{(optional; numeric) Maximum correlation allowed between any pair of variables in \code{predictors}. Recommended values are between 0.5 and 0.9. Higher values return larger number of predictors with a higher multicollinearity. If NULL, the pairwise correlation analysis is disabled. Default: \code{0.75}}
 

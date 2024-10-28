@@ -206,12 +206,8 @@ f_r2_glm_gaussian_poly2 <- function(df){
 #' @export
 f_r2_gam_gaussian <- function(df){
 
-  k <- k_auto(
-    df = df
-  )
-
   p <- mgcv::gam(
-    formula = y ~ s(x, k = k),
+    formula = y ~ s(x),
     data = df,
     family = stats::gaussian(link = "identity"),
     select = TRUE
@@ -239,9 +235,7 @@ f_r2_rpart <- function(df){
     formula = y ~ x,
     data = df,
     control = rpart::rpart.control(
-      minbucket = ceiling(
-        nrow(df)/100
-      )
+      minbucket = floor(nrow(df) * 0.05)
     )
   ) |>
     stats::predict(
@@ -266,7 +260,7 @@ f_r2_rf <- function(df){
     data = df,
     num.threads = 1,
     num.trees = 100,
-    min.node.size = ceiling(nrow(df)/100),
+    min.node.size = floor(nrow(df) * 0.05),
     seed = 1
   )
 
@@ -399,12 +393,8 @@ f_r2_glm_poisson_poly2 <- function(df){
 #' @export
 f_r2_gam_poisson <- function(df){
 
-  k <- k_auto(
-    df = df
-  )
-
   p <- mgcv::gam(
-    formula = y ~ s(x, k = k),
+    formula = y ~ s(x),
     data = df,
     family = stats::poisson(link = "log"),
     select = TRUE
@@ -546,12 +536,8 @@ f_auc_glm_binomial_poly2 <- function(df){
 #' @export
 f_auc_gam_binomial <- function(df){
 
-  k <- k_auto(
-    df = df
-  )
-
   p <- mgcv::gam(
-    formula = y ~ s(x, k = k),
+    formula = y ~ s(x),
     data = df,
     family = stats::quasibinomial(link = "logit"),
     weights = case_weights(
@@ -585,9 +571,7 @@ f_auc_rpart <- function(df){
       x = df[["y"]])
     ,
     control = rpart::rpart.control(
-      minbucket = ceiling(
-        nrow(df)/100
-      )
+      minbucket = floor(nrow(df) * 0.05)
     )
   ) |>
     stats::predict(
@@ -615,7 +599,7 @@ f_auc_rf <- function(df){
       ),
     num.threads = 1,
     num.trees = 100,
-    min.node.size = ceiling(nrow(df)/100),
+    min.node.size = floor(nrow(df) * 0.05),
     seed = 1
   )
 
@@ -727,7 +711,7 @@ f_v_rf_categorical <- function(df){
     ),
     num.threads = 1,
     num.trees = 100,
-    min.node.size = ceiling(nrow(df)/100),
+    min.node.size = floor(nrow(df) * 0.05),
     seed = 1
   )
 

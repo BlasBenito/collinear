@@ -75,8 +75,6 @@
 #'   \item [f_r2_rf()]: in all other cases.
 #' }
 #' Default: NULL
-#' @param preference_warn_limit (optional, numeric) Preference value over which a warning flagging suspicious predictors is issued. Disabled if NULL. Default: 0.95
-#' @param cor_method (optional; character string) Method used to compute pairwise correlations. Either "pearson" or "spearman". Default: "pearson".
 #' @param cor_max (optional; numeric) Maximum correlation allowed between any pair of variables in `predictors`. Recommended values are between 0.5 and 0.9. Higher values return larger number of predictors with a higher multicollinearity. If NULL, the pairwise correlation analysis is disabled. Default: `0.75`
 #' @param vif_max (optional, numeric) Maximum Variance Inflation Factor allowed during variable selection. Recommended values are between 2.5 and 10. Higher values return larger number of predictors with a higher multicollinearity. If NULL, the variance inflation analysis is disabled. Default: 5.
 #' @param quiet (optional; logical) If FALSE, messages generated during the execution of the function are printed to the console Default: FALSE
@@ -194,8 +192,6 @@ collinear <- function(
     encoding_method = "loo",
     preference_order = "auto",
     preference_f = "auto",
-    preference_warn_limit = 0.95,
-    cor_method = "pearson",
     cor_max = 0.75,
     vif_max = 5,
     quiet = FALSE
@@ -276,7 +272,6 @@ collinear <- function(
     )
 
     # preference order ----
-
     preference_order <-
       if(preference_order_class == "character"){
 
@@ -288,12 +283,39 @@ collinear <- function(
             predictors = predictors.response,
             f = preference_f,
             quiet = quiet,
-            warn_limit = preference_warn_limit
+            warn_limit = NULL
           )$predictor
 
         } else {
 
-          preference_order_user
+          #if preference_order_user does not contain all predictors
+          if(
+            all(
+              predictors.response %in% preference_order_user
+              ) == FALSE
+            ){
+
+            c(
+              preference_order_user,
+              preference_order(
+                df = df.response,
+                response = response,
+                predictors = setdiff(
+                  x = predictors.response,
+                  y = preference_order_user
+                ),
+                f = preference_f,
+                quiet = quiet,
+                warn_limit = NULL
+              )$predictor
+            )
+
+
+          } else {
+
+            preference_order_user
+
+          }
 
         }
 
@@ -325,7 +347,6 @@ collinear <- function(
       df = df.response,
       predictors = predictors.response,
       preference_order = preference_order,
-      cor_method = cor_method,
       cor_max = cor_max,
       quiet = quiet
     )

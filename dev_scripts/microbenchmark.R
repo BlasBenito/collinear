@@ -6,8 +6,7 @@ option1 <- function() {
   #correlation matrix
   m <- cor_matrix(
     df = df,
-    predictors = predictors,
-    cor_method = cor_method
+    predictors = predictors
   ) |>
     abs()
 
@@ -52,8 +51,7 @@ option2 <- function() {
   #correlation matrix
   m <- cor_matrix(
     df = df,
-    predictors = predictors,
-    cor_method = cor_method
+    predictors = predictors
   ) |>
     abs()
 

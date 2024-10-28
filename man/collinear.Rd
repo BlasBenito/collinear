@@ -11,8 +11,6 @@ collinear(
   encoding_method = "loo",
   preference_order = "auto",
   preference_f = "auto",
-  preference_warn_limit = 0.95,
-  cor_method = "pearson",
   cor_max = 0.75,
   vif_max = 5,
   quiet = FALSE
@@ -45,10 +43,6 @@ collinear(
 \item \code{\link[=f_r2_rf]{f_r2_rf()}}: in all other cases.
 }
 Default: NULL}
-
-\item{preference_warn_limit}{(optional, numeric) Preference value over which a warning flagging suspicious predictors is issued. Disabled if NULL. Default: 0.95}
-
-\item{cor_method}{(optional; character string) Method used to compute pairwise correlations. Either "pearson" or "spearman". Default: "pearson".}
 
 \item{cor_max}{(optional; numeric) Maximum correlation allowed between any pair of variables in \code{predictors}. Recommended values are between 0.5 and 0.9. Higher values return larger number of predictors with a higher multicollinearity. If NULL, the pairwise correlation analysis is disabled. Default: \code{0.75}}
 

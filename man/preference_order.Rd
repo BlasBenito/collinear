@@ -9,7 +9,7 @@ preference_order(
   response = NULL,
   predictors = NULL,
   f = "auto",
-  warn_limit = 0.95,
+  warn_limit = NULL,
   quiet = FALSE
 )
 }
@@ -30,7 +30,7 @@ preference_order(
 }
 Default: NULL}
 
-\item{warn_limit}{(optional, numeric) Preference value (R-squared, AUC, or Cramer's V) over which a warning flagging suspicious predictors is issued. Disabled if NULL. Default: 0.95}
+\item{warn_limit}{(optional, numeric) Preference value (R-squared, AUC, or Cramer's V) over which a warning flagging suspicious predictors is issued. Disabled if NULL. Default: NULL}
 
 \item{quiet}{(optional; logical) If FALSE, messages generated during the execution of the function are printed to the console Default: FALSE}
 }

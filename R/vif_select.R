@@ -233,7 +233,8 @@ vif_select <- function(
 
     stats::cor(
       x = df[, predictors, drop = FALSE],
-      use = "complete.obs"
+      use = "complete.obs",
+      method = "pearson"
     ) |>
       solve(tol = tolerance) |>
       diag() |>

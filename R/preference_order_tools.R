@@ -19,8 +19,8 @@ r2 <- function(
   stats::cor(
     x = p,
     y = o,
-    method = "pearson",
-    use = "complete.obs"
+    use = "complete.obs",
+    method = "pearson"
   )^2
 
 }
@@ -292,51 +292,3 @@ f_auto_rules <- function(){
   )
 
 }
-
-#' Auto Computation of K in GAM Smooths
-#'
-#' @inheritParams f_r2
-#' @param predictor (optiona, string) Name of a numeric column in `df`, to be used as predictor in a GAM model. Default: "x".
-#'
-#' @return integer; k value
-#' @export
-#' @autoglobal
-#' @family preference_order_tools
-#' @examples
-#' k_auto(
-#'   df = vi,
-#'   predictor = "swi_mean"
-#' )
-k_auto <- function(
-    df = NULL,
-    predictor = "x"
-){
-
-  #square root of predictor levels
-  sqrt_predictor_levels <-
-    df[[predictor]] |>
-    unique() |>
-    length() |>
-    sqrt() |>
-    ceiling()
-
-  predictor_levels <- max(
-    sqrt_predictor_levels - 1,
-    2
-    )
-
-  #rows in df
-  sqrt_df_rows <- df |>
-    nrow() |>
-    sqrt() |>
-    floor()
-
-  df_rows <- min(
-    sqrt_df_rows,
-    floor(nrow(df)/100)
-  )
-
-  min(predictor_levels, df_rows)
-
-}
-

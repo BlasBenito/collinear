@@ -60,8 +60,7 @@
 #' @export
 cor_matrix <- function(
     df = NULL,
-    predictors = NULL,
-    cor_method = "pearson"
+    predictors = NULL
 ){
 
   #if df with predictors, compute cor data frame
@@ -77,8 +76,7 @@ cor_matrix <- function(
 
     df <- cor_df(
       df = df,
-      predictors = predictors,
-      cor_method = cor_method
+      predictors = predictors
     )
 
   }

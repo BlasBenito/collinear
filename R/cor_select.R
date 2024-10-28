@@ -77,7 +77,6 @@ cor_select <- function(
     df = NULL,
     predictors = NULL,
     preference_order = NULL,
-    cor_method = "pearson",
     cor_max = 0.75,
     quiet = FALSE
 ){
@@ -138,8 +137,7 @@ cor_select <- function(
 
   m <- cor_matrix(
     df = df,
-    predictors = predictors,
-    cor_method = cor_method
+    predictors = predictors
   ) |>
     abs()
 

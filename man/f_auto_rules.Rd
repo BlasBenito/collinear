@@ -20,7 +20,6 @@ Other preference_order_tools:
 \code{\link{auc}()},
 \code{\link{case_weights}()},
 \code{\link{f_auto}()},
-\code{\link{k_auto}()},
 \code{\link{r2}()}
 }
 \concept{preference_order_tools}

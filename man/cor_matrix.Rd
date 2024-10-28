@@ -4,14 +4,12 @@
 \alias{cor_matrix}
 \title{Pairwise Correlation Matrix}
 \usage{
-cor_matrix(df = NULL, predictors = NULL, cor_method = "pearson")
+cor_matrix(df = NULL, predictors = NULL)
 }
 \arguments{
 \item{df}{(required; data frame, tibble, or sf) A data frame with numeric predictors, and optionally a numeric response and categorical predictors. Default: NULL.}
 
 \item{predictors}{(optional; character vector) Names of the variables to select from \code{df}. If omitted, all numeric columns in \code{df} are used instead. If argument \code{response} is not provided, non-numeric variables are ignored. Default: NULL}
-
-\item{cor_method}{(optional; character string) Method used to compute pairwise correlations. Either "pearson" or "spearman". Default: "pearson".}
 }
 \value{
 correlation matrix

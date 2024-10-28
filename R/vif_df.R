@@ -110,7 +110,8 @@ vif_df <- function(
   #compute correlation matrix
   m <- stats::cor(
     x = df[, predictors, drop = FALSE],
-    use = "complete.obs"
+    use = "complete.obs",
+    method = "pearson"
   )
 
   #first try

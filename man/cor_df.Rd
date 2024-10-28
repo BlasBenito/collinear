@@ -7,21 +7,11 @@
 \alias{cor_categorical_vs_categorical}
 \title{Pairwise Correlation Data Frame}
 \usage{
-cor_df(df = NULL, predictors = NULL, cor_method = "pearson", quiet = FALSE)
+cor_df(df = NULL, predictors = NULL, quiet = FALSE)
 
-cor_numeric_vs_numeric(
-  df = NULL,
-  predictors = NULL,
-  cor_method = "pearson",
-  quiet = FALSE
-)
+cor_numeric_vs_numeric(df = NULL, predictors = NULL, quiet = FALSE)
 
-cor_numeric_vs_categorical(
-  df = NULL,
-  predictors = NULL,
-  cor_method = "pearson",
-  quiet = FALSE
-)
+cor_numeric_vs_categorical(df = NULL, predictors = NULL, quiet = FALSE)
 
 cor_categorical_vs_categorical(df = NULL, predictors = NULL, quiet = FALSE)
 }
@@ -29,8 +19,6 @@ cor_categorical_vs_categorical(df = NULL, predictors = NULL, quiet = FALSE)
 \item{df}{(required; data frame, tibble, or sf) A data frame with numeric predictors, and optionally a numeric response and categorical predictors. Default: NULL.}
 
 \item{predictors}{(optional; character vector) Names of the variables to select from \code{df}. If omitted, all numeric columns in \code{df} are used instead. If argument \code{response} is not provided, non-numeric variables are ignored. Default: NULL}
-
-\item{cor_method}{(optional; character string) Method used to compute pairwise correlations. Either "pearson" or "spearman". Default: "pearson".}
 
 \item{quiet}{(optional; logical) If FALSE, messages generated during the execution of the function are printed to the console Default: FALSE}
 }
