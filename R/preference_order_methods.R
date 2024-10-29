@@ -900,10 +900,9 @@ f_v_rf_categorical <- function(df){
     data = df
   )$predictions
 
-  cor_cramer_v(
-    x = p,
-    y = df[["y"]],
-    check_input = FALSE
+  preference_score_v(
+    o = df[["y"]],
+    p = p
   )
 
 }

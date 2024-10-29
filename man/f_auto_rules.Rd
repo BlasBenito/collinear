@@ -21,6 +21,7 @@ Other preference_order_tools:
 \code{\link{f_auto}()},
 \code{\link{preference_order_collinear}()},
 \code{\link{preference_score_auc}()},
-\code{\link{preference_score_r2}()}
+\code{\link{preference_score_r2}()},
+\code{\link{preference_score_v}()}
 }
 \concept{preference_order_tools}
