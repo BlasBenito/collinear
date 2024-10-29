@@ -6,7 +6,7 @@
 #' \itemize{
 #' \item **Target Encoding**: When a numeric `response` is provided and `encoding_method` is not NULL, it transforms categorical predictors (classes "character" and "factor") to numeric using the response values as reference. See [target_encoding_lab()] for further details.
 #' \item **Preference Order**: When a response of any type is provided via `response`, the association between the response and each predictor is computed with an appropriate function (see [preference_order()] and [f_auto()]), and all predictors are ranked from higher to lower association. This rank is used to preserve important predictors during the multicollinearity filtering.
-#' \item **Pairwise Correlation Filtering**: Automated multicollinearity filtering via pairwise correlation. Correlations between numeric and categoricals  predictors are computed by target-encoding the categorical against the predictor, and correlations between categoricals are computed via Cramer's V. See [cor_select()], [cor_df()], and [cramer_v()] for further details.
+#' \item **Pairwise Correlation Filtering**: Automated multicollinearity filtering via pairwise correlation. Correlations between numeric and categoricals  predictors are computed by target-encoding the categorical against the predictor, and correlations between categoricals are computed via Cramer's V. See [cor_select()], [cor_df()], and [cor_cramer_v()] for further details.
 #' \item **VIF filtering**: Automated algorithm to identify and remove numeric predictors that are linear combinations of other predictors. See [vif_select()] and [vif_df()].
 #' }
 #'
@@ -215,9 +215,8 @@ collinear <- function(
   )
   rm(response)
 
-  #save copy of the original preference order
+  #copy of preference order to avoid overwriting in loop
   preference_order_user <- preference_order
-  preference_order_class <- class(preference_order)
 
   #output list
   out <- list()
@@ -271,76 +270,15 @@ collinear <- function(
       quiet = quiet
     )
 
-    # preference order ----
-    preference_order <-
-      if(preference_order_class == "character"){
-
-        if(preference_order_user[1] == "auto"){
-
-          preference_order(
-            df = df.response,
-            response = response,
-            predictors = predictors.response,
-            f = preference_f,
-            quiet = quiet,
-            warn_limit = NULL
-          )$predictor
-
-        } else {
-
-          #if preference_order_user does not contain all predictors
-          if(
-            all(
-              predictors.response %in% preference_order_user
-              ) == FALSE
-            ){
-
-            c(
-              preference_order_user,
-              preference_order(
-                df = df.response,
-                response = response,
-                predictors = setdiff(
-                  x = predictors.response,
-                  y = preference_order_user
-                ),
-                f = preference_f,
-                quiet = quiet,
-                warn_limit = NULL
-              )$predictor
-            )
-
-
-          } else {
-
-            preference_order_user
-
-          }
-
-        }
-
-      } else if(
-        preference_order_class == "data.frame" &&
-        "predictor" %in% colnames(preference_order_user)
-      ){
-
-        preference_order_user$predictor
-
-      } else if(
-        preference_order_class == "list"
-      ){
-
-        if(response %in% names(preference_order_user)){
-          preference_order_user[[response]]$predictor
-        } else {
-          preference_order_user[[1]]$predictor
-        }
-
-      } else {
-
-        NULL
-
-      }
+    #compute preference order
+    preference_order <- preference_order_collinear(
+      df = df.response,
+      response = response,
+      predictors = predictors.response,
+      preference_order = preference_order_user,
+      preference_f = preference_f,
+      quiet = quiet
+    )
 
     # correlation filter ----
     selection.cor <- cor_select(

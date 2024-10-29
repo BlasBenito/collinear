@@ -8,7 +8,7 @@ exampletestr::make_tests_shells_pkg()
 # test-cor_df.R DONE
 # test-cor_matrix.R DONE
 # test-cor_select.R DONE
-# test-cramer_v.R DONE
+# test-cor_cramer_v.R DONE
 # test-identify.R DONE
 # test-preference_order.R DONE
 # test-target_encoding_lab.R DONE

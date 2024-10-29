@@ -1,8 +1,8 @@
-testthat::test_that("`cramer_v()` works", {
+testthat::test_that("`cor_cramer_v()` works", {
 
   data(vi)
 
-    v <- cramer_v(
+    v <- cor_cramer_v(
       x = vi$soil_type,
       y = vi$koppen_zone
       )
@@ -18,7 +18,7 @@ testthat::test_that("`cramer_v()` works", {
     )
 
     testthat::expect_error(
-      v <- cramer_v(
+      v <- cor_cramer_v(
         x = vi$soil_type,
         y = vi$vi_mean
       )

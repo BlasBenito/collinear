@@ -4,7 +4,7 @@ library(collinear)
 #cor_df DONE
 #cor_matrix DONE
 #cor_select DONE
-#cramer_v DONE
+#cor_cramer_v DONE
 #target_encoding_lab DONE
 #target_encoding_methods DONE
 #vif_select DONE
@@ -280,7 +280,7 @@ preference.order
 
 
 
-#cramer_vi DONE
+#cor_cramer_vi DONE
 ###################################################
 ###################################################
 ###################################################
@@ -291,7 +291,7 @@ data(vi)
 vi <- vi[1:1000, ]
 
 #computing Cramer's V for two categorical predictors
-v <- cramer_v(
+v <- cor_cramer_v(
   x = vi$soil_type,
   y = vi$koppen_zone
   )
@@ -507,7 +507,7 @@ vi <- vi[1:1000, ]
 vi_predictors <- vi_predictors[1:10]
 
 #without response
-#categorical vs categorical compared with cramer_v()
+#categorical vs categorical compared with cor_cramer_v()
 #categorical vs numerical compared wit stats::cor() via target-encoding
 #numerical vs numerical compared with stats::cor()
 df <- cor_df(

@@ -27,7 +27,7 @@ f_auc <- function(x, y, df){
 
 }
 
-f_cramer_v <- function(x, y, df){
+f_cor_cramer_v <- function(x, y, df){
 
   data <- data.frame(
     y = df[[y]],
@@ -43,10 +43,10 @@ f_cramer_v <- function(x, y, df){
         )
       )
   ){
-    stop("f_cramer_v: arguments 'x' and 'y' must be names of character or factor columns in 'df'.")
+    stop("f_cor_cramer_v: arguments 'x' and 'y' must be names of character or factor columns in 'df'.")
   }
 
-  cramer_v(
+  cor_cramer_v(
     x = data$x,
     y = data$y,
     check_input = FALSE
@@ -55,7 +55,7 @@ f_cramer_v <- function(x, y, df){
 }
 
 
-f_rpart_binomial_unbalanced_auc(x, y, df)
+f_rpart_binomial_unbalanced_preference_score_auc(x, y, df)
 
 f_rpart_binomial_unbalanced_auc <- function(x, y, df){
 

@@ -17,7 +17,7 @@ f_v(df)
 numeric: Cramer's V
 }
 \description{
-Computes Cramer's V, a measure of association between categorical or factor variables. Please see \code{\link[=cramer_v]{cramer_v()}} for further details.
+Computes Cramer's V, a measure of association between categorical or factor variables. Please see \code{\link[=cor_cramer_v]{cor_cramer_v()}} for further details.
 }
 \examples{
 #load example data

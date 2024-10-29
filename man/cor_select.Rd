@@ -114,9 +114,9 @@ future::plan(future::sequential)
 \seealso{
 Other pairwise_correlation: 
 \code{\link{cor_clusters}()},
+\code{\link{cor_cramer_v}()},
 \code{\link{cor_df}()},
-\code{\link{cor_matrix}()},
-\code{\link{cramer_v}()}
+\code{\link{cor_matrix}()}
 }
 \author{
 Blas M. Benito, PhD

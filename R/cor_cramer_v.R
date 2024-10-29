@@ -23,7 +23,7 @@
 #' vi <- vi[1:1000, ]
 #'
 #' #computing Cramer's V for two categorical predictors
-#' v <- cramer_v(
+#' v <- cor_cramer_v(
 #'   x = vi$soil_type,
 #'   y = vi$koppen_zone
 #'   )
@@ -38,7 +38,7 @@
 #'  \item Cramér, H. (1946). Mathematical Methods of Statistics. Princeton: Princeton University Press, page 282 (Chapter 21. The two-dimensional case). ISBN 0-691-08004-6
 #' }
 #' @export
-cramer_v <- function(
+cor_cramer_v <- function(
     x = NULL,
     y = NULL,
     check_input = TRUE
@@ -50,7 +50,7 @@ cramer_v <- function(
     # Check if 'x' and 'y' have the same length
     if(length(x) != length(y)){
       stop(
-        "collinear::cramer_v(): arguments 'x' and 'y' must have the same length.",
+        "collinear::cor_cramer_v(): arguments 'x' and 'y' must have the same length.",
         call. = FALSE
         )
     }
@@ -58,7 +58,7 @@ cramer_v <- function(
     # Check if 'x' is not NULL
     if(is.null(x)){
       stop(
-        "collinear::cramer_v(): argument 'x' must not be NULL.",
+        "collinear::cor_cramer_v(): argument 'x' must not be NULL.",
         call. = FALSE
       )
     }
@@ -66,7 +66,7 @@ cramer_v <- function(
     # Check if 'y' is not NULL
     if(is.null(y)){
       stop(
-        "collinear::cramer_v(): argument 'y' must not be NULL.",
+        "collinear::cor_cramer_v(): argument 'y' must not be NULL.",
         call. = FALSE
       )
     }
@@ -74,7 +74,7 @@ cramer_v <- function(
     # Check if 'x' is a character vector
     if(is.numeric(x)){
       stop(
-        "collinear::cramer_v(): argument 'x' must be of class 'character' or 'factor', but it is 'numeric'.",
+        "collinear::cor_cramer_v(): argument 'x' must be of class 'character' or 'factor', but it is 'numeric'.",
         call. = FALSE
       )
     }
@@ -82,7 +82,7 @@ cramer_v <- function(
     # Check if 'y' is a character vector
     if(is.numeric(y)){
       stop(
-        "collinear::cramer_v(): argument 'y' must be of class 'character' or 'factor', but it is 'numeric'.",
+        "collinear::cor_cramer_v(): argument 'y' must be of class 'character' or 'factor', but it is 'numeric'.",
         call. = FALSE
       )
     }

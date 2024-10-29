@@ -47,7 +47,7 @@ R CMD check succeeded
 ✔ |          6 | cor_df [1.4s]                         
 ✔ |          8 | cor_matrix [1.4s]                     
 ✔ |          4 | cor_select [1.9s]                     
-✔ |          3 | cramer_v                              
+✔ |          3 | cor_cramer_v                              
 ✔ |          6 | identify [3.7s]                       
 ✔ |         33 | preference_order [29.3s]              
 ✔ |          9 | target_encoding_lab [1.3s]            
