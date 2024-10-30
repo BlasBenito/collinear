@@ -116,17 +116,8 @@ future::plan(
 
 ## Example Data
 
-The data frame `vi` consists of 30,000 rows and 67 columns, featuring
-various response types and a mix of numeric and categorical predictors.
-The code below makes it smaller to accelerate this tutorial.
-
-``` r
-set.seed(1)
-df <- dplyr::slice_sample(
-  vi, 
-  n = 5000
-  )
-```
+The data frame `vi` consists of rows, columns, and 0 NA values. It
+contains several numeric and categorical responses and predictors.
 
 The response columns, all derived from the same data, have descriptive
 names: `vi_numeric`, `vi_counts` (integers), `vi_binomial` (1s and 0s),
@@ -137,6 +128,16 @@ Predictor names are grouped in character vectors:
 `vi_predictors_numeric` (49 numeric and integer predictors),
 `vi_predictors_categorical` (12 character and factor predictors), and
 `vi_predictors` containing them all.
+
+The code below makes it smaller to accelerate this tutorial.
+
+``` r
+set.seed(1)
+df <- dplyr::slice_sample(
+  vi, 
+  n = 5000
+  )
+```
 
 ## Using `collinear()`
 
@@ -163,10 +164,10 @@ more than one response is provided, and a character vector otherwise.
 selection
 ```
 
-The predictor names are returned in the same order as the preference
-order. If `response` is provided, `collinear()` returns non-collinear
-variables ordered by their association with `response`. Otherwise, the
-predictors are ordered from lower to higher multicollinearity.
+If `response` is provided, and `preference_order` is provided or has the
+value “auto”, then `collinear()` returns the variable selection in order
+of preference. Otherwise, the predictors are ordered from lower to
+higher multicollinearity.
 
 ### How It Works
 
@@ -187,11 +188,12 @@ and “vi_character” through these functions.
 
 This function requires a numeric `response` to transform categorical
 `predictors` to numeric. This transformation allows applying the same
-multicollinearity filtering methods to all predictors.
+multicollinearity filtering methods to categorical and numeric
+predictors.
 
 In `collinear()`, this functionality is controlled by the argument
-`encoding_method`, which defines the encoding method, or disables the
-functionality entirely when `NULL`.
+`encoding_method`, which defines what method will be used for the target
+encoding, or disables the functionality entirely when `NULL`.
 
 The code chunk below creates an example data frame with two levels of
 the categorical predictor “koppen_zone” and the response “vi_numeric”.
@@ -225,11 +227,12 @@ df_toy <- collinear::target_encoding_lab(
 )
 ```
 
-The function output shows “koppen_zone” encoded as numeric, and ready
-for a multicollinearity analysis along with other numeric predictors.
+The function returns a data frame with the predictor “koppen_zone”
+encoded as numeric, and ready for a multicollinearity analysis along
+with other numeric predictors.
 
-In the example call to `collinear()` shown above, target encoding is
-executed for “vi_numeric”, resulting in zero categorical predictors.
+In the example call to `collinear()` shown at the beginning of this
+section, target encoding is executed for “vi_numeric” only, as follows:
 
 ``` r
 df_vi_numeric <- collinear::target_encoding_lab(
@@ -240,17 +243,22 @@ df_vi_numeric <- collinear::target_encoding_lab(
   overwrite = TRUE,
   quiet = TRUE
 )
+```
 
-#find categorical predictors
+This operation results in zero categorical predictors in the vector
+`vi_predictors`:
+
+``` r
 collinear::identify_predictors_categorical(
   df = df_vi_numeric,
   predictors = vi_predictors
 )
 ```
 
-On the other hand, target encoding is ignored for the categorical
-`response` “vi_categorical”, resulting in 12 categorical predictors to
-be handled by the multicollinearity analysis.
+On the other hand, target encoding is skipped for the categorical
+`response` “vi_categorical”, resulting in 12 categorical predictors that
+will require a different handling than the numeric ones in the next
+steps.
 
 ``` r
 df_vi_categorical <- df
