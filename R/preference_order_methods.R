@@ -79,6 +79,54 @@ f_auto <- function(
 
 }
 
+#' Data Frame of Preference Functions
+#'
+#' @return data frame
+#' @export
+#' @autoglobal
+#' @examples
+#' f_functions()
+f_functions <- function(){
+
+  f_list <- list(
+    c("f_r2_pearson", "numeric", "numeric", "cor(x, y, method = 'pearson')^2", "r-squared"),
+    c("f_r2_spearman", "numeric", "numeric", "cor(x, y, method = 'spearman')^2", "pseudo r-squared"),
+    c("f_r2_glm_gaussian", "numeric", "numeric, categorical", "glm(y ~ x, family = gaussian(link = 'identity'))", "r-squared"),
+    c("f_r2_glm_gaussian_poly2", "numeric", "numeric, categorical", "glm(y ~ poly(x, degree = 2, raw = TRUE), family = gaussian(link = 'identity'))", "r-squared"),
+    c("f_r2_gam_gaussian", "numeric", "numeric, categorical", "mgcv::gam(y ~ s(x), family = gaussian(link = 'identity'))", "r-squared"),
+    c("f_r2_rpart", "numeric", "numeric, categorical", "rpart::rpart(y ~ x)", "r-squared"),
+    c("f_r2_rf", "numeric", "numeric, categorical", "ranger::ranger(y ~ x)", "r-squared"),
+    c("f_r2_glm_poisson", "integer counts", "numeric, categorical", "glm(y ~ x, family = poisson(link = 'log'))", "r-squared"),
+    c("f_r2_glm_poisson_poly2", "integer counts", "numeric, categorical", "glm(y ~ poly(x, degree = 2, raw = TRUE), family = poisson(link = 'log'))", "r-squared"),
+    c("f_r2_gam_poisson", "integer counts", "numeric, categorical", "mgcv::gam(y ~ s(x), family = poisson(link = 'log'))", "r-squared"),
+    c("f_auc_glm_binomial", "binomial", "numeric, categorical", "glm(y ~ x, family = quasibinomial(link = 'logit'), weights = case_weights(y))", "AUC"),
+    c("f_auc_glm_binomial_poly2", "binomial", "numeric, categorical", "glm(y ~ poly(x, degree = 2, raw = TRUE), family = quasibinomial(link = 'logit'), weights = collinear::case_weights(y))", "AUC"),
+    c("f_auc_glm_binomial_poly2", "binomial", "numeric, categorical", "glm(y ~ poly(x, degree = 2, raw = TRUE), family = quasibinomial(link = 'logit'), weights = collinear::case_weights(y))", "AUC"),
+    c("f_auc_gam_binomial", "binomial", "numeric, categorical", "mgcv::gam(y ~ s(x), family = quasibinomial(link = 'logit'), weights = collinear::case_weights(y))", "AUC"),
+    c("f_auc_rpart", "binomial", "numeric, categorical", "rpart::rpart(y ~ x, weights = collinear::case_weights(y))", "AUC"),
+    c("f_auc_rf", "binomial", "numeric, categorical", "ranger::ranger(y ~ x, case.weights = collinear::case_weights(y))", "AUC"),
+    c("f_v", "categorical", "categorical", "collinear::cramer_v(x, y)", "Cramer's V"),
+    c("f_v_rf_categorical", "categorical", "numeric, categorical", "ranger::ranger(y ~ x, case.weights = collinear::case_weights(y))", "Cramer's V")
+  )
+
+  f_df <- f_list |>
+    as.data.frame() |>
+    t()
+
+  rownames(f_df) <- NULL
+
+  colnames(f_df) <- c(
+    "name",
+    "response_type",
+    "predictors_types",
+    "expression",
+    "preference_metric"
+  )
+
+  f_df
+
+}
+
 
 #' Rules to Select Default f Argument to Compute Preference Order
 #'
