@@ -164,7 +164,7 @@ The selections for both responses are different because `collinear()` follows di
 |------------|----------------|--------------------|
 | **Target-encoding** | executed: 12 categorical `predictors` transformed to numeric | skipped: all categorical `predictors` go to next steps |
 | **Preference order** | `f_r2_pearson()`: R-squared between `response` and `predictors` | `f_v_rf_categorical()`: Cramer's V of `response` against univariate random forest predictions |
-| **Pairwise correlation filtering** | - *numeric vs num.*: Pearson correlation | - *num. vs num.*: Pearson correlation  <br>  - *num. vs categorical*: target-encoding + Pearson <br> - *cat. vs cat.*: Cramer's V|
+| **Pairwise correlation filtering** | - *numeric vs num.*: Pearson correlation | - *num. vs num.*: Pearson correlation  <br>  - *num. vs categorical*: target-encoding + R-squared <br> - *cat. vs cat.*: Cramer's V|
 | **VIF filtering** | Applied to all remaining `predictors` | Applied to numeric remaining `predictors` |
 
 The following sections offer a detailed explanation of these alternative paths and the reasons behind them.
@@ -417,11 +417,144 @@ selection_list <- collinear::collinear(
     ),
   predictors = vi_predictors,
   preference_order = preference_list,
-  quiet = FALSE
+  quiet = TRUE
 )
+
+selection_list
 ```
 
 #### `cor_select()` 
+
+This function performs 2 steps:
+
+  + Computes a pairwise correlation matrix.
+  + Applies a forward stepwise multicollinearity filtering to select predictors below a certain correlation threshold.
+  
+**Pairwise Correlation Matrix**
+
+There are three possible cases to handle when building the correlation matrix:
+
+  + **Numeric vs numeric** (`cor_numeric_vs_numeric()`): Computes the R-squared between both predictors.
+
+```{r}
+x <- collinear::cor_numeric_vs_numeric(
+  df = df,
+  predictors = c(
+    "temperature_mean", #numeric
+    "temperature_max"   #numeric
+  )
+)
+```
+
+```{r, echo = FALSE}
+kableExtra::kbl(x) |> 
+  kableExtra::kable_styling()
+```
+  
+  + **Numeric vs categorical** (`cor_numeric_vs_categorical()`): The categorical predictor is target-encoded using the numeric predictor as reference, and then their R-squared is computed.
+
+```{r}
+x <- collinear::cor_numeric_vs_categorical(
+  df = df,
+  predictors = c(
+    "temperature_mean", #numeric
+    "soil_type"         #categorical
+  )
+)
+```
+
+```{r, echo = FALSE}
+kableExtra::kbl(x) |> 
+  kableExtra::kable_styling()
+```
+
+  + **Categorical vs categorical** (`cor_categorical_vs_categorical()`): Computes the Cramer's V between both predictors. However, comparing Cramer's V and R-squared is a suboptimal solution, and it is always recommended to target-encode categoricals first, if possible.
+  
+```{r}
+x <- collinear::cor_categorical_vs_categorical(
+  df = df,
+  predictors = c(
+    "koppen_zone",      #categorical
+    "soil_type"         #categorical
+  )
+)
+```
+
+```{r, echo = FALSE}
+kableExtra::kbl(x) |> 
+  kableExtra::kable_styling()
+```
+
+Pairwise correlations are computed by `cor_df()`, and rearranged as a matrix by `cor_matrix()`.
+
+```{r}
+df_cor <- collinear::cor_df(
+  df = df,
+  predictors = vi_predictors
+)
+```
+
+```{r, echo = FALSE}
+kableExtra::kbl(head(df_cor)) |> 
+  kableExtra::kable_styling()
+```
+
+```{r}
+m <- collinear::cor_matrix(
+  df = df_cor
+)
+```
+
+The first 10 rows and columns of the correlation matrix are shown below.
+
+```{r, echo = FALSE}
+kableExtra::kbl(m[1:10, 1:10]) |> 
+  kableExtra::kable_styling()
+```
+
+**Multicollinearity Filtering**
+
+The forward stepwise multicollinearity filtering implemented in `cor_select()` works as follows:
+
+  + Order the pairwise correlation matrix to match `preference_order`.
+  + Add the first first predictor in `preference_order` to the vector `selected`. 
+  + For every other predictor: get its maximum correlation with the predictors `selected`. If lower than `cor_max`, add it to `selected`, and ignore it otherwise. Move to the next predictor until all them have been tested. 
+
+```{r}
+#preference order from a previous example
+preference_order <- preference_list$vi_numeric$predictor
+
+#correlation threshold
+cor_max <- 0.5
+
+#reorder pairwise correlation matrix
+m <- m[
+  preference_order,
+  preference_order
+]
+
+diag(m) <- 0
+
+#selection algorithm
+selected <- preference_order[1]
+candidates <- preference_order[-1]
+
+for(candidate in candidates){
+  
+  if(max(m[selected, candidate]) <= cor_max){
+    
+    selected <- c(
+      selected,
+      candidate
+    )
+    
+  }
+  
+}
+
+selected
+```
+
 
 #### `vif_select()` 
 

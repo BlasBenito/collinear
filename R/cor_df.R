@@ -363,7 +363,7 @@ cor_categorical_vs_categorical <- function(
     quiet = quiet
   )
 
-  #get only non numeric predictors
+  #get only categorical predictors
   predictors <- identify_predictors_categorical(
     df = df,
     predictors = predictors
@@ -382,11 +382,14 @@ cor_categorical_vs_categorical <- function(
     stringsAsFactors = FALSE
   )
 
+  #filter out mirrored pairs
+  cor.df <- within(cor.df, {
+    x <- ifelse(x < y, x, y)
+    y <- ifelse(x < y, y, x)
+  })
+
   #filter out x == y
-  cor.df <- cor.df[
-    cor.df$x != cor.df$y,
-    , drop = FALSE
-  ]
+  cor.df <- cor.df[cor.df$x != cor.df$y, ]
 
   #future apply
   #progress bar

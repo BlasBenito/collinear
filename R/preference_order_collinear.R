@@ -88,9 +88,13 @@ preference_order_collinear <- function(
     "predictor" %in% colnames(preference_order)
   ){
 
-    message(
-      "\ncollinear::collinear(): using preference order data frame."
-    )
+    if(quiet == FALSE){
+
+      message(
+        "\ncollinear::collinear(): using preference order data frame."
+      )
+
+    }
 
     return(preference_order$predictor)
 
