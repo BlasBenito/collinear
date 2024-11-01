@@ -9,7 +9,7 @@ preference_order_collinear(
   response = NULL,
   predictors = NULL,
   preference_order = NULL,
-  preference_f = NULL,
+  f = NULL,
   quiet = FALSE
 )
 }
@@ -29,7 +29,7 @@ preference_order_collinear(
 \item \strong{NULL}: disabled.
 }. Default: "auto"}
 
-\item{preference_f}{(optional: function) Function to compute preference order. If "auto" (default) or NULL, the output of \code{\link[=f_auto]{f_auto()}} for the given data is used:
+\item{f}{(optional: function) Function to compute preference order. If "auto" (default) or NULL, the output of \code{\link[=f_auto]{f_auto()}} for the given data is used:
 \itemize{
 \item \code{\link[=f_auc_rf]{f_auc_rf()}}: if \code{response} is binomial.
 \item \code{\link[=f_r2_pearson]{f_r2_pearson()}}: if \code{response} and \code{predictors} are numeric.

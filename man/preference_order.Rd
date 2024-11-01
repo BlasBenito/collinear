@@ -22,10 +22,10 @@ preference_order(
 
 \item{f}{(optional: function) Function to compute preference order. If "auto" (default) or NULL, the output of \code{\link[=f_auto]{f_auto()}} for the given data is used:
 \itemize{
-\item \code{\link[=f_auc_rf]{f_auc_rf()}}: \code{response} is binomial.
-\item \code{\link[=f_r2_pearson]{f_r2_pearson()}}: \code{response} and \code{predictors} are numeric.
-\item \code{\link[=f_v]{f_v()}}: \code{response} and \code{predictors} are categorical.
-\item \code{\link[=f_v_rf_categorical]{f_v_rf_categorical()}}: \code{response} is categorical and \code{predictors} are numeric or mixed .
+\item \code{\link[=f_auc_rf]{f_auc_rf()}}: if \code{response} is binomial.
+\item \code{\link[=f_r2_pearson]{f_r2_pearson()}}: if \code{response} and \code{predictors} are numeric.
+\item \code{\link[=f_v]{f_v()}}: if \code{response} and \code{predictors} are categorical.
+\item \code{\link[=f_v_rf_categorical]{f_v_rf_categorical()}}: if \code{response} is categorical and \code{predictors} are numeric or mixed .
 \item \code{\link[=f_r2_rf]{f_r2_rf()}}: in all other cases.
 }
 Default: NULL}

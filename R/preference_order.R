@@ -50,15 +50,6 @@
 #' Accepts a character vector of response variables as input for the argument `response`. When more than one response is provided, the output is a named list of preference data frames.
 #'
 #' @inheritParams collinear
-#' @param f (optional: function) Function to compute preference order. If "auto" (default) or NULL, the output of [f_auto()] for the given data is used:
-#' \itemize{
-#'   \item [f_auc_rf()]: `response` is binomial.
-#'   \item [f_r2_pearson()]: `response` and `predictors` are numeric.
-#'   \item [f_v()]: `response` and `predictors` are categorical.
-#'   \item [f_v_rf_categorical()]: `response` is categorical and `predictors` are numeric or mixed .
-#'   \item [f_r2_rf()]: in all other cases.
-#' }
-#' Default: NULL
 #' @param warn_limit (optional, numeric) Preference value (R-squared, AUC, or Cramer's V) over which a warning flagging suspicious predictors is issued. Disabled if NULL. Default: NULL
 #' @family preference_order
 #' @return data frame: columns are "response", "predictor", "f" (function name), and "preference".

@@ -10,7 +10,7 @@ collinear(
   predictors = NULL,
   encoding_method = "loo",
   preference_order = "auto",
-  preference_f = "auto",
+  f = "auto",
   cor_max = 0.75,
   vif_max = 5,
   quiet = FALSE
@@ -34,7 +34,7 @@ collinear(
 \item \strong{NULL}: disabled.
 }. Default: "auto"}
 
-\item{preference_f}{(optional: function) Function to compute preference order. If "auto" (default) or NULL, the output of \code{\link[=f_auto]{f_auto()}} for the given data is used:
+\item{f}{(optional: function) Function to compute preference order. If "auto" (default) or NULL, the output of \code{\link[=f_auto]{f_auto()}} for the given data is used:
 \itemize{
 \item \code{\link[=f_auc_rf]{f_auc_rf()}}: if \code{response} is binomial.
 \item \code{\link[=f_r2_pearson]{f_r2_pearson()}}: if \code{response} and \code{predictors} are numeric.

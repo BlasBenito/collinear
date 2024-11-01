@@ -15,7 +15,7 @@ preference_order_collinear <- function(
     response = NULL,
     predictors = NULL,
     preference_order = NULL,
-    preference_f = NULL,
+    f = NULL,
     quiet = FALSE
 ){
 
@@ -34,7 +34,7 @@ preference_order_collinear <- function(
           df = df,
           response = response,
           predictors = predictors,
-          f = preference_f,
+          f = f,
           quiet = quiet,
           warn_limit = NULL
         )$predictor
@@ -54,7 +54,7 @@ preference_order_collinear <- function(
         df = df,
         response = response,
         predictors = missing_predictors,
-        f = preference_f,
+        f = f,
         quiet = quiet,
         warn_limit = NULL
       )$predictor
@@ -69,6 +69,15 @@ preference_order_collinear <- function(
     }
 
     # custom preference order ----
+
+    if(quiet == FALSE){
+
+      message(
+        "\ncollinear::collinear(): using custom preference order vector."
+      )
+
+    }
+
     return(preference_order)
 
   } #end of class character
@@ -78,6 +87,10 @@ preference_order_collinear <- function(
     is.data.frame(preference_order) &&
     "predictor" %in% colnames(preference_order)
   ){
+
+    message(
+      "\ncollinear::collinear(): using preference order data frame."
+    )
 
     return(preference_order$predictor)
 
@@ -89,12 +102,36 @@ preference_order_collinear <- function(
     ## list with response ----
     if(response %in% names(preference_order)){
 
+      if(quiet == FALSE){
+
+        message(
+          "\ncollinear::collinear(): selecting data frame '", response, "' fron preference order list."
+        )
+
+      }
+
       return(preference_order[[response]]$predictor)
 
     } else {
 
-      # list without response ----
-      return(preference_order[[1]]$predictor)
+      if(quiet == FALSE){
+
+        message(
+          "\ncollinear::collinear(): input preference order list does not have data for the response '", response, "'."
+        )
+
+      }
+
+      return(
+        preference_order(
+          df = df,
+          response = response,
+          predictors = predictors,
+          f = f,
+          quiet = quiet,
+          warn_limit = NULL
+        )$predictor
+      )
 
     }
 

@@ -66,7 +66,7 @@
 #'   \item **named list**: output of [preference_order()] from `response` of length two or more.
 #'   \item **NULL**: disabled.
 #' }. Default: "auto"
-#' @param preference_f (optional: function) Function to compute preference order. If "auto" (default) or NULL, the output of [f_auto()] for the given data is used:
+#' @param f (optional: function) Function to compute preference order. If "auto" (default) or NULL, the output of [f_auto()] for the given data is used:
 #' \itemize{
 #'   \item [f_auc_rf()]: if `response` is binomial.
 #'   \item [f_r2_pearson()]: if `response` and `predictors` are numeric.
@@ -191,7 +191,7 @@ collinear <- function(
     predictors = NULL,
     encoding_method = "loo",
     preference_order = "auto",
-    preference_f = "auto",
+    f = "auto",
     cor_max = 0.75,
     vif_max = 5,
     quiet = FALSE
@@ -213,6 +213,9 @@ collinear <- function(
     x = colnames(df),
     y = response
   )
+
+  #reorder responses
+  responses <- na.omit(responses[match(response, responses)])
   rm(response)
 
   #copy of preference order to avoid overwriting in loop
@@ -276,7 +279,7 @@ collinear <- function(
       response = response,
       predictors = predictors.response,
       preference_order = preference_order_user,
-      preference_f = preference_f,
+      f = f,
       quiet = quiet
     )
 
