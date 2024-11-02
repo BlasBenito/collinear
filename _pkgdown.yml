@@ -9,6 +9,11 @@ authors:
 
 articles:
 
+- title: "Tutorials"
+  navbar: "Tutorials"
+  contents:
+  - articles/how_it_works
+
 - title: "Blog Posts"
   navbar: "Blog Posts"
   contents:

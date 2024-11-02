@@ -6,7 +6,7 @@ output: github_document
 
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
-  eval = FALSE,
+  eval = TRUE,
   collapse = TRUE,
   comment = "#>",
   fig.path = "man/figures/README-",
@@ -14,6 +14,10 @@ knitr::opts_chunk$set(
 )
 # options(tibble.print_min = 5, tibble.print_max = 5)
 ```
+
+<!-- Development badges 
+# collinear <a href="https://dplyr.tidyverse.org"><img src="man/figures/logo.png" align="right" height="138" /></a>
+-->
 
 
 # collinear: R Package for Seamless Multicollinearity Management
@@ -48,17 +52,19 @@ The `collinear` package combines four methods for easy management of multicollin
 
 These methods are combined in the function `collinear()`, and as individual functions in `target_encoding_lab()`, `preference_order()`, `cor_select()`, and `vif_select()`.
 
+The article [How It Works](https://blasbenito.github.io/collinear/articles/how_it_works/how_it_works.html) explains these functions in detail.
+
 ## Citation
 
-If you find this package useful, please cite:
+If you find this package useful, please cite it as:
 
-*Blas M. Benito (2024). collinear: R Package for Seamless Multicollinearity Management. Version 1.2.0. doi: 10.5281/zenodo.10039489*
+*Blas M. Benito (2024). collinear: R Package for Seamless Multicollinearity Management. Version 2.0.0. doi: 10.5281/zenodo.10039489*
 
 ## Main Improvements in Version 2.0.0
 
 1. **Expanded Functionality**: Functions `collinear()` and `preference_order()` support both categorical and numeric responses and predictors, and can handle several responses at once.
 2. **Robust Selection Algorithms**: Enhanced selection in `vif_select()` and `cor_select()`.
-3. **Refined `preference_order()`**: New functions to compute association between response and predictors covering most use-cases, and automated function selection depending on data features.
+3. **Enhanced Functionality to Rank Predictors**: New functions to compute association between response and predictors covering most use-cases, and automated function selection depending on data features.
 4. **Simplified Target Encoding**: Streamlined and parallelized for better efficiency, and new default is "loo" (leave-one-out).
 5. **Parallelization and Progress Bars**: Utilizes `future` and `progressr` for enhanced performance and user experience.
 
@@ -92,63 +98,36 @@ remotes::install_github(
   )
 ```
 
-## Required Packages
-
-The packages required for this tutorial are:
 
 ```{r packages, message = FALSE, warning = FALSE, include = FALSE}
 library(collinear)
-library(dplyr)
-library(future)
 library(parallelly)
-library(kableExtra)
 ```
 
-## Parallelization Setup and Progress Bars
 
-Most functions in the package now accept a parallelization setup via `future::plan()` and progress bars via `progressr::handlers()`. However, progress bars are ignored in this tutorial because they don't work in Rmarkdown.
+## Getting Started
 
-```{r parallelization}
+The function `collinear()` provides access to the key functionalities of the package.
+
+The code below shows a example call to `collinear()` with two responses and mixed predictor types.
+
+```{r collinear_demo}
+#parallelization setup
 future::plan(
   future::multisession,
   workers = parallelly::availableCores() - 1
   )
 
-#progressr::handlers(global = TRUE)
-```
-
-
-## Example Data
-
-The data frame `vi` consists of `r nrow(vi)` rows, `r ncol(vi)` columns, and `r sum(is.na(vi))` NA values. It contains several numeric and categorical responses and predictors.
-
-The response columns, all derived from the same data, have descriptive names: `vi_numeric`, `vi_counts` (integers), `vi_binomial` (1s and 0s), `vi_categorical` (five categories), and `vi_factor` (factor version of the previous one).
-
-Predictor names are grouped in character vectors: `vi_predictors_numeric` (49 numeric and integer predictors), `vi_predictors_categorical` (12 character and factor predictors), and `vi_predictors` containing them all.
-
-The code below makes it smaller to accelerate this tutorial.
-
-```{r make_vi_smaller}
-set.seed(1)
-df <- dplyr::slice_sample(
-  vi, 
-  n = 5000
-  )
-```
-
-## Using `collinear()`
-
-The function `collinear()` provides access to the key functionalities of this package. The code below shows a call to `collinear()` with two responses and mixed predictor types.
-
-```{r collinear_demo}
+#multicollinearity filtering
 selection <- collinear::collinear(
-  df = df,
+  df = collinear::vi,
   response = c(
     "vi_numeric",
     "vi_categorical"
     ),
-  predictors = vi_predictors,
-  quiet = FALSE
+  predictors = collinear::vi_predictors,
+  cor_max = 0.75,
+  vif_max = 5
 )
 ```
 
@@ -158,407 +137,6 @@ The output is a named list of vectors with predictor names when more than one re
 selection
 ```
 
-The selections for both responses are different because `collinear()` follows different paths for numeric and categorical responses and predictors.
+## Getting help
 
-| **Functionality** | **numeric `response`** | **categorical `response`** |
-|------------|----------------|--------------------|
-| **Target-encoding** | executed: 12 categorical `predictors` transformed to numeric | skipped: all categorical `predictors` go to next steps |
-| **Preference order** | `f_r2_pearson()`: R-squared between `response` and `predictors` | `f_v_rf_categorical()`: Cramer's V of `response` against univariate random forest predictions |
-| **Pairwise correlation filtering** | - *numeric vs num.*: Pearson correlation | - *num. vs num.*: Pearson correlation  <br>  - *num. vs categorical*: target-encoding + R-squared <br> - *cat. vs cat.*: Cramer's V|
-| **VIF filtering** | Applied to all remaining `predictors` | Applied to numeric remaining `predictors` |
-
-The following sections offer a detailed explanation of these alternative paths and the reasons behind them.
-
-### How It Works
-
-The table below shows the main functions called by `collinear()`, their functionality, data requirements, and how to disable them.
-
-| **Function**           | **Functionality**                            | **Requirements**                  | **Disabled**                              |
-|------------------------|----------------------------------------------|-----------------------------------|------------------------------------------|
-| `target_encoding_lab()`| transform categorical predictors <br> to numeric       | - numeric `response` <br> - categorical `predictors` | - `response = NULL` <br> - `encoding_method = NULL` |
-| `preference_order()`   | rank and preserve <br> important predictors  | any `response`                    | - `response = NULL` <br> - `preference_order = NULL` |
-| `cor_select()`         | reduce <br> pairwise correlation             | any `predictors`                  | `cor_max = NULL`                         |
-| `vif_select()`         | reduce <br> variance inflation               | numeric `predictors`              | `vif_max = NULL`                         |
-
-The sections below explain these functions and how they are integrated into `collinear()`.
-
-#### `target_encoding_lab()`
-
-Target-encoding requires a numeric `response` to transform categorical `predictors` to numeric. This transformation enables the application of the same multicollinearity filtering (and modelling) methods to categorical and numeric predictors.
-
-In `collinear()`, this functionality is controlled by the argument `encoding_method`, which disables the functionality entirely when `NULL`, or defines the encoding method as "loo" (leave-one-out, default method), "mean", or "rank".
-
-There is a lengthier article about target-encoding [here](https://www.blasbenito.com/post/target-encoding/), let me show you a brief example of how it works. The example data frame below has two levels of the categorical predictor "koppen_zone" and the response "vi_numeric".
-
-```{r, echo = FALSE}
-df_toy <- df |> 
-  dplyr::select(vi_numeric, koppen_zone) |> 
-  dplyr::filter(koppen_zone %in% c("Af", "BSh")) |> 
-  dplyr::group_by(koppen_zone) |> 
-  dplyr::slice_head(n = 5) |> 
-  dplyr::ungroup()
-
-kableExtra::kbl(df_toy) |> 
-  kableExtra::kable_styling()
-```
-
-When introducing this data frame into `target_encoding_lab()` with the method "loo", it is first grouped by "koppen_zone" levels, and then each case  is encoded as the average of `response` across all other cases within the same level. 
-
-```{r, echo = FALSE}
-df_toy <- collinear::target_encoding_lab(
-  df = df_toy,
-  response = "vi_numeric",
-  predictors = "koppen_zone",
-  method = "loo",
-  overwrite = TRUE,
-  quiet = TRUE
-)
-```
-
-The result shows "koppen_zone" encoded as numeric and ready for a multicollinearity analysis.
-
-```{r, echo = FALSE}
-kableExtra::kbl(df_toy) |> 
-  kableExtra::kable_styling()
-```
-
-Due to the requirement for a numeric `response`, in the example call to `collinear()` target encoding is only applied for the `response` "vi_numeric" as follows:
-
-```{r}
-df_vi_numeric <- collinear::target_encoding_lab(
-  df = df,
-  response = "vi_numeric",
-  predictors = vi_predictors,
-  method = "loo",
-  overwrite = TRUE,
-  quiet = TRUE
-)
-```
-
-This operation results in zero categorical predictors in the data frame:
-
-```{r}
-collinear::identify_predictors_categorical(
-  df = df_vi_numeric,
-  predictors = vi_predictors
-)
-```
-
-On the other hand, target encoding is skipped for the categorical `response` "vi_categorical", resulting in 12 categorical predictors.
-
-```{r}
-df_vi_categorical <- df
-
-collinear::identify_predictors_categorical(
-  df = df_vi_categorical,
-  predictors = vi_predictors
-)
-```
-
-#### `preference_order()`
-
-The functions `collinear()`, `cor_select()`, and `vif_select()` are designed to preserve as many *relevant* predictors as possible, ensuring that their output have a good balance in terms of multicollinearity and predictive power.
-
-The computation of predictor *relevance* is controlled by the argument `preference_order`, which accepts a custom character vector or a data frame.
-
-**Custom character vector**
-
-Vector with `predictors` names in order of interest for the analyst. The example below shows a hypothetical case focused on preserving soil temperature variables over all others.
-  
-```{r}
-selection_from_vector <- collinear::collinear(
-  df = df,
-  response = "vi_numeric",
-  predictors = vi_predictors_numeric,
-  preference_order = c(
-    "soil_temperature_mean",
-    "soil_temperature_range",
-    "soil_temperature_min",
-    "soil_temperature_max"
-  ),
-  quiet = TRUE
-)
-
-selection_from_vector
-```
-
-**Data frame**
-
-Must have the column "predictor", and should be ordered from higher to lower quantitative preference. 
-
-The function `preference_order()` generates this data frame by computing the univariate association between each predictor and the `response` using a given `f` function:
-  
-```{r}
-preference_df <- collinear::preference_order(
-  df = df,
-  response = "vi_numeric",
-  predictors = vi_predictors_numeric,
-  f = f_r2_pearson, #cor(response, predictor)^2
-  quiet = TRUE
-)
-```
-
-
-```{r, echo = FALSE}
-kableExtra::kbl(preference_df) |> 
-  kableExtra::kable_styling()
-```
-
-The resulting data frame can be plugged into the `preference_order` argument of `collinear()`:
-
-```{r}
-selection_from_df <- collinear::collinear(
-  df = df,
-  response = "vi_numeric",
-  predictors = vi_predictors_numeric,
-  preference_order = preference_df,
-  quiet = TRUE
-)
-
-selection_from_df
-```
-
-But `collinear()` can also compute preference order by itself to return the same selection of predictors:
-
-```{r}
-selection_auto <- collinear::collinear(
-  df = df,
-  response = "vi_numeric",
-  predictors = vi_predictors_numeric,
-  preference_order = "auto",
-  f = "auto",
-  quiet = TRUE
-)
-
-selection_auto
-```
-The argument `f` of `preference_order()` and `collinear()` either receives a function name, or the string "auto". The names and features of all `f_...()` functions can be found in the data frame returned by `f_functions()`.
-
-```{r, eval = FALSE}
-collinear::f_functions()
-```
-
-```{r, echo = FALSE}
-collinear::f_functions() |> 
-  kableExtra::kbl() |> 
-  kableExtra::kable_styling()
-```
-
-All these functions take a data frame named `df` with the columns "x" and "y" as input, so preparing a custom one is task simple enough.
-
-```{r}
-#custom f function
-f_lm <- function(df){
-  summary(lm(y ~ x, data = df))$r.squared
-}
-
-preference_lm <- collinear::preference_order(
-  df = df,
-  response = "vi_numeric",
-  predictors = vi_predictors_numeric,
-  f = f_lm,
-  quiet = TRUE
-)
-```
-
-```{r, echo = FALSE}
-kableExtra::kbl(preference_lm) |> 
-  kableExtra::kable_styling()
-```
-
-When `f = "auto"`, `preference_order()` calls `f_auto()` and `f_auto_rules()` to select a function appropriate for the data properties. The example below, with categorical response and predictors, shows this feature in action. 
-
-```{r}
-preference_auto <- collinear::preference_order(
-  df = df,
-  response = "vi_categorical",
-  predictors = vi_predictors_categorical,
-  f = "auto",
-  quiet = TRUE
-)
-```
-
-```{r, echo = FALSE}
-kableExtra::kbl(preference_auto) |> 
-  kableExtra::kable_styling()
-```
-Here `f_auto()` selects `f_v()`, which computes Cramer's V between categorical responses and predictors. 
-
-To end this section, it is worth noting that `preference_order()` also accepts more than one response.
-
-```{r}
-preference_list <- collinear::preference_order(
-  df = df,
-  response = c(
-    "vi_categorical",
-    "vi_numeric"
-    ),
-  predictors = vi_predictors,
-  f = "auto",
-  quiet = TRUE
-)
-```
-
-The output is a named list that.
-
-```{r}
-names(preference_list)
-```
-
-This list can be plugged into `collinear()`. If a `response` is not in the preference order list, then is computed automatically for it anyway.
-
-```{r}
-selection_list <- collinear::collinear(
-  df = df,
-  response = c(
-    "vi_categorical",
-    "vi_numeric",
-    "vi_binomial" #not in preference_list
-    ),
-  predictors = vi_predictors,
-  preference_order = preference_list,
-  quiet = TRUE
-)
-
-selection_list
-```
-
-#### `cor_select()` 
-
-This function performs 2 steps:
-
-  + Computes a pairwise correlation matrix.
-  + Applies a forward stepwise multicollinearity filtering to select predictors below a certain correlation threshold.
-  
-**Pairwise Correlation Matrix**
-
-There are three possible cases to handle when building the correlation matrix:
-
-  + **Numeric vs numeric** (`cor_numeric_vs_numeric()`): Computes the R-squared between both predictors.
-
-```{r}
-x <- collinear::cor_numeric_vs_numeric(
-  df = df,
-  predictors = c(
-    "temperature_mean", #numeric
-    "temperature_max"   #numeric
-  )
-)
-```
-
-```{r, echo = FALSE}
-kableExtra::kbl(x) |> 
-  kableExtra::kable_styling()
-```
-  
-  + **Numeric vs categorical** (`cor_numeric_vs_categorical()`): The categorical predictor is target-encoded using the numeric predictor as reference, and then their R-squared is computed.
-
-```{r}
-x <- collinear::cor_numeric_vs_categorical(
-  df = df,
-  predictors = c(
-    "temperature_mean", #numeric
-    "soil_type"         #categorical
-  )
-)
-```
-
-```{r, echo = FALSE}
-kableExtra::kbl(x) |> 
-  kableExtra::kable_styling()
-```
-
-  + **Categorical vs categorical** (`cor_categorical_vs_categorical()`): Computes the Cramer's V between both predictors. However, comparing Cramer's V and R-squared is a suboptimal solution, and it is always recommended to target-encode categoricals first, if possible.
-  
-```{r}
-x <- collinear::cor_categorical_vs_categorical(
-  df = df,
-  predictors = c(
-    "koppen_zone",      #categorical
-    "soil_type"         #categorical
-  )
-)
-```
-
-```{r, echo = FALSE}
-kableExtra::kbl(x) |> 
-  kableExtra::kable_styling()
-```
-
-Pairwise correlations are computed by `cor_df()`, and rearranged as a matrix by `cor_matrix()`.
-
-```{r}
-df_cor <- collinear::cor_df(
-  df = df,
-  predictors = vi_predictors
-)
-```
-
-```{r, echo = FALSE}
-kableExtra::kbl(head(df_cor)) |> 
-  kableExtra::kable_styling()
-```
-
-```{r}
-m <- collinear::cor_matrix(
-  df = df_cor
-)
-```
-
-The first 10 rows and columns of the correlation matrix are shown below.
-
-```{r, echo = FALSE}
-kableExtra::kbl(m[1:10, 1:10]) |> 
-  kableExtra::kable_styling()
-```
-
-**Multicollinearity Filtering**
-
-The forward stepwise multicollinearity filtering implemented in `cor_select()` works as follows:
-
-  + Order the pairwise correlation matrix to match `preference_order`.
-  + Add the first first predictor in `preference_order` to the vector `selected`. 
-  + For every other predictor: get its maximum correlation with the predictors `selected`. If lower than `cor_max`, add it to `selected`, and ignore it otherwise. Move to the next predictor until all them have been tested. 
-
-```{r}
-#preference order from a previous example
-preference_order <- preference_list$vi_numeric$predictor
-
-#correlation threshold
-cor_max <- 0.5
-
-#reorder pairwise correlation matrix
-m <- m[
-  preference_order,
-  preference_order
-]
-
-diag(m) <- 0
-
-#selection algorithm
-selected <- preference_order[1]
-candidates <- preference_order[-1]
-
-for(candidate in candidates){
-  
-  if(max(m[selected, candidate]) <= cor_max){
-    
-    selected <- c(
-      selected,
-      candidate
-    )
-    
-  }
-  
-}
-
-selected
-```
-
-
-#### `vif_select()` 
-
-
-If you got here, thank you for your interest in `collinear`. I hope you can find it useful!
-
-Blas M. Benito, PhD
+If you encounter bugs or issues with the documentation, please [file a issue on GitHub](https://github.com/BlasBenito/collinear/issues).

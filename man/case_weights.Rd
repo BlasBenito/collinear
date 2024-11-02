@@ -28,6 +28,7 @@ Case Weights for Unbalanced Binomial or Categorical Responses
 Other preference_order_tools: 
 \code{\link{f_auto}()},
 \code{\link{f_auto_rules}()},
+\code{\link{f_functions}()},
 \code{\link{preference_order_collinear}()},
 \code{\link{preference_score_auc}()},
 \code{\link{preference_score_r2}()},

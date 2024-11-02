@@ -84,6 +84,7 @@ f_auto <- function(
 #' @return data frame
 #' @export
 #' @autoglobal
+#' @family preference_order_tools
 #' @examples
 #' f_functions()
 f_functions <- function(){

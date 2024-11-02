@@ -13,3 +13,4 @@ README_files/
 ^dev_scripts/
 ^docs$
 ^pkgdown$
+^vignettes/articles$
