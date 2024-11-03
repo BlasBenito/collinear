@@ -355,25 +355,32 @@ collinear <- function(
 
     }
 
+    #add validated
     attr(
       x = selection,
       which = "validated"
     ) <- TRUE
 
     if(!is.null(response)){
+
+      attributes(response) <- NULL
+
+      attr(
+        x = selection,
+        which = "response"
+      ) <- response
+
       out[[response]] <- selection
+
     } else {
-      out[[1]] <- selection
+
+      out <- selection
+
     }
 
     rm(selection)
 
   } #end of loop
-
-  if(is.list(out) && length(out) == 1){
-    out <- unlist(out)
-    names(out) <- NULL
-  }
 
   out
 

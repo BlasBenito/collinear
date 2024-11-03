@@ -1,5 +1,8 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
+<!-- Development badges 
+# collinear <a href="https://dplyr.tidyverse.org"><img src="man/figures/logo.png" align="right" height="138" /></a>
+-->
 
 # collinear: R Package for Seamless Multicollinearity Management
 
@@ -101,11 +104,9 @@ remotes::install_github(
 
 ## Getting Started
 
-The function `collinear()` provides access to the key functionalities of
-the package.
-
-The code below shows a example call to `collinear()` with two responses
-and mixed predictor types.
+The function `collinear()` provides all tools required for a fully
+fledged multicollinearity filtering workflow. The example below shows a
+call with two responses and mixed predictor types.
 
 ``` r
 #parallelization setup
@@ -114,16 +115,26 @@ future::plan(
   workers = parallelly::availableCores() - 1
   )
 
+#progress bar (does not work in Rmarkdown)
+#progressr::handlers(global = TRUE)
+
+#example data frame
+df <- collinear::vi[1:5000, ]
+
+#numeric and categorical predictors
+predictors <- collinear::vi_predictors
+
 #multicollinearity filtering
 selection <- collinear::collinear(
-  df = collinear::vi,
+  df = df,
   response = c(
     "vi_numeric",
     "vi_categorical"
     ),
-  predictors = collinear::vi_predictors,
+  predictors = predictors,
   cor_max = 0.75,
-  vif_max = 5
+  vif_max = 5,
+  quiet = FALSE
 )
 #> 
 #> collinear::collinear(): processing response 'vi_numeric'.
@@ -150,48 +161,46 @@ selection <- collinear::collinear(
 #> collinear::cor_select(): computing pairwise correlation matrix.
 #> 
 #> collinear::cor_select(): selected predictors: 
-#>  - biogeo_ecoregion
-#>  - cloud_cover_mean
-#>  - swi_max
+#>  - growing_season_length
+#>  - soil_temperature_max
+#>  - soil_temperature_range
+#>  - solar_rad_max
 #>  - rainfall_max
-#>  - aridity_index
 #>  - subregion
 #>  - biogeo_realm
-#>  - evapotranspiration_range
+#>  - swi_range
 #>  - rainfall_min
-#>  - swi_min
 #>  - solar_rad_mean
 #>  - soil_nitrogen
 #>  - continent
-#>  - temperature_max
 #>  - soil_soc
-#>  - temperature_min
+#>  - solar_rad_range
 #>  - cloud_cover_range
 #>  - topo_diversity
 #>  - soil_clay
 #>  - humidity_range
 #>  - country_income
-#>  - soil_sand
 #>  - topo_elevation
+#>  - soil_sand
 #>  - topo_slope
-#>  - country_gdp
+#>  - temperature_mean
 #>  - country_population
+#>  - country_gdp
 #> 
 #> collinear::vif_select(): selected predictors: 
-#>  - biogeo_ecoregion
-#>  - cloud_cover_mean
-#>  - swi_max
+#>  - growing_season_length
+#>  - soil_temperature_max
+#>  - soil_temperature_range
+#>  - solar_rad_max
 #>  - rainfall_max
-#>  - aridity_index
 #>  - subregion
 #>  - biogeo_realm
-#>  - evapotranspiration_range
-#>  - swi_min
+#>  - swi_range
+#>  - rainfall_min
 #>  - soil_nitrogen
 #>  - continent
-#>  - temperature_max
+#>  - cloud_cover_range
 #>  - topo_diversity
-#>  - topo_slope
 #> 
 #> collinear::collinear(): processing response 'vi_categorical'.
 #> ---------------------------------------------------------------
@@ -206,89 +215,89 @@ selection <- collinear::collinear(
 #> 
 #> collinear::cor_select(): selected predictors: 
 #>  - rainfall_mean
-#>  - koppen_group
+#>  - swi_mean
+#>  - soil_temperature_max
 #>  - soil_type
 #>  - humidity_max
-#>  - humidity_min
-#>  - evapotranspiration_max
 #>  - solar_rad_max
-#>  - rainfall_range
+#>  - country_gdp
 #>  - swi_range
-#>  - subregion
-#>  - rainfall_min
+#>  - rainfall_range
+#>  - country_population
 #>  - soil_soc
-#>  - biogeo_biome
+#>  - rainfall_min
+#>  - temperature_range
+#>  - evapotranspiration_mean
 #>  - soil_nitrogen
+#>  - region
+#>  - growing_season_temperature
+#>  - country_income
 #>  - cloud_cover_range
 #>  - humidity_range
 #>  - soil_sand
 #>  - soil_clay
+#>  - topo_elevation
 #>  - topo_diversity
 #>  - topo_slope
-#>  - topo_elevation
 #> 
 #> collinear::vif_select(): selected predictors: 
 #>  - rainfall_mean
+#>  - swi_mean
+#>  - soil_temperature_max
 #>  - humidity_max
-#>  - humidity_min
-#>  - evapotranspiration_max
 #>  - solar_rad_max
+#>  - country_gdp
 #>  - swi_range
-#>  - rainfall_min
+#>  - rainfall_range
+#>  - country_population
 #>  - soil_soc
-#>  - soil_nitrogen
-#>  - soil_sand
-#>  - soil_clay
 #>  - topo_diversity
 #>  - topo_slope
-#>  - topo_elevation
 #> 
 #> collinear::collinear(): selected predictors: 
 #>  - rainfall_mean
-#>  - koppen_group
+#>  - swi_mean
+#>  - soil_temperature_max
 #>  - soil_type
 #>  - humidity_max
-#>  - humidity_min
-#>  - evapotranspiration_max
 #>  - solar_rad_max
+#>  - country_gdp
 #>  - swi_range
-#>  - subregion
-#>  - rainfall_min
+#>  - rainfall_range
+#>  - country_population
 #>  - soil_soc
-#>  - biogeo_biome
-#>  - soil_nitrogen
-#>  - soil_sand
-#>  - soil_clay
+#>  - region
+#>  - country_income
 #>  - topo_diversity
 #>  - topo_slope
-#>  - topo_elevation
 ```
 
-The output is a named list of vectors with predictor names when more
-than one response is provided, and a character vector otherwise.
+The output is a named list of vectors with selected predictor names when
+more than one response is provided, and a character vector otherwise.
 
 ``` r
 selection
 #> $vi_numeric
-#>  [1] "biogeo_ecoregion"         "cloud_cover_mean"        
-#>  [3] "swi_max"                  "rainfall_max"            
-#>  [5] "aridity_index"            "subregion"               
-#>  [7] "biogeo_realm"             "evapotranspiration_range"
-#>  [9] "swi_min"                  "soil_nitrogen"           
-#> [11] "continent"                "temperature_max"         
-#> [13] "topo_diversity"           "topo_slope"              
+#>  [1] "growing_season_length"  "soil_temperature_max"   "soil_temperature_range"
+#>  [4] "solar_rad_max"          "rainfall_max"           "subregion"             
+#>  [7] "biogeo_realm"           "swi_range"              "rainfall_min"          
+#> [10] "soil_nitrogen"          "continent"              "cloud_cover_range"     
+#> [13] "topo_diversity"        
 #> attr(,"validated")
 #> [1] TRUE
+#> attr(,"response")
+#> [1] "vi_numeric"
 #> 
 #> $vi_categorical
-#>  [1] "rainfall_mean"          "koppen_group"           "soil_type"             
-#>  [4] "humidity_max"           "humidity_min"           "evapotranspiration_max"
-#>  [7] "solar_rad_max"          "swi_range"              "subregion"             
-#> [10] "rainfall_min"           "soil_soc"               "biogeo_biome"          
-#> [13] "soil_nitrogen"          "soil_sand"              "soil_clay"             
-#> [16] "topo_diversity"         "topo_slope"             "topo_elevation"        
+#>  [1] "rainfall_mean"        "swi_mean"             "soil_temperature_max"
+#>  [4] "soil_type"            "humidity_max"         "solar_rad_max"       
+#>  [7] "country_gdp"          "swi_range"            "rainfall_range"      
+#> [10] "country_population"   "soil_soc"             "region"              
+#> [13] "country_income"       "topo_diversity"       "topo_slope"          
 #> attr(,"validated")
 #> [1] TRUE
+#> attr(,"response")
+#> [1] "vi_categorical"
 ```
 
 ## Getting help

@@ -88,8 +88,7 @@ remotes::install_github(
 ```
 
 
-Previous versions are in the “archive_xxx” branches of the GitHub
-repository.
+Previous versions are in the “archive_xxx” branches of the GitHub repository.
 
 ```{r, eval = FALSE}
 remotes::install_github(
@@ -101,15 +100,14 @@ remotes::install_github(
 
 ```{r packages, message = FALSE, warning = FALSE, include = FALSE}
 library(collinear)
+library(future)
 library(parallelly)
 ```
 
 
 ## Getting Started
 
-The function `collinear()` provides access to the key functionalities of the package.
-
-The code below shows a example call to `collinear()` with two responses and mixed predictor types.
+The function `collinear()` provides all tools required for a fully fledged multicollinearity filtering workflow. The example below shows a call with two responses and mixed predictor types.
 
 ```{r collinear_demo}
 #parallelization setup
@@ -118,20 +116,30 @@ future::plan(
   workers = parallelly::availableCores() - 1
   )
 
+#progress bar (does not work in Rmarkdown)
+#progressr::handlers(global = TRUE)
+
+#example data frame
+df <- collinear::vi[1:5000, ]
+
+#numeric and categorical predictors
+predictors <- collinear::vi_predictors
+
 #multicollinearity filtering
 selection <- collinear::collinear(
-  df = collinear::vi,
+  df = df,
   response = c(
     "vi_numeric",
     "vi_categorical"
     ),
-  predictors = collinear::vi_predictors,
+  predictors = predictors,
   cor_max = 0.75,
-  vif_max = 5
+  vif_max = 5,
+  quiet = FALSE
 )
 ```
 
-The output is a named list of vectors with predictor names when more than one response is provided, and a character vector otherwise.  
+The output is a named list of vectors with selected predictor names when more than one response is provided, and a character vector otherwise.  
 
 ```{r}
 selection
