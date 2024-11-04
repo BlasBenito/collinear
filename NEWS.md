@@ -34,9 +34,9 @@
 
 - Target encoding can be disabled by setting the `encoding_method` argument to `NULL`.
 
-- VIF filtering can be disabled by setting `vif_max` to `NULL`.
+- VIF filtering can be disabled by setting `max_vif` to `NULL`.
 
-- Pairwise correlation filtering can be disabled by setting `cor_max` to `NULL`.
+- Pairwise correlation filtering can be disabled by setting `max_cor` to `NULL`.
 
 ### Function `cor_select()`
 
@@ -130,7 +130,7 @@ This version fixes bugs in two functions: `cor_select()` and `cor_df()`
 
   + When only one variable was left in the correlation matrix, the one column matrix became a vector with no colnames, which yielded an error. Now, to avoid this issue, drop = FALSE is used in the matrix subsetting.
 
-  + The previous version started removing predictors on a backwards fashion, from the last predictor in preference order, moving up one by one to the top. Under the wrong circumstances (low number of predictors, low cor_max, and high correlation between first and second predictors in preference order) this configuration would lead to keep only the first predictor, even when having others comply with the cor_max restriction lower down in the preference order. The new version produces smaller subsets of predictors with a higher diversity.
+  + The previous version started removing predictors on a backwards fashion, from the last predictor in preference order, moving up one by one to the top. Under the wrong circumstances (low number of predictors, low max_cor, and high correlation between first and second predictors in preference order) this configuration would lead to keep only the first predictor, even when having others comply with the max_cor restriction lower down in the preference order. The new version produces smaller subsets of predictors with a higher diversity.
 
 **`cor_df()`**
 

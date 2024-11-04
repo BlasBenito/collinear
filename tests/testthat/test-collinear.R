@@ -171,7 +171,7 @@ testthat::test_that("`collinear()` works", {
       response = "vi_numeric",
       predictors = predictors,
       encoding_method = NULL,
-      vif_max = NULL,
+      max_vif = NULL,
       quiet = FALSE
     )
   ) |>
@@ -213,7 +213,7 @@ testthat::test_that("`collinear()` works", {
       predictors = predictors,
       preference_order = preference_order,
       encoding_method = NULL,
-      cor_max = NULL,
+      max_cor = NULL,
       quiet = FALSE
     )
   ) |>

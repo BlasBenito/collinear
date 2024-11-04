@@ -7,6 +7,17 @@ output:
     source: false
 ---
 
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  eval = FALSE,
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%"
+)
+# options(tibble.print_min = 5, tibble.print_max = 5)
+```
+
 ## Summary
 
 This article explains how the package `collinear` handles responses and predictors of different types to facilitate multicollinearity filtering. The explanation is centered on the inputs, logic, and output of the function `collinear()`, and the main functions it calls: `target_encoding_lab()`, `preference_order()`, `cor_select()`, and `vif_select()`.
@@ -73,8 +84,8 @@ selection <- collinear::collinear(
   preference_order = "auto",  #automatic ranking of predictors
   f = "auto",                 #automatic selection of ranking function
   quiet = FALSE,              #enable messages 
-  cor_max = 0.75,             #maximum correlation threshold
-  vif_max = 5                 #maximum VIF threshold
+  max_cor = 0.75,             #maximum correlation threshold
+  max_vif = 5                 #maximum VIF threshold
 )
 ```
 The output is a named list of vectors with predictor names when more than one response is provided, and a character vector otherwise.  
@@ -107,8 +118,8 @@ The functionalities of `collinear()` (target encoding, preference order, pairwis
 |------------------------|----------------------------------------------|-----------------------------------|------------------------------------------|
 | `target_encoding_lab()`| transform categorical predictors <br> to numeric       | - numeric `response` <br> - categorical `predictors` | - `response = NULL` <br> - `encoding_method = NULL` |
 | `preference_order()`   | rank and preserve <br> important predictors  | any `response`                    | - `response = NULL` <br> - `preference_order = NULL` |
-| `cor_select()`         | reduce <br> pairwise correlation             | any `predictors`                  | `cor_max = NULL`                         |
-| `vif_select()`         | reduce <br> variance inflation               | numeric `predictors`              | `vif_max = NULL`                         |
+| `cor_select()`         | reduce <br> pairwise correlation             | any `predictors`                  | `max_cor = NULL`                         |
+| `vif_select()`         | reduce <br> variance inflation               | numeric `predictors`              | `max_vif = NULL`                         |
 
 The following sections focus on these functions and explain how their respective functionalities are implemented.
 
@@ -361,7 +372,7 @@ preference_list <- collinear::preference_order(
 )
 ```
 
-The output is a named list
+The output is a named list.
 
 ```{r}
 names(preference_list)
@@ -400,9 +411,13 @@ rm(
 
 ### Pairwise Correlation Filtering
 
-This function `cor_select()` performs 2 steps:
+Pairwise correlation is commonly used to detect and reduce multicollinearity by identifying pairs of predictors that are highly correlated with each other.
 
-  + Computes a pairwise correlation matrix.
+This function `cor_select()` builds upon this concept and improves it by integrating categorical predictors into the correlation analysis, and implementing an automated selection algorithm designed to preserve important predictors.
+
+This function performs the following steps:
+
+  + Computes a pairwise correlation matrix using methods able to integrate categorical predictors.
   + Applies a forward stepwise multicollinearity filtering to select predictors below a certain correlation threshold.
   
 **Pairwise Correlation Matrix**
@@ -522,14 +537,14 @@ The forward stepwise multicollinearity filtering implemented in `cor_select()` w
 
   + Order the pairwise correlation matrix to match `preference_order`.
   + Add the first first predictor in `preference_order` to the vector `selected`. 
-  + For every other predictor: get its maximum correlation with the predictors `selected`. If lower than `cor_max`, add it to `selected`, and ignore it otherwise. Move to the next predictor until all them have been tested. 
+  + For every other predictor: get its maximum correlation with the predictors `selected`. If lower than `max_cor`, add it to `selected`, and ignore it otherwise. Move to the next predictor until all them have been tested. 
 
 ```{r}
 #preference order from a previous example
 preference_order <- preference_list$vi_numeric$predictor
 
 #correlation threshold
-cor_max <- 0.5
+max_cor <- 0.5
 
 #reorder pairwise correlation matrix
 m <- m[
@@ -537,15 +552,18 @@ m <- m[
   preference_order
 ]
 
+#set diagonals to zero
 diag(m) <- 0
 
 #selection algorithm
 selected <- preference_order[1]
 candidates <- preference_order[-1]
 
+#iterate over candidates
 for(candidate in candidates){
   
-  if(max(m[selected, candidate]) <= cor_max){
+  #apply selection criteria
+  if(max(m[selected, candidate]) <= max_cor){
     
     selected <- c(
       selected,
@@ -560,7 +578,14 @@ selected
 ```
 
 
-### VIF Fitlering
+### VIF Filtering
+
+In a linear model, the confidence interval of a predictor's estimate is widened by a factor equal to the square root of its Variance Inflation Factor (VIF). [This article](https://www.blasbenito.com/post/variance-inflation-factor/) goes deep into this topic, but the key detail here is that VIF, as a metric of the modelling uncertainty induced by multicollinearity, can also be used as a guideline to manage multicollinearity. 
+
+The function `vif_select()` incorporates this idea onto an automated selection algorithm incorporating preference order to preserve important predictors. However, unlike `cor_select()`, `vif_select()` cannot work with categorical predictors unless these target-encoded.
+
+The actual VIF computation is implemented in the function `vif_df()`.
+
 
 
 If you got here, thank you for your interest in `collinear`. I hope you can find it useful!

@@ -132,8 +132,8 @@ selection <- collinear::collinear(
     "vi_categorical"
     ),
   predictors = predictors,
-  cor_max = 0.75,
-  vif_max = 5,
+  max_cor = 0.75,
+  max_vif = 5,
   quiet = FALSE
 )
 #> 

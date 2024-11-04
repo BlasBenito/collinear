@@ -39,19 +39,19 @@
 #'
 #' @section VIF-based Filtering:
 #'
-#' The function [vif_select()] computes Variance Inflation Factors and removes variables iteratively, until all variables in the resulting selection have a VIF below `vif_max`.
+#' The function [vif_select()] computes Variance Inflation Factors and removes variables iteratively, until all variables in the resulting selection have a VIF below `max_vif`.
 #'
-#' If the argument `preference_order` is not provided, all variables are ranked from lower to higher VIF, as returned by [vif_df()], and the variable with the higher VIF above `vif_max` is removed on each iteration.
+#' If the argument `preference_order` is not provided, all variables are ranked from lower to higher VIF, as returned by [vif_df()], and the variable with the higher VIF above `max_vif` is removed on each iteration.
 #'
-#' If `preference_order` is defined, whenever two or more variables are above `vif_max`, the one higher in `preference_order` is preserved, and the next one with a higher VIF is removed. For example, for the predictors and preference order \eqn{a} and \eqn{b}, if any of their VIFs is higher than `vif_max`, then \eqn{b} will be removed no matter whether its VIF is lower or higher than \eqn{a}'s VIF. If their VIF scores are lower than `vif_max`, then both are preserved.
+#' If `preference_order` is defined, whenever two or more variables are above `max_vif`, the one higher in `preference_order` is preserved, and the next one with a higher VIF is removed. For example, for the predictors and preference order \eqn{a} and \eqn{b}, if any of their VIFs is higher than `max_vif`, then \eqn{b} will be removed no matter whether its VIF is lower or higher than \eqn{a}'s VIF. If their VIF scores are lower than `max_vif`, then both are preserved.
 #'
 #' @section Pairwise Correlation Filtering:
 #'
-#' The function [cor_select()] applies a recursive forward selection algorithm to keep predictors with a maximum Pearson correlation with all other selected predictors lower than `cor_max`.
+#' The function [cor_select()] applies a recursive forward selection algorithm to keep predictors with a maximum Pearson correlation with all other selected predictors lower than `max_cor`.
 #'
 #' If the argument `preference_order` is NULL, the predictors are ranked from lower to higher sum of absolute pairwise correlation with all other predictors.
 #'
-#' If `preference_order` is defined, whenever two or more variables are above `cor_max`, the one higher in `preference_order` is preserved. For example, for the predictors and preference order \eqn{a} and \eqn{b}, if their correlation is higher than `cor_max`, then \eqn{b} will be removed and \eqn{a} preserved. If their correlation is lower than `cor_max`, then both are preserved.
+#' If `preference_order` is defined, whenever two or more variables are above `max_cor`, the one higher in `preference_order` is preserved. For example, for the predictors and preference order \eqn{a} and \eqn{b}, if their correlation is higher than `max_cor`, then \eqn{b} will be removed and \eqn{a} preserved. If their correlation is lower than `max_cor`, then both are preserved.
 #'
 #'
 #' @param df (required; data frame, tibble, or sf) A data frame with numeric predictors, and optionally a numeric response and categorical predictors. Default: NULL.
@@ -75,8 +75,8 @@
 #'   \item [f_r2_rf()]: in all other cases.
 #' }
 #' Default: NULL
-#' @param cor_max (optional; numeric) Maximum correlation allowed between any pair of variables in `predictors`. Recommended values are between 0.5 and 0.9. Higher values return larger number of predictors with a higher multicollinearity. If NULL, the pairwise correlation analysis is disabled. Default: `0.75`
-#' @param vif_max (optional, numeric) Maximum Variance Inflation Factor allowed during variable selection. Recommended values are between 2.5 and 10. Higher values return larger number of predictors with a higher multicollinearity. If NULL, the variance inflation analysis is disabled. Default: 5.
+#' @param max_cor (optional; numeric) Maximum correlation allowed between any pair of variables in `predictors`. Recommended values are between 0.5 and 0.9. Higher values return larger number of predictors with a higher multicollinearity. If NULL, the pairwise correlation analysis is disabled. Default: `0.75`
+#' @param max_vif (optional, numeric) Maximum Variance Inflation Factor allowed during variable selection. Recommended values are between 2.5 and 10. Higher values return larger number of predictors with a higher multicollinearity. If NULL, the variance inflation analysis is disabled. Default: 5.
 #' @param quiet (optional; logical) If FALSE, messages generated during the execution of the function are printed to the console Default: FALSE
 #'
 #' @return
@@ -101,33 +101,21 @@
 #' #predictors has mixed types
 #' predictors <- vi_predictors[1:8]
 #'
-#' #minimalistic
-#' #--------------------------------
-#' #  no target encoding
-#' #  no preference order
-#' #  all predictors filtered by correlation
-#' #  VIF filtering skipped (not required)
-#' x <- collinear(
-#'   df = df[, predictors]
-#' )
-#'
-#' #also:
-#' # x <- collinear(
-#' #   df = df,
-#' #   predictors = predictors,
-#' #   )
-#'
-#'
-#' #with numeric response
+#' #with numeric responses
 #' #--------------------------------
 #' #  target encoding
 #' #  automated preference order
 #' #  all predictors filtered by correlation and VIF
 #' x <- collinear(
 #'   df = df,
-#'   response = "vi_numeric",
+#'   response = c(
+#'     "vi_numeric",
+#'     "vi_binomial"
+#'     ),
 #'   predictors = predictors
 #' )
+#'
+#' x
 #'
 #'
 #' #with custom preference order
@@ -159,20 +147,6 @@
 #' )
 #'
 #'
-#' #with several responses
-#' #--------------------------------
-#' x <- collinear(
-#'     df = df,
-#'     response = c(
-#'       "vi_counts",
-#'       "vi_categorical"
-#'       ),
-#'     predictors = predictors
-#'   )
-#'
-#' #result is a named list
-#' x
-#'
 #'
 #' #resetting to sequential processing
 #' future::plan(future::sequential)
@@ -192,8 +166,8 @@ collinear <- function(
     encoding_method = "loo",
     preference_order = "auto",
     f = "auto",
-    cor_max = 0.75,
-    vif_max = 5,
+    max_cor = 0.75,
+    max_vif = 5,
     quiet = FALSE
 ){
 
@@ -288,7 +262,7 @@ collinear <- function(
       df = df.response,
       predictors = predictors.response,
       preference_order = preference_order,
-      cor_max = cor_max,
+      max_cor = max_cor,
       quiet = quiet
     )
 
@@ -297,7 +271,7 @@ collinear <- function(
     #selection by numeric and categorial
     #this section lets vif_select() yield a message
     #about the categorical variables it is ignoring
-    if(is.null(cor_max)){
+    if(is.null(max_cor)){
 
       selection.cor.type <- list(
         numeric = selection.cor,
@@ -319,7 +293,7 @@ collinear <- function(
       df = df.response,
       predictors = selection.cor.type$numeric,
       preference_order = preference_order,
-      vif_max = vif_max,
+      max_vif = max_vif,
       quiet = quiet
     )
 
@@ -342,7 +316,7 @@ collinear <- function(
     if(
       (
         length(selection.cor.type$categorical) > 0 &&
-        !is.null(vif_max) &&
+        !is.null(max_vif) &&
         any(!selection.cor.type$numeric %in% selection.vif)
       ) &&
       quiet == FALSE
@@ -370,12 +344,14 @@ collinear <- function(
         which = "response"
       ) <- response
 
-      out[[response]] <- selection
+      if(length(responses) > 1){
+        out[[response]] <- selection
+      } else {
+        out <- selection
+      }
 
     } else {
-
       out <- selection
-
     }
 
     rm(selection)

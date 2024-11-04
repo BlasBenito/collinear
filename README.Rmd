@@ -6,7 +6,7 @@ output: github_document
 
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
-  eval = TRUE,
+  eval = FALSE,
   collapse = TRUE,
   comment = "#>",
   fig.path = "man/figures/README-",
@@ -42,6 +42,8 @@ knitr::opts_chunk$set(
 Version 2.0.0 of `collinear` includes changes that may disrupt existing workflows, and results from previous versions may not be reproducible due to enhancements in the automated selection algorithms. Please refer to the Changelog for details.
 
 ## Summary
+
+[Multicollinearity hinders the interpretability](https://www.blasbenito.com/post/multicollinearity-model-interpretability/) of linear and machine learning models.
 
 The `collinear` package combines four methods for easy management of multicollinearity in modelling data frames with numeric and categorical variables:
 
@@ -133,8 +135,8 @@ selection <- collinear::collinear(
     "vi_categorical"
     ),
   predictors = predictors,
-  cor_max = 0.75,
-  vif_max = 5,
+  max_cor = 0.75,
+  max_vif = 5,
   quiet = FALSE
 )
 ```

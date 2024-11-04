@@ -2,7 +2,7 @@
 #'
 #' @description
 #'
-#' Hierarchical clustering of predictors from their pairwise correlation matrix. Computes the correlation matrix with [cor_df()] and [cor_matrix()], transforms it to a dist object, computes a clustering solution with [stats::hclust()], and applies [stats::cutree()] to separate groups based on the value of the argument `cor_max`.
+#' Hierarchical clustering of predictors from their pairwise correlation matrix. Computes the correlation matrix with [cor_df()] and [cor_matrix()], transforms it to a dist object, computes a clustering solution with [stats::hclust()], and applies [stats::cutree()] to separate groups based on the value of the argument `max_cor`.
 #'
 #' Returns a data frame with predictor names and their clusters, and optionally, prints a dendrogram of the clustering solution.
 #'
@@ -38,7 +38,7 @@
 cor_clusters <- function(
     df = NULL,
     predictors = NULL,
-    cor_max = 0.75,
+    max_cor = 0.75,
     method = "complete",
     plot = FALSE
 ){
@@ -57,7 +57,7 @@ cor_clusters <- function(
 
   hc_groups <- stats::cutree(
     tree = hc,
-    h = 1 - cor_max,
+    h = 1 - max_cor,
   )
 
   df_clusters <- data.frame(
@@ -72,7 +72,7 @@ cor_clusters <- function(
     plot(
       x = hc,
       labels = df_clusters$predictor,
-      main = paste0("Clustered predictors - cor_max = ", cor_max),
+      main = paste0("Clustered predictors - max_cor = ", max_cor),
       xlab = "",
       ylab = "1 - Cor",
       sub = "",
@@ -81,7 +81,7 @@ cor_clusters <- function(
     )
 
     graphics::abline(
-      h = 1 - cor_max,
+      h = 1 - max_cor,
       col = "gray50",
       lty = 3,
       lwd = 2
@@ -89,7 +89,7 @@ cor_clusters <- function(
 
     stats::rect.hclust(
       tree = hc,
-      h = 1 - cor_max,
+      h = 1 - max_cor,
       border = "red4"
     )
 

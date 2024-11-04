@@ -26,13 +26,13 @@ sapply(
 x <- collinear(
   df = df,
   predictors = predictors,
-  cor_max = 0.75, #default
-  vif_max = 5    #default
+  max_cor = 0.75, #default
+  max_vif = 5    #default
   )
 
 x
 
-#all correlations below cor_max
+#all correlations below max_cor
 cor_df(
   df = df,
   predictors = x
@@ -54,7 +54,7 @@ vif_df(
 x <- collinear(
   df = df,
   predictors = predictors,
-  cor_max = NULL
+  max_cor = NULL
 )
 
 #correlation filtering only
@@ -65,7 +65,7 @@ x <- collinear(
 x <- collinear(
   df = df,
   predictors = predictors,
-  vif_max = NULL
+  max_vif = NULL
 )
 
 

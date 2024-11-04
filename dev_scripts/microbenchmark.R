@@ -38,7 +38,7 @@ option1 <- function() {
 
   for(i in preference_order_rev){
 
-    if(max(m[selected, i]) > cor_max){
+    if(max(m[selected, i]) > max_cor){
       selected <- selected[selected != i]
     }
 
@@ -86,8 +86,8 @@ option2 <- function() {
 
     i <- i + 1
 
-    #remove i column and row if max > cor_max
-    if(max(m[1:i, i]) > cor_max){
+    #remove i column and row if max > max_cor
+    if(max(m[1:i, i]) > max_cor){
 
       #remove column
       m <- m[-i, -i, drop = FALSE]

@@ -37,7 +37,7 @@
 #' x <- cor_select(
 #'   df = df,
 #'   predictors = predictors,
-#'   cor_max = 0.75
+#'   max_cor = 0.75
 #' )
 #'
 #'
@@ -49,7 +49,7 @@
 #'     "swi_mean",
 #'     "soil_type"
 #'   ),
-#'   cor_max = 0.75
+#'   max_cor = 0.75
 #' )
 #'
 #'
@@ -64,7 +64,7 @@
 #'   df = df,
 #'   predictors = predictors,
 #'   preference_order = df_preference,
-#'   cor_max = 0.75
+#'   max_cor = 0.75
 #' )
 #'
 #' #resetting to sequential processing
@@ -77,7 +77,7 @@ cor_select <- function(
     df = NULL,
     predictors = NULL,
     preference_order = NULL,
-    cor_max = 0.75,
+    max_cor = 0.75,
     quiet = FALSE
 ){
 
@@ -87,11 +87,11 @@ cor_select <- function(
   }
 
   #do nothing if one predictor only
-  if(is.null(cor_max)){
+  if(is.null(max_cor)){
 
     if(quiet == FALSE){
 
-      message("\ncollinear::cor_select(): argument 'cor_max' is NULL, skipping pairwise correlation filtering.")
+      message("\ncollinear::cor_select(): argument 'max_cor' is NULL, skipping pairwise correlation filtering.")
 
     }
 
@@ -99,21 +99,21 @@ cor_select <- function(
 
   }
 
-  #checking argument cor_max
+  #checking argument max_cor
   if(
-    !is.numeric(cor_max) ||
-    length(cor_max) != 1 ||
-    cor_max < 0.1 ||
-    cor_max > 1
+    !is.numeric(max_cor) ||
+    length(max_cor) != 1 ||
+    max_cor < 0.1 ||
+    max_cor > 1
     ){
 
     if(quiet == FALSE){
 
-      message("\ncollinear::cor_select(): invalid 'cor_max', resetting it to 0.75.")
+      message("\ncollinear::cor_select(): invalid 'max_cor', resetting it to 0.75.")
 
     }
 
-    cor_max <- 0.75
+    max_cor <- 0.75
   }
 
   #validate input data
@@ -142,11 +142,11 @@ cor_select <- function(
     abs()
 
   #test to skip computation if needed
-  if(max(m[upper.tri(x = m)]) <= cor_max){
+  if(max(m[upper.tri(x = m)]) <= max_cor){
 
     if(quiet == FALSE){
 
-      message("\ncollinear::cor_select(): maximum pairwise correlation is <= ", cor_max, ", skipping pairwise correlation filtering.")
+      message("\ncollinear::cor_select(): maximum pairwise correlation is <= ", max_cor, ", skipping pairwise correlation filtering.")
 
     }
 
@@ -188,7 +188,7 @@ cor_select <- function(
   for(candidate in candidates){
 
     #if candidate keeps correlation below the threshold
-    if(max(m[selected, candidate]) <= cor_max){
+    if(max(m[selected, candidate]) <= max_cor){
 
       #add candidate to selected
       selected <- c(

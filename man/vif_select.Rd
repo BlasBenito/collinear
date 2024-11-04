@@ -8,7 +8,7 @@ vif_select(
   df = NULL,
   predictors = NULL,
   preference_order = NULL,
-  vif_max = 5,
+  max_vif = 5,
   quiet = FALSE
 )
 }
@@ -26,7 +26,7 @@ vif_select(
 \item \strong{NULL}: disabled.
 }. Default: "auto"}
 
-\item{vif_max}{(optional, numeric) Maximum Variance Inflation Factor allowed during variable selection. Recommended values are between 2.5 and 10. Higher values return larger number of predictors with a higher multicollinearity. If NULL, the variance inflation analysis is disabled. Default: 5.}
+\item{max_vif}{(optional, numeric) Maximum Variance Inflation Factor allowed during variable selection. Recommended values are between 2.5 and 10. Higher values return larger number of predictors with a higher multicollinearity. If NULL, the variance inflation analysis is disabled. Default: 5.}
 
 \item{quiet}{(optional; logical) If FALSE, messages generated during the execution of the function are printed to the console Default: FALSE}
 }
@@ -73,11 +73,11 @@ The range of VIF values is (1, Inf]. The recommended thresholds for maximum VIF 
 \section{VIF-based Filtering}{
 
 
-The function \code{\link[=vif_select]{vif_select()}} computes Variance Inflation Factors and removes variables iteratively, until all variables in the resulting selection have a VIF below \code{vif_max}.
+The function \code{\link[=vif_select]{vif_select()}} computes Variance Inflation Factors and removes variables iteratively, until all variables in the resulting selection have a VIF below \code{max_vif}.
 
-If the argument \code{preference_order} is not provided, all variables are ranked from lower to higher VIF, as returned by \code{\link[=vif_df]{vif_df()}}, and the variable with the higher VIF above \code{vif_max} is removed on each iteration.
+If the argument \code{preference_order} is not provided, all variables are ranked from lower to higher VIF, as returned by \code{\link[=vif_df]{vif_df()}}, and the variable with the higher VIF above \code{max_vif} is removed on each iteration.
 
-If \code{preference_order} is defined, whenever two or more variables are above \code{vif_max}, the one higher in \code{preference_order} is preserved, and the next one with a higher VIF is removed. For example, for the predictors and preference order \eqn{a} and \eqn{b}, if any of their VIFs is higher than \code{vif_max}, then \eqn{b} will be removed no matter whether its VIF is lower or higher than \eqn{a}'s VIF. If their VIF scores are lower than \code{vif_max}, then both are preserved.
+If \code{preference_order} is defined, whenever two or more variables are above \code{max_vif}, the one higher in \code{preference_order} is preserved, and the next one with a higher VIF is removed. For example, for the predictors and preference order \eqn{a} and \eqn{b}, if any of their VIFs is higher than \code{max_vif}, then \eqn{b} will be removed no matter whether its VIF is lower or higher than \eqn{a}'s VIF. If their VIF scores are lower than \code{max_vif}, then both are preserved.
 }
 
 \examples{
@@ -96,33 +96,33 @@ sapply(
 x <- vif_select(
   df = df,
   predictors = predictors,
-  vif_max = 2.5
+  max_vif = 2.5
 )
 
 x
 
-#all these have a VIF lower than vif_max (2.5)
+#all these have a VIF lower than max_vif (2.5)
 vif_df(
   df = df,
   predictors = x
 )
 
 
-#higher vif_max results in larger selection
+#higher max_vif results in larger selection
 x <- vif_select(
   df = df,
   predictors = predictors_numeric,
-  vif_max = 10
+  max_vif = 10
 )
 
 x
 
 
-#smaller vif_max results in smaller selection
+#smaller max_vif results in smaller selection
 x <- vif_select(
   df = df,
   predictors = predictors_numeric,
-  vif_max = 2.5
+  max_vif = 2.5
 )
 
 x
@@ -137,7 +137,7 @@ x <- vif_select(
     "soil_temperature_mean",
     "topo_elevation"
   ),
-  vif_max = 2.5
+  max_vif = 2.5
 )
 
 x
@@ -153,7 +153,7 @@ x <- vif_select(
   df = df,
   predictors = predictors_numeric,
   preference_order = df_preference,
-  vif_max = 2.5
+  max_vif = 2.5
 )
 
 x
