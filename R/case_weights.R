@@ -10,7 +10,7 @@
 #'  case_weights(
 #'    x = c("a", "a", "b", "b", "c")
 #'    )
-#' @family preference_order_tools
+#' @family modelling_tools
 #' @autoglobal
 #' @export
 case_weights <- function(

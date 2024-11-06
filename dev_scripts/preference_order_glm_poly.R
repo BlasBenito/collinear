@@ -55,7 +55,7 @@ f_cor_cramer_v <- function(x, y, df){
 }
 
 
-f_rpart_binomial_unbalanced_preference_score_auc(x, y, df)
+f_rpart_binomial_unbalanced_performance_score_auc(x, y, df)
 
 f_rpart_binomial_unbalanced_auc <- function(x, y, df){
 

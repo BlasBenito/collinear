@@ -10,16 +10,16 @@
 #'
 #' @return numeric: Area Under the ROC Curve
 #' @export
-#' @family preference_order_tools
+#' @family modelling_tools
 #' @autoglobal
-preference_score_auc <- function(
+performance_score_auc <- function(
     o = NULL,
     p = NULL
 ){
 
   if(is.null(o)){
     stop(
-      "collinear::preference_score_auc(): argument 'o' cannot be NULL.",
+      "collinear::performance_score_auc(): argument 'o' cannot be NULL.",
       call. = FALSE
     )
   }
@@ -27,7 +27,7 @@ preference_score_auc <- function(
 
   if(is.null(p)){
     stop(
-      "collinear::preference_score_auc(): argument 'p' cannot be NULL.",
+      "collinear::performance_score_auc(): argument 'p' cannot be NULL.",
       call. = FALSE
     )
   }
@@ -42,7 +42,7 @@ preference_score_auc <- function(
 
   if(sum(c(ones.n, zeros.n)) == 0){
     stop(
-      "collinear::preference_score_auc(): argument 'o' must be a binomial vector of 0s and 1s.",
+      "collinear::performance_score_auc(): argument 'o' must be a binomial vector of 0s and 1s.",
       call. = FALSE
     )
   }

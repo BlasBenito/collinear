@@ -76,6 +76,11 @@ reference:
   - has_concept("preference_order_tools")
   - has_concept("preference_order_functions")
 
+- title: Modelling Tools
+  desc: Tools to evaluate models, weight cases, and generate model formulas.
+- contents:
+  - has_concept("modelling_tools")
+
 - title: Example Data
   desc: Real and synthetic datasets used throughout the package examples.
 - contents:

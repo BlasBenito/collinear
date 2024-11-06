@@ -10,8 +10,8 @@
 #' @return numeric: Pearson R-squared
 #' @export
 #' @autoglobal
-#' @family preference_order_tools
-preference_score_r2 <- function(
+#' @family modelling_tools
+performance_score_r2 <- function(
     o = NULL,
     p = NULL
 ){

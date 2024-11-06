@@ -390,7 +390,7 @@ f_r2_glm_gaussian <- function(df){
     suppressWarnings() |>
     suppressMessages()
 
-  preference_score_r2(
+  performance_score_r2(
     o = df[["y"]],
     p = p
   )
@@ -421,7 +421,7 @@ f_r2_glm_gaussian_poly2 <- function(df){
     suppressWarnings() |>
     suppressMessages()
 
-  preference_score_r2(
+  performance_score_r2(
     o = df[["y"]],
     p = p
   )
@@ -445,7 +445,7 @@ f_r2_gam_gaussian <- function(df){
       type = "response"
     )
 
-  preference_score_r2(
+  performance_score_r2(
     o = df[["y"]],
     p = p
   )
@@ -471,7 +471,7 @@ f_r2_rpart <- function(df){
       type = "vector"
     )
 
-  preference_score_r2(
+  performance_score_r2(
     o = df[["y"]],
     p = p
   )
@@ -498,7 +498,7 @@ f_r2_rf <- function(df){
     data = df
     )$predictions
 
-  preference_score_r2(
+  performance_score_r2(
     o = df[["y"]],
     p = p
   )
@@ -578,7 +578,7 @@ f_r2_glm_poisson <- function(df){
     suppressWarnings() |>
     suppressMessages()
 
-  preference_score_r2(
+  performance_score_r2(
     o = df[["y"]],
     p = p
   )
@@ -608,7 +608,7 @@ f_r2_glm_poisson_poly2 <- function(df){
     suppressWarnings() |>
     suppressMessages()
 
-  preference_score_r2(
+  performance_score_r2(
     o = df[["y"]],
     p = p
   )
@@ -632,7 +632,7 @@ f_r2_gam_poisson <- function(df){
       type = "response"
     )
 
-  preference_score_r2(
+  performance_score_r2(
     o = df[["y"]],
     p = p
   )
@@ -718,7 +718,7 @@ f_auc_glm_binomial <- function(df){
     suppressWarnings() |>
     suppressMessages()
 
-  preference_score_auc(
+  performance_score_auc(
     o = df[["y"]],
     p = p
   )
@@ -752,7 +752,7 @@ f_auc_glm_binomial_poly2 <- function(df){
     suppressWarnings() |>
     suppressMessages()
 
-  preference_score_auc(
+  performance_score_auc(
     o = df[["y"]],
     p = p
   )
@@ -780,7 +780,7 @@ f_auc_gam_binomial <- function(df){
     suppressWarnings() |>
     suppressMessages()
 
-  preference_score_auc(
+  performance_score_auc(
     o = df[["y"]],
     p = p
   )
@@ -807,7 +807,7 @@ f_auc_rpart <- function(df){
       type = "vector"
     )
 
-  preference_score_auc(
+  performance_score_auc(
     o = df[["y"]],
     p = p
   )
@@ -837,7 +837,7 @@ f_auc_rf <- function(df){
     data = df
   )$predictions
 
-  preference_score_auc(
+  performance_score_auc(
     o = df[["y"]],
     p = p
   )
@@ -949,7 +949,7 @@ f_v_rf_categorical <- function(df){
     data = df
   )$predictions
 
-  preference_score_v(
+  performance_score_v(
     o = df[["y"]],
     p = p
   )

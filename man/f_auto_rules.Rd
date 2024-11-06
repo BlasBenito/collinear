@@ -17,12 +17,8 @@ f_auto_rules()
 }
 \seealso{
 Other preference_order_tools: 
-\code{\link{case_weights}()},
 \code{\link{f_auto}()},
 \code{\link{f_functions}()},
-\code{\link{preference_order_collinear}()},
-\code{\link{preference_score_auc}()},
-\code{\link{preference_score_r2}()},
-\code{\link{preference_score_v}()}
+\code{\link{preference_order_collinear}()}
 }
 \concept{preference_order_tools}

@@ -17,11 +17,11 @@ collinear(
 )
 }
 \arguments{
-\item{df}{(required; data frame, tibble, or sf) A data frame with numeric predictors, and optionally a numeric response and categorical predictors. Default: NULL.}
+\item{df}{(required; data frame, tibble, or sf) A data frame with responses and predictors. Default: NULL.}
 
-\item{response}{(optional, character string or vector) Name/s of response variable/s in \code{df}. Used in target encoding when it names a numeric variable and there are categorical predictors, and to compute preference order. Default: NULL.}
+\item{response}{(optional; character string or vector) Name/s of response variable/s in \code{df}. Used in target encoding when it names a numeric variable and there are categorical predictors, and to compute preference order. Default: NULL.}
 
-\item{predictors}{(optional; character vector) Names of the variables to select from \code{df}. If omitted, all numeric columns in \code{df} are used instead. If argument \code{response} is not provided, non-numeric variables are ignored. Default: NULL}
+\item{predictors}{(optional; character vector) Names of the predictors to select from \code{df}. If omitted, all numeric columns in \code{df} are used instead. If argument \code{response} is not provided, non-numeric variables are ignored. Default: NULL}
 
 \item{encoding_method}{(optional; character string). Name of the target encoding method. One of: "loo", "mean", or "rank". If NULL, target encoding is disabled. Default: "loo"}
 
@@ -134,33 +134,21 @@ df <- vi[1:500, ]
 #predictors has mixed types
 predictors <- vi_predictors[1:8]
 
-#minimalistic
-#--------------------------------
-#  no target encoding
-#  no preference order
-#  all predictors filtered by correlation
-#  VIF filtering skipped (not required)
-x <- collinear(
-  df = df[, predictors]
-)
-
-#also:
-# x <- collinear(
-#   df = df,
-#   predictors = predictors,
-#   )
-
-
-#with numeric response
+#with numeric responses
 #--------------------------------
 #  target encoding
 #  automated preference order
 #  all predictors filtered by correlation and VIF
 x <- collinear(
   df = df,
-  response = "vi_numeric",
+  response = c(
+    "vi_numeric",
+    "vi_binomial"
+    ),
   predictors = predictors
 )
+
+x
 
 
 #with custom preference order
@@ -191,20 +179,6 @@ x <- collinear(
   preference_order = preference_df
 )
 
-
-#with several responses
-#--------------------------------
-x <- collinear(
-    df = df,
-    response = c(
-      "vi_counts",
-      "vi_categorical"
-      ),
-    predictors = predictors
-  )
-
-#result is a named list
-x
 
 
 #resetting to sequential processing

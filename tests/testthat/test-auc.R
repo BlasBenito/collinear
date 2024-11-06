@@ -1,9 +1,9 @@
-testthat::test_that("`preference_score_auc()` works", {
+testthat::test_that("`performance_score_auc()` works", {
 
   data(vi)
 
     #perfect prediction
-    x <- preference_score_auc(
+    x <- performance_score_auc(
       o = vi$vi_binomial,
       p = vi$vi_numeric
       )
@@ -13,7 +13,7 @@ testthat::test_that("`preference_score_auc()` works", {
     )
 
     #random prediction
-    x <- preference_score_auc(
+    x <- performance_score_auc(
       o = vi$vi_binomial,
       p = runif(n = nrow(vi))
     )
@@ -24,21 +24,21 @@ testthat::test_that("`preference_score_auc()` works", {
 
     #error
     testthat::expect_error(
-      x <- preference_score_auc(
+      x <- performance_score_auc(
         o = runif(n = nrow(vi)),
         p = vi$vi_binomial
       )
     )
 
     testthat::expect_error(
-      x <- preference_score_auc(
+      x <- performance_score_auc(
         o = NULL,
         p = vi$vi_binomial
       )
     )
 
     testthat::expect_error(
-      x <- preference_score_auc(
+      x <- performance_score_auc(
         o = vi$vi_binomial,
         p = NULL
       )

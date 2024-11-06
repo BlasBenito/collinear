@@ -210,7 +210,9 @@ validate_predictors <- function(
   if(is.null(predictors)){
 
     if(!is.null(response)){
-      df[[response]] <- NULL
+      for(response.i in response){
+        df[[response.i]] <- NULL
+      }
     }
 
     predictors <- colnames(df)
@@ -220,7 +222,7 @@ validate_predictors <- function(
     #remove response from predictors
     if(
       !is.null(response) &&
-      response %in% predictors
+      any(response %in% predictors)
       ){
 
       predictors <- setdiff(

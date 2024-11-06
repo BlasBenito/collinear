@@ -7,11 +7,11 @@
 f_auto(df = NULL, response = NULL, predictors = NULL, quiet = FALSE)
 }
 \arguments{
-\item{df}{(required; data frame, tibble, or sf) A data frame with numeric predictors, and optionally a numeric response and categorical predictors. Default: NULL.}
+\item{df}{(required; data frame, tibble, or sf) A data frame with responses and predictors. Default: NULL.}
 
-\item{response}{(optional, character string or vector) Name/s of response variable/s in \code{df}. Used in target encoding when it names a numeric variable and there are categorical predictors, and to compute preference order. Default: NULL.}
+\item{response}{(optional; character string or vector) Name/s of response variable/s in \code{df}. Used in target encoding when it names a numeric variable and there are categorical predictors, and to compute preference order. Default: NULL.}
 
-\item{predictors}{(optional; character vector) Names of the variables to select from \code{df}. If omitted, all numeric columns in \code{df} are used instead. If argument \code{response} is not provided, non-numeric variables are ignored. Default: NULL}
+\item{predictors}{(optional; character vector) Names of the predictors to select from \code{df}. If omitted, all numeric columns in \code{df} are used instead. If argument \code{response} is not provided, non-numeric variables are ignored. Default: NULL}
 
 \item{quiet}{(optional; logical) If FALSE, messages generated during the execution of the function are printed to the console Default: FALSE}
 }
@@ -30,12 +30,8 @@ f <- f_auto(
 }
 \seealso{
 Other preference_order_tools: 
-\code{\link{case_weights}()},
 \code{\link{f_auto_rules}()},
 \code{\link{f_functions}()},
-\code{\link{preference_order_collinear}()},
-\code{\link{preference_score_auc}()},
-\code{\link{preference_score_r2}()},
-\code{\link{preference_score_v}()}
+\code{\link{preference_order_collinear}()}
 }
 \concept{preference_order_tools}

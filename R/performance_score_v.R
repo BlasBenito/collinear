@@ -10,8 +10,8 @@
 #' @return numeric: Cramer's V
 #' @export
 #' @autoglobal
-#' @family preference_order_tools
-preference_score_v <- function(
+#' @family modelling_tools
+performance_score_v <- function(
     o = NULL,
     p = NULL
 ){
