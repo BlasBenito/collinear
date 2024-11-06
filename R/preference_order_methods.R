@@ -112,7 +112,8 @@ f_functions <- function(){
 
   f_df <- f_list |>
     as.data.frame() |>
-    t()
+    t() |>
+    as.data.frame()
 
   rownames(f_df) <- NULL
 

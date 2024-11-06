@@ -142,7 +142,8 @@ df_toy <- collinear::vi |>
 reactable::reactable(
   data = df_toy, 
   pagination = FALSE,
-  fullWidth = FALSE
+  fullWidth = FALSE,
+  style = list(width = "50%")
   )
 ```
 
@@ -168,7 +169,8 @@ reactable::reactable(
     koppen_zone = reactable::colDef(format = reactable::colFormat(digits = 3))
   ),
   pagination = FALSE,
-  fullWidth = FALSE
+  fullWidth = FALSE,
+  style = list(width = "50%")
   )
 ```
 
@@ -258,13 +260,27 @@ collinear::f_functions()
 ```
 
 ```{r, echo = FALSE}
+f_df <- collinear::f_functions() |> 
+  dplyr::rename(
+    response = response_type,
+    predictors = predictors_types,
+    metric = preference_metric
+  )
+
 reactable::reactable(
-  data = collinear::f_functions(), 
+  data = f_df, 
   searchable = TRUE, 
   sortable = TRUE, 
   pagination = FALSE,
-  fullWidth = TRUE
+  fullWidth = TRUE,
+  list(
+    name = colDef(width = 1700),
+    response = colDef(width = 150),
+    predictors = colDef(width = 150),
+    expression = colDef(width = 250),
+    metric = colDef(width = 150)
   )
+)
 ```
 
 These functions take a data frame named `df` with the columns "x" (predictor) and "y" (response) as input, so preparing a custom one for your own purposes is simple enough. But take in mind that `preference_order()` arranges the resulting data frame from higher to lower preference values.
@@ -400,7 +416,6 @@ selection_list
 rm(
   preference_auto,
   preference_df,
-  preference_list,
   selection_list,
   selection_from_df,
   selection_auto,
