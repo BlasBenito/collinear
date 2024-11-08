@@ -48,9 +48,9 @@ variables:
   filtering of numeric predictors based on Variance Inflation Factors.
 
 These methods are combined in the function `collinear()`, which serves
-as single entry point for most of the functionalities in the package. The
-article [How It
-Works](https://blasbenito.github.io/collinear/articles/how_it_works/how_it_works.html)
+as single entry point for most of the functionalities in the package.
+The article [How It
+Works](https://blasbenito.github.io/collinear/articles/how_it_works.html)
 explains how `collinear()` works in detail.
 
 ## Citation
@@ -226,14 +226,14 @@ formulas
 #>     solar_rad_max + rainfall_max + subregion + biogeo_realm + 
 #>     swi_range + rainfall_min + soil_nitrogen + continent + cloud_cover_range + 
 #>     topo_diversity
-#> <environment: 0x55f90b405d10>
+#> <environment: 0x5afafd703c68>
 #> 
 #> $vi_categorical
 #> vi_categorical ~ rainfall_mean + swi_mean + soil_temperature_max + 
 #>     soil_type + humidity_max + solar_rad_max + country_gdp + 
 #>     swi_range + rainfall_range + country_population + soil_soc + 
 #>     region + country_income + topo_diversity + topo_slope
-#> <environment: 0x55f90b405d10>
+#> <environment: 0x5afafd703c68>
 ```
 
 These formulas can be used to fit models right away.

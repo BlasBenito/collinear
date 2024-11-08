@@ -1,3 +1,23 @@
+# Version 2.0.0 (Re-submission)
+
+Cran incoming pre-checks detected a invalid url in README.md and a mispelled word in DESCRIPTION:
+
+```
+Possibly misspelled words in DESCRIPTION:
+    VIF (12:602)
+
+  Found the following (possibly) invalid URLs:
+    URL: https://blasbenito.github.io/collinear/articles/how_it_works/how_it_works.html
+      From: README.md
+      Status: 404
+      Message: Not Found
+```
+
+I have fixed these issues as follows:
+
+  - Removed the word VIF from DESCRIPTION. 
+  - Replaced the offending URL with the right one: https://blasbenito.github.io/collinear/articles/how_it_works.html
+
 # Version 2.0.0
 
   + Local check and tests performed in Ubuntu 20.04.6 LTS (Focal) on R 4.4.1: 0 errors, warnings, and notes.
