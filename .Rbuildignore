@@ -10,7 +10,8 @@ README_files/
 ^_pkgdown\.yml$
 ^collinear\.Rproj$
 ^cran-comments.md$
-^dev_scripts/
+^dev_scripts
 ^docs$
 ^pkgdown$
 ^vignettes/articles$
+^README_files$

@@ -26,11 +26,23 @@ This article explains how the package `collinear` handles responses and predicto
 
 The packages required for this tutorial are:
 
+```{r, echo = FALSE, include = FALSE}
+if(!requireNamespace("dplyr", quietly = TRUE)){
+  install.packages("dplyr")
+}
+if(!requireNamespace("reactable", quietly = TRUE)){
+  install.packages("reactable")
+}
+
+```
+
+
 ```{r packages, message = FALSE, warning = FALSE, include = FALSE}
 library(collinear)
 library(future)
 library(parallelly)
 library(reactable)
+library(dplyr)
 ```
 
 

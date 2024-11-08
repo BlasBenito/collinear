@@ -22,9 +22,20 @@
 #'   vi_predictors_numeric
 #' )
 #'
+#' #subset to limit run time
+#' df <- vi[1:1000, ]
+#'
+#' #apply pairwise correlation first
+#' selection <- cor_select(
+#'   df = df,
+#'   predictors = vi_predictors_numeric,
+#'   quiet = TRUE
+#' )
+#'
+#' #VIF data frame
 #' df <- vif_df(
-#'   df = vi[1:1000, ], #subset to limit run time
-#'   predictors = vi_predictors_numeric
+#'   df = df,
+#'   predictors = selection
 #' )
 #'
 #' df
@@ -49,9 +60,9 @@ vif_df <- function(
   f_vif <- function(m = NULL){
 
     if(capabilities("long.double") == TRUE){
-      tolerance = 0
+      tolerance <- 0
     } else {
-      tolerance = .Machine$double.eps
+      tolerance <- .Machine$double.eps
     }
 
     #compute VIF

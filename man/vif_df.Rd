@@ -42,9 +42,20 @@ data(
   vi_predictors_numeric
 )
 
+#subset to limit run time
+df <- vi[1:1000, ]
+
+#apply pairwise correlation first
+selection <- cor_select(
+  df = df,
+  predictors = vi_predictors_numeric,
+  quiet = TRUE
+)
+
+#VIF data frame
 df <- vif_df(
-  df = vi[1:1000, ], #subset to limit run time
-  predictors = vi_predictors_numeric
+  df = df,
+  predictors = selection
 )
 
 df
