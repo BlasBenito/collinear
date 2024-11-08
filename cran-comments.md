@@ -1,3 +1,18 @@
+# Version 2.0.0 (re-re-submission)
+
+
+  The Description field contains
+    variables (Micci-Barreca, D. 2001 DOI:10.1145/507533.507538); 2)
+  Please write DOIs as <doi:prefix/suffix>.
+  
+Fixed by replacing DOI:10.1145/507533.507538 with <doi:10.1145/507533.507538> in DESCRIPTION.
+
+Ran R CMD check --as-cran collinear_2.0.0.tar.gz:
+
+* checking for future file timestamps ... NOTE
+unable to verify current time
+Status: 1 NOTE
+
 # Version 2.0.0 (Re-submission)
 
 Cran incoming pre-checks detected a invalid url in README.md and a mispelled word in DESCRIPTION:
