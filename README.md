@@ -28,6 +28,10 @@ to the Changelog for details.
 
 ## Summary
 
+[Multicollinearity hinders the
+interpretability](https://www.blasbenito.com/post/multicollinearity-model-interpretability/)
+of linear and machine learning models.
+
 The `collinear` package combines four methods for easy management of
 multicollinearity in modelling data frames with numeric and categorical
 variables:
@@ -43,13 +47,11 @@ variables:
 - **Variance Inflation Factor Filtering**: Automated multicollinearity
   filtering of numeric predictors based on Variance Inflation Factors.
 
-These methods are combined in the function `collinear()`, and as
-individual functions in `target_encoding_lab()`, `preference_order()`,
-`cor_select()`, and `vif_select()`.
-
-The article [How It
+These methods are combined in the function `collinear()`, which serves
+as single entrypoint for most of the functionalities in the package. The
+article [How It
 Works](https://blasbenito.github.io/collinear/articles/how_it_works/how_it_works.html)
-explains these functions in detail.
+explains how `collinear()` works in detail.
 
 ## Citation
 
@@ -105,8 +107,8 @@ remotes::install_github(
 ## Getting Started
 
 The function `collinear()` provides all tools required for a fully
-fledged multicollinearity filtering workflow. The example below shows a
-call with two responses and mixed predictor types.
+fledged multicollinearity filtering workflow. The code below shows a
+small example workflow.
 
 ``` r
 #parallelization setup
@@ -121,155 +123,66 @@ future::plan(
 #example data frame
 df <- collinear::vi[1:5000, ]
 
+#there are many NA cases in this data frame
+sum(is.na(df))
+#> [1] 3391
+```
+
+``` r
 #numeric and categorical predictors
 predictors <- collinear::vi_predictors
 
+collinear::identify_predictors(
+  df = df,
+  predictors = predictors
+)
+#> $numeric
+#>  [1] "topo_slope"                 "topo_diversity"            
+#>  [3] "topo_elevation"             "swi_mean"                  
+#>  [5] "swi_max"                    "swi_min"                   
+#>  [7] "swi_range"                  "soil_temperature_mean"     
+#>  [9] "soil_temperature_max"       "soil_temperature_min"      
+#> [11] "soil_temperature_range"     "soil_sand"                 
+#> [13] "soil_clay"                  "soil_silt"                 
+#> [15] "soil_ph"                    "soil_soc"                  
+#> [17] "soil_nitrogen"              "solar_rad_mean"            
+#> [19] "solar_rad_max"              "solar_rad_min"             
+#> [21] "solar_rad_range"            "growing_season_length"     
+#> [23] "growing_season_temperature" "growing_season_rainfall"   
+#> [25] "growing_degree_days"        "temperature_mean"          
+#> [27] "temperature_max"            "temperature_min"           
+#> [29] "temperature_range"          "temperature_seasonality"   
+#> [31] "rainfall_mean"              "rainfall_min"              
+#> [33] "rainfall_max"               "rainfall_range"            
+#> [35] "evapotranspiration_mean"    "evapotranspiration_max"    
+#> [37] "evapotranspiration_min"     "evapotranspiration_range"  
+#> [39] "cloud_cover_mean"           "cloud_cover_max"           
+#> [41] "cloud_cover_min"            "cloud_cover_range"         
+#> [43] "aridity_index"              "humidity_mean"             
+#> [45] "humidity_max"               "humidity_min"              
+#> [47] "humidity_range"             "country_population"        
+#> [49] "country_gdp"               
+#> 
+#> $categorical
+#>  [1] "koppen_zone"        "koppen_group"       "koppen_description"
+#>  [4] "soil_type"          "biogeo_ecoregion"   "biogeo_biome"      
+#>  [7] "biogeo_realm"       "country_name"       "country_income"    
+#> [10] "continent"          "region"             "subregion"
+```
+
+``` r
 #multicollinearity filtering
 selection <- collinear::collinear(
   df = df,
   response = c(
-    "vi_numeric",
-    "vi_categorical"
+    "vi_numeric",    #numeric response
+    "vi_categorical" #categorical response
     ),
   predictors = predictors,
   max_cor = 0.75,
   max_vif = 5,
-  quiet = FALSE
+  quiet = TRUE
 )
-#> 
-#> collinear::collinear(): processing response 'vi_numeric'.
-#> ---------------------------------------------------------------
-#> 
-#> collinear::target_encoding_lab(): using response 'vi_numeric' to encode categorical predictors:
-#>  - koppen_zone
-#>  - koppen_group
-#>  - koppen_description
-#>  - soil_type
-#>  - biogeo_ecoregion
-#>  - biogeo_biome
-#>  - biogeo_realm
-#>  - country_name
-#>  - country_income
-#>  - continent
-#>  - region
-#>  - subregion
-#> 
-#> collinear::preference_order(): ranking predictors for response 'vi_numeric'.
-#> 
-#> collinear::f_auto(): selected function: 'f_r2_pearson()'.
-#> 
-#> collinear::cor_select(): computing pairwise correlation matrix.
-#> 
-#> collinear::cor_select(): selected predictors: 
-#>  - growing_season_length
-#>  - soil_temperature_max
-#>  - soil_temperature_range
-#>  - solar_rad_max
-#>  - rainfall_max
-#>  - subregion
-#>  - biogeo_realm
-#>  - swi_range
-#>  - rainfall_min
-#>  - solar_rad_mean
-#>  - soil_nitrogen
-#>  - continent
-#>  - soil_soc
-#>  - solar_rad_range
-#>  - cloud_cover_range
-#>  - topo_diversity
-#>  - soil_clay
-#>  - humidity_range
-#>  - country_income
-#>  - topo_elevation
-#>  - soil_sand
-#>  - topo_slope
-#>  - temperature_mean
-#>  - country_population
-#>  - country_gdp
-#> 
-#> collinear::vif_select(): selected predictors: 
-#>  - growing_season_length
-#>  - soil_temperature_max
-#>  - soil_temperature_range
-#>  - solar_rad_max
-#>  - rainfall_max
-#>  - subregion
-#>  - biogeo_realm
-#>  - swi_range
-#>  - rainfall_min
-#>  - soil_nitrogen
-#>  - continent
-#>  - cloud_cover_range
-#>  - topo_diversity
-#> 
-#> collinear::collinear(): processing response 'vi_categorical'.
-#> ---------------------------------------------------------------
-#> 
-#> collinear::target_encoding_lab(): argument 'response' is not numeric, skipping target-encoding.
-#> 
-#> collinear::preference_order(): ranking predictors for response 'vi_categorical'.
-#> 
-#> collinear::f_auto(): selected function: 'f_v_rf_categorical()'.
-#> 
-#> collinear::cor_select(): computing pairwise correlation matrix.
-#> 
-#> collinear::cor_select(): selected predictors: 
-#>  - rainfall_mean
-#>  - swi_mean
-#>  - soil_temperature_max
-#>  - soil_type
-#>  - humidity_max
-#>  - solar_rad_max
-#>  - country_gdp
-#>  - swi_range
-#>  - rainfall_range
-#>  - country_population
-#>  - soil_soc
-#>  - rainfall_min
-#>  - temperature_range
-#>  - evapotranspiration_mean
-#>  - soil_nitrogen
-#>  - region
-#>  - growing_season_temperature
-#>  - country_income
-#>  - cloud_cover_range
-#>  - humidity_range
-#>  - soil_sand
-#>  - soil_clay
-#>  - topo_elevation
-#>  - topo_diversity
-#>  - topo_slope
-#> 
-#> collinear::vif_select(): selected predictors: 
-#>  - rainfall_mean
-#>  - swi_mean
-#>  - soil_temperature_max
-#>  - humidity_max
-#>  - solar_rad_max
-#>  - country_gdp
-#>  - swi_range
-#>  - rainfall_range
-#>  - country_population
-#>  - soil_soc
-#>  - topo_diversity
-#>  - topo_slope
-#> 
-#> collinear::collinear(): selected predictors: 
-#>  - rainfall_mean
-#>  - swi_mean
-#>  - soil_temperature_max
-#>  - soil_type
-#>  - humidity_max
-#>  - solar_rad_max
-#>  - country_gdp
-#>  - swi_range
-#>  - rainfall_range
-#>  - country_population
-#>  - soil_soc
-#>  - region
-#>  - country_income
-#>  - topo_diversity
-#>  - topo_slope
 ```
 
 The output is a named list of vectors with selected predictor names when
@@ -298,6 +211,46 @@ selection
 #> [1] TRUE
 #> attr(,"response")
 #> [1] "vi_categorical"
+```
+
+The output of `collinear()` can be easily converted into model formulas.
+
+``` r
+formulas <- collinear::model_formula(
+  predictors = selection
+)
+
+formulas
+#> $vi_numeric
+#> vi_numeric ~ growing_season_length + soil_temperature_max + soil_temperature_range + 
+#>     solar_rad_max + rainfall_max + subregion + biogeo_realm + 
+#>     swi_range + rainfall_min + soil_nitrogen + continent + cloud_cover_range + 
+#>     topo_diversity
+#> <environment: 0x55f90b405d10>
+#> 
+#> $vi_categorical
+#> vi_categorical ~ rainfall_mean + swi_mean + soil_temperature_max + 
+#>     soil_type + humidity_max + solar_rad_max + country_gdp + 
+#>     swi_range + rainfall_range + country_population + soil_soc + 
+#>     region + country_income + topo_diversity + topo_slope
+#> <environment: 0x55f90b405d10>
+```
+
+These formulas can be used to fit models right away.
+
+``` r
+#linear model
+m_vi_numeric <- stats::glm(
+  formula = formulas[["vi_numeric"]], 
+  data = df,
+  na.action = na.omit
+  )
+
+#random forest model
+m_vi_categorical <- ranger::ranger(
+  formula = formulas[["vi_categorical"]],
+  data = na.omit(df)
+)
 ```
 
 ## Getting help

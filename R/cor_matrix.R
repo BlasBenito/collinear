@@ -117,7 +117,7 @@ cor_matrix <- function(
       index_map[df$x],
       index_map[df$y]
       )
-    ] <- df$correlation
+    ] <- abs(df$correlation)
 
   #dim names
   dimnames(m) <- list(

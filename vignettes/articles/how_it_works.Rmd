@@ -437,7 +437,7 @@ This function performs the following steps:
   
 **Pairwise Correlation Matrix**
 
-Pairwise correlations are computed by `cor_df()`.
+Pairwise correlations are computed with `cor_df()`.
 
 ```{r}
 df_cor <- collinear::cor_df(
@@ -445,6 +445,8 @@ df_cor <- collinear::cor_df(
   predictors = vi_predictors
 )
 ```
+
+Notice that the original sign of the correlation is kept in the output, but the `correlation` column is arranged using absolute values instead.
 
 ```{r, echo = FALSE}
 reactable::reactable(
@@ -484,7 +486,7 @@ reactable::reactable(
   )
 ```
   
-  + **Numeric vs categorical** (`cor_numeric_vs_categorical()`): The categorical predictor is target-encoded using the numeric predictor as reference, and then their R-squared is computed.
+  + **Numeric vs categorical** (`cor_numeric_vs_categorical()`): The categorical predictor is target-encoded against the numeric, and then their R-squared is computed.
 
 ```{r}
 x <- collinear::cor_numeric_vs_categorical(
@@ -506,7 +508,7 @@ reactable::reactable(
   )
 ```
 
-  + **Categorical vs categorical** (`cor_categorical_vs_categorical()`): Computes the Cramer's V between both predictors. However, comparing Cramer's V and R-squared is a suboptimal solution, and it is always recommended to target-encode categoricals first, if possible.
+  + **Categorical vs categorical** (`cor_categorical_vs_categorical()`): Computes the Cramer's V between both predictors. Please, taken in mind that comparing Cramer's V and R-squared is a suboptimal solution, and it is always preferable to target-encode categorical predictors before the pairwise correlation analysis.
   
 ```{r}
 x <- collinear::cor_categorical_vs_categorical(
@@ -528,7 +530,7 @@ reactable::reactable(
   )
 ```
 
-The function `cor_matrix()` rearranges the pairwise correlation data frame into a matrix.
+The function `cor_matrix()` removes the correlation sign and rearranges the pairwise correlations data frame into a correlation matrix.
 
 ```{r}
 m <- collinear::cor_matrix(
@@ -542,7 +544,7 @@ The first 10 rows and columns of the correlation matrix are shown below.
 m <- round(m, 3)
 reactable(
   data = m[1:10, 1:10],
-  fullWidth = FALSE
+  fullWidth = TRUE
 )
 ```
 
@@ -570,7 +572,7 @@ m <- m[
 #set diagonals to zero
 diag(m) <- 0
 
-#selection algorithm
+#initialize required vectors
 selected <- preference_order[1]
 candidates <- preference_order[-1]
 
@@ -591,18 +593,121 @@ for(candidate in candidates){
 
 selected
 ```
+None of the predictors in `selected` has an absolute pairwise correlation with others higher than the defined threshold.
 
+```{r}
+df_cor <- collinear::cor_df(
+  df = df,
+  predictors = selected
+)
+```
+
+```{r, echo = FALSE}
+reactable::reactable(
+  data = df_cor, 
+  pagination = TRUE,
+  fullWidth = FALSE,
+  sortable = TRUE,
+  searchable = TRUE,
+  style = list(width = "75%"),
+  list(
+    correlation = reactable::colDef(format = reactable::colFormat(digits = 3))
+  )
+)
+```
 
 ### VIF Filtering
 
-In a linear model, the confidence interval of a predictor's estimate is widened by a factor equal to the square root of its Variance Inflation Factor (VIF). [This article](https://www.blasbenito.com/post/variance-inflation-factor/) goes deep into this topic, but the key detail here is that VIF, as a metric of the modelling uncertainty induced by multicollinearity, can also be used as a guideline to manage multicollinearity. 
+In a linear model, the confidence interval of a predictor's estimate is widened by a factor equal to the square root of its Variance Inflation Factor (VIF). Such VIF score is computed as `1/(1 - R2)`, where `R2` is the R-squared of the linear model of the predictor against all other predictors.
 
-The function `vif_select()` incorporates this idea onto an automated selection algorithm incorporating preference order to preserve important predictors. However, unlike `cor_select()`, `vif_select()` cannot work with categorical predictors unless these target-encoded.
+[This article](https://www.blasbenito.com/post/variance-inflation-factor/) goes deep into this topic, but the key detail here is that VIF is at the same time a metric of the uncertainty induced by multicollinearity and a tool to manage it 
 
-The actual VIF computation is implemented in the function `vif_df()`.
+The function `vif_select()` incorporates this idea into an automated selection algorithm that takes preference order into account to preserve important predictors.
+
+The actual VIF computation is implemented in the function `vif_df()`. Unlike `cor_df()`, `vif_df()` ignores categorical predictors, unless these are target-encoded.
+
+```{r}
+df_vif <- collinear::vif_df(
+  df = df,
+  predictors = selected #output of pairwise correlation selection
+)
+```
+In general, VIF scores higher than 2.5 are indicative of multicollinearity, but recommended thresholds may vary between 2.5 and 10 depending on the model type.
+
+```{r, echo = FALSE}
+reactable::reactable(
+  data = df_vif, 
+  pagination = FALSE,
+  fullWidth = FALSE,
+  sortable = TRUE,
+  style = list(width = "50%")
+  )
+```
+The function `vif_select()` calls `vif_df()` iteratively to remove predictors with a VIF above a defined threshold threshold, much like `cor_select()` does.
+
+```{r}
+#VIF threshold
+max_vif <- 2.5
+
+#filter out categorical predictors
+selected <- collinear::identify_predictors_numeric(
+  df = df,
+  predictors = selected
+)
+
+#initialize required vectors
+#example starts with the selection made 
+#by `cor_select()` in the previous section
+candidates <- selected[-1]
+selected <- selected[1]
 
 
+#iterate over candidate variables
+for(candidate in candidates){
+  
+  vif.df <- vif_df(
+    df = df,
+    predictors = c(
+      selected,
+      candidate
+    ),
+    quiet = TRUE
+  )
+  
+  #if candidate keeps vif below the threshold
+  if(max(vif.df$vif) <= max_vif){
+    
+    #add candidate to selected
+    selected <- c(
+      selected,
+      candidate
+    )
+    
+  }
+  
+}
 
-If you got here, thank you for your interest in `collinear`. I hope you can find it useful!
+selected
+```
+None of the predictors in `selected` has a VIF higher than the defined threshold.
+
+```{r}
+df_vif <- collinear::vif_df(
+  df = df,
+  predictors = selected
+)
+```
+
+```{r, echo = FALSE}
+reactable::reactable(
+  data = df_vif, 
+  pagination = FALSE,
+  fullWidth = FALSE,
+  sortable = TRUE,
+  style = list(width = "50%")
+  )
+```
+
+And that's all! If you got here, thank you for your interest in `collinear`. I hope you can find it useful!
 
 Blas M. Benito, PhD

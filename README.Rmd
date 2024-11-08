@@ -52,9 +52,7 @@ The `collinear` package combines four methods for easy management of multicollin
 - **Pairwise Correlation Filtering**: Automated multicollinearity filtering of numeric and categorical predictors based on pairwise correlations.
 - **Variance Inflation Factor Filtering**: Automated multicollinearity filtering of numeric predictors based on Variance Inflation Factors.
 
-These methods are combined in the function `collinear()`, and as individual functions in `target_encoding_lab()`, `preference_order()`, `cor_select()`, and `vif_select()`.
-
-The article [How It Works](https://blasbenito.github.io/collinear/articles/how_it_works/how_it_works.html) explains these functions in detail.
+These methods are combined in the function `collinear()`, which serves as single entrypoint for most of the functionalities in the package. The article [How It Works](https://blasbenito.github.io/collinear/articles/how_it_works/how_it_works.html) explains how `collinear()` works in detail.
 
 ## Citation
 
@@ -109,9 +107,9 @@ library(parallelly)
 
 ## Getting Started
 
-The function `collinear()` provides all tools required for a fully fledged multicollinearity filtering workflow. The example below shows a call with two responses and mixed predictor types.
+The function `collinear()` provides all tools required for a fully fledged multicollinearity filtering workflow. The code below shows a small example workflow.
 
-```{r collinear_demo}
+```{r}
 #parallelization setup
 future::plan(
   future::multisession,
@@ -124,20 +122,32 @@ future::plan(
 #example data frame
 df <- collinear::vi[1:5000, ]
 
+#there are many NA cases in this data frame
+sum(is.na(df))
+```
+
+```{r}
 #numeric and categorical predictors
 predictors <- collinear::vi_predictors
 
+collinear::identify_predictors(
+  df = df,
+  predictors = predictors
+)
+```
+
+```{r}
 #multicollinearity filtering
 selection <- collinear::collinear(
   df = df,
   response = c(
-    "vi_numeric",
-    "vi_categorical"
+    "vi_numeric",    #numeric response
+    "vi_categorical" #categorical response
     ),
   predictors = predictors,
   max_cor = 0.75,
   max_vif = 5,
-  quiet = FALSE
+  quiet = TRUE
 )
 ```
 
@@ -145,6 +155,31 @@ The output is a named list of vectors with selected predictor names when more th
 
 ```{r}
 selection
+```
+The output of `collinear()` can be easily converted into model formulas.
+
+```{r}
+formulas <- collinear::model_formula(
+  predictors = selection
+)
+
+formulas
+```
+These formulas can be used to fit models right away.
+
+```{r, eval = FALSE}
+#linear model
+m_vi_numeric <- stats::glm(
+  formula = formulas[["vi_numeric"]], 
+  data = df,
+  na.action = na.omit
+  )
+
+#random forest model
+m_vi_categorical <- ranger::ranger(
+  formula = formulas[["vi_categorical"]],
+  data = na.omit(df)
+)
 ```
 
 ## Getting help
