@@ -23,6 +23,7 @@ Imports:
     ranger
 Suggests: 
     future,
+    reactable,
     testthat (>= 3.0.0),
     spelling
 Config/testthat/edition: 3
