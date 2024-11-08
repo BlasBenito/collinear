@@ -48,7 +48,7 @@ variables:
   filtering of numeric predictors based on Variance Inflation Factors.
 
 These methods are combined in the function `collinear()`, which serves
-as single entrypoint for most of the functionalities in the package. The
+as single entry point for most of the functionalities in the package. The
 article [How It
 Works](https://blasbenito.github.io/collinear/articles/how_it_works/how_it_works.html)
 explains how `collinear()` works in detail.

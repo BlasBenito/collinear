@@ -38,7 +38,7 @@ Generate Model Formulas
 \examples{
 #using df, response, and predictors
 #----------------------------------
-df <- vi[1:5000, ]
+df <- vi[1:1000, ]
 
 #additive formulas
 formulas_additive <- model_formula(
@@ -53,10 +53,10 @@ formulas_additive <- model_formula(
 formulas_additive
 
 #using a formula in a model
-m <- stats::lm(
-  formula = formulas_additive[[1]],
-  data = df
-  )
+#m <- stats::lm(
+#  formula = formulas_additive[[1]],
+#  data = df
+#  )
 
 # using output of collinear()
 #----------------------------------
@@ -66,7 +66,7 @@ selection <- collinear(
     "vi_numeric",
     "vi_binomial"
   ),
-  predictors = vi_predictors_numeric[1:20],
+  predictors = vi_predictors_numeric[1:10],
   quiet = TRUE
 )
 

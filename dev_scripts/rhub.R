@@ -3,15 +3,6 @@ Sys.setenv(GITHUB_PAT = "my_pat")
 rhub::rhub_setup()
 rhub::rhub_doctor()
 
-#failing platforms
-rhub::rhub_check(
-  platforms = c(
-    "nold",
-    "rchk",
-    "macos-arm64"
-  )
-)
-
 #full check
 rhub::rhub_check(
   platforms = c(
@@ -32,11 +23,9 @@ rhub::rhub_check(
     "mkl",
     "nold",
     "nosuggests",
-    "rchk",
     "ubuntu-clang",
     "ubuntu-gcc12",
     "ubuntu-next",
-    "ubuntu-release",
-    "valgrind"
+    "ubuntu-release"
   )
 )

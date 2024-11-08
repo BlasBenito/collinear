@@ -78,7 +78,7 @@ df <- collinear::vi[1:5000, ]
 
 ## The Function `collinear()`
 
-This function serves as single entrypoint to the full functionality of the package. It aims to facilitate multicollinearity filtering for any combination of categorical and/or numeric responses and predictors.
+This function serves as single entry point to the full functionality of the package. It aims to facilitate multicollinearity filtering for any combination of categorical and/or numeric responses and predictors.
 
 The code below runs a full multicollinearity filtering for a numeric and a categorical response, and a set of predictors with mixed types (numeric, integer, character and factor).
 

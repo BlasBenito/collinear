@@ -132,7 +132,15 @@ future::plan(
 df <- vi[1:500, ]
 
 #predictors has mixed types
-predictors <- vi_predictors[1:8]
+#small subset to speed example up
+predictors <- c(
+  "swi_mean",
+  "soil_type",
+  "soil_temperature_mean",
+  "growing_season_length",
+  "rainfall_mean"
+  )
+
 
 #with numeric responses
 #--------------------------------
@@ -159,10 +167,10 @@ x <- collinear(
   predictors = predictors,
   preference_order = c(
     "swi_mean",
-    "soil_type",
-    "koppen_zone"
+    "soil_type"
   )
 )
+
 
 #pre-computed preference order
 #--------------------------------
@@ -178,8 +186,6 @@ x <- collinear(
   predictors = predictors,
   preference_order = preference_df
 )
-
-
 
 #resetting to sequential processing
 future::plan(future::sequential)
