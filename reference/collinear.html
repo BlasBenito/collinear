@@ -206,7 +206,15 @@ Accepts a character vector of response variables as input for the argument respo
 <span class="r-in"><span><span class="va">df</span> <span class="op">&lt;-</span> <span class="va">vi</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">500</span>, <span class="op">]</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#predictors has mixed types</span></span></span>
-<span class="r-in"><span><span class="va">predictors</span> <span class="op">&lt;-</span> <span class="va">vi_predictors</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">8</span><span class="op">]</span></span></span>
+<span class="r-in"><span><span class="co">#small subset to speed example up</span></span></span>
+<span class="r-in"><span><span class="va">predictors</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>  <span class="st">"swi_mean"</span>,</span></span>
+<span class="r-in"><span>  <span class="st">"soil_type"</span>,</span></span>
+<span class="r-in"><span>  <span class="st">"soil_temperature_mean"</span>,</span></span>
+<span class="r-in"><span>  <span class="st">"growing_season_length"</span>,</span></span>
+<span class="r-in"><span>  <span class="st">"rainfall_mean"</span></span></span>
+<span class="r-in"><span>  <span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#with numeric responses</span></span></span>
 <span class="r-in"><span><span class="co">#--------------------------------</span></span></span>
@@ -226,9 +234,6 @@ Accepts a character vector of response variables as input for the argument respo
 <span class="r-msg co"><span class="r-pr">#&gt;</span> ---------------------------------------------------------------</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> collinear::target_encoding_lab(): using response 'vi_numeric' to encode categorical predictors:</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span>  - koppen_zone</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span>  - koppen_group</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span>  - koppen_description</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>  - soil_type</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> collinear::preference_order(): ranking predictors for response 'vi_numeric'.</span>
@@ -238,10 +243,9 @@ Accepts a character vector of response variables as input for the argument respo
 <span class="r-msg co"><span class="r-pr">#&gt;</span> collinear::cor_select(): computing pairwise correlation matrix.</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> collinear::cor_select(): selected predictors: </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span>  - koppen_zone</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span>  - topo_diversity</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span>  - topo_slope</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span>  - topo_elevation</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>  - growing_season_length</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>  - soil_type</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>  - soil_temperature_mean</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> collinear::vif_select(): maximum VIF in 'predictors' is &lt;= 5. skipping VIF-based filtering.</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
@@ -249,9 +253,6 @@ Accepts a character vector of response variables as input for the argument respo
 <span class="r-msg co"><span class="r-pr">#&gt;</span> ---------------------------------------------------------------</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> collinear::target_encoding_lab(): using response 'vi_binomial' to encode categorical predictors:</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span>  - koppen_zone</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span>  - koppen_group</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span>  - koppen_description</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>  - soil_type</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> collinear::preference_order(): ranking predictors for response 'vi_binomial'.</span>
@@ -261,25 +262,24 @@ Accepts a character vector of response variables as input for the argument respo
 <span class="r-msg co"><span class="r-pr">#&gt;</span> collinear::cor_select(): computing pairwise correlation matrix.</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> collinear::cor_select(): selected predictors: </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span>  - koppen_group</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>  - soil_type</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span>  - topo_elevation</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span>  - topo_diversity</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span>  - topo_slope</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>  - rainfall_mean</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>  - swi_mean</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>  - soil_temperature_mean</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> collinear::vif_select(): maximum VIF in 'predictors' is &lt;= 5. skipping VIF-based filtering.</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">x</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $vi_numeric</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "koppen_zone"    "topo_diversity" "topo_slope"     "topo_elevation"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "growing_season_length" "soil_type"             "soil_temperature_mean"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"validated")</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"response")</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "vi_numeric"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $vi_binomial</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "koppen_group"   "soil_type"      "topo_elevation" "topo_diversity"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [5] "topo_slope"    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "soil_type"             "rainfall_mean"         "swi_mean"             </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [4] "soil_temperature_mean"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"validated")</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"response")</span>
@@ -295,8 +295,7 @@ Accepts a character vector of response variables as input for the argument respo
 <span class="r-in"><span>  predictors <span class="op">=</span> <span class="va">predictors</span>,</span></span>
 <span class="r-in"><span>  preference_order <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span></span>
 <span class="r-in"><span>    <span class="st">"swi_mean"</span>,</span></span>
-<span class="r-in"><span>    <span class="st">"soil_type"</span>,</span></span>
-<span class="r-in"><span>    <span class="st">"koppen_zone"</span></span></span>
+<span class="r-in"><span>    <span class="st">"soil_type"</span></span></span>
 <span class="r-in"><span>  <span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
@@ -304,9 +303,6 @@ Accepts a character vector of response variables as input for the argument respo
 <span class="r-msg co"><span class="r-pr">#&gt;</span> ---------------------------------------------------------------</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> collinear::target_encoding_lab(): using response 'vi_numeric' to encode categorical predictors:</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span>  - koppen_zone</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span>  - koppen_group</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span>  - koppen_description</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>  - soil_type</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> collinear::preference_order(): ranking predictors for response 'vi_numeric'.</span>
@@ -318,11 +314,11 @@ Accepts a character vector of response variables as input for the argument respo
 <span class="r-msg co"><span class="r-pr">#&gt;</span> collinear::cor_select(): selected predictors: </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>  - swi_mean</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>  - soil_type</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span>  - topo_diversity</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span>  - topo_slope</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span>  - topo_elevation</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>  - rainfall_mean</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>  - soil_temperature_mean</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> collinear::vif_select(): maximum VIF in 'predictors' is &lt;= 5. skipping VIF-based filtering.</span>
+<span class="r-in"><span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#pre-computed preference order</span></span></span>
 <span class="r-in"><span><span class="co">#--------------------------------</span></span></span>
@@ -347,9 +343,6 @@ Accepts a character vector of response variables as input for the argument respo
 <span class="r-msg co"><span class="r-pr">#&gt;</span> ---------------------------------------------------------------</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> collinear::target_encoding_lab(): using response 'vi_numeric' to encode categorical predictors:</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span>  - koppen_zone</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span>  - koppen_group</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span>  - koppen_description</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>  - soil_type</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> collinear::collinear(): using preference order data frame.</span>
@@ -357,15 +350,12 @@ Accepts a character vector of response variables as input for the argument respo
 <span class="r-msg co"><span class="r-pr">#&gt;</span> collinear::cor_select(): computing pairwise correlation matrix.</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> collinear::cor_select(): selected predictors: </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>  - rainfall_mean</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>  - swi_mean</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>  - soil_type</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span>  - topo_elevation</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span>  - topo_diversity</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span>  - topo_slope</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>  - soil_temperature_mean</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> collinear::vif_select(): maximum VIF in 'predictors' is &lt;= 5. skipping VIF-based filtering.</span>
-<span class="r-in"><span></span></span>
-<span class="r-in"><span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#resetting to sequential processing</span></span></span>
 <span class="r-in"><span><span class="fu">future</span><span class="fu">::</span><span class="fu"><a href="https://future.futureverse.org/reference/plan.html" class="external-link">plan</a></span><span class="op">(</span><span class="fu">future</span><span class="fu">::</span><span class="va"><a href="https://future.futureverse.org/reference/sequential.html" class="external-link">sequential</a></span><span class="op">)</span></span></span>
