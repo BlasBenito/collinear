@@ -5,14 +5,16 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<title>Seamless Multicollinearity Management • collinear</title>
+<title>Automated Multicollinearity Management • collinear</title>
 <script src="deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
 <script src="deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="deps/font-awesome-6.4.2/css/all.min.css" rel="stylesheet">
 <link href="deps/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet">
-<script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="Seamless Multicollinearity Management">
-<meta name="description" content="System for seamless management of multicollinearity in data frames with numeric and/or categorical variables for statistical analysis and machine learning modeling. The package combines bivariate correlation (Pearson, Spearman, and Cramer's V) with variance inflation factor analysis, target encoding to transform categorical variables into numeric (Micci-Barreca, D. 2001 &lt;DOI:10.1145/507533.507538&gt;), and a flexible feature prioritization method, to deliver a comprehensive multicollinearity management tool covering a wide range of use cases.">
-<meta property="og:description" content="System for seamless management of multicollinearity in data frames with numeric and/or categorical variables for statistical analysis and machine learning modeling. The package combines bivariate correlation (Pearson, Spearman, and Cramer's V) with variance inflation factor analysis, target encoding to transform categorical variables into numeric (Micci-Barreca, D. 2001 &lt;DOI:10.1145/507533.507538&gt;), and a flexible feature prioritization method, to deliver a comprehensive multicollinearity management tool covering a wide range of use cases.">
+<script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><link href="extra.css" rel="stylesheet">
+<meta property="og:title" content="Automated Multicollinearity Management">
+<meta name="description" content="Effortless multicollinearity management in data frames with both numeric and categorical variables for statistical and machine learning applications. The package simplifies multicollinearity analysis by combining four robust methods: 1) target encoding for categorical variables (Micci-Barreca, D. 2001 DOI:10.1145/507533.507538); 2) automated feature prioritization to prevent key variable loss during filtering; 3) pairwise correlation for all variable combinations (numeric-numeric, numeric-categorical, categorical-categorical); and 4) fast computation of variance inflation factors (VIF).">
+<meta property="og:description" content="Effortless multicollinearity management in data frames with both numeric and categorical variables for statistical and machine learning applications. The package simplifies multicollinearity analysis by combining four robust methods: 1) target encoding for categorical variables (Micci-Barreca, D. 2001 DOI:10.1145/507533.507538); 2) automated feature prioritization to prevent key variable loss during filtering; 3) pairwise correlation for all variable combinations (numeric-numeric, numeric-categorical, categorical-categorical); and 4) fast computation of variance inflation factors (VIF).">
+<link rel="stylesheet" href="extra.css">
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
@@ -22,7 +24,7 @@
 
     <a class="navbar-brand me-2" href="index.html">collinear</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.1.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -32,6 +34,19 @@
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto">
 <li class="nav-item"><a class="nav-link" href="reference/index.html">Reference</a></li>
+<li class="nav-item dropdown">
+  <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
+<li><hr class="dropdown-divider"></li>
+    <li><h6 class="dropdown-header" data-toc-skip>Tutorials</h6></li>
+    <li><a class="dropdown-item" href="articles/how_it_works.html">collinear: How It Works</a></li>
+    <li><hr class="dropdown-divider"></li>
+    <li><h6 class="dropdown-header" data-toc-skip>Blog Posts</h6></li>
+    <li><a class="external-link dropdown-item" href="https://www.blasbenito.com/post/multicollinearity-model-interpretability/">Multicollinearity Hinders Model Interpretability</a></li>
+    <li><a class="external-link dropdown-item" href="https://www.blasbenito.com/post/variance-inflation-factor/">Everything About Variance Inflation Factors</a></li>
+    <li><a class="external-link dropdown-item" href="https://www.blasbenito.com/post/target-encoding/">Mapping Categorical Predictors to Numeric</a></li>
+  </ul>
+</li>
 <li class="nav-item"><a class="nav-link" href="news/index.html">Changelog</a></li>
       </ul>
 <ul class="navbar-nav">
@@ -52,801 +67,208 @@
 <!-- Development badges
 &#10;[![R-CMD-check](https://github.com/BlasBenito/collinear/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/BlasBenito/collinear/actions/workflows/R-CMD-check.yaml)
 [![Devel-version](https://img.shields.io/badge/devel%20version-1.0.1-blue.svg)](https://github.com/blasbenito/collinear)
-&#10;
 &#10;<!-- badges: start -->
 
 <!-- badges: end -->
 <div class="section level2">
+<h2 id="warning">Warning<a class="anchor" aria-label="anchor" href="#warning"></a>
+</h2>
+<p>Version 2.0.0 of <code>collinear</code> includes changes that may disrupt existing workflows, and results from previous versions may not be reproducible due to enhancements in the automated selection algorithms. Please refer to the Changelog for details.</p>
+</div>
+<div class="section level2">
 <h2 id="summary">Summary<a class="anchor" aria-label="anchor" href="#summary"></a>
 </h2>
-<p>The R package <code>collinear</code> combines four different methods to offer a comprehensive tool for multicollinearity management:</p>
+<p><a href="https://www.blasbenito.com/post/multicollinearity-model-interpretability/" class="external-link">Multicollinearity hinders the interpretability</a> of linear and machine learning models.</p>
+<p>The <code>collinear</code> package combines four methods for easy management of multicollinearity in modelling data frames with numeric and categorical variables:</p>
 <ul>
 <li>
-<strong>Pairwise correlation for numeric and categorical predictors</strong>: identification of pairwise correlation via Pearson or Spearman methods for numeric predictors, and Cramer’s V for categorical predictors.</li>
+<strong>Target Encoding</strong>: Transforms categorical predictors to numeric using a numeric response as reference.</li>
 <li>
-<strong>Variance Inflation Factor analysis (VIF)</strong>: to identify multicollinearity resulting from linear combinations of other predictors.</li>
+<strong>Preference Order</strong>: Ranks predictors by their association with a response variable to preserve important ones in multicollinearity filtering.</li>
 <li>
-<strong>Target encoding of categorical predictors</strong>: transforms categorical predictors to numeric using a numeric variable as a response (usually a response variable) and handle them as numerics during the multicollinearity filtering.</li>
+<strong>Pairwise Correlation Filtering</strong>: Automated multicollinearity filtering of numeric and categorical predictors based on pairwise correlations.</li>
 <li>
-<strong>Variable prioritization</strong>: method to prioritize predictors during variable selection using expert knowledge or quantitative criteria.</li>
+<strong>Variance Inflation Factor Filtering</strong>: Automated multicollinearity filtering of numeric predictors based on Variance Inflation Factors.</li>
 </ul>
-<p>These methods are integrated in the <code><a href="reference/collinear.html">collinear()</a></code> function, which returns a vector of selected predictors with a user-defined level of multicollinearity.</p>
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">selected_variables</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/collinear.html">collinear</a></span><span class="op">(</span></span>
-<span>  <span class="va">df</span>, <span class="co">#your data frame</span></span>
-<span>  <span class="va">response</span>, <span class="co">#name of your response variable</span></span>
-<span>  <span class="va">predictors</span>, <span class="co">#names of your predictors,</span></span>
-<span>  <span class="va">preference_order</span>, <span class="co">#your predictors in order of interest</span></span>
-<span>  <span class="va">max_cor</span>, <span class="co">#maximum bivariate correlation</span></span>
-<span>  <span class="va">max_vif</span>, <span class="co">#maximum variance inflation factor</span></span>
-<span>  <span class="va">encoding_method</span>, <span class="co">#method to convert categorical predictors into numerics</span></span>
-<span><span class="op">)</span></span></code></pre></div>
-<p>The package contains other functions that may be useful during multicollinearity management:</p>
-<ul>
-<li>
-<code><a href="reference/cor_select.html">cor_select()</a></code>: like <code><a href="reference/collinear.html">collinear()</a></code>, but only using pairwise correlations.</li>
-<li>
-<code><a href="reference/vif_select.html">vif_select()</a></code>: like <code><a href="reference/collinear.html">collinear()</a></code>, but only using variance inflation factors.</li>
-<li>
-<code><a href="reference/preference_order.html">preference_order()</a></code>: to compute preference order based on univariate models.</li>
-<li>
-<code><a href="reference/target_encoding_lab.html">target_encoding_lab()</a></code>: to convert categorical predictors into numeric using several methods.</li>
-<li>
-<code><a href="reference/cor_df.html">cor_df()</a></code>: to generate a data frame with all pairwise correlation scores.</li>
-<li>
-<code><a href="reference/cor_matrix.html">cor_matrix()</a></code>: to convert a correlation data frame into matrix, or obtain a correlation matrix.</li>
-<li>
-<code><a href="reference/vif_df.html">vif_df()</a></code>: to obtain a data frame with all variance inflation factors.</li>
-</ul>
+<p>These methods are combined in the function <code><a href="reference/collinear.html">collinear()</a></code>, which serves as single entrypoint for most of the functionalities in the package. The article <a href="https://blasbenito.github.io/collinear/articles/how_it_works/how_it_works.html">How It Works</a> explains how <code><a href="reference/collinear.html">collinear()</a></code> works in detail.</p>
 </div>
 <div class="section level2">
 <h2 id="citation">Citation<a class="anchor" aria-label="anchor" href="#citation"></a>
 </h2>
-<p>If you found this package useful during your research work, please cite it as:</p>
-<p><em>Blas M. Benito (2023). collinear: R Package for Seamless Multicollinearity Management. Version 1.0.1. doi: 10.5281/zenodo.10039489</em></p>
+<p>If you find this package useful, please cite it as:</p>
+<p><em>Blas M. Benito (2024). collinear: R Package for Seamless Multicollinearity Management. Version 2.0.0. doi: 10.5281/zenodo.10039489</em></p>
+</div>
+<div class="section level2">
+<h2 id="main-improvements-in-version-200">Main Improvements in Version 2.0.0<a class="anchor" aria-label="anchor" href="#main-improvements-in-version-200"></a>
+</h2>
+<ol style="list-style-type: decimal">
+<li>
+<strong>Expanded Functionality</strong>: Functions <code><a href="reference/collinear.html">collinear()</a></code> and <code><a href="reference/preference_order.html">preference_order()</a></code> support both categorical and numeric responses and predictors, and can handle several responses at once.</li>
+<li>
+<strong>Robust Selection Algorithms</strong>: Enhanced selection in <code><a href="reference/vif_select.html">vif_select()</a></code> and <code><a href="reference/cor_select.html">cor_select()</a></code>.</li>
+<li>
+<strong>Enhanced Functionality to Rank Predictors</strong>: New functions to compute association between response and predictors covering most use-cases, and automated function selection depending on data features.</li>
+<li>
+<strong>Simplified Target Encoding</strong>: Streamlined and parallelized for better efficiency, and new default is “loo” (leave-one-out).</li>
+<li>
+<strong>Parallelization and Progress Bars</strong>: Utilizes <code>future</code> and <code>progressr</code> for enhanced performance and user experience.</li>
+</ol>
 </div>
 <div class="section level2">
 <h2 id="install">Install<a class="anchor" aria-label="anchor" href="#install"></a>
 </h2>
 <p>The package <code>collinear</code> can be installed from CRAN.</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"collinear"</span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://blasbenito.github.io/collinear/">collinear</a></span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"collinear"</span><span class="op">)</span></span></code></pre></div>
 <p>The development version can be installed from GitHub.</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span></span>
 <span>  repo <span class="op">=</span> <span class="st">"blasbenito/collinear"</span>, </span>
 <span>  ref <span class="op">=</span> <span class="st">"development"</span></span>
 <span>  <span class="op">)</span></span></code></pre></div>
+<p>Previous versions are in the “archive_xxx” branches of the GitHub repository.</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span></span>
+<span>  repo <span class="op">=</span> <span class="st">"blasbenito/collinear"</span>, </span>
+<span>  ref <span class="op">=</span> <span class="st">"archive_v1.1.1"</span></span>
+<span>  <span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
-<h2 id="multicollinearity-management-with-the-collinear-package">Multicollinearity management with the <code>collinear</code> package.<a class="anchor" aria-label="anchor" href="#multicollinearity-management-with-the-collinear-package"></a>
+<h2 id="getting-started">Getting Started<a class="anchor" aria-label="anchor" href="#getting-started"></a>
 </h2>
-<p>This section shows the basic usage of the package and offers a brief explanation on the methods used within.</p>
-<div class="section level3">
-<h3 id="required-libraries-and-example-data">Required libraries and example data<a class="anchor" aria-label="anchor" href="#required-libraries-and-example-data"></a>
-</h3>
-<p>The libraries below are required to run the examples in this section.</p>
+<p>The function <code><a href="reference/collinear.html">collinear()</a></code> provides all tools required for a fully fledged multicollinearity filtering workflow. The code below shows a small example workflow.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://blasbenito.github.io/collinear/">collinear</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/jabiru/tictoc" class="external-link">tictoc</a></span><span class="op">)</span></span></code></pre></div>
-<p>The package <code>collinear</code> is shipped with a data frame named <code>vi</code>, with 30.000 rows and 67 columns with a mixture of numeric and categorical variables.</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html" class="external-link">glimpse</a></span><span class="op">(</span><span class="va">vi</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Rows: 30,000</span></span>
-<span><span class="co">#&gt; Columns: 68</span></span>
-<span><span class="co">#&gt; $ longitude                  &lt;dbl&gt; -114.254306, 114.845693, -122.145972, 108.3…</span></span>
-<span><span class="co">#&gt; $ latitude                   &lt;dbl&gt; 45.0540272, 26.2706940, 56.3790272, 29.9456…</span></span>
-<span><span class="co">#&gt; $ vi_mean                    &lt;dbl&gt; 0.38, 0.53, 0.45, 0.69, 0.42, 0.68, 0.70, 0…</span></span>
-<span><span class="co">#&gt; $ vi_max                     &lt;dbl&gt; 0.57, 0.67, 0.65, 0.85, 0.64, 0.78, 0.77, 0…</span></span>
-<span><span class="co">#&gt; $ vi_min                     &lt;dbl&gt; 0.12, 0.41, 0.25, 0.50, 0.25, 0.48, 0.60, 0…</span></span>
-<span><span class="co">#&gt; $ vi_range                   &lt;dbl&gt; 0.45, 0.26, 0.40, 0.34, 0.39, 0.31, 0.17, 0…</span></span>
-<span><span class="co">#&gt; $ vi_binary                  &lt;dbl&gt; 0, 1, 0, 1, 0, 1, 1, 0, 1, 0, 0, 1, 0, 0, 0…</span></span>
-<span><span class="co">#&gt; $ koppen_zone                &lt;chr&gt; "BSk", "Cfa", "Dfc", "Cfb", "Aw", "Cfa", "A…</span></span>
-<span><span class="co">#&gt; $ koppen_group               &lt;chr&gt; "Arid", "Temperate", "Cold", "Temperate", "…</span></span>
-<span><span class="co">#&gt; $ koppen_description         &lt;chr&gt; "steppe, cold", "no dry season, hot summer"…</span></span>
-<span><span class="co">#&gt; $ soil_type                  &lt;chr&gt; "Cambisols", "Acrisols", "Luvisols", "Aliso…</span></span>
-<span><span class="co">#&gt; $ topo_slope                 &lt;int&gt; 6, 2, 0, 10, 0, 10, 6, 0, 2, 0, 0, 1, 0, 1,…</span></span>
-<span><span class="co">#&gt; $ topo_diversity             &lt;int&gt; 29, 24, 21, 25, 19, 30, 26, 20, 26, 22, 25,…</span></span>
-<span><span class="co">#&gt; $ topo_elevation             &lt;int&gt; 1821, 143, 765, 1474, 378, 485, 604, 1159, …</span></span>
-<span><span class="co">#&gt; $ swi_mean                   &lt;dbl&gt; 27.5, 56.1, 41.4, 59.3, 37.4, 56.3, 52.3, 2…</span></span>
-<span><span class="co">#&gt; $ swi_max                    &lt;dbl&gt; 62.9, 74.4, 81.9, 81.1, 83.2, 73.8, 55.8, 3…</span></span>
-<span><span class="co">#&gt; $ swi_min                    &lt;dbl&gt; 24.5, 33.3, 42.2, 31.3, 8.3, 28.8, 25.3, 11…</span></span>
-<span><span class="co">#&gt; $ swi_range                  &lt;dbl&gt; 38.4, 41.2, 39.7, 49.8, 74.9, 45.0, 30.5, 2…</span></span>
-<span><span class="co">#&gt; $ soil_temperature_mean      &lt;dbl&gt; 4.8, 19.9, 1.2, 13.0, 28.2, 18.1, 21.5, 23.…</span></span>
-<span><span class="co">#&gt; $ soil_temperature_max       &lt;dbl&gt; 29.9, 32.6, 20.4, 24.6, 41.6, 29.1, 26.4, 4…</span></span>
-<span><span class="co">#&gt; $ soil_temperature_min       &lt;dbl&gt; -12.4, 3.9, -16.0, -0.4, 16.8, 4.1, 17.3, 5…</span></span>
-<span><span class="co">#&gt; $ soil_temperature_range     &lt;dbl&gt; 42.3, 28.8, 36.4, 25.0, 24.8, 24.9, 9.1, 38…</span></span>
-<span><span class="co">#&gt; $ soil_sand                  &lt;int&gt; 41, 39, 27, 29, 48, 33, 30, 78, 23, 64, 54,…</span></span>
-<span><span class="co">#&gt; $ soil_clay                  &lt;int&gt; 20, 24, 28, 31, 27, 29, 40, 15, 26, 22, 23,…</span></span>
-<span><span class="co">#&gt; $ soil_silt                  &lt;int&gt; 38, 35, 43, 38, 23, 36, 29, 6, 49, 13, 22, …</span></span>
-<span><span class="co">#&gt; $ soil_ph                    &lt;dbl&gt; 6.5, 5.9, 5.6, 5.5, 6.5, 5.8, 5.2, 7.1, 7.3…</span></span>
-<span><span class="co">#&gt; $ soil_soc                   &lt;dbl&gt; 43.1, 14.6, 36.4, 34.9, 8.1, 20.8, 44.5, 4.…</span></span>
-<span><span class="co">#&gt; $ soil_nitrogen              &lt;dbl&gt; 2.8, 1.3, 2.9, 3.6, 1.2, 1.9, 2.8, 0.6, 3.1…</span></span>
-<span><span class="co">#&gt; $ solar_rad_mean             &lt;dbl&gt; 17.634, 19.198, 13.257, 14.163, 24.512, 17.…</span></span>
-<span><span class="co">#&gt; $ solar_rad_max              &lt;dbl&gt; 31.317, 24.498, 25.283, 17.237, 28.038, 22.…</span></span>
-<span><span class="co">#&gt; $ solar_rad_min              &lt;dbl&gt; 5.209, 13.311, 1.587, 9.642, 19.102, 12.196…</span></span>
-<span><span class="co">#&gt; $ solar_rad_range            &lt;dbl&gt; 26.108, 11.187, 23.696, 7.595, 8.936, 10.20…</span></span>
-<span><span class="co">#&gt; $ growing_season_length      &lt;dbl&gt; 139, 365, 164, 333, 228, 365, 365, 60, 365,…</span></span>
-<span><span class="co">#&gt; $ growing_season_temperature &lt;dbl&gt; 12.65, 19.35, 11.55, 12.45, 26.45, 17.75, 2…</span></span>
-<span><span class="co">#&gt; $ growing_season_rainfall    &lt;dbl&gt; 224.5, 1493.4, 345.4, 1765.5, 984.4, 1860.5…</span></span>
-<span><span class="co">#&gt; $ growing_degree_days        &lt;dbl&gt; 2140.5, 7080.9, 2053.2, 4162.9, 10036.7, 64…</span></span>
-<span><span class="co">#&gt; $ temperature_mean           &lt;dbl&gt; 3.65, 19.35, 1.45, 11.35, 27.55, 17.65, 22.…</span></span>
-<span><span class="co">#&gt; $ temperature_max            &lt;dbl&gt; 24.65, 33.35, 21.15, 23.75, 38.35, 30.55, 2…</span></span>
-<span><span class="co">#&gt; $ temperature_min            &lt;dbl&gt; -14.05, 3.05, -18.25, -3.55, 19.15, 2.45, 1…</span></span>
-<span><span class="co">#&gt; $ temperature_range          &lt;dbl&gt; 38.7, 30.3, 39.4, 27.3, 19.2, 28.1, 7.0, 29…</span></span>
-<span><span class="co">#&gt; $ temperature_seasonality    &lt;dbl&gt; 882.6, 786.6, 1070.9, 724.7, 219.3, 747.2, …</span></span>
-<span><span class="co">#&gt; $ rainfall_mean              &lt;int&gt; 446, 1493, 560, 1794, 990, 1860, 3150, 356,…</span></span>
-<span><span class="co">#&gt; $ rainfall_min               &lt;int&gt; 25, 37, 24, 29, 0, 60, 122, 1, 10, 12, 0, 0…</span></span>
-<span><span class="co">#&gt; $ rainfall_max               &lt;int&gt; 62, 209, 87, 293, 226, 275, 425, 62, 256, 3…</span></span>
-<span><span class="co">#&gt; $ rainfall_range             &lt;int&gt; 37, 172, 63, 264, 226, 215, 303, 61, 245, 2…</span></span>
-<span><span class="co">#&gt; $ evapotranspiration_mean    &lt;dbl&gt; 78.32, 105.88, 50.03, 64.65, 156.60, 108.50…</span></span>
-<span><span class="co">#&gt; $ evapotranspiration_max     &lt;dbl&gt; 164.70, 190.86, 117.53, 115.79, 187.71, 191…</span></span>
-<span><span class="co">#&gt; $ evapotranspiration_min     &lt;dbl&gt; 13.67, 50.44, 3.53, 28.01, 128.59, 51.39, 8…</span></span>
-<span><span class="co">#&gt; $ evapotranspiration_range   &lt;dbl&gt; 151.03, 140.42, 113.99, 87.79, 59.13, 139.9…</span></span>
-<span><span class="co">#&gt; $ cloud_cover_mean           &lt;int&gt; 31, 48, 42, 64, 38, 52, 60, 13, 53, 20, 11,…</span></span>
-<span><span class="co">#&gt; $ cloud_cover_max            &lt;int&gt; 39, 61, 49, 71, 58, 67, 77, 18, 60, 27, 23,…</span></span>
-<span><span class="co">#&gt; $ cloud_cover_min            &lt;int&gt; 16, 34, 33, 54, 19, 39, 45, 6, 45, 14, 2, 1…</span></span>
-<span><span class="co">#&gt; $ cloud_cover_range          &lt;int&gt; 23, 27, 15, 17, 38, 27, 32, 11, 15, 12, 21,…</span></span>
-<span><span class="co">#&gt; $ aridity_index              &lt;dbl&gt; 0.54, 1.27, 0.90, 2.08, 0.55, 1.67, 2.88, 0…</span></span>
-<span><span class="co">#&gt; $ humidity_mean              &lt;dbl&gt; 55.56, 62.14, 59.87, 69.32, 51.60, 62.76, 7…</span></span>
-<span><span class="co">#&gt; $ humidity_max               &lt;dbl&gt; 63.98, 65.00, 68.19, 71.90, 67.07, 65.68, 7…</span></span>
-<span><span class="co">#&gt; $ humidity_min               &lt;dbl&gt; 48.41, 58.97, 53.75, 67.21, 33.89, 59.92, 7…</span></span>
-<span><span class="co">#&gt; $ humidity_range             &lt;dbl&gt; 15.57, 6.03, 14.44, 4.69, 33.18, 5.76, 3.99…</span></span>
-<span><span class="co">#&gt; $ biogeo_ecoregion           &lt;chr&gt; "South Central Rockies forests", "Jian Nan …</span></span>
-<span><span class="co">#&gt; $ biogeo_biome               &lt;chr&gt; "Temperate Conifer Forests", "Tropical &amp; Su…</span></span>
-<span><span class="co">#&gt; $ biogeo_realm               &lt;chr&gt; "Nearctic", "Indomalayan", "Nearctic", "Pal…</span></span>
-<span><span class="co">#&gt; $ country_name               &lt;chr&gt; "United States of America", "China", "Canad…</span></span>
-<span><span class="co">#&gt; $ country_population         &lt;dbl&gt; 313973000, 1338612970, 33487208, 1338612970…</span></span>
-<span><span class="co">#&gt; $ country_gdp                &lt;dbl&gt; 15094000, 7973000, 1300000, 7973000, 15860,…</span></span>
-<span><span class="co">#&gt; $ country_income             &lt;chr&gt; "1. High income: OECD", "3. Upper middle in…</span></span>
-<span><span class="co">#&gt; $ continent                  &lt;chr&gt; "North America", "Asia", "North America", "…</span></span>
-<span><span class="co">#&gt; $ region                     &lt;chr&gt; "Americas", "Asia", "Americas", "Asia", "Af…</span></span>
-<span><span class="co">#&gt; $ subregion                  &lt;chr&gt; "Northern America", "Eastern Asia", "Northe…</span></span></code></pre></div>
-<p>The response variables are “vi_mean”, “vi_max”, “vi_min”, and “vi_range”, with statistics of a vegetation index named NDVI. The predictors are stored in the character vector <code>vi_predictors</code>.</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">vi_predictors</span></span>
-<span><span class="co">#&gt;  [1] "koppen_zone"                "koppen_group"              </span></span>
-<span><span class="co">#&gt;  [3] "koppen_description"         "soil_type"                 </span></span>
-<span><span class="co">#&gt;  [5] "topo_slope"                 "topo_diversity"            </span></span>
-<span><span class="co">#&gt;  [7] "topo_elevation"             "swi_mean"                  </span></span>
-<span><span class="co">#&gt;  [9] "swi_max"                    "swi_min"                   </span></span>
-<span><span class="co">#&gt; [11] "swi_range"                  "soil_temperature_mean"     </span></span>
-<span><span class="co">#&gt; [13] "soil_temperature_max"       "soil_temperature_min"      </span></span>
-<span><span class="co">#&gt; [15] "soil_temperature_range"     "soil_sand"                 </span></span>
-<span><span class="co">#&gt; [17] "soil_clay"                  "soil_silt"                 </span></span>
-<span><span class="co">#&gt; [19] "soil_ph"                    "soil_soc"                  </span></span>
-<span><span class="co">#&gt; [21] "soil_nitrogen"              "solar_rad_mean"            </span></span>
-<span><span class="co">#&gt; [23] "solar_rad_max"              "solar_rad_min"             </span></span>
-<span><span class="co">#&gt; [25] "solar_rad_range"            "growing_season_length"     </span></span>
-<span><span class="co">#&gt; [27] "growing_season_temperature" "growing_season_rainfall"   </span></span>
-<span><span class="co">#&gt; [29] "growing_degree_days"        "temperature_mean"          </span></span>
-<span><span class="co">#&gt; [31] "temperature_max"            "temperature_min"           </span></span>
-<span><span class="co">#&gt; [33] "temperature_range"          "temperature_seasonality"   </span></span>
-<span><span class="co">#&gt; [35] "rainfall_mean"              "rainfall_min"              </span></span>
-<span><span class="co">#&gt; [37] "rainfall_max"               "rainfall_range"            </span></span>
-<span><span class="co">#&gt; [39] "evapotranspiration_mean"    "evapotranspiration_max"    </span></span>
-<span><span class="co">#&gt; [41] "evapotranspiration_min"     "evapotranspiration_range"  </span></span>
-<span><span class="co">#&gt; [43] "cloud_cover_mean"           "cloud_cover_max"           </span></span>
-<span><span class="co">#&gt; [45] "cloud_cover_min"            "cloud_cover_range"         </span></span>
-<span><span class="co">#&gt; [47] "aridity_index"              "humidity_mean"             </span></span>
-<span><span class="co">#&gt; [49] "humidity_max"               "humidity_min"              </span></span>
-<span><span class="co">#&gt; [51] "humidity_range"             "biogeo_ecoregion"          </span></span>
-<span><span class="co">#&gt; [53] "biogeo_biome"               "biogeo_realm"              </span></span>
-<span><span class="co">#&gt; [55] "country_name"               "country_population"        </span></span>
-<span><span class="co">#&gt; [57] "country_gdp"                "country_income"            </span></span>
-<span><span class="co">#&gt; [59] "continent"                  "region"                    </span></span>
-<span><span class="co">#&gt; [61] "subregion"</span></span></code></pre></div>
-</div>
-<div class="section level3">
-<h3 id="collinear">
-<code>collinear()</code><a class="anchor" aria-label="anchor" href="#collinear"></a>
-</h3>
-<p>The <code><a href="reference/collinear.html">collinear()</a></code> function applies a multicollinearity filtering to numeric and categorical variables via pairwise correlations (with <code><a href="reference/cor_select.html">cor_select()</a></code>) and variance inflation factors (with <code><a href="reference/vif_select.html">vif_select()</a></code>). Categorical variables are converted into numeric via target-encoding (with <code><a href="reference/target_encoding_lab.html">target_encoding_lab()</a></code>) using a <code>response</code> variable as reference. If the response variable is not provided, categorical variables are ignored.</p>
-<div class="section level4">
-<h4 id="input-arguments">Input arguments<a class="anchor" aria-label="anchor" href="#input-arguments"></a>
-</h4>
-<p>The function takes these inputs:</p>
-<ul>
-<li>
-<code>df</code>: a data frame with predictors, and preferably, a response (more about this later).</li>
-<li>
-<code>response</code>: the name of the response variable, only relevant <strong>and highly recommended</strong> if there are categorical variables within the predictors.</li>
-<li>
-<code>predictors</code>: names of predictors involved in the multicollinearity analysis.</li>
-<li>
-<code>preference_order</code>: names of the predictors in the user’s order of preference. Does not need to name all predictors in <code>predictors</code>!</li>
-<li>
-<code>cor_method</code>: usually “pearson”, but also “spearman” is accepted.</li>
-<li>
-<code>max_cor</code>: maximum correlation allowed between two predictors.</li>
-<li>
-<code>max_vif</code>: maximum VIF allowed in a predictor.</li>
-<li>
-<code>encoding_method</code>: method used to convert categorical variables into numeric. Only relevant when a <code>response</code> is provided. By default, each group of the categorical variable is encoded with the mean of the <code>response</code> across the group.</li>
-</ul>
-<p>The code below shows a quick example. Notice that the argument <code>preference_order</code> was left as NULL, but will be explained later.</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">selected_predictors</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/collinear.html">collinear</a></span><span class="op">(</span></span>
-<span>  df <span class="op">=</span> <span class="va">vi</span>,</span>
-<span>  response <span class="op">=</span> <span class="st">"vi_mean"</span>,</span>
-<span>  predictors <span class="op">=</span> <span class="va">vi_predictors</span>,</span>
-<span>  preference_order <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  max_cor <span class="op">=</span> <span class="fl">0.75</span>,</span>
-<span>  max_vif <span class="op">=</span> <span class="fl">5</span>,</span>
-<span>  encoding_method <span class="op">=</span> <span class="st">"mean"</span></span>
-<span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">selected_predictors</span></span>
-<span><span class="co">#&gt;  [1] "country_income"             "topo_diversity"            </span></span>
-<span><span class="co">#&gt;  [3] "topo_slope"                 "country_population"        </span></span>
-<span><span class="co">#&gt;  [5] "country_gdp"                "humidity_range"            </span></span>
-<span><span class="co">#&gt;  [7] "soil_soc"                   "region"                    </span></span>
-<span><span class="co">#&gt;  [9] "soil_clay"                  "soil_type"                 </span></span>
-<span><span class="co">#&gt; [11] "subregion"                  "biogeo_realm"              </span></span>
-<span><span class="co">#&gt; [13] "soil_sand"                  "topo_elevation"            </span></span>
-<span><span class="co">#&gt; [15] "soil_nitrogen"              "swi_range"                 </span></span>
-<span><span class="co">#&gt; [17] "koppen_group"               "swi_min"                   </span></span>
-<span><span class="co">#&gt; [19] "solar_rad_max"              "rainfall_min"              </span></span>
-<span><span class="co">#&gt; [21] "growing_season_temperature" "rainfall_range"            </span></span>
-<span><span class="co">#&gt; [23] "solar_rad_min"              "cloud_cover_range"</span></span></code></pre></div>
-<p>The function has returned a list of predictors that should have a correlation lower than 0.75 with each other, and a VIF lower than 5. Let’s see if that’s true.</p>
-<p>The function <code><a href="reference/cor_df.html">cor_df()</a></code> returns a data frame with pairwise correlations, arranged by the absolute value of the correlation.</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">selected_predictors_cor</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/cor_df.html">cor_df</a></span><span class="op">(</span></span>
-<span>  df <span class="op">=</span> <span class="va">vi</span>,</span>
-<span>  response <span class="op">=</span> <span class="st">"vi_mean"</span>,</span>
-<span>  predictors <span class="op">=</span> <span class="va">selected_predictors</span></span>
-<span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">selected_predictors_cor</span><span class="op">)</span></span>
-<span><span class="co">#&gt; # A tibble: 6 × 3</span></span>
-<span><span class="co">#&gt;   x             y                          correlation</span></span>
-<span><span class="co">#&gt;   &lt;chr&gt;         &lt;chr&gt;                            &lt;dbl&gt;</span></span>
-<span><span class="co">#&gt; 1 solar_rad_min growing_season_temperature       0.744</span></span>
-<span><span class="co">#&gt; 2 koppen_group  soil_type                        0.732</span></span>
-<span><span class="co">#&gt; 3 soil_nitrogen soil_soc                         0.729</span></span>
-<span><span class="co">#&gt; 4 swi_min       soil_nitrogen                    0.673</span></span>
-<span><span class="co">#&gt; 5 soil_sand     soil_clay                       -0.666</span></span>
-<span><span class="co">#&gt; 6 koppen_group  swi_range                        0.659</span></span></code></pre></div>
-<p>The data frame above shows that the maximum correlation between two of the selected predictors is below 0.75, so here <code><a href="reference/collinear.html">collinear()</a></code> worked as expected.</p>
-<p>The function <code><a href="reference/vif_df.html">vif_df()</a></code> returns a data frame with the VIF scores of all predictors.</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">selected_predictors_vif</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/vif_df.html">vif_df</a></span><span class="op">(</span></span>
-<span>  df <span class="op">=</span> <span class="va">vi</span>,</span>
-<span>  response <span class="op">=</span> <span class="st">"vi_mean"</span>,</span>
-<span>  predictors <span class="op">=</span> <span class="va">selected_predictors</span></span>
-<span><span class="op">)</span></span>
-<span><span class="va">selected_predictors_vif</span></span>
-<span><span class="co">#&gt;                      variable   vif</span></span>
-<span><span class="co">#&gt; 1              country_income 1.215</span></span>
-<span><span class="co">#&gt; 2              topo_diversity 1.662</span></span>
-<span><span class="co">#&gt; 3                  topo_slope 1.929</span></span>
-<span><span class="co">#&gt; 4              humidity_range 2.043</span></span>
-<span><span class="co">#&gt; 5              topo_elevation 2.101</span></span>
-<span><span class="co">#&gt; 6                 country_gdp 2.158</span></span>
-<span><span class="co">#&gt; 7          country_population 2.171</span></span>
-<span><span class="co">#&gt; 8                rainfall_min 2.269</span></span>
-<span><span class="co">#&gt; 9           cloud_cover_range 2.418</span></span>
-<span><span class="co">#&gt; 10                   soil_soc 2.744</span></span>
-<span><span class="co">#&gt; 11                     region 2.849</span></span>
-<span><span class="co">#&gt; 12             rainfall_range 2.876</span></span>
-<span><span class="co">#&gt; 13                  subregion 2.900</span></span>
-<span><span class="co">#&gt; 14                  soil_clay 2.966</span></span>
-<span><span class="co">#&gt; 15                  soil_type 2.991</span></span>
-<span><span class="co">#&gt; 16              solar_rad_max 3.145</span></span>
-<span><span class="co">#&gt; 17               biogeo_realm 3.150</span></span>
-<span><span class="co">#&gt; 18                  soil_sand 3.175</span></span>
-<span><span class="co">#&gt; 19              soil_nitrogen 3.376</span></span>
-<span><span class="co">#&gt; 20                    swi_min 3.450</span></span>
-<span><span class="co">#&gt; 21                  swi_range 3.781</span></span>
-<span><span class="co">#&gt; 22               koppen_group 4.151</span></span>
-<span><span class="co">#&gt; 23 growing_season_temperature 4.314</span></span>
-<span><span class="co">#&gt; 24              solar_rad_min 4.432</span></span></code></pre></div>
-<p>The output shows that the maximum VIF is 4.2, so here <code><a href="reference/collinear.html">collinear()</a></code> did its work as expected.</p>
-</div>
-<div class="section level4">
-<h4 id="arguments-max_cor-and-max_vif">Arguments <code>max_cor</code> and <code>max_vif</code>
-<a class="anchor" aria-label="anchor" href="#arguments-max_cor-and-max_vif"></a>
-</h4>
-<p>The arguments <code>max_cor</code> and <code>max_vif</code> control the intensity of the multicollinearity filtering.</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co">#restrictive setup</span></span>
-<span><span class="va">selected_predictors_restrictive</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/collinear.html">collinear</a></span><span class="op">(</span></span>
-<span>  df <span class="op">=</span> <span class="va">vi</span>,</span>
-<span>  response <span class="op">=</span> <span class="st">"vi_mean"</span>,</span>
-<span>  predictors <span class="op">=</span> <span class="va">vi_predictors</span>,</span>
-<span>  max_cor <span class="op">=</span> <span class="fl">0.5</span>,</span>
-<span>  max_vif <span class="op">=</span> <span class="fl">2.5</span></span>
-<span><span class="op">)</span></span>
-<span></span>
-<span><span class="co">#permissive setup</span></span>
-<span><span class="va">selected_predictors_permissive</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/collinear.html">collinear</a></span><span class="op">(</span></span>
-<span>  df <span class="op">=</span> <span class="va">vi</span>,</span>
-<span>  response <span class="op">=</span> <span class="st">"vi_mean"</span>,</span>
-<span>  predictors <span class="op">=</span> <span class="va">vi_predictors</span>,</span>
-<span>  max_cor <span class="op">=</span> <span class="fl">0.9</span>,</span>
-<span>  max_vif <span class="op">=</span> <span class="fl">10</span></span>
-<span><span class="op">)</span></span></code></pre></div>
-<p>These are the variables selected under a restrictive setup:</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">selected_predictors_restrictive</span></span>
-<span><span class="co">#&gt;  [1] "country_income"             "soil_clay"                 </span></span>
-<span><span class="co">#&gt;  [3] "country_population"         "topo_slope"                </span></span>
-<span><span class="co">#&gt;  [5] "humidity_range"             "topo_elevation"            </span></span>
-<span><span class="co">#&gt;  [7] "soil_soc"                   "soil_silt"                 </span></span>
-<span><span class="co">#&gt;  [9] "cloud_cover_range"          "region"                    </span></span>
-<span><span class="co">#&gt; [11] "solar_rad_max"              "growing_season_temperature"</span></span>
-<span><span class="co">#&gt; [13] "biogeo_realm"</span></span></code></pre></div>
-<p>These are the variables selected under a more permissive setup:</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">selected_predictors_permissive</span></span>
-<span><span class="co">#&gt;  [1] "country_income"             "topo_diversity"            </span></span>
-<span><span class="co">#&gt;  [3] "topo_slope"                 "country_population"        </span></span>
-<span><span class="co">#&gt;  [5] "country_gdp"                "soil_soc"                  </span></span>
-<span><span class="co">#&gt;  [7] "region"                     "soil_type"                 </span></span>
-<span><span class="co">#&gt;  [9] "soil_nitrogen"              "subregion"                 </span></span>
-<span><span class="co">#&gt; [11] "biogeo_realm"               "topo_elevation"            </span></span>
-<span><span class="co">#&gt; [13] "koppen_group"               "biogeo_biome"              </span></span>
-<span><span class="co">#&gt; [15] "country_name"               "soil_ph"                   </span></span>
-<span><span class="co">#&gt; [17] "aridity_index"              "growing_season_temperature"</span></span>
-<span><span class="co">#&gt; [19] "rainfall_min"               "rainfall_range"            </span></span>
-<span><span class="co">#&gt; [21] "swi_mean"                   "soil_temperature_max"      </span></span>
-<span><span class="co">#&gt; [23] "solar_rad_mean"             "temperature_seasonality"   </span></span>
-<span><span class="co">#&gt; [25] "soil_clay"                  "soil_silt"                 </span></span>
-<span><span class="co">#&gt; [27] "cloud_cover_min"            "swi_range"                 </span></span>
-<span><span class="co">#&gt; [29] "humidity_range"</span></span></code></pre></div>
-<p>As expected, the restrictive setup resulted in a smaller set of selected predictors. There are no hard rules for <code>max_cor</code> and <code>max_vif</code>, and their selection will depend on the objective of the analysis and the nature of the predictors.</p>
-</div>
-<div class="section level4">
-<h4 id="the-response-argument">The <code>response</code> argument<a class="anchor" aria-label="anchor" href="#the-response-argument"></a>
-</h4>
-<p>The response argument is used to encode categorical variables as numeric. When omitted, the <code><a href="reference/collinear.html">collinear()</a></code> function ignores categorical variables. However, the function <code><a href="reference/cor_select.html">cor_select()</a></code> can help when there is not a suitable <code>response</code> variable in a data frame. This option is discussed at the end of this section.</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">selected_predictors_response</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/collinear.html">collinear</a></span><span class="op">(</span></span>
-<span>  df <span class="op">=</span> <span class="va">vi</span>,</span>
-<span>  response <span class="op">=</span> <span class="st">"vi_mean"</span>,</span>
-<span>  predictors <span class="op">=</span> <span class="va">vi_predictors</span></span>
-<span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">selected_predictors_no_response</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/collinear.html">collinear</a></span><span class="op">(</span></span>
-<span>  df <span class="op">=</span> <span class="va">vi</span>,</span>
-<span>  predictors <span class="op">=</span> <span class="va">vi_predictors</span></span>
-<span><span class="op">)</span></span></code></pre></div>
-<p>When the argument <code>response</code> is used, the output may contain categorical predictors (tagged with <code>&lt;chr&gt;</code>, from “character” below).</p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html" class="external-link">glimpse</a></span><span class="op">(</span><span class="va">vi</span><span class="op">[</span>, <span class="va">selected_predictors_response</span><span class="op">]</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Rows: 30,000</span></span>
-<span><span class="co">#&gt; Columns: 24</span></span>
-<span><span class="co">#&gt; $ country_income             &lt;chr&gt; "1. High income: OECD", "3. Upper middle in…</span></span>
-<span><span class="co">#&gt; $ topo_diversity             &lt;int&gt; 29, 24, 21, 25, 19, 30, 26, 20, 26, 22, 25,…</span></span>
-<span><span class="co">#&gt; $ topo_slope                 &lt;int&gt; 6, 2, 0, 10, 0, 10, 6, 0, 2, 0, 0, 1, 0, 1,…</span></span>
-<span><span class="co">#&gt; $ country_population         &lt;dbl&gt; 313973000, 1338612970, 33487208, 1338612970…</span></span>
-<span><span class="co">#&gt; $ country_gdp                &lt;dbl&gt; 15094000, 7973000, 1300000, 7973000, 15860,…</span></span>
-<span><span class="co">#&gt; $ humidity_range             &lt;dbl&gt; 15.57, 6.03, 14.44, 4.69, 33.18, 5.76, 3.99…</span></span>
-<span><span class="co">#&gt; $ soil_soc                   &lt;dbl&gt; 43.1, 14.6, 36.4, 34.9, 8.1, 20.8, 44.5, 4.…</span></span>
-<span><span class="co">#&gt; $ region                     &lt;chr&gt; "Americas", "Asia", "Americas", "Asia", "Af…</span></span>
-<span><span class="co">#&gt; $ soil_clay                  &lt;int&gt; 20, 24, 28, 31, 27, 29, 40, 15, 26, 22, 23,…</span></span>
-<span><span class="co">#&gt; $ soil_type                  &lt;chr&gt; "Cambisols", "Acrisols", "Luvisols", "Aliso…</span></span>
-<span><span class="co">#&gt; $ subregion                  &lt;chr&gt; "Northern America", "Eastern Asia", "Northe…</span></span>
-<span><span class="co">#&gt; $ biogeo_realm               &lt;chr&gt; "Nearctic", "Indomalayan", "Nearctic", "Pal…</span></span>
-<span><span class="co">#&gt; $ soil_sand                  &lt;int&gt; 41, 39, 27, 29, 48, 33, 30, 78, 23, 64, 54,…</span></span>
-<span><span class="co">#&gt; $ topo_elevation             &lt;int&gt; 1821, 143, 765, 1474, 378, 485, 604, 1159, …</span></span>
-<span><span class="co">#&gt; $ soil_nitrogen              &lt;dbl&gt; 2.8, 1.3, 2.9, 3.6, 1.2, 1.9, 2.8, 0.6, 3.1…</span></span>
-<span><span class="co">#&gt; $ swi_range                  &lt;dbl&gt; 38.4, 41.2, 39.7, 49.8, 74.9, 45.0, 30.5, 2…</span></span>
-<span><span class="co">#&gt; $ koppen_group               &lt;chr&gt; "Arid", "Temperate", "Cold", "Temperate", "…</span></span>
-<span><span class="co">#&gt; $ swi_min                    &lt;dbl&gt; 24.5, 33.3, 42.2, 31.3, 8.3, 28.8, 25.3, 11…</span></span>
-<span><span class="co">#&gt; $ solar_rad_max              &lt;dbl&gt; 31.317, 24.498, 25.283, 17.237, 28.038, 22.…</span></span>
-<span><span class="co">#&gt; $ rainfall_min               &lt;int&gt; 25, 37, 24, 29, 0, 60, 122, 1, 10, 12, 0, 0…</span></span>
-<span><span class="co">#&gt; $ growing_season_temperature &lt;dbl&gt; 12.65, 19.35, 11.55, 12.45, 26.45, 17.75, 2…</span></span>
-<span><span class="co">#&gt; $ rainfall_range             &lt;int&gt; 37, 172, 63, 264, 226, 215, 303, 61, 245, 2…</span></span>
-<span><span class="co">#&gt; $ solar_rad_min              &lt;dbl&gt; 5.209, 13.311, 1.587, 9.642, 19.102, 12.196…</span></span>
-<span><span class="co">#&gt; $ cloud_cover_range          &lt;int&gt; 23, 27, 15, 17, 38, 27, 32, 11, 15, 12, 21,…</span></span></code></pre></div>
-<p>However, when the argument <code>response</code> is ignored, all categorical predictors are ignored.</p>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html" class="external-link">glimpse</a></span><span class="op">(</span><span class="va">vi</span><span class="op">[</span>, <span class="va">selected_predictors_no_response</span><span class="op">]</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Rows: 30,000</span></span>
-<span><span class="co">#&gt; Columns: 18</span></span>
-<span><span class="co">#&gt; $ topo_diversity             &lt;int&gt; 29, 24, 21, 25, 19, 30, 26, 20, 26, 22, 25,…</span></span>
-<span><span class="co">#&gt; $ country_gdp                &lt;dbl&gt; 15094000, 7973000, 1300000, 7973000, 15860,…</span></span>
-<span><span class="co">#&gt; $ country_population         &lt;dbl&gt; 313973000, 1338612970, 33487208, 1338612970…</span></span>
-<span><span class="co">#&gt; $ topo_slope                 &lt;int&gt; 6, 2, 0, 10, 0, 10, 6, 0, 2, 0, 0, 1, 0, 1,…</span></span>
-<span><span class="co">#&gt; $ soil_soc                   &lt;dbl&gt; 43.1, 14.6, 36.4, 34.9, 8.1, 20.8, 44.5, 4.…</span></span>
-<span><span class="co">#&gt; $ soil_clay                  &lt;int&gt; 20, 24, 28, 31, 27, 29, 40, 15, 26, 22, 23,…</span></span>
-<span><span class="co">#&gt; $ soil_sand                  &lt;int&gt; 41, 39, 27, 29, 48, 33, 30, 78, 23, 64, 54,…</span></span>
-<span><span class="co">#&gt; $ soil_nitrogen              &lt;dbl&gt; 2.8, 1.3, 2.9, 3.6, 1.2, 1.9, 2.8, 0.6, 3.1…</span></span>
-<span><span class="co">#&gt; $ humidity_range             &lt;dbl&gt; 15.57, 6.03, 14.44, 4.69, 33.18, 5.76, 3.99…</span></span>
-<span><span class="co">#&gt; $ topo_elevation             &lt;int&gt; 1821, 143, 765, 1474, 378, 485, 604, 1159, …</span></span>
-<span><span class="co">#&gt; $ cloud_cover_range          &lt;int&gt; 23, 27, 15, 17, 38, 27, 32, 11, 15, 12, 21,…</span></span>
-<span><span class="co">#&gt; $ solar_rad_max              &lt;dbl&gt; 31.317, 24.498, 25.283, 17.237, 28.038, 22.…</span></span>
-<span><span class="co">#&gt; $ rainfall_min               &lt;int&gt; 25, 37, 24, 29, 0, 60, 122, 1, 10, 12, 0, 0…</span></span>
-<span><span class="co">#&gt; $ growing_season_temperature &lt;dbl&gt; 12.65, 19.35, 11.55, 12.45, 26.45, 17.75, 2…</span></span>
-<span><span class="co">#&gt; $ rainfall_range             &lt;int&gt; 37, 172, 63, 264, 226, 215, 303, 61, 245, 2…</span></span>
-<span><span class="co">#&gt; $ swi_range                  &lt;dbl&gt; 38.4, 41.2, 39.7, 49.8, 74.9, 45.0, 30.5, 2…</span></span>
-<span><span class="co">#&gt; $ solar_rad_min              &lt;dbl&gt; 5.209, 13.311, 1.587, 9.642, 19.102, 12.196…</span></span>
-<span><span class="co">#&gt; $ swi_min                    &lt;dbl&gt; 24.5, 33.3, 42.2, 31.3, 8.3, 28.8, 25.3, 11…</span></span></code></pre></div>
-<p>If there are categorical variables in a data frame, but there is no suitable <code>response</code> variable, then the function <code><a href="reference/cor_select.html">cor_select()</a></code> can handle the multicollinearity management via pairwise correlations, but at a MUCH higher computational cost, and with different results, as shown below.</p>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">tictoc</span><span class="fu">::</span><span class="fu">tic</span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="va">selected_predictors_response</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/cor_select.html">cor_select</a></span><span class="op">(</span></span>
-<span>  df <span class="op">=</span> <span class="va">vi</span>,</span>
-<span>  response <span class="op">=</span> <span class="st">"vi_mean"</span>,</span>
-<span>  predictors <span class="op">=</span> <span class="va">vi_predictors</span></span>
-<span><span class="op">)</span></span>
-<span><span class="fu">tictoc</span><span class="fu">::</span><span class="fu">toc</span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; 2.144 sec elapsed</span></span>
-<span></span>
-<span><span class="fu">tictoc</span><span class="fu">::</span><span class="fu">tic</span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="va">selected_predictors_no_response</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/cor_select.html">cor_select</a></span><span class="op">(</span></span>
-<span>  df <span class="op">=</span> <span class="va">vi</span>,</span>
-<span>  predictors <span class="op">=</span> <span class="va">vi_predictors</span></span>
-<span><span class="op">)</span></span>
-<span><span class="fu">tictoc</span><span class="fu">::</span><span class="fu">toc</span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; 1.591 sec elapsed</span></span></code></pre></div>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">selected_predictors_response</span></span>
-<span><span class="co">#&gt;  [1] "country_population"         "topo_elevation"            </span></span>
-<span><span class="co">#&gt;  [3] "country_income"             "country_gdp"               </span></span>
-<span><span class="co">#&gt;  [5] "topo_slope"                 "humidity_range"            </span></span>
-<span><span class="co">#&gt;  [7] "soil_clay"                  "topo_diversity"            </span></span>
-<span><span class="co">#&gt;  [9] "soil_sand"                  "cloud_cover_range"         </span></span>
-<span><span class="co">#&gt; [11] "region"                     "growing_season_temperature"</span></span>
-<span><span class="co">#&gt; [13] "solar_rad_min"              "soil_soc"                  </span></span>
-<span><span class="co">#&gt; [15] "rainfall_min"               "swi_range"                 </span></span>
-<span><span class="co">#&gt; [17] "soil_nitrogen"              "rainfall_range"            </span></span>
-<span><span class="co">#&gt; [19] "temperature_max"            "swi_min"                   </span></span>
-<span><span class="co">#&gt; [21] "subregion"                  "temperature_seasonality"   </span></span>
-<span><span class="co">#&gt; [23] "biogeo_realm"               "cloud_cover_min"           </span></span>
-<span><span class="co">#&gt; [25] "soil_type"                  "aridity_index"             </span></span>
-<span><span class="co">#&gt; [27] "solar_rad_max"              "koppen_group"              </span></span>
-<span><span class="co">#&gt; [29] "cloud_cover_max"</span></span></code></pre></div>
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">selected_predictors_no_response</span></span>
-<span><span class="co">#&gt;  [1] "country_population"         "topo_elevation"            </span></span>
-<span><span class="co">#&gt;  [3] "humidity_range"             "topo_slope"                </span></span>
-<span><span class="co">#&gt;  [5] "country_gdp"                "soil_clay"                 </span></span>
-<span><span class="co">#&gt;  [7] "topo_diversity"             "soil_sand"                 </span></span>
-<span><span class="co">#&gt;  [9] "cloud_cover_range"          "rainfall_min"              </span></span>
-<span><span class="co">#&gt; [11] "soil_soc"                   "swi_range"                 </span></span>
-<span><span class="co">#&gt; [13] "growing_season_temperature" "solar_rad_min"             </span></span>
-<span><span class="co">#&gt; [15] "rainfall_range"             "soil_nitrogen"             </span></span>
-<span><span class="co">#&gt; [17] "swi_min"                    "temperature_max"           </span></span>
-<span><span class="co">#&gt; [19] "cloud_cover_min"            "temperature_seasonality"   </span></span>
-<span><span class="co">#&gt; [21] "aridity_index"              "solar_rad_max"             </span></span>
-<span><span class="co">#&gt; [23] "swi_mean"                   "humidity_max"</span></span></code></pre></div>
-<p>The variable selection results differ because the numeric representations of the categorical variables are rather different between the two options. When no <code>response</code> is provided, the function <code><a href="reference/cor_select.html">cor_select()</a></code> compares categorical predictors against numeric ones by encoding each categorical after each numeric, and compares pairs of categoricals using Cramer’s V, implemented in the function <code><a href="reference/cramer_v.html">cramer_v()</a></code>. Additionally, Cramer’s V values are not directly comparable with Pearson or Spearman correlation scores, and having them together in the same analysis might induce bias during the variable selection. Not using the <code>response</code> argument should always be the last option.</p>
-</div>
-<div class="section level4">
-<h4 id="preference-order">Preference order<a class="anchor" aria-label="anchor" href="#preference-order"></a>
-</h4>
-<p>The argument <code>preference_order</code> gives the user some control on what predictors should be removed first and what predictors should be kept during the multicollinearity filtering. This argument accepts a vector of predictor names in the order of interest, or the result of the function <code><a href="reference/preference_order.html">preference_order()</a></code>, which allows to define preference order following a quantitative criteria.</p>
-<div class="section level5">
-<h5 id="manual-preference-order">Manual preference order<a class="anchor" aria-label="anchor" href="#manual-preference-order"></a>
-</h5>
-<p>Let’s start with the former option. Below, the argument <code>preference_order</code> names several predictors that are of importance for a hypothetical analysis. The <code>predictors</code> not in <code>preference_order</code> are ranked by the absolute sum of their correlations with other predictors during the pairwise correlation filtering, and by their VIF during the VIF-based filtering.</p>
-<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">selected_predictors</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/cor_select.html">cor_select</a></span><span class="op">(</span></span>
-<span>  df <span class="op">=</span> <span class="va">vi</span>,</span>
-<span>  response <span class="op">=</span> <span class="st">"vi_mean"</span>,</span>
-<span>  predictors <span class="op">=</span> <span class="va">vi_predictors</span>,</span>
-<span>  preference_order <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
-<span>    <span class="st">"soil_temperature_mean"</span>,</span>
-<span>    <span class="st">"soil_temperature_max"</span>,</span>
-<span>    <span class="st">"soil_type"</span></span>
-<span>  <span class="op">)</span></span>
-<span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">selected_predictors</span></span>
-<span><span class="co">#&gt;  [1] "soil_temperature_mean"  "soil_temperature_max"   "soil_type"             </span></span>
-<span><span class="co">#&gt;  [4] "country_population"     "topo_elevation"         "country_income"        </span></span>
-<span><span class="co">#&gt;  [7] "country_gdp"            "topo_slope"             "humidity_range"        </span></span>
-<span><span class="co">#&gt; [10] "soil_clay"              "topo_diversity"         "soil_sand"             </span></span>
-<span><span class="co">#&gt; [13] "cloud_cover_range"      "region"                 "soil_soc"              </span></span>
-<span><span class="co">#&gt; [16] "rainfall_min"           "solar_rad_range"        "swi_range"             </span></span>
-<span><span class="co">#&gt; [19] "soil_nitrogen"          "rainfall_range"         "subregion"             </span></span>
-<span><span class="co">#&gt; [22] "biogeo_realm"           "aridity_index"          "solar_rad_max"         </span></span>
-<span><span class="co">#&gt; [25] "koppen_group"           "soil_temperature_range" "cloud_cover_max"</span></span></code></pre></div>
-<p>Notice that in the output, two of the variables in <code>preference_order</code> are selected (“soil_temperature_mean” and “soil_type”), but one was removed (“soil_temperature_max”). This happens because at some point in the selection, the VIF of “soil_temperature_mean” and “soil_temperature_max” was higher than <code>max_vif</code>, and the one with lower preference was removed.</p>
-</div>
-<div class="section level5">
-<h5 id="quantitative-preference-order">Quantitative preference order<a class="anchor" aria-label="anchor" href="#quantitative-preference-order"></a>
-</h5>
-<p>The function <code><a href="reference/preference_order.html">preference_order()</a></code> requires the <code>response</code> argument, and takes a function <code>f</code> that returns a value of association between the response and any predictor. This value is then located in the “preference” column of the function’s output.</p>
-<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#parallelization setup</span></span>
-<span><span class="co"># future::plan(</span></span>
-<span><span class="co">#   future::multisession,</span></span>
-<span><span class="co">#   workers = 2 #set to parallelly::availableWorkers() - 1</span></span>
-<span><span class="co"># )</span></span>
+<span><span class="fu">future</span><span class="fu">::</span><span class="fu"><a href="https://future.futureverse.org/reference/plan.html" class="external-link">plan</a></span><span class="op">(</span></span>
+<span>  <span class="fu">future</span><span class="fu">::</span><span class="va"><a href="https://future.futureverse.org/reference/multisession.html" class="external-link">multisession</a></span>,</span>
+<span>  workers <span class="op">=</span> <span class="fu">parallelly</span><span class="fu">::</span><span class="fu"><a href="https://parallelly.futureverse.org/reference/availableCores.html" class="external-link">availableCores</a></span><span class="op">(</span><span class="op">)</span> <span class="op">-</span> <span class="fl">1</span></span>
+<span>  <span class="op">)</span></span>
 <span></span>
-<span><span class="co">#progress bar</span></span>
+<span><span class="co">#progress bar (does not work in Rmarkdown)</span></span>
 <span><span class="co">#progressr::handlers(global = TRUE)</span></span>
 <span></span>
-<span><span class="co">#compute preference order</span></span>
-<span><span class="va">preference_rsquared</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/preference_order.html">preference_order</a></span><span class="op">(</span></span>
-<span>  df <span class="op">=</span> <span class="va">vi</span>,</span>
-<span>  response <span class="op">=</span> <span class="st">"vi_mean"</span>,</span>
-<span>  predictors <span class="op">=</span> <span class="va">vi_predictors</span>,</span>
-<span>  f <span class="op">=</span> <span class="va">f_rsquared</span>,</span>
-<span><span class="op">)</span></span>
+<span><span class="co">#example data frame</span></span>
+<span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu">collinear</span><span class="fu">::</span><span class="va"><a href="reference/vi.html">vi</a></span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5000</span>, <span class="op">]</span></span>
 <span></span>
-<span><span class="va">preference_rsquared</span></span>
-<span><span class="co">#&gt;                     predictor   preference</span></span>
-<span><span class="co">#&gt; 1            biogeo_ecoregion 0.8971347093</span></span>
-<span><span class="co">#&gt; 2       growing_season_length 0.8076216576</span></span>
-<span><span class="co">#&gt; 3                 koppen_zone 0.8050280970</span></span>
-<span><span class="co">#&gt; 4          koppen_description 0.7903458680</span></span>
-<span><span class="co">#&gt; 5                     soil_ph 0.7664428862</span></span>
-<span><span class="co">#&gt; 6                    swi_mean 0.7286901614</span></span>
-<span><span class="co">#&gt; 7               humidity_mean 0.7141389404</span></span>
-<span><span class="co">#&gt; 8                koppen_group 0.6996959734</span></span>
-<span><span class="co">#&gt; 9                biogeo_biome 0.6515724588</span></span>
-<span><span class="co">#&gt; 10               country_name 0.6448346803</span></span>
-<span><span class="co">#&gt; 11           cloud_cover_mean 0.6338773126</span></span>
-<span><span class="co">#&gt; 12                  soil_type 0.6318025761</span></span>
-<span><span class="co">#&gt; 13              rainfall_mean 0.6005761078</span></span>
-<span><span class="co">#&gt; 14               humidity_max 0.5876622545</span></span>
-<span><span class="co">#&gt; 15       soil_temperature_max 0.5827628810</span></span>
-<span><span class="co">#&gt; 16                    swi_max 0.5813558512</span></span>
-<span><span class="co">#&gt; 17            cloud_cover_max 0.5758002449</span></span>
-<span><span class="co">#&gt; 18               humidity_min 0.5705720164</span></span>
-<span><span class="co">#&gt; 19    growing_season_rainfall 0.5697006759</span></span>
-<span><span class="co">#&gt; 20     soil_temperature_range 0.5523074848</span></span>
-<span><span class="co">#&gt; 21               biogeo_realm 0.5031101984</span></span>
-<span><span class="co">#&gt; 22              solar_rad_max 0.4905225950</span></span>
-<span><span class="co">#&gt; 23     evapotranspiration_max 0.4814731607</span></span>
-<span><span class="co">#&gt; 24               rainfall_max 0.4783927311</span></span>
-<span><span class="co">#&gt; 25              aridity_index 0.4506424015</span></span>
-<span><span class="co">#&gt; 26                  subregion 0.4469207404</span></span>
-<span><span class="co">#&gt; 27                  swi_range 0.4217411381</span></span>
-<span><span class="co">#&gt; 28            cloud_cover_min 0.4135724066</span></span>
-<span><span class="co">#&gt; 29   evapotranspiration_range 0.4042241481</span></span>
-<span><span class="co">#&gt; 30          temperature_range 0.3753489250</span></span>
-<span><span class="co">#&gt; 31             rainfall_range 0.3545446680</span></span>
-<span><span class="co">#&gt; 32    temperature_seasonality 0.2499469281</span></span>
-<span><span class="co">#&gt; 33               rainfall_min 0.2484813976</span></span>
-<span><span class="co">#&gt; 34                    swi_min 0.2406964836</span></span>
-<span><span class="co">#&gt; 35             solar_rad_mean 0.2140860965</span></span>
-<span><span class="co">#&gt; 36              soil_nitrogen 0.1872886789</span></span>
-<span><span class="co">#&gt; 37                  continent 0.1818717607</span></span>
-<span><span class="co">#&gt; 38            temperature_max 0.1589418736</span></span>
-<span><span class="co">#&gt; 39                     region 0.1505256024</span></span>
-<span><span class="co">#&gt; 40                   soil_soc 0.1493958026</span></span>
-<span><span class="co">#&gt; 41    evapotranspiration_mean 0.1455828419</span></span>
-<span><span class="co">#&gt; 42            solar_rad_range 0.1300751363</span></span>
-<span><span class="co">#&gt; 43            temperature_min 0.1222051434</span></span>
-<span><span class="co">#&gt; 44          cloud_cover_range 0.1216812855</span></span>
-<span><span class="co">#&gt; 45       soil_temperature_min 0.1018471531</span></span>
-<span><span class="co">#&gt; 46             topo_diversity 0.0925948262</span></span>
-<span><span class="co">#&gt; 47                  soil_clay 0.0769366113</span></span>
-<span><span class="co">#&gt; 48             humidity_range 0.0575393339</span></span>
-<span><span class="co">#&gt; 49             country_income 0.0489946403</span></span>
-<span><span class="co">#&gt; 50                  soil_sand 0.0427943817</span></span>
-<span><span class="co">#&gt; 51             topo_elevation 0.0424759731</span></span>
-<span><span class="co">#&gt; 52 growing_season_temperature 0.0239161476</span></span>
-<span><span class="co">#&gt; 53                 topo_slope 0.0203697134</span></span>
-<span><span class="co">#&gt; 54      soil_temperature_mean 0.0170527033</span></span>
-<span><span class="co">#&gt; 55           temperature_mean 0.0067479780</span></span>
-<span><span class="co">#&gt; 56                  soil_silt 0.0059316757</span></span>
-<span><span class="co">#&gt; 57        growing_degree_days 0.0047849144</span></span>
-<span><span class="co">#&gt; 58     evapotranspiration_min 0.0009965488</span></span>
-<span><span class="co">#&gt; 59                country_gdp 0.0008850479</span></span>
-<span><span class="co">#&gt; 60              solar_rad_min 0.0005751350</span></span>
-<span><span class="co">#&gt; 61         country_population 0.0002513147</span></span></code></pre></div>
-<p>The result of <code><a href="reference/preference_order.html">preference_order()</a></code> can be plugged right away into the <code>preference_order</code> argument of collinear.</p>
-<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">selected_predictors</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/collinear.html">collinear</a></span><span class="op">(</span></span>
-<span>  df <span class="op">=</span> <span class="va">vi</span>,</span>
-<span>  response <span class="op">=</span> <span class="st">"vi_mean"</span>,</span>
-<span>  predictors <span class="op">=</span> <span class="va">vi_predictors</span>,</span>
-<span>  preference_order <span class="op">=</span> <span class="va">preference_rsquared</span></span>
-<span><span class="op">)</span></span>
-<span><span class="va">selected_predictors</span></span>
-<span><span class="co">#&gt;  [1] "biogeo_ecoregion"           "biogeo_realm"              </span></span>
-<span><span class="co">#&gt;  [3] "solar_rad_max"              "rainfall_max"              </span></span>
-<span><span class="co">#&gt;  [5] "subregion"                  "swi_range"                 </span></span>
-<span><span class="co">#&gt;  [7] "rainfall_min"               "soil_nitrogen"             </span></span>
-<span><span class="co">#&gt;  [9] "continent"                  "soil_soc"                  </span></span>
-<span><span class="co">#&gt; [11] "cloud_cover_range"          "topo_diversity"            </span></span>
-<span><span class="co">#&gt; [13] "soil_clay"                  "humidity_range"            </span></span>
-<span><span class="co">#&gt; [15] "country_income"             "soil_sand"                 </span></span>
-<span><span class="co">#&gt; [17] "topo_elevation"             "growing_season_temperature"</span></span>
-<span><span class="co">#&gt; [19] "topo_slope"                 "country_gdp"               </span></span>
-<span><span class="co">#&gt; [21] "country_population"</span></span></code></pre></div>
-<p>This variable selection satisfies three conditions at once: maximum correlation between each predictor and the response, maximum pairwise correlation, and maximum VIF.</p>
-<p>The <code>f</code> argument used by default is the function <code><a href="reference/f_rsquared.html">f_rsquared()</a></code>, that returns the R-squared between the response and any predictor.</p>
-<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="reference/f_rsquared.html">f_rsquared</a></span><span class="op">(</span></span>
-<span>  x <span class="op">=</span> <span class="st">"growing_season_length"</span>,</span>
-<span>  y <span class="op">=</span> <span class="st">"vi_mean"</span>,</span>
-<span>  df <span class="op">=</span> <span class="va">vi</span></span>
-<span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 0.8076217</span></span></code></pre></div>
-<p>There are several other <code>f</code> functions implemented:</p>
-<ul>
-<li>
-<code><a href="reference/f_gam_deviance.html">f_gam_deviance()</a></code>: returns the explained deviance of a univariate GAM model between the response and each predictor, fitted with the function <code><a href="https://rdrr.io/pkg/mgcv/man/gam.html" class="external-link">mgcv::gam()</a></code>. Only if the R package <code>mgcv</code> is installed in the system.</li>
-<li>
-<code><a href="reference/f_rf_rsquared.html">f_rf_rsquared()</a></code> (also named <code><a href="reference/f_rf_rsquared.html">f_rf_deviance()</a></code>): returns the explained deviance of a univariate Random Forest model between the response and each predictor, fitted with the function <code><a href="http://imbs-hl.github.io/ranger/reference/ranger.html" class="external-link">ranger::ranger()</a></code>. Only if the R package <code>ranger</code> is installed in the system.</li>
-<li>
-<code><a href="reference/f_logistic_auc_balanced.html">f_logistic_auc_balanced()</a></code> and <code><a href="reference/f_logistic_auc_unbalanced.html">f_logistic_auc_unbalanced()</a></code>: return the area under the ROC curve of univariate binomial GLM between a binary response of 1s and 0s and a numeric predictor. The former assumes the response is balanced, while the latter applies case weights to mitigate unbalances.</li>
-<li>
-<code><a href="reference/f_gam_auc_balanced.html">f_gam_auc_balanced()</a></code> and <code><a href="reference/f_gam_auc_unbalanced.html">f_gam_auc_unbalanced()</a></code>: return the area under the ROC curve of univariate binomial GAM between a binary response of 1s and 0s and a numeric predictor. The former assumes the response is balanced, while the latter applies case weights to mitigate unbalances.</li>
-<li>
-<code><a href="reference/f_rf_auc_balanced.html">f_rf_auc_balanced()</a></code> and <code><a href="reference/f_rf_auc_unbalanced.html">f_rf_auc_unbalanced()</a></code>: return the area under the ROC curve of univariate random forest models between a binary response of 1s and 0s and a numeric predictor. The former assumes the response is balanced, while the latter applies case weights to mitigate unbalances.</li>
-</ul>
-<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co">#example of preference order for a binary variable</span></span>
+<span><span class="co">#there are many NA cases in this data frame</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">df</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] 3391</span></span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co">#numeric and categorical predictors</span></span>
+<span><span class="va">predictors</span> <span class="op">&lt;-</span> <span class="fu">collinear</span><span class="fu">::</span><span class="va"><a href="reference/vi_predictors.html">vi_predictors</a></span></span>
 <span></span>
-<span><span class="co">#the binary variable</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="va">vi</span><span class="op">$</span><span class="va">vi_binary</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co">#computation of preference order with </span></span>
-<span><span class="va">preference_auc</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/preference_order.html">preference_order</a></span><span class="op">(</span></span>
-<span>  df <span class="op">=</span> <span class="va">vi</span>,</span>
-<span>  response <span class="op">=</span> <span class="st">"vi_binary"</span>,</span>
-<span>  predictors <span class="op">=</span> <span class="va">vi_predictors</span>,</span>
-<span>  f <span class="op">=</span> <span class="va">f_gam_auc_unbalanced</span></span>
+<span><span class="fu">collinear</span><span class="fu">::</span><span class="fu"><a href="reference/identify_predictors.html">identify_predictors</a></span><span class="op">(</span></span>
+<span>  df <span class="op">=</span> <span class="va">df</span>,</span>
+<span>  predictors <span class="op">=</span> <span class="va">predictors</span></span>
 <span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">preference_auc</span></span></code></pre></div>
-<p>Custom functions created by the user are also accepted as input, as long as they have the <code>x</code>, <code>y</code>, and <code>df</code> arguments, and they return a single numeric value.</p>
-</div>
-</div>
-</div>
-<div class="section level3">
-<h3 id="cor_select-and-vif_select">
-<code>cor_select()</code> and <code>vif_select()</code>
-<a class="anchor" aria-label="anchor" href="#cor_select-and-vif_select"></a>
-</h3>
-<p>The functions <code><a href="reference/cor_select.html">cor_select()</a></code> and <code><a href="reference/vif_select.html">vif_select()</a></code>, called within <code><a href="reference/collinear.html">collinear()</a></code>, perform the pairwise correlation filtering, and the VIF-based filtering. The main difference between them is that <code><a href="reference/cor_select.html">cor_select()</a></code> can handle categorical predictors even when the <code>response</code> is omitted, while <code><a href="reference/vif_select.html">vif_select()</a></code> ignores them entirely in such case.</p>
-<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">selected_predictors_cor</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/cor_select.html">cor_select</a></span><span class="op">(</span></span>
-<span>  df <span class="op">=</span> <span class="va">vi</span>,</span>
-<span>  response <span class="op">=</span> <span class="st">"vi_mean"</span>,</span>
-<span>  predictors <span class="op">=</span> <span class="va">vi_predictors</span>,</span>
-<span>  preference_order <span class="op">=</span> <span class="va">preference_rsquared</span></span>
-<span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">selected_predictors_vif</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/vif_select.html">vif_select</a></span><span class="op">(</span></span>
-<span>  df <span class="op">=</span> <span class="va">vi</span>,</span>
-<span>  response <span class="op">=</span> <span class="st">"vi_mean"</span>,</span>
-<span>  predictors <span class="op">=</span> <span class="va">vi_predictors</span>,</span>
-<span>  preference_order <span class="op">=</span> <span class="va">preference_rsquared</span></span>
-<span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">selected_predictors_cor</span></span>
-<span><span class="co">#&gt;  [1] "biogeo_ecoregion"           "soil_temperature_max"      </span></span>
-<span><span class="co">#&gt;  [3] "soil_temperature_range"     "biogeo_realm"              </span></span>
-<span><span class="co">#&gt;  [5] "solar_rad_max"              "rainfall_max"              </span></span>
-<span><span class="co">#&gt;  [7] "aridity_index"              "subregion"                 </span></span>
-<span><span class="co">#&gt;  [9] "swi_range"                  "rainfall_min"              </span></span>
-<span><span class="co">#&gt; [11] "solar_rad_mean"             "soil_nitrogen"             </span></span>
-<span><span class="co">#&gt; [13] "continent"                  "soil_soc"                  </span></span>
-<span><span class="co">#&gt; [15] "solar_rad_range"            "cloud_cover_range"         </span></span>
-<span><span class="co">#&gt; [17] "topo_diversity"             "soil_clay"                 </span></span>
-<span><span class="co">#&gt; [19] "humidity_range"             "country_income"            </span></span>
-<span><span class="co">#&gt; [21] "soil_sand"                  "topo_elevation"            </span></span>
-<span><span class="co">#&gt; [23] "growing_season_temperature" "topo_slope"                </span></span>
-<span><span class="co">#&gt; [25] "country_gdp"                "country_population"</span></span></code></pre></div>
-<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">selected_predictors_vif</span></span>
-<span><span class="co">#&gt;  [1] "biogeo_ecoregion"   "soil_type"          "rainfall_mean"     </span></span>
-<span><span class="co">#&gt;  [4] "biogeo_realm"       "solar_rad_max"      "subregion"         </span></span>
-<span><span class="co">#&gt;  [7] "soil_nitrogen"      "continent"          "soil_soc"          </span></span>
-<span><span class="co">#&gt; [10] "topo_diversity"     "soil_clay"          "country_income"    </span></span>
-<span><span class="co">#&gt; [13] "soil_sand"          "topo_slope"         "country_gdp"       </span></span>
-<span><span class="co">#&gt; [16] "country_population"</span></span></code></pre></div>
-</div>
-<div class="section level3">
-<h3 id="target_encoding_lab">
-<code>target_encoding_lab()</code><a class="anchor" aria-label="anchor" href="#target_encoding_lab"></a>
-</h3>
-<p>The function <code><a href="reference/target_encoding_lab.html">target_encoding_lab()</a></code> is used within all other functions in the package to encode categorical variables as numeric. It implements four target encoding methods:</p>
-<ul>
-<li>“mean” (in <code><a href="reference/target_encoding_methods.html">target_encoding_mean()</a></code>): replaces each category with the mean of the response across the category. White noise can be added to this option to increase data variability.</li>
-<li>“rank” (in <code><a href="reference/target_encoding_methods.html">target_encoding_rank()</a></code>): replaces each category with the rank of the mean of the response across the category.</li>
-<li>“rnorm” (in <code><a href="reference/target_encoding_methods.html">target_encoding_rnorm()</a></code>): replaces each value in a category with a number generated by <code><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">stats::rnorm()</a></code> from a normal distribution with the mean and the standard deviation of the response over the category.</li>
-<li>“loo” (in <code><a href="reference/target_encoding_methods.html">target_encoding_loo()</a></code>): replaces each value in a category with the mean of the response across all the other cases within the category. White noise can be added to this option to increase data variability.</li>
-</ul>
-<p>The method “mean” is used as default throughout all functions in the package, but can be changed via the argument <code>encoding_method</code>.</p>
-<p>Below we use all methods to generate different numeric encodings for the categorical variable “koppen_zone”.</p>
-<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/target_encoding_lab.html">target_encoding_lab</a></span><span class="op">(</span></span>
-<span>  df <span class="op">=</span> <span class="va">vi</span>,</span>
-<span>  response <span class="op">=</span> <span class="st">"vi_mean"</span>,</span>
-<span>  predictors <span class="op">=</span> <span class="st">"koppen_zone"</span>,</span>
-<span>  encoding_methods <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
-<span>    <span class="st">"mean"</span>,</span>
-<span>    <span class="st">"rank"</span>,</span>
-<span>    <span class="st">"rnorm"</span>,</span>
-<span>    <span class="st">"loo"</span></span>
-<span>  <span class="op">)</span>,</span>
-<span>  seed <span class="op">=</span> <span class="fl">1</span>,</span>
-<span>  rnorm_sd_multiplier <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0.01</span>, <span class="fl">0.1</span><span class="op">)</span>,</span>
-<span>  white_noise <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0.01</span>, <span class="fl">0.1</span><span class="op">)</span>,</span>
-<span>  verbose <span class="op">=</span> <span class="cn">TRUE</span></span>
-<span><span class="op">)</span></span>
+<span><span class="co">#&gt; $numeric</span></span>
+<span><span class="co">#&gt;  [1] "topo_slope"                 "topo_diversity"            </span></span>
+<span><span class="co">#&gt;  [3] "topo_elevation"             "swi_mean"                  </span></span>
+<span><span class="co">#&gt;  [5] "swi_max"                    "swi_min"                   </span></span>
+<span><span class="co">#&gt;  [7] "swi_range"                  "soil_temperature_mean"     </span></span>
+<span><span class="co">#&gt;  [9] "soil_temperature_max"       "soil_temperature_min"      </span></span>
+<span><span class="co">#&gt; [11] "soil_temperature_range"     "soil_sand"                 </span></span>
+<span><span class="co">#&gt; [13] "soil_clay"                  "soil_silt"                 </span></span>
+<span><span class="co">#&gt; [15] "soil_ph"                    "soil_soc"                  </span></span>
+<span><span class="co">#&gt; [17] "soil_nitrogen"              "solar_rad_mean"            </span></span>
+<span><span class="co">#&gt; [19] "solar_rad_max"              "solar_rad_min"             </span></span>
+<span><span class="co">#&gt; [21] "solar_rad_range"            "growing_season_length"     </span></span>
+<span><span class="co">#&gt; [23] "growing_season_temperature" "growing_season_rainfall"   </span></span>
+<span><span class="co">#&gt; [25] "growing_degree_days"        "temperature_mean"          </span></span>
+<span><span class="co">#&gt; [27] "temperature_max"            "temperature_min"           </span></span>
+<span><span class="co">#&gt; [29] "temperature_range"          "temperature_seasonality"   </span></span>
+<span><span class="co">#&gt; [31] "rainfall_mean"              "rainfall_min"              </span></span>
+<span><span class="co">#&gt; [33] "rainfall_max"               "rainfall_range"            </span></span>
+<span><span class="co">#&gt; [35] "evapotranspiration_mean"    "evapotranspiration_max"    </span></span>
+<span><span class="co">#&gt; [37] "evapotranspiration_min"     "evapotranspiration_range"  </span></span>
+<span><span class="co">#&gt; [39] "cloud_cover_mean"           "cloud_cover_max"           </span></span>
+<span><span class="co">#&gt; [41] "cloud_cover_min"            "cloud_cover_range"         </span></span>
+<span><span class="co">#&gt; [43] "aridity_index"              "humidity_mean"             </span></span>
+<span><span class="co">#&gt; [45] "humidity_max"               "humidity_min"              </span></span>
+<span><span class="co">#&gt; [47] "humidity_range"             "country_population"        </span></span>
+<span><span class="co">#&gt; [49] "country_gdp"               </span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Encoding the predictor: koppen_zone</span></span>
-<span><span class="co">#&gt; New encoded predictor: 'koppen_zone__encoded_rank'</span></span>
-<span><span class="co">#&gt; New encoded predictor: 'koppen_zone__encoded_mean'</span></span>
-<span><span class="co">#&gt; New encoded predictor: 'koppen_zone__encoded_loo'</span></span>
-<span><span class="co">#&gt; New encoded predictor: 'koppen_zone__encoded_rank__noise_0.01'</span></span>
-<span><span class="co">#&gt; New encoded predictor: 'koppen_zone__encoded_mean__noise_0.01'</span></span>
-<span><span class="co">#&gt; New encoded predictor: 'koppen_zone__encoded_loo__noise_0.01'</span></span>
-<span><span class="co">#&gt; New encoded predictor: 'koppen_zone__encoded_rank__noise_0.1'</span></span>
-<span><span class="co">#&gt; New encoded predictor: 'koppen_zone__encoded_mean__noise_0.1'</span></span>
-<span><span class="co">#&gt; New encoded predictor: 'koppen_zone__encoded_loo__noise_0.1'</span></span>
-<span><span class="co">#&gt; New encoded predictor: 'koppen_zone__encoded_rnorm'</span></span>
-<span><span class="co">#&gt; New encoded predictor: 'koppen_zone__encoded_rnorm__sd_multiplier_0.01'</span></span>
-<span><span class="co">#&gt; New encoded predictor: 'koppen_zone__encoded_rnorm__sd_multiplier_0.1'</span></span></code></pre></div>
-<p>The relationship between these encoded versions of “koppen_zone” and the response are shown below.</p>
-<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co">#get names of encoded variables</span></span>
-<span><span class="va">koppen_zone_encoded</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">grep</a></span><span class="op">(</span></span>
-<span>  pattern <span class="op">=</span> <span class="st">"*__encoded*"</span>,</span>
-<span>  x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">df</span><span class="op">)</span>,</span>
-<span>  value <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span><span class="co">#&gt; $categorical</span></span>
+<span><span class="co">#&gt;  [1] "koppen_zone"        "koppen_group"       "koppen_description"</span></span>
+<span><span class="co">#&gt;  [4] "soil_type"          "biogeo_ecoregion"   "biogeo_biome"      </span></span>
+<span><span class="co">#&gt;  [7] "biogeo_realm"       "country_name"       "country_income"    </span></span>
+<span><span class="co">#&gt; [10] "continent"          "region"             "subregion"</span></span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co">#multicollinearity filtering</span></span>
+<span><span class="va">selection</span> <span class="op">&lt;-</span> <span class="fu">collinear</span><span class="fu">::</span><span class="fu"><a href="reference/collinear.html">collinear</a></span><span class="op">(</span></span>
+<span>  df <span class="op">=</span> <span class="va">df</span>,</span>
+<span>  response <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
+<span>    <span class="st">"vi_numeric"</span>,    <span class="co">#numeric response</span></span>
+<span>    <span class="st">"vi_categorical"</span> <span class="co">#categorical response</span></span>
+<span>    <span class="op">)</span>,</span>
+<span>  predictors <span class="op">=</span> <span class="va">predictors</span>,</span>
+<span>  max_cor <span class="op">=</span> <span class="fl">0.75</span>,</span>
+<span>  max_vif <span class="op">=</span> <span class="fl">5</span>,</span>
+<span>  quiet <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+<p>The output is a named list of vectors with selected predictor names when more than one response is provided, and a character vector otherwise.</p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">selection</span></span>
+<span><span class="co">#&gt; $vi_numeric</span></span>
+<span><span class="co">#&gt;  [1] "growing_season_length"  "soil_temperature_max"   "soil_temperature_range"</span></span>
+<span><span class="co">#&gt;  [4] "solar_rad_max"          "rainfall_max"           "subregion"             </span></span>
+<span><span class="co">#&gt;  [7] "biogeo_realm"           "swi_range"              "rainfall_min"          </span></span>
+<span><span class="co">#&gt; [10] "soil_nitrogen"          "continent"              "cloud_cover_range"     </span></span>
+<span><span class="co">#&gt; [13] "topo_diversity"        </span></span>
+<span><span class="co">#&gt; attr(,"validated")</span></span>
+<span><span class="co">#&gt; [1] TRUE</span></span>
+<span><span class="co">#&gt; attr(,"response")</span></span>
+<span><span class="co">#&gt; [1] "vi_numeric"</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $vi_categorical</span></span>
+<span><span class="co">#&gt;  [1] "rainfall_mean"        "swi_mean"             "soil_temperature_max"</span></span>
+<span><span class="co">#&gt;  [4] "soil_type"            "humidity_max"         "solar_rad_max"       </span></span>
+<span><span class="co">#&gt;  [7] "country_gdp"          "swi_range"            "rainfall_range"      </span></span>
+<span><span class="co">#&gt; [10] "country_population"   "soil_soc"             "region"              </span></span>
+<span><span class="co">#&gt; [13] "country_income"       "topo_diversity"       "topo_slope"          </span></span>
+<span><span class="co">#&gt; attr(,"validated")</span></span>
+<span><span class="co">#&gt; [1] TRUE</span></span>
+<span><span class="co">#&gt; attr(,"response")</span></span>
+<span><span class="co">#&gt; [1] "vi_categorical"</span></span></code></pre></div>
+<p>The output of <code><a href="reference/collinear.html">collinear()</a></code> can be easily converted into model formulas.</p>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">formulas</span> <span class="op">&lt;-</span> <span class="fu">collinear</span><span class="fu">::</span><span class="fu"><a href="reference/model_formula.html">model_formula</a></span><span class="op">(</span></span>
+<span>  predictors <span class="op">=</span> <span class="va">selection</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="co">#record the user's graphical parameters</span></span>
-<span><span class="va">user.par</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span>no.readonly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="va">formulas</span></span>
+<span><span class="co">#&gt; $vi_numeric</span></span>
+<span><span class="co">#&gt; vi_numeric ~ growing_season_length + soil_temperature_max + soil_temperature_range + </span></span>
+<span><span class="co">#&gt;     solar_rad_max + rainfall_max + subregion + biogeo_realm + </span></span>
+<span><span class="co">#&gt;     swi_range + rainfall_min + soil_nitrogen + continent + cloud_cover_range + </span></span>
+<span><span class="co">#&gt;     topo_diversity</span></span>
+<span><span class="co">#&gt; &lt;environment: 0x55f90b405d10&gt;</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $vi_categorical</span></span>
+<span><span class="co">#&gt; vi_categorical ~ rainfall_mean + swi_mean + soil_temperature_max + </span></span>
+<span><span class="co">#&gt;     soil_type + humidity_max + solar_rad_max + country_gdp + </span></span>
+<span><span class="co">#&gt;     swi_range + rainfall_range + country_population + soil_soc + </span></span>
+<span><span class="co">#&gt;     region + country_income + topo_diversity + topo_slope</span></span>
+<span><span class="co">#&gt; &lt;environment: 0x55f90b405d10&gt;</span></span></code></pre></div>
+<p>These formulas can be used to fit models right away.</p>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co">#linear model</span></span>
+<span><span class="va">m_vi_numeric</span> <span class="op">&lt;-</span> <span class="fu">stats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/stats/glm.html" class="external-link">glm</a></span><span class="op">(</span></span>
+<span>  formula <span class="op">=</span> <span class="va">formulas</span><span class="op">[[</span><span class="st">"vi_numeric"</span><span class="op">]</span><span class="op">]</span>, </span>
+<span>  data <span class="op">=</span> <span class="va">df</span>,</span>
+<span>  na.action <span class="op">=</span> <span class="va">na.omit</span></span>
+<span>  <span class="op">)</span></span>
 <span></span>
-<span><span class="co">#modify graphical parameters for the plot</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span>mfrow <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">4</span>, <span class="fl">3</span><span class="op">)</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co">#plot target encoding</span></span>
-<span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span></span>
-<span>  X <span class="op">=</span> <span class="va">koppen_zone_encoded</span>,</span>
-<span>  FUN <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span></span>
-<span>    x <span class="op">=</span> <span class="va">df</span><span class="op">[[</span><span class="va">x</span><span class="op">]</span><span class="op">]</span>,</span>
-<span>    y <span class="op">=</span> <span class="va">df</span><span class="op">$</span><span class="va">vi_mean</span>,</span>
-<span>    xlab <span class="op">=</span> <span class="va">x</span>,</span>
-<span>    ylab <span class="op">=</span> <span class="st">"vi_mean"</span>,</span>
-<span>    cex <span class="op">=</span> <span class="fl">0.5</span></span>
-<span>    <span class="op">)</span></span>
-<span><span class="op">)</span></span>
-<span></span>
-<span><span class="co">#reset the user's graphical parameters</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span><span class="va">user.par</span><span class="op">)</span></span></code></pre></div>
-<p>The function implementing each method can be used directly as well. The example below shows the “mean” method with the option <code>replace = FALSE</code>, which replaces the categorical values with the numeric ones in the output data frame.</p>
-<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">vi</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"vi_mean"</span>, <span class="st">"koppen_zone"</span><span class="op">)</span><span class="op">]</span>, n <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span>
-<span><span class="co">#&gt;    vi_mean koppen_zone</span></span>
-<span><span class="co">#&gt; 1     0.38         BSk</span></span>
-<span><span class="co">#&gt; 2     0.53         Cfa</span></span>
-<span><span class="co">#&gt; 3     0.45         Dfc</span></span>
-<span><span class="co">#&gt; 4     0.69         Cfb</span></span>
-<span><span class="co">#&gt; 5     0.42          Aw</span></span>
-<span><span class="co">#&gt; 6     0.68         Cfa</span></span>
-<span><span class="co">#&gt; 7     0.70          Af</span></span>
-<span><span class="co">#&gt; 8     0.26         BSh</span></span>
-<span><span class="co">#&gt; 9     0.55         Cwa</span></span>
-<span><span class="co">#&gt; 10    0.16         BWh</span></span></code></pre></div>
-<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/target_encoding_methods.html">target_encoding_mean</a></span><span class="op">(</span></span>
-<span>  df <span class="op">=</span> <span class="va">vi</span>,</span>
-<span>  response <span class="op">=</span> <span class="st">"vi_mean"</span>,</span>
-<span>  predictor <span class="op">=</span> <span class="st">"koppen_zone"</span>,</span>
-<span>  replace <span class="op">=</span> <span class="cn">TRUE</span></span>
-<span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">df</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"vi_mean"</span>, <span class="st">"koppen_zone"</span><span class="op">)</span><span class="op">]</span>, n <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span>
-<span><span class="co">#&gt;    vi_mean koppen_zone</span></span>
-<span><span class="co">#&gt; 1     0.38   0.2487370</span></span>
-<span><span class="co">#&gt; 2     0.53   0.5661689</span></span>
-<span><span class="co">#&gt; 3     0.45   0.4338492</span></span>
-<span><span class="co">#&gt; 4     0.69   0.5889908</span></span>
-<span><span class="co">#&gt; 5     0.42   0.5275241</span></span>
-<span><span class="co">#&gt; 6     0.68   0.5661689</span></span>
-<span><span class="co">#&gt; 7     0.70   0.6708994</span></span>
-<span><span class="co">#&gt; 8     0.26   0.3230049</span></span>
-<span><span class="co">#&gt; 9     0.55   0.5218936</span></span>
-<span><span class="co">#&gt; 10    0.16   0.1330452</span></span></code></pre></div>
-<p>If you got here, thank you for your interest in <code>collinear</code>. I hope you can find it useful!</p>
-<p>Blas M. Benito, PhD</p>
+<span><span class="co">#random forest model</span></span>
+<span><span class="va">m_vi_categorical</span> <span class="op">&lt;-</span> <span class="fu">ranger</span><span class="fu">::</span><span class="fu"><a href="http://imbs-hl.github.io/ranger/reference/ranger.html" class="external-link">ranger</a></span><span class="op">(</span></span>
+<span>  formula <span class="op">=</span> <span class="va">formulas</span><span class="op">[[</span><span class="st">"vi_categorical"</span><span class="op">]</span><span class="op">]</span>,</span>
+<span>  data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/na.fail.html" class="external-link">na.omit</a></span><span class="op">(</span><span class="va">df</span><span class="op">)</span></span>
+<span><span class="op">)</span></span></code></pre></div>
 </div>
+<div class="section level2">
+<h2 id="getting-help">Getting help<a class="anchor" aria-label="anchor" href="#getting-help"></a>
+</h2>
+<p>If you encounter bugs or issues with the documentation, please <a href="https://github.com/BlasBenito/collinear/issues" class="external-link">file a issue on GitHub</a>.</p>
 </div>
 </div>
   </main><aside class="col-md-3"><div class="links">
@@ -877,7 +299,8 @@
 <div class="developers">
 <h2 data-toc-skip>Developers</h2>
 <ul class="list-unstyled">
-<li>Blas M. Benito <br><small class="roles"> Author, maintainer, copyright holder </small> <a href="https://orcid.org/0000-0001-5105-7232" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
+<li>
+<a href="https://blasbenito.com" class="external-link">Blas M. Benito</a> <br><small class="roles"> Author, maintainer, copyright holder </small> <a href="https://orcid.org/0000-0001-5105-7232" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
 </ul>
 </div>
 
@@ -896,7 +319,7 @@
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by Blas M. Benito.</p>
+  <p>Developed by <a href="https://blasbenito.com" class="external-link">Blas M. Benito</a>.</p>
 </div>
 
 <div class="pkgdown-footer-right">
