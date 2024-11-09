@@ -14,6 +14,7 @@
 <meta property="og:title" content="Automated Multicollinearity Management">
 <meta name="description" content="Effortless multicollinearity management in data frames with both numeric and categorical variables for statistical and machine learning applications. The package simplifies multicollinearity analysis by combining four robust methods: 1) target encoding for categorical variables (Micci-Barreca, D. 2001 &lt;doi:10.1145/507533.507538&gt;); 2) automated feature prioritization to prevent key variable loss during filtering; 3) pairwise correlation for all variable combinations (numeric-numeric, numeric-categorical, categorical-categorical); and 4) fast computation of variance inflation factors.">
 <meta property="og:description" content="Effortless multicollinearity management in data frames with both numeric and categorical variables for statistical and machine learning applications. The package simplifies multicollinearity analysis by combining four robust methods: 1) target encoding for categorical variables (Micci-Barreca, D. 2001 &lt;doi:10.1145/507533.507538&gt;); 2) automated feature prioritization to prevent key variable loss during filtering; 3) pairwise correlation for all variable combinations (numeric-numeric, numeric-categorical, categorical-categorical); and 4) fast computation of variance inflation factors.">
+<meta property="og:image" content="https://blasbenito.github.io/collinear/logo.png">
 <link rel="stylesheet" href="extra.css">
 </head>
 <body>
@@ -62,8 +63,11 @@
 </nav><div class="container template-home">
 <div class="row">
   <main id="main" class="col-md-9"><div class="section level1">
-<div class="page-header"><h1 id="collinear-r-package-for-seamless-multicollinearity-management">collinear: R Package for Seamless Multicollinearity Management<a class="anchor" aria-label="anchor" href="#collinear-r-package-for-seamless-multicollinearity-management"></a>
-</h1></div>
+<div class="page-header">
+<img src="logo.png" class="logo" alt=""><h1 id="collinear-">collinear 
+<a class="anchor" aria-label="anchor" href="#collinear-"></a>
+</h1>
+</div>
 <!-- Development badges
 &#10;[![R-CMD-check](https://github.com/BlasBenito/collinear/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/BlasBenito/collinear/actions/workflows/R-CMD-check.yaml)
 [![Devel-version](https://img.shields.io/badge/devel%20version-1.0.1-blue.svg)](https://github.com/blasbenito/collinear)
@@ -242,14 +246,14 @@
 <span><span class="co">#&gt;     solar_rad_max + rainfall_max + subregion + biogeo_realm + </span></span>
 <span><span class="co">#&gt;     swi_range + rainfall_min + soil_nitrogen + continent + cloud_cover_range + </span></span>
 <span><span class="co">#&gt;     topo_diversity</span></span>
-<span><span class="co">#&gt; &lt;environment: 0x5afafd703c68&gt;</span></span>
+<span><span class="co">#&gt; &lt;environment: 0x55a20f4a7120&gt;</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $vi_categorical</span></span>
 <span><span class="co">#&gt; vi_categorical ~ rainfall_mean + swi_mean + soil_temperature_max + </span></span>
 <span><span class="co">#&gt;     soil_type + humidity_max + solar_rad_max + country_gdp + </span></span>
 <span><span class="co">#&gt;     swi_range + rainfall_range + country_population + soil_soc + </span></span>
 <span><span class="co">#&gt;     region + country_income + topo_diversity + topo_slope</span></span>
-<span><span class="co">#&gt; &lt;environment: 0x5afafd703c68&gt;</span></span></code></pre></div>
+<span><span class="co">#&gt; &lt;environment: 0x55a20f4a7120&gt;</span></span></code></pre></div>
 <p>These formulas can be used to fit models right away.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#linear model</span></span>
