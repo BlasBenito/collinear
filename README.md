@@ -4,7 +4,7 @@
 # collinear <a href="https://dplyr.tidyverse.org"><img src="man/figures/logo.png" align="right" height="138" /></a>
 -->
 
-# collinear: R Package for Seamless Multicollinearity Management
+# collinear <a><img src="man/figures/logo.png" align="right" height="138" /></a>
 
 <!-- Development badges 
 &#10;[![R-CMD-check](https://github.com/BlasBenito/collinear/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/BlasBenito/collinear/actions/workflows/R-CMD-check.yaml)
@@ -226,14 +226,14 @@ formulas
 #>     solar_rad_max + rainfall_max + subregion + biogeo_realm + 
 #>     swi_range + rainfall_min + soil_nitrogen + continent + cloud_cover_range + 
 #>     topo_diversity
-#> <environment: 0x5afafd703c68>
+#> <environment: 0x55a20f4a7120>
 #> 
 #> $vi_categorical
 #> vi_categorical ~ rainfall_mean + swi_mean + soil_temperature_max + 
 #>     soil_type + humidity_max + solar_rad_max + country_gdp + 
 #>     swi_range + rainfall_range + country_population + soil_soc + 
 #>     region + country_income + topo_diversity + topo_slope
-#> <environment: 0x5afafd703c68>
+#> <environment: 0x55a20f4a7120>
 ```
 
 These formulas can be used to fit models right away.
