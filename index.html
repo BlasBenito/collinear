@@ -14,8 +14,8 @@
 <link rel="apple-touch-icon" type="image/png" sizes="60x60" href="apple-touch-icon-60x60.png">
 <script src="deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
-<script src="deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="deps/font-awesome-6.4.2/css/all.min.css" rel="stylesheet">
-<link href="deps/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet">
+<script src="deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
+<link href="deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><link href="extra.css" rel="stylesheet">
 <meta property="og:title" content="Automated Multicollinearity Management">
 <meta name="description" content="Effortless multicollinearity management in data frames with both numeric and categorical variables for statistical and machine learning applications. The package simplifies multicollinearity analysis by combining four robust methods: 1) target encoding for categorical variables (Micci-Barreca, D. 2001 &lt;doi:10.1145/507533.507538&gt;); 2) automated feature prioritization to prevent key variable loss during filtering; 3) pairwise correlation for all variable combinations (numeric-numeric, numeric-categorical, categorical-categorical); and 4) fast computation of variance inflation factors.">
@@ -70,8 +70,9 @@
 <div class="row">
   <main id="main" class="col-md-9"><div class="section level1">
 <div class="page-header">
-<img src="logo.png" class="logo" alt=""><h1 id="dplyr-">dplyr 
-<a class="anchor" aria-label="anchor" href="#dplyr-"></a>
+<img src="logo.png" class="logo" alt=""><h1 id="collinear-seamless-multicollinearity-management-">
+<code>collinear</code> Seamless Multicollinearity Management 
+<a class="anchor" aria-label="anchor" href="#collinear-seamless-multicollinearity-management-"></a>
 </h1>
 </div>
 <!-- Development badges
@@ -252,14 +253,14 @@
 <span><span class="co">#&gt;     solar_rad_max + rainfall_max + subregion + biogeo_realm + </span></span>
 <span><span class="co">#&gt;     swi_range + rainfall_min + soil_nitrogen + continent + cloud_cover_range + </span></span>
 <span><span class="co">#&gt;     topo_diversity</span></span>
-<span><span class="co">#&gt; &lt;environment: 0x559e384136f0&gt;</span></span>
+<span><span class="co">#&gt; &lt;environment: 0x562cf84dc360&gt;</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $vi_categorical</span></span>
 <span><span class="co">#&gt; vi_categorical ~ rainfall_mean + swi_mean + soil_temperature_max + </span></span>
 <span><span class="co">#&gt;     soil_type + humidity_max + solar_rad_max + country_gdp + </span></span>
 <span><span class="co">#&gt;     swi_range + rainfall_range + country_population + soil_soc + </span></span>
 <span><span class="co">#&gt;     region + country_income + topo_diversity + topo_slope</span></span>
-<span><span class="co">#&gt; &lt;environment: 0x559e384136f0&gt;</span></span></code></pre></div>
+<span><span class="co">#&gt; &lt;environment: 0x562cf84dc360&gt;</span></span></code></pre></div>
 <p>These formulas can be used to fit models right away.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#linear model</span></span>
