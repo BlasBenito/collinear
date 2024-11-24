@@ -1,5 +1,5 @@
 ---
-title: "`collinear`: How It Works"
+title: "collinear: How It Works"
 output: 
   rmarkdown::html_document:
     toc: true
