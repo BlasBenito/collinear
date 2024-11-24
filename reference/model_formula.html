@@ -126,13 +126,13 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> vi_numeric ~ topo_slope + topo_diversity + topo_elevation + swi_mean + </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     swi_max + swi_min + swi_range + soil_temperature_mean + soil_temperature_max + </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     soil_temperature_min</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x5566cb50cbf8&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x5631c02dfbc0&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $vi_categorical</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> vi_categorical ~ topo_slope + topo_diversity + topo_elevation + </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     swi_mean + swi_max + swi_min + swi_range + soil_temperature_mean + </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     soil_temperature_max + soil_temperature_min</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x5566cb50cbf8&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x5631c02dfbc0&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#using a formula in a model</span></span></span>
@@ -167,7 +167,7 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span>     poly(topo_diversity, degree = 3, raw = TRUE) + poly(soil_temperature_min, </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     degree = 3, raw = TRUE) + poly(topo_slope, degree = 3, raw = TRUE) + </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     poly(topo_elevation, degree = 3, raw = TRUE)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x5566c30aaed8&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x5631bdf9a288&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $vi_binomial</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> vi_binomial ~ poly(swi_mean, degree = 3, raw = TRUE) + poly(soil_temperature_max, </span>
@@ -175,7 +175,7 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span>     poly(soil_temperature_mean, degree = 3, raw = TRUE) + poly(topo_elevation, </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     degree = 3, raw = TRUE) + poly(topo_diversity, degree = 3, </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     raw = TRUE) + poly(topo_slope, degree = 3, raw = TRUE)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x5566c30aaed8&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x5631bdf9a288&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#gam formulas</span></span></span>
@@ -189,13 +189,13 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> vi_numeric ~ s(swi_mean) + s(soil_temperature_max) + s(swi_range) + </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     s(topo_diversity) + s(soil_temperature_min) + s(topo_slope) + </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     s(topo_elevation)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x5566c2f22990&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x5631bde6b1c8&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $vi_binomial</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> vi_binomial ~ s(swi_mean) + s(soil_temperature_max) + s(swi_range) + </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     s(soil_temperature_mean) + s(topo_elevation) + s(topo_diversity) + </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     s(topo_slope)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x5566c2f22990&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x5631bde6b1c8&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#adding a random effect</span></span></span>
@@ -209,12 +209,12 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> vi_numeric ~ swi_mean + soil_temperature_max + swi_range + topo_diversity + </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     soil_temperature_min + topo_slope + topo_elevation + (1 | </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     country_name)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x5566c2e34d18&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x5631bdc7ee20&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $vi_binomial</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> vi_binomial ~ swi_mean + soil_temperature_max + swi_range + soil_temperature_mean + </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     topo_elevation + topo_diversity + topo_slope + (1 | country_name)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x5566c2e34d18&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x5631bdc7ee20&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 </code></pre></div>
     </div>
