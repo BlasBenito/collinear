@@ -20,7 +20,7 @@
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><hr class="dropdown-divider"></li>
     <li><h6 class="dropdown-header" data-toc-skip>Tutorials</h6></li>
-    <li><a class="dropdown-item" href="../articles/how_it_works.html">`collinear`: How It Works</a></li>
+    <li><a class="dropdown-item" href="../articles/how_it_works.html">collinear: How It Works</a></li>
     <li><hr class="dropdown-divider"></li>
     <li><h6 class="dropdown-header" data-toc-skip>Blog Posts</h6></li>
     <li><a class="external-link dropdown-item" href="https://www.blasbenito.com/post/multicollinearity-model-interpretability/">Multicollinearity Hinders Model Interpretability</a></li>
@@ -81,11 +81,13 @@
 <li><p>Target encoding, along with the <code>response</code> and <code>encoding_method</code> arguments, has been removed from this function. This change also applies to <code><a href="../reference/cor_df.html">cor_df()</a></code>.</p></li>
 <li><p>The function now calls <code><a href="../reference/validate_data_cor.html">validate_data_cor()</a></code> to ensure that the data is suitable for pairwise correlation multicollinearity filtering.</p></li>
 <li><p>Parallelization setup is now managed via <code><a href="https://future.futureverse.org/reference/plan.html" class="external-link">future::plan()</a></code>, with a progress bar provided by <code><a href="https://progressr.futureverse.org/reference/handlers.html" class="external-link">progressr::handlers()</a></code>. This setup is used by <code><a href="../reference/cor_df.html">cor_numeric_vs_categorical()</a></code> and <code><a href="../reference/cor_df.html">cor_categorical_vs_categorical()</a></code> to speed up pairwise correlation computation.</p></li>
+<li><p>Argument <code>cor_method</code> was removed because “spearman” is not a good option for multicollinearity analysis. The function now uses “pearson” internally.</p></li>
 </ul></div>
 <div class="section level4">
 <h4 id="function-cor_df-2-0-0">Function <code>cor_df()</code>
 <a class="anchor" aria-label="anchor" href="#function-cor_df-2-0-0"></a></h4>
-<ul><li>Fixed a bug that prevented <code><a href="../reference/cor_df.html">cor_numeric_vs_categorical()</a></code> and <code><a href="../reference/cor_df.html">cor_categorical_vs_categorical()</a></code> from triggering properly.</li>
+<ul><li><p>Fixed a bug that prevented <code><a href="../reference/cor_df.html">cor_numeric_vs_categorical()</a></code> and <code><a href="../reference/cor_df.html">cor_categorical_vs_categorical()</a></code> from triggering properly.</p></li>
+<li><p>Argument <code>cor_method</code> was removed because “spearman” is not a good option for multicollinearity analysis. The function now uses “pearson” internally.</p></li>
 </ul></div>
 <div class="section level4">
 <h4 id="function-vif_select-2-0-0">Function <code>vif_select()</code>
