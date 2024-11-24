@@ -286,7 +286,7 @@ reactable::reactable(
   pagination = FALSE,
   fullWidth = TRUE,
   list(
-    name = colDef(width = 1700),
+    name = colDef(width = 170),
     response = colDef(width = 150),
     predictors = colDef(width = 150),
     expression = colDef(width = 250),
