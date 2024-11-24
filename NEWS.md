@@ -48,9 +48,13 @@
 
 - Parallelization setup is now managed via `future::plan()`, with a progress bar provided by `progressr::handlers()`. This setup is used by `cor_numeric_vs_categorical()` and `cor_categorical_vs_categorical()` to speed up pairwise correlation computation.
 
+- Argument `cor_method` was removed because "spearman" is not a good option for multicollinearity analysis. The function now uses "pearson" internally.
+
 ### Function `cor_df()`
 
 - Fixed a bug that prevented `cor_numeric_vs_categorical()` and `cor_categorical_vs_categorical()` from triggering properly.
+
+- Argument `cor_method` was removed because "spearman" is not a good option for multicollinearity analysis. The function now uses "pearson" internally.
 
 ### Function `vif_select()`
 
