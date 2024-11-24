@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# dplyr <a href="https://github.com/BlasBenito/collinear"><img src="man/figures/logo.png" align="right" height="138" /></a>
+# `collinear` Seamless Multicollinearity Management <a href="https://github.com/BlasBenito/collinear"><img src="man/figures/logo.png" align="right" height="138" /></a>
 
 <!-- Development badges 
 &#10;[![R-CMD-check](https://github.com/BlasBenito/collinear/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/BlasBenito/collinear/actions/workflows/R-CMD-check.yaml)
@@ -223,14 +223,14 @@ formulas
 #>     solar_rad_max + rainfall_max + subregion + biogeo_realm + 
 #>     swi_range + rainfall_min + soil_nitrogen + continent + cloud_cover_range + 
 #>     topo_diversity
-#> <environment: 0x559e384136f0>
+#> <environment: 0x562cf84dc360>
 #> 
 #> $vi_categorical
 #> vi_categorical ~ rainfall_mean + swi_mean + soil_temperature_max + 
 #>     soil_type + humidity_max + solar_rad_max + country_gdp + 
 #>     swi_range + rainfall_range + country_population + soil_soc + 
 #>     region + country_income + topo_diversity + topo_slope
-#> <environment: 0x559e384136f0>
+#> <environment: 0x562cf84dc360>
 ```
 
 These formulas can be used to fit models right away.
