@@ -184,7 +184,7 @@ collinear <- function(
 
   #validate df
   df <- validate_df(
-    df = df,
+    df = df[ , c(response, predictors)],
     quiet = quiet
   )
 
