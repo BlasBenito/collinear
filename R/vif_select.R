@@ -215,7 +215,8 @@ vif_select <- function(
     predictors = predictors,
     preference_order = preference_order,
     preference_order_auto = preference_order_auto,
-    function_name = "collinear::vif_select()"
+    function_name = "collinear::vif_select()",
+    quiet = quiet
   )
 
   #fast function to compute max vif
