@@ -1,0 +1,27 @@
+---
+title: "collinear In The Wild"
+output: 
+  rmarkdown::html_document:
+    toc: true
+    toc_title: "Content"
+    source: false
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  eval = TRUE,
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%"
+)
+# options(tibble.print_min = 5, tibble.print_max = 5)
+```
+
+# Summary
+
+This article lists mentions and citations to the R package `collinear`.
+
+#2024
+
+Simons, A. L., Baez, H., Acharya-Patel, N., Helbing, C. C., Jeffers, J., Stanford, J., & Meyer, R. S. (2024). TerraDactyl: A tool for connecting environmental data to when and where. Ecological Informatics, 102974. https://doi.org/10.1016/j.ecoinf.2024.102974
