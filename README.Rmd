@@ -153,6 +153,7 @@ The output is a named list of vectors with selected predictor names when more th
 ```{r}
 selection
 ```
+
 The output of `collinear()` can be easily converted into model formulas.
 
 ```{r}
@@ -162,6 +163,7 @@ formulas <- collinear::model_formula(
 
 formulas
 ```
+
 These formulas can be used to fit models right away.
 
 ```{r, eval = FALSE}

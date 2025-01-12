@@ -223,14 +223,14 @@ formulas
 #>     solar_rad_max + rainfall_max + subregion + biogeo_realm + 
 #>     swi_range + rainfall_min + soil_nitrogen + continent + cloud_cover_range + 
 #>     topo_diversity
-#> <environment: 0x562cf84dc360>
+#> <environment: 0x55fd108b2b30>
 #> 
 #> $vi_categorical
 #> vi_categorical ~ rainfall_mean + swi_mean + soil_temperature_max + 
 #>     soil_type + humidity_max + solar_rad_max + country_gdp + 
 #>     swi_range + rainfall_range + country_population + soil_soc + 
 #>     region + country_income + topo_diversity + topo_slope
-#> <environment: 0x562cf84dc360>
+#> <environment: 0x55fd108b2b30>
 ```
 
 These formulas can be used to fit models right away.
