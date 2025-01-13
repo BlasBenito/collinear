@@ -20,6 +20,7 @@ articles:
   navbar: "Tutorials"
   contents:
   - articles/how_it_works
+  - articles/collinear_in_the_wild
 
 - title: "Blog Posts"
   navbar: "Blog Posts"
