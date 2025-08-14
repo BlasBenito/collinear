@@ -1,4 +1,2 @@
-- complete R/internal.R function df_to_matrix()
-- complete function R/cor_matrix() with function df_to_matrix() and cor_cramer_v() for char-char relationships.
-- move all ggplots in examples to README.Rmd
+- integrate new function validate_arg_df() into collinear().
 

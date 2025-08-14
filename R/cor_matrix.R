@@ -9,61 +9,60 @@
 #' @return correlation matrix
 #'
 #' @examples
-#' data(
-#'   vi,
-#'   vi_predictors
-#' )
+#'     data(vi)
 #'
-#' #reduce size of vi to speed-up example execution
-#' vi <- vi[1:1000, ]
+#'     #subset to speed-up example
+#'     vi <- vi[1:1000, ]
 #'
-#' #mixed predictors
-#' vi_predictors <- vi_predictors[1:10]
+#'     predictors <- c(
+#'       "koppen_zone", #character
+#'       "soil_type", #factor
+#'       "topo_elevation", #numeric
+#'       "soil_temperature_mean" #numeric
+#'     )
 #'
-#' #parallelization setup
-#' future::plan(
-#'   future::multisession,
-#'   workers = 2 #set to parallelly::availableCores() - 1
-#' )
+#'     #OPTIONAL: parallelization setup
+#'     # future::plan(
+#'     #   future::multisession,
+#'     #   workers = 2
+#'     # )
 #'
-#' #progress bar
-#' # progressr::handlers(global = TRUE)
+#'     #OPTIONAL: progress bar
+#'     # progressr::handlers(global = TRUE)
 #'
-#' #correlation data frame
-#' df <- cor_df(
-#'   df = vi,
-#'   predictors = vi_predictors
-#' )
 #'
-#' df
+#'     #correlation data frame to matrix
+#'     m <- cor_df(
+#'       df = vi,
+#'       predictors = predictors
+#'     ) |>
+#'       cor_matrix()
 #'
-#' #correlation matrix
-#' m <- cor_matrix(
-#'   df = df
-#' )
+#'     m
 #'
-#' m
+#'     #direct computation (uses cor_df() internally)
+#'     m <- cor_matrix(
+#'       df = vi,
+#'       predictors = predictors
+#'     )
 #'
-#' #generating it from the original data
-#' m <- cor_matrix(
-#'   df = vi,
-#'   predictors = vi_predictors
-#' )
+#'     m
 #'
-#' m
-#'
-#' #disable parallelization
-#' future::plan(future::sequential)
+#'     #OPTIONAL: disable parallelization
+#'     #future::plan(future::sequential)
 #' @autoglobal
 #' @family pairwise_correlation
 #' @author Blas M. Benito, PhD
 #' @export
 cor_matrix <- function(
     df = NULL,
-    predictors = NULL
+    predictors = NULL,
+    quiet = FALSE
 ){
 
-  #if df with predictors, compute cor data frame
+  function_name <- "collinear::cor_matrix()"
+
+  #if df with predictors, compute correlation matrix
   if(
     all(
       names(df) %in% c(
@@ -74,9 +73,24 @@ cor_matrix <- function(
       ) == FALSE
     ){
 
-    df <- cor_df(
+    df <- validate_arg_df(
       df = df,
-      predictors = predictors
+      predictors = predictors,
+      function_name = function_name,
+      quiet = quiet
+    )
+
+    predictors <- validate_arg_predictors_cor(
+      df = df,
+      predictors = predictors,
+      function_name = function_name,
+      quiet = quiet
+    )
+
+    df <- cor_df(
+      df  = df,
+      predictors = predictors,
+      quiet = quiet
     )
 
   }
@@ -117,7 +131,7 @@ cor_matrix <- function(
       index_map[df$x],
       index_map[df$y]
       )
-    ] <- abs(df$correlation)
+    ] <- df$correlation
 
   #dim names
   dimnames(m) <- list(

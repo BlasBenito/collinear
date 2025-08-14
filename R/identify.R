@@ -4,14 +4,11 @@
 #' Returns a list with the names of the valid numeric predictors and the names of the valid categorical predictors
 #'
 #' @inheritParams collinear
-#' @return list: names of numeric and categorical predictors
+#' @inheritParams identify_predictors_zero_variance
+#' @return list: names of numeric, categorical, logical, and zero-variance predictors
 #' @examples
-#' if (interactive()) {
 #'
-#' data(
-#'   vi,
-#'   vi_predictors
-#' )
+#' data(vi, vi_predictors)
 #'
 #' predictors_names <- identify_predictors(
 #'   df = vi,
@@ -20,26 +17,121 @@
 #'
 #' predictors_names
 #'
-#' }
 #' @autoglobal
 #' @family data_types
 #' @author Blas M. Benito, PhD
 #' @export
 identify_predictors <- function(
     df = NULL,
-    predictors = NULL
+    predictors = NULL,
+    decimals = 4
 ){
 
-  list(
+  if(is.null(predictors)){
+    predictors <- colnames(df)
+  }
+
+  out_list <- list(
     numeric = identify_predictors_numeric(
       df = df,
-      predictors = predictors
+      predictors = predictors,
+      decimals = decimals
     ),
     categorical = identify_predictors_categorical(
       df = df,
       predictors = predictors
+    ),
+    logical = identify_predictors_logical(
+      df = df,
+      predictors = predictors,
+      decimals = decimals
+    ),
+    zero_variance = identify_predictors_zero_variance(
+      df = df,
+      predictors = predictors,
+      decimals = decimals
     )
   )
+
+  out_list
+
+}
+
+#' Identify Valid Logical Predictors
+#'
+#' @description
+#' Returns the names of valid logical predictors. Ignores predictors with constant values (i.e., all TRUE or all FALSE).
+#'
+#' @inheritParams collinear
+#' @inheritParams identify_predictors_zero_variance
+#' @return character vector: names of logical predictors
+#' @examples
+#'
+#' data(vi, vi_predictors)
+#'
+#' logical.predictors <- identify_predictors_logical(
+#'   df = vi,
+#'   predictors = vi_predictors
+#' )
+#'
+#' logical.predictors
+#'
+#' @autoglobal
+#' @family data_types
+#' @author Blas M. Benito, PhD
+#' @export
+identify_predictors_logical <- function(
+    df = NULL,
+    predictors = NULL,
+    decimals = 4
+){
+
+  df <- validate_arg_df_not_null(
+    df = df,
+    function_name = "identify_predictors_numeric()"
+  )
+
+  if(is.null(predictors) || length(predictors) == 0){
+    return(NULL)
+  }
+
+  predictors <- intersect(
+    x = predictors,
+    y = colnames(df)
+  )
+
+  df <- df[, predictors, drop = FALSE]
+
+  # Get logical predictors
+  predictors <- predictors[
+    vapply(
+      X = df,
+      FUN = is.logical,
+      FUN.VALUE = logical(1)
+    )
+  ]
+
+  if(length(predictors) == 0){
+    return(NULL)
+  }
+
+  #ignore constant predictors (TRUE/FALSE only)
+  predictors_constant <- identify_predictors_zero_variance(
+    df = df,
+    predictors = predictors,
+    decimals = decimals
+  )
+
+  predictors <- setdiff(
+    x = predictors,
+    y = predictors_constant
+  )
+
+  if(length(predictors) == 0){
+    predictors <- NULL
+  }
+
+  predictors
 
 }
 
@@ -50,15 +142,11 @@ identify_predictors <- function(
 #' Returns the names of valid numeric predictors. Ignores predictors with constant values or with near-zero variance.
 #'
 #' @inheritParams collinear
-#' @param decimals (required, integer) Number of decimal places for the zero variance test. Smaller numbers will increase the number of variables detected as near-zero variance. Recommended values will depend on the range of the numeric variables in 'df'. Default: 4
+#' @inheritParams identify_predictors_zero_variance
 #' @return character vector: names of numeric predictors
 #' @examples
-#' if (interactive()) {
 #'
-#' data(
-#'   vi,
-#'   vi_predictors
-#' )
+#' data(vi, vi_predictors)
 #'
 #' numeric.predictors <- identify_predictors_numeric(
 #'   df = vi,
@@ -67,7 +155,6 @@ identify_predictors <- function(
 #'
 #' numeric.predictors
 #'
-#' }
 #' @autoglobal
 #' @family data_types
 #' @author Blas M. Benito, PhD
@@ -78,55 +165,49 @@ identify_predictors_numeric <- function(
     decimals = 4
 ){
 
-  if(!is.null(predictors)){
+  df <- validate_arg_df_not_null(
+    df = df,
+    function_name = "identify_predictors_numeric()"
+  )
 
-    if(length(predictors) == 0){
-      return(predictors)
-    }
-
-    predictors <- predictors[
-      predictors %in% colnames(df)
-    ]
-
-  } else {
-
-    predictors <- colnames(df)
-
+  if(is.null(predictors) || length(predictors) == 0){
+    return(NULL)
   }
+
+  predictors <- intersect(
+    x = predictors,
+    y = colnames(df)
+  )
+
+  df <- df[, predictors, drop = FALSE]
 
   #get numeric predictors
   predictors <- predictors[
-    sapply(
-      X = df[, predictors, drop = FALSE],
-      FUN = is.numeric
+    vapply(
+      X = df,
+      FUN = is.numeric,
+      FUN.VALUE = logical(1)
     )
   ]
 
   if(length(predictors) == 0){
-    return(predictors)
+    return(NULL)
   }
 
-  #replace Inf with NA
-  df <- df[, predictors, drop = FALSE]
-  is.na(df) <- do.call(
-    what = cbind,
-    args = lapply(
-      X = df,
-      FUN = is.infinite
-    )
+  #ignore constant and near-zero variance predictors
+  predictors_zero_variance <- identify_predictors_zero_variance(
+    df = df,
+    predictors = predictors
   )
 
-  #ignore constant and near-zero variance predictors
-  predictors <- predictors[
-    !round(
-      sapply(
-        X = df,
-        FUN = stats::var,
-        na.rm = TRUE
-      ),
-      decimals
-    ) == 0
-  ]
+  predictors <- setdiff(
+    x = predictors,
+    y = predictors_zero_variance
+  )
+
+  if(length(predictors) == 0){
+    predictors <- NULL
+  }
 
   predictors
 
@@ -142,10 +223,7 @@ identify_predictors_numeric <- function(
 #' @return character vector: categorical predictors names
 #' @examples
 #'
-#' data(
-#'   vi,
-#'   vi_predictors
-#' )
+#' data(vi, vi_predictors)
 #'
 #' non.numeric.predictors <- identify_predictors_categorical(
 #'   df = vi,
@@ -163,50 +241,52 @@ identify_predictors_categorical <- function(
     predictors = NULL
 ){
 
-  if(!is.null(predictors)){
+  df <- validate_arg_df_not_null(
+    df = df,
+    function_name = "identify_predictors_numeric()"
+  )
 
-    if(length(predictors) == 0){
-      return(predictors)
-    }
-
-    predictors <- predictors[
-      predictors %in% colnames(df)
-    ]
-
-  } else {
-
-    predictors <- colnames(df)
-
+  if(is.null(predictors) || length(predictors) == 0){
+    return(NULL)
   }
+
+  df <- df[, predictors, drop = FALSE]
 
   #subset categorical
   predictors <- predictors[
-    !sapply(
-      X = df[, predictors, drop = FALSE],
-      FUN = is.numeric
+    !vapply(
+      X = df,
+      FUN = is.numeric,
+      FUN.VALUE = logical(1)
     )
   ]
 
   #remove NA
-  predictors <- na.omit(predictors)
+  predictors <- stats::na.omit(predictors)
 
   #remove constant categoricals
   predictors <- predictors[
-    !sapply(
+    !vapply(
       X = df[, predictors, drop = FALSE],
       FUN = function(x){
         length(unique(x)) == 1
-      }
+      },
+      FUN.VALUE = logical(1)
     )
   ]
 
   #remove categoricals with as many values as rows
   predictors <- predictors[
-    !sapply(
+    !vapply(
       X = df[, predictors, drop = FALSE],
-      FUN = function(x) length(unique(x)) == length(x)
+      FUN = function(x) length(unique(x)) == length(x),
+      FUN.VALUE = logical(1)
     )
   ]
+
+  if(length(predictors) == 0){
+    predictors <- NULL
+  }
 
   predictors
 
@@ -224,10 +304,7 @@ identify_predictors_categorical <- function(
 #' @return character vector: names of zero and near-zero variance columns.
 #' @examples
 #'
-#' data(
-#'   vi,
-#'   vi_predictors
-#' )
+#' data(vi, vi_predictors)
 #'
 #' #create zero variance predictors
 #' vi$zv_1 <- 1
@@ -259,54 +336,55 @@ identify_predictors_zero_variance <- function(
     decimals = 4
 ){
 
-  if(!is.null(predictors)){
+  df <- validate_arg_df_not_null(
+    df = df,
+    function_name = "identify_predictors_numeric()"
+  )
 
-    if(length(predictors) == 0){
-      return(predictors)
-    }
-
-    predictors <- predictors[
-      predictors %in% colnames(df)
-    ]
-
-  } else {
-
-    predictors <- colnames(df)
-
+  if(is.null(predictors) || length(predictors) == 0){
+    return(NULL)
   }
 
+  predictors <- intersect(
+    x = predictors,
+    y = colnames(df)
+  )
+
+  df <- df[, predictors, drop = FALSE]
+
   predictors <- predictors[
-    sapply(
-      X = df[, predictors, drop = FALSE],
-      FUN = is.numeric
+    vapply(
+      X = df,
+      FUN = is.numeric,
+      FUN.VALUE = logical(1)
     )
   ]
 
   if(length(predictors) == 0){
-    return(predictors)
+    return(NULL)
   }
 
   df <- df[, predictors, drop = FALSE]
 
-  #replace inf with NA
-  is.na(df) <- do.call(
-    what = cbind,
-    args = lapply(
-      X = df,
-      FUN = is.infinite
-    )
-  )
-
-  colnames(df)[
+  #compute variance on valid values only
+  predictors <- colnames(df)[
     round(
       sapply(
         X = df,
-        FUN = stats::var,
-        na.rm = TRUE
+        FUN = function(x) stats::var(
+          x = x[is.finite(x)],
+          na.rm = TRUE
+          )
       ),
       decimals
     ) == 0
   ]
+
+  if(length(predictors) == 0){
+    predictors <- NULL
+  }
+
+  predictors
 
 }
 
@@ -331,7 +409,8 @@ identify_predictors_zero_variance <- function(
 #' @return character string: response type
 #'
 #' @examples
-
+#' data(vi, vi_predictors)
+#'
 #' identify_response_type(
 #'   df = vi,
 #'   response = "vi_numeric"
@@ -366,13 +445,27 @@ identify_response_type <- function(
     quiet = FALSE
 ){
 
-  if(is.null(df) || is.null(response)) {
+  function_name <- "collinear::identify_response_type()"
+
+  df <- validate_arg_df(
+    df = df,
+    function_name = function_name
+  )
+
+  response <- validate_arg_response(
+    df = df,
+    response = response,
+    function_name = function_name
+  )
+
+  if(is.null(response)) {
     return(NULL)
   }
 
-  if(!response %in% colnames(df)){
-    return(NULL)
-  }
+  quiet <- validate_arg_quiet(
+    function_name = function_name,
+    quiet = quiet
+  )
 
   # extract response
   x <- sort(unique(df[[response]]))
@@ -382,7 +475,8 @@ identify_response_type <- function(
   if(x_length == 1){
 
     stop(
-      "collinear::identify_response_type(): argument 'response' names a column with a constant value. Please select a different response column.",
+      function_name,
+      ": argument 'response' names a column with a constant value. Please select a different response column.",
       call. = FALSE
     )
 
@@ -396,10 +490,15 @@ identify_response_type <- function(
 
       if (x_length == 2) {
 
-        warning(
-          "collinear::identify_response_type(): argument 'response' names a numeric non-integer column with two unique values. Please consider recoding it as categorical, or select a different response column.",
-          call. = FALSE
-        )
+        if(quiet == FALSE){
+
+          message(
+            "\n",
+            function_name,
+            ": argument 'response' names a numeric non-integer column with two unique values. Please consider recoding it as categorical, or select a different response column."
+          )
+
+        }
 
         return("continuous-binary")
 
@@ -408,7 +507,9 @@ identify_response_type <- function(
         if(quiet == FALSE){
 
           message(
-            "\ncollinear::identify_response_type(): argument 'response' names a numeric non-integer column with 5 or fewer values. Please consider recoding it as integer or categorical, or select a different response column.",
+            "\n",
+            function_name,
+            ": argument 'response' names a numeric non-integer column with 5 or fewer values. Please consider recoding it as integer or categorical, or select a different response column.",
           )
 
         }
@@ -436,10 +537,16 @@ identify_response_type <- function(
 
           } else {
 
-            warning(
-              "collinear::identify_response_type(): argument 'response' names a integer column with two unique values that are not 0 and 1. Please consider recoding it as categorical, or select a different response column.",
-              call. = FALSE
-            )
+            if(quiet == FALSE){
+
+              message(
+                "\n",
+                function_name,
+
+                ": argument 'response' names a integer column with two unique values that are not 0 and 1. Please consider recoding it as categorical, or select a different response column."
+              )
+
+            }
 
             return("integer-binary")
 
@@ -494,6 +601,7 @@ identify_response_type <- function(
 #' @family data_types
 #' @autoglobal
 #' @examples
+#' data(vi, vi_predictors)
 #'
 #' identify_predictors_type(
 #'   df = vi,
@@ -515,23 +623,25 @@ identify_predictors_type <- function(
     predictors = NULL
 ){
 
-  if(is.null(df)){
-    return(NULL)
-  }
+  df <- validate_arg_df_not_null(
+    df = df,
+    function_name = "identify_predictors_numeric()"
+  )
 
   if(is.null(predictors)){
     return(NULL)
   }
 
-  predictors <- predictors[
-    predictors %in% colnames(df)
-  ]
+  predictors <- intersect(
+    x = predictors,
+    y = colnames(df)
+  )
 
-  if(length(predictors) >= 1){
-
-    df <- df[, predictors, drop = FALSE]
-
+  if(length(predictors) == 0){
+    return(NULL)
   }
+
+  df <- df[, predictors, drop = FALSE]
 
   out <- lapply(
     X = df,

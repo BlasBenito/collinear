@@ -4,26 +4,24 @@
 \alias{identify_predictors}
 \title{Identify Numeric and Categorical Predictors}
 \usage{
-identify_predictors(df = NULL, predictors = NULL)
+identify_predictors(df = NULL, predictors = NULL, decimals = 4)
 }
 \arguments{
-\item{df}{(required; data frame, tibble, or sf) A data frame with responses and predictors. Default: NULL.}
+\item{df}{(required; data frame, tibble, or sf) A data frame with responses and predictors. Must have at least 10 rows for pairwise correlation analysis, and \code{10 * (length(predictors) - 1)} for VIF analysis.  Default: NULL.}
 
-\item{predictors}{(optional; character vector) Names of the predictors to select from \code{df}. If omitted, all numeric columns in \code{df} are used instead. If argument \code{response} is not provided, non-numeric variables are ignored. Default: NULL}
+\item{predictors}{(optional; character vector or NULL) Names of the predictors to select from \code{df}. If omitted, all numeric columns in \code{df} are used instead. Default: NULL}
+
+\item{decimals}{(required, integer) Number of decimal places for the zero variance test. Smaller numbers will increase the number of variables detected as near-zero variance. Recommended values will depend on the range of the numeric variables in 'df'. Default: 4}
 }
 \value{
-list: names of numeric and categorical predictors
+list: names of numeric, categorical, logical, and zero-variance predictors
 }
 \description{
 Returns a list with the names of the valid numeric predictors and the names of the valid categorical predictors
 }
 \examples{
-if (interactive()) {
 
-data(
-  vi,
-  vi_predictors
-)
+data(vi, vi_predictors)
 
 predictors_names <- identify_predictors(
   df = vi,
@@ -33,10 +31,10 @@ predictors_names <- identify_predictors(
 predictors_names
 
 }
-}
 \seealso{
 Other data_types: 
 \code{\link{identify_predictors_categorical}()},
+\code{\link{identify_predictors_logical}()},
 \code{\link{identify_predictors_numeric}()},
 \code{\link{identify_predictors_type}()},
 \code{\link{identify_predictors_zero_variance}()},

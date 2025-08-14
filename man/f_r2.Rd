@@ -28,8 +28,8 @@ f_r2_rf(df)
 \arguments{
 \item{df}{(required, data frame) with columns:
 \itemize{
-\item "x": (numeric) continuous predictor.
-\item "y" (numeric) continuous response.
+\item \code{x}: (numeric) continuous predictor.
+\item \code{y} (numeric) continuous response.
 }}
 }
 \value{

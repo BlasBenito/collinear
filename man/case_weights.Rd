@@ -7,7 +7,7 @@
 case_weights(x = NULL)
 }
 \arguments{
-\item{x}{(required, integer, character, or factor vector) binomial, categorical, or factor response variable. Default: \code{NULL}}
+\item{x}{(required, integer, character, or factor vector) Binomial, categorical, or factor response variable. Default: NULL}
 }
 \value{
 numeric vector: case weights

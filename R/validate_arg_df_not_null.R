@@ -1,0 +1,33 @@
+#' Checks That Argument \code{df} Is Not NULL
+#'
+#' @description
+#' Internal function to validate the default value of the argument \code{df}.
+#' @inheritParams collinear
+#' @return data frame
+#' @autoglobal
+#' @family data_validation
+#' @export
+#' @examples
+#' data(vi)
+#' df <- validate_arg_df_not_null(
+#'   df = vi,
+#'   function_name = "f()"
+#'   )
+validate_arg_df_not_null <- function(
+    df = NULL,
+    function_name = NULL
+){
+
+  if(is.null(df)){
+
+    stop(
+      function_name,
+      ": argument 'df' cannot be NULL",
+      call. = FALSE
+    )
+
+  }
+
+  df
+
+}

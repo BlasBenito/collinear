@@ -14,29 +14,26 @@
 #' The methods to compute the group statistic implemented here are:
 #'
 #' \itemize{
-#'   \item "mean" (implemented in `target_encoding_mean()`): Encodes categorical values with the group means of the response. Variables encoded with this method are identified with the suffix "__encoded_mean". It has a method to control overfitting implemented via the argument `smoothing`. The integer value of this argument indicates a threshold in number of rows. Groups above this threshold are encoded with the group mean, while groups below it are encoded with a weighted mean of the group's mean and the global mean. This method is named "mean smoothing" in the relevant literature.
-#'   \item "rank" (implemented in `target_encoding_rank()`): Returns the rank of the group as a integer, being 1 he group with the lower mean of the response variable. Variables encoded with this method are identified with the suffix "__encoded_rank".
-#'   \item "loo" (implemented in `target_encoding_loo()`): Known as the "leave-one-out method" in the literature, it encodes each categorical value with the mean of the response variable across all other group cases. This method controls overfitting better than "mean". Variables encoded with this method are identified with the suffix "__encoded_loo".
+#'   \item "mean" (implemented in [target_encoding_mean()]): Encodes categorical values with the group means of the response. Variables encoded with this method are identified with the suffix "__encoded_mean". It has a method to control overfitting implemented via the argument \code{smoothing}. The integer value of this argument indicates a threshold in number of rows. Groups above this threshold are encoded with the group mean, while groups below it are encoded with a weighted mean of the group's mean and the global mean. This method is named "mean smoothing" in the relevant literature.
+#'   \item "rank" (implemented in [target_encoding_rank()]): Returns the rank of the group as a integer, being 1 he group with the lower mean of the response variable. Variables encoded with this method are identified with the suffix "__encoded_rank".
+#'   \item "loo" (implemented in [target_encoding_loo()]): Known as the "leave-one-out method" in the literature, it encodes each categorical value with the mean of the response variable across all other group cases. This method controls overfitting better than "mean". Variables encoded with this method are identified with the suffix "__encoded_loo".
 #' }
 #'
 #' Accepts a parallelization setup via [future::plan()] and a progress bar via [progressr::handlers()] (see examples).
 #'
 #' @inheritParams collinear
-#' @param response (optional, character string) Name of a numeric response variable in `df`. Default: NULL.
-#' @param methods (optional; character vector or NULL). Name of the target encoding methods. If NULL, target encoding is ignored, and `df` is returned with no modification. Default: c("loo", "mean", "rank")
+#' @param response (optional, character string) Name of a numeric response variable in \code{df}. Default: NULL.
+#' @param methods (optional; character vector or NULL). Name of the target encoding methods. If NULL, target encoding is ignored, and \code{df} is returned with no modification. Default: c("loo", "mean", "rank")
 #' @param smoothing (optional; integer vector) Argument of the method "mean". Groups smaller than this number have their means pulled towards the mean of the response across all cases. Default: 0
-#' @param white_noise (optional; numeric vector) Argument of the methods "mean", "rank", and "loo". Maximum white noise to add, expressed as a fraction of the range of the response variable. Range from 0 to 1. Default: `0`.
-#' @param seed (optional; integer vector) Random seed to facilitate reproducibility when `white_noise` is not 0. If NULL, the function selects one at random, and the selected seed does not appear in the encoded variable names. Default: 0
-#' @param overwrite (optional; logical) If `TRUE`, the original predictors in `df` are overwritten with their encoded versions, but only one encoding method, smoothing, white noise, and seed are allowed. Otherwise, encoded predictors with their descriptive names are added to `df`. Default: FALSE
+#' @param white_noise (optional; numeric vector) Argument of the methods "mean", "rank", and "loo". Maximum white noise to add, expressed as a fraction of the range of the response variable. Range from 0 to 1. Default: 0.
+#' @param seed (optional; integer vector) Random seed to facilitate reproducibility when \code{white_noise} is not 0. If NULL, the function selects one at random, and the selected seed does not appear in the encoded variable names. Default: 0
+#' @param overwrite (optional; logical) If TRUE, the original predictors in \code{df} are overwritten with their encoded versions, but only one encoding method, smoothing, white noise, and seed are allowed. Otherwise, encoded predictors with their descriptive names are added to \code{df}. Default: FALSE
 #'
 #' @return data frame
 #' @examples
 #'
-#loading example data
-#' data(
-#'   vi,
-#'   vi_predictors
-#'   )
+#  loading example data
+#' data(vi, vi_predictors)
 #'
 #' #subset to limit example run time
 #' vi <- vi[1:1000, ]
@@ -86,14 +83,8 @@ target_encoding_lab <- function(
     quiet = FALSE
 ){
 
-  # quiet ----
-  if(!is.logical(quiet)){
-    message("\ncollinear::target_encoding_lab(): argument 'quiet' must be logical, resetting it to FALSE.")
-    quiet <- FALSE
-  }
-
   # validate all other args ----
-  args <- validate_encoding_arguments(
+  args <- validate_args_target_encoding_lab(
     df = df,
     response = response,
     predictors = predictors,
@@ -105,10 +96,13 @@ target_encoding_lab <- function(
     quiet = quiet
   )
 
-  #reassign args
-  if(is.data.frame(args$df)){
-    df <- args$df
+  # early stops ----
+  if(is.null(args)){
+    return(df)
   }
+
+  #reassign args
+  df <- args$df
   response <- args$response
   predictors <- args$predictors
   methods <- args$methods
@@ -117,26 +111,13 @@ target_encoding_lab <- function(
   seed <- args$seed
   overwrite <- args$overwrite
 
-  # early stops ----
-  if(
-    is.null(response) ||
-    length(predictors) == 0 ||
-    is.null(methods) ||
-    (
-      !is.null(response) &&
-      !is.numeric(df[[response]])
-    )
-  ){
-    return(df)
-  }
-
   #message to start encoding
   if(quiet == FALSE){
 
     message(
       "\ncollinear::target_encoding_lab(): using response '",
       response,
-      "' to encode categorical predictors:\n - ",
+      "' to encode these categorical predictors:\n - ",
       paste0(
         predictors,
         collapse = "\n - "
@@ -269,6 +250,12 @@ target_encoding_lab <- function(
     df,
     encoded_df
   )
+
+  #add validated tag
+  attr(
+    x = df,
+    which = "validated"
+  ) <- TRUE
 
   df
 

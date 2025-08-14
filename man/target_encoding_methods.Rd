@@ -31,7 +31,7 @@ target_encoding_loo(
 )
 }
 \arguments{
-\item{df}{(required; data frame, tibble, or sf) A data frame with responses and predictors. Default: NULL.}
+\item{df}{(required; data frame, tibble, or sf) A data frame with responses and predictors. Must have at least 10 rows for pairwise correlation analysis, and \code{10 * (length(predictors) - 1)} for VIF analysis.  Default: NULL.}
 
 \item{response}{(optional, character string) Name of a numeric response variable in \code{df}. Default: NULL.}
 
@@ -39,7 +39,7 @@ target_encoding_loo(
 
 \item{encoded_name}{(required, string) Name of the encoded predictor. Default: NULL}
 
-\item{smoothing}{(optional; integer) Groups smaller than this number have their means pulled towards the mean of the response across all cases. Ignored by \code{target_encoding_rank()} and \code{target_encoding_loo()}. Default: 0}
+\item{smoothing}{(optional; integer) Groups smaller than this number have their means pulled towards the mean of the response across all cases. Ignored by \code{\link[=target_encoding_rank]{target_encoding_rank()}} and \code{\link[=target_encoding_loo]{target_encoding_loo()}}. Default: 0}
 }
 \value{
 data frame

@@ -19,6 +19,6 @@ f_auto_rules()
 Other preference_order_tools: 
 \code{\link{f_auto}()},
 \code{\link{f_functions}()},
-\code{\link{preference_order_collinear}()}
+\code{\link{preference_order_wrapper}()}
 }
 \concept{preference_order_tools}

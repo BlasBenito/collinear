@@ -1,12 +1,16 @@
 testthat::test_that("`vif_df()` works", {
 
+  data(vi, vi_predictors_numeric)
+
   # numeric types ----
   predictors <- vi_predictors_numeric[1:10]
   df <- vi[1:1000, ]
 
-  vif.df <- vif_df(
-    df = df,
-    predictors = predictors
+  testthat::expect_no_message(
+    vif.df <- vif_df(
+      df = df,
+      predictors = predictors
+    )
   )
 
   testthat::expect_true(
@@ -30,8 +34,7 @@ testthat::test_that("`vif_df()` works", {
       df = df,
       predictors = predictors
     )
-  ) |>
-    suppressMessages()
+  )
 
   testthat::expect_true(
     is.data.frame(vif.df)
@@ -53,20 +56,19 @@ testthat::test_that("`vif_df()` works", {
       df = df,
       predictors = predictors
     )
-  ) |>
-    suppressMessages()
+  )
 
   testthat::expect_true(
     is.data.frame(vif.df)
   )
 
   testthat::expect_true(
-    all(is.na(vif.df[1, ]))
+    nrow(vif.df) == 0
   )
 
   # edge cases ----
 
-  #no df
+  #no arguments
   testthat::expect_error(
     vif.df <- vif_df(
       df = NULL,
@@ -83,7 +85,7 @@ testthat::test_that("`vif_df()` works", {
   )
 
   #few rows
-  testthat::expect_error(
+  testthat::expect_message(
     vif.df <- vif_df(
       df = vi[1, ],
       predictors = vi_predictors
@@ -113,8 +115,7 @@ testthat::test_that("`vif_df()` works", {
       df = df,
       predictors = predictors
     )
-  ) |>
-    suppressMessages()
+  )
 
 
   testthat::expect_true(

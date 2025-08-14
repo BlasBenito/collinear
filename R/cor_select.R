@@ -81,58 +81,42 @@ cor_select <- function(
     quiet = FALSE
 ){
 
-  if(!is.logical(quiet)){
-    message("\ncollinear::cor_select(): argument 'quiet' must be logical, resetting it to FALSE.")
-    quiet <- FALSE
-  }
+  function_name <- "collinear::cor_select()"
 
-  #do nothing if one predictor only
-  if(is.null(max_cor)){
-
-    if(quiet == FALSE){
-
-      message("\ncollinear::cor_select(): argument 'max_cor' is NULL, skipping pairwise correlation filtering.")
-
-    }
-
-    return(predictors)
-
-  }
-
-  #checking argument max_cor
-  if(
-    !is.numeric(max_cor) ||
-    length(max_cor) != 1 ||
-    max_cor < 0.1 ||
-    max_cor > 1
-    ){
-
-    if(quiet == FALSE){
-
-      message("\ncollinear::cor_select(): invalid 'max_cor', resetting it to 0.75.")
-
-    }
-
-    max_cor <- 0.75
-  }
-
-  #validate input data
-  predictors <- validate_data_cor(
-    df = df,
-    predictors = predictors,
-    function_name = "collinear::cor_select()",
+  quiet <- validate_arg_quiet(
+    function_name = function_name,
     quiet = quiet
   )
 
-  if(length(predictors) <= 1){
-    return(predictors)
+  max_cor <- validate_arg_max_cor(
+    function_name = function_name,
+    max_cor = max_cor,
+    quiet = quiet
+  )
+
+  if(is.null(max_cor)){
+    return(NULL)
   }
 
-  #correlation matrix
-  if(quiet == FALSE){
+  df <- validate_arg_df(
+    df = df,
+    predictors = predictors,
+    function_name = function_name,
+    quiet = quiet
+  )
 
-    message("\ncollinear::cor_select(): computing pairwise correlation matrix.")
+  predictors <- validate_arg_predictors_cor(
+    df = df,
+    predictors = predictors,
+    function_name = function_name,
+    quiet = quiet
+  )
 
+  if(
+    length(predictors) == 1 ||
+    is.null(predictors)
+    ){
+    return(predictors)
   }
 
   m <- cor_matrix(
@@ -146,14 +130,19 @@ cor_select <- function(
 
     if(quiet == FALSE){
 
-      message("\ncollinear::cor_select(): maximum pairwise correlation is <= ", max_cor, ", skipping pairwise correlation filtering.")
+      message(
+        "\n",
+        function_name,
+        ": maximum pairwise correlation is <= ", max_cor, ", skipping correlation filtering."
+        )
 
     }
+
+    attr(predictors, "validated_cor") <- NULL
 
     return(predictors)
 
   }
-
 
   #auto preference order
   #variables with lower sum of correlation with others go higher
@@ -163,11 +152,11 @@ cor_select <- function(
     names()
 
   #validate preference order
-  preference_order <- validate_preference_order(
+  preference_order <- validate_arg_preference_order(
     predictors = predictors,
     preference_order = preference_order,
     preference_order_auto = preference_order_auto,
-    function_name = "collinear::cor_select()",
+    function_name = function_name,
     quiet = quiet
   )
 
@@ -203,7 +192,9 @@ cor_select <- function(
   if(quiet == FALSE){
 
     message(
-      "\ncollinear::cor_select(): selected predictors: \n - ",
+      "\n",
+      function_name,
+      ": selected predictors: \n - ",
       paste(selected, collapse = "\n - ")
     )
 

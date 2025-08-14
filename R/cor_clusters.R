@@ -2,7 +2,7 @@
 #'
 #' @description
 #'
-#' Hierarchical clustering of predictors from their pairwise correlation matrix. Computes the correlation matrix with [cor_df()] and [cor_matrix()], transforms it to a dist object, computes a clustering solution with [stats::hclust()], and applies [stats::cutree()] to separate groups based on the value of the argument `max_cor`.
+#' Hierarchical clustering of predictors from their pairwise correlation matrix. Computes the correlation matrix with [cor_df()] and [cor_matrix()], transforms it to a dist object, computes a clustering solution with [stats::hclust()], and applies [stats::cutree()] to separate groups based on the value of the argument \code{max_cor}.
 #'
 #' Returns a data frame with predictor names and their clusters, and optionally, prints a dendrogram of the clustering solution.
 #'
@@ -14,24 +14,35 @@
 #'
 #' @return data frame: predictor names and their clusters
 #' @examples
+#'   data(vi)
 #'
-#' #parallelization setup
-#' future::plan(
-#'   future::multisession,
-#'   workers = 2 #set to parallelly::availableCores() - 1
-#' )
+#'   #subset to speed-up example
+#'   vi <- vi[1:1000, ]
 #'
-#' #progress bar
-#' # progressr::handlers(global = TRUE)
+#'   #OPTIONAL: parallelization setup
+#'   # future::plan(
+#'   #   future::multisession,
+#'   #   workers = 2
+#'   # )
 #'
-#' df_clusters <- cor_clusters(
-#'   df = vi[1:1000, ],
-#'   predictors = vi_predictors[1:15]
-#' )
+#'   #OPTIONAL: progress bar
+#'   # progressr::handlers(global = TRUE)
 #'
-#' #disable parallelization
-#' future::plan(future::sequential)
+#'   #group predictors using max_cor as clustering threshold
+#'   df_clusters <- cor_clusters(
+#'     df = vi,
+#'     predictors = c(
+#'       "koppen_zone", #character
+#'       "soil_type", #factor
+#'       "topo_elevation", #numeric
+#'       "soil_temperature_mean" #numeric
+#'     ),
+#'     max_cor = 0.75,
+#'     plot = FALSE #set to TRUE to plot result
+#'   )
 #'
+#'   #OPTIONAL: disable parallelization
+#'   #future::plan(future::sequential)
 #' @export
 #' @family pairwise_correlation
 #' @autoglobal
@@ -40,12 +51,14 @@ cor_clusters <- function(
     predictors = NULL,
     max_cor = 0.75,
     method = "complete",
-    plot = FALSE
+    plot = FALSE,
+    quiet = FALSE
 ){
 
   m <- cor_matrix(
     df = df,
-    predictors = predictors
+    predictors = predictors,
+    quiet = quiet
   )
 
   m <- stats::as.dist(1 - abs(m))

@@ -8,18 +8,17 @@
 #'
 #' Even when its range is between 0 and 1, Cramer's V values are not directly comparable to R-squared values, and as such, a multicollinearity analysis containing both types of values must be assessed with care. It is probably preferable to convert non-numeric variables to numeric using target encoding rather before a multicollinearity analysis.
 #'
-#' @param x (required; character vector) character vector representing a categorical variable.  Default: NULL
-#' @param y (required; character vector) character vector representing a categorical variable. Must have the same length as 'x'. Default: NULL
+#' @param x (required; character vector) character vector representing a categorical variable. Default: NULL
+#' @param y (required; character vector) character vector representing a categorical variable. Must have the same length as \code{x}. Default: NULL
 #' @param check_input (required; logical) If FALSE, disables data checking for a slightly faster execution. Default: TRUE
 #'
 #' @return numeric: Cramer's V
 #'
 #' @examples
 #'
-#' #loading example data
 #' data(vi)
 #'
-#' #subset to limit example run time
+#' #subset to speed-up example
 #' vi <- vi[1:1000, ]
 #'
 #' #computing Cramer's V for two categorical predictors
@@ -94,7 +93,7 @@ cor_cramer_v <- function(
     x = as.character(x),
     y = as.character(y)
   ) |>
-    na.omit()
+    stats::na.omit()
 
   # contingency table of 'x' and 'y'
   xy.table <- table(

@@ -7,9 +7,9 @@
 identify_predictors_categorical(df = NULL, predictors = NULL)
 }
 \arguments{
-\item{df}{(required; data frame, tibble, or sf) A data frame with responses and predictors. Default: NULL.}
+\item{df}{(required; data frame, tibble, or sf) A data frame with responses and predictors. Must have at least 10 rows for pairwise correlation analysis, and \code{10 * (length(predictors) - 1)} for VIF analysis.  Default: NULL.}
 
-\item{predictors}{(optional; character vector) Names of the predictors to select from \code{df}. If omitted, all numeric columns in \code{df} are used instead. If argument \code{response} is not provided, non-numeric variables are ignored. Default: NULL}
+\item{predictors}{(optional; character vector or NULL) Names of the predictors to select from \code{df}. If omitted, all numeric columns in \code{df} are used instead. Default: NULL}
 }
 \value{
 character vector: categorical predictors names
@@ -19,10 +19,7 @@ Returns the names of character or factor predictors, if any. Removes categorical
 }
 \examples{
 
-data(
-  vi,
-  vi_predictors
-)
+data(vi, vi_predictors)
 
 non.numeric.predictors <- identify_predictors_categorical(
   df = vi,
@@ -35,6 +32,7 @@ non.numeric.predictors
 \seealso{
 Other data_types: 
 \code{\link{identify_predictors}()},
+\code{\link{identify_predictors_logical}()},
 \code{\link{identify_predictors_numeric}()},
 \code{\link{identify_predictors_type}()},
 \code{\link{identify_predictors_zero_variance}()},

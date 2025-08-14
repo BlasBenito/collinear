@@ -8,52 +8,55 @@ collinear(
   df = NULL,
   response = NULL,
   predictors = NULL,
-  encoding_method = "loo",
-  preference_order = "auto",
-  f = "auto",
+  encoding_method = NULL,
+  preference_order = NULL,
+  f = NULL,
   max_cor = 0.75,
   max_vif = 5,
   quiet = FALSE
 )
 }
 \arguments{
-\item{df}{(required; data frame, tibble, or sf) A data frame with responses and predictors. Default: NULL.}
+\item{df}{(required; data frame, tibble, or sf) A data frame with responses and predictors. Must have at least 10 rows for pairwise correlation analysis, and \code{10 * (length(predictors) - 1)} for VIF analysis.  Default: NULL.}
 
-\item{response}{(optional; character string or vector) Name/s of response variable/s in \code{df}. Used in target encoding when it names a numeric variable and there are categorical predictors, and to compute preference order. Default: NULL.}
+\item{response}{(optional; character, character vector, or NULL) Name of one or several response variables in \code{df}, used to target encode categorical predictors, if any, when \code{encoding_method} is not NULL, and to compute preference order when \code{preference_order} is not NULL. If \code{response} is NULL, target encoding and preference order computation are disabled. Default: NULL.}
 
-\item{predictors}{(optional; character vector) Names of the predictors to select from \code{df}. If omitted, all numeric columns in \code{df} are used instead. If argument \code{response} is not provided, non-numeric variables are ignored. Default: NULL}
+\item{predictors}{(optional; character vector or NULL) Names of the predictors to select from \code{df}. If omitted, all numeric columns in \code{df} are used instead. Default: NULL}
 
-\item{encoding_method}{(optional; character string). Name of the target encoding method. One of: "loo", "mean", or "rank". If NULL, target encoding is disabled. Default: "loo"}
+\item{encoding_method}{(optional; character or NULL). Name of one target encoding method or NULL. One of: "loo", "mean", or "rank" (see \code{\link[=target_encoding_lab]{target_encoding_lab()}} for further details). If NULL, target encoding is disabled. Default: NULL}
 
-\item{preference_order}{(optional; string, character vector, output of \code{\link[=preference_order]{preference_order()}}). Defines a priority order, from first to last, to preserve predictors during the selection process. Accepted inputs are:
+\item{preference_order}{(optional; character vector, output of \code{\link[=preference_order]{preference_order()}}, list, or NULL). Prioritizes predictors to preserve the most relevant ones during multicollinearity filtering. Accepted inputs are:
 \itemize{
-\item \strong{"auto"} (default): if \code{response} is not NULL, calls \code{\link[=preference_order]{preference_order()}} for internal computation.
-\item \strong{character vector}: predictor names in a custom preference order.
-\item \strong{data frame}: output of \code{\link[=preference_order]{preference_order()}} from \code{response} of length one.
-\item \strong{named list}: output of \code{\link[=preference_order]{preference_order()}} from \code{response} of length two or more.
-\item \strong{NULL}: disabled.
-}. Default: "auto"}
+\item \strong{NULL} (default): If argument \code{f} is NULL (default), predictors are prioritized from lower to higher multicollinearity. Otherwise it calls \code{\link[=preference_order]{preference_order()}} to rank the predictors using the function defined in the argument \code{f}. The output of this setting might differ to an external call to \code{\link[=preference_order]{preference_order()}} if target encoding is triggered to transform ategorical predictors to numeric.
+\item \strong{character vector}: Predictor names in a user-defined priority order. The first predictor in this vector is always selected, unless it has near zero-variance values.
+\item \strong{data frame}: output of \code{\link[=preference_order]{preference_order()}} computed on the value of the argument \code{response}.
+\item \strong{named list}: list of data frames, output of \code{\link[=preference_order]{preference_order()}} when argument \code{response} is a vector of length two or more.
+}. Default: NULL}
 
-\item{f}{(optional: function) Function to compute preference order. If "auto" (default) or NULL, the output of \code{\link[=f_auto]{f_auto()}} for the given data is used:
-\itemize{
-\item \code{\link[=f_auc_rf]{f_auc_rf()}}: if \code{response} is binomial.
-\item \code{\link[=f_r2_pearson]{f_r2_pearson()}}: if \code{response} and \code{predictors} are numeric.
-\item \code{\link[=f_v]{f_v()}}: if \code{response} and \code{predictors} are categorical.
-\item \code{\link[=f_v_rf_categorical]{f_v_rf_categorical()}}: if \code{response} is categorical and \code{predictors} are numeric or mixed .
-\item \code{\link[=f_r2_rf]{f_r2_rf()}}: in all other cases.
-}
-Default: NULL}
+\item{f}{(optional: function name or NULL) Function to compute preference order used when \code{preference_order = "auto"}. Available functions are listed by \code{\link[=f_functions]{f_functions()}} and described in the manual of \code{\link[=preference_order]{preference_order()}}. If NULL, calls to \code{\link[=f_auto]{f_auto()}} (see \code{\link[=f_auto_rules]{f_auto_rules()}}) to select a suitable method depending on the nature of the data. Default: NULL}
 
-\item{max_cor}{(optional; numeric) Maximum correlation allowed between any pair of variables in \code{predictors}. Recommended values are between 0.5 and 0.9. Higher values return larger number of predictors with a higher multicollinearity. If NULL, the pairwise correlation analysis is disabled. Default: \code{0.75}}
+\item{max_cor}{(optional; numeric or NULL) Maximum correlation allowed between any pair of variables in \code{predictors}. Valid values are between 0.01 and 0.99, while recommended values are between 0.5 (strict) and 0.9 (permissive). Higher values return larger number of predictors with a higher multicollinearity. If NULL, the pairwise correlation analysis is disabled. Default: 0.75}
 
-\item{max_vif}{(optional, numeric) Maximum Variance Inflation Factor allowed during variable selection. Recommended values are between 2.5 and 10. Higher values return larger number of predictors with a higher multicollinearity. If NULL, the variance inflation analysis is disabled. Default: 5.}
+\item{max_vif}{(optional, numeric or NULL) Maximum Variance Inflation Factor allowed during variable selection. Recommended values are between 2 (strict) and 10 (permissive). Higher values return larger number of predictors with a higher multicollinearity. If NULL, the variance inflation analysis is disabled. Default: 5.}
 
-\item{quiet}{(optional; logical) If FALSE, messages generated during the execution of the function are printed to the console Default: FALSE}
+\item{quiet}{(optional; logical) If FALSE, messages are printed to the console Default: FALSE}
 }
 \value{
+list
+
+A list whose structure depends on the value of the \code{response} argument:
+
 \itemize{
-\item character vector if \code{response} is NULL or is a string.
-\item named list if \code{response} is a character vector.
+\item If \code{response} is \code{NULL} or has length 1: an object of class \link{collinear_output} with a custom print method \link{print.collinear_output}. It contains:
+\itemize{
+\item \code{response} (\code{character} or \code{NULL}): Name of the response variable.
+\item \code{predictors} (\code{character} or \code{NULL}): Names of predictors considered in multicollinearity filtering.
+\item \code{selection} (\code{character} or \code{NULL}): Names of selected, non-collinear predictors.
+\item \code{df} (\code{data.frame} or \code{NULL}): Data frame including columns in \code{response} and \code{selection}. If target encoding was applied, categorical variables will be numeric.
+\item \code{arguments} (\code{list}): A list of arguments used in the call: \code{encoding_method}, \code{preference_order}, \code{f}, \code{max_cor}, and \code{max_vif}
+}
+
+\item If \code{response} is a character vector of length >= 2: an object of class \link{collinear_list}, a named list of \code{"collinear_output"} objects, one per response variable.
 }
 }
 \description{
@@ -65,14 +68,14 @@ Automates multicollinearity management in data frames with numeric and non-numer
 \item \strong{VIF filtering}: Automated algorithm to identify and remove numeric predictors that are linear combinations of other predictors. See \code{\link[=vif_select]{vif_select()}} and \code{\link[=vif_df]{vif_df()}}.
 }
 
-Accepts a parallelization setup via \code{\link[future:plan]{future::plan()}} and a progress bar via \code{\link[progressr:handlers]{progressr::handlers()}} (see examples).
+Accepts a parallelization setup via \code{\link[future:plan]{future::plan()}} and a progress bar via \code{\link[progressr:handlers]{progressr::handlers()}}. If available, parallelization is used to speed-up the execution of \code{\link[=target_encoding_lab]{target_encoding_lab()}}, \code{\link[=preference_order]{preference_order()}}, and \code{\link[=cor_select]{cor_select()}}.
 
 Accepts a character vector of response variables as input for the argument \code{response}. When more than one response is provided, the output is a named list of character.
 }
 \section{Target Encoding}{
 
 
-When the argument \code{response} names a \strong{numeric response variable}, categorical predictors in \code{predictors} (or in the columns of \code{df} if \code{predictors} is NULL) are converted to numeric via \strong{target encoding} with the function \code{\link[=target_encoding_lab]{target_encoding_lab()}}. When \code{response} is NULL or names a categorical variable, target-encoding is skipped. This feature facilitates multicollinearity filtering in data frames with mixed column types.
+When the argument \code{response} names a numeric column in \code{df} and \code{encoding_method} is not NULL, categorical predictors in \code{predictors} (or in the columns of \code{df} if \code{predictors} is NULL) are converted to numeric via \strong{target encoding} with the function \code{\link[=target_encoding_lab]{target_encoding_lab()}}. When \code{response} is NULL or names a categorical variable, target-encoding is skipped. This feature enables multicollinearity filtering in data frames with mixed column types.
 }
 
 \section{Preference Order}{
@@ -93,7 +96,7 @@ The argument \code{preference_order} accepts:
 
 The Variance Inflation Factor for a given variable \eqn{a} is computed as \eqn{1/(1-R2)}, where \eqn{R2} is the multiple R-squared of a multiple regression model fitted using \eqn{a} as response and all other predictors in the input data frame as predictors, as in  \eqn{a = b + c + ...}.
 
-The square root of the VIF of \eqn{a} is the factor by which the confidence interval of the estimate for \eqn{a} in the linear model \eqn{y = a + b + c + ...}` is widened by multicollinearity in the model predictors.
+The square root of the VIF of \eqn{a} is the factor by which the confidence interval of the estimate for \eqn{a} in the linear model \eqn{y = a + b + c + ...} is widened by multicollinearity in the model predictors.
 
 The range of VIF values is (1, Inf]. The recommended thresholds for maximum VIF may vary depending on the source consulted, being the most common values, 2.5, 5, and 10.
 }
@@ -105,13 +108,13 @@ The function \code{\link[=vif_select]{vif_select()}} computes Variance Inflation
 
 If the argument \code{preference_order} is not provided, all variables are ranked from lower to higher VIF, as returned by \code{\link[=vif_df]{vif_df()}}, and the variable with the higher VIF above \code{max_vif} is removed on each iteration.
 
-If \code{preference_order} is defined, whenever two or more variables are above \code{max_vif}, the one higher in \code{preference_order} is preserved, and the next one with a higher VIF is removed. For example, for the predictors and preference order \eqn{a} and \eqn{b}, if any of their VIFs is higher than \code{max_vif}, then \eqn{b} will be removed no matter whether its VIF is lower or higher than \eqn{a}'s VIF. If their VIF scores are lower than \code{max_vif}, then both are preserved.
+If \code{preference_order} is defined, whenever two or more variables are above \code{max_vif}, the one with a smaller index in the vector \code{preference_order} is preserved, and the next one with a higher VIF is removed. For example, for the predictors and preference order \eqn{a} and \eqn{b}, if any of their VIFs is higher than \code{max_vif}, then \eqn{b} will be removed regardless of whether its VIF is lower or higher than \eqn{a}'s VIF. If their VIF scores are lower than \code{max_vif}, then both are preserved.
 }
 
 \section{Pairwise Correlation Filtering}{
 
 
-The function \code{\link[=cor_select]{cor_select()}} applies a recursive forward selection algorithm to keep predictors with a maximum Pearson correlation with all other selected predictors lower than \code{max_cor}.
+The function \code{\link[=cor_select]{cor_select()}} applies a recursive forward selection algorithm to keep predictors with a maximum absolute Pearson correlation with all other selected predictors less than or equal to \code{max_cor}.
 
 If the argument \code{preference_order} is NULL, the predictors are ranked from lower to higher sum of absolute pairwise correlation with all other predictors.
 
@@ -125,7 +128,7 @@ future::plan(
   workers = 2 #set to parallelly::availableCores() - 1
 )
 
-#progress bar
+#progress bar (does not work in examples)
 #progressr::handlers(global = TRUE)
 
 #subset to limit example run time

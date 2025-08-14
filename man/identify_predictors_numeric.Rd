@@ -7,9 +7,9 @@
 identify_predictors_numeric(df = NULL, predictors = NULL, decimals = 4)
 }
 \arguments{
-\item{df}{(required; data frame, tibble, or sf) A data frame with responses and predictors. Default: NULL.}
+\item{df}{(required; data frame, tibble, or sf) A data frame with responses and predictors. Must have at least 10 rows for pairwise correlation analysis, and \code{10 * (length(predictors) - 1)} for VIF analysis.  Default: NULL.}
 
-\item{predictors}{(optional; character vector) Names of the predictors to select from \code{df}. If omitted, all numeric columns in \code{df} are used instead. If argument \code{response} is not provided, non-numeric variables are ignored. Default: NULL}
+\item{predictors}{(optional; character vector or NULL) Names of the predictors to select from \code{df}. If omitted, all numeric columns in \code{df} are used instead. Default: NULL}
 
 \item{decimals}{(required, integer) Number of decimal places for the zero variance test. Smaller numbers will increase the number of variables detected as near-zero variance. Recommended values will depend on the range of the numeric variables in 'df'. Default: 4}
 }
@@ -20,12 +20,8 @@ character vector: names of numeric predictors
 Returns the names of valid numeric predictors. Ignores predictors with constant values or with near-zero variance.
 }
 \examples{
-if (interactive()) {
 
-data(
-  vi,
-  vi_predictors
-)
+data(vi, vi_predictors)
 
 numeric.predictors <- identify_predictors_numeric(
   df = vi,
@@ -35,11 +31,11 @@ numeric.predictors <- identify_predictors_numeric(
 numeric.predictors
 
 }
-}
 \seealso{
 Other data_types: 
 \code{\link{identify_predictors}()},
 \code{\link{identify_predictors_categorical}()},
+\code{\link{identify_predictors_logical}()},
 \code{\link{identify_predictors_type}()},
 \code{\link{identify_predictors_zero_variance}()},
 \code{\link{identify_response_type}()}

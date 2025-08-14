@@ -17,7 +17,7 @@ model_formula(
 \arguments{
 \item{df}{(optional; data frame, tibble, or sf). A data frame with responses and predictors. Required if \code{predictors = NULL}. Default: NULL.}
 
-\item{response}{(optional; character string or vector) Name/s of response variable/s in \code{df}. Used in target encoding when it names a numeric variable and there are categorical predictors, and to compute preference order. Default: NULL.}
+\item{response}{(optional; character, character vector, or NULL) Name of one or several response variables in \code{df}, used to target encode categorical predictors, if any, when \code{encoding_method} is not NULL, and to compute preference order when \code{preference_order} is not NULL. If \code{response} is NULL, target encoding and preference order computation are disabled. Default: NULL.}
 
 \item{predictors}{(optional, character vector, output of \code{\link[=collinear]{collinear()}}): predictors to include in the formula. Required if \code{df = NULL}.}
 
@@ -25,9 +25,9 @@ model_formula(
 
 \item{term_args}{(optional; string). Arguments of the function applied to each term. For example, for "poly" it can be "degree = 2, raw = TRUE". Default: NULL}
 
-\item{random_effects}{(optional, string or character vector). Names of variables to be used as random effects. Each element is added to the final formula as \code{ +(1 | random_effect_name)}. Default: NULL}
+\item{random_effects}{(optional, string or character vector). Names of variables to be used as random effects. Each element is added to the final formula as \code{+(1 | random_effect_name)}. Default: NULL}
 
-\item{quiet}{(optional; logical) If FALSE, messages generated during the execution of the function are printed to the console Default: FALSE}
+\item{quiet}{(optional; logical) If FALSE, messages are printed to the console Default: FALSE}
 }
 \value{
 list if \code{predictors} is a list or length of \code{response} is higher than one, and character vector otherwise.
@@ -36,6 +36,8 @@ list if \code{predictors} is a list or length of \code{response} is higher than 
 Generate Model Formulas
 }
 \examples{
+
+data(vi, vi_predictors_numeric)
 #using df, response, and predictors
 #----------------------------------
 df <- vi[1:1000, ]

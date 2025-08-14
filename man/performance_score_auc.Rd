@@ -7,15 +7,22 @@
 performance_score_auc(o = NULL, p = NULL)
 }
 \arguments{
-\item{o}{(required, binomial vector) Binomial response with values 0 and 1. Default: NULL}
+\item{o}{(required, numeric vector) Binomial response with values 0 and 1. Default: NULL}
 
-\item{p}{(required, numeric vector) Predictions of binomial model. Default: NULL}
+\item{p}{(required, numeric vector) Predictions of a binomial model. Default: NULL}
 }
 \value{
 numeric: Area Under the ROC Curve
 }
 \description{
 Internal function to compute the AUC of binomial models within \code{\link[=preference_order]{preference_order()}}. As it is build for speed, this function does not check the inputs.
+}
+\examples{
+  performance_score_auc(
+    o = c(1, 1, 1, 1, 0, 0, 0),
+    p = c(1, 0.8, 0.7, 0.6, 0.5, 0.6, 0.7)
+  )
+
 }
 \seealso{
 Other modelling_tools: 

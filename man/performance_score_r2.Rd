@@ -17,6 +17,12 @@ numeric: Pearson R-squared
 \description{
 Internal function to compute the R-squared of observations versus model predictions.
 }
+\examples{
+  performance_score_r2(
+    o = c(1, 1, 1, 0.5, 0.5, 0, 0),
+    p = c(1, 0.8, 0.7, 0.6, 0.5, 0.1, 0)
+  )
+}
 \seealso{
 Other modelling_tools: 
 \code{\link{case_weights}()},

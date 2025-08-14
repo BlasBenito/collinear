@@ -1,5 +1,7 @@
 testthat::test_that("`cor_df()` works", {
 
+  data(vi, vi_predictors, vi_predictors_categorical)
+
   # mixed types ----
   predictors <- vi_predictors[1:10]
   df <- vi[1:1000, ]
@@ -7,7 +9,7 @@ testthat::test_that("`cor_df()` works", {
   cor.df <- cor_df(
     df = df,
     predictors = predictors
-    )
+  )
 
   testthat::expect_true(
     is.data.frame(cor.df)
@@ -48,7 +50,8 @@ testthat::test_that("`cor_df()` works", {
     cor.df <- cor_df(
       df = NULL,
       predictors = NULL
-    )
+    ),
+    regexp = "argument 'df' cannot be NULL"
   )
 
   #predictors only
@@ -56,15 +59,18 @@ testthat::test_that("`cor_df()` works", {
     cor.df <- cor_df(
       df = NULL,
       predictors = vi_predictors
-    )
+    ),
+    regexp = "argument 'df' cannot be NULL"
   )
 
   #few rows
-  testthat::expect_error(
+  testthat::expect_warning(
     cor.df <- cor_df(
       df = vi[1, ],
-      predictors = vi_predictors
-    )
+      predictors = vi_predictors,
+      quiet = TRUE
+    ),
+    regexp = "argument 'df' has fewer than 10 rows"
   )
 
 
@@ -88,13 +94,11 @@ testthat::test_that("`cor_df()` works", {
   #single predictor
   predictors <- vi_predictors[1]
 
-  testthat::expect_message(
-    cor.df <- cor_df(
-      df = df,
-      predictors = predictors
-    )
-  ) |>
-    suppressMessages()
+  cor.df <- cor_df(
+    df = df,
+    predictors = predictors,
+    quiet = FALSE
+  )
 
   testthat::expect_true(
     is.data.frame(cor.df)
@@ -109,7 +113,7 @@ testthat::test_that("`cor_df()` works", {
   )
 
   testthat::expect_true(
-   cor.df$correlation == 1
+    cor.df$correlation == 1
   )
 
 

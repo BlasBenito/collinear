@@ -7,15 +7,22 @@
 performance_score_v(o = NULL, p = NULL)
 }
 \arguments{
-\item{o}{(required, numeric vector) Response values. Default: NULL}
+\item{o}{(required; character vector) character vector representing observations of a categorical variable. Default: NULL}
 
-\item{p}{(required, numeric vector) Model predictions. Default: NULL}
+\item{p}{(required; character vector) character vector representing predictions of a categorical variable. Must have the same length as \code{o}. Default: NULL}
 }
 \value{
 numeric: Cramer's V
 }
 \description{
 Internal function to compute the Cramer's V of categorical observations versus categorical model predictions.
+}
+\examples{
+performance_score_v(
+ o = c("a", "a", "b", "c", "c"),
+ p = c("a", "b", "b", "c", "c")
+ )
+
 }
 \seealso{
 Other modelling_tools: 

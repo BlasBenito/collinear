@@ -3,7 +3,7 @@
 #' @description
 #' Ranks a set of predictors by the strength of their association with a response. Aims to minimize the loss of important predictors during multicollinearity filtering.
 #'
-#' The strength of association between the response and each predictor is computed by the function `f`. The `f` functions available are:
+#' The strength of association between the response and each predictor is computed by the function \code{f}. The \code{f} functions available are:
 #' \itemize{
 #'   \item **Numeric response vs numeric predictor**:
 #'   \itemize{
@@ -39,21 +39,24 @@
 #'   }
 #' }
 #'
-#' The name of the used function is stored in the attribute "f_name" of the output data frame. It can be retrieved via `attributes(df)$f_name`
+#' The name of the used function is stored in the attribute "f_name" of the output data frame. It can be retrieved via \code{attributes(df)$f_name}.
 #'
 #' Additionally, any custom function accepting a data frame with the columns "x" (predictor) and "y" (response) and returning a numeric indicator of association where higher numbers indicate higher association will work.
 #'
-#' This function returns a data frame with the column "predictor", with predictor names ordered by the column "preference", with the result of `f`. This data frame, or the column "predictor" alone, can be used as inputs for the argument `preference_order` in [collinear()], [cor_select()], and [vif_select()].
+#' This function returns a data frame with the column "predictor", with predictor names ordered by the column "preference", with the result of \code{f}. This data frame, or the column "predictor" alone, can be used as inputs for the argument \code{preference_order} in [collinear()], [cor_select()], and [vif_select()].
 #'
 #' Accepts a parallelization setup via [future::plan()] and a progress bar via [progressr::handlers()] (see examples).
 #'
-#' Accepts a character vector of response variables as input for the argument `response`. When more than one response is provided, the output is a named list of preference data frames.
+#' Accepts a character vector of response variables as input for the argument \code{response}. When more than one response is provided, the output is a named list of preference data frames.
 #'
 #' @inheritParams collinear
+#' @param f (optional: function name) Unquoted name of the function to compute preference order. Available functions are listed in the column `name` of the dataframe returned by [f_functions()]. By default calls to [f_auto()] to select a suitable method depending on the nature of the data (see [f_auto_rules()]). Default: f_auto
 #' @param warn_limit (optional, numeric) Preference value (R-squared, AUC, or Cramer's V) over which a warning flagging suspicious predictors is issued. Disabled if NULL. Default: NULL
 #' @family preference_order
 #' @return data frame: columns are "response", "predictor", "f" (function name), and "preference".
 #' @examples
+#' data(vi, vi_predictors, vi_predictors_numeric)
+#'
 #' #subsets to limit example run time
 #' df <- vi[1:1000, ]
 #' predictors <- vi_predictors[1:10]
@@ -76,7 +79,7 @@
 #'   df = df,
 #'   response = "vi_numeric",
 #'   predictors = predictors_numeric,
-#'   f = NULL
+#'   f = f_auto
 #'   )
 #'
 #' #returns data frame ordered by preference
@@ -128,30 +131,31 @@ preference_order <- function(
     df = NULL,
     response = NULL,
     predictors = NULL,
-    f = "auto",
+    f = f_auto,
     warn_limit = NULL,
     quiet = FALSE
 ){
 
-  if(!is.logical(quiet)){
-    message("\ncollinear::preference_order(): argument 'quiet' must be logical, resetting it to FALSE.")
-    quiet <- FALSE
-  }
+  function_name <- "collinear::preference_order()"
 
-  if(is.null(response)){
+  quiet <- validate_arg_quiet(
+    function_name = function_name,
+    quiet = quiet
+  )
 
-    if(quiet == FALSE){
-
-      message("\ncollinear::preference_order(): argument 'response' is NULL, skipping computation of preference order.")
-
-    }
-
-    return(NULL)
-  }
+  #check f
+  f <- validate_arg_f(
+    f = f,
+    f_name = deparse(substitute(f)),
+    function_name = function_name
+  )
 
   #check input data frame
-  df <- validate_df(
+  df <- validate_arg_df(
     df = df,
+    response = response,
+    predictors = predictors,
+    function_name = function_name,
     quiet = quiet
   )
 
@@ -162,63 +166,69 @@ preference_order <- function(
   )
   rm(response)
 
-  #copy of predictors
-  predictors_user <- predictors
-
-  #copy of f
-  f_user <- f
-  f_user_name <- deparse(substitute(f))
-
   #output list
   out <- list()
 
   #iterating over responses
   for(response in responses){
 
-    #check response
-    response <- validate_response(
-      df = df,
-      response = response,
-      quiet = quiet
-    )
+    if(
+      quiet == FALSE &&
+      length(responses) > 1
+    ){
 
-    if(quiet == FALSE){
+      msg <- paste0(
+        function_name,
+        ": processing response '",
+        response,
+        "'."
+      )
 
-      message("\ncollinear::preference_order(): ranking predictors for response '", response, "'." )
+      msg_length <- nchar(msg)
+
+      message("\n", msg)
+      message(rep(x = "-", times = nchar(msg)))
 
     }
 
-    #check predictors
-    predictors.response <- validate_predictors(
+    #check response
+    response <- validate_arg_response(
       df = df,
       response = response,
-      predictors = predictors_user,
       quiet = quiet
     )
 
-    #select f function
-    if(is.null(f_user) ||
-       (
-         is.character(f_user) &&
-        f_user == "auto"
-        )
-       ){
+    #check predictors
+    predictors.response <- validate_arg_predictors(
+      df = df,
+      response = response,
+      predictors = predictors,
+      function_name = function_name,
+      quiet = quiet
+    )
+
+
+    #use f_auto to get function name
+    if(all(c("df", "response", "predictors", "quiet") %in% names(formals(f)))){
 
       #get function name
-      f_name <- f_auto(
+      f_name <- f(
         df = df,
         response = response,
         predictors = predictors.response,
         quiet = quiet
       )
 
-      #as function
-      f <- get(f_name)
+      #validate to function
+      f.response <- validate_arg_f(
+        f = get(f_name),
+        f_name = f_name,
+        function_name = function_name
+      )
 
     } else {
 
-      f <- f_user
-      f_name <- f_user_name
+      f.response <- f
 
     }
 
@@ -230,7 +240,7 @@ preference_order <- function(
         ),
       predictor = predictors.response,
       f = rep(
-        x = f_name,
+        x = attributes(f.response)$name,
         times = length(predictors.response)
       )
     )
@@ -247,15 +257,15 @@ preference_order <- function(
 
         p()
 
-        f(
+        f.response(
           df = data.frame(
             y = df[[response]],
             x = df[[x]]
           ) |>
-            na.omit()
+            stats::na.omit()
         )
 
-      }, #end of lambda function
+      },
       future.seed = TRUE
     ) |>
       unlist() |>
@@ -281,7 +291,9 @@ preference_order <- function(
       if(nrow(preference_extreme) > 0){
 
          message(
-           "\ncollinear::preference_order(): [WARNING] predictors with associations to '",
+           "\n",
+           function_name,
+           ": predictors with associations to '",
            response,
            "' higher than ",
            warn_limit,
@@ -289,7 +301,10 @@ preference_order <- function(
            paste0(
              preference_extreme$predictor,
              ": ",
-             round(preference_extreme$preference, 2),
+             round(
+               preference_extreme$preference,
+               2
+               ),
              collapse = "\n - "
            )
          )
@@ -302,8 +317,7 @@ preference_order <- function(
 
   } #end of loop
 
-
-  if(is.list(out) && length(out) == 1){
+  if(length(out) == 1){
     out <- out[[1]]
   }
 

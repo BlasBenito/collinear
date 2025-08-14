@@ -11,6 +11,11 @@
 #' @export
 #' @autoglobal
 #' @family modelling_tools
+#' @examples
+#'   performance_score_r2(
+#'     o = c(1, 1, 1, 0.5, 0.5, 0, 0),
+#'     p = c(1, 0.8, 0.7, 0.6, 0.5, 0.1, 0)
+#'   )
 performance_score_r2 <- function(
     o = NULL,
     p = NULL

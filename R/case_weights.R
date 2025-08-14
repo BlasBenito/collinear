@@ -1,6 +1,6 @@
 #' @title Case Weights for Unbalanced Binomial or Categorical Responses
 #'
-#' @param x (required, integer, character, or factor vector) binomial, categorical, or factor response variable. Default: `NULL`
+#' @param x (required, integer, character, or factor vector) Binomial, categorical, or factor response variable. Default: NULL
 #' @return numeric vector: case weights
 #' @examples
 #'  case_weights(

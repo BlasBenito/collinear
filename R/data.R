@@ -4,11 +4,11 @@
 #'
 #' The response variable is a Vegetation Index encoded in different ways to help highlight the package capabilities:
 #' \itemize{
-#'  \item `vi_numeric`: continuous vegetation index values in the range 0-1.
-#'  \item `vi_counts`: simulated integer counts created by multiplying `vi_numeric` by 1000 and coercing the result to integer.
-#'  \item `vi_binomial`: simulated binomial variable created by transforming `vi_numeric` to zeros and ones.
-#'  \item `vi_categorical`: character variable with the categories "very_low", "low", "medium", "high", and "very_high", with thresholds located at the quantiles of `vi_numeric`.
-#'  \item `vi_factor`: `vi_categorical` converted to factor.
+#'  \item \code{vi_numeric}: continuous vegetation index values in the range 0-1.
+#'  \item \code{vi_counts}: simulated integer counts created by multiplying \code{vi_numeric} by 1000 and coercing the result to integer.
+#'  \item \code{vi_binomial}: simulated binomial variable created by transforming \code{vi_numeric} to zeros and ones.
+#'  \item \code{vi_categorical}: character variable with the categories "very_low", "low", "medium", "high", and "very_high", with thresholds located at the quantiles of \code{vi_numeric}.
+#'  \item \code{vi_factor}: \code{vi_categorical} converted to factor.
 #' }
 #'
 #' The names of all predictors (continuous, integer, character, and factors) are in [vi_predictors].
@@ -56,14 +56,14 @@
 #'
 #' Columns:
 #' \itemize{
-#'   \item `y`: response variable generated from `a * 0.75 + b * 0.25 + noise`.
-#'   \item `a`: most important predictor of `y`, uncorrelated with `b`.
-#'   \item `b`: second most important predictor of `y`, uncorrelated with `a`.
-#'   \item `c`: generated from `a + noise`.
-#'   \item `d`: generated from `(a + b)/2 + noise`.
+#'   \item \code{y}: response variable generated from \code{a * 0.75 + b * 0.25 + noise}.
+#'   \item \code{a}: most important predictor of \code{y}, uncorrelated with \code{b}.
+#'   \item \code{b}: second most important predictor of \code{y}, uncorrelated with \code{a}.
+#'   \item \code{c}: generated from \code{a + noise}.
+#'   \item \code{d}: generated from \code{(a + b)/2 + noise}.
 #' }
 #'
-#' These are variance inflation factors of the predictors in `toy`.
+#' These are variance inflation factors of the predictors in \code{toy}.
 #' variable vif
 #'  b       4.062
 #'  d       6.804

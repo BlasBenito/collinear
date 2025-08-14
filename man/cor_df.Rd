@@ -16,11 +16,11 @@ cor_numeric_vs_categorical(df = NULL, predictors = NULL, quiet = FALSE)
 cor_categorical_vs_categorical(df = NULL, predictors = NULL, quiet = FALSE)
 }
 \arguments{
-\item{df}{(required; data frame, tibble, or sf) A data frame with responses and predictors. Default: NULL.}
+\item{df}{(required; data frame, tibble, or sf) A data frame with responses and predictors. Must have at least 10 rows for pairwise correlation analysis, and \code{10 * (length(predictors) - 1)} for VIF analysis.  Default: NULL.}
 
-\item{predictors}{(optional; character vector) Names of the predictors to select from \code{df}. If omitted, all numeric columns in \code{df} are used instead. If argument \code{response} is not provided, non-numeric variables are ignored. Default: NULL}
+\item{predictors}{(optional; character vector or NULL) Names of the predictors to select from \code{df}. If omitted, all numeric columns in \code{df} are used instead. Default: NULL}
 
-\item{quiet}{(optional; logical) If FALSE, messages generated during the execution of the function are printed to the console Default: FALSE}
+\item{quiet}{(optional; logical) If FALSE, messages are printed to the console Default: FALSE}
 }
 \value{
 data frame; pairwise correlation
@@ -36,37 +36,65 @@ Computes a pairwise correlation data frame. Implements methods to compare differ
 Accepts a parallelization setup via \code{\link[future:plan]{future::plan()}} and a progress bar via \code{\link[progressr:handlers]{progressr::handlers()}} (see examples).
 }
 \examples{
-data(
-  vi,
-  vi_predictors
-)
+  data(vi)
 
-#reduce size of vi to speed-up example execution
-vi <- vi[1:1000, ]
+  #subset to speed-up example
+  vi <- vi[1:1000, ]
 
-#mixed predictors
-vi_predictors <- vi_predictors[1:10]
+  #predictors
+  predictors = c(
+    "koppen_zone", #character
+    "soil_type", #factor
+    "topo_elevation", #numeric
+    "soil_temperature_mean" #numeric
+  )
 
-#parallelization setup
-future::plan(
-  future::multisession,
-  workers = 2 #set to parallelly::availableCores() - 1
-)
+  #OPTIONAL: parallelization setup
+  # future::plan(
+  #   future::multisession,
+  #   workers = 2
+  # )
 
-#progress bar
-# progressr::handlers(global = TRUE)
+  #OPTIONAL: progress bar
+  # progressr::handlers(global = TRUE)
 
-#correlation data frame
-df <- cor_df(
-  df = vi,
-  predictors = vi_predictors
-)
+  #without preference order
+  selected_predictors <- cor_select(
+    df = vi,
+    predictors = predictors,
+    preference_order = NULL,
+    max_cor = 0.75
+  )
 
-df
 
-#disable parallelization
-future::plan(future::sequential)
+  #with custom preference order
+  selected_predictors <- cor_select(
+    df = vi,
+    predictors = predictors,
+    preference_order = c(
+      "soil_temperature_mean",
+      "soil_type"
+    ),
+    max_cor = 0.75
+  )
 
+
+  #with automated preference order
+  df_preference <- preference_order(
+    df = vi,
+    response = "vi_numeric",
+    predictors = predictors
+  )
+
+  selected_predictors <- cor_select(
+    df = df,
+    predictors = predictors,
+    preference_order = df_preference,
+    max_cor = 0.75
+  )
+
+  #OPTIONAL: disable parallelization
+  #future::plan(future::sequential)
 }
 \seealso{
 Other pairwise_correlation: 

@@ -1,3 +1,26 @@
+# collinear 2.0.1
+
+## Bugfixes
+
+Function `vif_select()` now passes the argument `quiet` to `validate_arg_preference_order()`. Fixes [issue](https://github.com/BlasBenito/collinear/issues/12), first described in [this PR](https://github.com/BlasBenito/collinear/pull/11).
+
+Fixed issue where function `cor_matrix()` returned absolute correlations only.
+
+## Changes
+
+Added new internal function `validate_arg_df()` to convert logicals to numeric, and NaN, Inf and -Inf to NA.
+
+Added new internal function `identify_predictors_logical()`.
+
+Added function `vif()` with fast but minimalistic method to compute VIF from a correlation matrix.
+
+Removed argument `warn_limit` of `preference_order()` from `collinear()` and its internal function `preference_order_wrapper()` to simplify their signatures.
+
+Default value of argument `f` in all functions is now NULL instead of "auto". When NULL, `f_auto()` is called to select a suitable function depending on the data features.
+
+Previous `error()` when `df` had fewer than 10 rows has been replaced with `warning()`.
+
+
 # collinear 2.0.0
 
 **Warning**: This version includes several breaking changes.
@@ -44,7 +67,7 @@
 
 - Target encoding, along with the `response` and `encoding_method` arguments, has been removed from this function. This change also applies to `cor_df()`.
 
-- The function now calls `validate_data_cor()` to ensure that the data is suitable for pairwise correlation multicollinearity filtering.
+- The function now calls `validate_arg_predictors_cor()` to ensure that the data is suitable for pairwise correlation multicollinearity filtering.
 
 - Parallelization setup is now managed via `future::plan()`, with a progress bar provided by `progressr::handlers()`. This setup is used by `cor_numeric_vs_categorical()` and `cor_categorical_vs_categorical()` to speed up pairwise correlation computation.
 
@@ -58,7 +81,7 @@
 
 - Target encoding, along with the `response` and `encoding_method` arguments, has been removed. As a result, this function now only works with numeric predictors. This change also applies to `vif_df()`.
 
-- The new function `validate_data_vif()` is called to ensure the data is suitable for VIF-based multicollinearity filtering. Attempting a VIF analysis in a data frame with more columns than rows now returns an error.
+- The new function `validate_arg_predictors_vif()` is called to ensure the data is suitable for VIF-based multicollinearity filtering. Attempting a VIF analysis in a data frame with more columns than rows now returns an error.
 
 ### Function `target_encoding_lab()` and Companion Functions
 

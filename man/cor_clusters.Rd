@@ -9,19 +9,22 @@ cor_clusters(
   predictors = NULL,
   max_cor = 0.75,
   method = "complete",
-  plot = FALSE
+  plot = FALSE,
+  quiet = FALSE
 )
 }
 \arguments{
-\item{df}{(required; data frame, tibble, or sf) A data frame with responses and predictors. Default: NULL.}
+\item{df}{(required; data frame, tibble, or sf) A data frame with responses and predictors. Must have at least 10 rows for pairwise correlation analysis, and \code{10 * (length(predictors) - 1)} for VIF analysis.  Default: NULL.}
 
-\item{predictors}{(optional; character vector) Names of the predictors to select from \code{df}. If omitted, all numeric columns in \code{df} are used instead. If argument \code{response} is not provided, non-numeric variables are ignored. Default: NULL}
+\item{predictors}{(optional; character vector or NULL) Names of the predictors to select from \code{df}. If omitted, all numeric columns in \code{df} are used instead. Default: NULL}
 
-\item{max_cor}{(optional; numeric) Maximum correlation allowed between any pair of variables in \code{predictors}. Recommended values are between 0.5 and 0.9. Higher values return larger number of predictors with a higher multicollinearity. If NULL, the pairwise correlation analysis is disabled. Default: \code{0.75}}
+\item{max_cor}{(optional; numeric or NULL) Maximum correlation allowed between any pair of variables in \code{predictors}. Valid values are between 0.01 and 0.99, while recommended values are between 0.5 (strict) and 0.9 (permissive). Higher values return larger number of predictors with a higher multicollinearity. If NULL, the pairwise correlation analysis is disabled. Default: 0.75}
 
 \item{method}{(optional, character string) Argument of \code{\link[stats:hclust]{stats::hclust()}} defining the agglomerative method. One of: "ward.D", "ward.D2", "single", "complete", "average" (= UPGMA), "mcquitty" (= WPGMA), "median" (= WPGMC) or "centroid" (= UPGMC). Unambiguous abbreviations are accepted as well. Default: "complete".}
 
 \item{plot}{(optional, logical) If TRUE, the clustering is plotted. Default: FALSE}
+
+\item{quiet}{(optional; logical) If FALSE, messages are printed to the console Default: FALSE}
 }
 \value{
 data frame: predictor names and their clusters
@@ -34,24 +37,35 @@ Returns a data frame with predictor names and their clusters, and optionally, pr
 Accepts a parallelization setup via \code{\link[future:plan]{future::plan()}} and a progress bar via \code{\link[progressr:handlers]{progressr::handlers()}} (see examples).
 }
 \examples{
+  data(vi)
 
-#parallelization setup
-future::plan(
-  future::multisession,
-  workers = 2 #set to parallelly::availableCores() - 1
-)
+  #subset to speed-up example
+  vi <- vi[1:1000, ]
 
-#progress bar
-# progressr::handlers(global = TRUE)
+  #OPTIONAL: parallelization setup
+  # future::plan(
+  #   future::multisession,
+  #   workers = 2
+  # )
 
-df_clusters <- cor_clusters(
-  df = vi[1:1000, ],
-  predictors = vi_predictors[1:15]
-)
+  #OPTIONAL: progress bar
+  # progressr::handlers(global = TRUE)
 
-#disable parallelization
-future::plan(future::sequential)
+  #group predictors using max_cor as clustering threshold
+  df_clusters <- cor_clusters(
+    df = vi,
+    predictors = c(
+      "koppen_zone", #character
+      "soil_type", #factor
+      "topo_elevation", #numeric
+      "soil_temperature_mean" #numeric
+    ),
+    max_cor = 0.75,
+    plot = FALSE #set to TRUE to plot result
+  )
 
+  #OPTIONAL: disable parallelization
+  #future::plan(future::sequential)
 }
 \seealso{
 Other pairwise_correlation: 

@@ -1,44 +1,24 @@
-#' @title Variance Inflation Factor
+#' @title Data Frame with Variance Inflation Factors
 #'
 #' @description
 #'
-#' Computes the Variance Inflation Factor of numeric variables in a data frame.
-#'
-#' This function computes the VIF (see section **Variance Inflation Factors** below) in two steps:
-#' \itemize{
-#'   \item Applies [base::solve()] to obtain the precision matrix, which is the inverse of the covariance matrix between all variables in `predictors`.
-#'   \item Uses [base::diag()] to extract the diagonal of the precision matrix, which contains the variance of the prediction of each predictor from all other predictors, and represents the VIF.
-#' }
+#' Applies [vif()] to compute the Variance Inflation Factors of a set of numeric predictors.
 #'
 #' @inheritSection collinear Variance Inflation Factors
 #'
 #' @inheritParams collinear
-#' @return data frame; predictors names their VIFs
+#' @return data frame; predictors names and their Variance Inflation Factors
 #'
 #' @examples
 #'
-#' data(
-#'   vi,
-#'   vi_predictors_numeric
+#' data(vi, vi_predictors_numeric)
+#'
+#' v <- vif_df(
+#'   df = vi[1:1000, ],
+#'   predictors = vi_predictors_numeric[1:5]
 #' )
 #'
-#' #subset to limit run time
-#' df <- vi[1:1000, ]
-#'
-#' #apply pairwise correlation first
-#' selection <- cor_select(
-#'   df = df,
-#'   predictors = vi_predictors_numeric,
-#'   quiet = TRUE
-#' )
-#'
-#' #VIF data frame
-#' df <- vif_df(
-#'   df = df,
-#'   predictors = selection
-#' )
-#'
-#' df
+#' v
 #'
 #' @autoglobal
 #' @family vif
@@ -50,132 +30,66 @@ vif_df <- function(
     quiet = FALSE
 ){
 
-  if(!is.logical(quiet)){
-    message("\ncollinear::vif_df(): argument 'quiet' must be logical, resetting it to FALSE.")
-    quiet <- FALSE
-  }
+  function_name <- "collinear::vif_df()"
 
-  #internal function to compute VIF
-  #from correlation matrix
-  f_vif <- function(m = NULL){
-
-    if(capabilities("long.double") == TRUE){
-      tolerance <- 0
-    } else {
-      tolerance <- .Machine$double.eps
-    }
-
-    #compute VIF
-    df <- m |>
-      solve(tol = tolerance) |>
-      diag() |>
-      data.frame(stringsAsFactors = FALSE)
-
-    #format data frame
-    colnames(df) <- "vif"
-    df$vif <- round(abs(df$vif), 4)
-    df$predictor <- colnames(m)
-    rownames(df) <- NULL
-
-    #arrange by VIF
-    df[
-      order(
-        df$vif,
-        decreasing = TRUE
-        ),
-      c("predictor", "vif")
-    ]
-
-  }
-
-  #validate data dimensions
-  predictors <- validate_data_vif(
-    df = df,
-    predictors = predictors,
-    function_name = "collinear::vif_df()",
+  quiet <- validate_arg_quiet(
+    function_name = function_name,
     quiet = quiet
   )
 
-  #if no numerics, return predictors
+  df <- validate_arg_df(
+    df = df,
+    predictors = predictors,
+    function_name = function_name,
+    quiet = quiet
+  )
+
+  predictors <- validate_arg_predictors_vif(
+    df = df,
+    predictors = predictors,
+    function_name = function_name,
+    quiet = quiet
+  )
+
+  #if no predictors
   if(length(predictors) == 0){
-    if(quiet == FALSE){
-      message("\ncollinear::vif_df(): no numeric predictors available.")
-    }
+
     return(
       data.frame(
-        variable = NA,
-        vif = NA
+        variable = character(),
+        vif = numeric()
       )
     )
+
   }
 
   if(length(predictors) == 1){
+
     return(
       data.frame(
         variable = predictors,
         vif = 0
       )
     )
+
   }
 
   #compute correlation matrix
-  m <- stats::cor(
-    x = df[, predictors, drop = FALSE],
-    use = "complete.obs",
-    method = "pearson"
+  m <- cor_matrix(
+    df = df,
+    predictors = predictors,
+    quiet = quiet
   )
 
-  #first try
-  vif.df <- tryCatch(
-    {f_vif(m = m)},
-    error = function(e) {
-      return(NA)
-    }
-  )
+  out <- vif(m = m) |>
+    data.frame(stringsAsFactors = FALSE)
 
-  #second try
-  if(is.data.frame(vif.df) == FALSE){
+  #format data frame
+  colnames(out) <- "vif"
+  out$predictor <- colnames(m)
+  rownames(out) <- NULL
 
-    vif.df <- tryCatch(
-      {
-
-        #look for perfect correlations that break solve()
-        #and replace them with 0.99 or -0.99
-        m.range <- range(
-          m[upper.tri(m)]
-          )
-
-        #maximum and minimum correlation
-        max.cor <- 0.9999999999
-        min.cor <- -max.cor
-
-        #replace values
-        if(max(m.range) > max.cor){
-          m[m > max.cor] <- max.cor
-          diag(m) <- 1
-        }
-
-        if(min(m.range) < min.cor){
-          m[m < min.cor] <- min.cor
-        }
-
-        #compute vif with the new matrix
-        f_vif(m = m)
-
-        },
-      error = function(e) {
-
-        stop(
-          "collinear::vif_df(): the correlation matrix is singular and cannot be solved.",
-          call. = FALSE
-          )
-
-      }
-    )
-
-  }
-
-  vif.df
+  out
 
 }
 

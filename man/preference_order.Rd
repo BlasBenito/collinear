@@ -8,31 +8,23 @@ preference_order(
   df = NULL,
   response = NULL,
   predictors = NULL,
-  f = "auto",
+  f = f_auto,
   warn_limit = NULL,
   quiet = FALSE
 )
 }
 \arguments{
-\item{df}{(required; data frame, tibble, or sf) A data frame with responses and predictors. Default: NULL.}
+\item{df}{(required; data frame, tibble, or sf) A data frame with responses and predictors. Must have at least 10 rows for pairwise correlation analysis, and \code{10 * (length(predictors) - 1)} for VIF analysis.  Default: NULL.}
 
-\item{response}{(optional; character string or vector) Name/s of response variable/s in \code{df}. Used in target encoding when it names a numeric variable and there are categorical predictors, and to compute preference order. Default: NULL.}
+\item{response}{(optional; character, character vector, or NULL) Name of one or several response variables in \code{df}, used to target encode categorical predictors, if any, when \code{encoding_method} is not NULL, and to compute preference order when \code{preference_order} is not NULL. If \code{response} is NULL, target encoding and preference order computation are disabled. Default: NULL.}
 
-\item{predictors}{(optional; character vector) Names of the predictors to select from \code{df}. If omitted, all numeric columns in \code{df} are used instead. If argument \code{response} is not provided, non-numeric variables are ignored. Default: NULL}
+\item{predictors}{(optional; character vector or NULL) Names of the predictors to select from \code{df}. If omitted, all numeric columns in \code{df} are used instead. Default: NULL}
 
-\item{f}{(optional: function) Function to compute preference order. If "auto" (default) or NULL, the output of \code{\link[=f_auto]{f_auto()}} for the given data is used:
-\itemize{
-\item \code{\link[=f_auc_rf]{f_auc_rf()}}: if \code{response} is binomial.
-\item \code{\link[=f_r2_pearson]{f_r2_pearson()}}: if \code{response} and \code{predictors} are numeric.
-\item \code{\link[=f_v]{f_v()}}: if \code{response} and \code{predictors} are categorical.
-\item \code{\link[=f_v_rf_categorical]{f_v_rf_categorical()}}: if \code{response} is categorical and \code{predictors} are numeric or mixed .
-\item \code{\link[=f_r2_rf]{f_r2_rf()}}: in all other cases.
-}
-Default: NULL}
+\item{f}{(optional: function name) Unquoted name of the function to compute preference order. Available functions are listed in the column \code{name} of the dataframe returned by \code{\link[=f_functions]{f_functions()}}. By default calls to \code{\link[=f_auto]{f_auto()}} to select a suitable method depending on the nature of the data (see \code{\link[=f_auto_rules]{f_auto_rules()}}). Default: f_auto}
 
 \item{warn_limit}{(optional, numeric) Preference value (R-squared, AUC, or Cramer's V) over which a warning flagging suspicious predictors is issued. Disabled if NULL. Default: NULL}
 
-\item{quiet}{(optional; logical) If FALSE, messages generated during the execution of the function are printed to the console Default: FALSE}
+\item{quiet}{(optional; logical) If FALSE, messages are printed to the console Default: FALSE}
 }
 \value{
 data frame: columns are "response", "predictor", "f" (function name), and "preference".
@@ -76,7 +68,7 @@ The strength of association between the response and each predictor is computed 
 }
 }
 
-The name of the used function is stored in the attribute "f_name" of the output data frame. It can be retrieved via \code{attributes(df)$f_name}
+The name of the used function is stored in the attribute "f_name" of the output data frame. It can be retrieved via \code{attributes(df)$f_name}.
 
 Additionally, any custom function accepting a data frame with the columns "x" (predictor) and "y" (response) and returning a numeric indicator of association where higher numbers indicate higher association will work.
 
@@ -87,6 +79,8 @@ Accepts a parallelization setup via \code{\link[future:plan]{future::plan()}} an
 Accepts a character vector of response variables as input for the argument \code{response}. When more than one response is provided, the output is a named list of preference data frames.
 }
 \examples{
+data(vi, vi_predictors, vi_predictors_numeric)
+
 #subsets to limit example run time
 df <- vi[1:1000, ]
 predictors <- vi_predictors[1:10]
@@ -109,7 +103,7 @@ df_preference <- preference_order(
   df = df,
   response = "vi_numeric",
   predictors = predictors_numeric,
-  f = NULL
+  f = f_auto
   )
 
 #returns data frame ordered by preference

@@ -7,15 +7,33 @@
 drop_geometry_column(df = NULL, quiet = FALSE)
 }
 \arguments{
-\item{df}{(required; data frame, tibble, or sf) A data frame with responses and predictors. Default: NULL.}
+\item{df}{(required; data frame, tibble, or sf) A data frame with responses and predictors. Must have at least 10 rows for pairwise correlation analysis, and \code{10 * (length(predictors) - 1)} for VIF analysis.  Default: NULL.}
 
-\item{quiet}{(optional; logical) If FALSE, messages generated during the execution of the function are printed to the console Default: FALSE}
+\item{quiet}{(optional; logical) If FALSE, messages are printed to the console Default: FALSE}
 }
 \value{
 data frame
 }
 \description{
-Replicates the functionality of  \code{sf::st_drop_geometry()} without depending on the \code{sf} package.
+Replicates the functionality of \code{sf::st_drop_geometry()} without depending on the \code{sf} package.
+}
+\examples{
+data(vi)
+
+#creating fake geometry column without sf loaded
+vi$geometry <- NA
+attr(
+  x = vi,
+  which = "sf_column"
+  ) <- "geometry"
+
+#drop geometry column
+df <- drop_geometry_column(
+  df = vi
+  )
+
+"geometry" \%in\% colnames(df)
+
 }
 \author{
 Blas M. Benito, PhD

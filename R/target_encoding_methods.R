@@ -4,14 +4,14 @@
 #' @inheritParams target_encoding_lab
 #' @param predictor (required; string) Name of the categorical predictor to encode. Default: NULL
 #' @param encoded_name (required, string) Name of the encoded predictor. Default: NULL
-#' @param smoothing (optional; integer) Groups smaller than this number have their means pulled towards the mean of the response across all cases. Ignored by `target_encoding_rank()` and `target_encoding_loo()`. Default: 0
+#' @param smoothing (optional; integer) Groups smaller than this number have their means pulled towards the mean of the response across all cases. Ignored by [target_encoding_rank()] and [target_encoding_loo()]. Default: 0
 #'
 #'
 #' @inherit target_encoding_lab return
 #'
 #' @examples
 #'
-#loading example data
+#  loading example data
 #' data(vi)
 #'
 #' #subset to limit example run time
@@ -333,8 +333,8 @@ add_white_noise <- function(
 #
 #' @inheritParams target_encoding_mean
 #' @param encoding_method (required, string) Name of the encoding method. One of: "mean", "rank", or "loo". Default: "mean"
-#' @param white_noise (optional; numeric vector) Argument of the methods "mean", "rank", and "loo". Maximum white noise to add, expressed as a fraction of the range of the response variable. Range from 0 to 1. Default: `0`.
-#' @param seed (optional; integer vector) Random seed to facilitate reproducibility when `white_noise` is not 0. If NULL, the function selects one at random, and the selected seed does not appear in the encoded variable names. Default: 0
+#' @param white_noise (optional; numeric vector) Argument of the methods "mean", "rank", and "loo". Maximum white noise to add, expressed as a fraction of the range of the response variable. Range from 0 to 1. Default: 0.
+#' @param seed (optional; integer vector) Random seed to facilitate reproducibility when \code{white_noise} is not 0. If NULL, the function selects one at random, and the selected seed does not appear in the encoded variable names. Default: 0
 #' @return string: predictor name
 #' @export
 #' @family target_encoding_tools

@@ -4,12 +4,14 @@
 \alias{cor_matrix}
 \title{Pairwise Correlation Matrix}
 \usage{
-cor_matrix(df = NULL, predictors = NULL)
+cor_matrix(df = NULL, predictors = NULL, quiet = FALSE)
 }
 \arguments{
-\item{df}{(required; data frame, tibble, or sf) A data frame with responses and predictors. Default: NULL.}
+\item{df}{(required; data frame, tibble, or sf) A data frame with responses and predictors. Must have at least 10 rows for pairwise correlation analysis, and \code{10 * (length(predictors) - 1)} for VIF analysis.  Default: NULL.}
 
-\item{predictors}{(optional; character vector) Names of the predictors to select from \code{df}. If omitted, all numeric columns in \code{df} are used instead. If argument \code{response} is not provided, non-numeric variables are ignored. Default: NULL}
+\item{predictors}{(optional; character vector or NULL) Names of the predictors to select from \code{df}. If omitted, all numeric columns in \code{df} are used instead. Default: NULL}
+
+\item{quiet}{(optional; logical) If FALSE, messages are printed to the console Default: FALSE}
 }
 \value{
 correlation matrix
@@ -20,51 +22,47 @@ If argument 'df' results from \code{\link[=cor_df]{cor_df()}}, transforms it to 
 Accepts a parallelization setup via \code{\link[future:plan]{future::plan()}} and a progress bar via \code{\link[progressr:handlers]{progressr::handlers()}} (see examples).
 }
 \examples{
-data(
-  vi,
-  vi_predictors
-)
+    data(vi)
 
-#reduce size of vi to speed-up example execution
-vi <- vi[1:1000, ]
+    #subset to speed-up example
+    vi <- vi[1:1000, ]
 
-#mixed predictors
-vi_predictors <- vi_predictors[1:10]
+    predictors <- c(
+      "koppen_zone", #character
+      "soil_type", #factor
+      "topo_elevation", #numeric
+      "soil_temperature_mean" #numeric
+    )
 
-#parallelization setup
-future::plan(
-  future::multisession,
-  workers = 2 #set to parallelly::availableCores() - 1
-)
+    #OPTIONAL: parallelization setup
+    # future::plan(
+    #   future::multisession,
+    #   workers = 2
+    # )
 
-#progress bar
-# progressr::handlers(global = TRUE)
+    #OPTIONAL: progress bar
+    # progressr::handlers(global = TRUE)
 
-#correlation data frame
-df <- cor_df(
-  df = vi,
-  predictors = vi_predictors
-)
 
-df
+    #correlation data frame to matrix
+    m <- cor_df(
+      df = vi,
+      predictors = predictors
+    ) |>
+      cor_matrix()
 
-#correlation matrix
-m <- cor_matrix(
-  df = df
-)
+    m
 
-m
+    #direct computation (uses cor_df() internally)
+    m <- cor_matrix(
+      df = vi,
+      predictors = predictors
+    )
 
-#generating it from the original data
-m <- cor_matrix(
-  df = vi,
-  predictors = vi_predictors
-)
+    m
 
-m
-
-#disable parallelization
-future::plan(future::sequential)
+    #OPTIONAL: disable parallelization
+    #future::plan(future::sequential)
 }
 \seealso{
 Other pairwise_correlation: 

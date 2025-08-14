@@ -7,11 +7,11 @@
 identify_response_type(df = NULL, response = NULL, quiet = FALSE)
 }
 \arguments{
-\item{df}{(required; data frame, tibble, or sf) A data frame with responses and predictors. Default: NULL.}
+\item{df}{(required; data frame, tibble, or sf) A data frame with responses and predictors. Must have at least 10 rows for pairwise correlation analysis, and \code{10 * (length(predictors) - 1)} for VIF analysis.  Default: NULL.}
 
-\item{response}{(optional; character string or vector) Name/s of response variable/s in \code{df}. Used in target encoding when it names a numeric variable and there are categorical predictors, and to compute preference order. Default: NULL.}
+\item{response}{(optional; character, character vector, or NULL) Name of one or several response variables in \code{df}, used to target encode categorical predictors, if any, when \code{encoding_method} is not NULL, and to compute preference order when \code{preference_order} is not NULL. If \code{response} is NULL, target encoding and preference order computation are disabled. Default: NULL.}
 
-\item{quiet}{(optional; logical) If FALSE, messages generated during the execution of the function are printed to the console Default: FALSE}
+\item{quiet}{(optional; logical) If FALSE, messages are printed to the console Default: FALSE}
 }
 \value{
 character string: response type
@@ -31,6 +31,8 @@ Internal function to identify the type of response variable. Supported types are
 }
 }
 \examples{
+data(vi, vi_predictors)
+
 identify_response_type(
   df = vi,
   response = "vi_numeric"
@@ -61,6 +63,7 @@ identify_response_type(
 Other data_types: 
 \code{\link{identify_predictors}()},
 \code{\link{identify_predictors_categorical}()},
+\code{\link{identify_predictors_logical}()},
 \code{\link{identify_predictors_numeric}()},
 \code{\link{identify_predictors_type}()},
 \code{\link{identify_predictors_zero_variance}()}

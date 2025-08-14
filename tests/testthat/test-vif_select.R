@@ -1,5 +1,7 @@
 testthat::test_that("`vif_select()` works", {
 
+  data(vi, vi_predictors)
+
   predictors <- vi_predictors[1:10]
   df <- vi[1:1000, ]
 
@@ -7,10 +9,19 @@ testthat::test_that("`vif_select()` works", {
   testthat::expect_message(
     x <- vif_select(
       df = df,
-      predictors = predictors
+      predictors = predictors,
+      quiet = FALSE
     )
   ) |>
     suppressMessages()
+
+  testthat::expect_no_message(
+    x <- vif_select(
+      df = df,
+      predictors = predictors,
+      quiet = TRUE
+    )
+  )
 
 
   testthat::expect_true(
@@ -28,7 +39,8 @@ testthat::test_that("`vif_select()` works", {
   #custom preference order
   preference_order <- c(
     "swi_mean",
-    "topo_elevation"
+    "topo_elevation",
+    "hola"
   )
 
   testthat::expect_message(
@@ -39,7 +51,6 @@ testthat::test_that("`vif_select()` works", {
     )
   ) |>
     suppressMessages()
-
 
   testthat::expect_true(
     is.character(x)
@@ -99,11 +110,11 @@ testthat::test_that("`vif_select()` works", {
       df = df,
       predictors = predictors
     )
-  )
-
+  ) |>
+    suppressMessages()
 
   testthat::expect_true(
-    length(x) == 0
+    is.null(x)
   )
 
   # edge cases ----
@@ -125,24 +136,22 @@ testthat::test_that("`vif_select()` works", {
   )
 
   #few rows
-  testthat::expect_error(
+  testthat::expect_message(
     x <- vif_select(
       df = vi[1, ],
       predictors = vi_predictors
     )
-  )
+  ) |>
+    suppressMessages()
 
 
   #no predictors
-  testthat::expect_message(
-    x <- vif_select(
-      df = df[, 1:5],
-      predictors = NULL,
-      preference_order = NULL,
-      quiet = TRUE
-    )
-  ) |>
-    suppressMessages()
+  x <- vif_select(
+    df = df[, 1:5],
+    predictors = NULL,
+    preference_order = NULL,
+    quiet = TRUE
+  )
 
   testthat::expect_true(
     all(x %in% colnames(df)[1:5])

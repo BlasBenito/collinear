@@ -13,27 +13,38 @@ cor_select(
 )
 }
 \arguments{
-\item{df}{(required; data frame, tibble, or sf) A data frame with responses and predictors. Default: NULL.}
+\item{df}{(required; data frame, tibble, or sf) A data frame with responses and predictors. Must have at least 10 rows for pairwise correlation analysis, and \code{10 * (length(predictors) - 1)} for VIF analysis.  Default: NULL.}
 
-\item{predictors}{(optional; character vector) Names of the predictors to select from \code{df}. If omitted, all numeric columns in \code{df} are used instead. If argument \code{response} is not provided, non-numeric variables are ignored. Default: NULL}
+\item{predictors}{(optional; character vector or NULL) Names of the predictors to select from \code{df}. If omitted, all numeric columns in \code{df} are used instead. Default: NULL}
 
-\item{preference_order}{(optional; string, character vector, output of \code{\link[=preference_order]{preference_order()}}). Defines a priority order, from first to last, to preserve predictors during the selection process. Accepted inputs are:
+\item{preference_order}{(optional; character vector, output of \code{\link[=preference_order]{preference_order()}}, list, or NULL). Prioritizes predictors to preserve the most relevant ones during multicollinearity filtering. Accepted inputs are:
 \itemize{
-\item \strong{"auto"} (default): if \code{response} is not NULL, calls \code{\link[=preference_order]{preference_order()}} for internal computation.
-\item \strong{character vector}: predictor names in a custom preference order.
-\item \strong{data frame}: output of \code{\link[=preference_order]{preference_order()}} from \code{response} of length one.
-\item \strong{named list}: output of \code{\link[=preference_order]{preference_order()}} from \code{response} of length two or more.
-\item \strong{NULL}: disabled.
-}. Default: "auto"}
+\item \strong{NULL} (default): If argument \code{f} is NULL (default), predictors are prioritized from lower to higher multicollinearity. Otherwise it calls \code{\link[=preference_order]{preference_order()}} to rank the predictors using the function defined in the argument \code{f}. The output of this setting might differ to an external call to \code{\link[=preference_order]{preference_order()}} if target encoding is triggered to transform ategorical predictors to numeric.
+\item \strong{character vector}: Predictor names in a user-defined priority order. The first predictor in this vector is always selected, unless it has near zero-variance values.
+\item \strong{data frame}: output of \code{\link[=preference_order]{preference_order()}} computed on the value of the argument \code{response}.
+\item \strong{named list}: list of data frames, output of \code{\link[=preference_order]{preference_order()}} when argument \code{response} is a vector of length two or more.
+}. Default: NULL}
 
-\item{max_cor}{(optional; numeric) Maximum correlation allowed between any pair of variables in \code{predictors}. Recommended values are between 0.5 and 0.9. Higher values return larger number of predictors with a higher multicollinearity. If NULL, the pairwise correlation analysis is disabled. Default: \code{0.75}}
+\item{max_cor}{(optional; numeric or NULL) Maximum correlation allowed between any pair of variables in \code{predictors}. Valid values are between 0.01 and 0.99, while recommended values are between 0.5 (strict) and 0.9 (permissive). Higher values return larger number of predictors with a higher multicollinearity. If NULL, the pairwise correlation analysis is disabled. Default: 0.75}
 
-\item{quiet}{(optional; logical) If FALSE, messages generated during the execution of the function are printed to the console Default: FALSE}
+\item{quiet}{(optional; logical) If FALSE, messages are printed to the console Default: FALSE}
 }
 \value{
+list
+
+A list whose structure depends on the value of the \code{response} argument:
+
 \itemize{
-\item character vector if \code{response} is NULL or is a string.
-\item named list if \code{response} is a character vector.
+\item If \code{response} is \code{NULL} or has length 1: an object of class \link{collinear_output} with a custom print method \link{print.collinear_output}. It contains:
+\itemize{
+\item \code{response} (\code{character} or \code{NULL}): Name of the response variable.
+\item \code{predictors} (\code{character} or \code{NULL}): Names of predictors considered in multicollinearity filtering.
+\item \code{selection} (\code{character} or \code{NULL}): Names of selected, non-collinear predictors.
+\item \code{df} (\code{data.frame} or \code{NULL}): Data frame including columns in \code{response} and \code{selection}. If target encoding was applied, categorical variables will be numeric.
+\item \code{arguments} (\code{list}): A list of arguments used in the call: \code{encoding_method}, \code{preference_order}, \code{f}, \code{max_cor}, and \code{max_vif}
+}
+
+\item If \code{response} is a character vector of length >= 2: an object of class \link{collinear_list}, a named list of \code{"collinear_output"} objects, one per response variable.
 }
 }
 \description{
@@ -44,7 +55,7 @@ Please check the section \strong{Pairwise Correlation Filtering} at the end of t
 \section{Pairwise Correlation Filtering}{
 
 
-The function \code{\link[=cor_select]{cor_select()}} applies a recursive forward selection algorithm to keep predictors with a maximum Pearson correlation with all other selected predictors lower than \code{max_cor}.
+The function \code{\link[=cor_select]{cor_select()}} applies a recursive forward selection algorithm to keep predictors with a maximum absolute Pearson correlation with all other selected predictors less than or equal to \code{max_cor}.
 
 If the argument \code{preference_order} is NULL, the predictors are ranked from lower to higher sum of absolute pairwise correlation with all other predictors.
 

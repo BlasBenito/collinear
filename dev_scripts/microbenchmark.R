@@ -18,7 +18,7 @@ option1 <- function() {
     names()
 
   #validate preference order
-  preference_order <- validate_preference_order(
+  preference_order <- validate_arg_preference_order(
     predictors = predictors,
     preference_order = preference_order,
     preference_order_auto = preference_order_auto
@@ -63,7 +63,7 @@ option2 <- function() {
     names()
 
   #validate preference order
-  preference_order <- validate_preference_order(
+  preference_order <- validate_arg_preference_order(
     predictors = predictors,
     preference_order = preference_order,
     preference_order_auto = preference_order_auto

@@ -1,16 +1,18 @@
 #' Generate Model Formulas
 #'
 #' @inheritParams collinear
-#' @param df (optional; data frame, tibble, or sf). A data frame with responses and predictors. Required if `predictors = NULL`. Default: NULL.
-#' @param predictors (optional, character vector, output of [collinear()]): predictors to include in the formula. Required if `df = NULL`.
+#' @param df (optional; data frame, tibble, or sf). A data frame with responses and predictors. Required if \code{predictors = NULL}. Default: NULL.
+#' @param predictors (optional, character vector, output of [collinear()]): predictors to include in the formula. Required if \code{df = NULL}.
 #' @param term_f (optional; string). Name of function to apply to each term in the formula, such as "s" for [mgcv::s()] or any other smoothing function, "poly" for [stats::poly()]. Default: NULL
 #' @param term_args (optional; string). Arguments of the function applied to each term. For example, for "poly" it can be "degree = 2, raw = TRUE". Default: NULL
-#' @param random_effects (optional, string or character vector). Names of variables to be used as random effects. Each element is added to the final formula as ` +(1 | random_effect_name)`. Default: NULL
+#' @param random_effects (optional, string or character vector). Names of variables to be used as random effects. Each element is added to the final formula as \code{+(1 | random_effect_name)}. Default: NULL
 #'
-#' @return list if `predictors` is a list or length of `response` is higher than one, and character vector otherwise.
+#' @return list if \code{predictors} is a list or length of \code{response} is higher than one, and character vector otherwise.
 #' @export
 #' @autoglobal
 #' @examples
+#'
+#' data(vi, vi_predictors_numeric)
 #' #using df, response, and predictors
 #' #----------------------------------
 #' df <- vi[1:1000, ]
@@ -80,103 +82,56 @@ model_formula <- function(
     quiet = FALSE
 ){
 
-  #if no predictors, df and response are required
-  #and predictors is generated from df colnames minus response
-  if(is.null(predictors)){
+  function_name <- "collinear::model_formula()"
 
-    #df
-    if(is.null(df)){
-      stop(
-        "collinear::model_formula(): arguments 'df' and 'predictors' cannot be NULL at the same time.",
-        call. = FALSE
-      )
-    }
+  quiet <- validate_arg_quiet(
+    function_name = function_name,
+    quiet = quiet
+  )
 
-    df <- validate_df(
-      df = df,
-      quiet = quiet
-    )
+  df <- validate_arg_df(
+    df = df,
+    response = response,
+    predictors = predictors,
+    function_name = function_name,
+    quiet = quiet
+  )
 
-    #response
-    if(is.null(response)){
-      stop(
-        "collinear::model_formula(): arguments 'response' and 'predictors' cannot be NULL at the same time.",
-        call. = FALSE
-      )
-    }
-
-    #generate predictors vector from df and response
-    predictors <- validate_predictors(
-      df = df,
-      response = NULL,
-      predictors = predictors,
-      quiet = quiet
-    )
-
-    #remove response from predictors
-    predictors <- setdiff(
-      x = predictors,
-      y = response
-    )
-
-  }
-
-  #predictors is a character vector
-  if(inherits(x = predictors, what = "character")){
-
-    #set response from attributes if argument is NULL
-    if(is.null(response)){
-      response <- attributes(predictors)$response
-    }
-
-    #if still NULL, stop
-    if(is.null(response)){
-      stop(
-        "collinear::model_formula(): argument 'predictors' must have a valid attribute 'response' if the argument 'response' is NULL.",
-        call. = FALSE
-      )
-    }
-
-    #convert to list
-    predictors_list <- list()
-
-    for(response.i in response){
-
-      attr(
-        x = predictors,
-        which = "validated"
-      ) <- TRUE
-
-      attr(
-        x = predictors,
-        which = "response"
-      ) <- response.i
-
-      predictors_list[[response.i]] <- predictors
-
-    }
-
-    predictors <- predictors_list
-
-  }
-
-  #predictors is a list
-  if(!inherits(x = predictors, what = "list")){
+  if(is.null(response)){
     stop(
-      "collinear::model_formula(): argument 'predictors' must be a list.",
+      function_name,
+      ": argument 'response' cannot be NULL.",
       call. = FALSE
     )
   }
 
-  #list must have names
-  if(any(is.null(names(predictors)))){
-    names(predictors) <- sapply(
-      X = predictors,
-      FUN = function(x){
-        attributes(x)$response
-      }
+  response <- validate_arg_response(
+    df = df,
+    response = response,
+    function_name = function_name,
+    quiet = quiet
+  )
+
+  if(is.null(predictors)){
+    stop(
+      function_name,
+      ": argument 'predictors' cannot be NULL.",
+      call. = FALSE
     )
   }
+
+  predictors <- validate_arg_predictors(
+    df = df,
+    response = response,
+    predictors = predictors,
+    function_name = function_name,
+    quiet = quiet
+  )
+
+  predictors_types <- identify_predictors(
+    df = df,
+    predictors = predictors
+  )
 
   #prepare terms formula
   term_comma <- ","
@@ -225,7 +180,8 @@ model_formula <- function(
 
     if(!is.character(random_effects)){
       stop(
-        "collinear::model_formula(): argument 'random_effects' must be a character string or vector.",
+        function_name,
+        ": argument 'random_effects' must be a character string or vector.",
         call. = FALSE
       )
     }
@@ -237,7 +193,8 @@ model_formula <- function(
 
     if(length(random_effects) == 0){
       stop(
-        "collinear::model_formula(): argument 'random_effects' must name variables not in argument 'predictors'.",
+        function_name,
+        ": argument 'random_effects' must name variables not in argument 'predictors'.",
         call. = FALSE
       )
     }
@@ -291,32 +248,39 @@ model_formula <- function(
   }
 
   #out list
-  out <- list()
+  terms <- vector()
 
-  #iterate over predictors
-  for(i in seq_len(length(predictors))){
+  #iterate over responses
+  for(predictor.i in predictors){
 
-    out[[names(predictors)[i]]] <- paste0(
-      names(predictors)[i],
-      " ~ ",
-      paste0(
-        paste0(
-          term_f,
-          as.vector(predictors[[i]]),
-          term_comma,
-          term_args
-        ),
-        collapse = " + "
-      ),
-      random_effects
-    ) |>
-      stats::as.formula()
+    if(predictor.i %in% predictors_types$numeric){
+
+      predictor.i <- paste0(
+        term_f,
+        predictor.i,
+        term_comma,
+        term_args
+      )
+
+    }
+
+    terms <- c(terms, predictor.i)
 
   }
 
-  if(length(out) == 1){
-    out <- unlist(out)
-  }
+  out <- paste0(
+    response,
+    " ~ ",
+    paste0(
+      terms,
+      collapse = " + "
+    ),
+    random_effects
+  ) |>
+    stats::as.formula()
+
+  environment(out) <- emptyenv()
+
 
   out
 

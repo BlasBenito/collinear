@@ -32,7 +32,8 @@ testthat::test_that("`preference_order()` works", {
     df = vi,
     response = responses,
     predictors = vi_predictors,
-    quiet = TRUE,
+    f = f_auto,
+    quiet = FALSE,
     warn_limit = NULL
   )
 
@@ -48,8 +49,8 @@ testthat::test_that("`preference_order()` works", {
     all(colnames(df_preference[[1]]) %in% expected_colnames)
   )
 
-  #numeric response
-  testthat::expect_message(
+  #f NULL
+  testthat::expect_error(
     df_preference <- preference_order(
       df = vi,
       response = "vi_numeric",
@@ -57,15 +58,24 @@ testthat::test_that("`preference_order()` works", {
       f = NULL,
       warn_limit = NULL
     )
-  ) |>
-    suppressMessages()
+  )
+
+  #numeric response
+  df_preference <- preference_order(
+    df = vi,
+    response = "vi_numeric",
+    predictors = vi_predictors,
+    f = f_r2_rf,
+    quiet = TRUE,
+    warn_limit = NULL
+  )
 
   testthat::expect_true(
     is.data.frame(df_preference)
   )
 
   testthat::expect_true(
-    ncol(df_preference) == length(expected_colnames)
+    unique(df_preference$f) == "f_r2_rf"
   )
 
   testthat::expect_true(
@@ -92,24 +102,16 @@ testthat::test_that("`preference_order()` works", {
   )
 
   testthat::expect_true(
-    ncol(df_preference) == length(expected_colnames)
-  )
-
-
-  testthat::expect_true(
-    nrow(df_preference) >= 1
+    unique(df_preference$f) == "f_r2_glm_poisson"
   )
 
   testthat::expect_true(
-    nrow(df_preference) == length(vi_predictors_numeric)
+    nrow(df_preference) == length(vi_predictors)
   )
 
   testthat::expect_true(
     all(colnames(df_preference) %in% expected_colnames)
   )
-
-
-
 
   #binomial response
   df_preference <- preference_order(
@@ -126,16 +128,11 @@ testthat::test_that("`preference_order()` works", {
   )
 
   testthat::expect_true(
-    ncol(df_preference) == length(expected_colnames)
-  )
-
-
-  testthat::expect_true(
-    nrow(df_preference) >= 1
+    unique(df_preference$f) == "f_auc_glm_binomial"
   )
 
   testthat::expect_true(
-    nrow(df_preference) == length(vi_predictors_numeric)
+    nrow(df_preference) == length(vi_predictors)
   )
 
   testthat::expect_true(
@@ -159,16 +156,11 @@ testthat::test_that("`preference_order()` works", {
   )
 
   testthat::expect_true(
-    ncol(df_preference) == length(expected_colnames)
-  )
-
-
-  testthat::expect_true(
-    nrow(df_preference) >= 1
+    unique(df_preference$f) == "f_v"
   )
 
   testthat::expect_true(
-    nrow(df_preference) == length(vi_predictors_categorical)
+    nrow(df_preference) == length(vi_predictors)
   )
 
   testthat::expect_true(
@@ -190,16 +182,11 @@ testthat::test_that("`preference_order()` works", {
   )
 
   testthat::expect_true(
-    ncol(df_preference) == length(expected_colnames)
-  )
-
-
-  testthat::expect_true(
-    nrow(df_preference) >= 1
+    unique(df_preference$f) == "f_v_rf_categorical"
   )
 
   testthat::expect_true(
-    nrow(df_preference) == length(vi_predictors_numeric)
+    nrow(df_preference) == length(vi_predictors)
   )
 
   testthat::expect_true(

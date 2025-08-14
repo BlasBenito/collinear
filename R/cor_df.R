@@ -15,37 +15,65 @@
 #' @return data frame; pairwise correlation
 #'
 #' @examples
-#' data(
-#'   vi,
-#'   vi_predictors
-#' )
+#'   data(vi)
 #'
-#' #reduce size of vi to speed-up example execution
-#' vi <- vi[1:1000, ]
+#'   #subset to speed-up example
+#'   vi <- vi[1:1000, ]
 #'
-#' #mixed predictors
-#' vi_predictors <- vi_predictors[1:10]
+#'   #predictors
+#'   predictors = c(
+#'     "koppen_zone", #character
+#'     "soil_type", #factor
+#'     "topo_elevation", #numeric
+#'     "soil_temperature_mean" #numeric
+#'   )
 #'
-#' #parallelization setup
-#' future::plan(
-#'   future::multisession,
-#'   workers = 2 #set to parallelly::availableCores() - 1
-#' )
+#'   #OPTIONAL: parallelization setup
+#'   # future::plan(
+#'   #   future::multisession,
+#'   #   workers = 2
+#'   # )
 #'
-#' #progress bar
-#' # progressr::handlers(global = TRUE)
+#'   #OPTIONAL: progress bar
+#'   # progressr::handlers(global = TRUE)
 #'
-#' #correlation data frame
-#' df <- cor_df(
-#'   df = vi,
-#'   predictors = vi_predictors
-#' )
+#'   #without preference order
+#'   selected_predictors <- cor_select(
+#'     df = vi,
+#'     predictors = predictors,
+#'     preference_order = NULL,
+#'     max_cor = 0.75
+#'   )
 #'
-#' df
 #'
-#' #disable parallelization
-#' future::plan(future::sequential)
+#'   #with custom preference order
+#'   selected_predictors <- cor_select(
+#'     df = vi,
+#'     predictors = predictors,
+#'     preference_order = c(
+#'       "soil_temperature_mean",
+#'       "soil_type"
+#'     ),
+#'     max_cor = 0.75
+#'   )
 #'
+#'
+#'   #with automated preference order
+#'   df_preference <- preference_order(
+#'     df = vi,
+#'     response = "vi_numeric",
+#'     predictors = predictors
+#'   )
+#'
+#'   selected_predictors <- cor_select(
+#'     df = df,
+#'     predictors = predictors,
+#'     preference_order = df_preference,
+#'     max_cor = 0.75
+#'   )
+#'
+#'   #OPTIONAL: disable parallelization
+#'   #future::plan(future::sequential)
 #' @autoglobal
 #' @family pairwise_correlation
 #' @export
@@ -55,37 +83,54 @@ cor_df <- function(
     quiet = FALSE
 ){
 
-  if(!is.logical(quiet)){
-    message("\ncollinear::cor_df(): argument 'quiet' must be logical, resetting it to FALSE.")
-    quiet <- FALSE
-  }
+  function_name <- "collinear::cor_df()"
 
-  #validate input data frame
-  predictors <- validate_data_cor(
+  quiet <- validate_arg_quiet(
+    function_name = function_name,
+    quiet = quiet
+  )
+
+  df <- validate_arg_df(
     df = df,
     predictors = predictors,
-    function_name = "collinear::cor_df()",
+    function_name = function_name,
+    quiet = quiet
+  )
+
+  #validate input data frame
+  predictors <- validate_arg_predictors_cor(
+    df = df,
+    predictors = predictors,
+    function_name = function_name,
     quiet = quiet
   )
 
   #if no numerics, return predictors
   if(length(predictors) == 0){
-    if(quiet == FALSE){
-      message("\ncollinear::cor_df(): no predictors provided, skipping correlation analysis.")
-    }
+
     return(
       data.frame(
-        variable = NA,
-        vif = NA
+        x = NA,
+        y = NA,
+        correlation = NA
       )
     )
+
   }
 
   #early output if only one predictor
   if(length(predictors) == 1){
+
     if(quiet == FALSE){
-      message("\ncollinear::cor_df(): only one predictor provided, skipping correlation analysis.")
+
+      message(
+        "\n",
+        function_name,
+        ": only one predictor provided, skipping correlation analysis."
+        )
+
     }
+
     return(
       data.frame(
         x = predictors,
@@ -93,6 +138,7 @@ cor_df <- function(
         correlation = 1.0
       )
     )
+
   }
 
   #list to store correlation data frames
@@ -158,17 +204,27 @@ cor_numeric_vs_numeric <- function(
     quiet = FALSE
 ){
 
+  function_name <- "collinear::cor_numeric_vs_numeric()"
+
+  quiet <- validate_arg_quiet(
+    function_name = function_name,
+    quiet = quiet
+  )
+
   #validate input data frame
-  df <- validate_df(
+  df <- validate_arg_df(
     df = df,
+    predictors = predictors,
+    function_name = function_name,
     quiet = quiet
   )
 
   #validate predictors
   #get numeric predictors only
-  predictors <- validate_predictors(
+  predictors <- validate_arg_predictors_cor(
     df = df,
     predictors = predictors,
+    function_name = function_name,
     quiet = quiet
   )
 
@@ -249,31 +305,39 @@ cor_numeric_vs_categorical <- function(
     quiet = FALSE
 ){
 
-  #validate input data frame
-  df <- validate_df(
-    df = df,
+  function_name <- "collinear::cor_numeric_vs_categorical()"
+
+  quiet <- validate_arg_quiet(
+    function_name = function_name,
     quiet = quiet
   )
 
-  #validate predictors without losing non-numerics
-  #random response name to disable non-numeric filtering
-  predictors <- validate_predictors(
+  #validate input data frame
+  df <- validate_arg_df(
     df = df,
-    response = paste0("x", Sys.time()),
     predictors = predictors,
+    function_name = function_name,
+    quiet = quiet
+  )
+
+  #validate predictors
+  predictors <- validate_arg_predictors_cor(
+    df = df,
+    predictors = predictors,
+    function_name = function_name,
     quiet = quiet
   )
 
   #identify numeric and categorical predictors
-  predictors <- identify_predictors(
+  predictors_types <- identify_predictors(
     df = df,
     predictors = predictors
   )
 
   if(
     any(
-      length(predictors$numeric) == 0,
-      length(predictors$categorical) == 0
+      length(predictors_types$numeric) == 0,
+      length(predictors_types$categorical) == 0
     )
   ){
     return(NULL)
@@ -281,8 +345,8 @@ cor_numeric_vs_categorical <- function(
 
   #data frame to store results
   cor.df <- expand.grid(
-    x = predictors$numeric,
-    y = predictors$categorical,
+    x = predictors_types$numeric,
+    y = predictors_types$categorical,
     stringsAsFactors = FALSE
   )
 
@@ -297,7 +361,7 @@ cor_numeric_vs_categorical <- function(
     MARGIN = 1,
     FUN = function(x){
 
-      #x <- c("topo_slope", "koppen_zone")
+      #x <- c("longitude", "vi_categorical")
 
       p()
 
@@ -305,7 +369,7 @@ cor_numeric_vs_categorical <- function(
         x = df[[x[1]]],
         y = df[[x[2]]]
       ) |>
-        na.omit()
+        stats::na.omit()
 
       #target encode
       df.x <- target_encoding_lab(
@@ -348,18 +412,26 @@ cor_categorical_vs_categorical <- function(
     quiet = FALSE
 ){
 
-  #validate input data frame
-  df <- validate_df(
-    df = df,
+  function_name <- "collinear::cor_categorical_vs_categorical()"
+
+  quiet <- validate_arg_quiet(
+    function_name = function_name,
     quiet = quiet
   )
 
-  #validate predictors without losing non-numerics
-  #random response name to disable non-numeric filtering
-  predictors <- validate_predictors(
+  #validate input data frame
+  df <- validate_arg_df(
     df = df,
-    response = paste0("x", Sys.time()),
     predictors = predictors,
+    function_name = function_name,
+    quiet = quiet
+  )
+
+  #validate predictors
+  predictors <- validate_arg_predictors_cor(
+    df = df,
+    predictors = predictors,
+    function_name = function_name,
     quiet = quiet
   )
 
@@ -409,7 +481,7 @@ cor_categorical_vs_categorical <- function(
         x = df[[x[1]]],
         y = df[[x[2]]]
       ) |>
-        na.omit()
+        stats::na.omit()
 
       cor_cramer_v(
         x = df.x$x,

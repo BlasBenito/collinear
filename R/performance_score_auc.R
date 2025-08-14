@@ -5,13 +5,19 @@
 #' Internal function to compute the AUC of binomial models within [preference_order()]. As it is build for speed, this function does not check the inputs.
 #'
 #'
-#' @param o (required, binomial vector) Binomial response with values 0 and 1. Default: NULL
-#' @param p (required, numeric vector) Predictions of binomial model. Default: NULL
+#' @param o (required, numeric vector) Binomial response with values 0 and 1. Default: NULL
+#' @param p (required, numeric vector) Predictions of a binomial model. Default: NULL
 #'
 #' @return numeric: Area Under the ROC Curve
 #' @export
 #' @family modelling_tools
 #' @autoglobal
+#' @examples
+#'   performance_score_auc(
+#'     o = c(1, 1, 1, 1, 0, 0, 0),
+#'     p = c(1, 0.8, 0.7, 0.6, 0.5, 0.6, 0.7)
+#'   )
+#'
 performance_score_auc <- function(
     o = NULL,
     p = NULL

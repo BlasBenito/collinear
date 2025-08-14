@@ -1,5 +1,7 @@
 testthat::test_that("`cor_select()` works", {
 
+  data(vi, vi_predictors)
+
   predictors <- vi_predictors[1:10]
   df <- vi[1:1000, ]
 
@@ -7,8 +9,10 @@ testthat::test_that("`cor_select()` works", {
   testthat::expect_message(
     x <- cor_select(
       df = df,
-      predictors = predictors
-    )
+      predictors = predictors,
+      quiet = FALSE
+    ),
+    regexp = "ranking predictors"
   ) |>
     suppressMessages()
 
@@ -132,7 +136,7 @@ testthat::test_that("`cor_select()` works", {
   )
 
   #few rows
-  testthat::expect_error(
+  testthat::expect_message(
     x <- cor_select(
       df = vi[1, ],
       predictors = vi_predictors

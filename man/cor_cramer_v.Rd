@@ -7,9 +7,9 @@
 cor_cramer_v(x = NULL, y = NULL, check_input = TRUE)
 }
 \arguments{
-\item{x}{(required; character vector) character vector representing a categorical variable.  Default: NULL}
+\item{x}{(required; character vector) character vector representing a categorical variable. Default: NULL}
 
-\item{y}{(required; character vector) character vector representing a categorical variable. Must have the same length as 'x'. Default: NULL}
+\item{y}{(required; character vector) character vector representing a categorical variable. Must have the same length as \code{x}. Default: NULL}
 
 \item{check_input}{(required; logical) If FALSE, disables data checking for a slightly faster execution. Default: TRUE}
 }
@@ -25,10 +25,9 @@ Even when its range is between 0 and 1, Cramer's V values are not directly compa
 }
 \examples{
 
-#loading example data
 data(vi)
 
-#subset to limit example run time
+#subset to speed-up example
 vi <- vi[1:1000, ]
 
 #computing Cramer's V for two categorical predictors

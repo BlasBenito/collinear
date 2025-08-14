@@ -13,6 +13,7 @@
 #' @export
 #' @autoglobal
 #' @examples
+#' data(vi, vi_predictors_numeric)
 #' f <- f_auto(
 #'   df = vi[1:1000, ],
 #'   response = "vi_numeric",
@@ -25,9 +26,35 @@ f_auto <- function(
     quiet = FALSE
 ){
 
-  if(is.null(df) || is.null(response) || is.null(predictors)) {
-    return(NULL)
-  }
+  function_name <- "collinear::f_auto()"
+
+  quiet <- validate_arg_quiet(
+    quiet = quiet,
+    function_name = function_name
+  )
+
+  df <- validate_arg_df(
+    df = df,
+    response = response,
+    predictors = predictors,
+    function_name = function_name,
+    quiet = quiet
+  )
+
+  response <- validate_arg_response(
+    df = df,
+    response = response,
+    function_name = function_name,
+    quiet = quiet
+  )
+
+  predictors <- validate_arg_predictors(
+    df = df,
+    response = response,
+    predictors = predictors,
+    function_name = function_name,
+    quiet = quiet
+  )
 
   #data frame with heuristic
   rules <- f_auto_rules()
@@ -40,7 +67,8 @@ f_auto <- function(
 
   if(response_type == "unknown"){
     stop(
-      "collinear::f_auto(): response type is 'unknown', please select an f_...() function suitable for your response data.",
+      function_name,
+      ": response type is 'unknown', please select an f_...() function suitable for your response data.",
       call. = FALSE
     )
   }
@@ -52,7 +80,8 @@ f_auto <- function(
 
   if(predictors_type == "unknown"){
     stop(
-      "collinear::f_auto(): predictors type is 'unknown', please select an f_...() function suitable for your predictor data.",
+      function_name,
+      ": predictors type is 'unknown', please select an f_...() function suitable for your predictor data.",
       call. = FALSE
     )
   }
@@ -67,9 +96,13 @@ f_auto <- function(
   if(quiet == FALSE){
 
     message(
-      "\ncollinear::f_auto(): selected function: '",
+      "\n",
+      function_name,
+      ": selected function '",
       f_name,
-      "()'."
+      "()' for response '",
+      response,
+      "'."
     )
 
   }
@@ -106,7 +139,7 @@ f_functions <- function(){
     c("f_auc_gam_binomial", "binomial", "numeric, categorical", "mgcv::gam(y ~ s(x), family = quasibinomial(link = 'logit'), weights = collinear::case_weights(y))", "AUC"),
     c("f_auc_rpart", "binomial", "numeric, categorical", "rpart::rpart(y ~ x, weights = collinear::case_weights(y))", "AUC"),
     c("f_auc_rf", "binomial", "numeric, categorical", "ranger::ranger(y ~ x, case.weights = collinear::case_weights(y))", "AUC"),
-    c("f_v", "categorical", "categorical", "collinear::cramer_v(x, y)", "Cramer's V"),
+    c("f_v", "categorical", "categorical", "collinear::cor_cramer_v(x, y)", "Cramer's V"),
     c("f_v_rf_categorical", "categorical", "numeric, categorical", "ranger::ranger(y ~ x, case.weights = collinear::case_weights(y))", "Cramer's V")
   )
 
@@ -133,7 +166,7 @@ f_functions <- function(){
 #' Rules to Select Default f Argument to Compute Preference Order
 #'
 #' @description
-#' Data frame with rules used by [f_auto()] to select the function `f` to compute preference order in [preference_order()].
+#' Data frame with rules used by [f_auto()] to select the function \code{f} to compute preference order in [preference_order()].
 #'
 #'
 #' @return data frame
@@ -237,26 +270,26 @@ f_auto_rules <- function(){
 #' These functions take a data frame with two numeric continuous columns "x" (predictor) and "y" (response), fit a univariate model, and return the R-squared of the observations versus the model predictions:
 #' \itemize{
 #'
-#'   \item `f_r2_pearson()`: Pearson's R-squared.
+#'   \item \code{f_r2_pearson()}: Pearson's R-squared.
 #'
-#'   \item `f_r2_spearman()`: Spearman's R-squared.
+#'   \item \code{f_r2_spearman()}: Spearman's R-squared.
 #'
-#'   \item `f_r2_glm_gaussian()`: Pearson's R-squared of a GLM model fitted with [stats::glm()], with formula `y ~ s(x)` and family `stats::gaussian(link = "identity")`.
+#'   \item \code{f_r2_glm_gaussian()}: Pearson's R-squared of a GLM model fitted with [stats::glm()], with formula \code{y ~ s(x)} and family \code{stats::gaussian(link = "identity")}.
 #'
-#'   \item `f_r2_glm_gaussian_poly2()`: Pearson's R-squared of a GLM model fitted with [stats::glm()], with formula `y ~ stats::poly(x, degree = 2, raw = TRUE)` and family `stats::gaussian(link = "identity")`.
+#'   \item \code{f_r2_glm_gaussian_poly2()}: Pearson's R-squared of a GLM model fitted with [stats::glm()], with formula \code{y ~ stats::poly(x, degree = 2, raw = TRUE)} and family \code{stats::gaussian(link = "identity")}.
 #'
-#'   \item `f_r2_gam_gaussian()`: Pearson's R-squared of a GAM model fitted with [mgcv::gam()], with formula `y ~ s(x)` and family `stats::gaussian(link = "identity")`.
+#'   \item \code{f_r2_gam_gaussian()}: Pearson's R-squared of a GAM model fitted with [mgcv::gam()], with formula \code{y ~ s(x)} and family \code{stats::gaussian(link = "identity")}.
 
-#'   \item `f_r2_rpart()`: Pearson's R-squared of a Recursive Partition Tree fitted with [rpart::rpart()] with formula `y ~ x`.
+#'   \item \code{f_r2_rpart()}: Pearson's R-squared of a Recursive Partition Tree fitted with [rpart::rpart()] with formula \code{y ~ x}.
 #'
-#'   \item `f_r2_rf()`: Pearson's R-squared of a 100 trees Random Forest model fitted with [ranger::ranger()] and formula `y ~ x`.
+#'   \item \code{f_r2_rf()}: Pearson's R-squared of a 100 trees Random Forest model fitted with [ranger::ranger()] and formula \code{y ~ x}.
 #'
 #' }
 #'
 #' @param df (required, data frame) with columns:
 #' \itemize{
-#'   \item "x": (numeric) continuous predictor.
-#'   \item "y" (numeric) continuous response.
+#'   \item \code{x}: (numeric) continuous predictor.
+#'   \item \code{y} (numeric) continuous response.
 #' }
 #'
 #' @return numeric: R-squared
@@ -514,15 +547,15 @@ f_r2_rf <- function(df){
 #' These functions take a data frame with a integer counts response "y", and a continuous predictor "x", fit a univariate model, and return the R-squared of observations versus predictions:
 #' \itemize{
 #'
-#'   \item `f_r2_glm_poisson()` Pearson's R-squared between a count response and the predictions of a GLM model with formula `y ~ x` and family `stats::poisson(link = "log")`.
+#'   \item \code{f_r2_glm_poisson()} Pearson's R-squared between a count response and the predictions of a GLM model with formula \code{y ~ x} and family \code{stats::poisson(link = "log")}.
 #'
-#'   \item `f_r2_glm_poisson_poly2()` Pearson's R-squared between a count response and the predictions of a GLM model with formula `y ~ stats::poly(x, degree = 2, raw = TRUE)` and family `stats::poisson(link = "log")`.
+#'   \item \code{f_r2_glm_poisson_poly2()} Pearson's R-squared between a count response and the predictions of a GLM model with formula \code{y ~ stats::poly(x, degree = 2, raw = TRUE)} and family \code{stats::poisson(link = "log")}.
 #'
-#'   \item `f_r2_gam_poisson()` Pearson's R-squared between a count response and the predictions of a [mgcv::gam()] model with formula `y ~ s(x)` and family `stats::poisson(link = "log")`.
+#'   \item \code{f_r2_gam_poisson()} Pearson's R-squared between a count response and the predictions of a [mgcv::gam()] model with formula \code{y ~ s(x)} and family \code{stats::poisson(link = "log")}.
 #'
-#'   \item `f_r2_rpart()`: Pearson's R-squared of a Recursive Partition Tree fitted with [rpart::rpart()] with formula `y ~ x`.
+#'   \item \code{f_r2_rpart()}: Pearson's R-squared of a Recursive Partition Tree fitted with [rpart::rpart()] with formula \code{y ~ x}.
 #'
-#'   \item `f_r2_rf()`: Pearson's R-squared of a 100 trees Random Forest model fitted with [ranger::ranger()] and formula `y ~ x`.
+#'   \item \code{f_r2_rf()}: Pearson's R-squared of a 100 trees Random Forest model fitted with [ranger::ranger()] and formula \code{y ~ x}.
 #' }
 #'
 #' @param df (required, data frame) with columns:
@@ -648,15 +681,15 @@ f_r2_gam_poisson <- function(df){
 #' These functions take a data frame with a binomial response "y" with unique values 1 and 0, and a continuous predictor "x", fit a univariate model, to return the Area Under the ROC Curve (AUC) of observations versus predictions:
 #' \itemize{
 #'
-#'   \item `f_auc_glm_binomial()`: AUC of a binomial response against the predictions of a GLM model with formula `y ~ x`, family `stats::quasibinomial(link = "logit")`, and weighted cases (see [case_weights()]) to control for unbalanced data.
+#'   \item \code{f_auc_glm_binomial()}: AUC of a binomial response against the predictions of a GLM model with formula \code{y ~ x}, family \code{stats::quasibinomial(link = "logit")}, and weighted cases (see [case_weights()]) to control for unbalanced data.
 #'
-#'   \item `f_auc_glm_binomial_poly2()`: AUC of a binomial response against the predictions of a GLM model with formula `y ~ stats::poly(x, degree = 2, raw = TRUE)`, family `stats::quasibinomial(link = "logit")`, and weighted cases (see [case_weights()]) to control for unbalanced data.
+#'   \item \code{f_auc_glm_binomial_poly2()}: AUC of a binomial response against the predictions of a GLM model with formula \code{y ~ stats::poly(x, degree = 2, raw = TRUE)}, family \code{stats::quasibinomial(link = "logit")}, and weighted cases (see [case_weights()]) to control for unbalanced data.
 #'
-#'   \item `f_auc_gam_binomial()`: AUC  of a GAM model with formula  `y ~ s(x)`, family `stats::quasibinomial(link = "logit")`, and weighted cases.
+#'   \item \code{f_auc_gam_binomial()}: AUC  of a GAM model with formula  \code{y ~ s(x)}, family \code{stats::quasibinomial(link = "logit")}, and weighted cases.
 #'
-#'   \item `f_auc_rpart()`: AUC of a Recursive Partition Tree with weighted cases.
+#'   \item \code{f_auc_rpart()}: AUC of a Recursive Partition Tree with weighted cases.
 #'
-#'   \item `f_auc_rf()`: AUC of a Random Forest model with weighted cases.
+#'   \item \code{f_auc_rf()}: AUC of a Random Forest model with weighted cases.
 #' }
 #'
 #' @param df (required, data frame) with columns:
@@ -883,7 +916,7 @@ f_v <- function(df){
   cor_cramer_v(
     x = df[["x"]],
     y = df[["y"]],
-    check_input = FALSE
+    check_input = TRUE
   )
 
 }
@@ -900,7 +933,6 @@ f_v <- function(df){
 #' }
 #' @return numeric: Cramer's V
 #' @examples
-
 #' #load example data
 #' data(vi)
 #'
