@@ -24,33 +24,62 @@
 identify_predictors <- function(
     df = NULL,
     predictors = NULL,
-    decimals = 4
+    decimals = 4,
+    quiet = FALSE
 ){
 
   if(is.null(predictors)){
     predictors <- colnames(df)
   }
 
+  predictors_numeric <- identify_predictors_numeric(
+    df = df,
+    predictors = predictors,
+    decimals = decimals,
+    quiet = quiet
+  )
+
+  predictors_categorical <- identify_predictors_categorical(
+    df = df,
+    predictors = setdiff(
+      x = predictors,
+      y = predictors_numeric
+    ),
+    quiet = quiet
+  )
+
+  predictors_logical <- identify_predictors_logical(
+    df = df,
+    predictors = setdiff(
+      x = predictors,
+      y = c(
+        predictors_numeric,
+        predictors_categorical
+        )
+    ),
+    decimals = decimals,
+    quiet = quiet
+  )
+
+  predictors_zero_variance <- identify_predictors_zero_variance(
+    df = df,
+    predictors = setdiff(
+      x = predictors,
+      y = c(
+        predictors_numeric,
+        predictors_categorical,
+        predictors_logical
+        )
+    ),
+    decimals = decimals,
+    quiet = quiet
+  )
+
   out_list <- list(
-    numeric = identify_predictors_numeric(
-      df = df,
-      predictors = predictors,
-      decimals = decimals
-    ),
-    categorical = identify_predictors_categorical(
-      df = df,
-      predictors = predictors
-    ),
-    logical = identify_predictors_logical(
-      df = df,
-      predictors = predictors,
-      decimals = decimals
-    ),
-    zero_variance = identify_predictors_zero_variance(
-      df = df,
-      predictors = predictors,
-      decimals = decimals
-    )
+    numeric = predictors_numeric,
+    categorical = predictors_categorical,
+    logical = predictors_logical,
+    zero_variance = predictors_zero_variance
   )
 
   out_list
@@ -83,12 +112,15 @@ identify_predictors <- function(
 identify_predictors_logical <- function(
     df = NULL,
     predictors = NULL,
-    decimals = 4
+    decimals = 4,
+    quiet = FALSE
 ){
+
+  function_name <- "collinear::identify_predictors_logical()"
 
   df <- validate_arg_df_not_null(
     df = df,
-    function_name = "identify_predictors_numeric()"
+    function_name = function_name
   )
 
   if(is.null(predictors) || length(predictors) == 0){
@@ -119,8 +151,23 @@ identify_predictors_logical <- function(
   predictors_constant <- identify_predictors_zero_variance(
     df = df,
     predictors = predictors,
-    decimals = decimals
+    decimals = decimals,
+    quiet = quiet
   )
+
+  if(quiet == FALSE && length(predictors_constant) < 0){
+
+    message(
+      "\n",
+      function_name,
+      ": these logical predictors have constant values and will be ignored:\n - ",
+      paste(
+        predictors_constant,
+        collapse = "\n - "
+      )
+    )
+
+  }
 
   predictors <- setdiff(
     x = predictors,
@@ -162,12 +209,15 @@ identify_predictors_logical <- function(
 identify_predictors_numeric <- function(
     df = NULL,
     predictors = NULL,
-    decimals = 4
+    decimals = 4,
+    quiet = FALSE
 ){
+
+  function_name <- "collinear::identify_predictors_numeric()"
 
   df <- validate_arg_df_not_null(
     df = df,
-    function_name = "identify_predictors_numeric()"
+    function_name = function_name
   )
 
   if(is.null(predictors) || length(predictors) == 0){
@@ -199,6 +249,20 @@ identify_predictors_numeric <- function(
     df = df,
     predictors = predictors
   )
+
+  if(quiet == FALSE && length(predictors_zero_variance) < 0){
+
+    message(
+      "\n",
+      function_name,
+      ": these numeric predictors have constant values and will be ignored:\n - ",
+      paste(
+        predictors_zero_variance,
+        collapse = "\n - "
+      )
+    )
+
+  }
 
   predictors <- setdiff(
     x = predictors,
@@ -238,12 +302,15 @@ identify_predictors_numeric <- function(
 #' @export
 identify_predictors_categorical <- function(
     df = NULL,
-    predictors = NULL
+    predictors = NULL,
+    quiet = FALSE
 ){
+
+  function_name <- "collinear::identify_predictors_categorical()"
 
   df <- validate_arg_df_not_null(
     df = df,
-    function_name = "identify_predictors_numeric()"
+    function_name = function_name
   )
 
   if(is.null(predictors) || length(predictors) == 0){
@@ -264,6 +331,8 @@ identify_predictors_categorical <- function(
   #remove NA
   predictors <- stats::na.omit(predictors)
 
+  predictors_copy <- predictors
+
   #remove constant categoricals
   predictors <- predictors[
     !vapply(
@@ -275,7 +344,28 @@ identify_predictors_categorical <- function(
     )
   ]
 
+  if(quiet == FALSE && length(predictors) < length(predictors_copy)){
+
+    predictors_constant <- setdiff(
+      x = predictors_copy,
+      y = predictors
+    )
+
+    message(
+      "\n",
+      function_name,
+      ": these categorical predictors have constant values and will be ignored:\n - ",
+      paste(
+        predictors_constant,
+        collapse = "\n - "
+      )
+    )
+
+  }
+
   #remove categoricals with as many values as rows
+  predictors_copy <- predictors
+
   predictors <- predictors[
     !vapply(
       X = df[, predictors, drop = FALSE],
@@ -283,6 +373,25 @@ identify_predictors_categorical <- function(
       FUN.VALUE = logical(1)
     )
   ]
+
+  if(quiet == FALSE && length(predictors) < length(predictors_copy)){
+
+    predictors_missing <- setdiff(
+      x = predictors_copy,
+      y = predictors
+    )
+
+    message(
+      "\n",
+      function_name,
+      ": these categorical predictors have as many unique values as rows and will be ignored:\n - ",
+      paste(
+        predictors_missing,
+        collapse = "\n - "
+      )
+    )
+
+  }
 
   if(length(predictors) == 0){
     predictors <- NULL
@@ -333,12 +442,15 @@ identify_predictors_categorical <- function(
 identify_predictors_zero_variance <- function(
     df = NULL,
     predictors = NULL,
-    decimals = 4
+    decimals = 4,
+    quiet = FALSE
 ){
+
+  function_name <- "collinear::identify_predictors_zero_variance()"
 
   df <- validate_arg_df_not_null(
     df = df,
-    function_name = "identify_predictors_numeric()"
+    function_name = function_name
   )
 
   if(is.null(predictors) || length(predictors) == 0){
@@ -620,7 +732,8 @@ identify_response_type <- function(
 #'
 identify_predictors_type <- function(
     df = NULL,
-    predictors = NULL
+    predictors = NULL,
+    quiet = FALSE
 ){
 
   df <- validate_arg_df_not_null(

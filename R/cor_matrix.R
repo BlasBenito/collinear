@@ -88,7 +88,7 @@ cor_matrix <- function(
     )
 
     df <- cor_df(
-      df  = df,
+      df = df,
       predictors = predictors,
       quiet = quiet
     )

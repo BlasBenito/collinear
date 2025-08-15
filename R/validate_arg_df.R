@@ -75,7 +75,15 @@ validate_arg_df <- function(
   #warning if not enough rows
   if(ncol(df) > 1){
 
-    if(nrow(df) < 10){
+    if(nrow(df) < 3){
+
+      stop(
+        function_name,
+        ": argument 'df' has fewer than 3 rows, multicollinearity analysis is not feasible.",
+        call. = FALSE
+      )
+
+    } else if(nrow(df) < 10){
 
       warning(
         "\n",
@@ -111,8 +119,6 @@ validate_arg_df <- function(
     )
 
   }
-
-
 
   df <- drop_geometry_column(
     df = df,

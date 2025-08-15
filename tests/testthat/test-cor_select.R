@@ -136,11 +136,28 @@ testthat::test_that("`cor_select()` works", {
   )
 
   #few rows
+  testthat::expect_error(
+    x <- cor_select(
+      df = vi[1:2, ],
+      predictors = vi_predictors
+    ),
+    regexp = "has fewer than 3 rows"
+  )
+
+  testthat::expect_warning(
+    x <- cor_select(
+      df = vi[1:9, ],
+      predictors = vi_predictors
+    ),
+    regexp = "has fewer than 10 rows"
+  )
+
   testthat::expect_message(
     x <- cor_select(
-      df = vi[1, ],
+      df = vi[1:29, ],
       predictors = vi_predictors
-    )
+    ),
+    regexp = "has fewer than 30 rows"
   )
 
 

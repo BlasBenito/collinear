@@ -94,11 +94,15 @@ testthat::test_that("`cor_df()` works", {
   #single predictor
   predictors <- vi_predictors[1]
 
-  cor.df <- cor_df(
-    df = df,
-    predictors = predictors,
-    quiet = FALSE
+  testthat::expect_message(
+    cor.df <- cor_df(
+      df = df,
+      predictors = predictors,
+      quiet = FALSE
+    ),
+    regexp = "only one predictor"
   )
+
 
   testthat::expect_true(
     is.data.frame(cor.df)

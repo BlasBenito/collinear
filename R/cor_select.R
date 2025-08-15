@@ -121,7 +121,8 @@ cor_select <- function(
 
   m <- cor_matrix(
     df = df,
-    predictors = predictors
+    predictors = predictors,
+    quiet = quiet
   ) |>
     abs()
 

@@ -100,14 +100,16 @@ validate_arg_preference_order <- function(
   #check if preference_order comes from preference_order()
   if(is.data.frame(preference_order)){
 
-    if("predictor" %in% colnames(preference_order)){
+    if(all(c("predictor", "response", "preference", "f") %in% colnames(preference_order))){
+
+    preference_order <- preference_order$predictor
 
     } else {
 
       stop(
         "\n",
         function_name,
-        ": argument 'preference_order' must be the output of 'preference_order()' or a data frame with a column named 'predictor'.",
+        ": argument 'preference_order' must be the output of 'preference_order()' or a data frame with the columns 'response', 'predictor', and 'preference', ordered from higher to lower preference.",
         call. = FALSE
       )
     }
@@ -115,7 +117,6 @@ validate_arg_preference_order <- function(
   }
 
   #subset preference_order in predictors
-
   preference_order_arg <- preference_order
 
   preference_order <- intersect(

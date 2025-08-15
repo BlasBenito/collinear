@@ -121,16 +121,6 @@ cor_df <- function(
   #early output if only one predictor
   if(length(predictors) == 1){
 
-    if(quiet == FALSE){
-
-      message(
-        "\n",
-        function_name,
-        ": only one predictor provided, skipping correlation analysis."
-        )
-
-    }
-
     return(
       data.frame(
         x = predictors,
@@ -331,7 +321,8 @@ cor_numeric_vs_categorical <- function(
   #identify numeric and categorical predictors
   predictors_types <- identify_predictors(
     df = df,
-    predictors = predictors
+    predictors = predictors,
+    quiet = quiet
   )
 
   if(
@@ -370,6 +361,11 @@ cor_numeric_vs_categorical <- function(
         y = df[[x[2]]]
       ) |>
         stats::na.omit()
+
+      attr(
+        x = df.x,
+        which = "validated"
+      ) <- TRUE
 
       #target encode
       df.x <- target_encoding_lab(
