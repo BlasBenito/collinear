@@ -205,19 +205,6 @@ testthat::test_that("`preference_order()` works", {
     regexp = "f_r2_rf"
   )
 
-
-  testthat::expect_message(
-    x <- preference_order(
-      df = df,
-      response = "vi_counts",
-      predictors = vi_predictors_numeric,
-      f = f_auto,
-      quiet = FALSE,
-      warn_limit = NULL
-    ),
-    regexp = "f_r2_rf"
-  )
-
   #binomial response
   x <- preference_order(
     df = df,
@@ -282,6 +269,19 @@ testthat::test_that("`preference_order()` works", {
     all(colnames(x) %in% expected_colnames)
   )
 
+  testthat::expect_message(
+    x <- preference_order(
+      df = df,
+      response = "vi_categorical",
+      predictors = vi_predictors_categorical,
+      f = f_auto,
+      warn_limit = NULL,
+      quiet = FALSE
+    ),
+    regexp = "f_v"
+  )
+
+
   #categorical response and categorical and numeric predictors
   x <- preference_order(
     df = df,
@@ -289,7 +289,7 @@ testthat::test_that("`preference_order()` works", {
     predictors = vi_predictors_numeric,
     f = f_v_rf_categorical,
     warn_limit = NULL,
-    quiet = TRUE
+    quiet = FALSE
   )
 
   testthat::expect_true(
@@ -307,6 +307,19 @@ testthat::test_that("`preference_order()` works", {
   testthat::expect_true(
     all(colnames(x) %in% expected_colnames)
   )
+
+  testthat::expect_message(
+    x <- preference_order(
+      df = df,
+      response = "vi_categorical",
+      predictors = vi_predictors_numeric,
+      f = f_auto,
+      warn_limit = NULL,
+      quiet = FALSE
+    ),
+    regexp = "f_v_rf_categorical"
+  )
+
 
 
 })

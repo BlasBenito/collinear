@@ -96,13 +96,7 @@ validate_arg_predictors_vif <- function(
       message(
         "\n",
         function_name,
-        ": VIF computation for the ",
-        length(predictors_subset),
-        " predictors in argument 'predictors' requires ",
-        min.rows,
-        " rows (ten times the number of predictors minus one) in 'df', but there are ",
-        nrow(df),
-        " rows instead. VIF analysis will be restricted to these predictors: \n - ",
+        ": not enough rows in `df` to compute VIF on all 'predictors'. VIF analysis will be restricted to these predictors: \n - ",
         paste(predictors_subset, collapse = "\n - ")
       )
 
