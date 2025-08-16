@@ -136,11 +136,29 @@ testthat::test_that("`vif_select()` works", {
   )
 
   #few rows
+  testthat::expect_error(
+    x <- vif_select(
+      df = df[1:2, ],
+      predictors = predictors
+    ),
+    regexp = "has fewer than 3 rows"
+  )
+
+  testthat::expect_warning(
+    x <- vif_select(
+      df = df[1:9, ],
+      predictors = predictors
+    ),
+    regexp = "has fewer than 10 rows"
+  ) |>
+    suppressMessages()
+
   testthat::expect_message(
     x <- vif_select(
-      df = vi[1, ],
-      predictors = vi_predictors
-    )
+      df = df[1:29, ],
+      predictors = predictors
+    ),
+    regexp = "has fewer than 30 rows"
   ) |>
     suppressMessages()
 

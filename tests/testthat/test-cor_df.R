@@ -64,14 +64,31 @@ testthat::test_that("`cor_df()` works", {
   )
 
   #few rows
-  testthat::expect_warning(
-    cor.df <- cor_df(
-      df = vi[1, ],
-      predictors = vi_predictors,
-      quiet = TRUE
+  testthat::expect_error(
+    x <- cor_df(
+      df = vi[1:2, ],
+      predictors = predictors
     ),
-    regexp = "argument 'df' has fewer than 10 rows"
+    regexp = "has fewer than 3 rows"
   )
+
+  testthat::expect_warning(
+    x <- cor_df(
+      df = vi[1:9, ],
+      predictors = predictors
+    ),
+    regexp = "has fewer than 10 rows"
+  ) |>
+    suppressMessages()
+
+  testthat::expect_message(
+    x <- cor_df(
+      df = vi[1:29, ],
+      predictors = predictors
+    ),
+    regexp = "has fewer than 30 rows"
+  ) |>
+    suppressMessages()
 
 
   #no predictors

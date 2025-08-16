@@ -150,7 +150,8 @@ testthat::test_that("`cor_select()` works", {
       predictors = vi_predictors
     ),
     regexp = "has fewer than 10 rows"
-  )
+  ) |>
+    suppressMessages()
 
   testthat::expect_message(
     x <- cor_select(
@@ -158,7 +159,8 @@ testthat::test_that("`cor_select()` works", {
       predictors = vi_predictors
     ),
     regexp = "has fewer than 30 rows"
-  )
+  ) |>
+    suppressMessages()
 
 
   #no predictors

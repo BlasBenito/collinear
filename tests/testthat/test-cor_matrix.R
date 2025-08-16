@@ -33,6 +33,33 @@ testthat::test_that("`cor_matrix()` works", {
     info = "Diagonal elements should be 1."
   )
 
+  #few rows
+  testthat::expect_error(
+    x <- cor_matrix(
+      df = vi[1:2, ],
+      predictors = predictors
+    ),
+    regexp = "has fewer than 3 rows"
+  )
+
+  testthat::expect_warning(
+    x <- cor_matrix(
+      df = vi[1:9, ],
+      predictors = predictors
+    ),
+    regexp = "has fewer than 10 rows"
+  ) |>
+    suppressMessages()
+
+  testthat::expect_message(
+    x <- cor_matrix(
+      df = vi[1:29, ],
+      predictors = predictors
+    ),
+    regexp = "has fewer than 30 rows"
+  ) |>
+    suppressMessages()
+
 
 
 })
