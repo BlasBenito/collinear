@@ -1,5 +1,7 @@
 testthat::test_that("`cor_clusters()` works", {
 
+  data(vi, vi_predictors)
+
   vi <- vi[1:1000, ]
   predictors <- vi_predictors[1:15]
 

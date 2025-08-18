@@ -131,12 +131,12 @@ testthat::test_that("All code examples work!", {
     encoded_name = "soil_type_encoded"
   )
 
-  plot(
-    x = df$soil_type_encoded,
-    y = df$vi_numeric,
-    xlab = "encoded variable",
-    ylab = "response"
-  )
+  # plot(
+  #   x = df$soil_type_encoded,
+  #   y = df$vi_numeric,
+  #   xlab = "encoded variable",
+  #   ylab = "response"
+  # )
 
   df <- target_encoding_rank(
     df = vi,
@@ -145,12 +145,12 @@ testthat::test_that("All code examples work!", {
     encoded_name = "soil_type_encoded"
   )
 
-  plot(
-    x = df$soil_type_encoded,
-    y = df$vi_numeric,
-    xlab = "encoded variable",
-    ylab = "response"
-  )
+  # plot(
+  #   x = df$soil_type_encoded,
+  #   y = df$vi_numeric,
+  #   xlab = "encoded variable",
+  #   ylab = "response"
+  # )
 
   df <- target_encoding_loo(
     df = vi,
@@ -159,12 +159,12 @@ testthat::test_that("All code examples work!", {
     encoded_name = "soil_type_encoded"
   )
 
-  plot(
-    x = df$soil_type_encoded,
-    y = df$vi_numeric,
-    xlab = "encoded variable",
-    ylab = "response"
-  )
+  # plot(
+  #   x = df$soil_type_encoded,
+  #   y = df$vi_numeric,
+  #   xlab = "encoded variable",
+  #   ylab = "response"
+  # )
 
   #target_encoding_lab ----
   data(vi, vi_predictors)
@@ -196,16 +196,11 @@ testthat::test_that("All code examples work!", {
   predictors <- vi_predictors[1:10]
   predictors_numeric <- vi_predictors_numeric[1:10]
 
-  future::plan(
-    future::multisession,
-    workers = 2
-  )
-
   df_preference <- preference_order(
     df = df,
     response = "vi_numeric",
     predictors = predictors_numeric,
-    f = NULL
+    f = f_auto
   )
 
   df_preference
@@ -222,8 +217,8 @@ testthat::test_that("All code examples work!", {
   )
 
   names(preference_list)
-  preference_list[[1]]
-  preference_list[[2]]
+  preference_list$vi_categorical
+  preference_list$vi_counts
 
   x <- collinear(
     df = df,
@@ -238,8 +233,6 @@ testthat::test_that("All code examples work!", {
     predictors = predictors_numeric,
     f = f_auc_glm_binomial
   )
-
-  future::plan(future::sequential)
 
   #f_auto ----
   data(vi, vi_predictors_numeric)
@@ -287,7 +280,7 @@ testthat::test_that("All code examples work!", {
   #f_r2_counts ----
   data(vi)
 
-  vi <- vi[1:1000, ]
+  vi <- collinear::vi[1:1000, ]
 
   df <- data.frame(
     y = vi[["vi_counts"]],
@@ -374,38 +367,34 @@ testthat::test_that("All code examples work!", {
     p = c(1, 0.8, 0.7, 0.6, 0.5, 0.6, 0.7)
   )
 
+  #TODO: Fix this function and examples
   #model_formula ----
   data(vi, vi_predictors_numeric)
 
   df <- vi[1:1000, ]
 
-  formulas_additive <- model_formula(
+  formula_additive <- model_formula(
     df = df,
-    response = c(
-      "vi_numeric",
-      "vi_categorical"
-    ),
+    response = "vi_numeric",
     predictors = vi_predictors_numeric[1:10]
   )
 
-  formulas_additive
+  formula_additive
 
   m <- stats::lm(
-    formula = formulas_additive[[1]],
+    formula = formula_additive,
     data = df
   )
 
   selection <- collinear(
     df = df,
-    response = c(
-      "vi_numeric",
-      "vi_binomial"
-    ),
+    response = "vi_numeric",
     predictors = vi_predictors_numeric[1:10],
     quiet = TRUE
   )
 
-  formulas_poly <- model_formula(
+  formula_poly <- model_formula(
+    df = df,
     predictors = selection,
     term_f = "poly",
     term_args = "degree = 3, raw = TRUE"

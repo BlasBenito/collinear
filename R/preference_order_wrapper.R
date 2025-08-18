@@ -128,7 +128,15 @@ preference_order_wrapper <- function(
 
     if(length(preference_order) > 0){
 
-      return(preference_order)
+      #return data frame
+      return(
+        data.frame(
+          response = response,
+          predictor = preference_order,
+          f = NA,
+          preference = length(preference_order):1
+        )
+      )
 
     } else {
 

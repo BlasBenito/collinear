@@ -30,3 +30,4 @@ Depends:
     R (>= 4.0)
 LazyData: true
 Language: en-US
+Config/testthat/parallel: true

@@ -1,6 +1,7 @@
 testthat::test_that("`target_encoding_methods()` works", {
 
-  df <- vi[1:1000, ]
+
+  df <- collinear::vi[1:1000, ]
 
   #target_encoding_mean
   df <- target_encoding_mean(
@@ -12,7 +13,7 @@ testthat::test_that("`target_encoding_methods()` works", {
   )
 
   testthat::expect_true(
-    class(vi[["soil_type"]]) == "factor"
+    class(df[["soil_type"]]) == "factor"
   )
 
   testthat::expect_true(

@@ -411,13 +411,13 @@ collinear <- function(
     if(length(selection.response) > 0){
 
       selection_in_preference_order <- intersect(
-        x = preference_order.response,
+        x = preference_order.response$predictor,
         y = selection.response
       )
 
       selection_no_in_preference_order <- setdiff(
         x = selection.response,
-        y = preference_order.response
+        y = preference_order.response$predictor
       )
 
       selection.response <- c(
