@@ -129,12 +129,28 @@ preference_order_wrapper <- function(
     if(length(preference_order) > 0){
 
       #return data frame
+      n <- length(preference_order)
+
+      if(is.null(response)){
+        response <- NA
+      }
+
       return(
         data.frame(
-          response = response,
+          response = rep(
+            x = response,
+            times = n
+            ),
           predictor = preference_order,
-          f = NA,
-          preference = length(preference_order):1
+          f = rep(
+            x = NA,
+            times = n
+            ),
+          preference = seq(
+            from = 1,
+            to = 0,
+            length.out = n
+          )
         )
       )
 
@@ -190,15 +206,6 @@ preference_order_wrapper <- function(
     f = f,
     quiet = quiet
   )
-
-  f_name <- unique(preference_order$f)
-
-  preference_order <- preference_order$predictor
-
-  attr(
-    x = preference_order,
-    which = "f_name"
-  ) <- f_name
 
   preference_order
 

@@ -85,10 +85,6 @@
 #'
 #'   \item If \code{response} is a character vector of length >= 2: an object of class [collinear_list], a named list of \code{"collinear_output"} objects, one per response variable.
 #' }
-
-#'
-
-#'
 #' @examples
 #' #parallelization setup
 #' future::plan(
@@ -221,10 +217,31 @@ collinear <- function(
   }
 
   ## responses ----
-  responses <- intersect(
-    x = colnames(df),
-    y = response
-  )
+  responses <- response
+  if(!is.null(response)){
+
+    responses <- intersect(
+      x = colnames(df),
+      y = response
+    )
+
+    responses_missing <- setdiff(
+      x = response,
+      y = responses
+    )
+
+    if(length(responses_missing) > 0 && quiet == FALSE){
+
+      message(
+        "\n",
+        function_name,
+        ": the following values of the argument 'responses' are not column names of 'df' and will be ignored: \n - ",
+        paste(responses_missing, collapse = "\n - ")
+      )
+
+    }
+
+  }
 
   if(
     length(responses) == 0 ||
@@ -234,28 +251,48 @@ collinear <- function(
   }
 
   ## avoid repeating messages in loop ----
+
+
   if(quiet == FALSE){
 
-    if(is.null(encoding_method)){
+    ### target encoding ----
+    predictors <- validate_arg_predictors(
+      df = df,
+      response = response,
+      predictors = predictors,
+      function_name = function_name,
+      quiet = quiet
+    )
 
-      message(
-        "\n",
-        function_name,
-        ": argument 'encoding_method' is NULL, skipping target encoding."
-      )
+    predictors_categorical_n <- identify_predictors_categorical(
+      df = df,
+      predictors = predictors,
+      quiet = quiet
+    ) |>
+      length()
 
-    } else if(is.null(response)){
+    if(!is.null(encoding_method)){
 
-      message(
-        "\n",
-        function_name,
-        ": argument 'response' is NULL, skipping target encoding."
-      )
+      if(
+        !is.null(encoding_method) &&
+        is.null(response) &&
+        predictors_categorical_n > 0)
+        {
+
+        message(
+          "\n",
+          function_name,
+          ": argument 'response' is NULL, skipping target encoding."
+        )
+
+      }
 
     }
 
-
-    if(is.null(f)){
+    if(
+      !is.null(response) &&
+      is.null(f)
+      ){
 
       message(
         "\n",
@@ -264,6 +301,7 @@ collinear <- function(
       )
 
     }
+
 
     if(is.null(max_cor)){
 
@@ -286,6 +324,7 @@ collinear <- function(
     }
 
   }
+
 
   #ITERATION ----
   out <- list()
@@ -465,7 +504,7 @@ collinear <- function(
       arguments = list(
         encoding_method = encoding_method,
         preference_order = preference_order.response,
-        f = attributes(preference_order.response)$f_name,
+        f = unique(preference_order.response$f),
         max_cor = max_cor,
         max_vif = max_vif
       )

@@ -186,7 +186,7 @@ print.collinear_output <- function(
       cat(
         "   + preference_order:\n     -",
         paste(
-          x$arguments$preference_order,
+          x$arguments$preference_order$predictor,
           collapse = "\n     - "
         )
       )

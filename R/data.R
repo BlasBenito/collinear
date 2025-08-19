@@ -20,6 +20,28 @@
 #' @family example_data
 "vi"
 
+#' Small Version (100 rows) of the Dataset \code{vi}
+#'
+#' @description
+#'
+#' Same as dataset [vi], but with only 100 rows. Used in code examples to shorten runtime.
+#'
+#' @usage data(vi_smol)
+#' @seealso [vi_predictors]
+#'
+#' @format Data frame with 100 rows and 68 columns.
+#' @family example_data
+"vi_smol"
+
+#' Response Names in Example Data Frame `vi`
+#'
+#' @usage data(vi_responses)
+#' @seealso [vi]
+#'
+#' @format Character vector with response names.
+#' @family example_data
+"vi_responses"
+
 #' All Predictor Names in Example Data Frame vi
 #'
 #' @usage data(vi_predictors)

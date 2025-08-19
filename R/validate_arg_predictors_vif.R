@@ -93,14 +93,18 @@ validate_arg_predictors_vif <- function(
       #restrict predictors to a manageable number
       predictors_subset <- predictors_numeric[1:min.predictors]
 
-      message(
-        "\n",
-        function_name,
-        ": not enough rows in `df` to compute VIF on all 'predictors'. VIF analysis will be restricted to these predictors: \n - ",
-        paste(predictors_subset, collapse = "\n - ")
-      )
+      if(quiet == FALSE){
 
-      return(predictors_subset)
+        message(
+          "\n",
+          function_name,
+          ": not enough rows in `df` to compute VIF on all 'predictors'. VIF analysis will be restricted to these predictors: \n - ",
+          paste(predictors_subset, collapse = "\n - ")
+        )
+
+      }
+
+      predictors_numeric <- predictors_subset
 
     }
 
@@ -119,7 +123,7 @@ validate_arg_predictors_vif <- function(
 
   }
 
-  if(length(predictors) == 1){
+  if(length(predictors_numeric) == 1){
 
     if(quiet == FALSE){
 
@@ -130,8 +134,6 @@ validate_arg_predictors_vif <- function(
       )
 
     }
-
-    return(predictors)
 
   }
 

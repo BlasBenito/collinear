@@ -395,26 +395,31 @@ testthat::test_that("All code examples work!", {
 
   formula_poly <- model_formula(
     df = df,
-    predictors = selection,
+    response = selection$response,
+    predictors = selection$selection,
     term_f = "poly",
     term_args = "degree = 3, raw = TRUE"
   )
 
-  formulas_poly
+  formula_poly
 
-  formulas_gam <- model_formula(
-    predictors = selection,
+  formula_gam <- model_formula(
+    df = df,
+    response = selection$response,
+    predictors = selection$selection,
     term_f = "s"
   )
 
-  formulas_gam
+  formula_gam
 
-  formulas_random_effect <- model_formula(
-    predictors = selection,
+  formula_random_effect <- model_formula(
+    df = df,
+    response = selection$response,
+    predictors = selection$selection,
     random_effects = "country_name"
   )
 
-  formulas_random_effect
+  formula_random_effect
 
   #identify_predictors ----
   data(
@@ -432,9 +437,15 @@ testthat::test_that("All code examples work!", {
   #identify_predictors_logical ----
   data(vi, vi_predictors)
 
+  vi$logical_predictor <- sample(
+    x = c(TRUE, FALSE),
+    replace = TRUE,
+    size = nrow(vi)
+  )
+
   logical.predictors <- identify_predictors_logical(
     df = vi,
-    predictors = vi_predictors
+    predictors = colnames(vi)
   )
 
   logical.predictors
@@ -452,12 +463,12 @@ testthat::test_that("All code examples work!", {
   #identify_predictors_categorical ----
   data(vi, vi_predictors)
 
-  non.numeric.predictors <- identify_predictors_categorical(
+  categorical.predictors <- identify_predictors_categorical(
     df = vi,
     predictors = vi_predictors
   )
 
-  non.numeric.predictors
+  categorical.predictors
 
   #identify_predictors_zero_variance ----
   data(vi, vi_predictors)
@@ -748,7 +759,7 @@ testthat::test_that("All code examples work!", {
   )
 
   selected_predictors <- cor_select(
-    df = df,
+    df = vi,
     predictors = predictors,
     preference_order = df_preference,
     max_cor = 0.75
@@ -834,7 +845,7 @@ testthat::test_that("All code examples work!", {
   #  automated preference order
   #  all predictors filtered by correlation and VIF
   x <- collinear(
-    df = df,
+    df = vi,
     response = c(
       "vi_numeric",
       "vi_binomial"
@@ -848,7 +859,7 @@ testthat::test_that("All code examples work!", {
   #with custom preference order
   #--------------------------------
   x <- collinear(
-    df = df,
+    df = vi,
     response = "vi_numeric",
     predictors = predictors,
     preference_order = c(
@@ -861,13 +872,13 @@ testthat::test_that("All code examples work!", {
   #pre-computed preference order
   #--------------------------------
   preference_df <- preference_order(
-    df = df,
+    df = vi,
     response = "vi_numeric",
     predictors = predictors
   )
 
   x <- collinear(
-    df = df,
+    df = vi,
     response = "vi_numeric",
     predictors = predictors,
     preference_order = preference_df

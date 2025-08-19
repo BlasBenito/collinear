@@ -2,8 +2,6 @@ testthat::test_that("`case_weights()` works", {
 
   data(vi)
 
-  vi <- vi[1:1000, ]
-
   #binomial weights
   weights <- case_weights(
     x = vi$vi_binomial

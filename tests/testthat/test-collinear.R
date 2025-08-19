@@ -1,27 +1,107 @@
 testthat::test_that("`collinear()` works", {
 
-  data(vi, vi_predictors)
+  #CODE EXAMPLES ----
 
-  predictors_misc <- c("koppen_zone", "region", "continent", "topo_slope", "topo_elevation", "growing_season_temperature", "soil_soc", "country_gdp", "country_name", "koppen_group")
+  #OPTIONAL: parallelization setup
+  # future::plan(
+  #   future::multisession,
+  #   workers = 2
+  # )
 
-  predictors_numeric <- vi_predictors_numeric[1:5]
+  #OPTIONAL: progress bar
+  #does not work in examples
+  #progressr::handlers(global = TRUE)
 
-  predictors_categorical <- vi_predictors_categorical[1:5]
-
-  vi.smol <- vi[1:1000, ]
-
-  #response types
-  responses <- c(
-    "vi_numeric",
-    "vi_counts",
-    "vi_binomial",
-    "vi_categorical",
-    "vi_factor"
+  #minimal setup
+  ## numeric predictors only
+  x <- collinear(
+    df = vi_smol,
+    predictors = vi_predictors_numeric
   )
 
-  future::plan(
-    future::multisession,
-    workers = 3
+  x
+  x$selection
+
+  #preference order by pearson correlatino with response
+  x <- collinear(
+    df = vi_smol,
+    response = "vi_numeric",
+    predictors = vi_predictors_numeric,
+    f = f_r2_pearson
+  )
+
+  x
+
+
+
+  #numeric and categorical predictors
+  #small subset to speed example up
+  predictors <- c(
+    "swi_mean",
+    "soil_type",
+    "soil_temperature_mean",
+    "growing_season_length",
+    "rainfall_mean"
+  )
+
+
+  #with numeric responses
+  #--------------------------------
+  #  target encoding
+  #  automated preference order
+  #  all predictors filtered by correlation and VIF
+  x <- collinear(
+    df = vi_smol,
+    response = c(
+      "vi_numeric",
+      "vi_binomial"
+    ),
+    predictors = predictors
+  )
+
+  x
+
+
+  #with custom preference order
+  #--------------------------------
+  x <- collinear(
+    df = df,
+    response = "vi_numeric",
+    predictors = predictors,
+    preference_order = c(
+      "swi_mean",
+      "soil_type"
+    )
+  )
+
+
+  #pre-computed preference order
+  #--------------------------------
+  preference_df <- preference_order(
+    df = df,
+    response = "vi_numeric",
+    predictors = predictors
+  )
+
+  x <- collinear(
+    df = df,
+    response = "vi_numeric",
+    predictors = predictors,
+    preference_order = preference_df
+  )
+
+  #resetting to sequential processing
+  future::plan(future::sequential)
+
+
+  #UNIT TEST ----
+  data(
+    vi,
+    vi_smol,
+    vi_predictors,
+    vi_predictors_numeric,
+    vi_predictors_categorical,
+    vi_responses
   )
 
   #DEFAULT CALL ----
@@ -36,7 +116,8 @@ testthat::test_that("`collinear()` works", {
   ##fewer than 10 rows ----
   testthat::expect_warning(
     x <- collinear(
-      df = vi.smol[1:5, 1:5]
+      df = vi_smol[1:9, ],
+      predictors = vi_predictors_numeric
     ),
     regexp = "has fewer than 10 rows"
   ) |>
@@ -45,7 +126,8 @@ testthat::test_that("`collinear()` works", {
   ##fewer than 30 rows ----
   testthat::expect_message(
     x <- collinear(
-      df = vi.smol[1:11, 1:10]
+      df = vi_smol[1:11, ],
+      predictors = vi_predictors_numeric
     ),
     regexp = "has fewer than 30 rows"
   ) |>
@@ -56,7 +138,8 @@ testthat::test_that("`collinear()` works", {
   #max_cor and max_vif NULL
   testthat::expect_error(
     x <- collinear(
-      df = vi.smol[, 1:10],
+      df = vi_smol,
+      predictors = vi_predictors_numeric,
       max_cor = NULL,
       max_vif = NULL
     )
@@ -65,7 +148,8 @@ testthat::test_that("`collinear()` works", {
   #max_cor and max_vif invalid
   f_test <- function(){
     collinear(
-      df = vi.smol[, 1:5],
+      df = vi_smol,
+      predictors = vi_predictors_numeric,
       max_cor = 2,
       max_vif = 20
     )
@@ -88,9 +172,8 @@ testthat::test_that("`collinear()` works", {
   ##response only ----
   testthat::expect_message(
     x <- collinear(
-      df = vi.smol[, c(responses, predictors_misc)],
-      response = responses,
-      predictors = NULL,
+      df = vi_smol[, c(vi_responses[1:2], vi_predictors_numeric)],
+      response = vi_responses[1:2],
       encoding_method = NULL,
       preference_order = NULL,
       f = NULL,
@@ -101,11 +184,11 @@ testthat::test_that("`collinear()` works", {
     suppressMessages()
 
   testthat::expect_true(
-    all(responses %in% names(x))
+    all(vi_responses[1:2] %in% names(x))
   )
 
   #check that the given response is never in selections
-  for(i in responses){
+  for(i in vi_responses[1:2]){
     testthat::expect_true(
       !i %in% x[[i]]$selection
     )
@@ -117,9 +200,9 @@ testthat::test_that("`collinear()` works", {
   ##numeric predictors ----
   testthat::expect_message(
     x <- collinear(
-      df = vi.smol,
+      df = vi,
       response = NULL,
-      predictors = predictors_numeric,
+      predictors = vi_predictors_numeric,
       encoding_method = NULL,
       preference_order = NULL,
       f = NULL,
@@ -141,9 +224,9 @@ testthat::test_that("`collinear()` works", {
   ##categorical predictors ----
   testthat::expect_message(
     x <- collinear(
-      df = vi.smol,
+      df = vi,
       response = NULL,
-      predictors = predictors_categorical,
+      predictors = vi_predictors_categorical[1:5],
       encoding_method = NULL,
       preference_order = NULL,
       f = NULL,
@@ -164,9 +247,9 @@ testthat::test_that("`collinear()` works", {
 
   ##mixed predictors ----
   x <- collinear(
-    df = vi.smol,
+    df = vi_smol,
     response = NULL,
-    predictors = predictors_misc,
+    predictors = vi_predictors,
     encoding_method = NULL,
     preference_order = NULL,
     f = NULL,
@@ -186,9 +269,9 @@ testthat::test_that("`collinear()` works", {
 
   ##numeric numeric ----
   x <- collinear(
-    df = vi.smol,
+    df = vi,
     response = "vi_numeric",
-    predictors = predictors_numeric,
+    predictors = vi_predictors_numeric,
     encoding_method = NULL,
     preference_order = NULL,
     f = NULL,
@@ -206,9 +289,9 @@ testthat::test_that("`collinear()` works", {
 
   ##categorical numeric ----
   x <- collinear(
-    df = vi.smol,
+    df = vi,
     response = "vi_categorical",
-    predictors = predictors_numeric,
+    predictors = vi_predictors_numeric,
     encoding_method = NULL,
     preference_order = NULL,
     f = NULL,
@@ -222,9 +305,9 @@ testthat::test_that("`collinear()` works", {
   ##categorical categorical ----
   testthat::expect_message(
     x <- collinear(
-      df = vi.smol,
+      df = vi_smol,
       response = "vi_categorical",
-      predictors = predictors_categorical,
+      predictors = vi_predictors_categorical,
       encoding_method = NULL,
       preference_order = NULL,
       f = NULL,
@@ -242,9 +325,9 @@ testthat::test_that("`collinear()` works", {
   #all selections are the same
   testthat::expect_message(
     x <- collinear(
-      df = vi.smol,
-      response = responses,
-      predictors = predictors_misc,
+      df = vi_smol,
+      response = vi_responses,
+      predictors = vi_predictors,
       encoding_method = NULL,
       preference_order = NULL,
       f = NULL,
@@ -256,7 +339,7 @@ testthat::test_that("`collinear()` works", {
 
   #check that all responses are in x
   testthat::expect_true(
-    all(responses %in% names(x))
+    all(vi_responses %in% names(x))
   )
 
   #check for identical selections because encoding_method and preference_order are NULL
@@ -269,7 +352,7 @@ testthat::test_that("`collinear()` works", {
     as.data.frame()
 
   testthat::expect_true(
-    all(selections$Freq == length(responses))
+    all(selections$Freq == length(vi_responses))
   )
 
   #checking formulas
@@ -297,9 +380,9 @@ testthat::test_that("`collinear()` works", {
   #TARGET ENCODING ----
   f_test <- function(){
     collinear(
-      df = vi.smol,
+      df = vi,
       response = c("vi_numeric", "vi_categorical"),
-      predictors = predictors_categorical,
+      predictors = vi_predictors_categorical,
       encoding_method = "loo",
       preference_order = NULL,
       f = NULL,
@@ -321,7 +404,7 @@ testthat::test_that("`collinear()` works", {
 
   #check that a categorical predictor was converted to numeric for "vi_numeric"
   testthat::expect_true(
-    !is.numeric(vi.smol[["soil_type"]]) &&
+    !is.numeric(vi[["soil_type"]]) &&
       !is.numeric(x$vi_categorical$df[["soil_type"]]) &&
       is.numeric(x$vi_numeric$df[["soil_type"]])
   )
@@ -339,9 +422,9 @@ testthat::test_that("`collinear()` works", {
 
   testthat::expect_message(
     x <- collinear(
-      df = vi.smol,
+      df = vi_smol,
       response = "vi_numeric",
-      predictors = predictors_misc,
+      predictors = vi_predictors_numeric,
       encoding_method = NULL,
       preference_order = preference_order,
       f = NULL,
@@ -369,39 +452,44 @@ testthat::test_that("`collinear()` works", {
     "growing_season_temperature"
   )
 
-  x <- collinear(
-    df = vi.smol,
-    response = "vi_numeric",
-    predictors = predictors_misc,
-    encoding_method = NULL,
-    preference_order = preference_order,
-    f = NULL,
-    max_cor = 0.75,
-    max_vif = 5,
-    quiet = TRUE
-  )
+  testthat::expect_message(
+    x <- collinear(
+      df = vi,
+      response = "vi_numeric",
+      predictors = vi_predictors_numeric,
+      encoding_method = NULL,
+      preference_order = preference_order,
+      f = NULL,
+      max_cor = 0.75,
+      max_vif = 5,
+      quiet = FALSE
+    ),
+    regexp = "argument 'f' is NULL"
+  ) |>
+    suppressMessages()
+
 
   testthat::expect_true(
     all(preference_order %in% x$selection)
   )
 
   testthat::expect_true(
-    all(preference_order %in% x$arguments$preference_order)
+    all(preference_order %in% x$arguments$preference_order$predictor)
   )
 
   ### NULL response ----
   #same as above!
-  preference_order <- c(
+  preference <- c(
     "soil_soc",
     "growing_season_temperature"
   )
 
   x <- collinear(
-    df = vi.smol,
+    df = vi_smol,
     response = NULL,
-    predictors = predictors_misc,
+    predictors = vi_predictors_numeric,
     encoding_method = NULL,
-    preference_order = preference_order,
+    preference_order = preference,
     f = NULL,
     max_cor = 0.75,
     max_vif = 5,
@@ -409,23 +497,23 @@ testthat::test_that("`collinear()` works", {
   )
 
   testthat::expect_true(
-    all(preference_order %in% x$selection)
+    all(preference %in% x$selection)
   )
 
   testthat::expect_true(
-    all(preference_order %in% x$arguments$preference_order)
+    all(preference %in% x$arguments$preference_order$predictor)
   )
 
   testthat::expect_true(
-    x$selection[1] == x$arguments$preference_order[1]
+    x$selection[1] == x$arguments$preference_order$predictor[1]
   )
 
   ### f_auto ----
   testthat::expect_message(
     x <- collinear(
-      df = vi.smol,
+      df = vi_smol,
       response = "vi_numeric",
-      predictors = predictors_misc,
+      predictors = vi_predictors_numeric,
       encoding_method = NULL,
       preference_order = NULL,
       f = f_auto,
@@ -438,7 +526,7 @@ testthat::test_that("`collinear()` works", {
     suppressMessages()
 
   testthat::expect_true(
-    x$selection[1] == x$arguments$preference_order[1]
+    x$selection[1] == x$arguments$preference_order$predictor[1]
   )
 
   testthat::expect_true(
@@ -446,15 +534,15 @@ testthat::test_that("`collinear()` works", {
   )
 
   testthat::expect_true(
-    x$arguments$f == "f_r2_rf"
+    x$arguments$f == "f_r2_pearson"
   )
 
   ### f_r2_rf ----
   testthat::expect_message(
     x <- collinear(
-      df = vi.smol,
+      df = vi_smol,
       response = "vi_numeric",
-      predictors = predictors_misc,
+      predictors = vi_predictors,
       encoding_method = NULL,
       preference_order = NULL,
       f = f_r2_rf,
@@ -467,7 +555,7 @@ testthat::test_that("`collinear()` works", {
     suppressMessages()
 
   testthat::expect_true(
-    x$selection[1] == x$arguments$preference_order[1]
+    x$selection[1] == x$arguments$preference_order$predictor[1]
   )
 
   testthat::expect_true(
@@ -483,9 +571,9 @@ testthat::test_that("`collinear()` works", {
 
   testthat::expect_error(
     x <- collinear(
-      df = vi.smol,
+      df = vi,
       response = "vi_numeric",
-      predictors = predictors_misc,
+      predictors = vi_predictors,
       encoding_method = NULL,
       preference_order = NULL,
       f = my_f,
@@ -499,9 +587,9 @@ testthat::test_that("`collinear()` works", {
   ### character function name
   testthat::expect_error(
     x <- collinear(
-      df = vi.smol,
+      df = vi,
       response = "vi_numeric",
-      predictors = predictors_misc,
+      predictors = vi_predictors,
       encoding_method = NULL,
       preference_order = NULL,
       f = "my_f",
@@ -515,9 +603,9 @@ testthat::test_that("`collinear()` works", {
   ###wrong function type
   testthat::expect_error(
     x <- collinear(
-      df = vi.smol,
+      df = vi,
       response = "vi_numeric",
-      predictors = predictors_misc,
+      predictors = vi_predictors,
       encoding_method = NULL,
       preference_order = NULL,
       f = f_v, #requires character response

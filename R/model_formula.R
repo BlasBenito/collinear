@@ -279,7 +279,7 @@ model_formula <- function(
   ) |>
     stats::as.formula()
 
-  environment(out) <- emptyenv()
+  environment(out) <- parent.frame()
 
 
   out

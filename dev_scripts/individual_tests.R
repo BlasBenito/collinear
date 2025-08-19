@@ -1,7 +1,7 @@
 library(testthat)
+library(devtools)
 library(collinear)
 
-#TODO
 testthat::test_file("tests/testthat/test-code_examples.R")
 
 #main functions

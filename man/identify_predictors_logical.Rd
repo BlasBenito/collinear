@@ -4,7 +4,12 @@
 \alias{identify_predictors_logical}
 \title{Identify Valid Logical Predictors}
 \usage{
-identify_predictors_logical(df = NULL, predictors = NULL, decimals = 4)
+identify_predictors_logical(
+  df = NULL,
+  predictors = NULL,
+  decimals = 4,
+  quiet = FALSE
+)
 }
 \arguments{
 \item{df}{(required; data frame, tibble, or sf) A data frame with responses and predictors. Must have at least 10 rows for pairwise correlation analysis, and \code{10 * (length(predictors) - 1)} for VIF analysis.  Default: NULL.}
@@ -12,6 +17,8 @@ identify_predictors_logical(df = NULL, predictors = NULL, decimals = 4)
 \item{predictors}{(optional; character vector or NULL) Names of the predictors to select from \code{df}. If omitted, all numeric columns in \code{df} are used instead. Default: NULL}
 
 \item{decimals}{(required, integer) Number of decimal places for the zero variance test. Smaller numbers will increase the number of variables detected as near-zero variance. Recommended values will depend on the range of the numeric variables in 'df'. Default: 4}
+
+\item{quiet}{(optional; logical) If FALSE, messages are printed to the console Default: FALSE}
 }
 \value{
 character vector: names of logical predictors
