@@ -2,6 +2,11 @@ testthat::test_that("`collinear()` works", {
 
   #CODE EXAMPLES ----
 
+  data(
+    vi_smol,
+    vi_predictors_numeric
+  )
+
   #OPTIONAL: parallelization setup
   # future::plan(
   #   future::multisession,
@@ -22,7 +27,7 @@ testthat::test_that("`collinear()` works", {
   x
   x$selection
 
-  #preference order by pearson correlatino with response
+  #preference order by R-squared with response
   x <- collinear(
     df = vi_smol,
     response = "vi_numeric",
@@ -65,7 +70,7 @@ testthat::test_that("`collinear()` works", {
   #with custom preference order
   #--------------------------------
   x <- collinear(
-    df = df,
+    df = vi_smol,
     response = "vi_numeric",
     predictors = predictors,
     preference_order = c(
@@ -78,13 +83,13 @@ testthat::test_that("`collinear()` works", {
   #pre-computed preference order
   #--------------------------------
   preference_df <- preference_order(
-    df = df,
+    df = vi_smol,
     response = "vi_numeric",
     predictors = predictors
   )
 
   x <- collinear(
-    df = df,
+    df = vi_smol,
     response = "vi_numeric",
     predictors = predictors,
     preference_order = preference_df

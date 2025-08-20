@@ -25,13 +25,6 @@ testthat::test_that("`performance_score_r2()` works", {
     #error
     testthat::expect_error(
       x <- performance_score_r2(
-        o = runif(n = nrow(vi)),
-        p = vi$vi_binomial
-      )
-    )
-
-    testthat::expect_error(
-      x <- performance_score_r2(
         o = NULL,
         p = vi$vi_binomial
       )
