@@ -9,8 +9,8 @@
 \arguments{
 \item{x}{(required, list) Object of class \code{collinear_arguments}. Default: NULL}
 
-\item{n}{(optional, integer) Maximum number of vector elements to print. Default: 5.}
+\item{n}{(optional, integer) Maximum number of vector elements to print. Defaults: 5.}
 }
 \description{
-Prints an object of the class \code{collinear_arguments} produced by \code{\link[=collinear]{collinear()}}.
+Prints an object of the class \code{collinear_arguments}.
 }

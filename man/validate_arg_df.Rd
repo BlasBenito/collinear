@@ -2,7 +2,7 @@
 % Please edit documentation in R/validate_arg_df.R
 \name{validate_arg_df}
 \alias{validate_arg_df}
-\title{Validate Values of Argument \code{df}}
+\title{Validate Argument \code{df}}
 \usage{
 validate_arg_df(
   df = NULL,

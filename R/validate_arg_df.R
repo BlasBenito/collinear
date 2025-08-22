@@ -1,4 +1,4 @@
-#' Validate Values of Argument \code{df}
+#' Validate Argument \code{df}
 #'
 #' @description
 #' Internal function to validate the integrity of the argument \code{df}.

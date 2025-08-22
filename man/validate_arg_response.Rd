@@ -2,7 +2,7 @@
 % Please edit documentation in R/validate_arg_response.R
 \name{validate_arg_response}
 \alias{validate_arg_response}
-\title{Validation of Argument \code{response}}
+\title{Validate Argument \code{response}}
 \usage{
 validate_arg_response(
   df = NULL,

@@ -1,9 +1,9 @@
 #' Print Method for Class \code{collinear_arguments}
 #'
-#' Prints an object of the class \code{collinear_arguments} produced by [collinear()].
+#' Prints an object of the class \code{collinear_arguments}.
 #'
 #' @param x (required, list) Object of class \code{collinear_arguments}. Default: NULL
-#' @param n (optional, integer) Maximum number of vector elements to print. Default: 5.
+#' @inheritParams print.collinear_selection
 #'
 #' @method print collinear_arguments
 #' @autoglobal
@@ -13,10 +13,26 @@ print.collinear_arguments <- function(
     n = 5
 ){
 
+
+  # timestamp ----
+  if(!is.null(x$timestamp)){
+
+    cat("Timestamp\n")
+    cat("---------\n")
+
+    cat(as.character(format(x$timestamp, "%Y-%m-%d %H:%M:%S")), "\n")
+
+    cat("\n")
+
+  }
+
+  cat("Arguments\n")
+  cat("---------\n")
+
   # df ----
   if(!is.null(x$df)){
 
-    cat(" - df:", fill = TRUE)
+    cat(" + df:", fill = TRUE)
 
     cat("   - rows:", nrow(x$df), fill = TRUE)
 
@@ -26,14 +42,87 @@ print.collinear_arguments <- function(
 
   }
 
+  # response ----
+  if(!is.null(x$response)){
 
-  cat(" + arguments:", fill = TRUE)
+    response <- na.omit(x$response[1:n])
+
+    omitted <- length(x$response) - n
+
+    symbol <- ifelse(
+      test = length(response) == 1,
+      yes = " -",
+      no = " +"
+    )
+
+    cat(
+      symbol,
+      "response:\n   -",
+      paste(
+        response,
+        collapse = "\n   - "
+      )
+    )
+
+    if(omitted > 0){
+
+      cat(
+        paste0(
+          "\n   - ... (",
+          omitted,
+          " ommited)"
+        )
+      )
+
+    }
+
+    cat("\n")
+
+  }
+
+  # predictors ----
+  if(!is.null(x$predictors)){
+
+    predictors <- na.omit(x$predictors[1:n])
+
+    omitted <- length(x$predictors) - n
+
+    symbol <- ifelse(
+      test = length(predictors) == 1,
+      yes = " -",
+      no = " +"
+    )
+
+    cat(
+      symbol,
+      "predictors:\n   -",
+      paste(
+        predictors,
+        collapse = "\n   - "
+      )
+    )
+
+    if(omitted > 0){
+
+      cat(
+        paste0(
+          "\n   - ... (",
+          omitted,
+          " ommited)"
+        )
+      )
+
+    }
+
+    cat("\n")
+
+  }
 
   ## Encoding method
   if(!is.null(x$encoding_method)){
 
     cat(
-      "   - encoding_method:",
+      " - encoding_method:",
       x$encoding_method,
       fill = TRUE
     )
@@ -49,7 +138,7 @@ print.collinear_arguments <- function(
       preference_order.vector <- x$preference_order$predictor
 
       cat(
-        "   + preference_order:\n     -",
+        " + preference_order:\n     -",
         paste(
           preference_order.vector[1:n],
           collapse = "\n     - "
@@ -80,7 +169,7 @@ print.collinear_arguments <- function(
   if(!is.null(x$f)){
 
     cat(
-      "   - f:",
+      " - f:",
       x$f,
       fill = TRUE
     )
@@ -92,7 +181,7 @@ print.collinear_arguments <- function(
   if(!is.null(x$max_cor)){
 
     cat(
-      "   - max_cor:",
+      " - max_cor:",
       round(x$max_cor, 2),
       fill = TRUE
     )
@@ -103,12 +192,16 @@ print.collinear_arguments <- function(
   if(!is.null(x$max_vif)){
 
     cat(
-      "   - max_vif:",
+      " - max_vif:",
       round(x$max_vif, 1),
       fill = TRUE
     )
 
   }
+
+  cat("\n")
+  cat("Results\n")
+  cat("---------\n")
 
 
 }

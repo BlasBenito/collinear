@@ -23,7 +23,7 @@
 #'
 #' @inheritParams collinear
 #' @param response (optional, character string) Name of a numeric response variable in \code{df}. Default: NULL.
-#' @param methods (optional; character vector or NULL). Name of the target encoding methods. If NULL, target encoding is ignored, and \code{df} is returned with no modification. Default: c("loo", "mean", "rank")
+#' @param encoding_method (optional; character vector or NULL). Name of the target encoding methods. If NULL, target encoding is ignored, and \code{df} is returned with no modification. Default: c("loo", "mean", "rank")
 #' @param smoothing (optional; integer vector) Argument of the method "mean". Groups smaller than this number have their means pulled towards the mean of the response across all cases. Default: 0
 #' @param white_noise (optional; numeric vector) Argument of the methods "mean", "rank", and "loo". Maximum white noise to add, expressed as a fraction of the range of the response variable. Range from 0 to 1. Default: 0.
 #' @param seed (optional; integer vector) Random seed to facilitate reproducibility when \code{white_noise} is not 0. If NULL, the function selects one at random, and the selected seed does not appear in the encoded variable names. Default: 0
@@ -43,7 +43,7 @@
 #'   df = vi,
 #'   response = "vi_numeric",
 #'   predictors = "koppen_zone",
-#'   methods = c(
+#'   encoding_method = c(
 #'     "mean",
 #'     "loo",
 #'     "rank"
@@ -71,7 +71,7 @@ target_encoding_lab <- function(
     df = NULL,
     response = NULL,
     predictors = NULL,
-    methods = c(
+    encoding_method = c(
       "loo",
       "mean",
       "rank"
@@ -88,7 +88,7 @@ target_encoding_lab <- function(
     df = df,
     response = response,
     predictors = predictors,
-    methods = methods,
+    encoding_method = encoding_method,
     smoothing = smoothing,
     white_noise = white_noise,
     seed = seed,
@@ -105,7 +105,7 @@ target_encoding_lab <- function(
   df <- args$df
   response <- args$response
   predictors <- args$predictors
-  methods <- args$methods
+  encoding_method <- args$encoding_method
   smoothing <- args$smoothing
   white_noise <- args$white_noise
   seed <- args$seed
@@ -132,7 +132,7 @@ target_encoding_lab <- function(
     white_noise = white_noise,
     smoothing = smoothing,
     seed = seed,
-    method = methods,
+    encoding_method = encoding_method,
     stringsAsFactors = FALSE
   )
 
@@ -160,7 +160,7 @@ target_encoding_lab <- function(
       smoothing.i <- as.integer(x["smoothing"])
       white_noise.i <- as.numeric(x["white_noise"])
       seed.i <- as.integer(x["seed"])
-      method.i <- x[["method"]]
+      encoding_method.i <- x[["encoding_method"]]
       predictor.i <- x["predictor"]
 
       #subset df
@@ -179,7 +179,7 @@ target_encoding_lab <- function(
       #new predictor name
       predictor_encoded_name.i <- encoded_predictor_name(
         predictor = predictor.i,
-        encoding_method = method.i,
+        encoding_method = encoding_method.i,
         smoothing = smoothing.i,
         white_noise = white_noise.i,
         seed = seed.i
@@ -189,7 +189,7 @@ target_encoding_lab <- function(
       f.i <- get(
         x = paste0(
           "target_encoding_",
-          method.i
+          encoding_method.i
         )
       )
 

@@ -2,7 +2,7 @@
 % Please edit documentation in R/validate_arg_predictors_vif.R
 \name{validate_arg_predictors_vif}
 \alias{validate_arg_predictors_vif}
-\title{Validation of Argument \code{predictors} for VIF Analysis}
+\title{Validate Argument \code{predictors} for VIF Analysis}
 \usage{
 validate_arg_predictors_vif(
   df = NULL,

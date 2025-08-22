@@ -7,8 +7,8 @@
 \method{summary}{collinear_output}(x = NULL)
 }
 \arguments{
-\item{x}{(required, list) Object of class \code{collinear_output} resulting from \code{\link[=build.collinear_output]{build.collinear_output()}}. Default: NULL}
+\item{x}{(required, list) Object of class \code{collinear_output} resulting from \code{\link[=collinear]{collinear()}}. Default: NULL}
 }
 \description{
-Prints the summary of an obect of the class \link{collinear_output} produced by \code{\link[=build.collinear_output]{build.collinear_output()}}.
+Summary Method for Class \code{collinear_output}
 }

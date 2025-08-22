@@ -1,4 +1,4 @@
-#' Validation of Argument \code{response}
+#' Validate Argument \code{response}
 #'
 #' @description
 #' Internal function. Validates the argument \code{response} as follows.

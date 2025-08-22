@@ -4,15 +4,13 @@
 \alias{print.collinear_output}
 \title{Print Method for Class \code{collinear_output}}
 \usage{
-\method{print}{collinear_output}(x = NULL, n = 5, ...)
+\method{print}{collinear_output}(x = NULL, n = 5)
 }
 \arguments{
-\item{x}{(required, list) Object of class \code{collinear_output} resulting from \code{\link[=build.collinear_output]{build.collinear_output()}}. Default: NULL}
+\item{x}{(required, list) Object of class \code{collinear_output} resulting from \code{\link[=collinear]{collinear()}}. Default: NULL}
 
 \item{n}{(optional, integer) Maximum number of vector elements to print. Defaults: 5.}
-
-\item{...}{(optional) Additional arguments (currently ignored).}
 }
 \description{
-Prints an obect of the class \link{collinear_output} produced by \code{\link[=build.collinear_output]{build.collinear_output()}}.
+Prints objects of the class \link{collinear_output} produced by \code{\link[=collinear]{collinear()}}.
 }

@@ -19,7 +19,7 @@ validate_args_target_encoding_lab <- function(
     df = NULL,
     response = NULL,
     predictors = NULL,
-    methods = c(
+    encoding_method = c(
       "mean",
       "loo",
       "rank"
@@ -82,47 +82,33 @@ validate_args_target_encoding_lab <- function(
 
   }
 
-  ## methods is NULL ----
-  if(is.null(methods)){
-
-    message(
-      "\n",
-      function_name,
-      ": argument 'methods' is NULL, skipping target encoding."
-    )
-
-    return(NULL)
-
-  }
-
-  ## method is not valid
-  valid_methods <- c(
-    "mean",
-    "loo",
-    "rank"
-  )
-
-  methods <- intersect(
-    x = methods,
-    y = valid_methods
-  )
-
-  if(length(methods) == 0){
+  # overwrite ----
+  if(is.logical(overwrite) == FALSE){
 
     if(quiet == FALSE){
 
       message(
         "\n",
         function_name,
-        ": argument 'methods' is not valid, resetting it to: '",
-        paste(valid_methods, collapse = "', '"),
-        "'."
+        ": argument 'overwrite' must be logical, resetting it to FALSE."
       )
 
     }
 
-    methods <- valid_methods
+    overwrite <- FALSE
 
+  }
+
+  encoding_method <- validate_arg_encoding_method(
+    encoding_method = encoding_method,
+    overwrite = overwrite,
+    function_name = function_name,
+    quiet = quiet
+  )
+
+  ## encoding_method is NULL ----
+  if(is.null(encoding_method)){
+    return(NULL)
   }
 
   ## df ----
@@ -227,42 +213,8 @@ validate_args_target_encoding_lab <- function(
     )
   }
 
-  # overwrite ----
-  if(is.logical(overwrite) == FALSE){
-
-    if(quiet == FALSE){
-
-      message(
-        "\n",
-        function_name,
-        ": argument 'overwrite' must be logical, resetting it to FALSE."
-      )
-
-    }
-
-    overwrite <- FALSE
-
-  }
-
+  #depends on overwrite
   if(overwrite == TRUE){
-
-    if(length(methods) > 1){
-
-      if(quiet == FALSE){
-
-        message(
-          "\n",
-          function_name,
-          ": only one encoding method allowed when 'overwrite = TRUE', using method: '",
-          methods[1],
-          "'."
-        )
-
-      }
-
-      methods <- methods[1]
-
-    }
 
     if(length(white_noise) > 1){
 
@@ -324,7 +276,7 @@ validate_args_target_encoding_lab <- function(
     df = df,
     response = response,
     predictors = predictors,
-    methods = methods,
+    encoding_method = encoding_method,
     smoothing = smoothing,
     white_noise = white_noise,
     seed = seed,

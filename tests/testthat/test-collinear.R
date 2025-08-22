@@ -96,7 +96,7 @@ testthat::test_that("`collinear()` works", {
   )
 
   #resetting to sequential processing
-  future::plan(future::sequential)
+  #future::plan(future::sequential)
 
 
   #UNIT TEST ----

@@ -1,4 +1,4 @@
-#' Validation of Argument \code{predictors} for VIF Analysis
+#' Validate Argument \code{predictors} for VIF Analysis
 #'
 #' @description
 #' Internal function to assess whether the input arguments \code{df} and \code{predictors} result in data dimensions suitable for a VIF analysis. Expects argument \code{df} to be validated with [validate_arg_df()].

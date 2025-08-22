@@ -2,7 +2,7 @@
 % Please edit documentation in R/validate_arg_predictors_cor.R
 \name{validate_arg_predictors_cor}
 \alias{validate_arg_predictors_cor}
-\title{Validation of Argument \code{predictors} for Correlation Analysis}
+\title{Validate Argument \code{predictors} for Correlation Analysis}
 \usage{
 validate_arg_predictors_cor(
   df = NULL,

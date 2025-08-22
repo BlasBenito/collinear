@@ -2,7 +2,7 @@
 % Please edit documentation in R/validate_arg_predictors.R
 \name{validate_arg_predictors}
 \alias{validate_arg_predictors}
-\title{Validation of Argument \code{predictors}}
+\title{Validate Argument \code{predictors}}
 \usage{
 validate_arg_predictors(
   df = NULL,

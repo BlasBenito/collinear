@@ -1,4 +1,4 @@
-#' Validation of Argument \code{predictors} for Correlation Analysis
+#' Validate Argument \code{predictors} for Correlation Analysis
 #'
 #' @description
 #' Internal function to assess whether the input arguments \code{df} and \code{predictors} result in data dimensions suitable for pairwise correlation analysis. Expects argument \code{df} to be validated with [validate_arg_df()].

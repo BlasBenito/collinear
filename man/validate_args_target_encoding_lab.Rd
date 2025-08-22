@@ -8,7 +8,7 @@ validate_args_target_encoding_lab(
   df = NULL,
   response = NULL,
   predictors = NULL,
-  methods = c("mean", "loo", "rank"),
+  encoding_method = c("mean", "loo", "rank"),
   smoothing = 0,
   white_noise = 0,
   seed = 0,
@@ -23,7 +23,7 @@ validate_args_target_encoding_lab(
 
 \item{predictors}{(optional; character vector or NULL) Names of the predictors to select from \code{df}. If omitted, all numeric columns in \code{df} are used instead. Default: NULL}
 
-\item{methods}{(optional; character vector or NULL). Name of the target encoding methods. If NULL, target encoding is ignored, and \code{df} is returned with no modification. Default: c("loo", "mean", "rank")}
+\item{encoding_method}{(optional; character vector or NULL). Name of the target encoding methods. If NULL, target encoding is ignored, and \code{df} is returned with no modification. Default: c("loo", "mean", "rank")}
 
 \item{smoothing}{(optional; integer vector) Argument of the method "mean". Groups smaller than this number have their means pulled towards the mean of the response across all cases. Default: 0}
 

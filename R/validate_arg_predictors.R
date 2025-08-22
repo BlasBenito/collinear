@@ -1,4 +1,4 @@
-#' Validation of Argument \code{predictors}
+#' Validate Argument \code{predictors}
 #'
 #' @description
 #' Internal function. Validates the argument \code{predictors} as follows:

@@ -1,27 +1,13 @@
-#' Builds Object of Class \code{collinear_output}
+#' Builds Object of Class \code{collinear_selection}
 #'
 #' @inheritParams collinear
 #'
-#' @return Object of class \code{collinear_output}:
-#'
-#' \itemize{
-#'   \item If \code{response} is \code{NULL} or has length 1: an object of class \code{collinear_output} with a custom print method [print.collinear_output]. It contains:
-#'     \itemize{
-#'       \item \code{response} (\code{character} or \code{NULL}): Name of the response variable.
-#'       \item \code{predictors} (\code{character} or \code{NULL}): Names of predictors considered in multicollinearity filtering.
-#'       \item \code{selection} (\code{character} or \code{NULL}): Names of selected, non-collinear predictors.
-#'       \item \code{df} (\code{data.frame} or \code{NULL}): Data frame including columns in \code{response} and \code{selection}. If target encoding was applied, categorical variables will be numeric.
-#'       \item \code{arguments} (\code{list}): A list of arguments used in the call: \code{encoding_method}, \code{preference_order}, \code{f}, \code{max_cor}, and \code{max_vif}
-#'     }
-#'
-#'   \item If \code{response} is a character vector of length >= 2: an object of class \code{collinear_list}, a named list of \code{"collinear_output"} objects, one per response variable.
-#' }
+#' @return Object of class \code{collinear_selection}
 #' @export
 #' @autoglobal
-build.collinear_output <- function(
+build.collinear_selection <- function(
     df = NULL,
     response = NULL,
-    predictors = NULL,
     preference_order = NULL,
     selection = NULL,
     quiet = FALSE
@@ -59,10 +45,15 @@ build.collinear_output <- function(
   }
 
   # main ----
-  out <- list(
-    response = paste(response),
-    selection = paste(selection)
-  )
+  out <- list()
+
+  if(!is.null(response)){
+    out$response <- paste(response)
+  }
+
+  if(!is.null(selection)){
+    out$selection <- paste(selection)
+  }
 
   # formulas ----
   ### formulas ----
@@ -126,15 +117,19 @@ build.collinear_output <- function(
   }
 
   #add remaining items
-  out$predictors <- paste(predictors)
-  out$df <- df
-  out$preference <- preference_order_list
-  out$timestamp <- Sys.time()
+
+  if(!is.null(df)){
+    out$df <- df
+  }
+
+  if(!is.null(preference_order_list)){
+    out$preference <- preference_order_list
+  }
 
   ## class ----
   class(out) <- c(
     class(out),
-    "collinear_output"
+    "collinear_selection"
   )
 
   out

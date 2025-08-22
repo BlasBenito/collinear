@@ -372,7 +372,7 @@ cor_numeric_vs_categorical <- function(
         df = df.x,
         response = "x",
         predictors = "y",
-        methods = "loo",
+        encoding_method = "loo",
         overwrite = TRUE,
         quiet = TRUE
       )

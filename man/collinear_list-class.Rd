@@ -5,5 +5,5 @@
 \alias{collinear_list}
 \title{Class \code{collinear_list}}
 \description{
-Output of \code{\link[=collinear]{collinear()}} when \code{response} is a character vector of length two or more. Named list of \link{collinear_output} objects, one for each response variable.
+Output of \code{\link[=collinear]{collinear()}} when \code{response} is a character vector of length two or more. Named list of \link{collinear_selection} objects, one for each response variable.
 }
