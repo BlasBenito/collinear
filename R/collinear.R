@@ -172,200 +172,39 @@ collinear <- function(
   function_name <- "collinear::collinear()"
 
   # VALIDATE ARGS ----
-
-  ## max_cor and max_vif
-  if(all(is.null(c(max_cor, max_vif)))){
-    stop(
-      function_name,
-      ": arguments 'max_cor' and 'max_vif' cannot be NULL at once.",
-      call. = FALSE
-    )
-  }
-
-  if(!is.null(max_cor)){
-    max_cor <- validate_arg_max_cor(
-      max_cor = max_cor,
-      function_name = function_name,
-      quiet = quiet
-    )
-  }
-
-  if(!is.null(max_vif)){
-    max_vif <- validate_arg_max_vif(
-      max_vif = max_vif,
-      function_name = function_name,
-      quiet = quiet
-    )
-  }
-
-  ## quiet ----
-  quiet <- validate_arg_quiet(
-    function_name = function_name,
-    quiet = quiet
-  )
-
-  ## df ----
-  df <- validate_arg_df(
+  args <- validate_args_collinear(
     df = df,
     response = response,
     predictors = predictors,
-    function_name = function_name,
-    quiet = quiet
-  )
-
-  ## f ----
-  if(!is.null(f)){
-
-    f <- validate_arg_f(
-      f = f,
-      f_name = deparse(substitute(f)),
-      function_name = function_name
-    )
-
-  }
-
-  ## responses ----
-  responses <- response
-  if(!is.null(response)){
-
-    responses <- intersect(
-      x = colnames(df),
-      y = response
-    )
-
-    responses_missing <- setdiff(
-      x = response,
-      y = responses
-    )
-
-    if(length(responses_missing) > 0 && quiet == FALSE){
-
-      message(
-        "\n",
-        function_name,
-        ": the following values of the argument 'responses' are not column names of 'df' and will be ignored: \n - ",
-        paste(responses_missing, collapse = "\n - ")
-      )
-
-    }
-
-  }
-
-  if(
-    length(responses) == 0 ||
-    is.null(responses)
-  ){
-    responses <- list(NULL)
-  }
-
-  ## encoding_method ----
-  encoding_method <- validate_arg_encoding_method(
-    encoding_method = encoding_method,
-    overwrite = TRUE,
-    function_name = function_name,
-    quiet = quiet
-  )
-
-  ## predictors ----
-  predictors <- validate_arg_predictors(
-    df = df,
-    response = NULL,
-    predictors = predictors,
-    function_name = function_name,
-    quiet = quiet
-  )
-
-  ## avoid repeating messages in loop ----
-  if(quiet == FALSE){
-
-    ### target encoding ----
-    predictors_categorical_n <- identify_predictors_categorical(
-      df = df,
-      predictors = predictors,
-      quiet = quiet
-    ) |>
-      length()
-
-    if(
-      !is.null(encoding_method) &&
-      is.null(response) &&
-      predictors_categorical_n > 0)
-    {
-
-      message(
-        "\n",
-        function_name,
-        ": argument 'response' is NULL, skipping target encoding."
-      )
-
-    }
-
-    if(
-      !is.null(response) &&
-      is.null(f)
-    ){
-
-      message(
-        "\n",
-        function_name,
-        ": argument 'f' is NULL, skipping computation of preference order."
-      )
-
-    }
-
-
-    if(is.null(max_cor)){
-
-      message(
-        "\n",
-        function_name,
-        ": argument 'max_cor' is NULL, skipping correlation filtering."
-      )
-
-    }
-
-    if(is.null(max_vif)){
-
-      message(
-        "\n",
-        function_name,
-        ": argument 'max_vif' is NULL, skipping skipping VIF filtering."
-      )
-
-    }
-
-  }
-
-  #store args list for output
-  args_list <- list(
-    df = df,
-    response = responses,
-    predictors = predictors,
     encoding_method = encoding_method,
     preference_order = preference_order,
-    f = attributes(f)$name,
+    f = f,
+    f_name = deparse(substitute(f)),
     max_cor = max_cor,
     max_vif = max_vif,
-    timestamp = Sys.time()
+    quiet = quiet,
+    function_name = function_name
   )
 
-  class(args_list) <- c(
-    class(args_list),
-    "collinear_arguments"
-  )
+  #manage response for loop
+  if(
+    length(args$response) == 0 ||
+    is.null(args$response)
+  ){
+    responses <- list(NULL)
+  } else {
+    responses <- args$response
+  }
+
 
   #if several responses, invalidate predictors
   if(length(responses) > 1){
-    attributes(predictors)$validated <- NULL
+    attributes(args$predictors)$validated <- NULL
   }
 
 
   #ITERATION ----
   out <- list()
-
-  #add slot with arguments
-  out[["arguments"]] <- args_list
-  rm(args_list)
 
   ## start ----
   for(response in responses){
@@ -376,14 +215,14 @@ collinear <- function(
     }
 
     response <- validate_arg_response(
-      df = df,
+      df = args$df,
       response = response,
-      quiet = quiet,
+      quiet = args$quiet,
       function_name = function_name
     )
 
     if(
-      quiet == FALSE &&
+      args$quiet == FALSE &&
       length(responses) > 1
     ){
 
@@ -402,13 +241,13 @@ collinear <- function(
     }
 
     ## copy df ----
-    df.response <- df
+    df.response <- args$df
 
     ## validate predictors ----
     predictors.response <- validate_arg_predictors(
       df = df.response,
       response = response,
-      predictors = predictors,
+      predictors = args$predictors,
       function_name = function_name
     )
 
@@ -416,16 +255,16 @@ collinear <- function(
     ## TARGET ENCODING ----
     if(
       !is.null(response) &&
-      !is.null(encoding_method)
+      !is.null(args$encoding_method)
     ){
 
       df.response <- target_encoding_lab(
         df = df.response,
         response = response,
         predictors = predictors.response,
-        encoding_method = encoding_method,
+        encoding_method = args$encoding_method,
         overwrite = TRUE,
-        quiet = quiet
+        quiet = args$quiet
       )
 
     }
@@ -435,9 +274,9 @@ collinear <- function(
       df = df.response,
       response = response,
       predictors = predictors.response,
-      preference_order = preference_order,
-      f = f,
-      quiet = quiet
+      preference_order = args$preference_order,
+      f = args$f,
+      quiet = args$quiet
     )
 
     ##MULTICOLLINEARITY ANALYSIS ----
@@ -446,20 +285,20 @@ collinear <- function(
     selection.response <- predictors.response
 
     ### correlation ----
-    if(!is.null(max_cor)){
+    if(!is.null(args$max_cor)){
 
       selection.response <- cor_select(
         df = df.response,
         predictors = predictors.response,
         preference_order = preference_order.response,
-        max_cor = max_cor,
-        quiet = quiet
+        max_cor = args$max_cor,
+        quiet = args$quiet
       )
 
     }
 
     ### vif ----
-    if(!is.null(max_vif)){
+    if(!is.null(args$max_vif)){
 
       #separate numeric and categorical
       selection.response.type <- identify_predictors(
@@ -471,8 +310,8 @@ collinear <- function(
         df = df.response,
         predictors = selection.response.type$numeric,
         preference_order = preference_order.response,
-        max_vif = max_vif,
-        quiet = quiet
+        max_vif = args$max_vif,
+        quiet = args$quiet
       )
 
       selection.response <- c(
@@ -514,7 +353,7 @@ collinear <- function(
 
     } else {
 
-      if(quiet == FALSE){
+      if(args$quiet == FALSE){
 
         message(
           "\n",
@@ -535,7 +374,7 @@ collinear <- function(
       response = response,
       preference_order = preference_order.response,
       selection = selection.response,
-      quiet = quiet
+      quiet = args$quiet
     )
 
     #store in output list
@@ -547,6 +386,9 @@ collinear <- function(
 
     # end ----
   } #end of loop
+
+  #add arguments
+  out$arguments <- args
 
   class(out) <- c(
     class(out),

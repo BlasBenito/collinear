@@ -13,8 +13,16 @@ print.collinear_output <- function(
     n = 5
 ){
 
+  if(!is.null(x$arguments)){
+    print(x$arguments)
+  }
+
+  cat("Results\n")
+  cat("===================\n")
+  cat("\n")
+
   lapply(
-    X = x,
+    X = x[names(x) != "arguments"],
     FUN = print,
     n = n
   )

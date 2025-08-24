@@ -5,6 +5,7 @@
 \title{Validate Argument \code{preference_order}}
 \usage{
 validate_arg_preference_order(
+  response = NULL,
   predictors = NULL,
   preference_order = NULL,
   preference_order_auto = NULL,
@@ -13,6 +14,8 @@ validate_arg_preference_order(
 )
 }
 \arguments{
+\item{response}{(optional; character, character vector, or NULL) Name of one or several response variables in \code{df}, used to target encode categorical predictors, if any, when \code{encoding_method} is not NULL, and to compute preference order when \code{preference_order} is not NULL. If \code{response} is NULL, target encoding and preference order computation are disabled. Default: NULL.}
+
 \item{predictors}{(optional; character vector or NULL) Names of the predictors to select from \code{df}. If omitted, all numeric columns in \code{df} are used instead. Default: NULL}
 
 \item{preference_order}{(optional; character vector, output of \code{\link[=preference_order]{preference_order()}}, list, or NULL). Prioritizes predictors to preserve the most relevant ones during multicollinearity filtering. Accepted inputs are:

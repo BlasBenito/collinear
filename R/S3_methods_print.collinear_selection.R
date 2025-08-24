@@ -16,11 +16,24 @@ print.collinear_selection <- function(
   # response ----
   if(!is.null(x$response)){
 
+    msg <- paste0(
+      "response: ",
+      x$response
+      )
+
+    msg_length <- nchar(msg)
+
+    underline <- paste0(rep(x = "-", times = nchar(msg)), collapse = "")
+
       cat(
-        " - response:",
-        x$response,
+        " -",
+        msg,
         fill = TRUE
       )
+
+      cat("  ", underline)
+
+      cat("\n")
 
   }
 

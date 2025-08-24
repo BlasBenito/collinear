@@ -18,7 +18,7 @@ print.collinear_arguments <- function(
   if(!is.null(x$timestamp)){
 
     cat("Timestamp\n")
-    cat("---------\n")
+    cat("===================\n")
 
     cat(as.character(format(x$timestamp, "%Y-%m-%d %H:%M:%S")), "\n")
 
@@ -26,8 +26,8 @@ print.collinear_arguments <- function(
 
   }
 
-  cat("Arguments\n")
-  cat("---------\n")
+  cat("Validated Arguments\n")
+  cat("===================\n")
 
   # df ----
   if(!is.null(x$df)){
@@ -137,17 +137,27 @@ print.collinear_arguments <- function(
 
       preference_order.vector <- x$preference_order$predictor
 
-      cat(
-        " + preference_order:\n     -",
-        paste(
-          preference_order.vector[1:n],
-          collapse = "\n     - "
-        )
+    } else if(is.character(x$preference_order)){
+
+      preference_order.vector <- x$preference_order
+
+    }
+
+    preference_order.length <- length(preference_order.vector)
+
+    preference_order.vector <- na.omit(preference_order.vector[1:n])
+
+    cat(
+      " + preference_order:\n     -",
+      paste(
+        preference_order.vector,
+        collapse = "\n     - "
       )
+    )
 
     if(length(preference_order.vector) > n){
 
-      omitted <- length(preference_order.vector) - n
+      omitted <- preference_order.length - n
 
       cat(
         paste0(
@@ -157,11 +167,9 @@ print.collinear_arguments <- function(
         )
       )
 
+    }
+
     cat("\n")
-
-    }
-
-    }
 
   }
 
@@ -200,8 +208,6 @@ print.collinear_arguments <- function(
   }
 
   cat("\n")
-  cat("Results\n")
-  cat("---------\n")
 
 
 }

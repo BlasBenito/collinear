@@ -12,11 +12,23 @@ summary.collinear_selection <- function(
   # response ----
   if(!is.null(x$response)){
 
+    msg <- paste0(
+      "response: ",
+      x$response
+    )
+
+    msg_length <- nchar(msg)
+
+    underline <- paste0(rep(x = "-", times = nchar(msg)), collapse = "")
+
     cat(
-      " - response:",
-      x$response,
+      msg,
       fill = TRUE
     )
+
+    cat(underline)
+
+    cat("\n")
 
   }
 
@@ -24,17 +36,29 @@ summary.collinear_selection <- function(
   # selection ----
   if(!is.null(x$selection)){
 
-    cat(
-      " + selection:\n   -",
-      paste(
-        x$selection,
-        collapse = "\n   - "
+    if(length(x$selection) > 1){
+
+      cat(
+        "+ selection:\n  -",
+        paste(
+          x$selection,
+          collapse = "\n  - "
+        )
       )
-    )
+
+    } else {
+
+      cat(
+        "- selection:\n  -", x$selection
+      )
+
+    }
 
     cat("\n")
 
   }
+
+  cat("\n")
 
   invisible(x)
 

@@ -49,6 +49,7 @@
 #'   #all other variables ordered according to preference_order_auto
 #'   my_order
 validate_arg_preference_order <- function(
+    response = NULL,
     predictors = NULL,
     preference_order = NULL,
     preference_order_auto = NULL,
@@ -59,16 +60,6 @@ validate_arg_preference_order <- function(
   if(isTRUE(attr(x = preference_order, which = "validated"))){
     return(preference_order)
   }
-
-  if(is.null(preference_order_auto)){
-    stop(
-      "\n",
-      function_name,
-      ": argument 'preference_order_auto' cannot be NULL.",
-      call. = FALSE
-    )
-  }
-
 
   if(!isTRUE(attr(x = predictors, which = "validated"))){
 
@@ -83,17 +74,35 @@ validate_arg_preference_order <- function(
 
   if(is.null(preference_order)){
 
-    if(quiet == FALSE){
+    if(!is.null(preference_order_auto)){
 
-      message(
-        "\n",
-        function_name,
-        ": ranking predictors from lower to higher multicollinearity."
-      )
+      if(quiet == FALSE){
+
+        message(
+          "\n",
+          function_name,
+          ": ranking predictors from lower to higher multicollinearity."
+        )
+
+      }
+
+      return(preference_order_auto)
+
+    } else {
+
+      if(quiet == FALSE){
+
+        message(
+          "\n",
+          function_name,
+          ": using argument 'predictors' as preference order."
+        )
+
+      }
+
+      return(predictors)
 
     }
-
-    return(preference_order_auto)
 
   }
 
@@ -101,6 +110,20 @@ validate_arg_preference_order <- function(
   if(is.data.frame(preference_order)){
 
     if(all(c("predictor", "response", "preference", "f") %in% colnames(preference_order))){
+
+      if(
+        !is.null(response) &&
+        unique(preference_order$response) != response
+        ){
+
+        stop(
+          "\n",
+          function_name,
+          ": values in column 'response' of the argument 'preference_order' do not match the value of the argument 'response'.",
+          call. = FALSE
+        )
+
+      }
 
     preference_order <- preference_order$predictor
 

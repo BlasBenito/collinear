@@ -288,7 +288,7 @@ testthat::test_that("`collinear()` works", {
   )
 
   testthat::expect_true(
-    all(c("linear", "smooth") %in% names(x$formulas))
+    all(c("linear", "smooth") %in% names(x$result$formulas))
   )
 
 

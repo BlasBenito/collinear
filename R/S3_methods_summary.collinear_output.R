@@ -9,12 +9,8 @@ summary.collinear_output <- function(
     x = NULL
 ){
 
-  if(!is.null(x$arguments)){
-    x$arguments <- NULL
-  }
-
   lapply(
-    X = x,
+    X = x[names(x) != "summary"],
     FUN = summary
   )
 
