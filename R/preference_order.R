@@ -321,6 +321,11 @@ preference_order <- function(
     out <- out[[1]]
   }
 
+  attr(
+    x = out,
+    which = "validated"
+  ) <- TRUE
+
   out
 
 }

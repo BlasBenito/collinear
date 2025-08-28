@@ -385,7 +385,7 @@ testthat::test_that("`collinear()` works", {
   #TARGET ENCODING ----
   f_test <- function(){
     collinear(
-      df = vi,
+      df = vi_smol,
       response = c("vi_numeric", "vi_categorical"),
       predictors = vi_predictors_categorical,
       encoding_method = "loo",
@@ -415,7 +415,7 @@ testthat::test_that("`collinear()` works", {
   )
 
 
-  #PREFERENCE ORDER ----
+  # PREFERENCE ORDER ----
 
   ## no target encoding ----
 
@@ -437,7 +437,7 @@ testthat::test_that("`collinear()` works", {
       max_vif = 5,
       quiet = FALSE
     ),
-    regexp = "does not contain valid column names in"
+    regexp = "argument 'preference_order' does not match the column names in 'df' and will be ignored"
   ) |>
     suppressMessages()
 
@@ -459,7 +459,7 @@ testthat::test_that("`collinear()` works", {
 
   testthat::expect_message(
     x <- collinear(
-      df = vi,
+      df = vi_smol,
       response = "vi_numeric",
       predictors = vi_predictors_numeric,
       encoding_method = NULL,
