@@ -16,13 +16,8 @@ validate_arg_f <- function(
 ){
 
   #NULL
-  if(is.null(f)) {
-    stop(
-      "\n",
-      function_name,
-      ": argument 'f' cannot be NULL.",
-      call. = FALSE
-    )
+  if(is.null(f)){
+    return(NULL)
   }
 
   #valid

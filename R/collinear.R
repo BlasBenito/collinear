@@ -230,7 +230,7 @@ collinear <- function(
         function_name,
         ": processing response '",
         response,
-        "'."
+        "'"
       )
 
       msg_length <- nchar(msg)
@@ -276,6 +276,8 @@ collinear <- function(
       predictors = predictors.response,
       preference_order = args$preference_order,
       f = args$f,
+      f_name = args$f_name,
+      function_name = function_name,
       quiet = args$quiet
     )
 
@@ -378,7 +380,7 @@ collinear <- function(
     )
 
     #store in output list
-    if(is.null(response) || length(responses) == 1){
+    if(is.null(response)){
       out[["result"]] <- out.response
     } else {
       out[[response]] <- out.response

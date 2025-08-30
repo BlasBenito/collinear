@@ -49,7 +49,6 @@
 #'   #all other variables ordered according to preference_order_auto
 #'   my_order
 validate_arg_preference_order <- function(
-    response = NULL,
     predictors = NULL,
     preference_order = NULL,
     preference_order_auto = NULL,
@@ -57,21 +56,39 @@ validate_arg_preference_order <- function(
     quiet = FALSE
 ){
 
+  #fast option, preference_order is validated
   if(isTRUE(attr(x = preference_order, which = "validated"))){
-    return(preference_order)
-  }
 
-  if(!isTRUE(attr(x = predictors, which = "validated"))){
+    if(is.data.frame(preference_order)){
+      preference_order <- preference_order$predictor
+    }
 
-    stop(
-      "\n",
-      function_name,
-      ": argument 'predictors' must be validated with 'collinear::validate_args_predictors()'.",
-      call. = FALSE
-    )
+    if(all(predictors %in% preference_order)){
+      return(preference_order)
+    }
 
   }
 
+  #data frame
+  if(is.data.frame(preference_order)){
+
+    if(all(c("predictor", "response", "preference", "f") %in% colnames(preference_order))){
+
+      preference_order <- preference_order$predictor
+
+    } else {
+
+      stop(
+        "\n",
+        function_name,
+        ": argument 'preference_order' must be the output of 'preference_order()' or a data frame with the columns 'response', 'predictor', and 'preference', ordered from higher to lower preference.",
+        call. = FALSE
+      )
+    }
+
+  }
+
+  #NULL
   if(is.null(preference_order)){
 
     if(!is.null(preference_order_auto)){
@@ -86,7 +103,7 @@ validate_arg_preference_order <- function(
 
       }
 
-      return(preference_order_auto)
+      preference_order <- preference_order_auto
 
     } else {
 
@@ -100,44 +117,24 @@ validate_arg_preference_order <- function(
 
       }
 
-      return(predictors)
-
-    }
-
-  }
-
-  #check if preference_order comes from preference_order()
-  if(is.data.frame(preference_order)){
-
-    if(all(c("predictor", "response", "preference", "f") %in% colnames(preference_order))){
-
-      if(
-        !is.null(response) &&
-        unique(preference_order$response) != response
-        ){
+      if(!isTRUE(attr(x = predictors, which = "validated"))){
 
         stop(
           "\n",
           function_name,
-          ": values in column 'response' of the argument 'preference_order' do not match the value of the argument 'response'.",
+          ": argument 'predictors' must be validated with 'collinear::validate_args_predictors()'.",
           call. = FALSE
         )
 
       }
 
-    preference_order <- preference_order$predictor
+      preference_order <- predictors
 
-    } else {
-
-      stop(
-        "\n",
-        function_name,
-        ": argument 'preference_order' must be the output of 'preference_order()' or a data frame with the columns 'response', 'predictor', and 'preference', ordered from higher to lower preference.",
-        call. = FALSE
-      )
     }
 
   }
+
+  #character vector
 
   #subset preference_order in predictors
   preference_order_arg <- preference_order

@@ -150,6 +150,20 @@ preference_order <- function(
     function_name = function_name
   )
 
+  if(is.null(f)){
+
+    if(quiet == FALSE){
+      message(
+        "\n",
+        function_name,
+        ": argument 'f' is NULL, skipping computation of preference order."
+      )
+    }
+
+    return(NULL)
+
+  }
+
   #check input data frame
   df <- validate_arg_df(
     df = df,
@@ -313,6 +327,11 @@ preference_order <- function(
 
     }
 
+    attr(
+      x = preference,
+      which = "validated"
+    ) <- TRUE
+
     out[[response]] <- preference
 
   } #end of loop
@@ -321,10 +340,6 @@ preference_order <- function(
     out <- out[[1]]
   }
 
-  attr(
-    x = out,
-    which = "validated"
-  ) <- TRUE
 
   out
 

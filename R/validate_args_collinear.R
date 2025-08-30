@@ -105,15 +105,13 @@ validate_args_collinear <- function(
   )
 
   ## f ----
-  if(!is.null(f)){
+  f <- validate_arg_f(
+    f = f,
+    f_name = f_name,
+    function_name = function_name
+  )
 
-    f <- validate_arg_f(
-      f = f,
-      f_name = f_name,
-      function_name = function_name
-    )
-
-  }
+  f_name <- attributes(f)$name
 
   ## preference_order ----
   if(is.character(preference_order)){
@@ -126,28 +124,43 @@ validate_args_collinear <- function(
     if(length(preference_order) == 0){
 
       if(quiet == FALSE){
+
         message(
           "\n",
           function_name,
-          ": argument 'preference_order' does not match the column names in 'df' and will be ignored."
+          ": character vector 'preference_order' does not contain any column names in 'df' and  will be ignored."
         )
+
       }
 
       preference_order <- NULL
 
     }
 
-  }
+  } else if(is.data.frame(preference_order)){
 
-  #other structures
-  if(!isTRUE(attr(x = preference_order, which = "validated"))){
-
-    #no response
     if(is.null(response)){
 
+      if(quiet == FALSE){
+
+        message(
+          "\n",
+          function_name,
+          ": argument 'preference_order' cannot be of class 'dataframe' or 'list' when 'response' is NULL and will be ignored."
+        )
+
+      }
+
+      preference_order <- NULL
+
+    } else if(length(response) == 1){
+
       if(
-        is.data.frame(preference_order) ||
-        is.list(preference_order)
+        !"response" %in% colnames(preference_order) ||
+        (
+          "response" %in% colnames(preference_order) &&
+          !response %in% preference_order$response
+        )
       ){
 
         if(quiet == FALSE){
@@ -155,7 +168,7 @@ validate_args_collinear <- function(
           message(
             "\n",
             function_name,
-            ": argument 'preference_order' must be a character vector of column names in 'df' or NULL when 'response' is NULL."
+            ": column 'response' of the dataframe 'preference_order' is absent or does not match the values in argument 'response' and will be ignored."
           )
 
         }
@@ -164,89 +177,77 @@ validate_args_collinear <- function(
 
       }
 
-
     } else {
 
-      if(is.data.frame(preference_order)){
+      if(quiet == FALSE){
 
-        if(
-          !all(c(
-            "predictor",
-            "response",
-            "preference",
-            "f"
-          ) %in% colnames(preference_order))
-        ){
-
-          if(quiet == FALSE){
-
-            message(
-              "\n",
-              function_name,
-              ": dataframe 'preference_order' does not have any of the columns 'predictor', 'response', 'preference' or 'f' and will be ignored."
-            )
-
-          }
-
-          preference_order <- NULL
-
-        }
-
-        preference_order <- preference_order[preference_order$response %in% response, ]
-
-        if(nrow(preference_order) == 0){
-
-          if(quiet == FALSE){
-            message(
-              "\n",
-              function_name,
-              ": column 'response' of the dataframe 'preference_order' does not match the values of the argument 'response' and will be ignored."
-            )
-          }
-
-          preference_order <- NULL
-
-        }
-
+        message(
+          "\n",
+          function_name,
+          ": argument 'preference_order' must be a character vector or a named list when 'response' has more than one element, it will be ignored."
+        )
 
       }
 
-      if(is.list(preference_order)){
+      preference_order <- NULL
 
-        preference_order <- preference_order[names(preference_order %in% response)]
+    }
 
-        if(length(preference_order) == 0){
+  } else if(is.list(preference_order)){
 
-          if(quiet == FALSE){
+    if(is.null(response)){
 
-            message(
-              "\n",
-              function_name,
-              ": list 'preference_order' has no elements named after the argument 'response' and will be ignored."
-            )
+      if(quiet == FALSE){
 
-          }
+        message(
+          "\n",
+          function_name,
+          ": argument 'preference_order' cannot be of class 'dataframe' or 'list' when 'response' is NULL and will be ignored."
+        )
 
-          preference_order <- NULL
+      }
+
+      preference_order <- NULL
+
+    } else {
+
+      if(any(response %in% names(preference_order))){
+
+        preference_order <- preference_order[response]
+
+      } else {
+
+        if(quiet == FALSE){
+
+          message(
+            "\n",
+            function_name,
+            ": list 'preference_order' does not contain any element named after the values in 'response' and will be ignored."
+          )
 
         }
 
+        preference_order <- NULL
 
       }
 
     }
 
+  } else if(!is.null(preference_order)){
+
+    if(quiet == FALSE){
+
+      message(
+        "\n",
+        function_name,
+        ": argument 'preference_order' is not valid and will be ignored."
+      )
+
+    }
+
+    preference_order <- NULL
+
   }
-
-  if(!is.null(preference_order)){
-
-    attr(
-      x = preference_order,
-      which = "validated"
-    ) <- TRUE
-
-  }
-
 
   #store args list for output
   args <- list(
@@ -255,7 +256,8 @@ validate_args_collinear <- function(
     predictors = predictors,
     encoding_method = encoding_method,
     preference_order = preference_order,
-    f = attributes(f)$name,
+    f = f,
+    f_name = f_name,
     max_cor = max_cor,
     max_vif = max_vif,
     timestamp = Sys.time(),

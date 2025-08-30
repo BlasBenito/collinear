@@ -10,6 +10,7 @@ preference_order_wrapper(
   predictors = NULL,
   preference_order = NULL,
   f = NULL,
+  f_name = NULL,
   quiet = FALSE
 )
 }
@@ -29,6 +30,8 @@ preference_order_wrapper(
 }. Default: NULL}
 
 \item{f}{(optional: function name or NULL) Function to compute preference order used when \code{preference_order = "auto"}. Available functions are listed by \code{\link[=f_functions]{f_functions()}} and described in the manual of \code{\link[=preference_order]{preference_order()}}. If NULL, calls to \code{\link[=f_auto]{f_auto()}} (see \code{\link[=f_auto_rules]{f_auto_rules()}}) to select a suitable method depending on the nature of the data. Default: NULL}
+
+\item{f_name}{(optional, string) Name of the function \code{f}, as returned by \code{deparse(substitute(f))}. Default: NULL}
 
 \item{quiet}{(optional; logical) If FALSE, messages are printed to the console Default: FALSE}
 }

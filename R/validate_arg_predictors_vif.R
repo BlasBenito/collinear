@@ -67,12 +67,34 @@ validate_arg_predictors_vif <- function(
     function_name = function_name
   )
 
-  predictors_arg <- predictors
-
-  predictors_numeric <- identify_predictors_numeric(
+  #predictors
+  predictors_types <- identify_predictors(
     df = df,
     predictors = predictors
   )
+
+  predictors_numeric <- predictors_types$numeric
+
+  predictors_lost <- c(
+    predictors_types$categorical,
+    predictors_types$logical,
+    predictors_types$zero_variance
+  )
+
+  if(length(predictors_lost) > 0){
+
+    if(quiet == FALSE){
+
+      message(
+        "\n",
+        function_name,
+        ": these predictors are categorical, logical, or have near-zero variance and will be ignored: \n - ",
+        paste(predictors_lost, collapse = "\n - ")
+      )
+
+    }
+
+  }
 
   if(length(predictors_numeric) > 0){
 
@@ -108,10 +130,7 @@ validate_arg_predictors_vif <- function(
 
     }
 
-  }
-
-
-  if(length(predictors_numeric) == 0){
+  } else if(length(predictors_numeric) == 0){
 
     message(
       "\n",
@@ -121,9 +140,7 @@ validate_arg_predictors_vif <- function(
 
     return(NULL)
 
-  }
-
-  if(length(predictors_numeric) == 1){
+  } else if(length(predictors_numeric) == 1){
 
     if(quiet == FALSE){
 
@@ -131,26 +148,6 @@ validate_arg_predictors_vif <- function(
         "\n",
         function_name,
         ": only one numeric predictor in argument 'predictors', skipping VIF filtering."
-      )
-
-    }
-
-  }
-
-  predictors_lost <- setdiff(
-    x = predictors_arg,
-    y = predictors_numeric
-  )
-
-  if(length(predictors_lost) > 0){
-
-    if(quiet == FALSE){
-
-      message(
-        "\n",
-        function_name,
-        ": these predictors are not numeric and will be ignored: \n - ",
-        paste(predictors_lost, collapse = "\n - ")
       )
 
     }

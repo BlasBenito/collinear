@@ -174,11 +174,11 @@ print.collinear_arguments <- function(
   }
 
   #f
-  if(!is.null(x$f)){
+  if(!is.null(x$f_name)){
 
     cat(
       " - f:",
-      x$f,
+      x$f_name,
       fill = TRUE
     )
 

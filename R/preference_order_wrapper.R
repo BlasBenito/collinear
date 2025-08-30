@@ -4,6 +4,7 @@
 #' Internal function to manage the argument \code{preference_order} within [collinear()]. Users should use [preference_order()] instead.
 #'
 #' @inheritParams collinear
+#' @inheritParams validate_args_collinear
 #'
 #' @return character vector or NULL
 #' @export
@@ -15,10 +16,10 @@ preference_order_wrapper <- function(
     predictors = NULL,
     preference_order = NULL,
     f = NULL,
+    f_name = NULL,
+    function_name = NULL,
     quiet = FALSE
 ){
-
-  function_name <- "collinear::collinear()"
 
   # NULL ----
   # cor_select and vif_select rank predictors by their multicollinearity
@@ -28,6 +29,67 @@ preference_order_wrapper <- function(
   ){
 
     return(NULL)
+
+  }
+
+  # list ----
+  if(
+    is.list(preference_order) &&
+    !is.data.frame(preference_order)
+    ){
+
+    if(
+      !is.null(response) &&
+      response %in% names(preference_order)
+      ){
+
+     return(preference_order[[response]])
+
+    } else {
+
+      if(quiet == FALSE){
+
+        message(
+          "\n",
+          function_name,
+          ": list 'preference_order' does not contain an object named after 'response' and will be ignored."
+        )
+
+      }
+
+      return(NULL)
+
+    }
+
+  }
+
+
+  #data frame
+  if(is.data.frame(preference_order)){
+
+    if(all(c("predictor", "response", "preference", "f") %in% colnames(preference_order))){
+
+      if(response %in% unique(preference_order$response)){
+
+        return(preference_order)
+
+      } else {
+
+        if(quiet == FALSE){
+
+          message(
+            "\n",
+            function_name,
+            ": column 'response' of the dataframe 'preference_order' does not contain a valid 'response' and will be ignored."
+          )
+
+        }
+
+        return(NULL)
+
+      }
+
+    }
 
   }
 
@@ -54,7 +116,6 @@ preference_order_wrapper <- function(
 
     }
 
-    ##valid vector ----
     preference_order <- intersect(
       x = preference_order,
       y = predictors
@@ -69,7 +130,7 @@ preference_order_wrapper <- function(
         response <- NA
       }
 
-        preference_order <- data.frame(
+        preference_df <- data.frame(
           response = rep(
             x = response,
             times = n
@@ -87,11 +148,11 @@ preference_order_wrapper <- function(
         )
 
         attr(
-          x = preference_order,
+          x = preference_df,
           which = "validated"
         ) <- TRUE
 
-        return(preference_order)
+        return(preference_df)
 
     } else {
 
@@ -112,62 +173,6 @@ preference_order_wrapper <- function(
   }
 
 
-  # list ----
-  if(is.list(preference_order) &&
-     isTRUE(attr(x = preference_order, which = "validated"))
-     ){
-
-    preference_order <- preference_order[[response]]
-
-    attr(
-      x = preference_order,
-      which = "validated"
-    ) <- TRUE
-
-    return(preference_order)
-
-  } else {
-
-    if(quiet == FALSE){
-
-      message(
-        "\n",
-        function_name,
-        ": list 'preference_order' does not contain an obect named after 'response' and will be ignored."
-      )
-
-    }
-
-    return(NULL)
-
-  }
-
-
-  # data frame ----
-  if(
-    is.data.frame(preference_order) &&
-    isTRUE(attr(x = preference_order, which = "validated"))
-    ){
-
-   return(preference_order)
-
-  } else {
-
-    if(quiet == FALSE){
-
-      message(
-        "\n",
-        function_name,
-        ": dataframe 'preference_order' is not valid and will be ignored."
-      )
-
-    }
-
-    return(NULL)
-
-  }
-
-
   if(is.null(f)){
 
     return(NULL)
@@ -180,12 +185,12 @@ preference_order_wrapper <- function(
       "\n",
       function_name,
       ": computing preference order with function '",
-      attributes(f)$name, "'."
+      f_name, "'."
     )
 
   }
 
-  preference_order <- preference_order(
+  preference_df <- preference_order(
     df = df,
     response = response,
     predictors = predictors,
@@ -193,6 +198,6 @@ preference_order_wrapper <- function(
     quiet = quiet
   )
 
-  preference_order
+  preference_df
 
 }

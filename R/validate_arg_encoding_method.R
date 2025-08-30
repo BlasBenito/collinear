@@ -27,16 +27,6 @@ validate_arg_encoding_method <- function(
 
   if(is.null(encoding_method)){
 
-    if(quiet == FALSE){
-
-      message(
-        "\n",
-        function_name,
-        ": argument 'encoding_method' is NULL, skipping target encoding."
-      )
-
-    }
-
     return(NULL)
   }
 
