@@ -1,6 +1,6 @@
 #' Print Method for Class \code{collinear_selection}
 #'
-#' Prints an obect of the class [collinear_selection] produced by [build.collinear_selection()].
+#' Prints an object of the class [collinear_selection] produced by [build.collinear_selection()].
 #'
 #' @param x (required, list) Object of class \code{collinear_selection} resulting from [build.collinear_selection()]. Default: NULL
 #' @param n (optional, integer) Maximum number of vector elements to print. Defaults: 5.
@@ -41,7 +41,7 @@ print.collinear_selection <- function(
   # selection ----
   if(!is.null(x$selection)){
 
-    selection <- na.omit(x$selection[1:n])
+    selection <- stats::na.omit(x$selection[1:n])
 
     omitted <- length(x$selection) - n
 

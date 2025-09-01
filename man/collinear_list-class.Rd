@@ -3,7 +3,11 @@
 \name{collinear_list-class}
 \alias{collinear_list-class}
 \alias{collinear_list}
-\title{Class \code{collinear_list}}
+\title{Class \code{collinear_list}
+TODO: update class definition to collinear_arguments
+Output of \code{\link[=collinear]{collinear()}} when \code{response} is a character vector of length two or more. Named list of \link{collinear_selection} objects, one for each response variable.}
 \description{
+Class \code{collinear_list}
+TODO: update class definition to collinear_arguments
 Output of \code{\link[=collinear]{collinear()}} when \code{response} is a character vector of length two or more. Named list of \link{collinear_selection} objects, one for each response variable.
 }

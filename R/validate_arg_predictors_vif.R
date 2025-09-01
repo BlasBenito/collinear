@@ -37,6 +37,7 @@
 validate_arg_predictors_vif <- function(
     df = NULL,
     predictors = NULL,
+    preference_order = NULL,
     function_name = NULL,
     quiet = FALSE
 ){
@@ -64,6 +65,26 @@ validate_arg_predictors_vif <- function(
     if(is.null(predictors)){
       return(NULL)
     }
+
+  }
+
+  #order according to preference order
+  if(!is.null(preference_order)){
+
+    if(is.data.frame(preference_order)){
+      preference_order <- preference_order$predictor
+    }
+
+    preference_order <- intersect(
+      x = preference_order,
+      y = colnames(df)
+    )
+
+    predictors <- c(
+      preference_order[preference_order %in% predictors],
+      predictors[!predictors %in% preference_order]
+      ) |>
+      unique()
 
   }
 
@@ -120,7 +141,11 @@ validate_arg_predictors_vif <- function(
         message(
           "\n",
           function_name,
-          ": not enough rows in `df` to compute VIF on all 'predictors'. VIF analysis will be restricted to these predictors: \n - ",
+          ": computing VIF on all 'predictors' requires ",
+          10 * length(predictors),
+          " rows, but 'df' has ",
+          nrow(df),
+          ". The VIF analysis will be applied to these predictors: \n - ",
           paste(predictors_subset, collapse = "\n - ")
         )
 

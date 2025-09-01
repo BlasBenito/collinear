@@ -55,8 +55,10 @@ testthat::test_that("`vif_df()` works", {
     vif.df <- vif_df(
       df = df,
       predictors = predictors
-    )
-  )
+    ),
+    regexp = "no numeric columns in argument 'predictors'"
+  ) |>
+    suppressMessages()
 
   testthat::expect_true(
     is.data.frame(vif.df)
@@ -129,13 +131,10 @@ testthat::test_that("`vif_df()` works", {
   #single predictor
   predictors <- vi_predictors_numeric[1]
 
-  testthat::expect_message(
-    vif.df <- vif_df(
-      df = df,
-      predictors = predictors
-    )
+  vif.df <- vif_df(
+    df = df,
+    predictors = predictors
   )
-
 
   testthat::expect_true(
     is.data.frame(vif.df)

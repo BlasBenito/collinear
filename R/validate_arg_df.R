@@ -44,6 +44,12 @@ validate_arg_df <- function(
     quiet = FALSE
 ){
 
+  if(is.null(function_name)){
+    function_name <- "collinear::validate_arg_df()"
+  }
+
+  preference_order_wrapper
+
   df <- validate_arg_df_not_null(
     df = df,
     function_name = function_name

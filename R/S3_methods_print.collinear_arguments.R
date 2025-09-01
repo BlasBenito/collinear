@@ -45,7 +45,7 @@ print.collinear_arguments <- function(
   # response ----
   if(!is.null(x$response)){
 
-    response <- na.omit(x$response[1:n])
+    response <- stats::na.omit(x$response[1:n])
 
     omitted <- length(x$response) - n
 
@@ -83,7 +83,7 @@ print.collinear_arguments <- function(
   # predictors ----
   if(!is.null(x$predictors)){
 
-    predictors <- na.omit(x$predictors[1:n])
+    predictors <- stats::na.omit(x$predictors[1:n])
 
     omitted <- length(x$predictors) - n
 
@@ -145,7 +145,7 @@ print.collinear_arguments <- function(
 
     preference_order.length <- length(preference_order.vector)
 
-    preference_order.vector <- na.omit(preference_order.vector[1:n])
+    preference_order.vector <- stats::na.omit(preference_order.vector[1:n])
 
     cat(
       " + preference_order:\n     -",

@@ -22,6 +22,11 @@ validate_arg_max_cor <- function(
     quiet = FALSE
     ){
 
+  if(is.null(function_name)){
+    function_name <- "collinear::validate_arg_max_cor()"
+  }
+
+
   max_cor_default <- 0.75
 
   if(isTRUE(attr(x = max_cor, which = "validated_cor"))){

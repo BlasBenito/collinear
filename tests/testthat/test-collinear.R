@@ -2,100 +2,146 @@ testthat::test_that("`collinear()` works", {
 
   #CODE EXAMPLES ----
 
-  data(
-    vi_smol,
-    vi_predictors_numeric
-  )
-
-  ##OPTIONAL: parallelization setup
-  # future::plan(
-  #   future::multisession,
-  #   workers = 2
-  # )
-
-  ##OPTIONAL: progress bar
-  ##does not work in R examples
-  #progressr::handlers(global = TRUE)
-
-  #minimal setup: numeric predictors only
-  x <- collinear(
-    df = vi_smol,
-    predictors = vi_predictors_numeric
-  )
-
-  x
-  x$selection
-
-  #preference order by R-squared with response
-  x <- collinear(
-    df = vi_smol,
-    response = "vi_numeric",
-    predictors = vi_predictors_numeric,
-    f = f_r2_pearson
-  )
-
-  x
-
-
-
-  #numeric and categorical predictors
-  #small subset to speed example up
-  predictors <- c(
-    "swi_mean",
-    "soil_type",
-    "soil_temperature_mean",
-    "growing_season_length",
-    "rainfall_mean"
-  )
-
-
-  #with numeric responses
-  #--------------------------------
-  #  target encoding
-  #  automated preference order
-  #  all predictors filtered by correlation and VIF
-  x <- collinear(
-    df = vi_smol,
-    response = c(
-      "vi_numeric",
-      "vi_binomial"
-    ),
-    predictors = predictors
-  )
-
-  x
-
-
-  #with custom preference order
-  #--------------------------------
-  x <- collinear(
-    df = vi_smol,
-    response = "vi_numeric",
-    predictors = predictors,
-    preference_order = c(
-      "swi_mean",
-      "soil_type"
-    )
-  )
-
-
-  #pre-computed preference order
-  #--------------------------------
-  preference_df <- preference_order(
-    df = vi_smol,
-    response = "vi_numeric",
-    predictors = predictors
-  )
-
-  x <- collinear(
-    df = vi_smol,
-    response = "vi_numeric",
-    predictors = predictors,
-    preference_order = preference_df
-  )
-
-  #resetting to sequential processing
-  #future::plan(future::sequential)
+#'   data(
+#'     vi_smol,
+#'     vi_predictors_numeric
+#'   )
+#'
+#'   ##OPTIONAL: parallelization setup
+#'   # future::plan(
+#'   #   future::multisession,
+#'   #   workers = 2
+#'   # )
+#'
+#'   ##OPTIONAL: progress bar
+#'   ##does not work in R examples
+#'   #progressr::handlers(global = TRUE)
+#'
+#'   ##minimal setup
+#'   ##--------------------------
+#'   ##all columns in df are filtered
+#'   ##uses numeric columns only to speed up example
+#'   x <- collinear(
+#'     df = vi_smol[, vi_predictors_numeric]
+#'   )
+#'
+#'   names(x)
+#'
+#'   #print full object
+#'   print(x)
+#'
+#'   #print selection only
+#'   summary(x)
+#'
+#'   #get selection vector
+#'   x$result$selection
+#'
+#'   #validated arguments are stored as well
+#'   x$arguments
+#'
+#'   ##using predictors
+#'   ##--------------------------
+#'   ## - numeric predictors only
+#'   ## - ordered by their mutual collinearity
+#'   ## - not enough rows for a full VIF analysis
+#'   x <- collinear(
+#'     df = vi_smol,
+#'     predictors = vi_predictors_numeric
+#'   )
+#'
+#'
+#'   ##disable VIF analysis
+#'   ##--------------------------
+#'   x <- collinear(
+#'     df = vi_smol,
+#'     predictors = vi_predictors_numeric,
+#'     max_vif = NULL
+#'   )
+#'
+#'
+#'   ##disable correlation analysis
+#'   ##--------------------------
+#'   x <- collinear(
+#'     df = vi_smol,
+#'     predictors = vi_predictors_numeric,
+#'     max_cor = NULL
+#'   )
+#'
+#'
+#'   ##automatic preference order
+#'   ##--------------------------
+#'   ## - rank predictors by R-squared with response (see f_functions() for more options)
+#'   x <- collinear(
+#'     df = vi_smol,
+#'     response = "vi_numeric",
+#'     predictors = vi_predictors_numeric,
+#'     f = f_r2_pearson
+#'   )
+#'
+#'   ##results for the given response
+#'   x$vi_numeric
+#'
+#'   ##response name is used instead of 'result'
+#'   x$vi_numeric$selection
+#'
+#'   ##formula for linear model
+#'   x$vi_numeric$formulas$linear
+#'
+#'   ##formula for gam model
+#'   x$vi_numeric$formulas$smooth
+#'
+#'   ##data frame with selected columns
+#'   colnames(x$vi_numeric$df)
+#'
+#'   #preference dataframe in results
+#'   x$vi_numeric$preference$df
+#'
+#'
+#'   ##manual preference order
+#'   ##--------------------------
+#'   ## - rank predictors by order in vector 'preference_order'
+#'   x <- collinear(
+#'     df = vi_smol,
+#'     response = "vi_numeric",
+#'     predictors = vi_predictors_numeric,
+#'     preference_order = c(
+#'       "swi_mean",
+#'       "soil_temperature_mean",
+#'       "growing_season_length",
+#'       "rainfall_mean"
+#'     )
+#'   )
+#'
+#'   #preference dataframe in results
+#'   x$vi_numeric$preference$df
+#'
+#'   ##missing predictors in preference_order due to multicollinearity with predictors with a higher preference
+#'   ##predictors not in preference order ranked by their collinearity with other predictors
+#'   summary(x)
+#'
+#'
+#'   ##several responses
+#'   ##--------------------------------
+#'   ## - automatic selection of preference order function with f_auto()
+#'   x <- collinear(
+#'     df = vi_smol,
+#'     response = c(
+#'       "vi_numeric",
+#'       "vi_binomial"
+#'     ),
+#'     predictors = vi_predictors_numeric,
+#'     f = f_auto
+#'   )
+#'
+#'   ##one object per response
+#'   x$vi_numeric$selection
+#'   x$vi_binomial$selection
+#'
+#'   ##function arguments
+#'   x$arguments
+#'
+#'   #resetting to sequential processing
+#'   #future::plan(future::sequential)
 
 
   #UNIT TEST ----
@@ -287,7 +333,7 @@ testthat::test_that("`collinear()` works", {
   )
 
   testthat::expect_true(
-    all(c("linear", "smooth") %in% names(x$result$formulas))
+    all(c("linear", "smooth") %in% names(x$vi_numeric$formulas))
   )
 
 
@@ -469,7 +515,7 @@ testthat::test_that("`collinear()` works", {
   )
 
   testthat::expect_true(
-    all(preference_order %in% x$result$selection)
+    all(preference_order %in% x$vi_numeric$selection)
   )
 
   testthat::expect_true(
@@ -494,7 +540,7 @@ testthat::test_that("`collinear()` works", {
     f = NULL,
     max_cor = 0.75,
     max_vif = 5,
-    quiet = FALSE
+    quiet = TRUE
   )
 
   testthat::expect_true(
@@ -554,7 +600,7 @@ testthat::test_that("`collinear()` works", {
     f = NULL,
     max_cor = 0.75,
     max_vif = 5,
-    quiet = FALSE
+    quiet = TRUE
   )
 
   testthat::expect_true(
@@ -655,21 +701,17 @@ testthat::test_that("`collinear()` works", {
   )
 
   ### f_r2_rf ----
-  testthat::expect_message(
-    x <- collinear(
-      df = vi_smol,
-      response = "vi_numeric",
-      predictors = vi_predictors_numeric,
-      encoding_method = NULL,
-      preference_order = NULL,
-      f = f_r2_rf,
-      max_cor = 0.75,
-      max_vif = 5,
-      quiet = FALSE
-    ),
-    regexp = "f_r2_rf"
-  ) |>
-    suppressMessages()
+  x <- collinear(
+    df = vi_smol,
+    response = "vi_numeric",
+    predictors = vi_predictors_numeric,
+    encoding_method = NULL,
+    preference_order = NULL,
+    f = f_r2_rf,
+    max_cor = 0.75,
+    max_vif = 5,
+    quiet = TRUE
+  )
 
   testthat::expect_true(
     x$vi_numeric$selection[1] == x$vi_numeric$preference$df$predictor[1]

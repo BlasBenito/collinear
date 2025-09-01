@@ -1,4 +1,5 @@
 #' Class \code{collinear_selection}
+#' TODO: update class definition
 #'
 #' Output of the `collinear()` function when \code{response} is NULL or length 1. It has the custom print method [print.collinear_selection].
 #'
@@ -16,7 +17,7 @@ NULL
 
 
 #' Class \code{collinear_list}
-#'
+#' TODO: update class definition to collinear_arguments
 #' Output of [collinear()] when \code{response} is a character vector of length two or more. Named list of [collinear_selection] objects, one for each response variable.
 #'
 #' @name collinear_list-class
@@ -24,3 +25,5 @@ NULL
 #' @rdname collinear_list-class
 #' @exportClass collinear_list
 NULL
+
+#' TODO: add remaining classes

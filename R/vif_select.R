@@ -118,6 +118,7 @@ vif_select <- function(
   predictors <- validate_arg_predictors_vif(
     df = df,
     predictors = predictors,
+    preference_order = preference_order,
     function_name = function_name,
     quiet = quiet
   )
@@ -132,9 +133,7 @@ vif_select <- function(
       message(
         "\n",
         function_name,
-        ": maximum VIF is <= ",
-        max_vif,
-        ", skipping VIF filtering."
+        ": at least two predictors are required for VIF filtering."
       )
 
     }
@@ -146,7 +145,7 @@ vif_select <- function(
   preference_order_auto <- vif_df(
     df = df,
     predictors = predictors,
-    quiet = quiet
+    quiet = TRUE
   )
 
   if(max(preference_order_auto$vif) <= max_vif){
@@ -156,9 +155,10 @@ vif_select <- function(
       message(
         "\n",
         function_name,
-        ": maximum VIF is <= ",
+        ": maximum VIF is lower than ",
         max_vif,
-        ", skipping VIF filtering."
+        ", returning these predictors: \n - ",
+        paste(predictors, collapse = "\n - ")
       )
 
     }

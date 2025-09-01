@@ -17,9 +17,16 @@ print.collinear_output <- function(
     print(x$arguments)
   }
 
-  cat("Results\n")
-  cat("===================\n")
-  cat("\n")
+  y <- x[names(x) != "arguments"]
+
+  if(length(names(y)) > 1){
+    cat("Results\n")
+    cat("===================\n")
+    cat("\n")
+  } else {
+    cat("Result\n")
+    cat("===================\n")
+  }
 
   lapply(
     X = x[names(x) != "arguments"],

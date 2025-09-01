@@ -56,17 +56,8 @@ validate_arg_preference_order <- function(
     quiet = FALSE
 ){
 
-  #fast option, preference_order is validated
-  if(isTRUE(attr(x = preference_order, which = "validated"))){
-
-    if(is.data.frame(preference_order)){
-      preference_order <- preference_order$predictor
-    }
-
-    if(all(predictors %in% preference_order)){
-      return(preference_order)
-    }
-
+  if(is.null(function_name)){
+    function_name <- "collinear::validate_arg_preference_order()"
   }
 
   #data frame
@@ -156,7 +147,7 @@ validate_arg_preference_order <- function(
       message(
         "\n",
         function_name,
-        ": these columns in 'preference_order' are not in 'predictors' and will be ignored:\n - ",
+        ": these variables in 'preference_order' are not in 'predictors' and will be ignored:\n - ",
         paste(
           predictors.missing,
           collapse = "\n - "

@@ -111,7 +111,7 @@ testthat::test_that("`preference_order()` works", {
   )
 
   #f NULL
-  testthat::expect_error(
+  testthat::expect_message(
     x <- preference_order(
       df = df,
       response = "vi_numeric",
@@ -119,7 +119,7 @@ testthat::test_that("`preference_order()` works", {
       f = NULL,
       warn_limit = NULL
     ),
-    regexp = "argument 'f' cannot be NULL"
+    regexp = "argument 'f' is NULL"
   )
 
   #numeric response

@@ -7,6 +7,7 @@
 validate_arg_predictors_vif(
   df = NULL,
   predictors = NULL,
+  preference_order = NULL,
   function_name = NULL,
   quiet = FALSE
 )
@@ -15,6 +16,14 @@ validate_arg_predictors_vif(
 \item{df}{(required; data frame, tibble, or sf) A data frame with responses and predictors. Must have at least 10 rows for pairwise correlation analysis, and \code{10 * (length(predictors) - 1)} for VIF analysis.  Default: NULL.}
 
 \item{predictors}{(optional; character vector or NULL) Names of the predictors to select from \code{df}. If omitted, all numeric columns in \code{df} are used instead. Default: NULL}
+
+\item{preference_order}{(optional; character vector, output of \code{\link[=preference_order]{preference_order()}}, list, or NULL). Prioritizes predictors to preserve the most relevant ones during multicollinearity filtering. Accepted inputs are:
+\itemize{
+\item \strong{NULL} (default): If argument \code{f} is NULL (default), predictors are prioritized from lower to higher multicollinearity. Otherwise it calls \code{\link[=preference_order]{preference_order()}} to rank the predictors using the function defined in the argument \code{f}. The output of this setting might differ to an external call to \code{\link[=preference_order]{preference_order()}} if target encoding is triggered to transform categorical predictors to numeric.
+\item \strong{character vector}: Predictor names in a user-defined priority order. The first predictor in this vector is always selected, unless it has near zero-variance values.
+\item \strong{data frame}: output of \code{\link[=preference_order]{preference_order()}} computed on the value of the argument \code{response}.
+\item \strong{named list}: list of data frames, output of \code{\link[=preference_order]{preference_order()}} when argument \code{response} is a vector of length two or more.
+}. Default: NULL}
 
 \item{function_name}{(optional, character string) Name of the function performing the argument check. Default: NULL}
 

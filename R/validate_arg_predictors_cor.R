@@ -39,6 +39,10 @@ validate_arg_predictors_cor <- function(
     quiet = FALSE
 ){
 
+  if(is.null(function_name)){
+    function_name <- "collinear::validate_arg_predictors_cor()"
+  }
+
   if(isTRUE(attr(x = predictors, which = "validated_cor"))){
     return(predictors)
   }

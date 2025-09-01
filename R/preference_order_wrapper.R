@@ -21,6 +21,10 @@ preference_order_wrapper <- function(
     quiet = FALSE
 ){
 
+  if(is.null(function_name)){
+    function_name <- "collinear::preference_order_wrapper()"
+  }
+
   # NULL ----
   # cor_select and vif_select rank predictors by their multicollinearity
   if(
@@ -176,17 +180,6 @@ preference_order_wrapper <- function(
   if(is.null(f)){
 
     return(NULL)
-
-  }
-
-  if(quiet == FALSE){
-
-    message(
-      "\n",
-      function_name,
-      ": computing preference order with function '",
-      f_name, "'."
-    )
 
   }
 

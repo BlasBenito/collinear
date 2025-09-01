@@ -12,7 +12,7 @@ Added new internal function `validate_arg_df()` to convert logicals to numeric, 
 
 Added new internal function `identify_predictors_logical()`.
 
-Added function `vif()` with fast but minimalistic method to compute VIF from a correlation matrix.
+Added function `vif()` with fast method to compute VIF from a correlation matrix.
 
 Removed argument `warn_limit` of `preference_order()` from `collinear()` and its internal function `preference_order_wrapper()` to simplify their signatures.
 

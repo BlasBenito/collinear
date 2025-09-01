@@ -3,7 +3,8 @@
 \name{collinear_selection-class}
 \alias{collinear_selection-class}
 \alias{collinear_selection}
-\title{Class \code{collinear_selection}}
+\title{Class \code{collinear_selection}
+TODO: update class definition}
 \description{
 Output of the \code{collinear()} function when \code{response} is NULL or length 1. It has the custom print method \link{print.collinear_selection}.
 }

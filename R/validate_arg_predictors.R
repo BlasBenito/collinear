@@ -41,6 +41,10 @@ validate_arg_predictors <- function(
     quiet = FALSE
 ){
 
+  if(is.null(function_name)){
+    function_name <- "collinear::validate_arg_predictors()"
+  }
+
   #if already validated, return it
   if(isTRUE(attr(x = predictors, which = "validated"))){
     return(predictors)

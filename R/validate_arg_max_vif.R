@@ -22,6 +22,10 @@ validate_arg_max_vif <- function(
     quiet = FALSE
     ){
 
+  if(is.null(function_name)){
+    function_name <- "collinear::validate_arg_max_vif()"
+  }
+
   max_vif_default <- 5
 
   if(isTRUE(attr(x = max_vif, which = "validated"))){

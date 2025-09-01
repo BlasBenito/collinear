@@ -38,6 +38,11 @@ validate_arg_response <- function(
     quiet = FALSE
 ){
 
+  if(is.null(function_name)){
+    function_name <- "collinear::validate_arg_response()"
+  }
+
+
   if(isTRUE(attr(x = response, which = "validated"))){
     return(response)
   }
