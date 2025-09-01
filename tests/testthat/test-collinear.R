@@ -7,18 +7,17 @@ testthat::test_that("`collinear()` works", {
     vi_predictors_numeric
   )
 
-  #OPTIONAL: parallelization setup
+  ##OPTIONAL: parallelization setup
   # future::plan(
   #   future::multisession,
   #   workers = 2
   # )
 
-  #OPTIONAL: progress bar
-  #does not work in examples
+  ##OPTIONAL: progress bar
+  ##does not work in R examples
   #progressr::handlers(global = TRUE)
 
-  #minimal setup
-  ## numeric predictors only
+  #minimal setup: numeric predictors only
   x <- collinear(
     df = vi_smol,
     predictors = vi_predictors_numeric

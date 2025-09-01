@@ -114,6 +114,7 @@ vif_select <- function(
     return(NULL)
   }
 
+  #validate predictors for vif analysis
   predictors <- validate_arg_predictors_vif(
     df = df,
     predictors = predictors,
@@ -125,6 +126,19 @@ vif_select <- function(
     length(predictors) == 1 ||
     is.null(predictors)
   ){
+
+    if(quiet == FALSE){
+
+      message(
+        "\n",
+        function_name,
+        ": maximum VIF is <= ",
+        max_vif,
+        ", skipping VIF filtering."
+      )
+
+    }
+
     return(predictors)
   }
 

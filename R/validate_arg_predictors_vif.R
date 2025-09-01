@@ -41,6 +41,12 @@ validate_arg_predictors_vif <- function(
     quiet = FALSE
 ){
 
+  #if df is NULL, stop
+  df <- validate_arg_df_not_null(
+    df = df,
+    function_name = function_name
+  )
+
   if(isTRUE(attr(x = predictors, which = "validated_vif"))){
     return(predictors)
   }
@@ -60,12 +66,6 @@ validate_arg_predictors_vif <- function(
     }
 
   }
-
-  #if df is NULL, stop
-  df <- validate_arg_df_not_null(
-    df = df,
-    function_name = function_name
-  )
 
   #predictors
   predictors_types <- identify_predictors(
