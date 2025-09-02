@@ -1,4 +1,4 @@
-#' @title Automated multicollinearity management
+#' @title Automated Multicollinearity Management
 #'
 #' @description
 #'
@@ -54,28 +54,32 @@
 #' If \code{preference_order} is defined, whenever two or more variables are above \code{max_cor}, the one higher in \code{preference_order} is preserved. For example, for the predictors and preference order \eqn{a} and \eqn{b}, if their correlation is higher than \code{max_cor}, then \eqn{b} will be removed and \eqn{a} preserved. If their correlation is lower than \code{max_cor}, then both are preserved.
 #'
 #'
-#' @param df (required; data frame, tibble, or sf) A data frame with responses and predictors. Must have at least 10 rows for pairwise correlation analysis, and \code{10 * (length(predictors) - 1)} for VIF analysis.  Default: NULL.
-#' @param response (optional; character, character vector, or NULL) Name of one or several response variables in \code{df}, used to target encode categorical predictors, if any, when \code{encoding_method} is not NULL, and to compute preference order when \code{preference_order} is not NULL. If \code{response} is NULL, target encoding and preference order computation are disabled. Default: NULL.
-#' @param predictors (optional; character vector or NULL) Names of the predictors to select from \code{df}. If omitted, all numeric columns in \code{df} are used instead. Default: NULL
-#' @param encoding_method (optional; character or NULL). Name of one target encoding method or NULL. One of: "loo", "mean", or "rank" (see [target_encoding_lab()] for further details). If NULL, target encoding is disabled. Default: NULL
-#' @param preference_order (optional; character vector, output of [preference_order()], list, or NULL). Prioritizes predictors to preserve the most relevant ones during multicollinearity filtering. Accepted inputs are:
-#' \itemize{
-#'   \item **NULL** (default): If argument \code{f} is NULL (default), predictors are prioritized from lower to higher multicollinearity. Otherwise it calls [preference_order()] to rank the predictors using the function defined in the argument \code{f}. The output of this setting might differ to an external call to [preference_order()] if target encoding is triggered to transform categorical predictors to numeric.
-#'   \item **character vector**: Predictor names in a user-defined priority order. The first predictor in this vector is always selected, unless it has near zero-variance values.
-#'   \item **data frame**: output of [preference_order()] computed on the value of the argument \code{response}.
-#'   \item **named list**: list of data frames, output of [preference_order()] when argument \code{response} is a vector of length two or more.
-#' }. Default: NULL
-#' @param f (optional: function name or NULL) Function to compute preference order used when \code{preference_order = "auto"}. Available functions are listed by [f_functions()] and described in the manual of [preference_order()]. If NULL, calls to [f_auto()] (see [f_auto_rules()]) to select a suitable method depending on the nature of the data. Default: NULL
-#' @param max_cor (optional; numeric or NULL) Maximum correlation allowed between any pair of variables in \code{predictors}. Valid values are between 0.01 and 0.99, while recommended values are between 0.5 (strict) and 0.9 (permissive). Higher values return larger number of predictors with a higher multicollinearity. If NULL, the pairwise correlation analysis is disabled. Default: 0.75
-#' @param max_vif (optional, numeric or NULL) Maximum Variance Inflation Factor allowed during variable selection. Recommended values are between 2 (strict) and 10 (permissive). Higher values return larger number of predictors with a higher multicollinearity. If NULL, the variance inflation analysis is disabled. Default: 5.
-#' @param quiet (optional; logical) If FALSE, messages are printed to the console Default: FALSE
+#' @param df (required; data frame, tibble, or sf) A data frame with responses (optional) and predictors. Must have at least 10 rows for pairwise correlation analysis, and \code{10 * (length(predictors) - 1)} for VIF analysis.  Default: NULL.
 #'
-#' @return List:
+#' @param response (optional; character, character vector, or NULL) Name of one or several response variables in \code{df}. When \code{encoding_method} is not NULL, response/s are used as reference to map categorical predictors, if any, to numeric (see [target_encoding_lab()]). When \code{f} is not NULL, responses are used to rank predictors and preserve important ones during multicollinearity filtering (see [preference_order()]). If no response is provided, the predictors are ranked from lower to higher multicollinearity. When several responses are provided, the selection results are named after each response in the output list. If no response is provided, the variable selection shows with the name "result" in the output list. Default: NULL.
+#'
+#' @param predictors (optional; character vector or NULL) Names of the predictors in \code{df} involved in the multicollinearity filtering. If NULL, all columns in \code{df} (except those with constant values or near zero variance) are used. Default: NULL
+#'
+#' @param encoding_method (optional; character or NULL). Name of one target encoding method. One of: "loo", "mean", or "rank" (see [target_encoding_lab()] for further details). If NULL, target encoding is disabled. Default: NULL
+#'
+#' @param preference_order (optional; character vector, output of [preference_order()], or NULL). Incompatible with \code{f} (overrides it when provided). Prioritizes predictors to preserve the most relevant ones during multicollinearity filtering.
+#' Accepted inputs are:
 #' \itemize{
-#'   \item timestamp: value of [Sys.time()].
-#'   \item arguments: list with input arguments.
-#'   \item output: one object of class `collinear_selection` generated by [build.collinear_selection()] per response in argument `response`.
-#' }
+#'   \item **NULL** (default): If argument \code{f} is NULL (default), predictors are ranked from lower to higher multicollinearity. Otherwise, [preference_order()] ranks the predictors according to their relationship with \code{response} using the function defined in \code{f}. NOTE: The output of this setting might differ to an external call to [preference_order()] if target encoding is triggered.
+#'   \item **character vector**: Predictor names in a user-defined priority order. The first predictor in this vector is always selected, unless it has near zero-variance values. This option sets \code{f} to NULL.
+#'   \item **data frame**: output of [preference_order()] computed on the given \code{response}. This option sets \code{f} to NULL.
+#'   \item **named list**: list of data frames, output of [preference_order()] when argument \code{response} is a vector of length two or more. This option sets \code{f} to NULL.
+#' }. Default: NULL
+#'
+#' @param f (optional: unquoted function name or NULL). Incompatible with \code{preference_order} (overridden if \code{preference_order} is provided). Function to rank \code{predictors} depending on their relationship with the \code{response}. Available functions are listed by [f_functions()] and described in the manual of [preference_order()]. Setting it to [f_auto] is a good starting point. Default: NULL
+#'
+#' @param max_cor (optional; numeric or NULL) Maximum correlation allowed between pairs of \code{predictors}. Valid values are between 0.01 and 0.99, and recommended values are between 0.5 (strict) and 0.9 (permissive). If NULL, the pairwise correlation analysis is disabled. Default: 0.75
+#'
+#' @param max_vif (optional, numeric or NULL) Maximum Variance Inflation Factor allowed for \code{predictors} during multicollinearity filtering. Recommended values are between 2 (strict) and 10 (permissive). If NULL, the variance inflation analysis is disabled. Default: 5.
+#'
+#' @param quiet (optional; logical) If FALSE, messages are printed to the console. Default: FALSE
+#'
+#' @return list of class [collinear_output]
 #'
 #' @examples
 #'   data(

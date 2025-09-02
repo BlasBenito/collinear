@@ -7,11 +7,11 @@
 validate_arg_max_vif(max_vif = NULL, function_name = NULL, quiet = FALSE)
 }
 \arguments{
-\item{max_vif}{(optional, numeric or NULL) Maximum Variance Inflation Factor allowed during variable selection. Recommended values are between 2 (strict) and 10 (permissive). Higher values return larger number of predictors with a higher multicollinearity. If NULL, the variance inflation analysis is disabled. Default: 5.}
+\item{max_vif}{(optional, numeric or NULL) Maximum Variance Inflation Factor allowed for \code{predictors} during multicollinearity filtering. Recommended values are between 2 (strict) and 10 (permissive). If NULL, the variance inflation analysis is disabled. Default: 5.}
 
 \item{function_name}{(optional, character string) Name of the function performing the argument check. Default: NULL}
 
-\item{quiet}{(optional; logical) If FALSE, messages are printed to the console Default: FALSE}
+\item{quiet}{(optional; logical) If FALSE, messages are printed to the console. Default: FALSE}
 }
 \value{
 numeric or NULL

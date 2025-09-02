@@ -118,7 +118,7 @@ validate_arg_predictors_vif <- function(
   if(length(predictors_numeric) > 1){
 
     #minimum number of required rows
-    min.rows <- (length(predictors_numeric) - 1) * 10
+    min.rows <- 10 * (length(predictors_numeric) - 1)
 
     #manageable number of predictors with rows in df
     min.predictors <- floor(

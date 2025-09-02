@@ -2,7 +2,7 @@
 % Please edit documentation in R/case_weights.R
 \name{case_weights}
 \alias{case_weights}
-\title{Case Weights for Unbalanced Binomial or Categorical Responses}
+\title{Case Weights for Binomial, Logical, or Categorical Responses}
 \usage{
 case_weights(x = NULL)
 }
@@ -13,7 +13,17 @@ case_weights(x = NULL)
 numeric vector: case weights
 }
 \description{
-Case Weights for Unbalanced Binomial or Categorical Responses
+Computes case weights adding to one for response variables of these types:
+
+\itemize{
+\item numeric binomial (1 and 0).
+\item logical (TRUE and FALSE): converted to numeric internally.
+\item categorical
+}
+
+Values NA, Inf, -Inf, and NaN are invalid for numeric and logical variables and will result in errors. For categorical variables, these, if present, are converted to their respective categories ("NA", "Inf", "-Inf", and "NaN") with their assigned case weights.
+
+All returned weights sum to one.
 }
 \examples{
  #numeric vector

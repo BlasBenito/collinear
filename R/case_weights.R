@@ -1,4 +1,16 @@
-#' @title Case Weights for Unbalanced Binomial or Categorical Responses
+#' @title Case Weights for Binomial, Logical, or Categorical Responses
+#'
+#' @description Computes case weights adding to one for response variables of these types:
+#'
+#' \itemize{
+#'   \item numeric binomial (1 and 0).
+#'   \item logical (TRUE and FALSE): converted to numeric internally.
+#'   \item categorical
+#' }
+#'
+#' Values NA, Inf, -Inf, and NaN are invalid for numeric and logical variables and will result in errors. For categorical variables, these, if present, are converted to their respective categories ("NA", "Inf", "-Inf", and "NaN") with their assigned case weights.
+#'
+#' All returned weights sum to one.
 #'
 #' @param x (required, integer, character, or factor vector) Binomial, categorical, or factor response variable. Default: NULL
 #' @return numeric vector: case weights

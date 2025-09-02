@@ -104,15 +104,6 @@ validate_args_collinear <- function(
     quiet = quiet
   )
 
-  ## f ----
-  f <- validate_arg_f(
-    f = f,
-    f_name = f_name,
-    function_name = function_name
-  )
-
-  f_name <- attributes(f)$name
-
   ## preference_order ----
   if(is.character(preference_order)){
 
@@ -215,6 +206,7 @@ validate_args_collinear <- function(
 
         preference_order <- preference_order[response]
 
+
       } else {
 
         if(quiet == FALSE){
@@ -248,6 +240,33 @@ validate_args_collinear <- function(
     preference_order <- NULL
 
   }
+
+  ## f ----
+  if(!is.null(preference_order) && !is.null(f)){
+
+
+    if(quiet == FALSE){
+
+      message(
+        "\n",
+        function_name,
+        ": resetting 'f' to NULL (overridden by 'preference_order')."
+      )
+
+    }
+
+
+    f <- NULL
+
+  }
+
+  f <- validate_arg_f(
+    f = f,
+    f_name = f_name,
+    function_name = function_name
+  )
+
+  f_name <- attributes(f)$name
 
   #store args list for output
   args <- list(

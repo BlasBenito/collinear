@@ -16,27 +16,28 @@ preference_order_wrapper(
 )
 }
 \arguments{
-\item{df}{(required; data frame, tibble, or sf) A data frame with responses and predictors. Must have at least 10 rows for pairwise correlation analysis, and \code{10 * (length(predictors) - 1)} for VIF analysis.  Default: NULL.}
+\item{df}{(required; data frame, tibble, or sf) A data frame with responses (optional) and predictors. Must have at least 10 rows for pairwise correlation analysis, and \code{10 * (length(predictors) - 1)} for VIF analysis.  Default: NULL.}
 
-\item{response}{(optional; character, character vector, or NULL) Name of one or several response variables in \code{df}, used to target encode categorical predictors, if any, when \code{encoding_method} is not NULL, and to compute preference order when \code{preference_order} is not NULL. If \code{response} is NULL, target encoding and preference order computation are disabled. Default: NULL.}
+\item{response}{(optional; character, character vector, or NULL) Name of one or several response variables in \code{df}. When \code{encoding_method} is not NULL, response/s are used as reference to map categorical predictors, if any, to numeric (see \code{\link[=target_encoding_lab]{target_encoding_lab()}}). When \code{f} is not NULL, responses are used to rank predictors and preserve important ones during multicollinearity filtering (see \code{\link[=preference_order]{preference_order()}}). If no response is provided, the predictors are ranked from lower to higher multicollinearity. When several responses are provided, the selection results are named after each response in the output list. If no response is provided, the variable selection shows with the name "result" in the output list. Default: NULL.}
 
-\item{predictors}{(optional; character vector or NULL) Names of the predictors to select from \code{df}. If omitted, all numeric columns in \code{df} are used instead. Default: NULL}
+\item{predictors}{(optional; character vector or NULL) Names of the predictors in \code{df} involved in the multicollinearity filtering. If NULL, all columns in \code{df} (except those with constant values or near zero variance) are used. Default: NULL}
 
-\item{preference_order}{(optional; character vector, output of \code{\link[=preference_order]{preference_order()}}, list, or NULL). Prioritizes predictors to preserve the most relevant ones during multicollinearity filtering. Accepted inputs are:
+\item{preference_order}{(optional; character vector, output of \code{\link[=preference_order]{preference_order()}}, or NULL). Incompatible with \code{f} (overrides it when provided). Prioritizes predictors to preserve the most relevant ones during multicollinearity filtering.
+Accepted inputs are:
 \itemize{
-\item \strong{NULL} (default): If argument \code{f} is NULL (default), predictors are prioritized from lower to higher multicollinearity. Otherwise it calls \code{\link[=preference_order]{preference_order()}} to rank the predictors using the function defined in the argument \code{f}. The output of this setting might differ to an external call to \code{\link[=preference_order]{preference_order()}} if target encoding is triggered to transform categorical predictors to numeric.
-\item \strong{character vector}: Predictor names in a user-defined priority order. The first predictor in this vector is always selected, unless it has near zero-variance values.
-\item \strong{data frame}: output of \code{\link[=preference_order]{preference_order()}} computed on the value of the argument \code{response}.
-\item \strong{named list}: list of data frames, output of \code{\link[=preference_order]{preference_order()}} when argument \code{response} is a vector of length two or more.
+\item \strong{NULL} (default): If argument \code{f} is NULL (default), predictors are ranked from lower to higher multicollinearity. Otherwise, \code{\link[=preference_order]{preference_order()}} ranks the predictors according to their relationship with \code{response} using the function defined in \code{f}. NOTE: The output of this setting might differ to an external call to \code{\link[=preference_order]{preference_order()}} if target encoding is triggered.
+\item \strong{character vector}: Predictor names in a user-defined priority order. The first predictor in this vector is always selected, unless it has near zero-variance values. This option sets \code{f} to NULL.
+\item \strong{data frame}: output of \code{\link[=preference_order]{preference_order()}} computed on the given \code{response}. This option sets \code{f} to NULL.
+\item \strong{named list}: list of data frames, output of \code{\link[=preference_order]{preference_order()}} when argument \code{response} is a vector of length two or more. This option sets \code{f} to NULL.
 }. Default: NULL}
 
-\item{f}{(optional: function name or NULL) Function to compute preference order used when \code{preference_order = "auto"}. Available functions are listed by \code{\link[=f_functions]{f_functions()}} and described in the manual of \code{\link[=preference_order]{preference_order()}}. If NULL, calls to \code{\link[=f_auto]{f_auto()}} (see \code{\link[=f_auto_rules]{f_auto_rules()}}) to select a suitable method depending on the nature of the data. Default: NULL}
+\item{f}{(optional: unquoted function name or NULL). Incompatible with \code{preference_order} (overridden if \code{preference_order} is provided). Function to rank \code{predictors} depending on their relationship with the \code{response}. Available functions are listed by \code{\link[=f_functions]{f_functions()}} and described in the manual of \code{\link[=preference_order]{preference_order()}}. Setting it to \link{f_auto} is a good starting point. Default: NULL}
 
 \item{f_name}{(optional, string) Name of the function \code{f}, as returned by \code{deparse(substitute(f))}. Default: NULL}
 
 \item{function_name}{(optional, character string) Name of the function performing the argument check. Default: NULL}
 
-\item{quiet}{(optional; logical) If FALSE, messages are printed to the console Default: FALSE}
+\item{quiet}{(optional; logical) If FALSE, messages are printed to the console. Default: FALSE}
 }
 \value{
 character vector or NULL
