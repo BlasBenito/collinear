@@ -16,12 +16,19 @@ numeric vector: case weights
 Case Weights for Unbalanced Binomial or Categorical Responses
 }
 \examples{
- case_weights(
-   x = c(0, 0, 0, 1, 1)
+ #numeric vector
+ y <- case_weights(
+   x = c(0, 0, 1, 1)
    )
 
- case_weights(
-   x = c("a", "a", "b", "b", "c")
+ #logical vector
+ y <- case_weights(
+   x = c(TRUE, TRUE, FALSE, FALSE)
+   )
+
+ #character vector
+ y <- case_weights(
+   x = c("a", "a", "b", "c")
    )
 }
 \seealso{

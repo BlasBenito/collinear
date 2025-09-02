@@ -1,8 +1,10 @@
 testthat::test_that("`validate_arg_predictors_cor()` works", {
 
-  data(vi)
-
-  df <- vi[1:1000, ]
+  data(
+    vi_smol,
+    vi_predictors_numeric,
+    vi_predictors
+    )
 
   #no arguments
   testthat::expect_error(
@@ -14,10 +16,9 @@ testthat::test_that("`validate_arg_predictors_cor()` works", {
   )
 
   #without predictors
-  #must contain all columns
   testthat::expect_no_message(
     predictors <- validate_arg_predictors_cor(
-      df = vi,
+      df = vi_smol,
       predictors = NULL,
       quiet = FALSE
     )
@@ -32,7 +33,7 @@ testthat::test_that("`validate_arg_predictors_cor()` works", {
   )
 
   testthat::expect_true(
-    all(predictors %in% colnames(vi))
+    all(predictors %in% colnames(vi_smol))
   )
 
 
@@ -43,7 +44,7 @@ testthat::test_that("`validate_arg_predictors_cor()` works", {
       predictors = "hola",
       quiet = FALSE
     ),
-    regexp = "no predictors available"
+    regexp = "no valid predictors available"
   ) |>
     suppressMessages()
 
@@ -66,15 +67,16 @@ testthat::test_that("`validate_arg_predictors_cor()` works", {
   #predictor not in df
   testthat::expect_message(
     predictors <- validate_arg_predictors_cor(
-      df = vi,
+      df = vi_smol,
       predictors = "vi_numeric",
       quiet = FALSE
-    )
+    ),
+    regexp = "only one predictor in argument 'predictors'"
   )
 
   testthat::expect_no_message(
     predictors <- validate_arg_predictors_cor(
-      df = vi,
+      df = vi_smol,
       predictors = "vi_numeric",
       quiet = TRUE
     )
@@ -85,23 +87,34 @@ testthat::test_that("`validate_arg_predictors_cor()` works", {
   )
 
   #with constant predictors
-  vi$zero_variance <- 1
-  vi$constant <- "hola"
+  vi_smol$zero_variance <- 1
+  vi_smol$constant <- "hola"
 
   #with quiet = FALSE
   testthat::expect_message(
     predictors <- validate_arg_predictors_cor(
-      df = vi,
+      df = vi_smol,
       predictors = c(vi_predictors, "zero_variance", "constant"),
       quiet = FALSE
-    )
+    ),
+    regexp = "these predictors have near zero variance and will be ignored"
+  ) |>
+    suppressMessages()
+
+  testthat::expect_message(
+    predictors <- validate_arg_predictors_cor(
+      df = vi_smol,
+      predictors = c(vi_predictors, "zero_variance", "constant"),
+      quiet = FALSE
+    ),
+    regexp = "these predictors have constant values and will be ignored"
   ) |>
     suppressMessages()
 
   #with quiet = TRUE
   testthat::expect_no_message(
     predictors <- validate_arg_predictors_cor(
-      df = vi,
+      df = vi_smol,
       predictors = c(vi_predictors, "zero_variance", "constant"),
       quiet = TRUE
     )

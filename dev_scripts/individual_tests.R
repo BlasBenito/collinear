@@ -6,6 +6,7 @@ testthat::test_file("tests/testthat/test-code_examples.R")
 
 #main functions
 
+#TODO: slow
 testthat::test_file("tests/testthat/test-collinear.R")
 #[ FAIL 0 | WARN 0 | SKIP 0 | PASS 62 ]
 
@@ -63,17 +64,15 @@ testthat::test_file("tests/testthat/test-validate_arg_df.R")
 testthat::test_file("tests/testthat/test-validate_arg_predictors.R")
 #[ FAIL 0 | WARN 0 | SKIP 0 | PASS 13 ]
 
-#TODO: fix this one
 testthat::test_file("tests/testthat/test-validate_arg_predictors_vif.R")
-#[ FAIL 0 | WARN 0 | SKIP 0 | PASS 17 ]
+#[ FAIL 0 | WARN 0 | SKIP 0 | PASS 18 ]
 
 testthat::test_file("tests/testthat/test-validate_arg_predictors_cor.R")
-#[ FAIL 0 | WARN 0 | SKIP 0 | PASS 15 ]
+#[ FAIL 0 | WARN 0 | SKIP 0 | PASS 16 ]
 
 testthat::test_file("tests/testthat/test-validate_arg_response.R")
 #[ FAIL 0 | WARN 0 | SKIP 0 | PASS 10 ]
 
-#TODO: fix this one
 testthat::test_file("tests/testthat/test-validate_arg_preference_order.R")
-#[ FAIL 0 | WARN 0 | SKIP 0 | PASS 8 ]
+#[ FAIL 0 | WARN 0 | SKIP 0 | PASS 9 ]
 

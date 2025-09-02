@@ -12,5 +12,5 @@
 \item{n}{(optional, integer) Maximum number of vector elements to print. Defaults: 5.}
 }
 \description{
-Prints an obect of the class \link{collinear_selection} produced by \code{\link[=build.collinear_selection]{build.collinear_selection()}}.
+Prints an object of the class \link{collinear_selection} produced by \code{\link[=build.collinear_selection]{build.collinear_selection()}}.
 }

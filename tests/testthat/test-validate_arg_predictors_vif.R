@@ -23,7 +23,8 @@ testthat::test_that("`validate_arg_predictors_vif()` works", {
       quiet = FALSE
     ),
     regexp = "these predictors are categorical, logical, or have near-zero variance"
-  )
+  ) |>
+    suppressMessages()
 
   testthat::expect_message(
     predictors <- validate_arg_predictors_vif(
@@ -31,12 +32,13 @@ testthat::test_that("`validate_arg_predictors_vif()` works", {
       predictors = NULL,
       quiet = FALSE
     ),
-    regexp = "not enough rows in `df` to compute VIF on all 'predictors'"
-  )
+    regexp = "not enough rows in `df` to process all predictors"
+  ) |>
+    suppressMessages()
 
   testthat::expect_no_message(
     predictors <- validate_arg_predictors_vif(
-      df = vi,
+      df = vi_smol,
       predictors = NULL,
       quiet = TRUE
     )
@@ -60,20 +62,22 @@ testthat::test_that("`validate_arg_predictors_vif()` works", {
   #not enough rows
   testthat::expect_message(
     predictors <- validate_arg_predictors_vif(
-      df = vi[1:9, ],
+      df = vi_smol[1:9, ],
       predictors = NULL,
       quiet = FALSE
     ),
     regexp = "not enough rows"
-  )
+  ) |>
+    suppressMessages()
 
   #predictor not in df
   testthat::expect_warning(
     predictors <- validate_arg_predictors_vif(
-      df = vi,
+      df = vi_smol,
       predictors = "hola",
       quiet = TRUE
-    )
+    ),
+    regexp = "no valid predictors available"
   )
 
   testthat::expect_true(
@@ -84,7 +88,7 @@ testthat::test_that("`validate_arg_predictors_vif()` works", {
   #predictor not in df
   testthat::expect_message(
     predictors <- validate_arg_predictors_vif(
-      df = vi,
+      df = vi_smol,
       predictors = "vi_numeric",
       quiet = FALSE
     ),
@@ -93,7 +97,7 @@ testthat::test_that("`validate_arg_predictors_vif()` works", {
 
   testthat::expect_no_message(
     predictors <- validate_arg_predictors_vif(
-      df = vi,
+      df = vi_smol,
       predictors = "vi_numeric",
       quiet = TRUE
     )
@@ -104,13 +108,13 @@ testthat::test_that("`validate_arg_predictors_vif()` works", {
   )
 
   #with constant predictors
-  vi$zero_variance <- 1
-  vi$constant <- "hola"
+  vi_smol$zero_variance <- 1
+  vi_smol$constant <- "hola"
 
   #with quiet = FALSE
   testthat::expect_message(
     predictors <- validate_arg_predictors_vif(
-      df = vi,
+      df = vi_smol,
       predictors = c(vi_predictors, "zero_variance", "constant"),
       quiet = FALSE
     ),
@@ -120,7 +124,7 @@ testthat::test_that("`validate_arg_predictors_vif()` works", {
 
   testthat::expect_message(
     predictors <- validate_arg_predictors_vif(
-      df = vi,
+      df = vi_smol,
       predictors = c(vi_predictors, "zero_variance", "constant"),
       quiet = FALSE
     ),
@@ -131,7 +135,7 @@ testthat::test_that("`validate_arg_predictors_vif()` works", {
   #with quiet = TRUE
   testthat::expect_no_message(
     predictors <- validate_arg_predictors_vif(
-      df = vi,
+      df = vi_smol,
       predictors = c(vi_predictors, "zero_variance", "constant"),
       quiet = TRUE
     )

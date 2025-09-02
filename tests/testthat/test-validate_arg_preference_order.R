@@ -1,8 +1,10 @@
 testthat::test_that("`validate_arg_preference_order()` works", {
 
-  data(vi, vi_predictors)
-
-  df <- vi[1:1000, ]
+  data(
+    vi_smol,
+    vi_predictors,
+    vi_predictors_numeric
+    )
 
   #no arguments
   testthat::expect_error(
@@ -13,29 +15,37 @@ testthat::test_that("`validate_arg_preference_order()` works", {
       function_name = NULL,
       quiet = FALSE
     ),
-    regexp = "argument 'preference_order_auto' cannot be NULL"
+    regexp = "argument 'predictors' must be validated"
   )
 
   #predictors not validated
   testthat::expect_error(
     preference_order <- validate_arg_preference_order(
-      predictors = vi_predictors,
-      preference_order = vi_predictors,
-      preference_order_auto = vi_predictors,
-      function_name = NULL,
+      predictors = vi_predictors[1:5],
+      preference_order = NULL,
+      preference_order_auto = NULL,
       quiet = FALSE
     ),
     regexp = "must be validated"
   )
 
-
-
-  #missing predictor
+  #predictors validated
   predictors <- validate_arg_predictors(
-    df = vi,
+    df = vi_smol,
     predictors = vi_predictors
   )
 
+  testthat::expect_message(
+    preference_order <- validate_arg_preference_order(
+      predictors = predictors,
+      preference_order = NULL,
+      preference_order_auto = NULL,
+      quiet = FALSE
+    ),
+    regexp = "using argument 'predictors' as preference order"
+  )
+
+  #missing predictor
   testthat::expect_message(
     preference_order <- validate_arg_preference_order(
       predictors = predictors,
@@ -57,7 +67,7 @@ testthat::test_that("`validate_arg_preference_order()` works", {
 
   #using data frame from preference_order()
   preference_df <- preference_order(
-    df = vi[1:1000, ],
+    df = vi_smol,
     response = "vi_numeric",
     predictors = vi_predictors_numeric,
     quiet = TRUE

@@ -173,7 +173,7 @@ validate_arg_predictors <- function(
 
     warning(
       function_name,
-      ": no predictors available, returning NULL.",
+      ": no valid predictors available, please check that values in argument 'predictors' match the column names in 'df'",
       call. = FALSE
     )
 
