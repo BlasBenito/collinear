@@ -1,22 +1,22 @@
 testthat::test_that("`validate_arg_df()` works", {
 
-  data(vi, vi_predictors)
+  data(vi_smol, vi_predictors_numeric)
 
-  df <- vi[1:1000, ]
+  vi_smol$vi_numeric[1] <- Inf
 
   #no arguments
   testthat::expect_error(
     x <- validate_arg_df(
       df = NULL,
       response = "vi_numeric",
-      predictors = vi_predictors,
+      predictors = vi_predictors_numeric,
       quiet = FALSE
     )
   )
 
   testthat::expect_message(
     x <- validate_arg_df(
-      df = vi,
+      df = vi_smol,
       response = NULL,
       predictors = NULL,
       quiet = FALSE
@@ -27,16 +27,16 @@ testthat::test_that("`validate_arg_df()` works", {
   #few rows
   testthat::expect_error(
     x <- validate_arg_df(
-      df = df[1:2, ],
-      predictors = vi_predictors
+      df = vi_smol[1:2, ],
+      predictors = vi_predictors_numeric
     ),
     regexp = "has fewer than 3 rows"
   )
 
   testthat::expect_warning(
     x <- cor_select(
-      df = df[1:9, ],
-      predictors = vi_predictors
+      df = vi_smol[1:9, ],
+      predictors = vi_predictors_numeric
     ),
     regexp = "has fewer than 10 rows"
   ) |>
@@ -44,8 +44,8 @@ testthat::test_that("`validate_arg_df()` works", {
 
   testthat::expect_message(
     x <- cor_select(
-      df = df[1:29, ],
-      predictors = vi_predictors
+      df = vi_smol[1:29, ],
+      predictors = vi_predictors_numeric
     ),
     regexp = "has fewer than 30 rows"
   ) |>
@@ -55,9 +55,9 @@ testthat::test_that("`validate_arg_df()` works", {
   #normal usage
   testthat::expect_message(
     x <- validate_arg_df(
-      df = df,
+      df = vi_smol,
       response = "vi_numeric",
-      predictors = vi_predictors,
+      predictors = vi_predictors_numeric,
       quiet = FALSE
     ),
     regexp = "replaced"
@@ -66,21 +66,21 @@ testthat::test_that("`validate_arg_df()` works", {
   testthat::expect_true(attributes(x)$validated)
 
   testthat::expect_true(
-    all(c("vi_numeric", vi_predictors) %in% colnames(x))
+    all(c("vi_numeric", vi_predictors_numeric) %in% colnames(x))
   )
 
   #only one predictor
   x <- validate_arg_df(
-    df = df,
+    df = vi_smol,
     response = NULL,
-    predictors = vi_predictors[1],
+    predictors = vi_predictors_numeric[1],
     quiet = FALSE
   )
 
   testthat::expect_true(attributes(x)$validated)
 
   testthat::expect_true(
-    all(vi_predictors[1] %in% colnames(x))
+    all(vi_predictors_numeric[1] %in% colnames(x))
   )
 
 })

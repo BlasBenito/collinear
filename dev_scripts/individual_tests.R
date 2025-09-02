@@ -57,7 +57,6 @@ testthat::test_file("tests/testthat/test-cramer_v.R")
 testthat::test_file("tests/testthat/test-identify.R")
 #[ FAIL 0 | WARN 0 | SKIP 0 | PASS 8 ]
 
-#TODO: slow!
 testthat::test_file("tests/testthat/test-validate_arg_df.R")
 #[ FAIL 0 | WARN 0 | SKIP 0 | PASS 10 ]
 

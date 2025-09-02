@@ -42,6 +42,10 @@ validate_arg_predictors_vif <- function(
     quiet = FALSE
 ){
 
+  if(is.null(function_name)){
+    function_name <- "collinear::validate_arg_predictors_vif()"
+  }
+
   #if df is NULL, stop
   df <- validate_arg_df_not_null(
     df = df,
@@ -68,23 +72,17 @@ validate_arg_predictors_vif <- function(
 
   }
 
-  #order according to preference order
   if(!is.null(preference_order)){
 
-    if(is.data.frame(preference_order)){
-      preference_order <- preference_order$predictor
-    }
-
-    preference_order <- intersect(
-      x = preference_order,
-      y = colnames(df)
+    preference_order <- validate_arg_preference_order(
+      predictors = predictors,
+      preference_order = preference_order,
+      preference_order_auto = predictors,
+      function_name = function_name,
+      quiet = quiet
     )
 
-    predictors <- c(
-      preference_order[preference_order %in% predictors],
-      predictors[!predictors %in% preference_order]
-      ) |>
-      unique()
+    predictors <- preference_order[preference_order %in% predictors]
 
   }
 
@@ -141,11 +139,7 @@ validate_arg_predictors_vif <- function(
         message(
           "\n",
           function_name,
-          ": computing VIF on all 'predictors' requires ",
-          10 * length(predictors),
-          " rows, but 'df' has ",
-          nrow(df),
-          ". The VIF analysis will be applied to these predictors: \n - ",
+          ": not enough rows in `df` to compute VIF on all predictors. VIF analysis will be applied to these ones: \n - ",
           paste(predictors_subset, collapse = "\n - ")
         )
 

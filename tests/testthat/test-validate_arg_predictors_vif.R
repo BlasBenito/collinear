@@ -1,8 +1,10 @@
 testthat::test_that("`validate_arg_predictors_vif()` works", {
 
-  data(vi)
-
-  df <- vi[1:1000, ]
+  data(
+    vi_smol,
+    vi_predictors_numeric,
+    vi_predictors
+    )
 
   #no arguments
   testthat::expect_error(
@@ -14,14 +16,22 @@ testthat::test_that("`validate_arg_predictors_vif()` works", {
   )
 
   #without predictors
-  #must contain only numeric columns
   testthat::expect_message(
     predictors <- validate_arg_predictors_vif(
-      df = vi,
+      df = vi_smol,
       predictors = NULL,
       quiet = FALSE
     ),
-    regexp = "are not numeric and will be ignored"
+    regexp = "these predictors are categorical, logical, or have near-zero variance"
+  )
+
+  testthat::expect_message(
+    predictors <- validate_arg_predictors_vif(
+      df = vi_smol,
+      predictors = NULL,
+      quiet = FALSE
+    ),
+    regexp = "not enough rows in `df` to compute VIF on all 'predictors'"
   )
 
   testthat::expect_no_message(
