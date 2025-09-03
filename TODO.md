@@ -11,6 +11,7 @@
 
 #collinear.R IN PROGRESS
 
+- rename `response` to `responses`, and check what other functions inherit this argument.
 - code examples DONE
 - documentation IN PROGRESS
 - test file DONE

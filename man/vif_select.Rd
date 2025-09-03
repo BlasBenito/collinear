@@ -13,7 +13,8 @@ vif_select(
 )
 }
 \arguments{
-\item{df}{(required; data frame, tibble, or sf) A data frame with responses (optional) and predictors. Must have at least 10 rows for pairwise correlation analysis, and \code{10 * (length(predictors) - 1)} for VIF analysis.  Default: NULL.}
+\item{df}{(required; data frame, tibble, or sf) A data frame with responses (optional) and predictors. Must have at least 10 rows for pairwise correlation analysis, and \code{10 * (length(predictors) - 1)} for VIF analysis.  Default: NULL.
+TODO: rename to responses, and check what other functions inherit this param}
 
 \item{predictors}{(optional; character vector or NULL) Names of the predictors in \code{df} involved in the multicollinearity filtering. If NULL, all columns in \code{df} (except those with constant values or near zero variance) are used. Default: NULL}
 
@@ -36,45 +37,51 @@ list of class \link{collinear_output}
 \description{
 This function automatizes multicollinearity filtering in data frames with numeric predictors by combining two methods:
 \itemize{
-\item \strong{Preference Order}: method to rank and preserve relevant variables during  multicollinearity filtering. See argument \code{preference_order} and function \code{\link[=preference_order]{preference_order()}}.
-\item \strong{VIF-based filtering}: recursive algorithm to identify and remove predictors with a VIF above a given threshold.
-}
 
-When the argument \code{preference_order} is not provided, the predictors are ranked lower to higher VIF. The predictor selection resulting from this option, albeit diverse and uncorrelated, might not be the one with the highest overall predictive power when used in a model.
+\item \strong{Preference Order}: System to rank predictors and protect important ones during multicollinearity filtering. The function offers two alternative options:
 
-Please check the sections \strong{Preference Order}, \strong{Variance Inflation Factors}, and \strong{VIF-based Filtering} at the end of this help file for further details.
-}
-\section{Preference Order}{
-
-
-This feature is designed to help protect important predictors during the multicollinearity filtering. It involves the arguments \code{preference_order} and \code{f}.
-
-The argument \code{preference_order} accepts:
 \itemize{
-\item: A character vector of predictor names in a custom order of preference, from first to last. This vector does not need to contain all predictor names, but only the ones relevant to the user.
-\item A data frame returned by \code{\link[=preference_order]{preference_order()}}, which ranks predictors based on their association with a response variable.
-\item If NULL, and \code{response} is provided, then \code{\link[=preference_order]{preference_order()}} is used internally to rank the predictors using the function \code{f}. If \code{f} is NULL as well, then \code{\link[=f_auto]{f_auto()}} selects a proper function based on the data properties.
-}
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{\\item Argument \code{preference_order}: Helps preserve predictors of interest for the user. Requires a character vector of predictors names. When two predictors in this vector are highly correlated, the one with a higher index is removed.
+}\if{html}{\out{</div>}}
+
+\item If \code{preference_order} is NULL, predictors are ranked from lower to higher VIF, as returned by \code{\link[=vif_df]{vif_df()}}. This option preserves rare predictors over redundant ones, but does not guarantee strong statistical models.
+
 }
 
+\item \strong{VIF-based Filtering}: Computes Variance Inflation Factors for numeric predictors and removes redundant ones iteratively, while taking preference order into account. See \code{\link[=vif]{vif()}} and \code{\link[=vif_df]{vif_df()}} for further details.
+}
+}
 \section{Variance Inflation Factors}{
 
 
-The Variance Inflation Factor for a given variable \eqn{a} is computed as \eqn{1/(1-R2)}, where \eqn{R2} is the multiple R-squared of a multiple regression model fitted using \eqn{a} as response and all other predictors in the input data frame as predictors, as in  \eqn{a = b + c + ...}.
+The Variance Inflation Factor of a given predictor \eqn{a} is computed as \eqn{1/(1-R2)}, where \eqn{R2} is the multiple R-squared of a multiple regression model fitted using \eqn{a} as response against all other predictors, as in  \eqn{a = b + c + ...}.
 
-The square root of the VIF of \eqn{a} is the factor by which the confidence interval of the estimate for \eqn{a} in the linear model \eqn{y = a + b + c + ...} is widened by multicollinearity in the model predictors.
+The square root of the VIF of \eqn{a} is the factor by which the confidence interval of the estimate for \eqn{a} in the linear model \eqn{y = a + b + c + ...} is widened by multicollinearity in the predictors.
 
-The range of VIF values is (1, Inf]. The recommended thresholds for maximum VIF may vary depending on the source consulted, being the most common values, 2.5, 5, and 10.
+The range of VIF values is (1, Inf]. The recommended thresholds for maximum VIF may vary depending on the source consulted, being the most common values, 2.5 (most conservative), 5, and 10 (most permissive).
 }
 
 \section{VIF-based Filtering}{
 
 
-The function \code{\link[=vif_select]{vif_select()}} computes Variance Inflation Factors and removes variables iteratively, until all variables in the resulting selection have a VIF below \code{max_vif}.
+This algorithm, implemented in \code{\link[=vif_select]{vif_select()}}, selects numeric predictors with a Variance Inflation Factor lower than \code{max_vif} while preserving those with a higher ranking in \code{preference_order}, if provided.
 
-If the argument \code{preference_order} is not provided, all variables are ranked from lower to higher VIF, as returned by \code{\link[=vif_df]{vif_df()}}, and the variable with the higher VIF above \code{max_vif} is removed on each iteration.
+The algorithm works as follows:
 
-If \code{preference_order} is defined, whenever two or more variables are above \code{max_vif}, the one with a smaller index in the vector \code{preference_order} is preserved, and the next one with a higher VIF is removed. For example, for the predictors and preference order \eqn{a} and \eqn{b}, if any of their VIFs is higher than \code{max_vif}, then \eqn{b} will be removed regardless of whether its VIF is lower or higher than \eqn{a}'s VIF. If their VIF scores are lower than \code{max_vif}, then both are preserved.
+\enumerate{
+
+\item All numeric predictors are ranked according to the argument \code{preference_order}, or from lower to higher VIF with the other predictors (as computed by \code{\link[=vif_df]{vif_df()}}) otherwise. Categorical predictors are ignored.
+
+\item The predictor with the higher rank is added to the selection.
+
+\item The VIF of the next predictor in the ranking against the predictor/s in the selection is computed via \code{\link[=cor_matrix]{cor_matrix()}} and \code{\link[=vif]{vif()}}. If the resulting VIF is lower than \code{max_vif}, the new predictor is added to the selection. Otherwise it is removed.
+
+\item Step 3 is repeated until all predictors are processed.
+
+}
+
+This filtering method ensures that all predictors in the selection are correlated below \code{max_vif} and that the selection respects the prioritization defined in \code{preference_order}.
 }
 
 \examples{

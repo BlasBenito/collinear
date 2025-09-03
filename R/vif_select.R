@@ -4,16 +4,21 @@
 #'
 #' This function automatizes multicollinearity filtering in data frames with numeric predictors by combining two methods:
 #' \itemize{
-#' \item **Preference Order**: method to rank and preserve relevant variables during  multicollinearity filtering. See argument \code{preference_order} and function [preference_order()].
-#' \item **VIF-based filtering**: recursive algorithm to identify and remove predictors with a VIF above a given threshold.
+#'
+#'   \item **Preference Order**: System to rank predictors and protect important ones during multicollinearity filtering. The function offers two alternative options:
+#'
+#'   \itemize{
+#'
+#'     \item Argument \code{preference_order}: Helps preserve predictors of interest for the user. Requires a character vector of predictors names. When two predictors in this vector are highly correlated, the one with a higher index is removed.
+#'
+#'
+#'    \item If \code{preference_order} is NULL, predictors are ranked from lower to higher VIF, as returned by [vif_df()]. This option preserves rare predictors over redundant ones, but does not guarantee strong statistical models.
+#'
+#'   }
+#'
+#'    \item **VIF-based Filtering**: Computes Variance Inflation Factors for numeric predictors and removes redundant ones iteratively, while taking preference order into account. See [vif()] and [vif_df()] for further details.
 #' }
 #'
-#' When the argument \code{preference_order} is not provided, the predictors are ranked lower to higher VIF. The predictor selection resulting from this option, albeit diverse and uncorrelated, might not be the one with the highest overall predictive power when used in a model.
-#'
-#' Please check the sections **Preference Order**, **Variance Inflation Factors**, and **VIF-based Filtering** at the end of this help file for further details.
-#'
-#'
-#' @inheritSection collinear Preference Order
 #' @inheritSection collinear Variance Inflation Factors
 #' @inheritSection collinear VIF-based Filtering
 #'
