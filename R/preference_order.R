@@ -50,7 +50,9 @@
 #' Accepts a character vector of response variables as input for the argument \code{response}. When more than one response is provided, the output is a named list of preference data frames.
 #'
 #' @inheritParams collinear
+#'
 #' @param f (optional: function name) Unquoted name of the function to compute preference order. Available functions are listed in the column `name` of the dataframe returned by [f_functions()]. By default calls to [f_auto()] to select a suitable method depending on the nature of the data (see [f_auto_rules()]). Default: f_auto
+#'
 #' @param warn_limit (optional, numeric) Preference value (R-squared, AUC, or Cramer's V) over which a warning flagging suspicious predictors is issued. Disabled if NULL. Default: NULL
 #' @family preference_order
 #' @return data frame: columns are "response", "predictor", "f" (function name), and "preference".
@@ -77,7 +79,7 @@
 #' #applies f_r2_pearson() to compute correlation between response and predictors
 #' df_preference <- preference_order(
 #'   df = df,
-#'   response = "vi_numeric",
+#'   responses = "vi_numeric",
 #'   predictors = predictors_numeric,
 #'   f = f_auto
 #'   )
@@ -95,7 +97,7 @@
 #'
 #' preference_list <- preference_order(
 #'   df = df,
-#'   response = responses,
+#'   responses = responses,
 #'   predictors = predictors
 #' )
 #'
@@ -107,7 +109,7 @@
 #' #can be used in collinear()
 #' # x <- collinear(
 #' #   df = df,
-#' #   response = responses,
+#' #   responses = responses,
 #' #   predictors = predictors,
 #' #   preference_order = preference_list
 #' # )
@@ -116,7 +118,7 @@
 #' #for binomial response and numeric predictors
 #' # preference_order(
 #' #   df = vi,
-#' #   response = "vi_binomial",
+#' #   responses = "vi_binomial",
 #' #   predictors = predictors_numeric,
 #' #   f = f_auc_glm_binomial
 #' # )
@@ -129,7 +131,7 @@
 #' @export
 preference_order <- function(
     df = NULL,
-    response = NULL,
+    responses = NULL,
     predictors = NULL,
     f = f_auto,
     warn_limit = NULL,
@@ -167,7 +169,7 @@ preference_order <- function(
   #check input data frame
   df <- validate_arg_df(
     df = df,
-    response = response,
+    responses = responses,
     predictors = predictors,
     function_name = function_name,
     quiet = quiet
@@ -176,9 +178,8 @@ preference_order <- function(
   #managing multiple responses
   responses <- intersect(
     x = colnames(df),
-    y = response
+    y = responses
   )
-  rm(response)
 
   #output list
   out <- list()

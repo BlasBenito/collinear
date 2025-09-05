@@ -14,6 +14,8 @@ validate_arg_encoding_method(
 \arguments{
 \item{encoding_method}{(optional; character or NULL). Name of one target encoding method. One of: "loo", "mean", or "rank" (see \code{\link[=target_encoding_lab]{target_encoding_lab()}} for further details). If NULL, target encoding is disabled. Default: NULL}
 
+\item{overwrite}{(optional; logical) If TRUE, the original predictors in \code{df} are overwritten with their encoded versions, but only one encoding method, smoothing, white noise, and seed are allowed. Otherwise, encoded predictors with their descriptive names are added to \code{df}. Default: FALSE}
+
 \item{function_name}{(optional, character string) Name of the function performing the argument check. Default: NULL}
 
 \item{quiet}{(optional; logical) If FALSE, messages are printed to the console. Default: FALSE}

@@ -38,7 +38,7 @@ validate_args_target_encoding_lab <- function(
   ## df is NULL ----
   df <- validate_arg_df(
     df = df,
-    response = response,
+    responses = response,
     predictors = predictors,
     function_name = function_name
   )
@@ -114,7 +114,7 @@ validate_args_target_encoding_lab <- function(
   ## df ----
   df <- validate_arg_df(
     df = df,
-    response = response,
+    responses = response,
     predictors = predictors,
     function_name = function_name,
     quiet = quiet

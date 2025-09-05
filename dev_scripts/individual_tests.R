@@ -2,10 +2,6 @@ library(testthat)
 library(devtools)
 library(collinear)
 
-testthat::test_file("tests/testthat/test-code_examples.R")
-
-#main functions
-
 #TODO: slow
 testthat::test_file("tests/testthat/test-collinear.R")
 #[ FAIL 0 | WARN 0 | SKIP 0 | PASS 62 ]

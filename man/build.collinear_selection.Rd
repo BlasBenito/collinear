@@ -2,7 +2,7 @@
 % Please edit documentation in R/S3_methods_build.collinear_selection.R
 \name{build.collinear_selection}
 \alias{build.collinear_selection}
-\title{Builds Object of Class \code{collinear_selection}}
+\title{Builds Class \code{collinear_selection}}
 \usage{
 build.collinear_selection(
   df = NULL,
@@ -13,19 +13,20 @@ build.collinear_selection(
 )
 }
 \arguments{
-\item{df}{(required; data frame, tibble, or sf) A data frame with responses (optional) and predictors. Must have at least 10 rows for pairwise correlation analysis, and \code{10 * (length(predictors) - 1)} for VIF analysis.  Default: NULL.
-TODO: rename to responses, and check what other functions inherit this param}
+\item{df}{(required; data frame, tibble, or sf) A data frame with responses (optional) and predictors. Must have at least 10 rows for pairwise correlation analysis, and \code{10 * (length(predictors) - 1)} for VIF analysis.  Default: NULL.}
 
-\item{response}{(optional; character, character vector, or NULL) Name of one or several response variables in \code{df}. When \code{encoding_method} is not NULL, response/s are used as reference to map categorical predictors, if any, to numeric (see \code{\link[=target_encoding_lab]{target_encoding_lab()}}). When \code{f} is not NULL, responses are used to rank predictors and preserve important ones during multicollinearity filtering (see \code{\link[=preference_order]{preference_order()}}). If no response is provided, the predictors are ranked from lower to higher multicollinearity. When several responses are provided, the selection results are named after each response in the output list. If no response is provided, the variable selection shows with the name "result" in the output list. Default: NULL.}
+\item{response}{(optional, character string) Name of a response variable in \code{df}. Default: NULL.}
 
 \item{preference_order}{(optional; character vector, output of \code{\link[=preference_order]{preference_order()}}, or NULL). Incompatible with \code{f} (overrides it when provided). Prioritizes predictors to preserve the most relevant ones during multicollinearity filtering.
 Accepted inputs are:
 \itemize{
-\item \strong{NULL} (default): If argument \code{f} is NULL (default), predictors are ranked from lower to higher multicollinearity. Otherwise, \code{\link[=preference_order]{preference_order()}} ranks the predictors according to their relationship with \code{response} using the function defined in \code{f}. NOTE: The output of this setting might differ to an external call to \code{\link[=preference_order]{preference_order()}} if target encoding is triggered.
+\item \strong{NULL} (default): If argument \code{f} is NULL (default), predictors are ranked from lower to higher multicollinearity. Otherwise, \code{\link[=preference_order]{preference_order()}} ranks the predictors according to their relationship with \code{responses} using the function defined in \code{f}. NOTE: The output of this setting might differ to an external call to \code{\link[=preference_order]{preference_order()}} if target encoding is triggered.
 \item \strong{character vector}: Predictor names in a user-defined priority order. The first predictor in this vector is always selected, unless it has near zero-variance values. This option sets \code{f} to NULL.
-\item \strong{data frame}: output of \code{\link[=preference_order]{preference_order()}} computed on the given \code{response}. This option sets \code{f} to NULL.
-\item \strong{named list}: list of data frames, output of \code{\link[=preference_order]{preference_order()}} when argument \code{response} is a vector of length two or more. This option sets \code{f} to NULL.
+\item \strong{data frame}: output of \code{\link[=preference_order]{preference_order()}} computed on the given \code{responses}. This option sets \code{f} to NULL.
+\item \strong{named list}: list of data frames, output of \code{\link[=preference_order]{preference_order()}} when argument \code{responses} is a vector of length two or more. This option sets \code{f} to NULL.
 }. Default: NULL}
+
+\item{selection}{(required, character vector) Names of the selected predictors. Default: NULL}
 
 \item{quiet}{(optional; logical) If FALSE, messages are printed to the console. Default: FALSE}
 }
@@ -33,5 +34,5 @@ Accepted inputs are:
 Object of class \code{collinear_selection}
 }
 \description{
-Builds Object of Class \code{collinear_selection}
+Builds Class \code{collinear_selection}
 }

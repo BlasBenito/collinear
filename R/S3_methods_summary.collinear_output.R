@@ -1,19 +1,23 @@
-#' Summary Method for Class \code{collinear_output}
-#'
-#' @param x (required, list) Object of class \code{collinear_output} resulting from [collinear()]. Default: NULL
-#'
+#' Summary of \code{collinear_output}
+#' @param object (required, list of class \code{collinear_output}) Object to summarize. Default: NULL
+#' @param ... Ignored, kept for consistency with generic.
 #' @method summary collinear_output
-#' @autoglobal
 #' @export
 summary.collinear_output <- function(
-    x = NULL
+    object = NULL,
+    ...
 ){
 
-  lapply(
-    X = x[names(x) != "summary"],
+  x <- object[names(object) != "arguments"]
+
+  #print summary of selections
+  x.summary <- lapply(
+    X = x,
     FUN = summary
   )
 
-  invisible(x)
+  class(x.summary) <- c(class(x.summary), "summary.collinear_output")
+
+  x.summary
 
 }

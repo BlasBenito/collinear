@@ -12,6 +12,7 @@
 #' Accepts a parallelization setup via [future::plan()] and a progress bar via [progressr::handlers()] (see examples).
 #'
 #' @inheritParams collinear
+#
 #' @return data frame; pairwise correlation
 #'
 #' @examples
@@ -61,7 +62,7 @@
 #'   #with automated preference order
 #'   df_preference <- preference_order(
 #'     df = vi,
-#'     response = "vi_numeric",
+#'     responses = "vi_numeric",
 #'     predictors = predictors
 #'   )
 #'

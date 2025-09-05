@@ -13,18 +13,17 @@ vif_select(
 )
 }
 \arguments{
-\item{df}{(required; data frame, tibble, or sf) A data frame with responses (optional) and predictors. Must have at least 10 rows for pairwise correlation analysis, and \code{10 * (length(predictors) - 1)} for VIF analysis.  Default: NULL.
-TODO: rename to responses, and check what other functions inherit this param}
+\item{df}{(required; data frame, tibble, or sf) A data frame with responses (optional) and predictors. Must have at least 10 rows for pairwise correlation analysis, and \code{10 * (length(predictors) - 1)} for VIF analysis.  Default: NULL.}
 
 \item{predictors}{(optional; character vector or NULL) Names of the predictors in \code{df} involved in the multicollinearity filtering. If NULL, all columns in \code{df} (except those with constant values or near zero variance) are used. Default: NULL}
 
 \item{preference_order}{(optional; character vector, output of \code{\link[=preference_order]{preference_order()}}, or NULL). Incompatible with \code{f} (overrides it when provided). Prioritizes predictors to preserve the most relevant ones during multicollinearity filtering.
 Accepted inputs are:
 \itemize{
-\item \strong{NULL} (default): If argument \code{f} is NULL (default), predictors are ranked from lower to higher multicollinearity. Otherwise, \code{\link[=preference_order]{preference_order()}} ranks the predictors according to their relationship with \code{response} using the function defined in \code{f}. NOTE: The output of this setting might differ to an external call to \code{\link[=preference_order]{preference_order()}} if target encoding is triggered.
+\item \strong{NULL} (default): If argument \code{f} is NULL (default), predictors are ranked from lower to higher multicollinearity. Otherwise, \code{\link[=preference_order]{preference_order()}} ranks the predictors according to their relationship with \code{responses} using the function defined in \code{f}. NOTE: The output of this setting might differ to an external call to \code{\link[=preference_order]{preference_order()}} if target encoding is triggered.
 \item \strong{character vector}: Predictor names in a user-defined priority order. The first predictor in this vector is always selected, unless it has near zero-variance values. This option sets \code{f} to NULL.
-\item \strong{data frame}: output of \code{\link[=preference_order]{preference_order()}} computed on the given \code{response}. This option sets \code{f} to NULL.
-\item \strong{named list}: list of data frames, output of \code{\link[=preference_order]{preference_order()}} when argument \code{response} is a vector of length two or more. This option sets \code{f} to NULL.
+\item \strong{data frame}: output of \code{\link[=preference_order]{preference_order()}} computed on the given \code{responses}. This option sets \code{f} to NULL.
+\item \strong{named list}: list of data frames, output of \code{\link[=preference_order]{preference_order()}} when argument \code{responses} is a vector of length two or more. This option sets \code{f} to NULL.
 }. Default: NULL}
 
 \item{max_vif}{(optional, numeric or NULL) Maximum Variance Inflation Factor allowed for \code{predictors} during multicollinearity filtering. Recommended values are between 2 (strict) and 10 (permissive). If NULL, the variance inflation analysis is disabled. Default: 5.}
@@ -32,7 +31,7 @@ Accepted inputs are:
 \item{quiet}{(optional; logical) If FALSE, messages are printed to the console. Default: FALSE}
 }
 \value{
-list of class \link{collinear_output}
+list of class \code{collinear_output}
 }
 \description{
 This function automatizes multicollinearity filtering in data frames with numeric predictors by combining two methods:
@@ -128,7 +127,7 @@ This filtering method ensures that all predictors in the selection are correlate
   #using automated preference order
   df_preference <- preference_order(
     df = df,
-    response = "vi_numeric",
+    responses = "vi_numeric",
     predictors = vi_predictors[1:10]
   )
 

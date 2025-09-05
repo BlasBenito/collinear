@@ -13,8 +13,7 @@ add_white_noise(
 )
 }
 \arguments{
-\item{df}{(required; data frame, tibble, or sf) A data frame with responses (optional) and predictors. Must have at least 10 rows for pairwise correlation analysis, and \code{10 * (length(predictors) - 1)} for VIF analysis.  Default: NULL.
-TODO: rename to responses, and check what other functions inherit this param}
+\item{df}{(required; data frame, tibble, or sf) A data frame with responses (optional) and predictors. Must have at least 10 rows for pairwise correlation analysis, and \code{10 * (length(predictors) - 1)} for VIF analysis.  Default: NULL.}
 
 \item{response}{(optional, character string) Name of a numeric response variable in \code{df}. Default: NULL.}
 

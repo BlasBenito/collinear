@@ -22,11 +22,17 @@
 #' Accepts a parallelization setup via [future::plan()] and a progress bar via [progressr::handlers()] (see examples).
 #'
 #' @inheritParams collinear
+#'
 #' @param response (optional, character string) Name of a numeric response variable in \code{df}. Default: NULL.
+#'
 #' @param encoding_method (optional; character vector or NULL). Name of the target encoding methods. If NULL, target encoding is ignored, and \code{df} is returned with no modification. Default: c("loo", "mean", "rank")
+#'
 #' @param smoothing (optional; integer vector) Argument of the method "mean". Groups smaller than this number have their means pulled towards the mean of the response across all cases. Default: 0
+#'
 #' @param white_noise (optional; numeric vector) Argument of the methods "mean", "rank", and "loo". Maximum white noise to add, expressed as a fraction of the range of the response variable. Range from 0 to 1. Default: 0.
+#'
 #' @param seed (optional; integer vector) Random seed to facilitate reproducibility when \code{white_noise} is not 0. If NULL, the function selects one at random, and the selected seed does not appear in the encoded variable names. Default: 0
+#'
 #' @param overwrite (optional; logical) If TRUE, the original predictors in \code{df} are overwritten with their encoded versions, but only one encoding method, smoothing, white noise, and seed are allowed. Otherwise, encoded predictors with their descriptive names are added to \code{df}. Default: FALSE
 #'
 #' @return data frame

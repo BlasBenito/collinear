@@ -6,19 +6,18 @@
 \usage{
 validate_arg_df(
   df = NULL,
-  response = NULL,
+  responses = NULL,
   predictors = NULL,
   function_name = NULL,
   quiet = FALSE
 )
 }
 \arguments{
-\item{df}{(required; data frame, tibble, or sf) A data frame with responses (optional) and predictors. Must have at least 10 rows for pairwise correlation analysis, and \code{10 * (length(predictors) - 1)} for VIF analysis.  Default: NULL.
-TODO: rename to responses, and check what other functions inherit this param}
+\item{df}{(required; data frame, tibble, or sf) A data frame with responses (optional) and predictors. Must have at least 10 rows for pairwise correlation analysis, and \code{10 * (length(predictors) - 1)} for VIF analysis.  Default: NULL.}
 
-\item{response}{(required; character string or vector) Names of the target response variables in \code{df}. Default: NULL.}
+\item{responses}{(optional; character, character vector, or NULL) Name of one or several response variables in \code{df}. When \code{encoding_method} is not NULL, response/s are used as reference to map categorical predictors, if any, to numeric (see \code{\link[=target_encoding_lab]{target_encoding_lab()}}). When \code{f} is not NULL, responses are used to rank predictors and preserve important ones during multicollinearity filtering (see \code{\link[=preference_order]{preference_order()}}). If no response is provided, the predictors are ranked from lower to higher multicollinearity. When several responses are provided, the selection results are named after each response in the output list. If no response is provided, the variable selection shows with the name "result" in the output list. Default: NULL.}
 
-\item{predictors}{(required; character vector) Names of the target predictors in \code{df}. Default: NULL}
+\item{predictors}{(optional; character vector or NULL) Names of the predictors in \code{df} involved in the multicollinearity filtering. If NULL, all columns in \code{df} (except those with constant values or near zero variance) are used. Default: NULL}
 
 \item{function_name}{(optional, character string) Name of the function performing the argument check. Default: NULL}
 
@@ -35,10 +34,10 @@ It performs the following actions:
 \item Returns \code{df} as-is if already tagged with \code{validated = TRUE}.
 \item Stops if \code{df} is \code{NULL}, not coercible to a data frame, or has zero rows.
 \item Drops geometry column if present.
-\item Subsets \code{df} to the \code{response} and \code{predictors} columns.
+\item Subsets \code{df} to the \code{responses} and \code{predictors} columns.
 \item Converts logical columns to numeric.
 \item Replaces \code{NaN}, \code{Inf}, and \code{-Inf} values with \code{NA} in numeric columns.
-\item Reorders columns to match original \code{response} + \code{predictors} order.
+\item Reorders columns to match original \code{responses} + \code{predictors} order.
 \item Tags the result with the attribute \code{validated = TRUE}.
 }
 }
@@ -48,7 +47,7 @@ data(vi, vi_predictors)
 
 vi <- validate_arg_df(
   df = vi,
-  response = "vi_numeric",
+  responses = "vi_numeric",
   predictors = vi_predictors,
   function_name = "f()",
   quiet = FALSE

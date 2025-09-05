@@ -78,7 +78,7 @@ testthat::test_that("`collinear()` works", {
   testthat::expect_message(
     x <- collinear(
       df = vi_smol[, c(vi_responses[1:2], vi_predictors_numeric)],
-      response = vi_responses[1:2],
+      responses = vi_responses[1:2],
       encoding_method = NULL,
       preference_order = NULL,
       f = NULL,
@@ -106,7 +106,7 @@ testthat::test_that("`collinear()` works", {
   testthat::expect_message(
     x <- collinear(
       df = vi,
-      response = NULL,
+      responses = NULL,
       predictors = vi_predictors_numeric,
       encoding_method = NULL,
       preference_order = NULL,
@@ -130,7 +130,7 @@ testthat::test_that("`collinear()` works", {
   testthat::expect_message(
     x <- collinear(
       df = vi,
-      response = NULL,
+      responses = NULL,
       predictors = vi_predictors_categorical[1:5],
       encoding_method = NULL,
       preference_order = NULL,
@@ -153,7 +153,7 @@ testthat::test_that("`collinear()` works", {
   ##mixed predictors ----
   x <- collinear(
     df = vi_smol,
-    response = NULL,
+    responses = NULL,
     predictors = vi_predictors,
     encoding_method = NULL,
     preference_order = NULL,
@@ -175,7 +175,7 @@ testthat::test_that("`collinear()` works", {
   ##numeric numeric ----
   x <- collinear(
     df = vi,
-    response = "vi_numeric",
+    responses = "vi_numeric",
     predictors = vi_predictors_numeric,
     encoding_method = NULL,
     preference_order = NULL,
@@ -195,7 +195,7 @@ testthat::test_that("`collinear()` works", {
   ##categorical numeric ----
   x <- collinear(
     df = vi,
-    response = "vi_categorical",
+    responses = "vi_categorical",
     predictors = vi_predictors_numeric,
     encoding_method = NULL,
     preference_order = NULL,
@@ -211,7 +211,7 @@ testthat::test_that("`collinear()` works", {
   testthat::expect_message(
     x <- collinear(
       df = vi_smol,
-      response = "vi_categorical",
+      responses = "vi_categorical",
       predictors = vi_predictors_categorical,
       encoding_method = NULL,
       preference_order = NULL,
@@ -231,7 +231,7 @@ testthat::test_that("`collinear()` works", {
   testthat::expect_message(
     x <- collinear(
       df = vi_smol,
-      response = vi_responses,
+      responses = vi_responses,
       predictors = vi_predictors,
       encoding_method = NULL,
       preference_order = NULL,
@@ -286,7 +286,7 @@ testthat::test_that("`collinear()` works", {
   f_test <- function(){
     collinear(
       df = vi_smol,
-      response = c("vi_numeric", "vi_categorical"),
+      responses = c("vi_numeric", "vi_categorical"),
       predictors = vi_predictors_categorical,
       encoding_method = "loo",
       preference_order = NULL,
@@ -328,7 +328,7 @@ testthat::test_that("`collinear()` works", {
   testthat::expect_message(
     x <- collinear(
       df = vi_smol,
-      response = "vi_numeric",
+      responses = "vi_numeric",
       predictors = vi_predictors_numeric,
       encoding_method = NULL,
       preference_order = preference_order,
@@ -359,7 +359,7 @@ testthat::test_that("`collinear()` works", {
 
   x <- collinear(
     df = vi_smol,
-    response = "vi_numeric",
+    responses = "vi_numeric",
     predictors = vi_predictors_numeric,
     encoding_method = NULL,
     preference_order = preference_order,
@@ -380,7 +380,7 @@ testthat::test_that("`collinear()` works", {
   ### valid dataframe ----
   preference_df <- preference_order(
     df = vi_smol,
-    response = "vi_numeric",
+    responses = "vi_numeric",
     predictors = vi_predictors_numeric,
     f = f_r2_pearson,
     quiet = TRUE
@@ -388,7 +388,7 @@ testthat::test_that("`collinear()` works", {
 
   x <- collinear(
     df = vi_smol,
-    response = "vi_numeric",
+    responses = "vi_numeric",
     predictors = vi_predictors_numeric,
     encoding_method = NULL,
     preference_order = preference_df,
@@ -420,7 +420,7 @@ testthat::test_that("`collinear()` works", {
   testthat::expect_message(
     x <- collinear(
       df = vi_smol,
-      response = "vi_numeric",
+      responses = "vi_numeric",
       predictors = vi_predictors_numeric,
       encoding_method = NULL,
       preference_order = preference_df,
@@ -440,7 +440,7 @@ testthat::test_that("`collinear()` works", {
   ### valid list ----
   preference_list <- preference_order(
     df = vi_smol,
-    response = c("vi_numeric", "vi_binomial"),
+    responses = c("vi_numeric", "vi_binomial"),
     predictors = vi_predictors_numeric,
     f = f_r2_pearson,
     quiet = TRUE
@@ -448,7 +448,7 @@ testthat::test_that("`collinear()` works", {
 
   x <- collinear(
     df = vi_smol,
-    response = c("vi_numeric", "vi_binomial"),
+    responses = c("vi_numeric", "vi_binomial"),
     predictors = vi_predictors_numeric,
     encoding_method = NULL,
     preference_order = preference_list,
@@ -478,7 +478,7 @@ testthat::test_that("`collinear()` works", {
   testthat::expect_message(
     x <- collinear(
       df = vi_smol,
-      response = "vi_numeric",
+      responses = "vi_numeric",
       predictors = vi_predictors_numeric,
       encoding_method = NULL,
       preference_order = preference_list,
@@ -508,7 +508,7 @@ testthat::test_that("`collinear()` works", {
 
   x <- collinear(
     df = vi_smol,
-    response = NULL,
+    responses = NULL,
     predictors = vi_predictors_numeric,
     encoding_method = NULL,
     preference_order = preference,
@@ -530,7 +530,7 @@ testthat::test_that("`collinear()` works", {
   testthat::expect_message(
     x <- collinear(
       df = vi_smol,
-      response = "vi_numeric",
+      responses = "vi_numeric",
       predictors = vi_predictors_numeric,
       encoding_method = NULL,
       preference_order = NULL,
@@ -558,7 +558,7 @@ testthat::test_that("`collinear()` works", {
   ### f_r2_rf ----
   x <- collinear(
     df = vi_smol,
-    response = "vi_numeric",
+    responses = "vi_numeric",
     predictors = vi_predictors_numeric,
     encoding_method = NULL,
     preference_order = NULL,
@@ -586,7 +586,7 @@ testthat::test_that("`collinear()` works", {
   testthat::expect_error(
     x <- collinear(
       df = vi,
-      response = "vi_numeric",
+      responses = "vi_numeric",
       predictors = vi_predictors,
       encoding_method = NULL,
       preference_order = NULL,
@@ -602,7 +602,7 @@ testthat::test_that("`collinear()` works", {
   testthat::expect_error(
     x <- collinear(
       df = vi,
-      response = "vi_numeric",
+      responses = "vi_numeric",
       predictors = vi_predictors,
       encoding_method = NULL,
       preference_order = NULL,
@@ -618,7 +618,7 @@ testthat::test_that("`collinear()` works", {
   testthat::expect_error(
     x <- collinear(
       df = vi,
-      response = "vi_numeric",
+      responses = "vi_numeric",
       predictors = vi_predictors,
       encoding_method = NULL,
       preference_order = NULL,

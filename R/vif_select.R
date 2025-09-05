@@ -68,7 +68,7 @@
 #'   #using automated preference order
 #'   df_preference <- preference_order(
 #'     df = df,
-#'     response = "vi_numeric",
+#'     responses = "vi_numeric",
 #'     predictors = vi_predictors[1:10]
 #'   )
 #'

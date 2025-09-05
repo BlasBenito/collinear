@@ -2,15 +2,17 @@
 % Please edit documentation in R/S3_methods_print.collinear_arguments.R
 \name{print.collinear_arguments}
 \alias{print.collinear_arguments}
-\title{Print Method for Class \code{collinear_arguments}}
+\title{Print \code{collinear_arguments}}
 \usage{
-\method{print}{collinear_arguments}(x = NULL, n = 5)
+\method{print}{collinear_arguments}(x = NULL, n = 5, ...)
 }
 \arguments{
-\item{x}{(required, list) Object of class \code{collinear_arguments}. Default: NULL}
+\item{x}{(required, list of class \code{collinear_arguments}) Object to print. Default: NULL}
 
-\item{n}{(optional, integer) Maximum number of vector elements to print. Defaults: 5.}
+\item{n}{(optional, integer) Maximum printed vector length. Default: 5.}
+
+\item{...}{Ignored, kept for consistency with generic.}
 }
 \description{
-Prints an object of the class \code{collinear_arguments}.
+Print \code{collinear_arguments}
 }

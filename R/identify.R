@@ -517,6 +517,7 @@ identify_predictors_zero_variance <- function(
 #' }
 #'
 #' @inheritParams collinear
+#' @inheritParams f_auto
 #'
 #' @return character string: response type
 #'

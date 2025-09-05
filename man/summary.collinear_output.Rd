@@ -2,13 +2,15 @@
 % Please edit documentation in R/S3_methods_summary.collinear_output.R
 \name{summary.collinear_output}
 \alias{summary.collinear_output}
-\title{Summary Method for Class \code{collinear_output}}
+\title{Summary of \code{collinear_output}}
 \usage{
-\method{summary}{collinear_output}(x = NULL)
+\method{summary}{collinear_output}(object = NULL, ...)
 }
 \arguments{
-\item{x}{(required, list) Object of class \code{collinear_output} resulting from \code{\link[=collinear]{collinear()}}. Default: NULL}
+\item{object}{(required, list of class \code{collinear_output}) Object to summarize. Default: NULL}
+
+\item{...}{Ignored, kept for consistency with generic.}
 }
 \description{
-Summary Method for Class \code{collinear_output}
+Summary of \code{collinear_output}
 }

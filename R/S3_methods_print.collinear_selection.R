@@ -1,16 +1,13 @@
-#' Print Method for Class \code{collinear_selection}
-#'
-#' Prints an object of the class [collinear_selection] produced by [build.collinear_selection()].
-#'
-#' @param x (required, list) Object of class \code{collinear_selection} resulting from [build.collinear_selection()]. Default: NULL
-#' @param n (optional, integer) Maximum number of vector elements to print. Defaults: 5.
-#'
+#' Print \code{collinear_selection}
+#' @param x (required, list of class \code{collinear_selection}) Object to print. Default: NULL
+#' @param n (optional, integer) Maximum printed vector length. Default: 5.
+#' @param ... Ignored, kept for consistency with generic.
 #' @method print collinear_selection
-#' @autoglobal
 #' @export
 print.collinear_selection <- function(
     x = NULL,
-    n = 5
+    n = 5,
+    ...
 ){
 
   # response ----

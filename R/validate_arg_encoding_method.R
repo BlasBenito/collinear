@@ -1,6 +1,7 @@
 #' Validate Argument \code{encoding_method}
 #'
 #' @inheritParams collinear
+#' @inheritParams target_encoding_lab
 #' @inheritParams validate_arg_quiet
 #'
 #' @returns character

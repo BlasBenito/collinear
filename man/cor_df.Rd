@@ -16,8 +16,7 @@ cor_numeric_vs_categorical(df = NULL, predictors = NULL, quiet = FALSE)
 cor_categorical_vs_categorical(df = NULL, predictors = NULL, quiet = FALSE)
 }
 \arguments{
-\item{df}{(required; data frame, tibble, or sf) A data frame with responses (optional) and predictors. Must have at least 10 rows for pairwise correlation analysis, and \code{10 * (length(predictors) - 1)} for VIF analysis.  Default: NULL.
-TODO: rename to responses, and check what other functions inherit this param}
+\item{df}{(required; data frame, tibble, or sf) A data frame with responses (optional) and predictors. Must have at least 10 rows for pairwise correlation analysis, and \code{10 * (length(predictors) - 1)} for VIF analysis.  Default: NULL.}
 
 \item{predictors}{(optional; character vector or NULL) Names of the predictors in \code{df} involved in the multicollinearity filtering. If NULL, all columns in \code{df} (except those with constant values or near zero variance) are used. Default: NULL}
 
@@ -83,7 +82,7 @@ Accepts a parallelization setup via \code{\link[future:plan]{future::plan()}} an
   #with automated preference order
   df_preference <- preference_order(
     df = vi,
-    response = "vi_numeric",
+    responses = "vi_numeric",
     predictors = predictors
   )
 

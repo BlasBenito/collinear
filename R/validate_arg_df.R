@@ -8,17 +8,16 @@
 #'   \item Returns \code{df} as-is if already tagged with \code{validated = TRUE}.
 #'   \item Stops if \code{df} is \code{NULL}, not coercible to a data frame, or has zero rows.
 #'   \item Drops geometry column if present.
-#'   \item Subsets \code{df} to the \code{response} and \code{predictors} columns.
+#'   \item Subsets \code{df} to the \code{responses} and \code{predictors} columns.
 #'   \item Converts logical columns to numeric.
 #'   \item Replaces \code{NaN}, \code{Inf}, and \code{-Inf} values with \code{NA} in numeric columns.
-#'   \item Reorders columns to match original \code{response} + \code{predictors} order.
+#'   \item Reorders columns to match original \code{responses} + \code{predictors} order.
 #'   \item Tags the result with the attribute \code{validated = TRUE}.
 #' }
 #'
 #' @inheritParams collinear
+#' @inheritParams f_auto
 #' @inheritParams validate_arg_quiet
-#' @param response (required; character string or vector) Names of the target response variables in \code{df}. Default: NULL.
-#' @param predictors (required; character vector) Names of the target predictors in \code{df}. Default: NULL
 #' @return data frame
 #' @examples
 #'
@@ -26,7 +25,7 @@
 #'
 #' vi <- validate_arg_df(
 #'   df = vi,
-#'   response = "vi_numeric",
+#'   responses = "vi_numeric",
 #'   predictors = vi_predictors,
 #'   function_name = "f()",
 #'   quiet = FALSE
@@ -38,7 +37,7 @@
 #' @export
 validate_arg_df <- function(
     df = NULL,
-    response = NULL,
+    responses = NULL,
     predictors = NULL,
     function_name = NULL,
     quiet = FALSE
@@ -138,7 +137,7 @@ validate_arg_df <- function(
   #subset valid columns
   selected_columns <- unique(
     c(
-      response,
+      responses,
       predictors
     )
   )
@@ -152,7 +151,7 @@ validate_arg_df <- function(
     selected_columns <- intersect(
       x = colnames(df),
       y = c(
-        response,
+        responses,
         selected_columns
       )
     )

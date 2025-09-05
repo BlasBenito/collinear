@@ -6,9 +6,9 @@
 #' @returns list
 #' @export
 #' @autoglobal
-validate_args_collinear <- function(
+build.collinear_arguments <- function(
     df = NULL,
-    response = NULL,
+    responses = NULL,
     predictors = NULL,
     encoding_method = NULL,
     preference_order = NULL,
@@ -54,24 +54,25 @@ validate_args_collinear <- function(
   ## df ----
   df <- validate_arg_df(
     df = df,
-    response = response,
+    responses = responses,
     predictors = predictors,
     function_name = function_name,
     quiet = quiet
   )
 
   ## response ----
-  responses <- response
-  if(!is.null(response)){
+  if(!is.null(responses)){
+
+    responses_original <- responses
 
     responses <- intersect(
       x = colnames(df),
-      y = response
+      y = responses_original
     )
 
     responses_missing <- setdiff(
-      x = response,
-      y = responses
+      x = responses,
+      y = responses_original
     )
 
     if(length(responses_missing) > 0 && quiet == FALSE){
@@ -130,27 +131,27 @@ validate_args_collinear <- function(
 
   } else if(is.data.frame(preference_order)){
 
-    if(is.null(response)){
+    if(is.null(responses)){
 
       if(quiet == FALSE){
 
         message(
           "\n",
           function_name,
-          ": argument 'preference_order' cannot be of class 'dataframe' or 'list' when 'response' is NULL and will be ignored."
+          ": argument 'preference_order' cannot be of class 'dataframe' or 'list' when 'responses' is NULL and will be ignored."
         )
 
       }
 
       preference_order <- NULL
 
-    } else if(length(response) == 1){
+    } else if(length(responses) == 1){
 
       if(
         !"response" %in% colnames(preference_order) ||
         (
           "response" %in% colnames(preference_order) &&
-          !response %in% preference_order$response
+          any(!responses %in% preference_order$response)
         )
       ){
 
@@ -159,7 +160,7 @@ validate_args_collinear <- function(
           message(
             "\n",
             function_name,
-            ": column 'response' of the dataframe 'preference_order' is absent or does not match the values in argument 'response' and will be ignored."
+            ": column 'response' of the dataframe 'preference_order' is absent or does not match the values in argument 'responses' and will be ignored."
           )
 
         }
@@ -175,7 +176,7 @@ validate_args_collinear <- function(
         message(
           "\n",
           function_name,
-          ": argument 'preference_order' must be a character vector or a named list when 'response' has more than one element, it will be ignored."
+          ": argument 'preference_order' must be a character vector or a named list when 'responses' has more than one element, it will be ignored."
         )
 
       }
@@ -186,42 +187,38 @@ validate_args_collinear <- function(
 
   } else if(is.list(preference_order)){
 
-    if(is.null(response)){
+    if(is.null(responses)){
 
       if(quiet == FALSE){
 
         message(
           "\n",
           function_name,
-          ": argument 'preference_order' cannot be of class 'dataframe' or 'list' when 'response' is NULL and will be ignored."
+          ": argument 'preference_order' cannot be of class 'dataframe' or 'list' when 'responses' is NULL and will be ignored."
         )
 
       }
 
       preference_order <- NULL
 
+    } else if(any(responses %in% names(preference_order))){
+
+      preference_order <- preference_order[responses]
+
+
     } else {
 
-      if(any(response %in% names(preference_order))){
+      if(quiet == FALSE){
 
-        preference_order <- preference_order[response]
-
-
-      } else {
-
-        if(quiet == FALSE){
-
-          message(
-            "\n",
-            function_name,
-            ": list 'preference_order' does not contain any element named after the values in 'response' and will be ignored."
-          )
-
-        }
-
-        preference_order <- NULL
+        message(
+          "\n",
+          function_name,
+          ": list 'preference_order' does not contain any element named after the values in 'responses' and will be ignored."
+        )
 
       }
+
+      preference_order <- NULL
 
     }
 
@@ -271,7 +268,7 @@ validate_args_collinear <- function(
   #store args list for output
   args <- list(
     df = df,
-    response = response,
+    responses = responses,
     predictors = predictors,
     encoding_method = encoding_method,
     preference_order = preference_order,
@@ -296,20 +293,20 @@ validate_args_collinear <- function(
 
     if(
       !is.null(args$encoding_method) &&
-      is.null(args$response) &&
+      is.null(args$responses) &&
       predictors_categorical_n > 0)
     {
 
       message(
         "\n",
         function_name,
-        ": argument 'response' is NULL, skipping target encoding."
+        ": argument 'responses' is NULL, skipping target encoding."
       )
 
     }
 
     if(
-      !is.null(args$response) &&
+      !is.null(args$responses) &&
       is.null(args$f) &&
       is.null(args$preference_order)
     ){

@@ -4,7 +4,8 @@
 #' Internal function to manage the argument \code{preference_order} within [collinear()]. Users should use [preference_order()] instead.
 #'
 #' @inheritParams collinear
-#' @inheritParams validate_args_collinear
+#' @inheritParams f_auto
+#' @inheritParams validate_arg_f
 #'
 #' @return character vector or NULL
 #' @export
@@ -185,7 +186,7 @@ preference_order_wrapper <- function(
 
   preference_df <- preference_order(
     df = df,
-    response = response,
+    responses = response,
     predictors = predictors,
     f = f,
     quiet = quiet

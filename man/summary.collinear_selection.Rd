@@ -2,13 +2,15 @@
 % Please edit documentation in R/S3_methods_summary.collinear_selection.R
 \name{summary.collinear_selection}
 \alias{summary.collinear_selection}
-\title{Summary Method for Class \code{collinear_selection}}
+\title{Summary of \code{collinear_selection}}
 \usage{
-\method{summary}{collinear_selection}(x = NULL)
+\method{summary}{collinear_selection}(object = NULL, ...)
 }
 \arguments{
-\item{x}{(required, list) Object of class \code{collinear_selection} resulting from \code{\link[=build.collinear_selection]{build.collinear_selection()}}. Default: NULL}
+\item{object}{(required, list of class \code{collinear_selection}) Object to summarize. Default: NULL}
+
+\item{...}{Ignored, kept for consistency with generic.}
 }
 \description{
-Summary Method for Class \code{collinear_selection}
+Summary of \code{collinear_selection}
 }

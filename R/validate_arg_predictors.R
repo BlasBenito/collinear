@@ -17,6 +17,7 @@
 #' }
 #'
 #' @inheritParams collinear
+#' @inheritParams target_encoding_lab
 #' @inheritParams validate_arg_quiet
 #'
 #' @return character vector: predictor names

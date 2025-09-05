@@ -1,6 +1,8 @@
-#' Builds Object of Class \code{collinear_selection}
+#' Builds Class \code{collinear_selection}
 #'
 #' @inheritParams collinear
+#' @inheritParams f_auto
+#' @param selection (required, character vector) Names of the selected predictors. Default: NULL
 #'
 #' @return Object of class \code{collinear_selection}
 #' @export

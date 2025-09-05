@@ -3,6 +3,7 @@
 #' @description
 #' Internal function to validate the default value of the argument \code{df}.
 #' @inheritParams collinear
+#' @inheritParams validate_arg_quiet
 #' @return data frame
 #' @autoglobal
 #' @family data_validation

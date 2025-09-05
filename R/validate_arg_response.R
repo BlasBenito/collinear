@@ -15,6 +15,7 @@
 #' }
 #'
 #' @inheritParams collinear
+#' @inheritParams f_auto
 #' @inheritParams validate_arg_quiet
 #' @return character string: response name
 #' @examples

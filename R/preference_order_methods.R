@@ -8,6 +8,9 @@
 #'
 #'
 #' @inheritParams collinear
+#'
+#' @param response (optional, character string) Name of a response variable in \code{df}. Default: NULL.
+#'
 #' @return function name
 #' @family preference_order_tools
 #' @export
@@ -35,7 +38,7 @@ f_auto <- function(
 
   df <- validate_arg_df(
     df = df,
-    response = response,
+    responses = response,
     predictors = predictors,
     function_name = function_name,
     quiet = quiet

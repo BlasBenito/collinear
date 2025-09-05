@@ -1,16 +1,13 @@
-#' Print Method for Class \code{collinear_arguments}
-#'
-#' Prints an object of the class \code{collinear_arguments}.
-#'
-#' @param x (required, list) Object of class \code{collinear_arguments}. Default: NULL
-#' @inheritParams print.collinear_selection
-#'
+#' Print \code{collinear_arguments}
+#' @param x (required, list of class \code{collinear_arguments}) Object to print. Default: NULL
+#' @param n (optional, integer) Maximum printed vector length. Default: 5.
+#' @param ... Ignored, kept for consistency with generic.
 #' @method print collinear_arguments
-#' @autoglobal
 #' @export
 print.collinear_arguments <- function(
     x = NULL,
-    n = 5
+    n = 5,
+    ...
 ){
 
 

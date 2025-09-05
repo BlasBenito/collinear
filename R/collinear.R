@@ -6,7 +6,7 @@
 #'
 #' \itemize{
 #'
-#'   \item **Target Encoding**: When \code{response} is numeric, there are categorical variables in \code{predictors}, and \code{encoding_method} is one of "loo", "mean", or "rank" (see [target_encoding_lab()] for further details), categorical predictors are remapped to numeric using the response values as reference. This feature enables multicollinearity filtering in data frames with mixed column types.
+#'   \item **Target Encoding**: When \code{responses} is numeric, there are categorical variables in \code{predictors}, and \code{encoding_method} is one of "loo", "mean", or "rank" (see [target_encoding_lab()] for further details), categorical predictors are remapped to numeric using the response values as reference. This feature enables multicollinearity filtering in data frames with mixed column types.
 #'
 #'   \item **Preference Order**: System to rank predictors and protect important ones during multicollinearity filtering. The function offers three alternative options:
 #'
@@ -14,7 +14,7 @@
 #'
 #'     \item Argument \code{preference_order}: Accepts a character vector of predictor names ranked from left to right, or a result from [preference_order()]. When two predictors in this vector or dataframe are highly collinear, the one with a lower ranking is removed.
 #'
-#'    \item Argument \code{f}: Helps preserve those predictors with a stronger relationship with the \code{response}, and results in stronger statistical models. It requires an unquoted function name (see output of [f_functions()]) that is used by [preference_order()] to rank predictors by their association with the response. Alternatively, the function [f_auto] chooses an appropriate \code{f} function depending on the nature of the response and the predictors.
+#'    \item Argument \code{f}: Helps preserve those predictors with a stronger relationship with the \code{responses}, and results in stronger statistical models. It requires an unquoted function name (see output of [f_functions()]) that is used by [preference_order()] to rank predictors by their association with the response. Alternatively, the function [f_auto] chooses an appropriate \code{f} function depending on the nature of the response and the predictors.
 #'
 #'    \item When \code{preference_order} and \code{f} are NULL, predictors are ranked from lower to higher multicollilnearity. This option preserves rare predictors over redundant ones, but does not guarantee strong statistical models.
 #'   }
@@ -77,8 +77,8 @@
 #'
 #'
 #' @param df (required; data frame, tibble, or sf) A data frame with responses (optional) and predictors. Must have at least 10 rows for pairwise correlation analysis, and \code{10 * (length(predictors) - 1)} for VIF analysis.  Default: NULL.
-#' TODO: rename to responses, and check what other functions inherit this param
-#' @param response (optional; character, character vector, or NULL) Name of one or several response variables in \code{df}. When \code{encoding_method} is not NULL, response/s are used as reference to map categorical predictors, if any, to numeric (see [target_encoding_lab()]). When \code{f} is not NULL, responses are used to rank predictors and preserve important ones during multicollinearity filtering (see [preference_order()]). If no response is provided, the predictors are ranked from lower to higher multicollinearity. When several responses are provided, the selection results are named after each response in the output list. If no response is provided, the variable selection shows with the name "result" in the output list. Default: NULL.
+#'
+#' @param responses (optional; character, character vector, or NULL) Name of one or several response variables in \code{df}. When \code{encoding_method} is not NULL, response/s are used as reference to map categorical predictors, if any, to numeric (see [target_encoding_lab()]). When \code{f} is not NULL, responses are used to rank predictors and preserve important ones during multicollinearity filtering (see [preference_order()]). If no response is provided, the predictors are ranked from lower to higher multicollinearity. When several responses are provided, the selection results are named after each response in the output list. If no response is provided, the variable selection shows with the name "result" in the output list. Default: NULL.
 #'
 #' @param predictors (optional; character vector or NULL) Names of the predictors in \code{df} involved in the multicollinearity filtering. If NULL, all columns in \code{df} (except those with constant values or near zero variance) are used. Default: NULL
 #'
@@ -87,13 +87,13 @@
 #' @param preference_order (optional; character vector, output of [preference_order()], or NULL). Incompatible with \code{f} (overrides it when provided). Prioritizes predictors to preserve the most relevant ones during multicollinearity filtering.
 #' Accepted inputs are:
 #' \itemize{
-#'   \item **NULL** (default): If argument \code{f} is NULL (default), predictors are ranked from lower to higher multicollinearity. Otherwise, [preference_order()] ranks the predictors according to their relationship with \code{response} using the function defined in \code{f}. NOTE: The output of this setting might differ to an external call to [preference_order()] if target encoding is triggered.
+#'   \item **NULL** (default): If argument \code{f} is NULL (default), predictors are ranked from lower to higher multicollinearity. Otherwise, [preference_order()] ranks the predictors according to their relationship with \code{responses} using the function defined in \code{f}. NOTE: The output of this setting might differ to an external call to [preference_order()] if target encoding is triggered.
 #'   \item **character vector**: Predictor names in a user-defined priority order. The first predictor in this vector is always selected, unless it has near zero-variance values. This option sets \code{f} to NULL.
-#'   \item **data frame**: output of [preference_order()] computed on the given \code{response}. This option sets \code{f} to NULL.
-#'   \item **named list**: list of data frames, output of [preference_order()] when argument \code{response} is a vector of length two or more. This option sets \code{f} to NULL.
+#'   \item **data frame**: output of [preference_order()] computed on the given \code{responses}. This option sets \code{f} to NULL.
+#'   \item **named list**: list of data frames, output of [preference_order()] when argument \code{responses} is a vector of length two or more. This option sets \code{f} to NULL.
 #' }. Default: NULL
 #'
-#' @param f (optional: unquoted function name or NULL). Incompatible with \code{preference_order} (overridden if \code{preference_order} is provided). Function to rank \code{predictors} depending on their relationship with the \code{response}. Available functions are listed by [f_functions()] and described in the manual of [preference_order()]. Setting it to [f_auto] is a good starting point. Default: NULL
+#' @param f (optional: unquoted function name or NULL). Incompatible with \code{preference_order} (overridden if \code{preference_order} is provided). Function to rank \code{predictors} depending on their relationship with the \code{responses}. Available functions are listed by [f_functions()] and described in the manual of [preference_order()]. Setting it to [f_auto] is a good starting point. Default: NULL
 #'
 #' @param max_cor (optional; numeric or NULL) Maximum correlation allowed between pairs of \code{predictors}. Valid values are between 0.01 and 0.99, and recommended values are between 0.5 (strict) and 0.9 (permissive). If NULL, the pairwise correlation analysis is disabled. Default: 0.75
 #'
@@ -101,7 +101,7 @@
 #'
 #' @param quiet (optional; logical) If FALSE, messages are printed to the console. Default: FALSE
 #'
-#' @return list of class [collinear_output]
+#' @return list of class \code{collinear_output}
 #'
 #' @examples
 #'   data(
@@ -175,7 +175,7 @@
 #'   ## - rank predictors by R-squared with response (see f_functions() for more options)
 #'   x <- collinear(
 #'     df = vi_smol,
-#'     response = "vi_numeric",
+#'     responses = "vi_numeric",
 #'     predictors = vi_predictors_numeric,
 #'     f = f_r2_pearson
 #'   )
@@ -204,7 +204,7 @@
 #'   ## - rank predictors by order in vector 'preference_order'
 #'   x <- collinear(
 #'     df = vi_smol,
-#'     response = "vi_numeric",
+#'     responses = "vi_numeric",
 #'     predictors = vi_predictors_numeric,
 #'     preference_order = c(
 #'       "swi_mean",
@@ -217,8 +217,12 @@
 #'   #preference dataframe in results
 #'   x$vi_numeric$preference$df
 #'
-#'   ##missing predictors in preference_order due to multicollinearity with predictors with a higher preference
-#'   ##predictors not in preference order ranked by their collinearity with other predictors
+#'   ##missing predictors in preference_order
+#'   ##due to multicollinearity with
+#'   ##predictors with a higher preference
+#'   ##predictors not in preference order
+#'   ##ranked by their collinearity
+#'   ##with other predictors
 #'   summary(x)
 #'
 #'
@@ -227,7 +231,7 @@
 #'   ## - automatic selection of preference order function with f_auto()
 #'   x <- collinear(
 #'     df = vi_smol,
-#'     response = c(
+#'     responses = c(
 #'       "vi_numeric",
 #'       "vi_binomial"
 #'     ),
@@ -255,7 +259,7 @@
 #' @export
 collinear <- function(
     df = NULL,
-    response = NULL,
+    responses = NULL,
     predictors = NULL,
     encoding_method = NULL,
     preference_order = NULL,
@@ -268,9 +272,9 @@ collinear <- function(
   function_name <- "collinear::collinear()"
 
   # VALIDATE ARGS ----
-  args <- validate_args_collinear(
+  args <- build.collinear_arguments(
     df = df,
-    response = response,
+    responses = responses,
     predictors = predictors,
     encoding_method = encoding_method,
     preference_order = preference_order,
@@ -284,12 +288,12 @@ collinear <- function(
 
   #manage response for loop
   if(
-    length(args$response) == 0 ||
-    is.null(args$response)
+    length(args$responses) == 0 ||
+    is.null(args$responses)
   ){
     responses <- list(NULL)
   } else {
-    responses <- args$response
+    responses <- args$responses
   }
 
 

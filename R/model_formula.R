@@ -1,10 +1,13 @@
 #' Generate Model Formulas
 #'
 #' @inheritParams collinear
-#' @param df (optional; data frame, tibble, or sf). A data frame with responses and predictors. Required if \code{predictors = NULL}. Default: NULL.
-#' @param predictors (optional, character vector, output of [collinear()]): predictors to include in the formula. Required if \code{df = NULL}.
+#'
+#' @inheritParams f_auto
+#'
 #' @param term_f (optional; string). Name of function to apply to each term in the formula, such as "s" for [mgcv::s()] or any other smoothing function, "poly" for [stats::poly()]. Default: NULL
+#'
 #' @param term_args (optional; string). Arguments of the function applied to each term. For example, for "poly" it can be "degree = 2, raw = TRUE". Default: NULL
+#'
 #' @param random_effects (optional, string or character vector). Names of variables to be used as random effects. Each element is added to the final formula as \code{+(1 | random_effect_name)}. Default: NULL
 #'
 #' @return list if \code{predictors} is a list or length of \code{response} is higher than one, and character vector otherwise.
@@ -91,7 +94,7 @@ model_formula <- function(
 
   df <- validate_arg_df(
     df = df,
-    response = response,
+    responses = response,
     predictors = predictors,
     function_name = function_name,
     quiet = quiet

@@ -1,13 +1,17 @@
-#' Summary Method for Class \code{collinear_selection}
-#'
-#' @param x (required, list) Object of class \code{collinear_selection} resulting from [build.collinear_selection()]. Default: NULL
-#'
+#' Summary of \code{collinear_selection}
+#' @param object (required, list of class \code{collinear_selection}) Object to summarize. Default: NULL
+#' @param ... Ignored, kept for consistency with generic.
 #' @method summary collinear_selection
-#' @autoglobal
 #' @export
 summary.collinear_selection <- function(
-    x = NULL
+    object = NULL,
+    ...
 ){
+
+  x <- list(
+    response = object$response,
+    selection = object$selection
+  )
 
   # response ----
   if(!is.null(x$response)){
@@ -60,6 +64,8 @@ summary.collinear_selection <- function(
 
   cat("\n")
 
-  invisible(x)
+  class(x) <- c(class(x), "summary.collinear_selection")
+
+  x
 
 }
