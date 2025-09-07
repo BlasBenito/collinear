@@ -107,6 +107,8 @@
 #'
 #' @param quiet (optional; logical) If FALSE, messages are printed to the console. Default: FALSE
 #'
+#' @param ... (optional) Used to introduce an alternative value for the internal argument \code{function_name}.
+#'
 #' @return list of class \code{collinear_output}
 #'
 #' @examples
@@ -272,10 +274,17 @@ collinear <- function(
     f = NULL,
     max_cor = 0.75,
     max_vif = 5,
-    quiet = FALSE
+    quiet = FALSE,
+    ...
 ){
 
   function_name <- "collinear::collinear()"
+
+  dots <- list(...)
+  if("function_name" %in% names(dots)){
+    function_name <- dots$function_name
+    dots$function_name <- NULL
+  }
 
   # VALIDATE ARGS ----
   args <- build.collinear_arguments(

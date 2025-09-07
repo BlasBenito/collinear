@@ -21,8 +21,9 @@ list of class \code{collinear_output}
 \description{
 Automated version of \code{\link[=collinear]{collinear()}}, with the complete functionality but fewer arguments for fire-and-forget usage.
 
-Arguments \code{max_vif} and \code{max_cor} are autoconfigured depending on the average correlation between all pairs of predictors. The autoconfiguration rules are:
+Arguments \code{max_vif} and \code{max_cor} are autoconfigured depending on the average correlation between all pairs of predictors. The autoconfiguration rules are shown below:
 \preformatted{
+
 max_cor <- max(
   0.5,
   correlation_mean
@@ -39,8 +40,25 @@ if (max_cor >= 0.95) {
 }
 }
 }
+\examples{
+
+data(
+  vi_smol,
+  vi_predictors_numeric
+)
+
+x <- collinear_auto(
+  df = vi_smol,
+  responses = "vi_numeric",
+  predictors = vi_predictors_numeric
+)
+
+x
+
+}
 \seealso{
 Other automated_multicollinearity_analysis: 
-\code{\link{collinear}()}
+\code{\link{collinear}()},
+\code{\link{collinear_lite}()}
 }
 \concept{automated_multicollinearity_analysis}

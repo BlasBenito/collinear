@@ -1,6 +1,6 @@
 #' Pairwise Correlation Stats
 #'
-#' Generates a correlation dataframe with [cor_df()] and computes the the minimum, mean, maximum, and quantiles 0.05, 0.25, 0.50, 0.75, and 0.95 of the Pearson correlations (and Cramer's V if there is more than one categorical predictor).
+#' Generates a correlation dataframe with [cor_df()] and computes the the minimum, mean, maximum, and quantiles 0.05, 0.25, median (0.5), 0.75, and 0.95 of the Pearson correlations (and Cramer's V if there is more than one categorical predictor).
 #'
 #' @inheritParams cor_matrix
 #'
@@ -51,7 +51,7 @@ cor_stats <- function(
   }
 
 
-  values <- na.omit(correlation_df$correlation)
+  values <- stats::na.omit(correlation_df$correlation)
 
   stats <- c(
     "minimum" = min(values),
@@ -68,10 +68,8 @@ cor_stats <- function(
       names = FALSE
       ),
 
-    "quantile_0.50" = stats::quantile(
-      x = values,
-      probs = 0.50,
-      names = FALSE
+    "median" = stats::median(
+      x = values
       ),
 
     "quantile_0.75" = stats::quantile(

@@ -21,7 +21,7 @@ list:
 }
 }
 \description{
-Generates a correlation dataframe with \code{\link[=cor_df]{cor_df()}} and computes the the minimum, mean, maximum, and quantiles 0.05, 0.25, 0.50, 0.75, and 0.95 of the Pearson correlations (and Cramer's V if there is more than one categorical predictor).
+Generates a correlation dataframe with \code{\link[=cor_df]{cor_df()}} and computes the the minimum, mean, maximum, and quantiles 0.05, 0.25, median (0.5), 0.75, and 0.95 of the Pearson correlations (and Cramer's V if there is more than one categorical predictor).
 }
 \examples{
 stats <- cor_stats(
