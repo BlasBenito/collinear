@@ -9,11 +9,11 @@
 - documentation DONE
 - test file DONE
 
-#collinear.R IN PROGRESS
+#collinear.R DONE
 
-- rename `response` to `responses`, and check what other functions inherit this argument.
+- rename `response` to `responses` DONE
 - code examples DONE
-- documentation IN PROGRESS
+- documentation DONE
 - test file DONE
 
 #cor_clusters.R

@@ -2,7 +2,7 @@
 % Please edit documentation in R/S3_methods_build.collinear_arguments.R
 \name{build.collinear_arguments}
 \alias{build.collinear_arguments}
-\title{Validates Arguments of \code{collinear()}}
+\title{Builds Class \code{collinear_arguments}}
 \usage{
 build.collinear_arguments(
   df = NULL,
@@ -28,11 +28,17 @@ build.collinear_arguments(
 \item{encoding_method}{(optional; character or NULL). Name of one target encoding method. One of: "loo", "mean", or "rank" (see \code{\link[=target_encoding_lab]{target_encoding_lab()}} for further details). If NULL, target encoding is disabled. Default: NULL}
 
 \item{preference_order}{(optional; character vector, output of \code{\link[=preference_order]{preference_order()}}, or NULL). Incompatible with \code{f} (overrides it when provided). Prioritizes predictors to preserve the most relevant ones during multicollinearity filtering.
+
 Accepted inputs are:
+
 \itemize{
+
 \item \strong{NULL} (default): If argument \code{f} is NULL (default), predictors are ranked from lower to higher multicollinearity. Otherwise, \code{\link[=preference_order]{preference_order()}} ranks the predictors according to their relationship with \code{responses} using the function defined in \code{f}. NOTE: The output of this setting might differ to an external call to \code{\link[=preference_order]{preference_order()}} if target encoding is triggered.
+
 \item \strong{character vector}: Predictor names in a user-defined priority order. The first predictor in this vector is always selected, unless it has near zero-variance values. This option sets \code{f} to NULL.
+
 \item \strong{data frame}: output of \code{\link[=preference_order]{preference_order()}} computed on the given \code{responses}. This option sets \code{f} to NULL.
+
 \item \strong{named list}: list of data frames, output of \code{\link[=preference_order]{preference_order()}} when argument \code{responses} is a vector of length two or more. This option sets \code{f} to NULL.
 }. Default: NULL}
 
@@ -49,8 +55,21 @@ Accepted inputs are:
 \item{function_name}{(optional, character string) Name of the function performing the argument check. Default: NULL}
 }
 \value{
-list
+list of class \code{collinear_arguments}
 }
 \description{
-Validates Arguments of \code{collinear()}
+Builds Class \code{collinear_arguments}
 }
+\seealso{
+\code{\link[=print.collinear_arguments]{print.collinear_arguments()}}
+
+Other S3_methods: 
+\code{\link{build.collinear_output}()},
+\code{\link{build.collinear_selection}()},
+\code{\link{print.collinear_arguments}()},
+\code{\link{print.collinear_output}()},
+\code{\link{print.collinear_selection}()},
+\code{\link{summary.collinear_output}()},
+\code{\link{summary.collinear_selection}()}
+}
+\concept{S3_methods}

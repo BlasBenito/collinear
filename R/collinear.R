@@ -1,4 +1,4 @@
-#' @title Automated Multicollinearity Management
+#' @title Comprehensive Multicollinearity Management
 #'
 #' @description
 #'
@@ -12,14 +12,14 @@
 #'
 #'   \itemize{
 #'
-#'     \item Argument \code{preference_order}: Accepts a character vector of predictor names ranked from left to right, or a result from [preference_order()]. When two predictors in this vector or dataframe are highly collinear, the one with a lower ranking is removed.
+#'     \item Argument \code{preference_order}: Accepts a character vector of predictor names ranked from left to right, or a result from [preference_order()]. When two predictors in this vector or dataframe are highly collinear, the one with a lower ranking is removed. This option helps the user focus the analysis on particular predictors of interest.
 #'
-#'    \item Argument \code{f}: Helps preserve those predictors with a stronger relationship with the \code{responses}, and results in stronger statistical models. It requires an unquoted function name (see output of [f_functions()]) that is used by [preference_order()] to rank predictors by their association with the response. Alternatively, the function [f_auto] chooses an appropriate \code{f} function depending on the nature of the response and the predictors.
+#'    \item Argument \code{f}: Takes an unquoted function name (see output of [f_functions()]) that is used by [preference_order()] to rank predictors by their association with the response. Alternatively, the function [f_auto] chooses an appropriate \code{f} function depending on the nature of the response and the predictors. Using this option helps preserve those predictors with a stronger relationship with the \code{responses}, and results in stronger statistical models.
 #'
 #'    \item When \code{preference_order} and \code{f} are NULL, predictors are ranked from lower to higher multicollilnearity. This option preserves rare predictors over redundant ones, but does not guarantee strong statistical models.
 #'   }
 #'
-#'   \item **Pairwise Correlation Filtering**: Computes pairwise correlation between all pairs of predictors and removes redundant ones taking preference order into account. Correlations between numeric and categorical predictors are computed by target-encoding the categorical predictor against the numeric one. Correlations between pairs of categorical predictors are computed via Cramer's V. Pearson correlation and Cramer's V are not directly comparable, but this function assumes they are. See [cor_select()], [cor_df()], and [cor_cramer_v()] for further details.
+#'   \item **Pairwise Correlation Filtering**: Computes the correlation between all pairs of predictors and removes redundant ones while taking preference order into account. Correlations between numeric and categorical predictors are assessed by target-encoding the categorical predictor against the numeric one and computing their Pearson correlation. Correlations between pairs of categorical predictors are computed with Cramer's V. Pearson correlation and Cramer's V are not directly comparable, but this function assumes they are. See [cor_select()], [cor_df()], and [cor_cramer_v()] for further details.
 #'
 #'    \item **VIF-based Filtering**: Computes Variance Inflation Factors for numeric predictors and removes redundant ones iteratively, while taking preference order into account. See [vif()], [vif_df()] and [vif_select()] for further details.
 #' }
@@ -85,11 +85,17 @@
 #' @param encoding_method (optional; character or NULL). Name of one target encoding method. One of: "loo", "mean", or "rank" (see [target_encoding_lab()] for further details). If NULL, target encoding is disabled. Default: NULL
 #'
 #' @param preference_order (optional; character vector, output of [preference_order()], or NULL). Incompatible with \code{f} (overrides it when provided). Prioritizes predictors to preserve the most relevant ones during multicollinearity filtering.
+#'
 #' Accepted inputs are:
+#'
 #' \itemize{
+#'
 #'   \item **NULL** (default): If argument \code{f} is NULL (default), predictors are ranked from lower to higher multicollinearity. Otherwise, [preference_order()] ranks the predictors according to their relationship with \code{responses} using the function defined in \code{f}. NOTE: The output of this setting might differ to an external call to [preference_order()] if target encoding is triggered.
+#'
 #'   \item **character vector**: Predictor names in a user-defined priority order. The first predictor in this vector is always selected, unless it has near zero-variance values. This option sets \code{f} to NULL.
+#'
 #'   \item **data frame**: output of [preference_order()] computed on the given \code{responses}. This option sets \code{f} to NULL.
+#'
 #'   \item **named list**: list of data frames, output of [preference_order()] when argument \code{responses} is a vector of length two or more. This option sets \code{f} to NULL.
 #' }. Default: NULL
 #'
@@ -489,14 +495,11 @@ collinear <- function(
     # end ----
   } #end of loop
 
-  #add arguments
-  out$arguments <- args
-
-  class(out) <- c(
-    class(out),
-    "collinear_output"
+  out_list <- build.collinear_output(
+    collinear_selection = out,
+    collinear_arguments = args
   )
 
-  out
+  out_list
 
 }

@@ -3,6 +3,8 @@
 #' @param n (optional, integer) Maximum printed vector length. Default: 5.
 #' @param ... Ignored, kept for consistency with generic.
 #' @method print collinear_arguments
+#' @family S3_methods
+#' @autoglobal
 #' @export
 print.collinear_arguments <- function(
     x = NULL,

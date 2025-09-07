@@ -5,7 +5,7 @@
 \alias{cor_numeric_vs_numeric}
 \alias{cor_numeric_vs_categorical}
 \alias{cor_categorical_vs_categorical}
-\title{Pairwise Correlation Data Frame}
+\title{Data Frame of Absolute Pairwise Correlations}
 \usage{
 cor_df(df = NULL, predictors = NULL, quiet = FALSE)
 
@@ -23,7 +23,7 @@ cor_categorical_vs_categorical(df = NULL, predictors = NULL, quiet = FALSE)
 \item{quiet}{(optional; logical) If FALSE, messages are printed to the console. Default: FALSE}
 }
 \value{
-data frame; pairwise correlation
+data frame; predictors pairs and their absolute Pearson correlation or Cramer's V association.
 }
 \description{
 Computes a pairwise correlation data frame. Implements methods to compare different types of predictors:
@@ -101,24 +101,28 @@ Other pairwise_correlation:
 \code{\link{cor_clusters}()},
 \code{\link{cor_cramer_v}()},
 \code{\link{cor_matrix}()},
-\code{\link{cor_select}()}
+\code{\link{cor_select}()},
+\code{\link{cor_stats}()}
 
 Other pairwise_correlation: 
 \code{\link{cor_clusters}()},
 \code{\link{cor_cramer_v}()},
 \code{\link{cor_matrix}()},
-\code{\link{cor_select}()}
+\code{\link{cor_select}()},
+\code{\link{cor_stats}()}
 
 Other pairwise_correlation: 
 \code{\link{cor_clusters}()},
 \code{\link{cor_cramer_v}()},
 \code{\link{cor_matrix}()},
-\code{\link{cor_select}()}
+\code{\link{cor_select}()},
+\code{\link{cor_stats}()}
 
 Other pairwise_correlation: 
 \code{\link{cor_clusters}()},
 \code{\link{cor_cramer_v}()},
 \code{\link{cor_matrix}()},
-\code{\link{cor_select}()}
+\code{\link{cor_select}()},
+\code{\link{cor_stats}()}
 }
 \concept{pairwise_correlation}

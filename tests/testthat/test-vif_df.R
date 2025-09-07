@@ -131,10 +131,14 @@ testthat::test_that("`vif_df()` works", {
   #single predictor
   predictors <- vi_predictors_numeric[1]
 
-  vif.df <- vif_df(
-    df = df,
-    predictors = predictors
+  testthat::expect_message(
+    vif.df <- vif_df(
+      df = df,
+      predictors = predictors
+    ),
+    regexp = "only one numeric predictor"
   )
+
 
   testthat::expect_true(
     is.data.frame(vif.df)

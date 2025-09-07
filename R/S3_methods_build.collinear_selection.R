@@ -5,8 +5,9 @@
 #' @param selection (required, character vector) Names of the selected predictors. Default: NULL
 #'
 #' @return Object of class \code{collinear_selection}
-#' @export
+#' @family S3_methods
 #' @autoglobal
+#' @export
 build.collinear_selection <- function(
     df = NULL,
     response = NULL,

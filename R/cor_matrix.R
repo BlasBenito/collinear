@@ -6,6 +6,7 @@
 #' Accepts a parallelization setup via [future::plan()] and a progress bar via [progressr::handlers()] (see examples).
 #'
 #' @inheritParams collinear
+#' @param df (required; data frame, tibble, or sf) A data frame with responses (optional) and predictors. Must have at least 10 rows. Alternatively, a dataframe resulting from [cor_df()]. Default: NULL.
 #' @return correlation matrix
 #'
 #' @examples
@@ -72,20 +73,6 @@ cor_matrix <- function(
         )
       ) == FALSE
     ){
-
-    df <- validate_arg_df(
-      df = df,
-      predictors = predictors,
-      function_name = function_name,
-      quiet = quiet
-    )
-
-    predictors <- validate_arg_predictors_cor(
-      df = df,
-      predictors = predictors,
-      function_name = function_name,
-      quiet = quiet
-    )
 
     df <- cor_df(
       df = df,

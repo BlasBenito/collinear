@@ -2,7 +2,7 @@
 % Please edit documentation in R/cor_clusters.R
 \name{cor_clusters}
 \alias{cor_clusters}
-\title{Hierarchical Clustering from a Pairwise Correlation Matrix}
+\title{Hierarchical Clustering from Pairwise Correlation Matrix}
 \usage{
 cor_clusters(
   df = NULL,
@@ -27,10 +27,10 @@ cor_clusters(
 \item{quiet}{(optional; logical) If FALSE, messages are printed to the console. Default: FALSE}
 }
 \value{
-data frame: predictor names and their clusters
+data frame: predictor names and their cluster IDs
 }
 \description{
-Hierarchical clustering of predictors from their pairwise correlation matrix. Computes the correlation matrix with \code{\link[=cor_df]{cor_df()}} and \code{\link[=cor_matrix]{cor_matrix()}}, transforms it to a dist object, computes a clustering solution with \code{\link[stats:hclust]{stats::hclust()}}, and applies \code{\link[stats:cutree]{stats::cutree()}} to separate groups based on the value of the argument \code{max_cor}.
+Hierarchical clustering of predictors from their pairwise correlation matrix. Computes the correlation matrix with \code{\link[=cor_df]{cor_df()}} and \code{\link[=cor_matrix]{cor_matrix()}}, transforms it to a distance matrix using \code{\link[stats:dist]{stats::dist()}}, computes a clustering solution with \code{\link[stats:hclust]{stats::hclust()}}, and applies \code{\link[stats:cutree]{stats::cutree()}} to separate groups based on the value of the argument \code{max_cor}.
 
 Returns a data frame with predictor names and their clusters, and optionally, prints a dendrogram of the clustering solution.
 
@@ -72,6 +72,7 @@ Other pairwise_correlation:
 \code{\link{cor_cramer_v}()},
 \code{\link{cor_df}()},
 \code{\link{cor_matrix}()},
-\code{\link{cor_select}()}
+\code{\link{cor_select}()},
+\code{\link{cor_stats}()}
 }
 \concept{pairwise_correlation}

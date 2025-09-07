@@ -14,3 +14,14 @@
 \description{
 Summary of \code{collinear_output}
 }
+\seealso{
+Other S3_methods: 
+\code{\link{build.collinear_arguments}()},
+\code{\link{build.collinear_output}()},
+\code{\link{build.collinear_selection}()},
+\code{\link{print.collinear_arguments}()},
+\code{\link{print.collinear_output}()},
+\code{\link{print.collinear_selection}()},
+\code{\link{summary.collinear_selection}()}
+}
+\concept{S3_methods}

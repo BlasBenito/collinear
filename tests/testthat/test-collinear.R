@@ -429,7 +429,7 @@ testthat::test_that("`collinear()` works", {
       max_vif = 5,
       quiet = FALSE
     ),
-    regexp = "does not match the values in argument 'response'"
+    regexp = "does not match the values in argument 'responses'"
   ) |>
     suppressMessages()
 
@@ -487,7 +487,7 @@ testthat::test_that("`collinear()` works", {
       max_vif = 5,
       quiet = FALSE
     ),
-    regexp = "list 'preference_order' does not contain any element named after the values in 'response'"
+    regexp = "list 'preference_order' does not contain any element named after the values in 'responses'"
   ) |>
     suppressMessages()
 

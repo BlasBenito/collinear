@@ -2,6 +2,8 @@
 #' @param object (required, list of class \code{collinear_selection}) Object to summarize. Default: NULL
 #' @param ... Ignored, kept for consistency with generic.
 #' @method summary collinear_selection
+#' @family S3_methods
+#' @autoglobal
 #' @export
 summary.collinear_selection <- function(
     object = NULL,

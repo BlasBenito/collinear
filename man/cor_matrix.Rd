@@ -7,7 +7,7 @@
 cor_matrix(df = NULL, predictors = NULL, quiet = FALSE)
 }
 \arguments{
-\item{df}{(required; data frame, tibble, or sf) A data frame with responses (optional) and predictors. Must have at least 10 rows for pairwise correlation analysis, and \code{10 * (length(predictors) - 1)} for VIF analysis.  Default: NULL.}
+\item{df}{(required; data frame, tibble, or sf) A data frame with responses (optional) and predictors. Must have at least 10 rows. Alternatively, a dataframe resulting from \code{\link[=cor_df]{cor_df()}}. Default: NULL.}
 
 \item{predictors}{(optional; character vector or NULL) Names of the predictors in \code{df} involved in the multicollinearity filtering. If NULL, all columns in \code{df} (except those with constant values or near zero variance) are used. Default: NULL}
 
@@ -69,7 +69,8 @@ Other pairwise_correlation:
 \code{\link{cor_clusters}()},
 \code{\link{cor_cramer_v}()},
 \code{\link{cor_df}()},
-\code{\link{cor_select}()}
+\code{\link{cor_select}()},
+\code{\link{cor_stats}()}
 }
 \author{
 Blas M. Benito, PhD

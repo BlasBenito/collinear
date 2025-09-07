@@ -2,7 +2,7 @@
 % Please edit documentation in R/collinear.R
 \name{collinear}
 \alias{collinear}
-\title{Automated Multicollinearity Management}
+\title{Comprehensive Multicollinearity Management}
 \usage{
 collinear(
   df = NULL,
@@ -26,11 +26,17 @@ collinear(
 \item{encoding_method}{(optional; character or NULL). Name of one target encoding method. One of: "loo", "mean", or "rank" (see \code{\link[=target_encoding_lab]{target_encoding_lab()}} for further details). If NULL, target encoding is disabled. Default: NULL}
 
 \item{preference_order}{(optional; character vector, output of \code{\link[=preference_order]{preference_order()}}, or NULL). Incompatible with \code{f} (overrides it when provided). Prioritizes predictors to preserve the most relevant ones during multicollinearity filtering.
+
 Accepted inputs are:
+
 \itemize{
+
 \item \strong{NULL} (default): If argument \code{f} is NULL (default), predictors are ranked from lower to higher multicollinearity. Otherwise, \code{\link[=preference_order]{preference_order()}} ranks the predictors according to their relationship with \code{responses} using the function defined in \code{f}. NOTE: The output of this setting might differ to an external call to \code{\link[=preference_order]{preference_order()}} if target encoding is triggered.
+
 \item \strong{character vector}: Predictor names in a user-defined priority order. The first predictor in this vector is always selected, unless it has near zero-variance values. This option sets \code{f} to NULL.
+
 \item \strong{data frame}: output of \code{\link[=preference_order]{preference_order()}} computed on the given \code{responses}. This option sets \code{f} to NULL.
+
 \item \strong{named list}: list of data frames, output of \code{\link[=preference_order]{preference_order()}} when argument \code{responses} is a vector of length two or more. This option sets \code{f} to NULL.
 }. Default: NULL}
 
@@ -56,15 +62,15 @@ Automates multicollinearity management by combining four methods:
 
 \itemize{
 
-\if{html}{\out{<div class="sourceCode">}}\preformatted{\\item Argument \code{preference_order}: Accepts a character vector of predictor names ranked from left to right, or a result from [preference_order()]. When two predictors in this vector or dataframe are highly collinear, the one with a lower ranking is removed.
+\if{html}{\out{<div class="sourceCode">}}\preformatted{\\item Argument \code{preference_order}: Accepts a character vector of predictor names ranked from left to right, or a result from [preference_order()]. When two predictors in this vector or dataframe are highly collinear, the one with a lower ranking is removed. This option helps the user focus the analysis on particular predictors of interest.
 }\if{html}{\out{</div>}}
 
-\item Argument \code{f}: Helps preserve those predictors with a stronger relationship with the \code{responses}, and results in stronger statistical models. It requires an unquoted function name (see output of \code{\link[=f_functions]{f_functions()}}) that is used by \code{\link[=preference_order]{preference_order()}} to rank predictors by their association with the response. Alternatively, the function \link{f_auto} chooses an appropriate \code{f} function depending on the nature of the response and the predictors.
+\item Argument \code{f}: Takes an unquoted function name (see output of \code{\link[=f_functions]{f_functions()}}) that is used by \code{\link[=preference_order]{preference_order()}} to rank predictors by their association with the response. Alternatively, the function \link{f_auto} chooses an appropriate \code{f} function depending on the nature of the response and the predictors. Using this option helps preserve those predictors with a stronger relationship with the \code{responses}, and results in stronger statistical models.
 
 \item When \code{preference_order} and \code{f} are NULL, predictors are ranked from lower to higher multicollilnearity. This option preserves rare predictors over redundant ones, but does not guarantee strong statistical models.
 }
 
-\item \strong{Pairwise Correlation Filtering}: Computes pairwise correlation between all pairs of predictors and removes redundant ones taking preference order into account. Correlations between numeric and categorical predictors are computed by target-encoding the categorical predictor against the numeric one. Correlations between pairs of categorical predictors are computed via Cramer's V. Pearson correlation and Cramer's V are not directly comparable, but this function assumes they are. See \code{\link[=cor_select]{cor_select()}}, \code{\link[=cor_df]{cor_df()}}, and \code{\link[=cor_cramer_v]{cor_cramer_v()}} for further details.
+\item \strong{Pairwise Correlation Filtering}: Computes the correlation between all pairs of predictors and removes redundant ones while taking preference order into account. Correlations between numeric and categorical predictors are assessed by target-encoding the categorical predictor against the numeric one and computing their Pearson correlation. Correlations between pairs of categorical predictors are computed with Cramer's V. Pearson correlation and Cramer's V are not directly comparable, but this function assumes they are. See \code{\link[=cor_select]{cor_select()}}, \code{\link[=cor_df]{cor_df()}}, and \code{\link[=cor_cramer_v]{cor_cramer_v()}} for further details.
 
 \item \strong{VIF-based Filtering}: Computes Variance Inflation Factors for numeric predictors and removes redundant ones iteratively, while taking preference order into account. See \code{\link[=vif]{vif()}}, \code{\link[=vif_df]{vif_df()}} and \code{\link[=vif_select]{vif_select()}} for further details.
 }
@@ -277,5 +283,9 @@ This filtering method ensures that all predictors in the selection are correlate
 \item David A. Belsley, D.A., Kuh, E., Welsch, R.E. (1980). Regression Diagnostics: Identifying Influential Data and Sources of Collinearity. John Wiley & Sons. DOI: 10.1002/0471725153.
 \item Micci-Barreca, D. (2001) A Preprocessing Scheme for High-Cardinality Categorical Attributes in Classification and Prediction Problems. SIGKDD Explor. Newsl. 3, 1, 27-32. DOI: 10.1145/507533.507538
 }
+}
+\seealso{
+Other automated_multicollinearity_analysis: 
+\code{\link{collinear_auto}()}
 }
 \concept{automated_multicollinearity_analysis}

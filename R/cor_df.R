@@ -1,4 +1,4 @@
-#' Pairwise Correlation Data Frame
+#' Data Frame of Absolute Pairwise Correlations
 #'
 #' @description
 #'
@@ -13,7 +13,7 @@
 #'
 #' @inheritParams collinear
 #
-#' @return data frame; pairwise correlation
+#' @return data frame; predictors pairs and their absolute Pearson correlation or Cramer's V association.
 #'
 #' @examples
 #'   data(vi)
@@ -249,6 +249,8 @@ cor_numeric_vs_numeric <- function(
     "correlation"
   )
 
+  cor.df$correlation <- abs(cor.df$correlation)
+
   #filter out x == y
   cor.df <- cor.df[
     cor.df$x != cor.df$y,
@@ -379,12 +381,13 @@ cor_numeric_vs_categorical <- function(
       )
 
       #compute correlation
-      stats::cor(
+      val <- stats::cor(
         x = df.x$x,
         y = df.x$y,
         use = "pairwise.complete.obs",
         method = "pearson"
-      )
+      ) |>
+        abs()
 
     }, #end of lambda function
     future.seed = TRUE
@@ -480,11 +483,12 @@ cor_categorical_vs_categorical <- function(
       ) |>
         stats::na.omit()
 
-      cor_cramer_v(
+      val <- cor_cramer_v(
         x = df.x$x,
         y = df.x$y,
         check_input = FALSE
-      )
+      ) |>
+        abs()
 
     },
     future.seed = TRUE

@@ -2,6 +2,8 @@
 #' @param object (required, list of class \code{collinear_output}) Object to summarize. Default: NULL
 #' @param ... Ignored, kept for consistency with generic.
 #' @method summary collinear_output
+#' @family S3_methods
+#' @autoglobal
 #' @export
 summary.collinear_output <- function(
     object = NULL,
