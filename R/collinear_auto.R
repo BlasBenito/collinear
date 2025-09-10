@@ -13,14 +13,21 @@
 #' if (max_cor >= 0.95) {
 #'   max_vif <- 10
 #' } else if (max_cor >= 0.85) {
-#'   max_vif <- 7.5
+#'   max_vif <- 8.5
+#' } else if (max_cor >= 0.80) {
+#'   max_vif <- 7
 #' } else if (max_cor >= 0.75) {
 #'   max_vif <- 5
+#' } else if (max_cor >= 0.70) {
+#'   max_vif <- 3.5
 #' } else {
 #'   max_vif <- 2.5
 #' }
+#'
 #' }
-
+#'
+#' These rules were obtained by comparing executions of [vif_select()] and [cor_select()] on 100000 different combinations of rows and columns of the dataset [vi], by finding the \code{max_vif} value leading to the most similar variable selection resulting from a given \code{max_cor} value.
+#'
 #' @inheritParams collinear
 #' @examples
 #'
@@ -86,9 +93,13 @@ collinear_auto <- function(
   if (max_cor >= 0.95) {
     max_vif <- 10
   } else if (max_cor >= 0.85) {
-    max_vif <- 7.5
+    max_vif <- 8.5
+  } else if (max_cor >= 0.80) {
+    max_vif <- 7
   } else if (max_cor >= 0.75) {
     max_vif <- 5
+  } else if (max_cor >= 0.70) {
+    max_vif <- 3.5
   } else {
     max_vif <- 2.5
   }
