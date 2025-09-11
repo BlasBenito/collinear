@@ -2,7 +2,7 @@
 % Please edit documentation in R/S3_methods_summary.collinear_output.R
 \name{summary.collinear_output}
 \alias{summary.collinear_output}
-\title{Summary of \code{collinear_output}}
+\title{Summary of \code{class.collinear_output}}
 \usage{
 \method{summary}{collinear_output}(object = NULL, ...)
 }
@@ -11,14 +11,18 @@
 
 \item{...}{Ignored, kept for consistency with generic.}
 }
+\value{
+list
+TODO describe list structure
+}
 \description{
-Summary of \code{collinear_output}
+Summary of \code{class.collinear_output}
 }
 \seealso{
 Other S3_methods: 
-\code{\link{build.collinear_arguments}()},
-\code{\link{build.collinear_output}()},
-\code{\link{build.collinear_selection}()},
+\code{\link{class.collinear_arguments}()},
+\code{\link{class.collinear_output}()},
+\code{\link{class.collinear_selection}()},
 \code{\link{print.collinear_arguments}()},
 \code{\link{print.collinear_output}()},
 \code{\link{print.collinear_selection}()},

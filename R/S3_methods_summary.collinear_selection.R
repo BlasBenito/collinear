@@ -1,6 +1,8 @@
-#' Summary of \code{collinear_selection}
-#' @param object (required, list of class \code{collinear_selection}) Object to summarize. Default: NULL
+#' Summary of \code{class.collinear_selection}
+#' @param object (required, output of [class.collinear_selection()]) Object to summarize. Default: NULL
 #' @param ... Ignored, kept for consistency with generic.
+#' @return list
+#' TODO describe list structure
 #' @method summary collinear_selection
 #' @family S3_methods
 #' @autoglobal

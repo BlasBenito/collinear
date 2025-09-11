@@ -52,7 +52,7 @@ Accepted inputs are:
 \item{...}{(optional) Used to introduce an alternative value for the internal argument \code{function_name}.}
 }
 \value{
-list of class \code{collinear_output}
+list of class \code{class.collinear_output}
 }
 \description{
 Automates multicollinearity management by combining four methods:

@@ -1,14 +1,15 @@
-#' Builds Class \code{collinear_selection}
+#' Builds \code{class.collinear_selection}
 #'
 #' @inheritParams collinear
 #' @inheritParams f_auto
 #' @param selection (required, character vector) Names of the selected predictors. Default: NULL
 #'
-#' @return Object of class \code{collinear_selection}
+#' @return list
+#' TODO: describe list structure
 #' @family S3_methods
 #' @autoglobal
 #' @export
-build.collinear_selection <- function(
+class.collinear_selection <- function(
     df = NULL,
     response = NULL,
     preference_order = NULL,

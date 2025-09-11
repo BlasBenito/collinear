@@ -160,10 +160,9 @@ vif_select <- function(
       message(
         "\n",
         function_name,
-        ": maximum VIF is lower than ",
+        ": maximum VIF in 'predictors' is lower than ",
         max_vif,
-        ", returning these predictors: \n - ",
-        paste(predictors, collapse = "\n - ")
+        ", nothing to do."
       )
 
     }

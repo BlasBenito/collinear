@@ -1,5 +1,5 @@
-#' Print \code{collinear_selection}
-#' @param x (required, list of class \code{collinear_selection}) Object to print. Default: NULL
+#' Print \code{class.collinear_selection}
+#' @param x (required, output of [class.collinear_selection()]) Object to print. Default: NULL
 #' @param n (optional, integer) Maximum printed vector length. Default: 5.
 #' @param ... Ignored, kept for consistency with generic.
 #' @method print collinear_selection

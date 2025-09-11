@@ -2,25 +2,25 @@
 % Please edit documentation in R/S3_methods_print.collinear_output.R
 \name{print.collinear_output}
 \alias{print.collinear_output}
-\title{Print \code{collinear_output}}
+\title{Print \code{class.collinear_output}}
 \usage{
 \method{print}{collinear_output}(x = NULL, n = 5, ...)
 }
 \arguments{
-\item{x}{(required, list of class \code{collinear_output}) Object to print. Default: NULL}
+\item{x}{(required, list of class \code{class.collinear_output}) Object to print. Default: NULL}
 
 \item{n}{(optional, integer) Maximum printed vector length. Default: 5.}
 
 \item{...}{Ignored, kept for consistency with generic.}
 }
 \description{
-Print \code{collinear_output}
+Print \code{class.collinear_output}
 }
 \seealso{
 Other S3_methods: 
-\code{\link{build.collinear_arguments}()},
-\code{\link{build.collinear_output}()},
-\code{\link{build.collinear_selection}()},
+\code{\link{class.collinear_arguments}()},
+\code{\link{class.collinear_output}()},
+\code{\link{class.collinear_selection}()},
 \code{\link{print.collinear_arguments}()},
 \code{\link{print.collinear_selection}()},
 \code{\link{summary.collinear_output}()},

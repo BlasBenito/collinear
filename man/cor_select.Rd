@@ -37,7 +37,7 @@ Accepted inputs are:
 \item{quiet}{(optional; logical) If FALSE, messages are printed to the console. Default: FALSE}
 }
 \value{
-list of class \code{collinear_output}
+list of class \code{class.collinear_output}
 }
 \description{
 Implements a recursive forward selection algorithm to keep predictors with a maximum pairwise correlation with all other selected predictors lower than a given threshold. Uses \code{\link[=cor_df]{cor_df()}} underneath, and as such, can handle different combinations of predictor types.

@@ -109,7 +109,7 @@
 #'
 #' @param ... (optional) Used to introduce an alternative value for the internal argument \code{function_name}.
 #'
-#' @return list of class \code{collinear_output}
+#' @return list of class \code{class.collinear_output}
 #'
 #' @examples
 #'   data(
@@ -287,7 +287,7 @@ collinear <- function(
   }
 
   # VALIDATE ARGS ----
-  args <- build.collinear_arguments(
+  args <- class.collinear_arguments(
     df = df,
     responses = responses,
     predictors = predictors,
@@ -423,18 +423,34 @@ collinear <- function(
         predictors = selection.response
       )
 
-      selection.vif <- vif_select(
-        df = df.response,
-        predictors = selection.response.type$numeric,
-        preference_order = preference_order.response,
-        max_vif = args$max_vif,
-        quiet = args$quiet
-      )
+      if(length(selection.response.type$numeric) > 1){
 
-      selection.response <- c(
-        selection.vif,
-        selection.response.type$categorical
-      )
+        selection.vif <- vif_select(
+          df = df.response,
+          predictors = selection.response.type$numeric,
+          preference_order = preference_order.response,
+          max_vif = args$max_vif,
+          quiet = args$quiet
+        )
+
+        selection.response <- c(
+          selection.vif,
+          selection.response.type$categorical
+        )
+
+      } else {
+
+        if(quiet == FALSE){
+
+          message(
+            "\n",
+            function_name,
+            ": no numeric predictors available for VIF filtering, skipping it."
+          )
+
+        }
+
+      }
 
     }
 
@@ -486,7 +502,7 @@ collinear <- function(
 
 
     ## response list ----
-    out.response <- build.collinear_selection(
+    out.response <- class.collinear_selection(
       df = df.response,
       response = response,
       preference_order = preference_order.response,
@@ -504,7 +520,7 @@ collinear <- function(
     # end ----
   } #end of loop
 
-  out_list <- build.collinear_output(
+  out_list <- class.collinear_output(
     collinear_selection = out,
     collinear_arguments = args
   )

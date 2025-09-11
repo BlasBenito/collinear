@@ -1,6 +1,8 @@
-#' Summary of \code{collinear_output}
+#' Summary of \code{class.collinear_output}
 #' @param object (required, list of class \code{collinear_output}) Object to summarize. Default: NULL
 #' @param ... Ignored, kept for consistency with generic.
+#' @return list
+#' TODO describe list structure
 #' @method summary collinear_output
 #' @family S3_methods
 #' @autoglobal

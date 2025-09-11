@@ -1,14 +1,19 @@
-#' Builds Class \code{collinear_arguments}
+#' Builds \code{class.collinear_arguments}
+#'
+#' @description
+#' List with the validated arguments of a [collinear()] call.
+#'
 #'
 #' @inheritParams collinear
 #' @inheritParams validate_arg_f
 #'
-#' @returns list of class \code{collinear_arguments}
+#' @returns list
+#' TODO: describe class output
 #' @seealso [print.collinear_arguments()]
 #' @family S3_methods
 #' @autoglobal
 #' @export
-build.collinear_arguments <- function(
+class.collinear_arguments <- function(
     df = NULL,
     responses = NULL,
     predictors = NULL,

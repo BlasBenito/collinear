@@ -1,5 +1,5 @@
-#' Print \code{collinear_output}
-#' @param x (required, list of class \code{collinear_output}) Object to print. Default: NULL
+#' Print \code{class.collinear_output}
+#' @param x (required, list of class \code{class.collinear_output}) Object to print. Default: NULL
 #' @param n (optional, integer) Maximum printed vector length. Default: 5.
 #' @param ... Ignored, kept for consistency with generic.
 #' @method print collinear_output

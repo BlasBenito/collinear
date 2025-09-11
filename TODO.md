@@ -16,6 +16,14 @@
 - documentation DONE
 - test file DONE
 
+#collinear_auto.R IN PROGRESS
+
+- code examples
+- documentation
+- test file
+
+#collinear_lite.R
+
 #cor_clusters.R
 
 - code examples
@@ -41,6 +49,12 @@
 - test file
 
 #cor_select.R
+
+- code examples
+- documentation
+- test file
+
+#cor_stats.R
 
 - code examples
 - documentation

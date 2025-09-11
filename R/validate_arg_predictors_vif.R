@@ -151,12 +151,6 @@ validate_arg_predictors_vif <- function(
 
   } else if(length(predictors_numeric) == 0){
 
-    message(
-      "\n",
-      function_name,
-      ": no numeric columns in argument 'predictors', skipping VIF filtering."
-    )
-
     return(NULL)
 
   } else if(length(predictors_numeric) == 1){

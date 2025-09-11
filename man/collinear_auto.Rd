@@ -16,12 +16,17 @@ collinear_auto(df = NULL, responses = NULL, predictors = NULL, quiet = FALSE)
 \item{quiet}{(optional; logical) If FALSE, messages are printed to the console. Default: FALSE}
 }
 \value{
-list of class \code{collinear_output}
+list of class \code{class.collinear_output}
 }
 \description{
-Automated version of \code{\link[=collinear]{collinear()}}, with the complete functionality but fewer arguments for fire-and-forget usage.
+A fire-and-forget wrapper to \code{\link[=collinear]{collinear()}}. It configures target encoding, preference order, and the maximum multicollinearity levels (\code{max_vif} and \code{max_cor}) automatically.
+
+Target encoding is triggered with the method "loo" (leave-one-out, see \code{\link[=target_encoding_lab]{target_encoding_lab()}} for further details) when a response is numeric and there are categorical predictors.
+
+Preference order is computed automatically when \code{responses} is not NULL using \code{\link[=f_auto]{f_auto()}} to select a proper method depending on the nature of the response and the predictors.
 
 Arguments \code{max_vif} and \code{max_cor} are autoconfigured depending on the average correlation between all pairs of predictors. The autoconfiguration rules are shown below:
+
 \preformatted{
 
 max_cor <- max(
@@ -32,13 +37,20 @@ max_cor <- max(
 if (max_cor >= 0.95) {
   max_vif <- 10
 } else if (max_cor >= 0.85) {
-  max_vif <- 7.5
+  max_vif <- 8.5
+} else if (max_cor >= 0.80) {
+  max_vif <- 7
 } else if (max_cor >= 0.75) {
   max_vif <- 5
+} else if (max_cor >= 0.70) {
+  max_vif <- 3.5
 } else {
   max_vif <- 2.5
 }
+
 }
+
+These rules were obtained empirically, by comparing executions of \code{\link[=vif_select]{vif_select()}} and \code{\link[=cor_select]{cor_select()}} on 100000 different combinations of rows and columns of the dataset \link{vi}, and finding the \code{max_vif} value leading to the most similar variable selection resulting from a given \code{max_cor} value.
 }
 \examples{
 

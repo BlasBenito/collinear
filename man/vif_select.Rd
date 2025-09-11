@@ -37,7 +37,7 @@ Accepted inputs are:
 \item{quiet}{(optional; logical) If FALSE, messages are printed to the console. Default: FALSE}
 }
 \value{
-list of class \code{collinear_output}
+list of class \code{class.collinear_output}
 }
 \description{
 This function automatizes multicollinearity filtering in data frames with numeric predictors by combining two methods:

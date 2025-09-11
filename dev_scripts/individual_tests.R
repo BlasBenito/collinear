@@ -6,6 +6,8 @@ library(collinear)
 testthat::test_file("tests/testthat/test-collinear.R")
 #[ FAIL 0 | WARN 0 | SKIP 0 | PASS 62 ]
 
+testthat::test_file("tests/testthat/test-collinear_auto.R")
+
 testthat::test_file("tests/testthat/test-cor_select.R")
 #[ FAIL 0 | WARN 0 | SKIP 0 | PASS 25 ]
 

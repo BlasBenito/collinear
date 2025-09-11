@@ -1,4 +1,4 @@
-testthat::test_that("`collinear()` works", {
+testthat::test_that("`collinear_auto()` works", {
 
   data(
     vi,
@@ -12,7 +12,7 @@ testthat::test_that("`collinear()` works", {
   #DEFAULT CALL ----
   #Error: collinear::collinear(): argument 'df' cannot be NULL
   testthat::expect_error(
-    x <- collinear(),
+    x <- collinear_auto(),
     regexp = "'df' cannot be NULL"
   )
 
@@ -20,7 +20,7 @@ testthat::test_that("`collinear()` works", {
 
   ##fewer than 10 rows ----
   testthat::expect_warning(
-    x <- collinear(
+    x <- collinear_auto(
       df = vi_smol[1:9, ],
       predictors = vi_predictors_numeric
     ),
@@ -30,7 +30,7 @@ testthat::test_that("`collinear()` works", {
 
   ##fewer than 30 rows ----
   testthat::expect_message(
-    x <- collinear(
+    x <- collinear_auto(
       df = vi_smol[1:11, ],
       predictors = vi_predictors_numeric
     ),
@@ -40,51 +40,27 @@ testthat::test_that("`collinear()` works", {
 
   ##more than 30 rows ----
 
-  #max_cor and max_vif NULL
+  #max_cor and max_vif
   testthat::expect_error(
-    x <- collinear(
+    x <- collinear_auto(
       df = vi_smol,
       predictors = vi_predictors_numeric,
       max_cor = NULL,
       max_vif = NULL
-    )
+    ),
+    regexp = "unused arguments"
   )
-
-  #max_cor and max_vif invalid
-  f_test <- function(){
-    collinear(
-      df = vi_smol,
-      predictors = vi_predictors_numeric,
-      max_cor = 2,
-      max_vif = 20
-    )
-  }
-
-  testthat::expect_message(
-    x <- f_test(),
-    regexp = "argument 'max_cor' is outside its recommended range"
-  ) |>
-    suppressMessages()
-
-  testthat::expect_message(
-    x <- f_test(),
-    regexp = "argument 'max_vif' is outside its recommended range"
-  ) |>
-    suppressMessages()
 
   #RESPONSE ----
 
   ##response only ----
   testthat::expect_message(
-    x <- collinear(
+    x <- collinear_auto(
       df = vi_smol[, c(vi_responses[1:2], vi_predictors_numeric)],
       responses = vi_responses[1:2],
-      encoding_method = NULL,
-      preference_order = NULL,
-      f = NULL,
       quiet = FALSE
     ),
-    regexp = "ranking predictors from lower to higher multicollinearity"
+    regexp = "autoconfiguring 'max_vif' and 'max_cor'"
   ) |>
     suppressMessages()
 
@@ -104,16 +80,13 @@ testthat::test_that("`collinear()` works", {
 
   ##numeric predictors ----
   testthat::expect_message(
-    x <- collinear(
+    x <- collinear_auto(
       df = vi,
       responses = NULL,
       predictors = vi_predictors_numeric,
-      encoding_method = NULL,
-      preference_order = NULL,
-      f = NULL,
       quiet = FALSE
     ),
-    regexp = "ranking predictors from lower to higher multicollinearity"
+    regexp = "max_cor = 0.5"
   ) |>
     suppressMessages()
 
@@ -128,16 +101,13 @@ testthat::test_that("`collinear()` works", {
 
   ##categorical predictors ----
   testthat::expect_message(
-    x <- collinear(
+    x <- collinear_auto(
       df = vi_smol,
       responses = NULL,
       predictors = vi_predictors_categorical[1:5],
-      encoding_method = NULL,
-      preference_order = NULL,
-      f = NULL,
       quiet = FALSE
     ),
-    regexp = "no numeric predictors available for VIF filtering"
+    regexp = "max_vif = NULL"
   ) |>
     suppressMessages()
 
@@ -151,13 +121,10 @@ testthat::test_that("`collinear()` works", {
   )
 
   ##mixed predictors ----
-  x <- collinear(
+  x <- collinear_auto(
     df = vi_smol,
     responses = NULL,
     predictors = vi_predictors,
-    encoding_method = NULL,
-    preference_order = NULL,
-    f = NULL,
     quiet = TRUE
   )
 
@@ -173,13 +140,10 @@ testthat::test_that("`collinear()` works", {
   #PREDICTORS + RESPONSE ----
 
   ##numeric numeric ----
-  x <- collinear(
+  x <- collinear_auto(
     df = vi,
     responses = "vi_numeric",
     predictors = vi_predictors_numeric,
-    encoding_method = NULL,
-    preference_order = NULL,
-    f = NULL,
     quiet = TRUE
   )
 
@@ -197,9 +161,6 @@ testthat::test_that("`collinear()` works", {
     df = vi,
     responses = "vi_categorical",
     predictors = vi_predictors_numeric,
-    encoding_method = NULL,
-    preference_order = NULL,
-    f = NULL,
     quiet = TRUE
   )
 
@@ -209,16 +170,13 @@ testthat::test_that("`collinear()` works", {
 
   ##categorical categorical ----
   testthat::expect_message(
-    x <- collinear(
+    x <- collinear_auto(
       df = vi_smol,
       responses = "vi_categorical",
       predictors = vi_predictors_categorical,
-      encoding_method = NULL,
-      preference_order = NULL,
-      f = NULL,
       quiet = FALSE
     ),
-    regexp = "no numeric predictors available for VIF filtering, skipping it"
+    regexp = "max_vif = NULL"
   ) |>
     suppressMessages()
 
@@ -229,13 +187,10 @@ testthat::test_that("`collinear()` works", {
   ##multiple responses ----
   #all selections are the same
   testthat::expect_message(
-    x <- collinear(
+    x <- collinear_auto(
       df = vi_smol,
       responses = vi_responses,
       predictors = vi_predictors,
-      encoding_method = NULL,
-      preference_order = NULL,
-      f = NULL,
       quiet = FALSE
     ),
     regexp = "processing response"
