@@ -32,7 +32,7 @@ autoconfig_arg_max_cor <- function(
   } else {
     function_name <- paste0(
       function_name,
-      " > \n    |____",
+      " > \n    └── ",
       default_function_name
     )
   }
