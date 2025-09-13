@@ -2,28 +2,39 @@ library(collinear)
 library(future)
 library(tictoc)
 library(ggplot2)
+library(distantia)
 
 future::plan(
   strategy = future::multisession,
-  workers = length(future::availableWorkers()) - 2
+  workers = 8
 )
 
 #data to use
 data(vi, vi_predictors_numeric)
-
 df <- vi[, vi_predictors_numeric]
+
+#add synthetic data
+x <- distantia::zoo_simulate(
+  name = "sim",
+  cols = 100,
+  rows = nrow(df)
+) |>
+  as.data.frame()
+
+df <- cbind(df, x)
+
 
 #candidate values
 max_vif_candidates <- seq(from = 2.5, to = 10, by = 0.1)
 max_cor_candidates <- seq(from = 0.5, to = 0.99, by = 0.01)
-n_predictors_candidates <- seq(from = 5, to = length(vi_predictors_numeric))
+n_predictors_candidates <- seq(from = 5, to = ncol(df))
 n_rows_candidates <- seq(from = 30 * length(vi_predictors_numeric), to = nrow(df))
 
 #random seed
 set.seed(1)
 
 #iterations
-n <- 10000
+n <- 1000000
 iterations <- seq_len(n)
 
 iterations_df <- data.frame(
@@ -58,6 +69,11 @@ experiment_list <- future.apply::future_lapply(
       max_cor = iterations.df.i$max_cor,
       quiet = TRUE
     )
+
+    #if out.cor selects nothing, cancel this run
+    if(length(out.cor) == length(colnames(df.i))){
+      return(NULL)
+    }
 
     #vif
     for(j in seq_len(length(max_vif_candidates))){

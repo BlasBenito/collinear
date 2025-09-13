@@ -41,28 +41,36 @@ testthat::test_that("`collinear_auto()` works", {
   ##more than 30 rows ----
 
   #max_cor and max_vif
-  testthat::expect_error(
+  testthat::expect_message(
     x <- collinear_auto(
       df = vi_smol,
       predictors = vi_predictors_numeric,
       max_cor = NULL,
       max_vif = NULL
     ),
-    regexp = "unused arguments"
-  )
+    regexp = "autoconfiguring 'max_cor'"
+  ) |>
+    suppressMessages()
+
+  testthat::expect_message(
+    x <- collinear_auto(
+      df = vi_smol,
+      predictors = vi_predictors_numeric,
+      max_cor = NULL,
+      max_vif = NULL
+    ),
+    regexp = "autoconfiguring 'max_vif'"
+  ) |>
+    suppressMessages()
 
   #RESPONSE ----
 
   ##response only ----
-  testthat::expect_message(
-    x <- collinear_auto(
-      df = vi_smol[, c(vi_responses[1:2], vi_predictors_numeric)],
-      responses = vi_responses[1:2],
-      quiet = FALSE
-    ),
-    regexp = "autoconfiguring 'max_vif' and 'max_cor'"
-  ) |>
-    suppressMessages()
+  x <- collinear_auto(
+    df = vi_smol[, c(vi_responses[1:2], vi_predictors_numeric)],
+    responses = vi_responses[1:2],
+    quiet = TRUE
+  )
 
   testthat::expect_true(
     all(vi_responses[1:2] %in% names(x))
@@ -79,16 +87,12 @@ testthat::test_that("`collinear_auto()` works", {
   #PREDICTORS ----
 
   ##numeric predictors ----
-  testthat::expect_message(
-    x <- collinear_auto(
-      df = vi,
-      responses = NULL,
-      predictors = vi_predictors_numeric,
-      quiet = FALSE
-    ),
-    regexp = "max_cor = 0.5"
-  ) |>
-    suppressMessages()
+  x <- collinear_auto(
+    df = vi,
+    responses = NULL,
+    predictors = vi_predictors_numeric,
+    quiet = TRUE
+  )
 
   testthat::expect_true(
     inherits(x = x, what = "collinear_output")
@@ -239,13 +243,10 @@ testthat::test_that("`collinear_auto()` works", {
 
   #TARGET ENCODING ----
   f_test <- function(){
-    collinear(
+    collinear_auto(
       df = vi_smol,
       responses = c("vi_numeric", "vi_categorical"),
       predictors = vi_predictors_categorical,
-      encoding_method = "loo",
-      preference_order = NULL,
-      f = NULL,
       quiet = FALSE
     )
   }
@@ -355,8 +356,8 @@ testthat::test_that("`collinear_auto()` works", {
 
   testthat::expect_true(
     all.equal(
-    target = x$arguments$preference_order,
-    current = x$vi_numeric$preference$df
+      target = x$arguments$preference_order,
+      current = x$vi_numeric$preference$df
     )
   )
 

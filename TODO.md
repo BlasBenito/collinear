@@ -1,7 +1,42 @@
+#NEW: function validate_arg_function_name()
+
+  default_function_name <- "collinear::whatever()"
+
+  if(is.null(function_name)){
+    function_name <- default_function_name
+  } else {
+    function_name <- paste0(
+      function_name,
+      "\n    └── ",
+      default_function_name
+    )
+  }
+  
+collinear::collinear() > 
+    └── collinear::autoconfig_arg_max_cor()
+
+maybe use
+
+collinear::
+ └── collinear()
+      └── autoconfig_arg_max_cor()
+
 #README.Rmd
 
 - update
 - test
+
+#autoconfig_arg_max_cor.R
+
+- code examples DONE
+- documentation DONE
+- test file DONE
+
+#autofoncig_arg_max_vif.R
+
+- code examples DONE
+- documentation DONE
+- test file DONE
 
 #case_weights.R DONE
 
@@ -14,7 +49,7 @@
 - rename `response` to `responses` DONE
 - code examples DONE
 - documentation DONE
-- test file DONE
+- test file PENDING SLOW!
 
 #collinear_auto.R IN PROGRESS
 

@@ -89,7 +89,7 @@ validate_arg_max_vif <- function(
       message(
         "\n",
         function_name,
-        ": argument 'max_vif' is outside its recommended range (>=1 to <=10), resetting it to its default value (", max_vif_default, ")."
+        ": argument 'max_vif' is outside its valid range (>=1 to <=10), resetting it to ", max_vif_default, "."
       )
 
     }

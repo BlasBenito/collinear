@@ -2,6 +2,13 @@ library(testthat)
 library(devtools)
 library(collinear)
 
+
+testthat::test_file("tests/testthat/test-autoconfig_arg_max_vif.R")
+# [ FAIL 0 | WARN 0 | SKIP 0 | PASS 11 ]
+
+testthat::test_file("tests/testthat/test-autoconfig_arg_max_cor.R")
+#[ FAIL 0 | WARN 0 | SKIP 0 | PASS 8 ]
+
 #TODO: slow
 testthat::test_file("tests/testthat/test-collinear.R")
 #[ FAIL 0 | WARN 0 | SKIP 0 | PASS 62 ]

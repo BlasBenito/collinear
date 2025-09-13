@@ -23,9 +23,10 @@ class.collinear_arguments <- function(
     f_name = NULL,
     max_cor = 0.75,
     max_vif = 5,
-    quiet = FALSE,
-    function_name = NULL
+    quiet = FALSE
 ){
+
+  function_name <- "collinear::class.collinear_arguments()"
 
   ## max_cor max_vif ----
   if(all(is.null(c(max_cor, max_vif)))){

@@ -4,7 +4,14 @@
 \alias{collinear_auto}
 \title{Automated Multicollinearity Management}
 \usage{
-collinear_auto(df = NULL, responses = NULL, predictors = NULL, quiet = FALSE)
+collinear_auto(
+  df = NULL,
+  responses = NULL,
+  predictors = NULL,
+  max_cor = NULL,
+  max_vif = NULL,
+  quiet = FALSE
+)
 }
 \arguments{
 \item{df}{(required; data frame, tibble, or sf) A data frame with responses (optional) and predictors. Must have at least 10 rows for pairwise correlation analysis, and \code{10 * (length(predictors) - 1)} for VIF analysis.  Default: NULL.}
@@ -12,6 +19,10 @@ collinear_auto(df = NULL, responses = NULL, predictors = NULL, quiet = FALSE)
 \item{responses}{(optional; character, character vector, or NULL) Name of one or several response variables in \code{df}. When \code{encoding_method} is not NULL, response/s are used as reference to map categorical predictors, if any, to numeric (see \code{\link[=target_encoding_lab]{target_encoding_lab()}}). When \code{f} is not NULL, responses are used to rank predictors and preserve important ones during multicollinearity filtering (see \code{\link[=preference_order]{preference_order()}}). If no response is provided, the predictors are ranked from lower to higher multicollinearity. When several responses are provided, the selection results are named after each response in the output list. If no response is provided, the variable selection shows with the name "result" in the output list. Default: NULL.}
 
 \item{predictors}{(optional; character vector or NULL) Names of the predictors in \code{df} involved in the multicollinearity filtering. If NULL, all columns in \code{df} (except those with constant values or near zero variance) are used. Default: NULL}
+
+\item{max_cor}{(optional, numeric or NULL) Maximum correlation allowed between pairs of \code{predictors}. If NULL, \code{\link[=autoconfig_arg_max_cor]{autoconfig_arg_max_cor()}} finds a suitable value. Default: NULL}
+
+\item{max_vif}{(optional, numeric or NULL). Maximum Variance Inflation Factor allowed for \code{predictors} during multicollinearity filtering. If NULL, \code{\link[=autoconfig_arg_max_vif]{autoconfig_arg_max_vif()}} finds a suitable value for the given data. Default: NULL}
 
 \item{quiet}{(optional; logical) If FALSE, messages are printed to the console. Default: FALSE}
 }
@@ -25,32 +36,7 @@ Target encoding is triggered with the method "loo" (leave-one-out, see \code{\li
 
 Preference order is computed automatically when \code{responses} is not NULL using \code{\link[=f_auto]{f_auto()}} to select a proper method depending on the nature of the response and the predictors.
 
-Arguments \code{max_vif} and \code{max_cor} are autoconfigured depending on the average correlation between all pairs of predictors. The autoconfiguration rules are shown below:
-
-\preformatted{
-
-max_cor <- max(
-  0.5,
-  correlation_mean
-)
-
-if (max_cor >= 0.95) {
-  max_vif <- 10
-} else if (max_cor >= 0.85) {
-  max_vif <- 8.5
-} else if (max_cor >= 0.80) {
-  max_vif <- 7
-} else if (max_cor >= 0.75) {
-  max_vif <- 5
-} else if (max_cor >= 0.70) {
-  max_vif <- 3.5
-} else {
-  max_vif <- 2.5
-}
-
-}
-
-These rules were obtained empirically, by comparing executions of \code{\link[=vif_select]{vif_select()}} and \code{\link[=cor_select]{cor_select()}} on 100000 different combinations of rows and columns of the dataset \link{vi}, and finding the \code{max_vif} value leading to the most similar variable selection resulting from a given \code{max_cor} value.
+Arguments \code{max_vif} and \code{max_cor} are autoconfigured by the functions \code{\link[=autoconfig_arg_max_cor]{autoconfig_arg_max_cor()}} and \code{\link[=autoconfig_arg_max_vif]{autoconfig_arg_max_vif()}} depending on the overall pairwise correlation between predictors.
 }
 \examples{
 

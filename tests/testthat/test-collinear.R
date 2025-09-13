@@ -62,13 +62,13 @@ testthat::test_that("`collinear()` works", {
 
   testthat::expect_message(
     x <- f_test(),
-    regexp = "argument 'max_cor' is outside its recommended range"
+    regexp = "argument 'max_cor' is outside its valid range"
   ) |>
     suppressMessages()
 
   testthat::expect_message(
     x <- f_test(),
-    regexp = "argument 'max_vif' is outside its recommended range"
+    regexp = "argument 'max_vif' is outside its valid range"
   ) |>
     suppressMessages()
 
@@ -154,7 +154,7 @@ testthat::test_that("`collinear()` works", {
   x <- collinear(
     df = vi_smol,
     responses = NULL,
-    predictors = vi_predictors,
+    predictors = c(vi_predictors_numeric[1:3], vi_predictors_categorical[1:3]),
     encoding_method = NULL,
     preference_order = NULL,
     f = NULL,
@@ -232,7 +232,7 @@ testthat::test_that("`collinear()` works", {
     x <- collinear(
       df = vi_smol,
       responses = vi_responses,
-      predictors = vi_predictors,
+      predictors = vi_predictors_numeric,
       encoding_method = NULL,
       preference_order = NULL,
       f = NULL,

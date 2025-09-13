@@ -103,9 +103,7 @@ f_auto <- function(
       function_name,
       ": selected function '",
       f_name,
-      "()' for response '",
-      response,
-      "'."
+      "()' to compute preference order."
     )
 
   }
