@@ -1,25 +1,5 @@
-#NEW: function validate_arg_function_name()
+#validate_arg_function_name.R
 
-  default_function_name <- "collinear::whatever()"
-
-  if(is.null(function_name)){
-    function_name <- default_function_name
-  } else {
-    function_name <- paste0(
-      function_name,
-      "\n    └── ",
-      default_function_name
-    )
-  }
-  
-collinear::collinear() > 
-    └── collinear::autoconfig_arg_max_cor()
-
-maybe use
-
-collinear::
- └── collinear()
-      └── autoconfig_arg_max_cor()
 
 #README.Rmd
 

@@ -6,7 +6,7 @@ library(distantia)
 
 future::plan(
   strategy = future::multisession,
-  workers = 8
+  workers = future::availableCores() - 2
 )
 
 #data to use
@@ -17,11 +17,13 @@ df <- vi[, vi_predictors_numeric]
 x <- distantia::zoo_simulate(
   name = "sim",
   cols = 100,
-  rows = nrow(df)
+  rows = nrow(df),
+  seasons = 100
 ) |>
   as.data.frame()
 
 df <- cbind(df, x)
+rm(x)
 
 
 #candidate values
@@ -42,7 +44,7 @@ iterations_df <- data.frame(
   n_predictors = sample(x = n_predictors_candidates, size = n, replace = TRUE),
   n_rows = sample(x = n_rows_candidates, size = n, replace = TRUE),
   out_max_vif = rep(NA, n),
-  out_dissimilarity = rep(NA, n)
+  out_similarity = rep(NA, n)
 )
 
 tic()
@@ -94,7 +96,7 @@ experiment_list <- future.apply::future_lapply(
 
     #fill results
     iterations.df.i$out_max_vif <- max_vif_candidates[j]
-    iterations.df.i$out_dissimilarity <- length(intersect(out.vif, out.cor)) / length(union(out.vif, out.cor))
+    iterations.df.i$out_similarity <- length(intersect(out.vif, out.cor)) / length(union(out.vif, out.cor))
 
     return(iterations.df.i)
 
@@ -110,13 +112,13 @@ toc()
 ggplot(
   data = experiment_df |>
     dplyr::filter(
-      out_dissimilarity > 0.5
+      out_similarity > 0.5
     )
 ) +
   aes(
     x = max_cor,
     y = out_max_vif,
-    color = out_dissimilarity
+    color = out_similarity
   ) +
   geom_point() +
   geom_smooth(method = mgcv::gam, formula = y ~ s(x)) +

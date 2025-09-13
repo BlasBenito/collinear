@@ -14,8 +14,7 @@ class.collinear_arguments(
   f_name = NULL,
   max_cor = 0.75,
   max_vif = 5,
-  quiet = FALSE,
-  function_name = NULL
+  quiet = FALSE
 )
 }
 \arguments{
@@ -51,8 +50,6 @@ Accepted inputs are:
 \item{max_vif}{(optional, numeric or NULL) Maximum Variance Inflation Factor allowed for \code{predictors} during multicollinearity filtering. Recommended values are between 2 (strict) and 10 (permissive). If NULL, the variance inflation analysis is disabled. Default: 5.}
 
 \item{quiet}{(optional; logical) If FALSE, messages are printed to the console. Default: FALSE}
-
-\item{function_name}{(optional, character string) Name of the function performing the argument check. Default: NULL}
 }
 \value{
 list
