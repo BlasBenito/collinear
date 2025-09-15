@@ -7,11 +7,11 @@
 \alias{f_r2_gam_poisson}
 \title{Association Between a Count Response and a Continuous Predictor}
 \usage{
-f_r2_glm_poisson(df)
+f_r2_glm_poisson(df, ...)
 
-f_r2_glm_poisson_poly2(df)
+f_r2_glm_poisson_poly2(df, ...)
 
-f_r2_gam_poisson(df)
+f_r2_gam_poisson(df, ...)
 }
 \arguments{
 \item{df}{(required, data frame) with columns:
@@ -19,6 +19,8 @@ f_r2_gam_poisson(df)
 \item "x": (numeric) continuous predictor.
 \item "y" (integer) counts response.
 }}
+
+\item{...}{(optional) Other arguments. Currently used for the internal argument \code{function_name}.}
 }
 \description{
 These functions take a data frame with a integer counts response "y", and a continuous predictor "x", fit a univariate model, and return the R-squared of observations versus predictions:

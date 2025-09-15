@@ -13,7 +13,8 @@ validate_args_target_encoding_lab(
   white_noise = 0,
   seed = 0,
   overwrite = FALSE,
-  quiet = FALSE
+  quiet = FALSE,
+  function_name = NULL
 )
 }
 \arguments{
@@ -34,6 +35,8 @@ validate_args_target_encoding_lab(
 \item{overwrite}{(optional; logical) If TRUE, the original predictors in \code{df} are overwritten with their encoded versions, but only one encoding method, smoothing, white noise, and seed are allowed. Otherwise, encoded predictors with their descriptive names are added to \code{df}. Default: FALSE}
 
 \item{quiet}{(optional; logical) If FALSE, messages are printed to the console. Default: FALSE}
+
+\item{function_name}{(optional, character string) Name of the function performing the argument check. Default: NULL}
 }
 \value{
 list

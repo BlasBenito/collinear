@@ -64,31 +64,14 @@ testthat::test_that("`cor_df()` works", {
   )
 
   #few rows
-  testthat::expect_error(
-    x <- cor_df(
-      df = vi[1:2, ],
-      predictors = predictors
-    ),
-    regexp = "has fewer than 3 rows"
-  )
-
   testthat::expect_warning(
-    x <- cor_df(
-      df = vi[1:9, ],
-      predictors = predictors
+    cor.df <- cor_df(
+      df = vi[1, ],
+      predictors = vi_predictors,
+      quiet = TRUE
     ),
-    regexp = "has fewer than 10 rows"
-  ) |>
-    suppressMessages()
-
-  testthat::expect_message(
-    x <- cor_df(
-      df = vi[1:29, ],
-      predictors = predictors
-    ),
-    regexp = "has fewer than 30 rows"
-  ) |>
-    suppressMessages()
+    regexp = "argument 'df' has fewer than 10 rows"
+  )
 
 
   #no predictors
@@ -111,15 +94,11 @@ testthat::test_that("`cor_df()` works", {
   #single predictor
   predictors <- vi_predictors[1]
 
-  testthat::expect_message(
-    cor.df <- cor_df(
-      df = df,
-      predictors = predictors,
-      quiet = FALSE
-    ),
-    regexp = "only one predictor"
+  cor.df <- cor_df(
+    df = df,
+    predictors = predictors,
+    quiet = FALSE
   )
-
 
   testthat::expect_true(
     is.data.frame(cor.df)

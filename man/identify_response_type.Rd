@@ -4,7 +4,7 @@
 \alias{identify_response_type}
 \title{Identify Response Type}
 \usage{
-identify_response_type(df = NULL, response = NULL, quiet = FALSE)
+identify_response_type(df = NULL, response = NULL, quiet = FALSE, ...)
 }
 \arguments{
 \item{df}{(required; data frame, tibble, or sf) A data frame with responses (optional) and predictors. Must have at least 10 rows for pairwise correlation analysis, and \code{10 * (length(predictors) - 1)} for VIF analysis.  Default: NULL.}
@@ -12,6 +12,8 @@ identify_response_type(df = NULL, response = NULL, quiet = FALSE)
 \item{response}{(optional, character string) Name of a response variable in \code{df}. Default: NULL.}
 
 \item{quiet}{(optional; logical) If FALSE, messages are printed to the console. Default: FALSE}
+
+\item{...}{(optional) Other arguments. Currently used for the internal argument \code{function_name}.}
 }
 \value{
 character string: response type

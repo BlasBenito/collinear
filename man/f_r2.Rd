@@ -11,19 +11,19 @@
 \alias{f_r2_rf}
 \title{Association Between a Continuous Response and a Continuous Predictor}
 \usage{
-f_r2_pearson(df)
+f_r2_pearson(df, ...)
 
-f_r2_spearman(df)
+f_r2_spearman(df, ...)
 
-f_r2_glm_gaussian(df)
+f_r2_glm_gaussian(df, ...)
 
-f_r2_glm_gaussian_poly2(df)
+f_r2_glm_gaussian_poly2(df, ...)
 
-f_r2_gam_gaussian(df)
+f_r2_gam_gaussian(df, ...)
 
-f_r2_rpart(df)
+f_r2_rpart(df, ...)
 
-f_r2_rf(df)
+f_r2_rf(df, ...)
 }
 \arguments{
 \item{df}{(required, data frame) with columns:
@@ -31,6 +31,8 @@ f_r2_rf(df)
 \item \code{x}: (numeric) continuous predictor.
 \item \code{y} (numeric) continuous response.
 }}
+
+\item{...}{(optional) Other arguments. Currently used for the internal argument \code{function_name}.}
 }
 \value{
 numeric: R-squared

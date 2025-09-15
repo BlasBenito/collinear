@@ -22,13 +22,20 @@ validate_arg_quiet <- function(
     quiet = NULL
 ){
 
-  if(is.null(function_name)){
-    function_name <- "collinear::validate_arg_quiet()"
-  }
+  function_name <- validate_arg_function_name(
+    default_name = "collinear::validate_arg_quiet()",
+    function_name = function_name
+  )
 
   if(is.logical(quiet)){
     return(quiet)
   }
+
+  message(
+    "\n",
+    function_name,
+    ": argument 'quiet' must be logical, setting it to FALSE."
+  )
 
   FALSE
 

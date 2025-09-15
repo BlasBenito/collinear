@@ -14,8 +14,14 @@ class.collinear_selection <- function(
     response = NULL,
     preference_order = NULL,
     selection = NULL,
-    quiet = FALSE
+    quiet = FALSE,
+    ...
 ){
+
+  function_name <- validate_arg_function_name(
+    default_name = "collinear::class.collinear_selection()",
+    ... = ...
+  )
 
   # preference order ----
   preference_order_list <- NULL
@@ -73,14 +79,16 @@ class.collinear_selection <- function(
 
     response_type <- identify_predictors(
       df = df,
-      predictors = response
+      predictors = response,
+      function_name = function_name
     ) |>
       unlist() |>
       names()
 
     selection_type <- identify_predictors(
       df = df,
-      predictors = selection
+      predictors = selection,
+      function_name = function_name
     )
 
     out$formulas <- list()
@@ -90,7 +98,8 @@ class.collinear_selection <- function(
       df = df,
       response = response,
       predictors = selection,
-      quiet = quiet
+      quiet = quiet,
+      function_name = function_name
     )
 
     #general formula name
@@ -113,7 +122,8 @@ class.collinear_selection <- function(
         response = response,
         predictors = selection,
         term_f = "s",
-        quiet = quiet
+        quiet = quiet,
+        function_name = function_name
       )
 
     }

@@ -9,7 +9,8 @@ cor_select(
   predictors = NULL,
   preference_order = NULL,
   max_cor = 0.75,
-  quiet = FALSE
+  quiet = FALSE,
+  ...
 )
 }
 \arguments{
@@ -35,6 +36,8 @@ Accepted inputs are:
 \item{max_cor}{(optional; numeric or NULL) Maximum correlation allowed between pairs of \code{predictors}. Valid values are between 0.01 and 0.99, and recommended values are between 0.5 (strict) and 0.9 (permissive). If NULL, the pairwise correlation analysis is disabled. Default: 0.75}
 
 \item{quiet}{(optional; logical) If FALSE, messages are printed to the console. Default: FALSE}
+
+\item{...}{(optional) Other arguments. Currently used for the internal argument \code{function_name}.}
 }
 \value{
 list of class \code{class.collinear_output}
@@ -112,7 +115,7 @@ x <- cor_select(
 #with automated preference order
 df_preference <- preference_order(
   df = df,
-  responses = "vi_numeric",
+  response = "vi_numeric",
   predictors = predictors
 )
 

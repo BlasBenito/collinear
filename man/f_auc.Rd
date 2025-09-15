@@ -9,15 +9,15 @@
 \alias{f_auc_rf}
 \title{Association Between a Binomial Response and a Continuous Predictor}
 \usage{
-f_auc_glm_binomial(df)
+f_auc_glm_binomial(df, ...)
 
-f_auc_glm_binomial_poly2(df)
+f_auc_glm_binomial_poly2(df, ...)
 
-f_auc_gam_binomial(df)
+f_auc_gam_binomial(df, ...)
 
-f_auc_rpart(df)
+f_auc_rpart(df, ...)
 
-f_auc_rf(df)
+f_auc_rf(df, ...)
 }
 \arguments{
 \item{df}{(required, data frame) with columns:
@@ -25,6 +25,8 @@ f_auc_rf(df)
 \item "x": (numeric) continuous predictor.
 \item "y" (integer) binomial response with unique values 0 and 1.
 }}
+
+\item{...}{(optional) Other arguments. Currently used for the internal argument \code{function_name}.}
 }
 \description{
 These functions take a data frame with a binomial response "y" with unique values 1 and 0, and a continuous predictor "x", fit a univariate model, to return the Area Under the ROC Curve (AUC) of observations versus predictions:

@@ -79,12 +79,20 @@ target_encoding_mean <- function(
     response = NULL,
     predictor = NULL,
     encoded_name = NULL,
-    smoothing = 0
+    smoothing = 0,
+    ...
 ){
+
+  function_name <- validate_arg_function_name(
+    default_name = "collinear::target_encoding_mean()",
+    ... = ...
+  )
 
   if(is.null(encoded_name)){
     stop(
-      "collinear::target_encoding_mean() argument 'encoded_name' is required.",
+      "\n",
+      function_name,
+      ": argument 'encoded_name' is required.",
       call. = FALSE
     )
   }
@@ -131,12 +139,20 @@ target_encoding_rank <- function(
     response = NULL,
     predictor = NULL,
     encoded_name = NULL,
-    smoothing = 0
+    smoothing = 0,
+    ...
 ){
+
+  function_name <- validate_arg_function_name(
+    default_name = "collinear::target_encoding_rank()",
+    ... = ...
+  )
 
   if(is.null(encoded_name)){
     stop(
-      "collinear::target_encoding_rank() argument 'encoded_name' is required.",
+      "\n",
+      function_name,
+      ": argument 'encoded_name' is required.",
       call. = FALSE
     )
   }
@@ -189,12 +205,20 @@ target_encoding_loo <- function(
     response = NULL,
     predictor = NULL,
     encoded_name = NULL,
-    smoothing = 0
+    smoothing = 0,
+    ...
 ){
+
+  function_name <- validate_arg_function_name(
+    default_name = "collinear::collinear()",
+    ... = ...
+  )
 
   if(is.null(encoded_name)){
     stop(
-      "collinear::target_encoding_loo() argument 'encoded_name' is required.",
+      "\n",
+      function_name,
+      ": argument 'encoded_name' is required.",
       call. = FALSE
     )
   }

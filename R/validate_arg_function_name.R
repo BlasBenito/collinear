@@ -6,14 +6,24 @@
 #'
 #' @param default_name (optional, character) Name of the calling function. Default: NULL
 #' @param function_name (optional, character) Name of the parent function.
+#' @inheritParams collinear
 #'
 #' @returns character
 #' @export
 #' @autoglobal
 validate_arg_function_name <- function(
-    default_name = "hola",
-    function_name = "adios"
+    default_name = NULL,
+    function_name = NULL,
+    ...
 ){
+
+  dots <- list(...)
+  if(
+    "function_name" %in% names(dots) &&
+    is.null(function_name)
+    ){
+    function_name <- dots$function_name
+  }
 
   if(all(is.null(c(default_name, function_name)))){
     return(NULL)
@@ -23,7 +33,7 @@ validate_arg_function_name <- function(
     return(default_name)
   }
 
-  hirarchy_symbol <- "└── "
+  hirarchy_symbol <- "\u2514\u2500\u2500 "
   spaces <- "    "
 
   spaces_multiplier <- length(
@@ -49,7 +59,7 @@ validate_arg_function_name <- function(
     default_name
   )
 
-  message(function_name)
+  function_name
 
 
 }

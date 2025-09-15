@@ -4,7 +4,7 @@
 \alias{identify_predictors_type}
 \title{Identify Predictor Types}
 \usage{
-identify_predictors_type(df = NULL, predictors = NULL, quiet = FALSE)
+identify_predictors_type(df = NULL, predictors = NULL, quiet = FALSE, ...)
 }
 \arguments{
 \item{df}{(required; data frame, tibble, or sf) A data frame with responses (optional) and predictors. Must have at least 10 rows for pairwise correlation analysis, and \code{10 * (length(predictors) - 1)} for VIF analysis.  Default: NULL.}
@@ -12,6 +12,8 @@ identify_predictors_type(df = NULL, predictors = NULL, quiet = FALSE)
 \item{predictors}{(optional; character vector or NULL) Names of the predictors in \code{df} involved in the multicollinearity filtering. If NULL, all columns in \code{df} (except those with constant values or near zero variance) are used. Default: NULL}
 
 \item{quiet}{(optional; logical) If FALSE, messages are printed to the console. Default: FALSE}
+
+\item{...}{(optional) Other arguments. Currently used for the internal argument \code{function_name}.}
 }
 \value{
 character string: predictors type

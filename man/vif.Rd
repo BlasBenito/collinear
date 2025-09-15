@@ -4,10 +4,12 @@
 \alias{vif}
 \title{Variance Inflation Factors From Correlation Matrix}
 \usage{
-vif(m = NULL)
+vif(m = NULL, ...)
 }
 \arguments{
 \item{m}{(required, matrix) Correlation matrix generated via \code{\link[stats:cor]{stats::cor()}} or \code{\link[=cor_matrix]{cor_matrix()}}. Must have named dimensions. Default: NULL}
+
+\item{...}{(optional) Other arguments. Currently used for the internal argument \code{function_name}.}
 }
 \value{
 named numeric vector

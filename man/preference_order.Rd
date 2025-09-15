@@ -10,7 +10,8 @@ preference_order(
   predictors = NULL,
   f = f_auto,
   warn_limit = NULL,
-  quiet = FALSE
+  quiet = FALSE,
+  ...
 )
 }
 \arguments{
@@ -25,6 +26,8 @@ preference_order(
 \item{warn_limit}{(optional, numeric) Preference value (R-squared, AUC, or Cramer's V) over which a warning flagging suspicious predictors is issued. Disabled if NULL. Default: NULL}
 
 \item{quiet}{(optional; logical) If FALSE, messages are printed to the console. Default: FALSE}
+
+\item{...}{(optional) Other arguments. Currently used for the internal argument \code{function_name}.}
 }
 \value{
 data frame: columns are "response", "predictor", "f" (function name), and "preference".

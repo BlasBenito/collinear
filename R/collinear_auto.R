@@ -37,23 +37,29 @@ collinear_auto <- function(
     predictors = NULL,
     max_cor = NULL,
     max_vif = NULL,
-    quiet = FALSE
+    quiet = FALSE,
+    ...
 ){
 
-  function_name <- "collinear::collinear_auto()"
+  function_name <- validate_arg_function_name(
+    default_name = "collinear::collinear_auto()",
+    ... = ...
+  )
 
   df <- validate_arg_df(
     df = df,
     responses = responses,
     predictors = predictors,
-    quiet = quiet
+    quiet = quiet,
+    function_name = function_name
   )
 
   predictors <- validate_arg_predictors(
     df = df,
     response = NULL,
     predictors = predictors,
-    quiet = quiet
+    quiet = quiet,
+    function_name = function_name
   )
 
   #autoconfiguration
@@ -61,7 +67,8 @@ collinear_auto <- function(
     df = df,
     predictors = predictors,
     max_cor = max_cor,
-    quiet = quiet
+    quiet = quiet,
+    function_name = function_name
   )
 
   max_vif <- autoconfig_arg_max_vif(
@@ -69,7 +76,8 @@ collinear_auto <- function(
     predictors = predictors,
     max_cor = max_cor,
     max_vif = max_vif,
-    quiet = quiet
+    quiet = quiet,
+    function_name = function_name
   )
 
   #call to collinear
@@ -82,7 +90,8 @@ collinear_auto <- function(
     f = f_auto,
     max_cor = max_cor,
     max_vif = max_vif,
-    quiet = quiet
+    quiet = quiet,
+    function_name = function_name
   )
 
   out

@@ -4,7 +4,13 @@
 \alias{identify_predictors}
 \title{Identify Numeric and Categorical Predictors}
 \usage{
-identify_predictors(df = NULL, predictors = NULL, decimals = 4, quiet = FALSE)
+identify_predictors(
+  df = NULL,
+  predictors = NULL,
+  decimals = 4,
+  quiet = FALSE,
+  ...
+)
 }
 \arguments{
 \item{df}{(required; data frame, tibble, or sf) A data frame with responses (optional) and predictors. Must have at least 10 rows for pairwise correlation analysis, and \code{10 * (length(predictors) - 1)} for VIF analysis.  Default: NULL.}
@@ -14,6 +20,8 @@ identify_predictors(df = NULL, predictors = NULL, decimals = 4, quiet = FALSE)
 \item{decimals}{(required, integer) Number of decimal places for the zero variance test. Smaller numbers will increase the number of variables detected as near-zero variance. Recommended values will depend on the range of the numeric variables in 'df'. Default: 4}
 
 \item{quiet}{(optional; logical) If FALSE, messages are printed to the console. Default: FALSE}
+
+\item{...}{(optional) Other arguments. Currently used for the internal argument \code{function_name}.}
 }
 \value{
 list: names of numeric, categorical, logical, and zero-variance predictors

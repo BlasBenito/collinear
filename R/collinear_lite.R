@@ -40,10 +40,14 @@ collinear_lite <- function(
     preference_order = NULL,
     max_cor = 0.75,
     max_vif = 5,
-    quiet = FALSE
+    quiet = FALSE,
+    ...
 ){
 
-  function_name <- "collinear::collinear_lite()"
+  function_name <- validate_arg_function_name(
+    default_name = "collinear::collinear_lite()",
+    ... = ...
+  )
 
   if(
     !is.null(response) &&

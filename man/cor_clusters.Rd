@@ -10,7 +10,8 @@ cor_clusters(
   max_cor = 0.75,
   method = "complete",
   plot = FALSE,
-  quiet = FALSE
+  quiet = FALSE,
+  ...
 )
 }
 \arguments{
@@ -25,6 +26,8 @@ cor_clusters(
 \item{plot}{(optional, logical) If TRUE, the clustering is plotted. Default: FALSE}
 
 \item{quiet}{(optional; logical) If FALSE, messages are printed to the console. Default: FALSE}
+
+\item{...}{(optional) Other arguments. Currently used for the internal argument \code{function_name}.}
 }
 \value{
 data frame: predictor names and their cluster IDs

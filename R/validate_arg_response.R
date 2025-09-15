@@ -39,9 +39,10 @@ validate_arg_response <- function(
     quiet = FALSE
 ){
 
-  if(is.null(function_name)){
-    function_name <- "collinear::validate_arg_response()"
-  }
+  function_name <- validate_arg_function_name(
+    default_name = "collinear::validate_arg_response()",
+    function_name = function_name
+  )
 
 
   if(isTRUE(attr(x = response, which = "validated"))){
@@ -67,6 +68,7 @@ validate_arg_response <- function(
     )
 
     warning(
+      "\n",
       function_name,
       ": the following column/s in 'response' are not in 'df' and will be ignored: \n - ",
       paste(missing_response, collapse = "\n - "),
@@ -84,6 +86,7 @@ validate_arg_response <- function(
   if(length(response) > 1){
 
     message(
+      "\n",
       function_name,
       ": multiple columns are named in the argument 'response'. Using first one with value '", response[1], "'."
     )
@@ -95,6 +98,7 @@ validate_arg_response <- function(
   if(length(response) == 0){
 
     warning(
+      "\n",
       function_name,
       ": no response available, returning NULL.",
       call. = FALSE
@@ -109,7 +113,8 @@ validate_arg_response <- function(
 
     response.zero.variance <- identify_predictors_zero_variance(
       df = df,
-      predictors = response
+      predictors = response,
+      function_name = function_name
     )
 
     if(length(response.zero.variance) == 1){

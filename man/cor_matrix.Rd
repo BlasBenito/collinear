@@ -4,7 +4,7 @@
 \alias{cor_matrix}
 \title{Pairwise Correlation Matrix}
 \usage{
-cor_matrix(df = NULL, predictors = NULL, quiet = FALSE)
+cor_matrix(df = NULL, predictors = NULL, quiet = FALSE, ...)
 }
 \arguments{
 \item{df}{(required; data frame, tibble, or sf) A data frame with responses (optional) and predictors. Must have at least 10 rows. Alternatively, a dataframe resulting from \code{\link[=cor_df]{cor_df()}}. Default: NULL.}
@@ -12,6 +12,8 @@ cor_matrix(df = NULL, predictors = NULL, quiet = FALSE)
 \item{predictors}{(optional; character vector or NULL) Names of the predictors in \code{df} involved in the multicollinearity filtering. If NULL, all columns in \code{df} (except those with constant values or near zero variance) are used. Default: NULL}
 
 \item{quiet}{(optional; logical) If FALSE, messages are printed to the console. Default: FALSE}
+
+\item{...}{(optional) Other arguments. Currently used for the internal argument \code{function_name}.}
 }
 \value{
 correlation matrix

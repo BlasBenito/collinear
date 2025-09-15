@@ -8,7 +8,8 @@ identify_predictors_zero_variance(
   df = NULL,
   predictors = NULL,
   decimals = 4,
-  quiet = FALSE
+  quiet = FALSE,
+  ...
 )
 }
 \arguments{
@@ -19,6 +20,8 @@ identify_predictors_zero_variance(
 \item{decimals}{(required, integer) Number of decimal places for the zero variance test. Smaller numbers will increase the number of variables detected as near-zero variance. Recommended values will depend on the range of the numeric variables in 'df'. Default: 4}
 
 \item{quiet}{(optional; logical) If FALSE, messages are printed to the console. Default: FALSE}
+
+\item{...}{(optional) Other arguments. Currently used for the internal argument \code{function_name}.}
 }
 \value{
 character vector: names of zero and near-zero variance columns.

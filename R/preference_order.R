@@ -135,10 +135,14 @@ preference_order <- function(
     predictors = NULL,
     f = f_auto,
     warn_limit = NULL,
-    quiet = FALSE
+    quiet = FALSE,
+    ...
 ){
 
-  function_name <- "collinear::preference_order()"
+  function_name <- validate_arg_function_name(
+    default_name = "collinear::preference_order()",
+    ... = ...
+  )
 
   quiet <- validate_arg_quiet(
     function_name = function_name,
@@ -210,6 +214,7 @@ preference_order <- function(
     response <- validate_arg_response(
       df = df,
       response = response,
+      function_name = function_name,
       quiet = quiet
     )
 

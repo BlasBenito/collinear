@@ -4,12 +4,14 @@
 \alias{performance_score_r2}
 \title{Pearson's R-squared of Observations vs Predictions}
 \usage{
-performance_score_r2(o = NULL, p = NULL)
+performance_score_r2(o = NULL, p = NULL, ...)
 }
 \arguments{
 \item{o}{(required, numeric vector) Response values. Default: NULL}
 
 \item{p}{(required, numeric vector) Model predictions. Default: NULL}
+
+\item{...}{(optional) Other arguments. Currently used for the internal argument \code{function_name}.}
 }
 \value{
 numeric: Pearson R-squared

@@ -4,6 +4,7 @@
 #'
 #' @param collinear_selection (required, list) Output of  [class.collinear_selection()]. Default: NULL
 #' @param collinear_arguments (required, list) Output of [class.collinear_arguments()]. Default: NULL
+#' @inheritParams validate_arg_quiet
 #'
 #' @returns list:
 #' \itemize{
@@ -15,13 +16,22 @@
 #' @export
 class.collinear_output <- function(
     collinear_selection = NULL,
-    collinear_arguments = NULL
+    collinear_arguments = NULL,
+    function_name = NULL
 ){
+
+  function_name <- validate_arg_function_name(
+    default_name = "collinear::class.collinear_output()",
+    function_name = function_name
+  )
+
 
   if(any(is.null(c(collinear_selection, collinear_arguments)))){
 
     stop(
-      "collinear::class.collinear_output(): none of the arguments 'collinear_selection' and 'collinear_arguments' can be NULL.",
+      "\n",
+      function_name,
+      ": arguments 'collinear_selection' and 'collinear_arguments' cannot be NULL.",
       call. = FALSE
     )
 
@@ -30,7 +40,9 @@ class.collinear_output <- function(
   if(!inherits(x = collinear_arguments, what = "collinear_arguments")){
 
     stop(
-      "collinear::class.collinear_output(): argument 'collinear_arguments' must be of the class 'collinear_arguments'.",
+      "\n",
+      function_name,
+      ": argument 'collinear_arguments' must be of the class 'collinear_arguments'.",
       call. = FALSE
     )
 
@@ -44,10 +56,14 @@ class.collinear_output <- function(
     unique()
 
   if(!"collinear_selection" %in% check_collinear_selection){
+
     stop(
-      "collinear::class.collinear_output(): argument 'collinear_selection' must be a list containing objects of class 'collinear_selection'.",
+      "\n",
+      function_name,
+      ": argument 'collinear_selection' must be a list containing objects of class 'collinear_selection'.",
       call. = FALSE
     )
+
   }
 
   collinear_selection$arguments <- collinear_arguments

@@ -92,10 +92,14 @@ vif_select <- function(
     predictors = NULL,
     preference_order = NULL,
     max_vif = 5,
-    quiet = FALSE
+    quiet = FALSE,
+    ...
 ){
 
-  function_name <- "collinear::vif_select()"
+  function_name <- validate_arg_function_name(
+    default_name = "collinear::vif_select()",
+    ... = ...
+  )
 
   df <- validate_arg_df(
     df = df,
@@ -150,7 +154,8 @@ vif_select <- function(
   preference_order_auto <- vif_df(
     df = df,
     predictors = predictors,
-    quiet = TRUE
+    quiet = TRUE,
+    function_name = function_name
   )
 
   if(max(preference_order_auto$vif) <= max_vif){
@@ -196,9 +201,10 @@ vif_select <- function(
     vif.max <- cor_matrix(
       df = df,
       predictors = c(selected, candidate),
-      quiet = quiet
+      quiet = quiet,
+      function_name = function_name
     ) |>
-      vif() |>
+      vif(function_name = function_name) |>
       max()
 
 

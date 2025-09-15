@@ -11,6 +11,7 @@
 #' @param x (required; character vector) character vector representing a categorical variable. Default: NULL
 #' @param y (required; character vector) character vector representing a categorical variable. Must have the same length as \code{x}. Default: NULL
 #' @param check_input (required; logical) If FALSE, disables data checking for a slightly faster execution. Default: TRUE
+#' @inheritParams collinear
 #'
 #' @return numeric: Cramer's V
 #'
@@ -40,16 +41,24 @@
 cor_cramer_v <- function(
     x = NULL,
     y = NULL,
-    check_input = TRUE
+    check_input = TRUE,
+    ...
 ) {
+
+  function_name <- validate_arg_function_name(
+    default_name = "collinear::cor_cramer_v()",
+    ... = ...
+  )
 
   #data checks
   if(check_input == TRUE){
 
-    # Check if 'x' and 'y' have the same length
+    #x and y have the same length
     if(length(x) != length(y)){
       stop(
-        "collinear::cor_cramer_v(): arguments 'x' and 'y' must have the same length.",
+        "\n",
+        function_name,
+        ": arguments 'x' and 'y' must have the same length.",
         call. = FALSE
         )
     }
@@ -57,7 +66,9 @@ cor_cramer_v <- function(
     # Check if 'x' is not NULL
     if(is.null(x)){
       stop(
-        "collinear::cor_cramer_v(): argument 'x' must not be NULL.",
+        "\n",
+        function_name,
+        ": argument 'x' must not be NULL.",
         call. = FALSE
       )
     }
@@ -65,7 +76,9 @@ cor_cramer_v <- function(
     # Check if 'y' is not NULL
     if(is.null(y)){
       stop(
-        "collinear::cor_cramer_v(): argument 'y' must not be NULL.",
+        "\n",
+        function_name,
+        ": argument 'y' must not be NULL.",
         call. = FALSE
       )
     }
@@ -73,7 +86,9 @@ cor_cramer_v <- function(
     # Check if 'x' is a character vector
     if(is.numeric(x)){
       stop(
-        "collinear::cor_cramer_v(): argument 'x' must be of class 'character' or 'factor', but it is 'numeric'.",
+        "\n",
+        function_name,
+        ": argument 'x' must be of class 'character' or 'factor', but it is 'numeric'.",
         call. = FALSE
       )
     }
@@ -81,7 +96,9 @@ cor_cramer_v <- function(
     # Check if 'y' is a character vector
     if(is.numeric(y)){
       stop(
-        "collinear::cor_cramer_v(): argument 'y' must be of class 'character' or 'factor', but it is 'numeric'.",
+        "\n",
+        function_name,
+        ": argument 'y' must be of class 'character' or 'factor', but it is 'numeric'.",
         call. = FALSE
       )
     }

@@ -15,6 +15,11 @@ validate_arg_f <- function(
     function_name = NULL
 ){
 
+  function_name <- validate_arg_function_name(
+    default_name = "collinear::validate_arg_f()",
+    function_name = function_name
+  )
+
   #NULL
   if(is.null(f)){
     return(NULL)

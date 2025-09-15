@@ -4,12 +4,18 @@
 \alias{class.collinear_output}
 \title{Builds Class \code{class.collinear_output}}
 \usage{
-class.collinear_output(collinear_selection = NULL, collinear_arguments = NULL)
+class.collinear_output(
+  collinear_selection = NULL,
+  collinear_arguments = NULL,
+  function_name = NULL
+)
 }
 \arguments{
 \item{collinear_selection}{(required, list) Output of  \code{\link[=class.collinear_selection]{class.collinear_selection()}}. Default: NULL}
 
 \item{collinear_arguments}{(required, list) Output of \code{\link[=class.collinear_arguments]{class.collinear_arguments()}}. Default: NULL}
+
+\item{function_name}{(optional, character string) Name of the function performing the argument check. Default: NULL}
 }
 \value{
 list:

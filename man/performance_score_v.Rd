@@ -4,12 +4,14 @@
 \alias{performance_score_v}
 \title{Cramer's V of Observations vs Predictions}
 \usage{
-performance_score_v(o = NULL, p = NULL)
+performance_score_v(o = NULL, p = NULL, ...)
 }
 \arguments{
 \item{o}{(required; character vector) character vector representing observations of a categorical variable. Default: NULL}
 
 \item{p}{(required; character vector) character vector representing predictions of a categorical variable. Must have the same length as \code{o}. Default: NULL}
+
+\item{...}{(optional) Other arguments. Currently used for the internal argument \code{function_name}.}
 }
 \value{
 numeric: Cramer's V

@@ -19,9 +19,15 @@ validate_arg_df_not_null <- function(
     function_name = NULL
 ){
 
+  function_name <- validate_arg_function_name(
+    default_name = "collinear::validate_arg_df_not_null()",
+    function_name = function_name
+  )
+
   if(is.null(df)){
 
     stop(
+      "\n",
       function_name,
       ": argument 'df' cannot be NULL",
       call. = FALSE

@@ -7,6 +7,7 @@
 #'
 #' @param o (required, numeric vector) Binomial response with values 0 and 1. Default: NULL
 #' @param p (required, numeric vector) Predictions of a binomial model. Default: NULL
+#' @inheritParams collinear
 #'
 #' @return numeric: Area Under the ROC Curve
 #' @export
@@ -20,12 +21,20 @@
 #'
 performance_score_auc <- function(
     o = NULL,
-    p = NULL
+    p = NULL,
+    ...
 ){
+
+  function_name <- validate_arg_function_name(
+    default_name = "collinear::performance_score_auc()",
+    ... = ...
+  )
 
   if(is.null(o)){
     stop(
-      "collinear::performance_score_auc(): argument 'o' cannot be NULL.",
+      "\n",
+      function_name,
+      ": argument 'o' cannot be NULL.",
       call. = FALSE
     )
   }
@@ -33,7 +42,9 @@ performance_score_auc <- function(
 
   if(is.null(p)){
     stop(
-      "collinear::performance_score_auc(): argument 'p' cannot be NULL.",
+      "\n",
+      function_name,
+      ": argument 'p' cannot be NULL.",
       call. = FALSE
     )
   }
@@ -48,7 +59,9 @@ performance_score_auc <- function(
 
   if(sum(c(ones.n, zeros.n)) == 0){
     stop(
-      "collinear::performance_score_auc(): argument 'o' must be a binomial vector of 0s and 1s.",
+      "\n",
+      function_name,
+      ": argument 'o' must be a binomial vector of 0s and 1s.",
       call. = FALSE
     )
   }

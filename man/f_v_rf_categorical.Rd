@@ -4,7 +4,7 @@
 \alias{f_v_rf_categorical}
 \title{Association Between a Categorical Response and a Categorical or Numeric Predictor}
 \usage{
-f_v_rf_categorical(df)
+f_v_rf_categorical(df, ...)
 }
 \arguments{
 \item{df}{(required, data frame) with columns:
@@ -12,6 +12,8 @@ f_v_rf_categorical(df)
 \item "x": (character, factor, or numeric) categorical or numeric predictor.
 \item "y" (character or factor) categorical response.
 }}
+
+\item{...}{(optional) Other arguments. Currently used for the internal argument \code{function_name}.}
 }
 \value{
 numeric: Cramer's V

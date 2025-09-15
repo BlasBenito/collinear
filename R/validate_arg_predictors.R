@@ -42,9 +42,10 @@ validate_arg_predictors <- function(
     quiet = FALSE
 ){
 
-  if(is.null(function_name)){
-    function_name <- "collinear::validate_arg_predictors()"
-  }
+  function_name <- validate_arg_function_name(
+    default_name = "collinear::validate_arg_predictors()",
+    function_name = function_name
+  )
 
   #if already validated, return it
   if(isTRUE(attr(x = predictors, which = "validated"))){
@@ -108,7 +109,8 @@ validate_arg_predictors <- function(
     #removing zero variance predictors
     predictors.zero.variance <- identify_predictors_zero_variance(
       df = df,
-      predictors = predictors
+      predictors = predictors,
+      function_name = function_name
     )
 
     if(length(predictors.zero.variance) > 0){
@@ -173,6 +175,7 @@ validate_arg_predictors <- function(
   if(length(predictors) == 0){
 
     warning(
+      "\n",
       function_name,
       ": no valid predictors available, please check that values in argument 'predictors' match the column names in 'df'",
       call. = FALSE

@@ -4,12 +4,14 @@
 \alias{validate_arg_function_name}
 \title{Validates Argument \code{function_name}}
 \usage{
-validate_arg_function_name(default_name = "hola", function_name = "adios")
+validate_arg_function_name(default_name = NULL, function_name = NULL, ...)
 }
 \arguments{
 \item{default_name}{(optional, character) Name of the calling function. Default: NULL}
 
 \item{function_name}{(optional, character) Name of the parent function.}
+
+\item{...}{(optional) Other arguments. Currently used for the internal argument \code{function_name}.}
 }
 \value{
 character

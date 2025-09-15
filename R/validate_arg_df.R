@@ -43,11 +43,10 @@ validate_arg_df <- function(
     quiet = FALSE
 ){
 
-  if(is.null(function_name)){
-    function_name <- "collinear::validate_arg_df()"
-  }
-
-  preference_order_wrapper
+  function_name <- validate_arg_function_name(
+    default_name = "collinear::validate_arg_df()",
+    function_name = function_name
+  )
 
   df <- validate_arg_df_not_null(
     df = df,
@@ -127,7 +126,8 @@ validate_arg_df <- function(
 
   df <- drop_geometry_column(
     df = df,
-    quiet = quiet
+    quiet = quiet,
+    function_name = function_name
   )
 
   if(is.null(predictors)){
@@ -175,7 +175,8 @@ validate_arg_df <- function(
   #identify predictors
   column_types <- identify_predictors(
     df = df,
-    predictors = selected_columns
+    predictors = selected_columns,
+    function_name = function_name
   )
 
   #logicals to numeric

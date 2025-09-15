@@ -11,7 +11,8 @@ model_formula(
   term_f = NULL,
   term_args = NULL,
   random_effects = NULL,
-  quiet = FALSE
+  quiet = FALSE,
+  ...
 )
 }
 \arguments{
@@ -28,6 +29,8 @@ model_formula(
 \item{random_effects}{(optional, string or character vector). Names of variables to be used as random effects. Each element is added to the final formula as \code{+(1 | random_effect_name)}. Default: NULL}
 
 \item{quiet}{(optional; logical) If FALSE, messages are printed to the console. Default: FALSE}
+
+\item{...}{(optional) Other arguments. Currently used for the internal argument \code{function_name}.}
 }
 \value{
 list if \code{predictors} is a list or length of \code{response} is higher than one, and character vector otherwise.

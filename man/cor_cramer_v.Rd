@@ -4,7 +4,7 @@
 \alias{cor_cramer_v}
 \title{Bias Corrected Cramer's V}
 \usage{
-cor_cramer_v(x = NULL, y = NULL, check_input = TRUE)
+cor_cramer_v(x = NULL, y = NULL, check_input = TRUE, ...)
 }
 \arguments{
 \item{x}{(required; character vector) character vector representing a categorical variable. Default: NULL}
@@ -12,6 +12,8 @@ cor_cramer_v(x = NULL, y = NULL, check_input = TRUE)
 \item{y}{(required; character vector) character vector representing a categorical variable. Must have the same length as \code{x}. Default: NULL}
 
 \item{check_input}{(required; logical) If FALSE, disables data checking for a slightly faster execution. Default: TRUE}
+
+\item{...}{(optional) Other arguments. Currently used for the internal argument \code{function_name}.}
 }
 \value{
 numeric: Cramer's V

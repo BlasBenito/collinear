@@ -18,20 +18,16 @@ validate_arg_encoding_method <- function(
     quiet = FALSE
 ){
 
-  if(is.null(function_name)){
-    function_name <- "collinear::validate_arg_encoding_method()"
-  }
+  function_name <- validate_arg_function_name(
+    default_name = "collinear::validate_arg_encoding_method()",
+    function_name = function_name
+  )
 
   if(isTRUE(attr(x = encoding_method, which = "validated"))){
     return(encoding_method)
   }
 
-  if(is.null(function_name)){
-    function_name <- "collinear::validate_arg_encoding_method()"
-  }
-
   if(is.null(encoding_method)){
-
     return(NULL)
   }
 

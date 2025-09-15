@@ -82,10 +82,14 @@ model_formula <- function(
     term_f = NULL,
     term_args = NULL,
     random_effects = NULL,
-    quiet = FALSE
+    quiet = FALSE,
+    ...
 ){
 
-  function_name <- "collinear::model_formula()"
+  function_name <- validate_arg_function_name(
+    default_name = "collinear::model_formula()",
+    ... = ...
+  )
 
   quiet <- validate_arg_quiet(
     function_name = function_name,
@@ -102,6 +106,7 @@ model_formula <- function(
 
   if(is.null(response)){
     stop(
+      "\n",
       function_name,
       ": argument 'response' cannot be NULL.",
       call. = FALSE
@@ -117,6 +122,7 @@ model_formula <- function(
 
   if(is.null(predictors)){
     stop(
+      "\n",
       function_name,
       ": argument 'predictors' cannot be NULL.",
       call. = FALSE
@@ -183,6 +189,7 @@ model_formula <- function(
 
     if(!is.character(random_effects)){
       stop(
+        "\n",
         function_name,
         ": argument 'random_effects' must be a character string or vector.",
         call. = FALSE
@@ -196,6 +203,7 @@ model_formula <- function(
 
     if(length(random_effects) == 0){
       stop(
+        "\n",
         function_name,
         ": argument 'random_effects' must name variables not in argument 'predictors'.",
         call. = FALSE

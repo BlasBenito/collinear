@@ -27,7 +27,6 @@ Suggests:
     spelling
 Config/testthat/edition: 3
 Depends: 
-    R (>= 4.1.0)
+    R (>= 4.0)
 LazyData: true
 Language: en-US
-Config/testthat/parallel: true

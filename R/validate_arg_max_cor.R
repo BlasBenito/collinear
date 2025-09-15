@@ -22,10 +22,10 @@ validate_arg_max_cor <- function(
     quiet = FALSE
     ){
 
-  if(is.null(function_name)){
-    function_name <- "collinear::validate_arg_max_cor()"
-  }
-
+  function_name <- validate_arg_function_name(
+    default_name = "collinear::validate_arg_max_cor()",
+    function_name = function_name
+  )
 
   max_cor_default <- 0.75
 
@@ -81,14 +81,14 @@ validate_arg_max_cor <- function(
 
   }
 
-  if(max_cor > 0.99 || max_cor < 0.1){
+  if(max_cor > 1 || max_cor < 0){
 
     if(quiet == FALSE){
 
       message(
         "\n",
         function_name,
-        ": argument 'max_cor' is outside its valid range (>=0.1 to <=0.99), resetting it to ", max_cor_default, "."
+        ": argument 'max_cor' is outside its recommended range (>=0 to <=1), resetting it to its default value (", max_cor_default, ")."
       )
 
     }

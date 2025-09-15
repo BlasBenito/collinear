@@ -58,10 +58,14 @@
 cor_matrix <- function(
     df = NULL,
     predictors = NULL,
-    quiet = FALSE
+    quiet = FALSE,
+    ...
 ){
 
-  function_name <- "collinear::cor_matrix()"
+  function_name <- validate_arg_function_name(
+    default_name = "collinear::cor_matrix()",
+    ... = ...
+  )
 
   #if df with predictors, compute correlation matrix
   if(
@@ -77,7 +81,8 @@ cor_matrix <- function(
     df <- cor_df(
       df = df,
       predictors = predictors,
-      quiet = quiet
+      quiet = quiet,
+      function_name = function_name
     )
 
   }

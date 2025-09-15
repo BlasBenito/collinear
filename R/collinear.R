@@ -107,7 +107,7 @@
 #'
 #' @param quiet (optional; logical) If FALSE, messages are printed to the console. Default: FALSE
 #'
-#' @param ... (optional) Used to introduce an alternative value for the internal argument \code{function_name}.
+#' @param ... (optional) Other arguments. Currently used for the internal argument \code{function_name}.
 #'
 #' @return list of class \code{class.collinear_output}
 #'
@@ -278,13 +278,10 @@ collinear <- function(
     ...
 ){
 
-  function_name <- "collinear::collinear()"
-
-  dots <- list(...)
-  if("function_name" %in% names(dots)){
-    function_name <- dots$function_name
-    dots$function_name <- NULL
-  }
+  function_name <- validate_arg_function_name(
+    default_name = "collinear::collinear()",
+    ... = ...
+  )
 
   # VALIDATE ARGS ----
   args <- class.collinear_arguments(
@@ -379,7 +376,8 @@ collinear <- function(
         predictors = predictors.response,
         encoding_method = args$encoding_method,
         overwrite = TRUE,
-        quiet = args$quiet
+        quiet = args$quiet,
+        function_name = function_name
       )
 
     }
@@ -392,8 +390,8 @@ collinear <- function(
       preference_order = args$preference_order,
       f = args$f,
       f_name = args$f_name,
-      function_name = function_name,
-      quiet = args$quiet
+      quiet = args$quiet,
+      function_name = function_name
     )
 
     ##MULTICOLLINEARITY ANALYSIS ----
@@ -409,7 +407,8 @@ collinear <- function(
         predictors = predictors.response,
         preference_order = preference_order.response,
         max_cor = args$max_cor,
-        quiet = args$quiet
+        quiet = args$quiet,
+        function_name = function_name
       )
 
     }
@@ -420,7 +419,8 @@ collinear <- function(
       #separate numeric and categorical
       selection.response.type <- identify_predictors(
         df = df.response,
-        predictors = selection.response
+        predictors = selection.response,
+        function_name = function_name
       )
 
       if(length(selection.response.type$numeric) > 1){
@@ -430,7 +430,8 @@ collinear <- function(
           predictors = selection.response.type$numeric,
           preference_order = preference_order.response,
           max_vif = args$max_vif,
-          quiet = args$quiet
+          quiet = args$quiet,
+          function_name = function_name
         )
 
         selection.response <- c(
@@ -507,7 +508,8 @@ collinear <- function(
       response = response,
       preference_order = preference_order.response,
       selection = selection.response,
-      quiet = args$quiet
+      quiet = args$quiet,
+      function_name = function_name
     )
 
     #store in output list

@@ -42,9 +42,10 @@ validate_arg_predictors_vif <- function(
     quiet = FALSE
 ){
 
-  if(is.null(function_name)){
-    function_name <- "collinear::validate_arg_predictors_vif()"
-  }
+  function_name <- validate_arg_function_name(
+    default_name = "collinear::validate_arg_predictors_vif()",
+    function_name = function_name
+  )
 
   #if df is NULL, stop
   df <- validate_arg_df_not_null(
@@ -89,7 +90,8 @@ validate_arg_predictors_vif <- function(
   #predictors
   predictors_types <- identify_predictors(
     df = df,
-    predictors = predictors
+    predictors = predictors,
+    function_name = function_name
   )
 
   predictors_numeric <- predictors_types$numeric

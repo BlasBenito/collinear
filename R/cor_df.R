@@ -81,10 +81,14 @@
 cor_df <- function(
     df = NULL,
     predictors = NULL,
-    quiet = FALSE
+    quiet = FALSE,
+    ...
 ){
 
-  function_name <- "collinear::cor_df()"
+  function_name <- validate_arg_function_name(
+    default_name = "collinear::cor_df()",
+    ... = ...
+  )
 
   quiet <- validate_arg_quiet(
     function_name = function_name,
@@ -139,21 +143,24 @@ cor_df <- function(
   cor.list[["num-vs-num"]] <- cor_numeric_vs_numeric(
     df = df,
     predictors = predictors,
-    quiet = quiet
+    quiet = quiet,
+    function_name = function_name
   )
 
   #correlation between numeric and character variables
   cor.list[["num-vs-cat"]] <- cor_numeric_vs_categorical(
     df = df,
     predictors = predictors,
-    quiet = quiet
+    quiet = quiet,
+    function_name = function_name
   )
 
   #correlation between characters
   cor.list[["cat-vs-cat"]] <- cor_categorical_vs_categorical(
     df = df,
     predictors = predictors,
-    quiet = quiet
+    quiet = quiet,
+    function_name = function_name
   )
 
   #join results
@@ -192,10 +199,14 @@ cor_df <- function(
 cor_numeric_vs_numeric <- function(
     df = NULL,
     predictors = NULL,
-    quiet = FALSE
+    quiet = FALSE,
+    ...
 ){
 
-  function_name <- "collinear::cor_numeric_vs_numeric()"
+  function_name <- validate_arg_function_name(
+    default_name = "collinear::cor_numeric_vs_numeric()",
+    ... = ...
+  )
 
   quiet <- validate_arg_quiet(
     function_name = function_name,
@@ -222,7 +233,8 @@ cor_numeric_vs_numeric <- function(
   #identify numerics
   predictors <- identify_predictors_numeric(
     df = df,
-    predictors = predictors
+    predictors = predictors,
+    function_name = function_name
   )
 
   if(length(predictors) <= 1){
@@ -295,10 +307,14 @@ cor_numeric_vs_numeric <- function(
 cor_numeric_vs_categorical <- function(
     df = NULL,
     predictors = NULL,
-    quiet = FALSE
+    quiet = FALSE,
+    ...
 ){
 
-  function_name <- "collinear::cor_numeric_vs_categorical()"
+  function_name <- validate_arg_function_name(
+    default_name = "collinear::cor_numeric_vs_categorical()",
+    ... = ...
+  )
 
   quiet <- validate_arg_quiet(
     function_name = function_name,
@@ -325,7 +341,8 @@ cor_numeric_vs_categorical <- function(
   predictors_types <- identify_predictors(
     df = df,
     predictors = predictors,
-    quiet = quiet
+    quiet = quiet,
+    function_name = function_name
   )
 
   if(
@@ -409,10 +426,14 @@ cor_numeric_vs_categorical <- function(
 cor_categorical_vs_categorical <- function(
     df = NULL,
     predictors = NULL,
-    quiet = FALSE
+    quiet = FALSE,
+    ...
 ){
 
-  function_name <- "collinear::cor_categorical_vs_categorical()"
+  function_name <- validate_arg_function_name(
+    default_name = "collinear::cor_categorical_vs_categorical()",
+    ... = ...
+  )
 
   quiet <- validate_arg_quiet(
     function_name = function_name,
@@ -438,7 +459,8 @@ cor_categorical_vs_categorical <- function(
   #get only categorical predictors
   predictors <- identify_predictors_categorical(
     df = df,
-    predictors = predictors
+    predictors = predictors,
+    function_name = function_name
   )
 
   #empty output if no predictors
@@ -486,7 +508,8 @@ cor_categorical_vs_categorical <- function(
       val <- cor_cramer_v(
         x = df.x$x,
         y = df.x$y,
-        check_input = FALSE
+        check_input = FALSE,
+        function_name = function_name
       ) |>
         abs()
 

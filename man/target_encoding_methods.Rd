@@ -11,7 +11,8 @@ target_encoding_mean(
   response = NULL,
   predictor = NULL,
   encoded_name = NULL,
-  smoothing = 0
+  smoothing = 0,
+  ...
 )
 
 target_encoding_rank(
@@ -19,7 +20,8 @@ target_encoding_rank(
   response = NULL,
   predictor = NULL,
   encoded_name = NULL,
-  smoothing = 0
+  smoothing = 0,
+  ...
 )
 
 target_encoding_loo(
@@ -27,7 +29,8 @@ target_encoding_loo(
   response = NULL,
   predictor = NULL,
   encoded_name = NULL,
-  smoothing = 0
+  smoothing = 0,
+  ...
 )
 }
 \arguments{
@@ -40,6 +43,8 @@ target_encoding_loo(
 \item{encoded_name}{(required, string) Name of the encoded predictor. Default: NULL}
 
 \item{smoothing}{(optional; integer) Groups smaller than this number have their means pulled towards the mean of the response across all cases. Ignored by \code{\link[=target_encoding_rank]{target_encoding_rank()}} and \code{\link[=target_encoding_loo]{target_encoding_loo()}}. Default: 0}
+
+\item{...}{(optional) Other arguments. Currently used for the internal argument \code{function_name}.}
 }
 \value{
 data frame

@@ -25,8 +25,14 @@ identify_predictors <- function(
     df = NULL,
     predictors = NULL,
     decimals = 4,
-    quiet = FALSE
+    quiet = FALSE,
+    ...
 ){
+
+  function_name <- validate_arg_function_name(
+    default_name = "collinear::identify_predictors()",
+    ... = ...
+  )
 
   if(is.null(predictors)){
     predictors <- colnames(df)
@@ -36,7 +42,8 @@ identify_predictors <- function(
     df = df,
     predictors = predictors,
     decimals = decimals,
-    quiet = quiet
+    quiet = quiet,
+    function_name = function_name
   )
 
   predictors_categorical <- identify_predictors_categorical(
@@ -45,7 +52,8 @@ identify_predictors <- function(
       x = predictors,
       y = predictors_numeric
     ),
-    quiet = quiet
+    quiet = quiet,
+    function_name = function_name
   )
 
   predictors_logical <- identify_predictors_logical(
@@ -58,7 +66,8 @@ identify_predictors <- function(
         )
     ),
     decimals = decimals,
-    quiet = quiet
+    quiet = quiet,
+    function_name = function_name
   )
 
   predictors_zero_variance <- identify_predictors_zero_variance(
@@ -72,7 +81,8 @@ identify_predictors <- function(
         )
     ),
     decimals = decimals,
-    quiet = quiet
+    quiet = quiet,
+    function_name = function_name
   )
 
   out_list <- list(
@@ -113,10 +123,14 @@ identify_predictors_logical <- function(
     df = NULL,
     predictors = NULL,
     decimals = 4,
-    quiet = FALSE
+    quiet = FALSE,
+    ...
 ){
 
-  function_name <- "collinear::identify_predictors_logical()"
+  function_name <- validate_arg_function_name(
+    default_name = "collinear::identify_predictors_logical()",
+    ... = ...
+  )
 
   df <- validate_arg_df_not_null(
     df = df,
@@ -210,10 +224,14 @@ identify_predictors_numeric <- function(
     df = NULL,
     predictors = NULL,
     decimals = 4,
-    quiet = FALSE
+    quiet = FALSE,
+    ...
 ){
 
-  function_name <- "collinear::identify_predictors_numeric()"
+  function_name <- validate_arg_function_name(
+    default_name = "collinear::identify_predictors_numeric()",
+    ... = ...
+  )
 
   df <- validate_arg_df_not_null(
     df = df,
@@ -247,7 +265,8 @@ identify_predictors_numeric <- function(
   #ignore constant and near-zero variance predictors
   predictors_zero_variance <- identify_predictors_zero_variance(
     df = df,
-    predictors = predictors
+    predictors = predictors,
+    function_name = function_name
   )
 
   if(quiet == FALSE && length(predictors_zero_variance) < 0){
@@ -303,10 +322,14 @@ identify_predictors_numeric <- function(
 identify_predictors_categorical <- function(
     df = NULL,
     predictors = NULL,
-    quiet = FALSE
+    quiet = FALSE,
+    ...
 ){
 
-  function_name <- "collinear::identify_predictors_categorical()"
+  function_name <- validate_arg_function_name(
+    default_name = "collinear::identify_predictors_categorical()",
+    ... = ...
+  )
 
   df <- validate_arg_df_not_null(
     df = df,
@@ -443,10 +466,14 @@ identify_predictors_zero_variance <- function(
     df = NULL,
     predictors = NULL,
     decimals = 4,
-    quiet = FALSE
+    quiet = FALSE,
+    ...
 ){
 
-  function_name <- "collinear::identify_predictors_zero_variance()"
+  function_name <- validate_arg_function_name(
+    default_name = "collinear::identify_predictors_zero_variance()",
+    ... = ...
+  )
 
   df <- validate_arg_df_not_null(
     df = df,
@@ -555,10 +582,14 @@ identify_predictors_zero_variance <- function(
 identify_response_type <- function(
     df = NULL,
     response = NULL,
-    quiet = FALSE
+    quiet = FALSE,
+    ...
 ){
 
-  function_name <- "collinear::identify_response_type()"
+  function_name <- validate_arg_function_name(
+    default_name = "collinear::identify_response_type()",
+    ... = ...
+  )
 
   df <- validate_arg_df(
     df = df,
@@ -588,6 +619,7 @@ identify_response_type <- function(
   if(x_length == 1){
 
     stop(
+      "\n",
       function_name,
       ": argument 'response' names a column with a constant value. Please select a different response column.",
       call. = FALSE
@@ -734,12 +766,18 @@ identify_response_type <- function(
 identify_predictors_type <- function(
     df = NULL,
     predictors = NULL,
-    quiet = FALSE
+    quiet = FALSE,
+    ...
 ){
+
+  function_name <- validate_arg_function_name(
+    default_name = "collinear::identify_predictors_numeric()",
+    ... = ...
+  )
 
   df <- validate_arg_df_not_null(
     df = df,
-    function_name = "identify_predictors_numeric()"
+    function_name = function_name
   )
 
   if(is.null(predictors)){

@@ -9,6 +9,7 @@
 #' @inheritSection collinear Variance Inflation Factors
 #'
 #' @param m (required, matrix) Correlation matrix generated via [stats::cor()] or [cor_matrix()]. Must have named dimensions. Default: NULL
+#' @inheritParams collinear
 #'
 #' @return named numeric vector
 #' @family vif
@@ -24,25 +25,39 @@
 #' )
 #'
 #' vif(m)
-vif <- function(m = NULL){
+vif <- function(
+    m = NULL,
+    ...
+    ){
+
+  function_name <- validate_arg_function_name(
+    default_name = "collinear::vif()",
+    ... = ...
+  )
 
   if(inherits(x = m, what = "matrix") == FALSE){
     stop(
-      "collinear::vif(): argument 'm' must be a correlation matrix generated via 'stats::cor()' or 'collinear::cor_matrix()'.",
+      "\n",
+      function_name,
+      ": argument 'm' must be a correlation matrix generated via 'stats::cor()' or 'collinear::cor_matrix()'.",
       call. = FALSE
     )
   }
 
   if(length(unique(dim(m))) > 1){
     stop(
-      "collinear::vif(): argument 'm' must be a square matrix.",
+      "\n",
+      function_name,
+      ": argument 'm' must be a square matrix.",
       call. = FALSE
     )
   }
 
   if(length(dimnames(m)[[1]]) != nrow(m)){
     stop(
-      "collinear::vif(): argument 'm' must have dimension names.",
+      "\n",
+      function_name,
+      ": argument 'm' must have dimension names.",
       call. = FALSE
     )
   }
@@ -99,7 +114,9 @@ vif <- function(m = NULL){
   if(is.null(out)){
 
     warning(
-      "collinear::vif(): the correlation matrix is singular and cannot be solved. Returning Inf VIFs",
+      "\n",
+      function_name,
+      ": the correlation matrix is singular and cannot be solved. Returning Inf VIFs",
       call. = FALSE
     )
 

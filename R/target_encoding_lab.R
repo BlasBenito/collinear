@@ -35,6 +35,8 @@
 #'
 #' @param overwrite (optional; logical) If TRUE, the original predictors in \code{df} are overwritten with their encoded versions, but only one encoding method, smoothing, white noise, and seed are allowed. Otherwise, encoded predictors with their descriptive names are added to \code{df}. Default: FALSE
 #'
+#' @inheritParams collinear
+#'
 #' @return data frame
 #' @examples
 #'
@@ -86,8 +88,14 @@ target_encoding_lab <- function(
     white_noise = 0,
     seed = 0,
     overwrite = FALSE,
-    quiet = FALSE
+    quiet = FALSE,
+    ...
 ){
+
+  function_name <- validate_arg_function_name(
+    default_name = "collinear::target_encoding_lab()",
+    ... = ...
+  )
 
   # validate all other args ----
   args <- validate_args_target_encoding_lab(
@@ -99,6 +107,7 @@ target_encoding_lab <- function(
     white_noise = white_noise,
     seed = seed,
     overwrite = overwrite,
+    function_name = function_name,
     quiet = quiet
   )
 
@@ -121,7 +130,9 @@ target_encoding_lab <- function(
   if(quiet == FALSE){
 
     message(
-      "\ncollinear::target_encoding_lab(): using response '",
+      "\n",
+      function_name,
+      ": using response '",
       response,
       "' to encode these categorical predictors:\n - ",
       paste0(
@@ -205,7 +216,8 @@ target_encoding_lab <- function(
         response = response,
         predictor = predictor.i,
         encoded_name = predictor_encoded_name.i,
-        smoothing = smoothing.i
+        smoothing = smoothing.i,
+        function_name = function_name
       )
 
       #add white noise if any

@@ -56,7 +56,7 @@
 #' #with automated preference order
 #' df_preference <- preference_order(
 #'   df = df,
-#'   responses = "vi_numeric",
+#'   response = "vi_numeric",
 #'   predictors = predictors
 #' )
 #'
@@ -78,10 +78,14 @@ cor_select <- function(
     predictors = NULL,
     preference_order = NULL,
     max_cor = 0.75,
-    quiet = FALSE
+    quiet = FALSE,
+    ...
 ){
 
-  function_name <- "collinear::cor_select()"
+  function_name <- validate_arg_function_name(
+    default_name = "collinear::cor_select()",
+    ... = ...
+  )
 
   quiet <- validate_arg_quiet(
     function_name = function_name,
@@ -89,8 +93,8 @@ cor_select <- function(
   )
 
   max_cor <- validate_arg_max_cor(
-    function_name = function_name,
     max_cor = max_cor,
+    function_name = function_name,
     quiet = quiet
   )
 
@@ -122,7 +126,7 @@ cor_select <- function(
   m <- cor_matrix(
     df = df,
     predictors = predictors,
-    quiet = quiet
+    function_name = function_name
   ) |>
     abs()
 

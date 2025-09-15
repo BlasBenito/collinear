@@ -6,7 +6,7 @@
 #'
 #' @param o (required; character vector) character vector representing observations of a categorical variable. Default: NULL
 #' @param p (required; character vector) character vector representing predictions of a categorical variable. Must have the same length as \code{o}. Default: NULL
-#'
+#' @inheritParams collinear
 #' @return numeric: Cramer's V
 #' @export
 #' @autoglobal
@@ -19,13 +19,39 @@
 #'
 performance_score_v <- function(
     o = NULL,
-    p = NULL
+    p = NULL,
+    ...
 ){
 
-  cor_cramer_v(
-    x = o,
-    y = p,
-    check_input = FALSE
+  function_name <- validate_arg_function_name(
+    default_name = "collinear::performance_score_v()",
+    ... = ...
   )
 
+  tryCatch(
+    {
+
+      cor_cramer_v(
+        x = o,
+        y = p,
+        check_input = FALSE,
+        function_name = function_name
+      )
+
+    },
+    error = function(e) {
+
+      stop(
+        "\n",
+        function_name,
+        ": ", conditionMessage(e), call. = FALSE)
+    }
+
+  )
+
+
+
 }
+
+
+

@@ -28,11 +28,25 @@
 #'
 drop_geometry_column <- function(
     df = NULL,
-    quiet = FALSE
+    quiet = FALSE,
+    ...
     ){
 
+  dots <- list(...)
+  if("function_name" %in% names(dots)){
+    function_name <- dots$function_name
+    dots$function_name <- NULL
+  } else {
+    function_name <- NULL
+  }
+
+  function_name <- validate_arg_function_name(
+    default_name = "collinear::drop_geometry_column()",
+    function_name = function_name
+  )
+
   quiet <- validate_arg_quiet(
-    function_name = "collinear::drop_geometry_column()",
+    function_name = function_name,
     quiet = quiet
   )
 
@@ -43,7 +57,9 @@ drop_geometry_column <- function(
 
     if(quiet == FALSE){
 
-      message("\ncollinear::drop_geometry_column(): dropping geometry column from 'df'.")
+      message("\n",
+      function_name,
+      ": dropping geometry column from 'df'.")
 
     }
 

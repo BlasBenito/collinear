@@ -5,6 +5,8 @@
 #'
 #'
 #' @inheritParams target_encoding_lab
+#' @inheritParams collinear
+#' @inheritParams validate_arg_quiet
 #' @return list
 #' @export
 #' @autoglobal
@@ -28,10 +30,14 @@ validate_args_target_encoding_lab <- function(
     white_noise = 0,
     seed = 0,
     overwrite = FALSE,
-    quiet = FALSE
+    quiet = FALSE,
+    function_name = NULL
 ){
 
-  function_name <- "collinear::target_encoding_lab()"
+  function_name <- validate_arg_function_name(
+    default_name = "collinear::target_encoding_lab()",
+    function_name = function_name
+  )
 
   # early stops ----
 

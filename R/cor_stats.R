@@ -3,6 +3,7 @@
 #' Generates a correlation dataframe with [cor_df()] and computes the the minimum, mean, maximum, and quantiles 0.05, 0.25, median (0.5), 0.75, and 0.95 of the Pearson correlations (and Cramer's V if there is more than one categorical predictor).
 #'
 #' @inheritParams cor_matrix
+#' @inheritParams collinear
 #'
 #' @returns list:
 #' \itemize{
@@ -23,8 +24,14 @@
 cor_stats <- function(
     df = NULL,
     predictors = NULL,
-    quiet = FALSE
+    quiet = FALSE,
+    ...
 ){
+
+  function_name <- validate_arg_function_name(
+    default_name = "collinear::cor_stats()",
+    ... = ...
+  )
 
   if(
     all(
@@ -40,7 +47,8 @@ cor_stats <- function(
     correlation_df <- cor_df(
       df = df,
       predictors = predictors,
-      quiet = quiet
+      quiet = quiet,
+      function_name = function_name
     )
 
   } else {

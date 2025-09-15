@@ -9,7 +9,8 @@ class.collinear_selection(
   response = NULL,
   preference_order = NULL,
   selection = NULL,
-  quiet = FALSE
+  quiet = FALSE,
+  ...
 )
 }
 \arguments{
@@ -35,6 +36,8 @@ Accepted inputs are:
 \item{selection}{(required, character vector) Names of the selected predictors. Default: NULL}
 
 \item{quiet}{(optional; logical) If FALSE, messages are printed to the console. Default: FALSE}
+
+\item{...}{(optional) Other arguments. Currently used for the internal argument \code{function_name}.}
 }
 \value{
 list

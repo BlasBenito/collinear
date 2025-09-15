@@ -56,97 +56,71 @@ validate_arg_preference_order <- function(
     quiet = FALSE
 ){
 
-  if(is.null(function_name)){
-    function_name <- "collinear::validate_arg_preference_order()"
+  if(isTRUE(attr(x = preference_order, which = "validated"))){
+    return(preference_order)
   }
 
-  #NULL
+  function_name <- validate_arg_function_name(
+    default_name = "collinear::validate_arg_preference_order()",
+    function_name = function_name
+  )
+
+  if(is.null(preference_order_auto)){
+    stop(
+      "\n",
+      function_name,
+      ": argument 'preference_order_auto' cannot be NULL.",
+      call. = FALSE
+    )
+  }
+
+
+  if(!isTRUE(attr(x = predictors, which = "validated"))){
+
+    stop(
+      "\n",
+      function_name,
+      ": argument 'predictors' must be validated with 'collinear::validate_args_predictors()'.",
+      call. = FALSE
+    )
+
+  }
+
   if(is.null(preference_order)){
 
-    if(!is.null(preference_order_auto)){
+    if(quiet == FALSE){
 
-      if(!is.character(preference_order_auto)){
-
-        stop(
-          function_name,
-          ": argument 'preference_order_auto' must be a character vector of predictor names.",
-          call. = FALSE
-        )
-
-      }
-
-      if(quiet == FALSE){
-
-        message(
-          "\n",
-          function_name,
-          ": ranking predictors from lower to higher multicollinearity."
-        )
-
-      }
-
-      preference_order <- preference_order_auto
-
-    } else {
-
-      if(!isTRUE(attr(x = predictors, which = "validated"))){
-
-        stop(
-          "\n",
-          function_name,
-          ": argument 'predictors' must be validated with 'collinear::validate_args_predictors()'.",
-          call. = FALSE
-        )
-
-      }
-
-      if(quiet == FALSE){
-
-        message(
-          "\n",
-          function_name,
-          ": using argument 'predictors' as preference order."
-        )
-
-      }
-
-      preference_order <- predictors
+      message(
+        "\n",
+        function_name,
+        ": ranking predictors from lower to higher multicollinearity."
+      )
 
     }
 
+    return(preference_order_auto)
+
   }
 
-  #data frame
+  #check if preference_order comes from preference_order()
   if(is.data.frame(preference_order)){
 
-    if(all(c("predictor", "response", "preference", "f") %in% colnames(preference_order))){
-
-      preference_order <- preference_order$predictor
+    if("predictor" %in% colnames(preference_order)){
 
     } else {
 
       stop(
         "\n",
         function_name,
-        ": argument 'preference_order' must be the output of 'preference_order()' or a data frame with the columns 'response', 'predictor', and 'preference', ordered from higher to lower preference.",
+        ": argument 'preference_order' must be the output of 'preference_order()' or a data frame with a column named 'predictor'.",
         call. = FALSE
       )
     }
 
   }
 
-  #character vector
-  if(!is.character(preference_order)){
-
-    stop(
-      function_name,
-      ": argument 'preference_order' must be a data frame resulting from `preference_order` or a character vector of predictor names.",
-      call. = FALSE
-    )
-
-  }
-
   #subset preference_order in predictors
+
   preference_order_arg <- preference_order
 
   preference_order <- intersect(
@@ -166,7 +140,7 @@ validate_arg_preference_order <- function(
       message(
         "\n",
         function_name,
-        ": these variables in 'preference_order' are not in 'predictors' and will be ignored:\n - ",
+        ": these columns in 'preference_order' are not in 'predictors' and will be ignored:\n - ",
         paste(
           predictors.missing,
           collapse = "\n - "

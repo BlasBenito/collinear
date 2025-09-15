@@ -22,9 +22,10 @@ validate_arg_max_vif <- function(
     quiet = FALSE
     ){
 
-  if(is.null(function_name)){
-    function_name <- "collinear::validate_arg_max_vif()"
-  }
+  function_name <- validate_arg_function_name(
+    default_name = "collinear::validate_arg_max_vif()",
+    function_name = function_name
+  )
 
   max_vif_default <- 5
 

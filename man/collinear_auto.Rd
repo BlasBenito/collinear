@@ -10,7 +10,8 @@ collinear_auto(
   predictors = NULL,
   max_cor = NULL,
   max_vif = NULL,
-  quiet = FALSE
+  quiet = FALSE,
+  ...
 )
 }
 \arguments{
@@ -25,6 +26,8 @@ collinear_auto(
 \item{max_vif}{(optional, numeric or NULL). Maximum Variance Inflation Factor allowed for \code{predictors} during multicollinearity filtering. If NULL, \code{\link[=autoconfig_arg_max_vif]{autoconfig_arg_max_vif()}} finds a suitable value for the given data. Default: NULL}
 
 \item{quiet}{(optional; logical) If FALSE, messages are printed to the console. Default: FALSE}
+
+\item{...}{(optional) Other arguments. Currently used for the internal argument \code{function_name}.}
 }
 \value{
 list of class \code{class.collinear_output}

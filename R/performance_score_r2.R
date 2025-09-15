@@ -6,6 +6,7 @@
 #'
 #' @param o (required, numeric vector) Response values. Default: NULL
 #' @param p (required, numeric vector) Model predictions. Default: NULL
+#' @inheritParams collinear
 #'
 #' @return numeric: Pearson R-squared
 #' @export
@@ -18,14 +19,31 @@
 #'   )
 performance_score_r2 <- function(
     o = NULL,
-    p = NULL
+    p = NULL,
+    ...
 ){
 
-  stats::cor(
-    x = p,
-    y = o,
-    use = "complete.obs",
-    method = "pearson"
-  )^2
+  function_name <- validate_arg_function_name(
+    default_name = "collinear::performance_score_r2()",
+    ... = ...
+  )
+
+  tryCatch(
+    {
+      stats::cor(
+        x = p,
+        y = o,
+        use = "complete.obs",
+        method = "pearson"
+      )^2
+    },
+    error = function(e) {
+      stop(
+        "\n",
+        function_name,
+        ": ", conditionMessage(e), call. = FALSE)
+    }
+  )
+
 
 }

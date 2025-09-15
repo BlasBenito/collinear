@@ -4,10 +4,12 @@
 \alias{case_weights}
 \title{Case Weights for Binomial, Logical, or Categorical Responses}
 \usage{
-case_weights(x = NULL)
+case_weights(x = NULL, ...)
 }
 \arguments{
 \item{x}{(required, integer, character, or factor vector) Binomial, categorical, or factor response variable. Default: NULL}
+
+\item{...}{(optional) Other arguments. Currently used for the internal argument \code{function_name}.}
 }
 \value{
 numeric vector: case weights

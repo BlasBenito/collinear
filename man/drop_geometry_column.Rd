@@ -4,12 +4,14 @@
 \alias{drop_geometry_column}
 \title{Removes geometry column in sf data frames}
 \usage{
-drop_geometry_column(df = NULL, quiet = FALSE)
+drop_geometry_column(df = NULL, quiet = FALSE, ...)
 }
 \arguments{
 \item{df}{(required; data frame, tibble, or sf) A data frame with responses (optional) and predictors. Must have at least 10 rows for pairwise correlation analysis, and \code{10 * (length(predictors) - 1)} for VIF analysis.  Default: NULL.}
 
 \item{quiet}{(optional; logical) If FALSE, messages are printed to the console. Default: FALSE}
+
+\item{...}{(optional) Other arguments. Currently used for the internal argument \code{function_name}.}
 }
 \value{
 data frame

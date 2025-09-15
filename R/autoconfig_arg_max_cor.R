@@ -25,17 +25,10 @@ autoconfig_arg_max_cor <- function(
     quiet = FALSE
 ){
 
-  default_function_name <- "collinear::autoconfig_arg_max_cor()"
-
-  if(is.null(function_name)){
-    function_name <- default_function_name
-  } else {
-    function_name <- paste0(
-      function_name,
-      " > \n    └── ",
-      default_function_name
-    )
-  }
+  function_name <- validate_arg_function_name(
+    default_name = "collinear::autoconfig_arg_max_cor()",
+    function_name = function_name
+  )
 
   if(
     is.numeric(max_cor) &&

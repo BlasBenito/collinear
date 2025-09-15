@@ -4,12 +4,14 @@
 \alias{performance_score_auc}
 \title{Area Under the Curve of Binomial Observations vs Probabilistic Model Predictions}
 \usage{
-performance_score_auc(o = NULL, p = NULL)
+performance_score_auc(o = NULL, p = NULL, ...)
 }
 \arguments{
 \item{o}{(required, numeric vector) Binomial response with values 0 and 1. Default: NULL}
 
 \item{p}{(required, numeric vector) Predictions of a binomial model. Default: NULL}
+
+\item{...}{(optional) Other arguments. Currently used for the internal argument \code{function_name}.}
 }
 \value{
 numeric: Area Under the ROC Curve

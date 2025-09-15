@@ -1,5 +1,6 @@
 testthat::test_that("`collinear()` works", {
 
+  #load data
   data(
     vi,
     vi_smol,

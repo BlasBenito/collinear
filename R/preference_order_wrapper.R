@@ -22,9 +22,10 @@ preference_order_wrapper <- function(
     quiet = FALSE
 ){
 
-  if(is.null(function_name)){
-    function_name <- "collinear::preference_order_wrapper()"
-  }
+  function_name <- validate_arg_function_name(
+    default_name = "collinear::preference_order_wrapper()",
+    function_name = function_name
+  )
 
   # NULL ----
   # cor_select and vif_select rank predictors by their multicollinearity
@@ -189,7 +190,8 @@ preference_order_wrapper <- function(
     responses = response,
     predictors = predictors,
     f = f,
-    quiet = quiet
+    quiet = quiet,
+    function_name = function_name
   )
 
   preference_df

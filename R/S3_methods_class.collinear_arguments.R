@@ -23,10 +23,22 @@ class.collinear_arguments <- function(
     f_name = NULL,
     max_cor = 0.75,
     max_vif = 5,
-    quiet = FALSE
+    quiet = FALSE,
+    ...
 ){
 
-  function_name <- "collinear::class.collinear_arguments()"
+  dots <- list(...)
+  if("function_name" %in% names(dots)){
+    function_name <- dots$function_name
+    dots$function_name <- NULL
+  } else {
+    function_name <- NULL
+  }
+
+  function_name <- validate_arg_function_name(
+    default_name = "collinear::class.collinear_arguments()",
+    function_name = function_name
+  )
 
   ## max_cor max_vif ----
   if(all(is.null(c(max_cor, max_vif)))){

@@ -13,6 +13,7 @@
 #' All returned weights sum to one.
 #'
 #' @param x (required, integer, character, or factor vector) Binomial, categorical, or factor response variable. Default: NULL
+#' @inheritParams collinear
 #' @return numeric vector: case weights
 #' @examples
 #'  #numeric vector
@@ -33,12 +34,20 @@
 #' @autoglobal
 #' @export
 case_weights <- function(
-    x = NULL
+    x = NULL,
+    ...
 ){
+
+  function_name <- validate_arg_function_name(
+    default_name = "collinear::case_weights()",
+    ... = ...
+  )
 
   if(is.null(x)){
     stop(
-      "collinear::case_weights(): argument 'x' cannot be NULL.",
+      "\n",
+      function_name,
+      ": argument 'x' cannot be NULL.",
       call. = FALSE
     )
   }
@@ -49,7 +58,9 @@ case_weights <- function(
 
   if(is.numeric(x) && any(!is.finite(x))){
     stop(
-      "collinear::case_weights(): NA, Inf, -Inf, or NaN values are not allowed when 'x' is numeric or logical.",
+      "\n",
+      function_name,
+      ": NA, Inf, -Inf, or NaN values are not allowed when 'x' is numeric or logical.",
       call. = FALSE
     )
   }
@@ -70,7 +81,9 @@ case_weights <- function(
 
   if(length(out) != length(x)){
     stop(
-      "collinear::case_weights(): something went wrong when computing case weights, the length of the input is ",
+      "\n",
+      function_name,
+      ": something went wrong when computing case weights, the length of the input is ",
       length(x),
       ", but the length of the output is ",
       length(out),

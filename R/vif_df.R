@@ -27,10 +27,14 @@
 vif_df <- function(
     df = NULL,
     predictors = NULL,
-    quiet = FALSE
+    quiet = FALSE,
+    ...
 ){
 
-  function_name <- "collinear::vif_df()"
+  function_name <- validate_arg_function_name(
+    default_name = "collinear::vif_df()",
+    ... = ...
+  )
 
   quiet <- validate_arg_quiet(
     function_name = function_name,
@@ -78,10 +82,14 @@ vif_df <- function(
   m <- cor_matrix(
     df = df,
     predictors = predictors,
-    quiet = quiet
+    quiet = quiet,
+    function_name = function_name
   )
 
-  out <- vif(m = m) |>
+  out <- vif(
+    m = m,
+    function_name = function_name
+    ) |>
     data.frame(stringsAsFactors = FALSE)
 
   #format data frame

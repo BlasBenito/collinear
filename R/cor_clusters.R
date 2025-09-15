@@ -53,13 +53,20 @@ cor_clusters <- function(
     max_cor = 0.75,
     method = "complete",
     plot = FALSE,
-    quiet = FALSE
+    quiet = FALSE,
+    ...
 ){
+
+  function_name <- validate_arg_function_name(
+    default_name = "collinear::cor_clusters()",
+    ... = ...
+  )
 
   m <- cor_matrix(
     df = df,
     predictors = predictors,
-    quiet = quiet
+    quiet = quiet,
+    function_name = function_name
   )
 
   m <- stats::as.dist(1 - abs(m))
