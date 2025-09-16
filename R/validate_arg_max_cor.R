@@ -88,7 +88,7 @@ validate_arg_max_cor <- function(
       message(
         "\n",
         function_name,
-        ": argument 'max_cor' is outside its recommended range (>=0 to <=1), resetting it to its default value (", max_cor_default, ")."
+        ": argument 'max_cor' is outside its valid range (>=0.1 to <=1), resetting it to its default value (", max_cor_default, ")."
       )
 
     }

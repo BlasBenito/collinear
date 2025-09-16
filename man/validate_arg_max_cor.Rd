@@ -7,7 +7,7 @@
 validate_arg_max_cor(max_cor = NULL, function_name = NULL, quiet = FALSE)
 }
 \arguments{
-\item{max_cor}{(optional; numeric or NULL) Maximum correlation allowed between pairs of \code{predictors}. Valid values are between 0.01 and 0.99, and recommended values are between 0.5 (strict) and 0.9 (permissive). If NULL, the pairwise correlation analysis is disabled. Default: 0.75}
+\item{max_cor}{(optional; numeric or NULL) Maximum correlation allowed between pairs of \code{predictors}. Valid values are between 0.01 and 0.99, and recommended values are between 0.5 (strict) and 0.9 (permissive). If NULL, the pairwise correlation analysis is disabled. Default: 0.7}
 
 \item{function_name}{(optional, character string) Name of the function performing the argument check. Default: NULL}
 

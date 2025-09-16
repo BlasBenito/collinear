@@ -39,7 +39,7 @@ testthat::test_that("`autoconfig_arg_max_cor()` works", {
 
 
   testthat::expect_true(
-    x == 0.5
+    x == 0.58
   )
 
   testthat::expect_true(
@@ -62,7 +62,7 @@ testthat::test_that("`autoconfig_arg_max_cor()` works", {
 
 
   testthat::expect_true(
-    x == 0.5
+    x == 0.58
   )
 
   testthat::expect_true(

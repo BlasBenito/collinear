@@ -1,4 +1,4 @@
-testthat::test_that("`autoconfig_arg_max_cor()` works", {
+testthat::test_that("`autoconfig_arg_max_vif()` works", {
 
   data(
     vi_smol,
@@ -41,7 +41,7 @@ testthat::test_that("`autoconfig_arg_max_cor()` works", {
 
 
   testthat::expect_true(
-    x == 5
+    x == 2.5
   )
 
   testthat::expect_true(
@@ -90,7 +90,7 @@ testthat::test_that("`autoconfig_arg_max_cor()` works", {
 
 
   testthat::expect_true(
-    x == 2.5
+    x == 1.85
   )
 
   testthat::expect_true(

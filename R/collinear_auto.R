@@ -1,7 +1,8 @@
 #' @title Automated Multicollinearity Management
 #'
 #' @description
-#' A fire-and-forget wrapper to [collinear()]. It configures target encoding, preference order, and the maximum multicollinearity levels (\code{max_vif} and \code{max_cor}) automatically.
+#'
+#' A fire-and-forget wrapper to [collinear()] to reduce data redundancy. It configures target encoding, preference order, and the maximum multicollinearity levels (\code{max_vif} and \code{max_cor}) automatically.
 #'
 #' Target encoding is triggered with the method "loo" (leave-one-out, see [target_encoding_lab()] for further details) when a response is numeric and there are categorical predictors.
 #'

@@ -56,10 +56,6 @@ validate_arg_preference_order <- function(
     quiet = FALSE
 ){
 
-  if(isTRUE(attr(x = preference_order, which = "validated"))){
-    return(preference_order)
-  }
-
   function_name <- validate_arg_function_name(
     default_name = "collinear::validate_arg_preference_order()",
     function_name = function_name
@@ -106,6 +102,8 @@ validate_arg_preference_order <- function(
   if(is.data.frame(preference_order)){
 
     if("predictor" %in% colnames(preference_order)){
+
+      preference_order <- preference_order$predictor
 
     } else {
 

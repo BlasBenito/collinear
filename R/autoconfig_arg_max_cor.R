@@ -1,9 +1,9 @@
 #' Autoconfigure Argument \code{max_cor}
 #'
-#' If \code{max_cor = NULL}, computes the average pairwise correlation between all predictors as \code{x} and returns \code{max(x, 0.5)}. Otherwise, it checks \code{max_cor} with [validate_arg_max_cor()] and returns the result.
+#' If \code{max_cor = NULL}, computes the average pairwise correlation between all predictors as \code{x} and returns \code{max(x, 0.58)}. The value \code{0.58} is selected because it roughly matches a VIF of 2.5 according to the model [gam_cor_to_vif], but it can be overriden by the user by selecting a lower value as input for \code{max_cor}. Otherwise, it checks \code{max_cor} with [validate_arg_max_cor()] and returns the result.
 #'
 #' @inheritParams collinear
-#' @param max_cor (optional, numeric or NULL) Maximum correlation allowed between pairs of \code{predictors}.
+#' @param max_cor (optional, numeric or NULL) Maximum correlation allowed between pairs of \code{predictors}. Default: NULL
 #' @inheritParams validate_arg_quiet
 #'
 #' @returns numeric
@@ -21,13 +21,15 @@ autoconfig_arg_max_cor <- function(
     df = NULL,
     predictors = NULL,
     max_cor = NULL,
-    function_name = NULL,
-    quiet = FALSE
+    quiet = FALSE,
+    ...
 ){
+
+  min_cor <- 0.58
 
   function_name <- validate_arg_function_name(
     default_name = "collinear::autoconfig_arg_max_cor()",
-    function_name = function_name
+    ... = ...
   )
 
   if(
@@ -74,7 +76,7 @@ autoconfig_arg_max_cor <- function(
     ]
 
     max_cor <- max(
-      0.5,
+      min_cor,
       round(x = correlation_mean, digits = 2)
     )
 

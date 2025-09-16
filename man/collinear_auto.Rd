@@ -33,7 +33,7 @@ collinear_auto(
 list of class \code{class.collinear_output}
 }
 \description{
-A fire-and-forget wrapper to \code{\link[=collinear]{collinear()}}. It configures target encoding, preference order, and the maximum multicollinearity levels (\code{max_vif} and \code{max_cor}) automatically.
+A fire-and-forget wrapper to \code{\link[=collinear]{collinear()}} to reduce data redundancy. It configures target encoding, preference order, and the maximum multicollinearity levels (\code{max_vif} and \code{max_cor}) automatically.
 
 Target encoding is triggered with the method "loo" (leave-one-out, see \code{\link[=target_encoding_lab]{target_encoding_lab()}} for further details) when a response is numeric and there are categorical predictors.
 

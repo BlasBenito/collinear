@@ -8,8 +8,8 @@ autoconfig_arg_max_cor(
   df = NULL,
   predictors = NULL,
   max_cor = NULL,
-  function_name = NULL,
-  quiet = FALSE
+  quiet = FALSE,
+  ...
 )
 }
 \arguments{
@@ -17,17 +17,17 @@ autoconfig_arg_max_cor(
 
 \item{predictors}{(optional; character vector or NULL) Names of the predictors in \code{df} involved in the multicollinearity filtering. If NULL, all columns in \code{df} (except those with constant values or near zero variance) are used. Default: NULL}
 
-\item{max_cor}{(optional, numeric or NULL) Maximum correlation allowed between pairs of \code{predictors}.}
-
-\item{function_name}{(optional, character string) Name of the function performing the argument check. Default: NULL}
+\item{max_cor}{(optional, numeric or NULL) Maximum correlation allowed between pairs of \code{predictors}. Default: NULL}
 
 \item{quiet}{(optional; logical) If FALSE, messages are printed to the console. Default: FALSE}
+
+\item{...}{(optional) Other arguments. Currently used for the internal argument \code{function_name}.}
 }
 \value{
 numeric
 }
 \description{
-If \code{max_cor = NULL}, computes the average pairwise correlation between all predictors as \code{x} and returns \code{max(x, 0.5)}. Otherwise, it checks \code{max_cor} with \code{\link[=validate_arg_max_cor]{validate_arg_max_cor()}} and returns the result.
+If \code{max_cor = NULL}, computes the average pairwise correlation between all predictors as \code{x} and returns \code{max(x, 0.58)}. The value \code{0.58} is selected because it roughly matches a VIF of 2.5 according to the model \link{gam_cor_to_vif}, but it can be overriden by the user by selecting a lower value as input for \code{max_cor}. Otherwise, it checks \code{max_cor} with \code{\link[=validate_arg_max_cor]{validate_arg_max_cor()}} and returns the result.
 }
 \examples{
 max_cor <- autoconfig_arg_max_cor(

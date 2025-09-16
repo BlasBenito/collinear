@@ -37,7 +37,7 @@
 #' x <- cor_select(
 #'   df = df,
 #'   predictors = predictors,
-#'   max_cor = 0.75
+#'   max_cor = 0.7
 #' )
 #'
 #'
@@ -49,7 +49,7 @@
 #'     "swi_mean",
 #'     "soil_type"
 #'   ),
-#'   max_cor = 0.75
+#'   max_cor = 0.7
 #' )
 #'
 #'
@@ -64,7 +64,7 @@
 #'   df = df,
 #'   predictors = predictors,
 #'   preference_order = df_preference,
-#'   max_cor = 0.75
+#'   max_cor = 0.7
 #' )
 #'
 #' #resetting to sequential processing
@@ -77,7 +77,7 @@ cor_select <- function(
     df = NULL,
     predictors = NULL,
     preference_order = NULL,
-    max_cor = 0.75,
+    max_cor = 0.7,
     quiet = FALSE,
     ...
 ){
@@ -157,7 +157,7 @@ cor_select <- function(
     names()
 
   #validate preference order
-  preference_order <- validate_arg_preference_order(
+  preference.order <- validate_arg_preference_order(
     predictors = predictors,
     preference_order = preference_order,
     preference_order_auto = preference_order_auto,
@@ -167,16 +167,16 @@ cor_select <- function(
 
   #organize the correlation matrix according to preference_order
   m <- m[
-    preference_order,
-    preference_order
+    preference.order,
+    preference.order
   ]
 
   #set diag to 0
   diag(m) <- 0
 
   #vectors with selected and candidates
-  selected <- preference_order[1]
-  candidates <- preference_order[-1]
+  selected <- preference.order[1]
+  candidates <- preference.order[-1]
 
   #iterate over candidate variables
   for(candidate in candidates){

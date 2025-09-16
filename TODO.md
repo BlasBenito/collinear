@@ -1,5 +1,3 @@
-#validate_arg_function_name.R
-
 
 #README.Rmd
 
@@ -220,6 +218,12 @@
 - test file
 
 #validate_arg_f.R
+
+- code examples
+- documentation
+- test file
+
+#validate_arg_function_name.R
 
 - code examples
 - documentation

@@ -9,8 +9,8 @@ autoconfig_arg_max_vif(
   predictors = NULL,
   max_cor = NULL,
   max_vif = NULL,
-  function_name = NULL,
-  quiet = FALSE
+  quiet = FALSE,
+  ...
 )
 }
 \arguments{
@@ -18,45 +18,19 @@ autoconfig_arg_max_vif(
 
 \item{predictors}{(optional; character vector or NULL) Names of the predictors in \code{df} involved in the multicollinearity filtering. If NULL, all columns in \code{df} (except those with constant values or near zero variance) are used. Default: NULL}
 
-\item{max_cor}{(optional; numeric or NULL) Maximum correlation allowed between pairs of \code{predictors}. Valid values are between 0.01 and 0.99, and recommended values are between 0.5 (strict) and 0.9 (permissive). If NULL, the pairwise correlation analysis is disabled. Default: 0.75}
+\item{max_cor}{(optional; numeric or NULL) Maximum correlation allowed between pairs of \code{predictors}. Valid values are between 0.01 and 0.99, and recommended values are between 0.5 (strict) and 0.9 (permissive). If NULL, the pairwise correlation analysis is disabled. Default: 0.7}
 
 \item{max_vif}{optional, numeric or NULL) Maximum Variance Inflation Factor allowed for \code{predictors} during multicollinearity filtering. Recommended values are between 2 (strict) and 10 (permissive). If NULL, the value is autoconfigured depending on the average pairwise correlation of the dataset.}
 
-\item{function_name}{(optional, character string) Name of the function performing the argument check. Default: NULL}
-
 \item{quiet}{(optional; logical) If FALSE, messages are printed to the console. Default: FALSE}
+
+\item{...}{(optional) Other arguments. Currently used for the internal argument \code{function_name}.}
 }
 \value{
 numeric
 }
 \description{
-If \code{max_vif = NULL}, autoconfigures it depending on the value of \code{max_cor}, if provided, or the average pairwise correlation of the numeric predictors as follows:
-}
-\details{
-\preformatted{
-
-max_cor <- max(
-  0.5,
-  correlation_mean
-)
-
-if (max_cor >= 0.95) {
-  max_vif <- 10
-} else if (max_cor >= 0.85) {
-  max_vif <- 8.5
-} else if (max_cor >= 0.80) {
-  max_vif <- 7
-} else if (max_cor >= 0.75) {
-  max_vif <- 5
-} else if (max_cor >= 0.70) {
-  max_vif <- 3.5
-} else {
-  max_vif <- 2.5
-}
-
-}
-
-These rules were obtained empirically, by comparing executions of \code{\link[=vif_select]{vif_select()}} and \code{\link[=cor_select]{cor_select()}} on 100000 different combinations of rows and columns of the dataset \link{vi} and \code{max_cor} values, and finding the \code{max_vif} value leading to the most similar variable selection resulting from a given \code{max_cor}.
+If \code{max_vif = NULL}, returns the prediction of the model \link{gam_cor_to_vif} on the input \code{max_cor} (see \link{experiment_df} for further details).
 }
 \examples{
 max_vif <- autoconfig_arg_max_vif(
