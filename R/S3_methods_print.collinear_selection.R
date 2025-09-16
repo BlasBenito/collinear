@@ -40,6 +40,8 @@ print.collinear_selection <- function(
   # selection ----
   if(!is.null(x$selection)){
 
+    cat("\n")
+
     selection <- stats::na.omit(x$selection[1:n])
 
     omitted <- length(x$selection) - n
@@ -79,6 +81,8 @@ print.collinear_selection <- function(
   # formulas ----
   if(!is.null(x$formulas)){
 
+    cat("\n")
+
     if(length(x$formulas) > 1){
       cat(" + formulas:", fill = TRUE)
     } else {
@@ -94,6 +98,8 @@ print.collinear_selection <- function(
   # df ----
   if(!is.null(x$df)){
 
+    cat("\n")
+
     cat(" + df:", fill = TRUE)
 
     cat("   - rows:", nrow(x$df), fill = TRUE)
@@ -106,6 +112,8 @@ print.collinear_selection <- function(
 
   # preference ----
   if(!is.null(x$preference)){
+
+    cat("\n")
 
     cat(" + preference order:", fill = TRUE)
     cat("   + df:", fill = TRUE)
@@ -132,7 +140,7 @@ print.collinear_selection <- function(
 
   }
 
-  cat("\n")
+  cat("\n\n")
 
   invisible(x)
 }

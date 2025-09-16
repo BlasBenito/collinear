@@ -300,68 +300,6 @@ class.collinear_arguments <- function(
     quiet = quiet
   )
 
-  ## avoid repeating messages in loop ----
-  if(args$quiet == FALSE){
-
-    ### target encoding ----
-    predictors_categorical_n <- identify_predictors_categorical(
-      df = args$df,
-      predictors = args$predictors,
-      quiet = args$quiet
-    ) |>
-      length()
-
-    if(
-      !is.null(args$encoding_method) &&
-      is.null(args$responses) &&
-      predictors_categorical_n > 0)
-    {
-
-      message(
-        "\n",
-        function_name,
-        ": argument 'responses' is NULL, skipping target encoding."
-      )
-
-    }
-
-    if(
-      !is.null(args$responses) &&
-      is.null(args$f) &&
-      is.null(args$preference_order)
-    ){
-
-      message(
-        "\n",
-        function_name,
-        ": argument 'f' is NULL, skipping computation of preference order."
-      )
-
-    }
-
-
-    if(is.null(args$max_cor)){
-
-      message(
-        "\n",
-        function_name,
-        ": argument 'max_cor' is NULL, skipping correlation filtering."
-      )
-
-    }
-
-    if(is.null(args$max_vif)){
-
-      message(
-        "\n",
-        function_name,
-        ": argument 'max_vif' is NULL, skipping skipping VIF filtering."
-      )
-
-    }
-
-  }
-
   class(args) <- c(
     class(args),
     "collinear_arguments"

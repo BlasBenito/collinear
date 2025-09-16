@@ -6,7 +6,6 @@
 \usage{
 collinear_lite(
   df = NULL,
-  response = NULL,
   predictors = NULL,
   preference_order = NULL,
   max_cor = 0.75,
@@ -17,8 +16,6 @@ collinear_lite(
 }
 \arguments{
 \item{df}{(required; data frame, tibble, or sf) A data frame with responses (optional) and predictors. Must have at least 10 rows for pairwise correlation analysis, and \code{10 * (length(predictors) - 1)} for VIF analysis.  Default: NULL.}
-
-\item{response}{(optional, character string) Name of a numeric response variable in \code{df}. Default: NULL.}
 
 \item{predictors}{(optional; character vector or NULL) Names of the predictors in \code{df} involved in the multicollinearity filtering. If NULL, all columns in \code{df} (except those with constant values or near zero variance) are used. Default: NULL}
 
@@ -51,7 +48,7 @@ character vector: predictors selection
 \description{
 Minimalistic version of \code{\link[=collinear]{collinear()}} with the following features:
 \itemize{
-\item Argument \code{response} instead of \code{responses}, to process only one response at a time.
+\item Argument \code{responses} not required.
 \item Target encoding disabled.
 \item Computation of preference order disabled. Only the argument \code{preference_order} is available.
 \item Output is a character vector of selected predictors
@@ -65,7 +62,6 @@ data(
 
 x <- collinear_lite(
   df = vi_smol,
-  response = "vi_numeric",
   predictors = vi_predictors_numeric,
   preference_order = c(
     "aridity_index",

@@ -27,15 +27,19 @@
 - rename `response` to `responses` DONE
 - code examples DONE
 - documentation DONE
-- test file PENDING SLOW!
+- test file DONE
 
-#collinear_auto.R IN PROGRESS
+#collinear_auto.R DONE
 
-- code examples
-- documentation
-- test file
+- code examples DONE
+- documentation DONE
+- test file DONE
 
-#collinear_lite.R
+#collinear_lite.R DONE
+
+- code examples DONE
+- documentation DONE
+- test file IN DONE
 
 #cor_clusters.R
 
