@@ -12,15 +12,20 @@ testthat::test_file("tests/testthat/test-autoconfig_arg_max_cor.R")
 testthat::test_file("tests/testthat/test-case_weights.R")
 #[ FAIL 0 | WARN 0 | SKIP 0 | PASS 19 ]
 
-#TODO: slow
-testthat::test_file("tests/testthat/test-collinear.R")
-#[ FAIL 0 | WARN 0 | SKIP 0 | PASS 62 ]
-
 testthat::test_file("tests/testthat/test-collinear_auto.R")
 #[ FAIL 0 | WARN 0 | SKIP 0 | PASS 32 ]
 
 testthat::test_file("tests/testthat/test-collinear_lite.R")
 #[ FAIL 0 | WARN 0 | SKIP 0 | PASS 10 ]
+
+testthat::test_file("tests/testthat/test-collinear.R")
+#[ FAIL 0 | WARN 0 | SKIP 0 | PASS 62 ]
+
+testthat::test_file("tests/testthat/test-cor_clusters.R")
+#[ FAIL 0 | WARN 0 | SKIP 0 | PASS 6 ]
+
+testthat::test_file("tests/testthat/test-cor_cramer_v.R")
+#[ FAIL 0 | WARN 0 | SKIP 0 | PASS 8 ]
 
 testthat::test_file("tests/testthat/test-cor_select.R")
 #[ FAIL 0 | WARN 0 | SKIP 0 | PASS 25 ]

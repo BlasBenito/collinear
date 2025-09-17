@@ -1,34 +1,35 @@
 testthat::test_that("`cor_clusters()` works", {
 
-  data(vi, vi_predictors)
+  data(vi_smol, vi_predictors_numeric)
 
-  vi <- vi[1:1000, ]
-  predictors <- vi_predictors[1:15]
-
-  df <- cor_clusters(
-    df = vi,
-    predictors = predictors
+  out <- cor_clusters(
+    df = vi_smol,
+    predictors = vi_predictors_numeric
     )
 
   testthat::expect_true(
-    is.data.frame(df)
+    is.data.frame(out$df)
     )
 
   testthat::expect_true(
-    all(c("predictor", "cluster") %in% colnames(df))
+    all(c("predictor", "cluster") %in% colnames(out$df))
   )
 
   testthat::expect_true(
-    class(df$predictor) == "character"
+    class(out$df$predictor) == "character"
   )
 
 
   testthat::expect_true(
-    class(df$cluster) == "integer"
+    class(out$df$cluster) == "integer"
   )
 
   testthat::expect_true(
-    max(df$cluster) < nrow(df)
+    max(out$df$cluster) < nrow(vi_smol)
+  )
+
+  testthat::expect_true(
+    inherits(x = out$hclust, what = "hclust")
   )
 
 

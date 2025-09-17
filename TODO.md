@@ -22,13 +22,6 @@
 - documentation DONE
 - test file DONE
 
-#collinear.R DONE
-
-- rename `response` to `responses` DONE
-- code examples DONE
-- documentation DONE
-- test file DONE
-
 #collinear_auto.R DONE
 
 - code examples DONE
@@ -41,17 +34,24 @@
 - documentation DONE
 - test file IN DONE
 
-#cor_clusters.R
 
-- code examples
-- documentation
-- test file
+#collinear.R DONE
 
-#cor_cramer_v.R
+- code examples DONE
+- documentation DONE
+- test file DONE
 
-- code examples
-- documentation
-- test file
+#cor_clusters.R DONE
+
+- code examples DONE
+- documentation DONE
+- test file DONE
+
+#cor_cramer_v.R DONE
+
+- code examples DONE
+- documentation DONE
+- test file DONE
 
 #cor_df.R
 
