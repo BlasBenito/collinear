@@ -18,7 +18,7 @@
 #' }
 #'
 #' @examples
-data(vi_smol)
+#'data(vi_smol)
 #'
 #' #OPTIONAL: parallelization setup
 #' # future::plan(

@@ -1,80 +1,63 @@
-#' Data Frame of Absolute Pairwise Correlations
+#' Absolute Pairwise Correlations Dataframe
 #'
 #' @description
 #'
-#' Computes a pairwise correlation data frame. Implements methods to compare different types of predictors:
+#' Computes a absolute pairwise correlation data frame. Implements methods to compare different types of predictors:
 #' \itemize{
 #'   \item **numeric vs. numeric**: as computed with [stats::cor()] using the methods "pearson" or "spearman", via [cor_numeric_vs_numeric()].
 #'   \item **numeric vs. categorical**: the function [cor_numeric_vs_categorical()] target-encodes the categorical variable using the numeric variable as reference with [target_encoding_lab()] and the method "loo" (leave-one-out), and then their correlation is computed with [stats::cor()].
-#'   \item **categorical vs. categorical**: the function [cor_categorical_vs_categorical()] computes Cramer's V (see [cor_cramer_v()]) as indicator of the association between character or factor variables. However, take in mind that Cramer's V is not directly comparable with R-squared, even when having the same range from zero to one. It is always recommended to target-encode categorical variables with [target_encoding_lab()] before the pairwise correlation analysis.
+#'   \item **categorical vs. categorical**: the function [cor_categorical_vs_categorical()] computes Cramer's V (see [cor_cramer_v()]) as indicator of the association between character or factor variables. Please read the documentation of [cor_cramer_v()] to better understand the caveats of mixing Pearson Correlation and Cramer's V in a multicollinearity analysis.
 #'   }
 #'
 #' Accepts a parallelization setup via [future::plan()] and a progress bar via [progressr::handlers()] (see examples).
 #'
 #' @inheritParams collinear
 #
-#' @return data frame; predictors pairs and their absolute Pearson correlation or Cramer's V association.
+#' @return data frame:
+#' \itemize{
+#'   \item \code{x} predictor name.
+#'   \item \code{y} predictor name.
+#'   \item \code{correlation} Absolute Pearson correlation for numeric vs. numeric and numeric vs. categorical, or Cramer's V for categorical vs categorical.
+#' }
 #'
 #' @examples
-#'   data(vi)
+#' data(vi_smol)
 #'
-#'   #subset to speed-up example
-#'   vi <- vi[1:1000, ]
+#' #predictors
+#' predictors = c(
+#'   "koppen_zone", #character
+#'   "soil_type", #factor
+#'   "topo_elevation", #numeric
+#'   "soil_temperature_mean" #numeric
+#' )
 #'
-#'   #predictors
-#'   predictors = c(
-#'     "koppen_zone", #character
-#'     "soil_type", #factor
-#'     "topo_elevation", #numeric
-#'     "soil_temperature_mean" #numeric
-#'   )
+#' #OPTIONAL: parallelization setup
+#' # only worth it for large data
+#' # future::plan(
+#' #   future::multisession,
+#' #   workers = 2
+#' # )
 #'
-#'   #OPTIONAL: parallelization setup
-#'   # future::plan(
-#'   #   future::multisession,
-#'   #   workers = 2
-#'   # )
+#' #OPTIONAL: progress bar
+#' # progressr::handlers(global = TRUE)
 #'
-#'   #OPTIONAL: progress bar
-#'   # progressr::handlers(global = TRUE)
+#' #entire data frame
+#' x <- cor_df(
+#'   df = vi_smol[, predictors]
+#' )
 #'
-#'   #without preference order
-#'   selected_predictors <- cor_select(
-#'     df = vi,
-#'     predictors = predictors,
-#'     preference_order = NULL,
-#'     max_cor = 0.75
-#'   )
+#' x
 #'
+#' #predictors vector (same result)
+#' x <- cor_df(
+#'   df = vi_smol,
+#'   predictors = predictors
+#' )
 #'
-#'   #with custom preference order
-#'   selected_predictors <- cor_select(
-#'     df = vi,
-#'     predictors = predictors,
-#'     preference_order = c(
-#'       "soil_temperature_mean",
-#'       "soil_type"
-#'     ),
-#'     max_cor = 0.75
-#'   )
+#' x
 #'
-#'
-#'   #with automated preference order
-#'   df_preference <- preference_order(
-#'     df = vi,
-#'     responses = "vi_numeric",
-#'     predictors = predictors
-#'   )
-#'
-#'   selected_predictors <- cor_select(
-#'     df = df,
-#'     predictors = predictors,
-#'     preference_order = df_preference,
-#'     max_cor = 0.75
-#'   )
-#'
-#'   #OPTIONAL: disable parallelization
-#'   #future::plan(future::sequential)
+#' #OPTIONAL: disable parallelization
+#' #future::plan(future::sequential)
 #' @autoglobal
 #' @family pairwise_correlation
 #' @export

@@ -9,7 +9,6 @@ cor_clusters(
   predictors = NULL,
   max_cor = 0.75,
   method = "complete",
-  plot = FALSE,
   quiet = FALSE,
   ...
 )
@@ -23,14 +22,16 @@ cor_clusters(
 
 \item{method}{(optional, character string) Argument of \code{\link[stats:hclust]{stats::hclust()}} defining the agglomerative method. One of: "ward.D", "ward.D2", "single", "complete", "average" (= UPGMA), "mcquitty" (= WPGMA), "median" (= WPGMC) or "centroid" (= UPGMC). Unambiguous abbreviations are accepted as well. Default: "complete".}
 
-\item{plot}{(optional, logical) If TRUE, the clustering is plotted. Default: FALSE}
-
 \item{quiet}{(optional; logical) If FALSE, messages are printed to the console. Default: FALSE}
 
 \item{...}{(optional) Other arguments. Currently used for the internal argument \code{function_name}.}
 }
 \value{
-data frame: predictor names and their cluster IDs
+list:
+\itemize{
+\item df: data frame with predictor names and their cluster IDs.
+\item hclust: clustering obect
+}
 }
 \description{
 Hierarchical clustering of predictors from their pairwise correlation matrix. Computes the correlation matrix with \code{\link[=cor_df]{cor_df()}} and \code{\link[=cor_matrix]{cor_matrix()}}, transforms it to a distance matrix using \code{\link[stats:dist]{stats::dist()}}, computes a clustering solution with \code{\link[stats:hclust]{stats::hclust()}}, and applies \code{\link[stats:cutree]{stats::cutree()}} to separate groups based on the value of the argument \code{max_cor}.
@@ -40,35 +41,45 @@ Returns a data frame with predictor names and their clusters, and optionally, pr
 Accepts a parallelization setup via \code{\link[future:plan]{future::plan()}} and a progress bar via \code{\link[progressr:handlers]{progressr::handlers()}} (see examples).
 }
 \examples{
-  data(vi)
+data(vi_smol)
 
-  #subset to speed-up example
-  vi <- vi[1:1000, ]
+#OPTIONAL: parallelization setup
+# future::plan(
+#   future::multisession,
+#   workers = 2
+# )
 
-  #OPTIONAL: parallelization setup
-  # future::plan(
-  #   future::multisession,
-  #   workers = 2
-  # )
+#OPTIONAL: progress bar
+# progressr::handlers(global = TRUE)
 
-  #OPTIONAL: progress bar
-  # progressr::handlers(global = TRUE)
+#group predictors using max_cor as clustering threshold
+clusters <- cor_clusters(
+  df = vi_smol,
+  predictors = c(
+    "koppen_zone", #character
+    "soil_type", #factor
+    "topo_elevation", #numeric
+    "soil_temperature_mean" #numeric
+  ),
+  max_cor = 0.75
+)
 
-  #group predictors using max_cor as clustering threshold
-  df_clusters <- cor_clusters(
-    df = vi,
-    predictors = c(
-      "koppen_zone", #character
-      "soil_type", #factor
-      "topo_elevation", #numeric
-      "soil_temperature_mean" #numeric
-    ),
-    max_cor = 0.75,
-    plot = FALSE #set to TRUE to plot result
-  )
+#clusters data frame
+clusters$df
 
-  #OPTIONAL: disable parallelization
-  #future::plan(future::sequential)
+##plot hclust object
+# graphics::plot(clusters$hclust)
+
+##plot max_cor threshold
+# graphics::abline(
+#   h = 1 - 0.75,
+#   col = "red4",
+#   lty = 3,
+#   lwd = 2
+# )
+
+#OPTIONAL: disable parallelization
+#future::plan(future::sequential)
 }
 \seealso{
 Other pairwise_correlation: 

@@ -1,6 +1,6 @@
 testthat::test_that("`cor_select()` works", {
 
-  data(vi, vi_predictors)
+  data(vi_smol, vi_predictors)
 
   predictors <- vi_predictors[1:10]
   df <- vi[1:1000, ]
@@ -138,7 +138,7 @@ testthat::test_that("`cor_select()` works", {
   #few rows
   testthat::expect_message(
     x <- cor_select(
-      df = vi[1, ],
+      df = vi_smol[1, ],
       predictors = vi_predictors
     )
   )
@@ -146,7 +146,7 @@ testthat::test_that("`cor_select()` works", {
 
   #no predictors
   x <- cor_select(
-    df = df[, 1:5],
+    df = vi_smol[, 1:5],
     predictors = NULL,
     quiet = TRUE
   )

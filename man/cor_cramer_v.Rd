@@ -7,9 +7,9 @@
 cor_cramer_v(x = NULL, y = NULL, check_input = TRUE, ...)
 }
 \arguments{
-\item{x}{(required; character vector) character vector representing a categorical variable. Default: NULL}
+\item{x}{(required; vector) Values of a categorical variable (character or vector). Converted to character if numeric or logical. Default: NULL}
 
-\item{y}{(required; character vector) character vector representing a categorical variable. Must have the same length as \code{x}. Default: NULL}
+\item{y}{(required; vector) Values of a categorical variable (character or vector). Converted to character if numeric or logical. Default: NULL}
 
 \item{check_input}{(required; logical) If FALSE, disables data checking for a slightly faster execution. Default: TRUE}
 
@@ -19,26 +19,52 @@ cor_cramer_v(x = NULL, y = NULL, check_input = TRUE, ...)
 numeric: Cramer's V
 }
 \description{
-Computes bias-corrected Cramer's V (extension of the chi-squared test), a measure of association between two categorical variables. Results are in the range 0-1, where 0 indicates no association, and 1 indicates a perfect association.
+Cramer's V extends the chi-squared test to quantify how strongly the
+categories of two variables co-occur. The value ranges from 0 to 1,
+where 0 indicates no association and 1 indicates perfect association.
 
-In essence, Cramer's V assesses the co-occurrence of the categories of two variables to quantify how strongly these variables are related.
+When both variables are binary, Cramer's V is mathematically identical to the absolute Pearson correlation. With more than two categories the relationship diverges: as the number of categories increases, Pearson correlation (which depends on numeric coding) and Cramer's V (which depends only on the contingency table) become progressively less comparable.
 
-Even when its range is between 0 and 1, Cramer's V values are not directly comparable to R-squared values, and as such, a multicollinearity analysis containing both types of values must be assessed with care. It is probably preferable to convert non-numeric variables to numeric using target encoding rather before a multicollinearity analysis.
+If you intend to combine these measures in a multicollinearity analysis, interpret them with care. It is often preferable to convert non-numeric variables to numeric form (for example, via target encoding) before assessing multicollinearity.
 }
 \examples{
 
-data(vi)
+# perfect one-to-one association
+cor_cramer_v(
+  x = c("a", "a", "b", "c"),
+  y = c("a", "a", "b", "c")
+)
 
-#subset to speed-up example
-vi <- vi[1:1000, ]
+# still perfect: labels differ but mapping is unique
+cor_cramer_v(
+  x = c("a", "a", "b", "c"),
+  y = c("a", "a", "b", "d")
+)
 
-#computing Cramer's V for two categorical predictors
-v <- cor_cramer_v(
-  x = vi$soil_type,
-  y = vi$koppen_zone
-  )
+# high but < 1: mostly aligned, one category of y repeats
+cor_cramer_v(
+  x = c("a", "a", "b", "c"),
+  y = c("a", "a", "b", "b")
+)
 
-v
+# appears similar by position, but no association by distribution
+# (x = "a" mixes with y = "a" and "b")
+cor_cramer_v(
+  x = c("a", "a", "a", "c"),
+  y = c("a", "a", "b", "b")
+)
+
+# numeric inputs are coerced to character internally
+cor_cramer_v(
+  x = c(1, 1, 2, 3),
+  y = c(1, 1, 2, 2)
+)
+
+# logical inputs are also coerced to character
+cor_cramer_v(
+  x = c(TRUE, TRUE, FALSE, FALSE),
+  y = c(TRUE, TRUE, FALSE, FALSE)
+)
 
 }
 \references{

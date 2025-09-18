@@ -27,14 +27,14 @@ testthat::test_file("tests/testthat/test-cor_clusters.R")
 testthat::test_file("tests/testthat/test-cor_cramer_v.R")
 #[ FAIL 0 | WARN 0 | SKIP 0 | PASS 8 ]
 
-testthat::test_file("tests/testthat/test-cor_select.R")
-#[ FAIL 0 | WARN 0 | SKIP 0 | PASS 25 ]
-
 testthat::test_file("tests/testthat/test-cor_df.R")
 #[ FAIL 0 | WARN 0 | SKIP 0 | PASS 17 ]
 
 testthat::test_file("tests/testthat/test-cor_matrix.R")
 #[ FAIL 0 | WARN 0 | SKIP 0 | PASS 7 ]
+
+testthat::test_file("tests/testthat/test-cor_select.R")
+#[ FAIL 0 | WARN 0 | SKIP 0 | PASS 25 ]
 
 testthat::test_file("tests/testthat/test-vif.R")
 #[ FAIL 0 | WARN 0 | SKIP 0 | PASS 7 ]

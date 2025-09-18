@@ -1,14 +1,11 @@
 testthat::test_that("`cor_df()` works", {
 
-  data(vi, vi_predictors, vi_predictors_categorical)
+  data(vi_smol, vi_predictors, vi_predictors_categorical)
 
-  # mixed types ----
-  predictors <- vi_predictors[1:10]
-  df <- vi[1:1000, ]
-
+  #mixed types
   cor.df <- cor_df(
-    df = df,
-    predictors = predictors
+    df = vi_smol,
+    predictors = vi_predictors[1:10]
   )
 
   testthat::expect_true(
@@ -24,11 +21,9 @@ testthat::test_that("`cor_df()` works", {
   )
 
   # categorical only ----
-  predictors <- vi_predictors_categorical[1:5]
-
   cor.df <- cor_df(
-    df = df,
-    predictors = predictors
+    df = vi_smol,
+    predictors = vi_predictors_categorical[1:5]
   )
 
   testthat::expect_true(
@@ -64,19 +59,19 @@ testthat::test_that("`cor_df()` works", {
   )
 
   #few rows
-  testthat::expect_warning(
+  testthat::expect_error(
     cor.df <- cor_df(
-      df = vi[1, ],
+      df = vi_smol[1, ],
       predictors = vi_predictors,
       quiet = TRUE
     ),
-    regexp = "argument 'df' has fewer than 10 rows"
+    regexp = "argument 'df' has fewer than 3 rows"
   )
 
 
   #no predictors
   cor.df <- cor_df(
-    df = vi[1:1000, 1:5],
+    df = vi_smol[, 1:5],
     predictors = NULL
   )
 
@@ -92,13 +87,15 @@ testthat::test_that("`cor_df()` works", {
   )
 
   #single predictor
-  predictors <- vi_predictors[1]
-
-  cor.df <- cor_df(
-    df = df,
-    predictors = predictors,
-    quiet = FALSE
+  testthat::expect_message(
+    cor.df <- cor_df(
+      df = vi_smol,
+      predictors = vi_predictors[1],
+      quiet = FALSE
+    ),
+    regexp = "only one predictor"
   )
+
 
   testthat::expect_true(
     is.data.frame(cor.df)

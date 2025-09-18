@@ -53,10 +53,10 @@
 - documentation DONE
 - test file DONE
 
-#cor_df.R
+#cor_df.R IN PROGRESS
 
-- code examples
-- documentation
+- code examples DONE
+- documentation DONE
 - test file
 
 #cor_matrix.R
