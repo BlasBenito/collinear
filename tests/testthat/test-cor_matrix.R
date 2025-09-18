@@ -1,36 +1,30 @@
 testthat::test_that("`cor_matrix()` works", {
 
-  data(vi, vi_predictors)
-  vi <- vi[1:1000, ]
+  data(vi_smol, vi_predictors)
 
-  #without response, input from cor_df()
-  predictors <- vi_predictors[1:15]
+  #nput from cor_df()
 
   df <- cor_df(
-    df = vi,
-    predictors = predictors
+    df = vi_smol,
+    predictors = vi_predictors[1:15]
     )
 
   m <- cor_matrix(df = df)
 
   testthat::expect_true(
-    is.matrix(m),
-    info = "Result should be a matrix."
+    is.matrix(m)
   )
 
   testthat::expect_true(
-    all(rownames(m) == colnames(m)),
-    info = "Row and column names should be the same."
+    all(rownames(m) == colnames(m))
   )
 
   testthat::expect_true(
-    all(rownames(m) %in% predictors),
-    info = "Row and column names should match the variables."
+    all(rownames(m) %in% vi_predictors[1:15])
   )
 
   testthat::expect_true(
-    all(diag(m) == 1),
-    info = "Diagonal elements should be 1."
+    all(diag(m) == 1)
   )
 
   #few rows

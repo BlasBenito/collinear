@@ -7,7 +7,7 @@
 cor_stats(df = NULL, predictors = NULL, quiet = FALSE, ...)
 }
 \arguments{
-\item{df}{(required; data frame, tibble, or sf) A data frame with responses (optional) and predictors. Must have at least 10 rows. Alternatively, a dataframe resulting from \code{\link[=cor_df]{cor_df()}}. Default: NULL.}
+\item{df}{(required; data frame, tibble, or sf) A dataframe with predictors or the output of\code{\link[=cor_df]{cor_df()}}. Default: NULL.}
 
 \item{predictors}{(optional; character vector or NULL) Names of the predictors in \code{df} involved in the multicollinearity filtering. If NULL, all columns in \code{df} (except those with constant values or near zero variance) are used. Default: NULL}
 

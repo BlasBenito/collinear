@@ -2,7 +2,7 @@
 % Please edit documentation in R/cor_select.R
 \name{cor_select}
 \alias{cor_select}
-\title{Automated Multicollinearity Filtering with Pairwise Correlations}
+\title{Automated Multicollinearity Filtering with Absolute Pairwise Correlations}
 \usage{
 cor_select(
   df = NULL,
@@ -43,7 +43,17 @@ Accepted inputs are:
 list of class \code{class.collinear_output}
 }
 \description{
-Implements a recursive forward selection algorithm to keep predictors with a maximum pairwise correlation with all other selected predictors lower than a given threshold. Uses \code{\link[=cor_df]{cor_df()}} underneath, and as such, can handle different combinations of predictor types.
+Reduces multicollinearity among predictors using the following steps:
+\itemize{
+\item Computes the pairwise correlations between predictors.
+\item Orders predictors according to the user preference (argument \code{preference_order}) or from lower to higher multicollinearity otherwise.
+\item Iteratively selects predictors:
+\itemize{
+\item Starts with the top-preference predictor.
+\item Adds predictors one by one only if their correlation with already selected predictors does not exceed \code{max_cor}.
+}
+\item Returns the set of selected predictors.
+}
 
 Please check the section \strong{Pairwise Correlation Filtering} at the end of this help file for further details.
 }
@@ -70,42 +80,42 @@ This filtering method ensures that all predictors in the selection are correlate
 }
 
 \examples{
-#subset to limit example run time
-df <- vi[1:1000, ]
+data(vi_smol)
 
-#only numeric predictors only to speed-up examples
-#categorical predictors are supported, but result in a slower analysis
-predictors <- vi_predictors_numeric[1:8]
-
-#predictors has mixed types
-sapply(
-  X = df[, predictors, drop = FALSE],
-  FUN = class
+#predictors
+predictors = c(
+  "koppen_zone", #character
+  "soil_type", #factor
+  "topo_elevation", #numeric
+  "soil_temperature_mean" #numeric
 )
 
-#parallelization setup
-future::plan(
-  future::multisession,
-  workers = 2 #set to parallelly::availableCores() - 1
-)
-
-#progress bar
+#OPTIONAL: parallelization setup
+# only worth it for large data
+# future::plan(
+#   future::multisession,
+#   workers = 2
+# )
+#
+#OPTIONAL: progress bar
 # progressr::handlers(global = TRUE)
 
-#without preference order
+#predictors ordered from lower to higher multicollinearity
 x <- cor_select(
-  df = df,
+  df = vi_smol,
   predictors = predictors,
   max_cor = 0.7
 )
 
+x
+
 
 #with custom preference order
 x <- cor_select(
-  df = df,
+  df = vi_smol,
   predictors = predictors,
   preference_order = c(
-    "swi_mean",
+    "koppen_zone",
     "soil_type"
   ),
   max_cor = 0.7
@@ -114,20 +124,22 @@ x <- cor_select(
 
 #with automated preference order
 df_preference <- preference_order(
-  df = df,
+  df = vi_smol,
   response = "vi_numeric",
   predictors = predictors
 )
 
+df_preference
+
 x <- cor_select(
-  df = df,
+  df = vi_smol,
   predictors = predictors,
   preference_order = df_preference,
   max_cor = 0.7
 )
 
-#resetting to sequential processing
-future::plan(future::sequential)
+#OPTIONAL: disable parallelization
+#future::plan(future::sequential)
 }
 \seealso{
 Other pairwise_correlation: 

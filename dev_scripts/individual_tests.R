@@ -19,7 +19,7 @@ testthat::test_file("tests/testthat/test-collinear_lite.R")
 #[ FAIL 0 | WARN 0 | SKIP 0 | PASS 10 ]
 
 testthat::test_file("tests/testthat/test-collinear.R")
-#[ FAIL 0 | WARN 0 | SKIP 0 | PASS 62 ]
+#[ FAIL 0 | WARN 0 | SKIP 0 | PASS 61 ]
 
 testthat::test_file("tests/testthat/test-cor_clusters.R")
 #[ FAIL 0 | WARN 0 | SKIP 0 | PASS 6 ]

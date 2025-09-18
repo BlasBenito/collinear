@@ -37,18 +37,11 @@
 #' #   future::multisession,
 #' #   workers = 2
 #' # )
-#'
+#' #
 #' #OPTIONAL: progress bar
 #' # progressr::handlers(global = TRUE)
 #'
-#' #entire data frame
-#' x <- cor_df(
-#'   df = vi_smol[, predictors]
-#' )
-#'
-#' x
-#'
-#' #predictors vector (same result)
+#' #predictors ordered from lower to higher multicollinearity
 #' x <- cor_df(
 #'   df = vi_smol,
 #'   predictors = predictors

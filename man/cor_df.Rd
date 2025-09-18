@@ -5,7 +5,7 @@
 \alias{cor_numeric_vs_numeric}
 \alias{cor_numeric_vs_categorical}
 \alias{cor_categorical_vs_categorical}
-\title{Data Frame of Absolute Pairwise Correlations}
+\title{Absolute Pairwise Correlations Dataframe}
 \usage{
 cor_df(df = NULL, predictors = NULL, quiet = FALSE, ...)
 
@@ -30,78 +30,54 @@ cor_categorical_vs_categorical(
 \item{...}{(optional) Other arguments. Currently used for the internal argument \code{function_name}.}
 }
 \value{
-data frame; predictors pairs and their absolute Pearson correlation or Cramer's V association.
+data frame:
+\itemize{
+\item \code{x} predictor name.
+\item \code{y} predictor name.
+\item \code{correlation} Absolute Pearson correlation for numeric vs. numeric and numeric vs. categorical, or Cramer's V for categorical vs categorical.
+}
 }
 \description{
-Computes a pairwise correlation data frame. Implements methods to compare different types of predictors:
+Computes a absolute pairwise correlation data frame. Implements methods to compare different types of predictors:
 \itemize{
 \item \strong{numeric vs. numeric}: as computed with \code{\link[stats:cor]{stats::cor()}} using the methods "pearson" or "spearman", via \code{\link[=cor_numeric_vs_numeric]{cor_numeric_vs_numeric()}}.
 \item \strong{numeric vs. categorical}: the function \code{\link[=cor_numeric_vs_categorical]{cor_numeric_vs_categorical()}} target-encodes the categorical variable using the numeric variable as reference with \code{\link[=target_encoding_lab]{target_encoding_lab()}} and the method "loo" (leave-one-out), and then their correlation is computed with \code{\link[stats:cor]{stats::cor()}}.
-\item \strong{categorical vs. categorical}: the function \code{\link[=cor_categorical_vs_categorical]{cor_categorical_vs_categorical()}} computes Cramer's V (see \code{\link[=cor_cramer_v]{cor_cramer_v()}}) as indicator of the association between character or factor variables. However, take in mind that Cramer's V is not directly comparable with R-squared, even when having the same range from zero to one. It is always recommended to target-encode categorical variables with \code{\link[=target_encoding_lab]{target_encoding_lab()}} before the pairwise correlation analysis.
+\item \strong{categorical vs. categorical}: the function \code{\link[=cor_categorical_vs_categorical]{cor_categorical_vs_categorical()}} computes Cramer's V (see \code{\link[=cor_cramer_v]{cor_cramer_v()}}) as indicator of the association between character or factor variables. Please read the documentation of \code{\link[=cor_cramer_v]{cor_cramer_v()}} to better understand the caveats of mixing Pearson Correlation and Cramer's V in a multicollinearity analysis.
 }
 
 Accepts a parallelization setup via \code{\link[future:plan]{future::plan()}} and a progress bar via \code{\link[progressr:handlers]{progressr::handlers()}} (see examples).
 }
 \examples{
-  data(vi)
+data(vi_smol)
 
-  #subset to speed-up example
-  vi <- vi[1:1000, ]
+#predictors
+predictors = c(
+  "koppen_zone", #character
+  "soil_type", #factor
+  "topo_elevation", #numeric
+  "soil_temperature_mean" #numeric
+)
 
-  #predictors
-  predictors = c(
-    "koppen_zone", #character
-    "soil_type", #factor
-    "topo_elevation", #numeric
-    "soil_temperature_mean" #numeric
-  )
+#OPTIONAL: parallelization setup
+# only worth it for large data
+# future::plan(
+#   future::multisession,
+#   workers = 2
+# )
+#
+#OPTIONAL: progress bar
+# progressr::handlers(global = TRUE)
 
-  #OPTIONAL: parallelization setup
-  # future::plan(
-  #   future::multisession,
-  #   workers = 2
-  # )
+#predictors ordered from lower to higher multicollinearity
+x <- cor_df(
+  df = vi_smol,
+  predictors = predictors
+)
 
-  #OPTIONAL: progress bar
-  # progressr::handlers(global = TRUE)
+x
 
-  #without preference order
-  selected_predictors <- cor_select(
-    df = vi,
-    predictors = predictors,
-    preference_order = NULL,
-    max_cor = 0.75
-  )
-
-
-  #with custom preference order
-  selected_predictors <- cor_select(
-    df = vi,
-    predictors = predictors,
-    preference_order = c(
-      "soil_temperature_mean",
-      "soil_type"
-    ),
-    max_cor = 0.75
-  )
-
-
-  #with automated preference order
-  df_preference <- preference_order(
-    df = vi,
-    responses = "vi_numeric",
-    predictors = predictors
-  )
-
-  selected_predictors <- cor_select(
-    df = df,
-    predictors = predictors,
-    preference_order = df_preference,
-    max_cor = 0.75
-  )
-
-  #OPTIONAL: disable parallelization
-  #future::plan(future::sequential)
+#OPTIONAL: disable parallelization
+#future::plan(future::sequential)
 }
 \seealso{
 Other pairwise_correlation: 

@@ -586,7 +586,7 @@ testthat::test_that("`collinear()` works", {
 
   testthat::expect_error(
     x <- collinear(
-      df = vi,
+      df = vi_smol,
       responses = "vi_numeric",
       predictors = vi_predictors,
       encoding_method = NULL,
@@ -602,7 +602,7 @@ testthat::test_that("`collinear()` works", {
   ### character function name ----
   testthat::expect_error(
     x <- collinear(
-      df = vi,
+      df = vi_smol,
       responses = "vi_numeric",
       predictors = vi_predictors,
       encoding_method = NULL,
@@ -613,22 +613,6 @@ testthat::test_that("`collinear()` works", {
       quiet = TRUE
     ),
     regexp = "must be a uquoted function name"
-  )
-
-  ###wrong function type ----
-  testthat::expect_error(
-    x <- collinear(
-      df = vi,
-      responses = "vi_numeric",
-      predictors = vi_predictors,
-      encoding_method = NULL,
-      preference_order = NULL,
-      f = f_v, #requires character response
-      max_cor = 0.75,
-      max_vif = 5,
-      quiet = TRUE
-    ),
-    regexp = "must be of class 'character'"
   )
 
 

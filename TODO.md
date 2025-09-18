@@ -53,23 +53,23 @@
 - documentation DONE
 - test file DONE
 
-#cor_df.R IN PROGRESS
+#cor_df.R DONE
 
 - code examples DONE
 - documentation DONE
-- test file
+- test file DONE
 
-#cor_matrix.R
+#cor_matrix.R DONE
 
-- code examples
-- documentation
-- test file
+- code examples DONE
+- documentation DONE
+- test file DONE
 
-#cor_select.R
+#cor_select.R IN PROGRESS
 
-- code examples
-- documentation
-- test file
+- code examples DONE
+- documentation DONE
+- test file PENDING
 
 #cor_stats.R
 
