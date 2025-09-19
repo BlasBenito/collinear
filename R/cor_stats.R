@@ -71,6 +71,12 @@ cor_stats <- function(
     ... = ...
   )
 
+  df <- validate_arg_df_not_null(
+    df = df,
+    function_name = function_name
+  )
+
+  #cor_df data frame
   if(
     all(
       names(df) %in% c(
@@ -79,10 +85,17 @@ cor_stats <- function(
         "correlation",
         "metric"
       )
-    ) == FALSE
+    )
   ){
 
+    correlation_df <- df
+    rm(df)
 
+    out_type <- "df"
+
+  } else {
+
+    #data frame of predictors
     correlation_df <- cor_df(
       df = df,
       predictors = predictors,
@@ -92,17 +105,35 @@ cor_stats <- function(
 
     out_type <- "list"
 
-  } else {
-
-    correlation_df <- df
-    rm(df)
-
-    out_type <- "df"
-
   }
 
 
   values <- stats::na.omit(correlation_df$correlation)
+
+  if(length(values) < 10){
+
+    stop(
+      "\n",
+      function_name,
+      ": not enough correlation values to compute meaningful stats.",
+      call. = FALSE
+    )
+
+  }
+
+  if(length(values) < 30){
+
+    if(quiet == FALSE){
+
+      message(
+        "\n",
+        function_name,
+        ": correlation stats were computed with fewer than 30 cases, interpret them with care."
+      )
+
+    }
+
+  }
 
   stats <- c(
     "minimum" = min(values),
@@ -150,10 +181,6 @@ cor_stats <- function(
     statistic = stats_names,
     correlation = stats
   )
-
-  if(quiet == FALSE){
-    print(stats_df, row.names = FALSE, right = FALSE)
-  }
 
   if(out_type == "list"){
     out <- list(

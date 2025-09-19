@@ -1,21 +1,41 @@
-#' Identify Numeric and Categorical Predictors
+#' Identify Numeric, Categorical, and Logical Predictors
 #'
 #' @description
-#' Returns a list with the names of the valid numeric predictors and the names of the valid categorical predictors
+#' Returns a list with the names of the valid numeric, categorical, and logical predictors in a given dataframe
 #'
 #' @inheritParams collinear
 #' @inheritParams identify_predictors_zero_variance
-#' @return list: names of numeric, categorical, logical, and zero-variance predictors
+#' @return list
+#' \itemize{
+#'   \item \code{numeric}: character vector of numeric predictors.
+#'   \item \code{categorical}: character vector of categorical (character and factor) predictors.
+#'   \item \code{logical}: character vector of logical predictors.
+#'   \item \code{zero_variance}: character vector with numeric predictors having quasi-constant values
+#' }
 #' @examples
 #'
 #' data(vi, vi_predictors)
 #'
-#' predictors_names <- identify_predictors(
-#'   df = vi,
-#'   predictors = vi_predictors
+#' #adding logical predictor
+#' vi$logical <- TRUE
+#'
+#' #adding zero variance predictor
+#' vi$zero_variance <- 1
+#'
+#' #identify predictors types
+#' x <- identify_predictors(
+#'   df = vi
 #' )
 #'
-#' predictors_names
+#' x
+#'
+#' #identify specific predictors
+#' x <- identify_predictors(
+#'   df = vi,
+#'   predictors = c("logical", "zero_variance")
+#' )
+#'
+#' x
 #'
 #' @autoglobal
 #' @family data_types
@@ -96,7 +116,7 @@ identify_predictors <- function(
 
 }
 
-#' Identify Valid Logical Predictors
+#' Identify Logical Predictors
 #'
 #' @description
 #' Returns the names of valid logical predictors. Ignores predictors with constant values (i.e., all TRUE or all FALSE).
@@ -122,7 +142,6 @@ identify_predictors <- function(
 identify_predictors_logical <- function(
     df = NULL,
     predictors = NULL,
-    decimals = 4,
     quiet = FALSE,
     ...
 ){
@@ -165,7 +184,6 @@ identify_predictors_logical <- function(
   predictors_constant <- identify_predictors_zero_variance(
     df = df,
     predictors = predictors,
-    decimals = decimals,
     quiet = quiet
   )
 
@@ -681,17 +699,6 @@ identify_response_type <- function(
             return("integer-binomial")
 
           } else {
-
-            if(quiet == FALSE){
-
-              message(
-                "\n",
-                function_name,
-
-                ": argument 'response' names a integer column with two unique values that are not 0 and 1. Please consider recoding it as categorical, or select a different response column."
-              )
-
-            }
 
             return("integer-binary")
 

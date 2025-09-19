@@ -36,6 +36,23 @@ testthat::test_file("tests/testthat/test-cor_matrix.R")
 testthat::test_file("tests/testthat/test-cor_select.R")
 #[ FAIL 0 | WARN 0 | SKIP 0 | PASS 25 ]
 
+testthat::test_file("tests/testthat/test-cor_stats.R")
+#[ FAIL 0 | WARN 0 | SKIP 0 | PASS 8 ]
+
+testthat::test_file("tests/testthat/test-drop_geometry_column.R")
+#[ FAIL 0 | WARN 0 | SKIP 0 | PASS 4 ]
+
+testthat::test_file("tests/testthat/test-identify_predictors.R")
+#[ FAIL 0 | WARN 0 | SKIP 0 | PASS 8 ]
+
+
+#TODO
+
+
+
+
+
+
 testthat::test_file("tests/testthat/test-vif.R")
 #[ FAIL 0 | WARN 0 | SKIP 0 | PASS 7 ]
 
@@ -72,8 +89,7 @@ testthat::test_file("tests/testthat/test-case_weights.R")
 testthat::test_file("tests/testthat/test-cramer_v.R")
 #[ FAIL 0 | WARN 0 | SKIP 0 | PASS 3 ]
 
-testthat::test_file("tests/testthat/test-identify.R")
-#[ FAIL 0 | WARN 0 | SKIP 0 | PASS 8 ]
+
 
 testthat::test_file("tests/testthat/test-validate_arg_df.R")
 #[ FAIL 0 | WARN 0 | SKIP 0 | PASS 10 ]

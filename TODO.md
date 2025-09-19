@@ -71,28 +71,28 @@
 - documentation DONE
 - test file DONE
 
-#cor_stats.R IN PROGRESS 
+#cor_stats.R DONE
 
 - code examples DONE
 - documentation DONE
-- test file PENDING
+- test file DONE
 
-#data.R
+#data.R DONE
 
-- code examples
-- documentation
-- test file
+- documentation DONE
 
-#drop_geometry_column.R
+#drop_geometry_column.R DONE
 
-- code examples
-- documentation
-- test file
+- code examples DONE
+- documentation DONE
+- test file DONE
 
-#identify.R
+#identify_predictors.R IN PROGRESS
 
-- code examples
-- documentation
+## identify_predictors_logical() IN PROGRESS
+
+- code examples IN PROGRESS
+- documentation IN PROGRESS
 - test file
 
 #imports.R

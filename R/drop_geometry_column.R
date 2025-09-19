@@ -10,39 +10,35 @@
 #' @author Blas M. Benito, PhD
 #' @export
 #' @examples
-#' data(vi)
+#' data(vi_smol)
 #'
 #' #creating fake geometry column without sf loaded
-#' vi$geometry <- NA
+#' vi_smol$geometry <- NA
 #' attr(
-#'   x = vi,
+#'   x = vi_smol,
 #'   which = "sf_column"
 #'   ) <- "geometry"
 #'
+#' #check new attribute
+#' attributes(vi_smol)$sf_column
+#'
 #' #drop geometry column
 #' df <- drop_geometry_column(
-#'   df = vi
+#'   df = vi_smol
 #'   )
 #'
+#' #checking that the geometry was droppped
 #' "geometry" %in% colnames(df)
+#' attributes(df)$sf_column
 #'
 drop_geometry_column <- function(
     df = NULL,
     quiet = FALSE,
     ...
     ){
-
-  dots <- list(...)
-  if("function_name" %in% names(dots)){
-    function_name <- dots$function_name
-    dots$function_name <- NULL
-  } else {
-    function_name <- NULL
-  }
-
   function_name <- validate_arg_function_name(
     default_name = "collinear::drop_geometry_column()",
-    function_name = function_name
+    ... = ...
   )
 
   quiet <- validate_arg_quiet(

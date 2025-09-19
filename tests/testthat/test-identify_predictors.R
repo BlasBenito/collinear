@@ -1,9 +1,9 @@
 testthat::test_that("`identify_predictors_categorical()` works", {
 
-    data(vi, vi_predictors)
+    data(vi_smol, vi_predictors)
 
     non.numeric.predictors <- identify_predictors_categorical(
-      df = vi,
+      df = vi_smol,
       predictors = vi_predictors
     )
 
@@ -20,9 +20,9 @@ testthat::test_that("`identify_predictors_categorical()` works", {
 
 testthat::test_that("`identify_predictors_numeric()` works", {
 
-    data(vi, vi_predictors)
+    data(vi_smol, vi_predictors)
     numeric.predictors <- identify_predictors_numeric(
-      df = vi,
+      df = vi_smol,
       predictors = vi_predictors
     )
 
@@ -39,13 +39,13 @@ testthat::test_that("`identify_predictors_numeric()` works", {
 
 testthat::test_that("`identify_predictors_zero_variance()` works", {
 
-    data(vi, vi_predictors)
-    vi$zv_1 <- 1
-    vi$zv_2 <- runif(n = nrow(vi), min = 0, max = 1e-04)
+    data(vi_smol, vi_predictors)
+    vi_smol$zv_1 <- 1
+    vi_smol$zv_2 <- runif(n = nrow(vi_smol), min = 0, max = 1e-04)
     vi_predictors <- c(vi_predictors, "zv_1", "zv_2")
 
     zero.variance.predictors <- identify_predictors_zero_variance(
-      df = vi,
+      df = vi_smol,
       predictors = vi_predictors
     )
 
@@ -64,7 +64,7 @@ testthat::test_that("`identify_predictors_zero_variance()` works", {
 testthat::test_that("`identify_predictors()` works", {
 
   predictors <- identify_predictors(
-    df = vi,
+    df = vi_smol,
     predictors = vi_predictors
   )
 

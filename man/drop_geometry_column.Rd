@@ -20,21 +20,26 @@ data frame
 Replicates the functionality of \code{sf::st_drop_geometry()} without depending on the \code{sf} package.
 }
 \examples{
-data(vi)
+data(vi_smol)
 
 #creating fake geometry column without sf loaded
-vi$geometry <- NA
+vi_smol$geometry <- NA
 attr(
-  x = vi,
+  x = vi_smol,
   which = "sf_column"
   ) <- "geometry"
 
+#check new attribute
+attributes(vi_smol)$sf_column
+
 #drop geometry column
 df <- drop_geometry_column(
-  df = vi
+  df = vi_smol
   )
 
+#checking that the geometry was droppped
 "geometry" \%in\% colnames(df)
+attributes(df)$sf_column
 
 }
 \author{

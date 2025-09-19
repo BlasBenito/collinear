@@ -69,7 +69,8 @@ validate_args_target_encoding_lab <- function(
   #response is categorical
   response_type <- identify_response_type(
     df = df,
-    response = response
+    response = response,
+    function_name = function_name
   )
 
   if(response_type == "categorical"){
@@ -137,7 +138,8 @@ validate_args_target_encoding_lab <- function(
   #check that response is numeric
   response <- identify_predictors_numeric(
     df = df,
-    predictors = response
+    predictors = response,
+    function_name = function_name
   )
 
   if(length(response) == 0){
@@ -168,7 +170,8 @@ validate_args_target_encoding_lab <- function(
   #identify categorical predictors
   predictors <- identify_predictors_categorical(
     df = df,
-    predictors = predictors
+    predictors = predictors,
+    function_name = function_name
   )
 
   if(length(predictors) == 0){

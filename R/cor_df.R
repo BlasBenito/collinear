@@ -373,7 +373,8 @@ cor_numeric_vs_categorical <- function(
         predictors = "y",
         encoding_method = "loo",
         overwrite = TRUE,
-        quiet = TRUE
+        quiet = TRUE,
+        function_name = function_name
       )
 
       #compute correlation
