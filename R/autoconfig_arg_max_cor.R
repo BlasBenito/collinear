@@ -72,7 +72,7 @@ autoconfig_arg_max_cor <- function(
 
     correlation_mean <- correlation_stats$stats[
       correlation_stats$stats$statistic == "mean",
-      "value"
+      "correlation"
     ]
 
     max_cor <- max(

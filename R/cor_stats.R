@@ -1,23 +1,61 @@
 #' Pairwise Correlation Stats
 #'
-#' Generates a correlation dataframe with [cor_df()] and computes the the minimum, mean, maximum, and quantiles 0.05, 0.25, median (0.5), 0.75, and 0.95 of the Pearson correlations (and Cramer's V if there is more than one categorical predictor).
+#' Computes the the minimum, mean, maximum, and quantiles 0.05, 0.25, median (0.5), 0.75, and 0.95 of the column "correlation" in the output of [cor_df()].
 #'
 #' @inheritParams cor_matrix
-#' @inheritParams collinear
 #'
-#' @returns list:
+#' @returns
 #' \itemize{
-#'   \item values: numeric vector of absolute correlations.
-#'   \item stats: dataframe with the columns \code{statistic} and \code{value}.
+#'   \item if \code{df} is the output of [cor_df()]: stats dataframe with the columns \code{statistic} and \code{correlation}.
+#'   \item if \code{df} is a data frame with predictors: list with:
+#'   \itemize{
+#'     \item \code{correlation}: result from [cor_df()].
+#'     \item \code{stats} data frame.
+#'   }
 #' }
 #' @examples
+#' data(
+#'   vi_smol,
+#'   vi_predictors_numeric
+#'   )
+#'
+#' #OPTIONAL: parallelization setup
+#' # only worth it for large data
+#' # future::plan(
+#' #   future::multisession,
+#' #   workers = 2
+#' # )
+#' #
+#' #OPTIONAL: progress bar
+#' # progressr::handlers(global = TRUE)
+#'
+#' #returns correlation and stats dataframes
 #' stats <- cor_stats(
 #'   df = vi_smol,
-#'   predictors = vi_predictors_numeric
+#'   predictors = vi_predictors_numeric[1:10]
 #' )
 #'
-#' head(stats$values)
-#' str(stats$stats)
+#' #vector of correlation values
+#' head(stats$correlation)
+#'
+#' #stats data frame
+#' stats$stats
+#'
+#' #using output of cor_df
+#' df_correlation <- cor_df(
+#'   df = vi_smol,
+#'   predictors = vi_predictors_numeric[1:10]
+#' )
+#'
+#' #returns stats dataframe only
+#' stats <- cor_stats(
+#'   df = df_correlation
+#' )
+#'
+#' stats
+#'
+#' #OPTIONAL: disable parallelization
+#' #future::plan(future::sequential)
 #' @autoglobal
 #' @family pairwise_correlation
 #' @export
@@ -38,7 +76,8 @@ cor_stats <- function(
       names(df) %in% c(
         "x",
         "y",
-        "correlation"
+        "correlation",
+        "metric"
       )
     ) == FALSE
   ){
@@ -51,10 +90,14 @@ cor_stats <- function(
       function_name = function_name
     )
 
+    out_type <- "list"
+
   } else {
 
     correlation_df <- df
     rm(df)
+
+    out_type <- "df"
 
   }
 
@@ -105,17 +148,21 @@ cor_stats <- function(
 
   stats_df <- data.frame(
     statistic = stats_names,
-    value = stats
+    correlation = stats
   )
 
   if(quiet == FALSE){
     print(stats_df, row.names = FALSE, right = FALSE)
   }
 
-  out <- list(
-    values = values,
-    stats = stats_df
-  )
+  if(out_type == "list"){
+    out <- list(
+      correlation = correlation_df,
+      stats = stats_df
+    )
+  } else {
+    out <- stats_df
+  }
 
   out
 

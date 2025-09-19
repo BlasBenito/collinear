@@ -71,11 +71,11 @@
 - documentation DONE
 - test file DONE
 
-#cor_stats.R
+#cor_stats.R IN PROGRESS 
 
-- code examples
-- documentation
-- test file
+- code examples DONE
+- documentation DONE
+- test file PENDING
 
 #data.R
 

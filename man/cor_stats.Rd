@@ -16,23 +16,61 @@ cor_stats(df = NULL, predictors = NULL, quiet = FALSE, ...)
 \item{...}{(optional) Other arguments. Currently used for the internal argument \code{function_name}.}
 }
 \value{
-list:
 \itemize{
-\item values: numeric vector of absolute correlations.
-\item stats: dataframe with the columns \code{statistic} and \code{value}.
+\item if \code{df} is the output of \code{\link[=cor_df]{cor_df()}}: stats dataframe with the columns \code{statistic} and \code{correlation}.
+\item if \code{df} is a data frame with predictors: list with:
+\itemize{
+\item \code{correlation}: result from \code{\link[=cor_df]{cor_df()}}.
+\item \code{stats} data frame.
+}
 }
 }
 \description{
-Generates a correlation dataframe with \code{\link[=cor_df]{cor_df()}} and computes the the minimum, mean, maximum, and quantiles 0.05, 0.25, median (0.5), 0.75, and 0.95 of the Pearson correlations (and Cramer's V if there is more than one categorical predictor).
+Computes the the minimum, mean, maximum, and quantiles 0.05, 0.25, median (0.5), 0.75, and 0.95 of the column "correlation" in the output of \code{\link[=cor_df]{cor_df()}}.
 }
 \examples{
+data(
+  vi_smol,
+  vi_predictors_numeric
+  )
+
+#OPTIONAL: parallelization setup
+# only worth it for large data
+# future::plan(
+#   future::multisession,
+#   workers = 2
+# )
+#
+#OPTIONAL: progress bar
+# progressr::handlers(global = TRUE)
+
+#returns correlation and stats dataframes
 stats <- cor_stats(
   df = vi_smol,
-  predictors = vi_predictors_numeric
+  predictors = vi_predictors_numeric[1:10]
 )
 
-head(stats$values)
-str(stats$stats)
+#vector of correlation values
+head(stats$correlation)
+
+#stats data frame
+stats$stats
+
+#using output of cor_df
+df_correlation <- cor_df(
+  df = vi_smol,
+  predictors = vi_predictors_numeric[1:10]
+)
+
+#returns stats dataframe only
+stats <- cor_stats(
+  df = df_correlation
+)
+
+stats
+
+#OPTIONAL: disable parallelization
+#future::plan(future::sequential)
 }
 \seealso{
 Other pairwise_correlation: 
