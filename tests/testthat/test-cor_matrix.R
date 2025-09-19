@@ -30,16 +30,16 @@ testthat::test_that("`cor_matrix()` works", {
   #few rows
   testthat::expect_error(
     x <- cor_matrix(
-      df = vi[1:2, ],
-      predictors = predictors
+      df = vi_smol[1:2, ],
+      predictors = vi_predictors[1:15]
     ),
     regexp = "has fewer than 3 rows"
   )
 
   testthat::expect_warning(
     x <- cor_matrix(
-      df = vi[1:9, ],
-      predictors = predictors
+      df = vi_smol[1:9, ],
+      predictors = vi_predictors[1:15]
     ),
     regexp = "has fewer than 10 rows"
   ) |>
@@ -47,8 +47,8 @@ testthat::test_that("`cor_matrix()` works", {
 
   testthat::expect_message(
     x <- cor_matrix(
-      df = vi[1:29, ],
-      predictors = predictors
+      df = vi_smol[1:29, ],
+      predictors = vi_predictors[1:15]
     ),
     regexp = "has fewer than 30 rows"
   ) |>

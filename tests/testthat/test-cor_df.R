@@ -13,7 +13,7 @@ testthat::test_that("`cor_df()` works", {
   )
 
   testthat::expect_true(
-    all(names(cor.df) %in% c("x", "y", "correlation"))
+    all(names(cor.df) %in% c("x", "y", "correlation", "metric"))
   )
 
   testthat::expect_true(
@@ -31,7 +31,7 @@ testthat::test_that("`cor_df()` works", {
   )
 
   testthat::expect_true(
-    all(names(cor.df) %in% c("x", "y", "correlation"))
+    all(names(cor.df) %in% c("x", "y", "correlation", "metric"))
   )
 
   testthat::expect_true(

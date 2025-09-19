@@ -72,7 +72,8 @@ cor_matrix <- function(
       names(df) %in% c(
         "x",
         "y",
-        "correlation"
+        "correlation",
+        "metric"
         )
       ) == FALSE
     ){
@@ -88,7 +89,7 @@ cor_matrix <- function(
 
   #create all possible pairs
   df <- rbind(
-    df,
+    df[, c("x", "y", "correlation")],
     data.frame(
       x = df$y,
       y = df$x,

@@ -18,6 +18,7 @@
 #'   \item \code{x} predictor name.
 #'   \item \code{y} predictor name.
 #'   \item \code{correlation} Absolute Pearson correlation for numeric vs. numeric and numeric vs. categorical, or Cramer's V for categorical vs categorical.
+#'   \item \code{metric} "pearson" for absolute Pearson correlation for numeric vs. numeric and numeric vs. categorical and "cramer_v" for Cramer's V association between categorical predictors.
 #' }
 #'
 #' @examples
@@ -229,12 +230,14 @@ cor_numeric_vs_numeric <- function(
   #remove factors
   cor.df$Var1 <- as.character(cor.df$Var1)
   cor.df$Var2 <- as.character(cor.df$Var2)
+  cor.df$metric <- "pearson"
 
   #rename columns
   colnames(cor.df) <- c(
     "x",
     "y",
-    "correlation"
+    "correlation",
+    "metric"
   )
 
   cor.df$correlation <- abs(cor.df$correlation)
@@ -386,6 +389,8 @@ cor_numeric_vs_categorical <- function(
     future.seed = TRUE
   )
 
+  cor.df$metric <- "pearson"
+
   cor.df
 
 }
@@ -492,6 +497,8 @@ cor_categorical_vs_categorical <- function(
     },
     future.seed = TRUE
   )
+
+  cor.df$metric <- "cramer_v"
 
   cor.df
 

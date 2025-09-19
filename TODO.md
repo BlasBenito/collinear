@@ -65,11 +65,11 @@
 - documentation DONE
 - test file DONE
 
-#cor_select.R IN PROGRESS
+#cor_select.R DONE
 
 - code examples DONE
 - documentation DONE
-- test file PENDING
+- test file DONE
 
 #cor_stats.R
 

@@ -3,25 +3,17 @@ testthat::test_that("`cor_select()` works", {
   data(vi_smol, vi_predictors)
 
   predictors <- vi_predictors[1:10]
-  df <- vi[1:1000, ]
 
   # mixed types ----
   testthat::expect_message(
     x <- cor_select(
-      df = df,
+      df = vi_smol,
       predictors = predictors,
       quiet = FALSE
     ),
     regexp = "ranking predictors"
   ) |>
     suppressMessages()
-
-  x <- cor_select(
-    df = df,
-    predictors = predictors,
-    quiet = TRUE
-  )
-
 
   testthat::expect_true(
     is.character(x)
@@ -42,7 +34,7 @@ testthat::test_that("`cor_select()` works", {
   )
 
   x <- cor_select(
-    df = df,
+    df = vi_smol,
     predictors = predictors,
     preference_order = preference_order,
     quiet = TRUE
@@ -66,7 +58,7 @@ testthat::test_that("`cor_select()` works", {
 
   #automated preference order
   preference_order <- preference_order(
-    df = df,
+    df = vi_smol,
     response = "vi_numeric",
     predictors = predictors,
     quiet = TRUE,
@@ -74,7 +66,7 @@ testthat::test_that("`cor_select()` works", {
   )
 
   x <- cor_select(
-    df = df,
+    df = vi_smol,
     predictors = predictors,
     preference_order = preference_order,
     quiet = TRUE
@@ -100,7 +92,7 @@ testthat::test_that("`cor_select()` works", {
   predictors <- vi_predictors_categorical[1:5]
 
   x <- cor_select(
-    df = df,
+    df = vi_smol,
     predictors = predictors,
     quiet = TRUE
   )
@@ -124,7 +116,8 @@ testthat::test_that("`cor_select()` works", {
     x <- cor_select(
       df = NULL,
       predictors = NULL
-    )
+    ),
+    regexp = "argument 'df' cannot be NULL"
   )
 
   #predictors only
@@ -132,15 +125,17 @@ testthat::test_that("`cor_select()` works", {
     x <- cor_select(
       df = NULL,
       predictors = vi_predictors
-    )
+    ),
+    regexp = "argument 'df' cannot be NULL"
   )
 
   #few rows
-  testthat::expect_message(
+  testthat::expect_error(
     x <- cor_select(
       df = vi_smol[1, ],
       predictors = vi_predictors
-    )
+    ),
+    regexp = "argument 'df' has fewer than 3 rows"
   )
 
 
@@ -152,7 +147,7 @@ testthat::test_that("`cor_select()` works", {
   )
 
   testthat::expect_true(
-    all(x %in% colnames(df)[1:5])
+    all(x %in% colnames(vi_smol)[1:5])
   )
 
   #single predictor
@@ -160,9 +155,10 @@ testthat::test_that("`cor_select()` works", {
 
   testthat::expect_message(
     x <- cor_select(
-      df = vi[1:1000, ],
+      df = vi_smol,
       predictors = predictors
-    )
+    ),
+    regexp = "only one predictor"
   ) |>
     suppressMessages()
 

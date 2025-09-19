@@ -35,6 +35,7 @@ data frame:
 \item \code{x} predictor name.
 \item \code{y} predictor name.
 \item \code{correlation} Absolute Pearson correlation for numeric vs. numeric and numeric vs. categorical, or Cramer's V for categorical vs categorical.
+\item \code{metric} "pearson" for absolute Pearson correlation for numeric vs. numeric and numeric vs. categorical and "cramer_v" for Cramer's V association between categorical predictors.
 }
 }
 \description{
