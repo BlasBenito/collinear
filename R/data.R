@@ -24,7 +24,7 @@
 #'
 #' @description
 #'
-#' Same as dataset [vi], but with only 100 rows. Used in code examples to shorten runtime.
+#' Same as dataset [vi], but with only 610 rows. Used in code examples to shorten runtime.
 #'
 #' @usage data(vi_smol)
 #' @seealso [vi_predictors]

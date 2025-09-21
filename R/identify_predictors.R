@@ -1,7 +1,7 @@
 #' Identify Numeric, Categorical, and Logical Predictors
 #'
 #' @description
-#' Returns a list with the names of the valid numeric, categorical, and logical predictors in a given dataframe
+#' Returns a list with the names of the valid numeric, categorical, and logical predictors in a given dataframe.
 #'
 #' @inheritParams collinear
 #' @inheritParams identify_predictors_zero_variance
@@ -10,7 +10,6 @@
 #'   \item \code{numeric}: character vector of numeric predictors.
 #'   \item \code{categorical}: character vector of categorical (character and factor) predictors.
 #'   \item \code{logical}: character vector of logical predictors.
-#'   \item \code{zero_variance}: character vector with numeric predictors having quasi-constant values
 #' }
 #' @examples
 #'
@@ -56,6 +55,11 @@ identify_predictors <- function(
 
   if(is.null(predictors)){
     predictors <- colnames(df)
+  } else {
+    predictors <- intersect(
+      x = predictors,
+      y = colnames(df)
+    )
   }
 
   predictors_numeric <- identify_predictors_numeric(
@@ -64,7 +68,7 @@ identify_predictors <- function(
     decimals = decimals,
     quiet = quiet,
     function_name = function_name
-  )
+  )$valid
 
   predictors_categorical <- identify_predictors_categorical(
     df = df,
@@ -74,7 +78,7 @@ identify_predictors <- function(
     ),
     quiet = quiet,
     function_name = function_name
-  )
+  )$valid
 
   predictors_logical <- identify_predictors_logical(
     df = df,
@@ -83,22 +87,7 @@ identify_predictors <- function(
       y = c(
         predictors_numeric,
         predictors_categorical
-        )
-    ),
-    decimals = decimals,
-    quiet = quiet,
-    function_name = function_name
-  )
-
-  predictors_zero_variance <- identify_predictors_zero_variance(
-    df = df,
-    predictors = setdiff(
-      x = predictors,
-      y = c(
-        predictors_numeric,
-        predictors_categorical,
-        predictors_logical
-        )
+      )
     ),
     decimals = decimals,
     quiet = quiet,
@@ -108,8 +97,7 @@ identify_predictors <- function(
   out_list <- list(
     numeric = predictors_numeric,
     categorical = predictors_categorical,
-    logical = predictors_logical,
-    zero_variance = predictors_zero_variance
+    logical = predictors_logical
   )
 
   out_list
@@ -215,24 +203,29 @@ identify_predictors_logical <- function(
 }
 
 
-#' Identify Valid Numeric Predictors
+#' Identify Numeric Predictors
 #'
 #' @description
-#' Returns the names of valid numeric predictors. Ignores predictors with constant values or with near-zero variance.
+#' Identifies valid and invalid numeric predictors.
 #'
 #' @inheritParams collinear
 #' @inheritParams identify_predictors_zero_variance
-#' @return character vector: names of numeric predictors
+#' @return list:
+#' \itemize{
+#'   \item \code{valid}: character vector with valid numeric predictor names.
+#'   \item \code{invalid}: character vector with invalid numeric predictor names due to near-zero variance.
+#' }
 #' @examples
 #'
-#' data(vi, vi_predictors)
+#' data(vi_smol, vi_predictors)
 #'
-#' numeric.predictors <- identify_predictors_numeric(
-#'   df = vi,
+#' x <- identify_predictors_numeric(
+#'   df = vi_smol,
 #'   predictors = vi_predictors
 #' )
 #'
-#' numeric.predictors
+#' x$valid
+#' x$invalid
 #'
 #' @autoglobal
 #' @family data_types
@@ -256,82 +249,94 @@ identify_predictors_numeric <- function(
     function_name = function_name
   )
 
-  if(is.null(predictors) || length(predictors) == 0){
-    return(NULL)
-  }
-
-  predictors <- intersect(
-    x = predictors,
-    y = colnames(df)
+  out_list <-       list(
+    valid = NULL,
+    invalid = NULL
   )
 
-  df <- df[, predictors, drop = FALSE]
+  if(is.null(predictors) || length(predictors) == 0){
+    return(out_list)
+  } else {
+    predictors <- intersect(
+      x = colnames(df),
+      y = predictors
+    )
+  }
 
   #get numeric predictors
-  predictors <- predictors[
+  predictors_numeric_all <- predictors[
     vapply(
-      X = df,
+      X = df[, predictors, drop = FALSE],
       FUN = is.numeric,
       FUN.VALUE = logical(1)
     )
   ]
 
-  if(length(predictors) == 0){
-    return(NULL)
+  if(length(predictors_numeric_all) == 0){
+    return(out_list)
   }
 
   #ignore constant and near-zero variance predictors
-  predictors_zero_variance <- identify_predictors_zero_variance(
+  predictors_numeric_invalid <- identify_predictors_zero_variance(
     df = df,
-    predictors = predictors,
+    predictors = predictors_numeric_all,
     function_name = function_name
   )
 
-  if(quiet == FALSE && length(predictors_zero_variance) < 0){
+  if(quiet == FALSE && length(predictors_numeric_invalid) > 0){
 
     message(
       "\n",
       function_name,
-      ": these numeric predictors have constant values and will be ignored:\n - ",
+      ": invalid numeric predictors due to near-zero variance:\n - ",
       paste(
-        predictors_zero_variance,
+        predictors_numeric_invalid,
         collapse = "\n - "
       )
     )
 
   }
 
-  predictors <- setdiff(
-    x = predictors,
-    y = predictors_zero_variance
+  predictors_numeric_valid <- setdiff(
+    x = predictors_numeric_all,
+    y = predictors_numeric_invalid
   )
 
-  if(length(predictors) == 0){
-    predictors <- NULL
+  if(length(predictors_numeric_valid) > 0){
+    out_list$valid <- predictors_numeric_valid
   }
 
-  predictors
+  if(length(predictors_numeric_invalid) > 0){
+    out_list$invalid <- predictors_numeric_invalid
+  }
+
+  out_list
 
 }
 
 #' Identify Valid Categorical Predictors
 #'
 #' @description
-#' Returns the names of character or factor predictors, if any. Removes categorical predictors with constant values, or with as many unique values as rows are in the input data frame.
+#' Identifies valid and invalid categorical predictors (character or factor predictors). Invalid categorical predictors are those with a single category, or as many categories as cases (full-cardinality).
 #'
 #'
 #' @inheritParams collinear
-#' @return character vector: categorical predictors names
+#' @return list:
+#' \itemize{
+#'   \item \code{valid}: character vector with valid categorical predictor names.
+#'   \item \code{invalid}: character vector with invalid categorical predictor names due to degenerate cardinality (1 or \code{nrow(df)} categories).
+#' }
 #' @examples
 #'
-#' data(vi, vi_predictors)
+#' data(vi_smol, vi_predictors)
 #'
-#' non.numeric.predictors <- identify_predictors_categorical(
-#'   df = vi,
+#' x <- identify_predictors_categorical(
+#'   df = vi_smol,
 #'   predictors = vi_predictors
 #' )
 #'
-#' non.numeric.predictors
+#' x$valid
+#' x$invalid
 #'
 #' @autoglobal
 #' @family data_types
@@ -354,91 +359,80 @@ identify_predictors_categorical <- function(
     function_name = function_name
   )
 
+  out_list <- list(
+    valid = NULL,
+    invalid = NULL
+  )
+
   if(is.null(predictors) || length(predictors) == 0){
-    return(NULL)
+    return(out_list)
+  } else {
+    predictors <- intersect(
+      x = colnames(df),
+      y = predictors
+    )
   }
 
-  df <- df[, predictors, drop = FALSE]
-
-  #subset categorical
-  predictors <- predictors[
-    !vapply(
-      X = df,
-      FUN = is.numeric,
-      FUN.VALUE = logical(1)
-    )
-  ]
-
-  #remove NA
-  predictors <- stats::na.omit(predictors)
-
-  predictors_copy <- predictors
-
-  #remove constant categoricals
-  predictors <- predictors[
-    !vapply(
+  #subset character or factor
+  predictors_categorical_all <- predictors[
+    vapply(
       X = df[, predictors, drop = FALSE],
       FUN = function(x){
-        length(unique(x)) == 1
+        is.character(x) || is.factor(x)
       },
       FUN.VALUE = logical(1)
     )
+  ] |>
+    stats::na.omit()
+
+  if(length(predictors_categorical_all) == 0){
+    return(out_list)
+  }
+
+  n <- nrow(df)
+
+  #keep predictors with unique length different than one or nrow(df)
+  length_unique <- vapply(
+    X = df[, predictors_categorical_all, drop = FALSE],
+    FUN = function(x){length(unique(x))},
+    FUN.VALUE = integer(1)
+  )
+
+  predictors_categorical_valid <- predictors_categorical_all[
+    !(length_unique %in% c(1, n))
   ]
 
-  if(quiet == FALSE && length(predictors) < length(predictors_copy)){
+  predictors_categorical_invalid <- setdiff(
+    x = predictors_categorical_all,
+    y = predictors_categorical_valid
+  )
 
-    predictors_constant <- setdiff(
-      x = predictors_copy,
-      y = predictors
-    )
+  if(
+    quiet == FALSE &&
+    length(predictors_categorical_invalid) > 0
+  ){
 
     message(
       "\n",
       function_name,
-      ": these categorical predictors have constant values and will be ignored:\n - ",
+      ": invalid categorical predictors due to degenerate cardinality:\n - ",
       paste(
-        predictors_constant,
+        predictors_categorical_invalid,
         collapse = "\n - "
       )
     )
 
   }
 
-  #remove categoricals with as many values as rows
-  predictors_copy <- predictors
-
-  predictors <- predictors[
-    !vapply(
-      X = df[, predictors, drop = FALSE],
-      FUN = function(x) length(unique(x)) == length(x),
-      FUN.VALUE = logical(1)
-    )
-  ]
-
-  if(quiet == FALSE && length(predictors) < length(predictors_copy)){
-
-    predictors_missing <- setdiff(
-      x = predictors_copy,
-      y = predictors
-    )
-
-    message(
-      "\n",
-      function_name,
-      ": these categorical predictors have as many unique values as rows and will be ignored:\n - ",
-      paste(
-        predictors_missing,
-        collapse = "\n - "
-      )
-    )
-
+  if(length(predictors_categorical_valid) > 0){
+    out_list$valid <- predictors_categorical_valid
   }
 
-  if(length(predictors) == 0){
-    predictors <- NULL
+  if(length(predictors_categorical_invalid) > 0){
+    out_list$invalid <- predictors_categorical_invalid
   }
 
-  predictors
+  out_list
 
 }
 
@@ -531,7 +525,7 @@ identify_predictors_zero_variance <- function(
         FUN = function(x) stats::var(
           x = x[is.finite(x)],
           na.rm = TRUE
-          )
+        )
       ),
       decimals
     ) == 0
@@ -621,6 +615,17 @@ identify_response_type <- function(
   )
 
   if(is.null(response)) {
+
+    if(quiet == FALSE){
+
+      message(
+        "\n",
+        function_name,
+        ": argument 'response' is NULL, returning NULL."
+      )
+
+    }
+
     return(NULL)
   }
 
@@ -797,7 +802,7 @@ identify_predictors_type <- function(
   )
 
   if(length(predictors) == 0){
-    return(NULL)
+    predictors <- colnames(df)
   }
 
   df <- df[, predictors, drop = FALSE]

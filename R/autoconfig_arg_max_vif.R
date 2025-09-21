@@ -56,7 +56,7 @@ autoconfig_arg_max_vif <- function(
       df = df,
       predictors = predictors,
       quiet = quiet
-    )
+    )$valid
 
     if(is.null(predictors.numeric)){
 

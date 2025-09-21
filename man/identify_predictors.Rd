@@ -29,11 +29,10 @@ list
 \item \code{numeric}: character vector of numeric predictors.
 \item \code{categorical}: character vector of categorical (character and factor) predictors.
 \item \code{logical}: character vector of logical predictors.
-\item \code{zero_variance}: character vector with numeric predictors having quasi-constant values
 }
 }
 \description{
-Returns a list with the names of the valid numeric, categorical, and logical predictors in a given dataframe
+Returns a list with the names of the valid numeric, categorical, and logical predictors in a given dataframe.
 }
 \examples{
 

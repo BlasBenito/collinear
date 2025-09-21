@@ -212,7 +212,7 @@ cor_numeric_vs_numeric <- function(
     df = df,
     predictors = predictors,
     function_name = function_name
-  )
+  )$valid
 
   if(length(predictors) <= 1){
     return(NULL)
@@ -443,7 +443,7 @@ cor_categorical_vs_categorical <- function(
     df = df,
     predictors = predictors,
     function_name = function_name
-  )
+  )$valid
 
   #empty output if no predictors
   if(length(predictors) <= 1){

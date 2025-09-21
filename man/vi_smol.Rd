@@ -11,7 +11,7 @@ Data frame with 100 rows and 68 columns.
 data(vi_smol)
 }
 \description{
-Same as dataset \link{vi}, but with only 100 rows. Used in code examples to shorten runtime.
+Same as dataset \link{vi}, but with only 610 rows. Used in code examples to shorten runtime.
 }
 \seealso{
 \link{vi_predictors}

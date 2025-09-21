@@ -89,7 +89,8 @@
 
 #identify_predictors.R IN PROGRESS
 
-## identify_predictors_logical() IN PROGRESS
+## identify_predictors_numeric() IN PROGRESS
+## identify_predictors_categorical()
 
 - code examples IN PROGRESS
 - documentation IN PROGRESS

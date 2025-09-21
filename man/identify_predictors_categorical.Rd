@@ -21,21 +21,26 @@ identify_predictors_categorical(
 \item{...}{(optional) Other arguments. Currently used for the internal argument \code{function_name}.}
 }
 \value{
-character vector: categorical predictors names
+list:
+\itemize{
+\item \code{valid}: character vector with valid categorical predictor names.
+\item \code{invalid}: character vector with invalid categorical predictor names due to degenerate cardinality (1 or \code{nrow(df)} categories).
+}
 }
 \description{
-Returns the names of character or factor predictors, if any. Removes categorical predictors with constant values, or with as many unique values as rows are in the input data frame.
+Identifies valid and invalid categorical predictors (character or factor predictors). Invalid categorical predictors are those with a single category, or as many categories as cases (full-cardinality).
 }
 \examples{
 
-data(vi, vi_predictors)
+data(vi_smol, vi_predictors)
 
-non.numeric.predictors <- identify_predictors_categorical(
-  df = vi,
+x <- identify_predictors_categorical(
+  df = vi_smol,
   predictors = vi_predictors
 )
 
-non.numeric.predictors
+x$valid
+x$invalid
 
 }
 \seealso{

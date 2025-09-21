@@ -272,7 +272,7 @@ collinear <- function(
     encoding_method = NULL,
     preference_order = NULL,
     f = NULL,
-    max_cor = 0.7,
+    max_cor = 0.70,
     max_vif = 5,
     quiet = FALSE,
     ...

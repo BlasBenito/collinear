@@ -36,7 +36,7 @@ collinear_lite <- function(
     df = NULL,
     predictors = NULL,
     preference_order = NULL,
-    max_cor = 0.75,
+    max_cor = 0.70,
     max_vif = 5,
     quiet = FALSE,
     ...

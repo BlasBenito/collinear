@@ -8,7 +8,7 @@ collinear_lite(
   df = NULL,
   predictors = NULL,
   preference_order = NULL,
-  max_cor = 0.75,
+  max_cor = 0.7,
   max_vif = 5,
   quiet = FALSE,
   ...

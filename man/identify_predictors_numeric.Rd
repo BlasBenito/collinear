@@ -2,7 +2,7 @@
 % Please edit documentation in R/identify_predictors.R
 \name{identify_predictors_numeric}
 \alias{identify_predictors_numeric}
-\title{Identify Valid Numeric Predictors}
+\title{Identify Numeric Predictors}
 \usage{
 identify_predictors_numeric(
   df = NULL,
@@ -24,21 +24,26 @@ identify_predictors_numeric(
 \item{...}{(optional) Other arguments. Currently used for the internal argument \code{function_name}.}
 }
 \value{
-character vector: names of numeric predictors
+list:
+\itemize{
+\item \code{valid}: character vector with valid numeric predictor names.
+\item \code{invalid}: character vector with invalid numeric predictor names due to near-zero variance.
+}
 }
 \description{
-Returns the names of valid numeric predictors. Ignores predictors with constant values or with near-zero variance.
+Identifies valid and invalid numeric predictors.
 }
 \examples{
 
-data(vi, vi_predictors)
+data(vi_smol, vi_predictors)
 
-numeric.predictors <- identify_predictors_numeric(
-  df = vi,
+x <- identify_predictors_numeric(
+  df = vi_smol,
   predictors = vi_predictors
 )
 
-numeric.predictors
+x$valid
+x$invalid
 
 }
 \seealso{

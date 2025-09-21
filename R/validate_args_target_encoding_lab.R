@@ -140,7 +140,7 @@ validate_args_target_encoding_lab <- function(
     df = df,
     predictors = response,
     function_name = function_name
-  )
+  )$valid
 
   if(length(response) == 0){
 
@@ -149,7 +149,7 @@ validate_args_target_encoding_lab <- function(
       message(
         "\n",
         function_name,
-        ": argument 'response' is not numeric, skipping target-encoding."
+        ": argument 'response' is not a valid numeric, skipping target-encoding."
       )
 
     }
@@ -172,7 +172,7 @@ validate_args_target_encoding_lab <- function(
     df = df,
     predictors = predictors,
     function_name = function_name
-  )
+  )$valid
 
   if(length(predictors) == 0){
 

@@ -4,7 +4,8 @@ testthat::test_that("`cor_clusters()` works", {
 
   out <- cor_clusters(
     df = vi_smol,
-    predictors = vi_predictors_numeric
+    predictors = vi_predictors_numeric,
+    quiet = TRUE
     )
 
   testthat::expect_true(
