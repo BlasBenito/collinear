@@ -42,10 +42,8 @@ testthat::test_file("tests/testthat/test-cor_stats.R")
 testthat::test_file("tests/testthat/test-drop_geometry_column.R")
 #[ FAIL 0 | WARN 0 | SKIP 0 | PASS 4 ]
 
-#TODO
-
 testthat::test_file("tests/testthat/test-identify_predictors.R")
-#[ FAIL 0 | WARN 0 | SKIP 0 | PASS 8 ]
+#[ FAIL 0 | WARN 0 | SKIP 0 | PASS 34 ]
 
 
 

@@ -31,27 +31,27 @@ Variables with a variance of zero or near-zero are highly problematic for multic
 }
 \examples{
 
-data(vi, vi_predictors)
+data(vi_smol, vi_predictors)
 
 #create zero variance predictors
-vi$zv_1 <- 1
-vi$zv_2 <- runif(n = nrow(vi), min = 0, max = 0.0001)
+vi$zero_variance <- 1
+vi$quasi_zero_variance <- runif(n = nrow(vi), min = 0, max = 0.0001)
 
 
 #add to vi predictors
 vi_predictors <- c(
   vi_predictors,
-  "zv_1",
-  "zv_2"
+  "zero_variance",
+  "quasi_zero_variance"
 )
 
 #identify zero variance predictors
-zero.variance.predictors <- identify_predictors_zero_variance(
+x <- identify_predictors_zero_variance(
   df = vi,
   predictors = vi_predictors
 )
 
-zero.variance.predictors
+x
 
 }
 \seealso{

@@ -15,65 +15,56 @@
 #' @autoglobal
 #' @examples
 #'
-#' data(vi, vi_predictors_numeric)
-#' #using df, response, and predictors
-#' #----------------------------------
-#' df <- vi[1:1000, ]
+#' data(vi_smol, vi_predictors_numeric)
 #'
-#' #additive formulas
-#' formulas_additive <- model_formula(
-#'   df = df,
-#'   response = c(
-#'     "vi_numeric",
-#'     "vi_categorical"
-#'     ),
-#'   predictors = vi_predictors_numeric[1:10]
+#' #additive formula
+#' x <- model_formula(
+#'   df = vi_smol,
+#'   response = "vi_numeric",
+#'   predictors = vi_predictors_numeric[1:3]
 #' )
 #'
-#' formulas_additive
+#' x
 #'
 #' #using a formula in a model
-#' #m <- stats::lm(
-#' #  formula = formulas_additive[[1]],
-#' #  data = df
-#' #  )
+#' m <- stats::lm(
+#'  formula = x,
+#'  data = vi_smol
+#'  )
 #'
-#' # using output of collinear()
-#' #----------------------------------
-#' selection <- collinear(
-#'   df = df,
-#'   response = c(
-#'     "vi_numeric",
-#'     "vi_binomial"
-#'   ),
-#'   predictors = vi_predictors_numeric[1:10],
-#'   quiet = TRUE
-#' )
+#' summary(m)
 #'
-#' #polynomial formulas
-#' formulas_poly <- model_formula(
-#'   predictors = selection,
+#'
+#' #polynomial formula
+#' x <- model_formula(
+#'   df = vi_smol,
+#'   response = "vi_numeric",
+#'   predictors = vi_predictors_numeric[1:3],
 #'   term_f = "poly",
 #'   term_args = "degree = 3, raw = TRUE"
 #' )
 #'
-#' formulas_poly
+#' x
 #'
-#' #gam formulas
-#' formulas_gam <- model_formula(
-#'   predictors = selection,
+#' #gam formula
+#' x <- model_formula(
+#'   df = vi_smol,
+#'   response = "vi_numeric",
+#'   predictors = vi_predictors_numeric[1:3],
 #'   term_f = "s"
 #' )
 #'
-#' formulas_gam
+#' x
 #'
-#' #adding a random effect
-#' formulas_random_effect <- model_formula(
-#'   predictors = selection,
-#'   random_effects = "country_name"
+#' #random effect
+#' x <- model_formula(
+#'   df = vi_smol,
+#'   response = "vi_numeric",
+#'   predictors = vi_predictors_numeric[1:3],
+#'   random_effects = "country_name" #from vi_smol$country_name
 #' )
 #'
-#' formulas_random_effect
+#' x
 #' @family modelling_tools
 model_formula <- function(
     df = NULL,

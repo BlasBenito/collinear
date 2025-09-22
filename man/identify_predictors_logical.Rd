@@ -16,21 +16,40 @@ identify_predictors_logical(df = NULL, predictors = NULL, quiet = FALSE, ...)
 \item{...}{(optional) Other arguments. Currently used for the internal argument \code{function_name}.}
 }
 \value{
-character vector: names of logical predictors
+list:
+\itemize{
+\item \code{valid}: character vector with valid logical predictor names.
+\item \code{invalid}: character vector with invalid logical predictor names.
+}
 }
 \description{
-Returns the names of valid logical predictors. Ignores predictors with constant values (i.e., all TRUE or all FALSE).
+Identifies valid and invalid logical predictors (character or factor predictors). Invalid logical predictors are those with a constant value.
 }
 \examples{
 
-data(vi, vi_predictors)
+data(vi_smol, vi_predictors)
 
-logical.predictors <- identify_predictors_logical(
-  df = vi,
-  predictors = vi_predictors
+#invalid logical
+vi_smol$logical_invalid <- TRUE
+
+#valid logical
+vi_smol$logical_valid <- sample(
+  x = c(TRUE, FALSE),
+  size = nrow(vi_smol),
+  replace = TRUE
 )
 
-logical.predictors
+x <- identify_predictors_logical(
+  df = vi_smol,
+  predictors = c(
+    vi_predictors,
+    "logical_invalid",
+    "logical_valid"
+  )
+)
+
+x$valid
+x$invalid
 
 }
 \seealso{

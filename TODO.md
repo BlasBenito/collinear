@@ -87,26 +87,17 @@
 - documentation DONE
 - test file DONE
 
-#identify_predictors.R IN PROGRESS
+#identify_predictors.R DONE
 
-## identify_predictors_numeric() IN PROGRESS
-## identify_predictors_categorical()
+- code examples DONE
+- documentation DONE
+- test file DONE
 
-- code examples IN PROGRESS
-- documentation IN PROGRESS
-- test file
+#model_formula IN PROGRESS
 
-#imports.R
-
-- code examples
-- documentation
-- test file
-
-#model_formula.R
-
-- code examples
-- documentation
-- test file
+- code examples DONE
+- documentation PENDING
+- test file PENDING
 
 #performance_score_auc.R
 

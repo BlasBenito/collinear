@@ -92,7 +92,7 @@ identify_predictors <- function(
     decimals = decimals,
     quiet = quiet,
     function_name = function_name
-  )
+  )$valid
 
   out_list <- list(
     numeric = predictors_numeric,
@@ -107,21 +107,40 @@ identify_predictors <- function(
 #' Identify Logical Predictors
 #'
 #' @description
-#' Returns the names of valid logical predictors. Ignores predictors with constant values (i.e., all TRUE or all FALSE).
+#' Identifies valid and invalid logical predictors (character or factor predictors). Invalid logical predictors are those with a constant value.
 #'
 #' @inheritParams collinear
 #' @inheritParams identify_predictors_zero_variance
-#' @return character vector: names of logical predictors
+#' @return list:
+#' \itemize{
+#'   \item \code{valid}: character vector with valid logical predictor names.
+#'   \item \code{invalid}: character vector with invalid logical predictor names.
+#' }
 #' @examples
 #'
-#' data(vi, vi_predictors)
+#' data(vi_smol, vi_predictors)
 #'
-#' logical.predictors <- identify_predictors_logical(
-#'   df = vi,
-#'   predictors = vi_predictors
+#' #invalid logical
+#' vi_smol$logical_invalid <- TRUE
+#'
+#' #valid logical
+#' vi_smol$logical_valid <- sample(
+#'   x = c(TRUE, FALSE),
+#'   size = nrow(vi_smol),
+#'   replace = TRUE
 #' )
 #'
-#' logical.predictors
+#' x <- identify_predictors_logical(
+#'   df = vi_smol,
+#'   predictors = c(
+#'     vi_predictors,
+#'     "logical_invalid",
+#'     "logical_valid"
+#'   )
+#' )
+#'
+#' x$valid
+#' x$invalid
 #'
 #' @autoglobal
 #' @family data_types
@@ -144,61 +163,74 @@ identify_predictors_logical <- function(
     function_name = function_name
   )
 
-  if(is.null(predictors) || length(predictors) == 0){
-    return(NULL)
-  }
-
-  predictors <- intersect(
-    x = predictors,
-    y = colnames(df)
+  out_list <- list(
+    valid = NULL,
+    invalid = NULL
   )
 
-  df <- df[, predictors, drop = FALSE]
+  if(is.null(predictors) || length(predictors) == 0){
+    return(out_list)
+  } else {
+    predictors <- intersect(
+      x = colnames(df),
+      y = predictors
+    )
+  }
 
   # Get logical predictors
-  predictors <- predictors[
+  predictors_logical_all <- predictors[
     vapply(
-      X = df,
+      X = df[, predictors, drop = FALSE],
       FUN = is.logical,
       FUN.VALUE = logical(1)
     )
-  ]
+  ] |>
+    stats::na.omit()
 
-  if(length(predictors) == 0){
-    return(NULL)
+  if(length(predictors_logical_all) == 0){
+    return(out_list)
   }
 
-  #ignore constant predictors (TRUE/FALSE only)
-  predictors_constant <- identify_predictors_zero_variance(
-    df = df,
-    predictors = predictors,
-    quiet = quiet
+  #keep predictors with unique length different than one or nrow(df)
+  length_unique <- vapply(
+    X = df[, predictors_logical_all, drop = FALSE],
+    FUN = function(x){length(unique(x))},
+    FUN.VALUE = integer(1)
   )
 
-  if(quiet == FALSE && length(predictors_constant) < 0){
+  predictors_logical_valid <- predictors_logical_all[length_unique > 1]
+
+  predictors_logical_invalid <- setdiff(
+    x = predictors_logical_all,
+    y = predictors_logical_valid
+  )
+
+  if(
+    quiet == FALSE &&
+    length(predictors_logical_invalid) > 0
+  ){
 
     message(
       "\n",
       function_name,
-      ": these logical predictors have constant values and will be ignored:\n - ",
+      ": invalid logical predictors due to constant values:\n - ",
       paste(
-        predictors_constant,
+        predictors_logical_invalid,
         collapse = "\n - "
       )
     )
 
   }
 
-  predictors <- setdiff(
-    x = predictors,
-    y = predictors_constant
-  )
-
-  if(length(predictors) == 0){
-    predictors <- NULL
+  if(length(predictors_logical_valid) > 0){
+    out_list$valid <- predictors_logical_valid
   }
 
-  predictors
+  if(length(predictors_logical_invalid) > 0){
+    out_list$invalid <- predictors_logical_invalid
+  }
+
+  out_list
 
 }
 
@@ -448,27 +480,27 @@ identify_predictors_categorical <- function(
 #' @return character vector: names of zero and near-zero variance columns.
 #' @examples
 #'
-#' data(vi, vi_predictors)
+#' data(vi_smol, vi_predictors)
 #'
 #' #create zero variance predictors
-#' vi$zv_1 <- 1
-#' vi$zv_2 <- runif(n = nrow(vi), min = 0, max = 0.0001)
+#' vi$zero_variance <- 1
+#' vi$quasi_zero_variance <- runif(n = nrow(vi), min = 0, max = 0.0001)
 #'
 #'
 #' #add to vi predictors
 #' vi_predictors <- c(
 #'   vi_predictors,
-#'   "zv_1",
-#'   "zv_2"
+#'   "zero_variance",
+#'   "quasi_zero_variance"
 #' )
 #'
 #' #identify zero variance predictors
-#' zero.variance.predictors <- identify_predictors_zero_variance(
+#' x <- identify_predictors_zero_variance(
 #'   df = vi,
 #'   predictors = vi_predictors
 #' )
 #'
-#' zero.variance.predictors
+#' x
 #'
 #' @autoglobal
 #' @family data_types
@@ -561,25 +593,25 @@ identify_predictors_zero_variance <- function(
 #' @return character string: response type
 #'
 #' @examples
-#' data(vi, vi_predictors)
+#' data(vi_smol)
 #'
 #' identify_response_type(
-#'   df = vi,
+#'   df = vi_smol,
 #'   response = "vi_numeric"
 #' )
 #'
 #' identify_response_type(
-#'   df = vi,
+#'   df = vi_smol,
 #'   response = "vi_counts"
 #' )
 #'
 #' identify_response_type(
-#'   df = vi,
+#'   df = vi_smol,
 #'   response = "vi_binomial"
 #' )
 #'
 #' identify_response_type(
-#'   df = vi,
+#'   df = vi_smol,
 #'   response = "vi_categorical"
 #' )
 #'
@@ -758,20 +790,20 @@ identify_response_type <- function(
 #' @family data_types
 #' @autoglobal
 #' @examples
-#' data(vi, vi_predictors)
+#' data(vi_smol, vi_predictors)
 #'
 #' identify_predictors_type(
-#'   df = vi,
+#'   df = vi_smol,
 #'   predictors = vi_predictors
 #' )
 #'
 #' identify_predictors_type(
-#'   df = vi,
+#'   df = vi_smol,
 #'   predictors = vi_predictors_numeric
 #' )
 #'
 #' identify_predictors_type(
-#'   df = vi,
+#'   df = vi_smol,
 #'   predictors = vi_predictors_categorical
 #' )
 #'

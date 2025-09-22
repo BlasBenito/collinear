@@ -28,20 +28,20 @@ Internal function to identify predictor types. The supported types are:
 }
 }
 \examples{
-data(vi, vi_predictors)
+data(vi_smol, vi_predictors)
 
 identify_predictors_type(
-  df = vi,
+  df = vi_smol,
   predictors = vi_predictors
 )
 
 identify_predictors_type(
-  df = vi,
+  df = vi_smol,
   predictors = vi_predictors_numeric
 )
 
 identify_predictors_type(
-  df = vi,
+  df = vi_smol,
   predictors = vi_predictors_categorical
 )
 

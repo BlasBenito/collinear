@@ -33,25 +33,25 @@ Internal function to identify the type of response variable. Supported types are
 }
 }
 \examples{
-data(vi, vi_predictors)
+data(vi_smol)
 
 identify_response_type(
-  df = vi,
+  df = vi_smol,
   response = "vi_numeric"
 )
 
 identify_response_type(
-  df = vi,
+  df = vi_smol,
   response = "vi_counts"
 )
 
 identify_response_type(
-  df = vi,
+  df = vi_smol,
   response = "vi_binomial"
 )
 
 identify_response_type(
-  df = vi,
+  df = vi_smol,
   response = "vi_categorical"
 )
 
