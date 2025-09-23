@@ -1,11 +1,10 @@
 #' Pearson's R-squared of Observations vs Predictions
 #'
 #' @description
-#' Internal function to compute the R-squared of observations versus model predictions.
+#' Internal function to compute the R-squared of observations versus predictions via [stats::cor()]. Used within [f_r2_glm_gaussian()], [f_r2_glm_gaussian_poly2()], [f_r2_gam_gaussian()], [f_r2_rpart()], [f_r2_rf()], [f_r2_glm_poisson()], [f_r2_glm_poisson_poly2()], and [f_r2_gam_poisson()].
 #'
-#'
-#' @param o (required, numeric vector) Response values. Default: NULL
-#' @param p (required, numeric vector) Model predictions. Default: NULL
+#' @param o (required, numeric vector) Observations. Default: NULL
+#' @param p (required, numeric vector) Predictions. Default: NULL
 #' @inheritParams collinear
 #'
 #' @return numeric: Pearson R-squared

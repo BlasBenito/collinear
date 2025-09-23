@@ -1,11 +1,11 @@
 #' Cramer's V of Observations vs Predictions
 #'
 #' @description
-#' Internal function to compute the Cramer's V of categorical observations versus categorical model predictions.
+#' Internal function to compute the Cramer's V of categorical observations versus categorical model predictions. Please read the help file of [cor_cramer_v()] for further details.
 #'
 #'
-#' @param o (required; character vector) character vector representing observations of a categorical variable. Default: NULL
-#' @param p (required; character vector) character vector representing predictions of a categorical variable. Must have the same length as \code{o}. Default: NULL
+#' @param o (required; character vector) categorical observations. Default: NULL
+#' @param p (required; character vector) categorical predictions. Default: NULL
 #' @inheritParams collinear
 #' @return numeric: Cramer's V
 #' @export

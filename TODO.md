@@ -93,29 +93,29 @@
 - documentation DONE
 - test file DONE
 
-#model_formula IN PROGRESS
+#model_formula DONE
 
 - code examples DONE
-- documentation PENDING
-- test file PENDING
+- documentation DONE
+- test file DONE
 
-#performance_score_auc.R
+#performance_score_auc.R DONE
 
-- code examples
-- documentation
-- test file
+- code examples DONE
+- documentation DONE 
+- test file DONE
 
-#performance_score_r2.R
+#performance_score_r2.R DONE
 
-- code examples
-- documentation
-- test file
+- code examples DONE
+- documentation DONE
+- test file DONE
 
-#performance_score_v.R
+#performance_score_v.R DONE
 
-- code examples
-- documentation
-- test file
+- code examples DONE
+- documentation DONE
+- test file DONE
 
 #preference_order_methods.R
 

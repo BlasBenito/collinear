@@ -2,14 +2,14 @@
 % Please edit documentation in R/performance_score_auc.R
 \name{performance_score_auc}
 \alias{performance_score_auc}
-\title{Area Under the Curve of Binomial Observations vs Probabilistic Model Predictions}
+\title{Area Under the Curve}
 \usage{
 performance_score_auc(o = NULL, p = NULL, ...)
 }
 \arguments{
-\item{o}{(required, numeric vector) Binomial response with values 0 and 1. Default: NULL}
+\item{o}{(required, numeric vector) Binomial observations (values 0 and 1). Default: NULL}
 
-\item{p}{(required, numeric vector) Predictions of a binomial model. Default: NULL}
+\item{p}{(required, numeric vector) Prediction of binomial model in the range 0-1. Default: NULL}
 
 \item{...}{(optional) Other arguments. Currently used for the internal argument \code{function_name}.}
 }
@@ -17,7 +17,7 @@ performance_score_auc(o = NULL, p = NULL, ...)
 numeric: Area Under the ROC Curve
 }
 \description{
-Internal function to compute the AUC of binomial models within \code{\link[=preference_order]{preference_order()}}. As it is build for speed, this function does not check the inputs.
+Internal function to compute the AUC of binomial models within \code{\link[=preference_order]{preference_order()}}. Used within \code{\link[=f_auc_glm_binomial]{f_auc_glm_binomial()}}, \code{\link[=f_auc_glm_binomial_poly2]{f_auc_glm_binomial_poly2()}}, \code{\link[=f_auc_gam_binomial]{f_auc_gam_binomial()}}, \code{\link[=f_auc_rpart]{f_auc_rpart()}}, and \code{\link[=f_auc_rf]{f_auc_rf()}}. This function is build for speed and it does not check the inputs.
 }
 \examples{
   performance_score_auc(

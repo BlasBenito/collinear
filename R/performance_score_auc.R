@@ -1,12 +1,10 @@
-
-#' Area Under the Curve of Binomial Observations vs Probabilistic Model Predictions
+#' Area Under the Curve
 #'
 #' @description
-#' Internal function to compute the AUC of binomial models within [preference_order()]. As it is build for speed, this function does not check the inputs.
+#' Internal function to compute the AUC of binomial models within [preference_order()]. Used within [f_auc_glm_binomial()], [f_auc_glm_binomial_poly2()], [f_auc_gam_binomial()], [f_auc_rpart()], and [f_auc_rf()]. This function is build for speed and it does not check the inputs.
 #'
-#'
-#' @param o (required, numeric vector) Binomial response with values 0 and 1. Default: NULL
-#' @param p (required, numeric vector) Predictions of a binomial model. Default: NULL
+#' @param o (required, numeric vector) Binomial observations (values 0 and 1). Default: NULL
+#' @param p (required, numeric vector) Prediction of binomial model in the range 0-1. Default: NULL
 #' @inheritParams collinear
 #'
 #' @return numeric: Area Under the ROC Curve

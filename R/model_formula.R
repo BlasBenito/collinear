@@ -1,7 +1,17 @@
 #' Generate Model Formulas
 #'
-#' @inheritParams collinear
+#' @description
+#' Generates model formulas from a dataframe, a response name, and a vector of predictors. Intended to help fit an exploratory model from the results of a multicollinearity analysis.
 #'
+#' The types of formulas it can generate are:
+#' \itemize{
+#'   \item additive: \code{y ~ x + z}
+#'   \item polynomial: \code{y ~ poly(x, ...) + poly(z, ...)}
+#'   \item GAM: \code{y ~ s(x) + s(z)}
+#'   \item random effect: \code{y ~ x + (1 \ z)}
+#' }
+#'
+#' @inheritParams collinear
 #' @inheritParams f_auto
 #'
 #' @param term_f (optional; string). Name of function to apply to each term in the formula, such as "s" for [mgcv::s()] or any other smoothing function, "poly" for [stats::poly()]. Default: NULL

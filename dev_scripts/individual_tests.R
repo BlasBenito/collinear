@@ -45,7 +45,19 @@ testthat::test_file("tests/testthat/test-drop_geometry_column.R")
 testthat::test_file("tests/testthat/test-identify_predictors.R")
 #[ FAIL 0 | WARN 0 | SKIP 0 | PASS 34 ]
 
+testthat::test_file("tests/testthat/test-model_formula.R")
+#[ FAIL 0 | WARN 0 | SKIP 0 | PASS 7 ]
 
+testthat::test_file("tests/testthat/test-performance_score_auc.R")
+#[ FAIL 0 | WARN 0 | SKIP 0 | PASS 5 ]
+
+testthat::test_file("tests/testthat/test-performance_score_r2.R")
+#[ FAIL 0 | WARN 0 | SKIP 0 | PASS 4 ]
+
+testthat::test_file("tests/testthat/test-performance_score_v.R")
+#[ FAIL 0 | WARN 0 | SKIP 0 | PASS 4 ]
+
+#TODO
 
 
 testthat::test_file("tests/testthat/test-vif.R")

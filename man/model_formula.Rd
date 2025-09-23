@@ -36,7 +36,15 @@ model_formula(
 list if \code{predictors} is a list or length of \code{response} is higher than one, and character vector otherwise.
 }
 \description{
-Generate Model Formulas
+Generates model formulas from a dataframe, a response name, and a vector of predictors. Intended to help fit an exploratory model from the results of a multicollinearity analysis.
+
+The types of formulas it can generate are:
+\itemize{
+\item additive: \code{y ~ x + z}
+\item polynomial: \code{y ~ poly(x, ...) + poly(z, ...)}
+\item GAM: \code{y ~ s(x) + s(z)}
+\item random effect: \code{y ~ x + (1 \ z)}
+}
 }
 \examples{
 

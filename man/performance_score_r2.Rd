@@ -7,9 +7,9 @@
 performance_score_r2(o = NULL, p = NULL, ...)
 }
 \arguments{
-\item{o}{(required, numeric vector) Response values. Default: NULL}
+\item{o}{(required, numeric vector) Observations. Default: NULL}
 
-\item{p}{(required, numeric vector) Model predictions. Default: NULL}
+\item{p}{(required, numeric vector) Predictions. Default: NULL}
 
 \item{...}{(optional) Other arguments. Currently used for the internal argument \code{function_name}.}
 }
@@ -17,7 +17,7 @@ performance_score_r2(o = NULL, p = NULL, ...)
 numeric: Pearson R-squared
 }
 \description{
-Internal function to compute the R-squared of observations versus model predictions.
+Internal function to compute the R-squared of observations versus predictions via \code{\link[stats:cor]{stats::cor()}}. Used within \code{\link[=f_r2_glm_gaussian]{f_r2_glm_gaussian()}}, \code{\link[=f_r2_glm_gaussian_poly2]{f_r2_glm_gaussian_poly2()}}, \code{\link[=f_r2_gam_gaussian]{f_r2_gam_gaussian()}}, \code{\link[=f_r2_rpart]{f_r2_rpart()}}, \code{\link[=f_r2_rf]{f_r2_rf()}}, \code{\link[=f_r2_glm_poisson]{f_r2_glm_poisson()}}, \code{\link[=f_r2_glm_poisson_poly2]{f_r2_glm_poisson_poly2()}}, and \code{\link[=f_r2_gam_poisson]{f_r2_gam_poisson()}}.
 }
 \examples{
   performance_score_r2(

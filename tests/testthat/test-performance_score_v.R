@@ -3,9 +3,9 @@ testthat::test_that("`performance_score_r2()` works", {
   data(vi_smol)
 
     #perfect prediction
-    x <- performance_score_r2(
-      o = vi_smol$vi_numeric,
-      p = vi_smol$vi_numeric
+    x <- performance_score_v(
+      o = vi_smol$vi_categorical,
+      p = vi_smol$vi_categorical
       )
 
     testthat::expect_true(
@@ -13,9 +13,9 @@ testthat::test_that("`performance_score_r2()` works", {
     )
 
     #random prediction
-    x <- performance_score_r2(
-      o = vi_smol$vi_binomial,
-      p = runif(n = nrow(vi_smol))
+    x <- performance_score_v(
+      o = vi_smol$vi_categorical,
+      p = vi_smol$koppen_zone
     )
 
     testthat::expect_true(
@@ -24,15 +24,15 @@ testthat::test_that("`performance_score_r2()` works", {
 
     #error
     testthat::expect_error(
-      x <- performance_score_r2(
+      x <- performance_score_v(
         o = NULL,
-        p = vi_smol$vi_binomial
+        p = vi_smol$vi_categorical
       )
     )
 
     testthat::expect_error(
-      x <- performance_score_r2(
-        o = vi_smol$vi_binomial,
+      x <- performance_score_v(
+        o = vi_smol$vi_categorical,
         p = NULL
       )
     )
