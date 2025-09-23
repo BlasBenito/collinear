@@ -57,8 +57,11 @@ testthat::test_file("tests/testthat/test-performance_score_r2.R")
 testthat::test_file("tests/testthat/test-performance_score_v.R")
 #[ FAIL 0 | WARN 0 | SKIP 0 | PASS 4 ]
 
-#TODO
 
+testthat::test_file("tests/testthat/test-preference_order_methods.R")
+#[ FAIL 0 | WARN 0 | SKIP 0 | PASS 34 ]
+
+#TODO
 
 testthat::test_file("tests/testthat/test-vif.R")
 #[ FAIL 0 | WARN 0 | SKIP 0 | PASS 7 ]
@@ -74,8 +77,10 @@ testthat::test_file("tests/testthat/test-vif_select.R")
 testthat::test_file("tests/testthat/test-preference_order.R")
 #[ FAIL 0 | WARN 0 | SKIP 0 | PASS 34 ]
 
-testthat::test_file("tests/testthat/test-preference_order_methods.R")
-#[ FAIL 0 | WARN 0 | SKIP 0 | PASS 17 ]
+testthat::test_file("tests/testthat/test-preference_order_wrapper.R")
+#[ FAIL 0 | WARN 0 | SKIP 0 | PASS 14 ]
+
+#TODO
 
 testthat::test_file("tests/testthat/test-target_encoding_lab.R")
 # [ FAIL 0 | WARN 0 | SKIP 0 | PASS 7 ]

@@ -117,17 +117,17 @@
 - documentation DONE
 - test file DONE
 
-#preference_order_methods.R
+#preference_order_methods.R DONE
 
-- code examples
-- documentation
-- test file
+- code examples DONE
+- documentation DONE
+- test file DONE
 
-#preference_order_wrapper.R
+#preference_order_wrapper.R DONE
 
-- code examples
-- documentation
-- test file
+- code examples DONE
+- documentation DONE
+- test file DONE
 
 #preference_order.R
 

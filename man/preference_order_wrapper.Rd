@@ -51,6 +51,22 @@ character vector or NULL
 \description{
 Internal function to manage the argument \code{preference_order} within \code{\link[=collinear]{collinear()}}. Users should use \code{\link[=preference_order]{preference_order()}} instead.
 }
+\examples{
+data(vi_smol, vi_predictors_numeric)
+
+x <- preference_order_wrapper(
+  df = vi_smol,
+  response = "vi_numeric",
+  predictors = vi_predictors_numeric,
+  preference_order = c(
+    "soil_soc",
+    "growing_season_temperature"
+  ),
+  quiet = TRUE
+)
+
+x
+}
 \seealso{
 Other preference_order_tools: 
 \code{\link{f_auto}()},

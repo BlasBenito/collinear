@@ -6,7 +6,21 @@
 #' @inheritParams collinear
 #' @inheritParams f_auto
 #' @inheritParams validate_arg_f
+#' @examples
+#' data(vi_smol, vi_predictors_numeric)
 #'
+#' x <- preference_order_wrapper(
+#'   df = vi_smol,
+#'   response = "vi_numeric",
+#'   predictors = vi_predictors_numeric,
+#'   preference_order = c(
+#'     "soil_soc",
+#'     "growing_season_temperature"
+#'   ),
+#'   quiet = TRUE
+#' )
+#'
+#' x
 #' @return character vector or NULL
 #' @export
 #' @autoglobal
@@ -94,6 +108,16 @@ preference_order_wrapper <- function(
         return(NULL)
 
       }
+
+    } else {
+
+      message(
+        "\n",
+        function_name,
+        ": dataframe 'preference_order' requires the columns 'predictor', 'response', 'preference', and 'f'."
+      )
+
+      return(NULL)
 
     }
 
@@ -193,6 +217,10 @@ preference_order_wrapper <- function(
     quiet = quiet,
     function_name = function_name
   )
+
+  if(!is.null(f_name) && all(preference_df$f == "f")){
+    preference_df$f <- f_name
+  }
 
   preference_df
 
