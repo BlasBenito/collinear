@@ -16,6 +16,7 @@
 #' attributes(quiet)$validated
 #'
 #' @autoglobal
+#' @family data_validation
 #' @export
 validate_arg_quiet <- function(
     function_name = NULL,

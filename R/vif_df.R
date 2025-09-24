@@ -21,7 +21,7 @@
 #' v
 #'
 #' @autoglobal
-#' @family vif
+#' @family variance_inflation_factor
 #' @inherit vif_select references
 #' @export
 vif_df <- function(

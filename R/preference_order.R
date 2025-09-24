@@ -55,7 +55,14 @@
 #'
 #' @param warn_limit (optional, numeric) Preference value (R-squared, AUC, or Cramer's V) over which a warning flagging suspicious predictors is issued. Disabled if NULL. Default: NULL
 #' @family preference_order
-#' @return data frame: columns are "response", "predictor", "f" (function name), and "preference".
+#' @return data frame:
+#' \itemize{
+#'   \item \code{response}: character, response name.
+#'   \item \code{predictor}: character, name of the predictor.
+#'   \item \code{f}: name of the function used to compute the preference order.
+#'   \item \code{preference}: value returned by  \code{f} to represent the association between the \code{response} and each given \code{predictor}
+#'   \item \code{metric}: optional, name of the metric in \code{preference}, only returned when \code{f} is in [f_functions()].
+#' }
 #' @examples
 #' data(vi, vi_predictors, vi_predictors_numeric)
 #'
@@ -185,8 +192,11 @@ preference_order <- function(
     y = responses
   )
 
+  f_df <- f_functions()[, c("name", "preference_metric")]
+  colnames(f_df) <- c("f", "metric")
+
   #output list
-  out <- list()
+  out_list <- list()
 
   #iterating over responses
   for(response in responses){
@@ -333,20 +343,32 @@ preference_order <- function(
 
     }
 
+    #join metric
+    if(unique(preference$f) %in% unique(f_df$f)){
+
+      preference <- merge(
+        x = preference,
+        y = f_df,
+        by = "f"
+      )
+
+    }
+
     attr(
       x = preference,
       which = "validated"
     ) <- TRUE
 
-    out[[response]] <- preference
+    out_list[[response]] <- preference
 
   } #end of loop
 
-  if(length(out) == 1){
-    out <- out[[1]]
-  }
+  out_df <- do.call(
+    what = "rbind",
+    args = out_list
+  )
 
 
-  out
+  out_df
 
 }

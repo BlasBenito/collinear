@@ -131,16 +131,16 @@ f_auto <- function(
 f_functions <- function(){
 
   f_list <- list(
-    c("f_r2_pearson", "numeric", "numeric", "cor(x, y, method = 'pearson')^2", "r-squared"),
-    c("f_r2_spearman", "numeric", "numeric", "cor(x, y, method = 'spearman')^2", "pseudo r-squared"),
-    c("f_r2_glm_gaussian", "numeric", "numeric, categorical", "stats::glm(y ~ x, family = gaussian(link = 'identity'))", "r-squared"),
-    c("f_r2_glm_gaussian_poly2", "numeric", "numeric, categorical", "stats::glm(y ~ poly(x, degree = 2, raw = TRUE), family = gaussian(link = 'identity'))", "r-squared"),
-    c("f_r2_gam_gaussian", "numeric", "numeric, categorical", "mgcv::gam(y ~ s(x), family = gaussian(link = 'identity'))", "r-squared"),
-    c("f_r2_rpart", "numeric", "numeric, categorical", "rpart::rpart(y ~ x)", "r-squared"),
-    c("f_r2_rf", "numeric", "numeric, categorical", "ranger::ranger(y ~ x)", "r-squared"),
-    c("f_r2_glm_poisson", "integer counts", "numeric, categorical", "stats::glm(y ~ x, family = poisson(link = 'log'))", "r-squared"),
-    c("f_r2_glm_poisson_poly2", "integer counts", "numeric, categorical", "stats::glm(y ~ poly(x, degree = 2, raw = TRUE), family = poisson(link = 'log'))", "r-squared"),
-    c("f_r2_gam_poisson", "integer counts", "numeric, categorical", "mgcv::gam(y ~ s(x), family = poisson(link = 'log'))", "r-squared"),
+    c("f_r2_pearson", "numeric", "numeric", "cor(x, y, method = 'pearson')^2", "R2"),
+    c("f_r2_spearman", "numeric", "numeric", "cor(x, y, method = 'spearman')^2", "pseudo R2"),
+    c("f_r2_glm_gaussian", "numeric", "numeric, categorical", "stats::glm(y ~ x, family = gaussian(link = 'identity'))", "R2"),
+    c("f_r2_glm_gaussian_poly2", "numeric", "numeric, categorical", "stats::glm(y ~ poly(x, degree = 2, raw = TRUE), family = gaussian(link = 'identity'))", "R2"),
+    c("f_r2_gam_gaussian", "numeric", "numeric, categorical", "mgcv::gam(y ~ s(x), family = gaussian(link = 'identity'))", "R2"),
+    c("f_r2_rpart", "numeric", "numeric, categorical", "rpart::rpart(y ~ x)", "R2"),
+    c("f_r2_rf", "numeric", "numeric, categorical", "ranger::ranger(y ~ x)", "R2"),
+    c("f_r2_glm_poisson", "integer counts", "numeric, categorical", "stats::glm(y ~ x, family = poisson(link = 'log'))", "R2"),
+    c("f_r2_glm_poisson_poly2", "integer counts", "numeric, categorical", "stats::glm(y ~ poly(x, degree = 2, raw = TRUE), family = poisson(link = 'log'))", "R2"),
+    c("f_r2_gam_poisson", "integer counts", "numeric, categorical", "mgcv::gam(y ~ s(x), family = poisson(link = 'log'))", "R2"),
     c("f_auc_glm_binomial", "binomial", "numeric, categorical", "stats::glm(y ~ x, family = quasibinomial(link = 'logit'), weights = case_weights(y))", "AUC"),
     c("f_auc_glm_binomial_poly2", "binomial", "numeric, categorical", "stats::glm(y ~ poly(x, degree = 2, raw = TRUE), family = quasibinomial(link = 'logit'), weights = collinear::case_weights(y))", "AUC"),
     c("f_auc_glm_binomial_poly2", "binomial", "numeric, categorical", "stats::glm(y ~ poly(x, degree = 2, raw = TRUE), family = quasibinomial(link = 'logit'), weights = collinear::case_weights(y))", "AUC"),
@@ -275,22 +275,22 @@ f_auto_rules <- function(){
 #' Association Between a Continuous Response and a Continuous Predictor
 #'
 #' @description
-#' These functions take a data frame with two numeric continuous columns "x" (predictor) and "y" (response), fit a univariate model, and return the R-squared of the observations versus the model predictions:
+#' These functions take a data frame with two numeric continuous columns "x" (predictor) and "y" (response), fit a univariate model, and return the R2 of the observations versus the model predictions:
 #' \itemize{
 #'
-#'   \item \code{f_r2_pearson()}: Pearson's R-squared.
+#'   \item \code{f_r2_pearson()}: Pearson's R2.
 #'
-#'   \item \code{f_r2_spearman()}: Spearman's R-squared.
+#'   \item \code{f_r2_spearman()}: Spearman's R2.
 #'
-#'   \item \code{f_r2_glm_gaussian()}: Pearson's R-squared of a GLM model fitted with [stats::glm()], with formula \code{y ~ s(x)} and family \code{stats::gaussian(link = "identity")}.
+#'   \item \code{f_r2_glm_gaussian()}: Pearson's R2 of a GLM model fitted with [stats::glm()], with formula \code{y ~ s(x)} and family \code{stats::gaussian(link = "identity")}.
 #'
-#'   \item \code{f_r2_glm_gaussian_poly2()}: Pearson's R-squared of a GLM model fitted with [stats::glm()], with formula \code{y ~ stats::poly(x, degree = 2, raw = TRUE)} and family \code{stats::gaussian(link = "identity")}.
+#'   \item \code{f_r2_glm_gaussian_poly2()}: Pearson's R2 of a GLM model fitted with [stats::glm()], with formula \code{y ~ stats::poly(x, degree = 2, raw = TRUE)} and family \code{stats::gaussian(link = "identity")}.
 #'
-#'   \item \code{f_r2_gam_gaussian()}: Pearson's R-squared of a GAM model fitted with [mgcv::gam()], with formula \code{y ~ s(x)} and family \code{stats::gaussian(link = "identity")}.
+#'   \item \code{f_r2_gam_gaussian()}: Pearson's R2 of a GAM model fitted with [mgcv::gam()], with formula \code{y ~ s(x)} and family \code{stats::gaussian(link = "identity")}.
 
-#'   \item \code{f_r2_rpart()}: Pearson's R-squared of a Recursive Partition Tree fitted with [rpart::rpart()] with formula \code{y ~ x}.
+#'   \item \code{f_r2_rpart()}: Pearson's R2 of a Recursive Partition Tree fitted with [rpart::rpart()] with formula \code{y ~ x}.
 #'
-#'   \item \code{f_r2_rf()}: Pearson's R-squared of a 100 trees Random Forest model fitted with [ranger::ranger()] and formula \code{y ~ x}.
+#'   \item \code{f_r2_rf()}: Pearson's R2 of a 100 trees Random Forest model fitted with [ranger::ranger()] and formula \code{y ~ x}.
 #'
 #' }
 #'
@@ -300,7 +300,7 @@ f_auto_rules <- function(){
 #'   \item \code{y} (numeric) continuous response.
 #' }
 #' @inheritParams collinear
-#' @return numeric: R-squared
+#' @return numeric: R2
 #' @examples
 #'
 #load example data
@@ -319,19 +319,19 @@ f_auto_rules <- function(){
 #'
 #' # Continuous response
 #'
-#' #Pearson R-squared
+#' #Pearson R2
 #' f_r2_pearson(df = df)
 #'
-#' #Spearman R-squared
+#' #Spearman R2
 #' f_r2_spearman(df = df)
 #'
-#' #R-squared of a gaussian gam
+#' #R2 of a gaussian gam
 #' f_r2_glm_gaussian(df = df)
 #'
 #' #gaussian glm with second-degree polynomials
 #' f_r2_glm_gaussian_poly2(df = df)
 #'
-#' #R-squared of a gaussian gam
+#' #R2 of a gaussian gam
 #' f_r2_gam_gaussian(df = df)
 #'
 #' #recursive partition tree
@@ -360,19 +360,19 @@ f_auto_rules <- function(){
 #'
 #' # Continuous response
 #'
-#' #Pearson R-squared
+#' #Pearson R2
 #' f_r2_pearson(df = df)
 #'
-#' #Spearman R-squared
+#' #Spearman R2
 #' f_r2_spearman(df = df)
 #'
-#' #R-squared of a gaussian gam
+#' #R2 of a gaussian gam
 #' f_r2_glm_gaussian(df = df)
 #'
 #' #gaussian glm with second-degree polynomials
 #' f_r2_glm_gaussian_poly2(df = df)
 #'
-#' #R-squared of a gaussian gam
+#' #R2 of a gaussian gam
 #' f_r2_gam_gaussian(df = df)
 #'
 #' #recursive partition tree
@@ -701,18 +701,18 @@ f_r2_rf <- function(
 #' Association Between a Count Response and a Continuous Predictor
 #'
 #' @description
-#' These functions take a data frame with a integer counts response "y", and a continuous predictor "x", fit a univariate model, and return the R-squared of observations versus predictions:
+#' These functions take a data frame with a integer counts response "y", and a continuous predictor "x", fit a univariate model, and return the R2 of observations versus predictions:
 #' \itemize{
 #'
-#'   \item \code{f_r2_glm_poisson()} Pearson's R-squared between a count response and the predictions of a GLM model with formula \code{y ~ x} and family \code{stats::poisson(link = "log")}.
+#'   \item \code{f_r2_glm_poisson()} Pearson's R2 between a count response and the predictions of a GLM model with formula \code{y ~ x} and family \code{stats::poisson(link = "log")}.
 #'
-#'   \item \code{f_r2_glm_poisson_poly2()} Pearson's R-squared between a count response and the predictions of a GLM model with formula \code{y ~ stats::poly(x, degree = 2, raw = TRUE)} and family \code{stats::poisson(link = "log")}.
+#'   \item \code{f_r2_glm_poisson_poly2()} Pearson's R2 between a count response and the predictions of a GLM model with formula \code{y ~ stats::poly(x, degree = 2, raw = TRUE)} and family \code{stats::poisson(link = "log")}.
 #'
-#'   \item \code{f_r2_gam_poisson()} Pearson's R-squared between a count response and the predictions of a [mgcv::gam()] model with formula \code{y ~ s(x)} and family \code{stats::poisson(link = "log")}.
+#'   \item \code{f_r2_gam_poisson()} Pearson's R2 between a count response and the predictions of a [mgcv::gam()] model with formula \code{y ~ s(x)} and family \code{stats::poisson(link = "log")}.
 #'
-#'   \item \code{f_r2_rpart()}: Pearson's R-squared of a Recursive Partition Tree fitted with [rpart::rpart()] with formula \code{y ~ x}.
+#'   \item \code{f_r2_rpart()}: Pearson's R2 of a Recursive Partition Tree fitted with [rpart::rpart()] with formula \code{y ~ x}.
 #'
-#'   \item \code{f_r2_rf()}: Pearson's R-squared of a 100 trees Random Forest model fitted with [ranger::ranger()] and formula \code{y ~ x}.
+#'   \item \code{f_r2_rf()}: Pearson's R2 of a 100 trees Random Forest model fitted with [ranger::ranger()] and formula \code{y ~ x}.
 #' }
 #'
 #' @param df (required, data frame) with columns:

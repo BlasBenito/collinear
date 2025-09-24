@@ -30,7 +30,14 @@ preference_order(
 \item{...}{(optional) Other arguments. Currently used for the internal argument \code{function_name}.}
 }
 \value{
-data frame: columns are "response", "predictor", "f" (function name), and "preference".
+data frame:
+\itemize{
+\item \code{response}: character, response name.
+\item \code{predictor}: character, name of the predictor.
+\item \code{f}: name of the function used to compute the preference order.
+\item \code{preference}: value returned by  \code{f} to represent the association between the \code{response} and each given \code{predictor}
+\item \code{metric}: optional, name of the metric in \code{preference}, only returned when \code{f} is in \code{\link[=f_functions]{f_functions()}}.
+}
 }
 \description{
 Ranks a set of predictors by the strength of their association with a response. Aims to minimize the loss of important predictors during multicollinearity filtering.

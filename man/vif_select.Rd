@@ -154,11 +154,11 @@ This filtering method ensures that all predictors in the selection are correlate
 }
 }
 \seealso{
-Other vif: 
+Other variance_inflation_factor: 
 \code{\link{vif}()},
 \code{\link{vif_df}()}
 }
 \author{
 Blas M. Benito, PhD
 }
-\concept{vif}
+\concept{variance_inflation_factor}

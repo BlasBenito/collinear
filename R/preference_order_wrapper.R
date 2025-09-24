@@ -52,37 +52,6 @@ preference_order_wrapper <- function(
 
   }
 
-  # list ----
-  if(
-    is.list(preference_order) &&
-    !is.data.frame(preference_order)
-    ){
-
-    if(
-      !is.null(response) &&
-      response %in% names(preference_order)
-      ){
-
-     return(preference_order[[response]])
-
-    } else {
-
-      if(quiet == FALSE){
-
-        message(
-          "\n",
-          function_name,
-          ": list 'preference_order' does not contain an object named after 'response' and will be ignored."
-        )
-
-      }
-
-      return(NULL)
-
-    }
-
-  }
-
 
   #data frame
   if(is.data.frame(preference_order)){
@@ -90,6 +59,16 @@ preference_order_wrapper <- function(
     if(all(c("predictor", "response", "preference", "f") %in% colnames(preference_order))){
 
       if(response %in% unique(preference_order$response)){
+
+        #filter response
+        preference_order <- preference_order[preference_order$response == response, ]
+
+        #arrange
+        preference_order <- preference_order[
+          order(
+            preference_order$preference,
+            decreasing = TRUE),
+        ]
 
         return(preference_order)
 

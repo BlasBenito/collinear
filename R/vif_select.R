@@ -80,7 +80,7 @@
 #'     quiet = FALSE
 #'   )
 #' @autoglobal
-#' @family vif
+#' @family variance_inflation_factor
 #' @author Blas M. Benito, PhD
 #' @references
 #' \itemize{

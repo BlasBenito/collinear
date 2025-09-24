@@ -81,13 +81,20 @@ It performs the following actions:
 }
 \seealso{
 Other data_validation: 
+\code{\link{autoconfig_arg_max_cor}()},
+\code{\link{autoconfig_arg_max_vif}()},
+\code{\link{tolerance}()},
 \code{\link{validate_arg_df}()},
 \code{\link{validate_arg_df_not_null}()},
+\code{\link{validate_arg_encoding_method}()},
+\code{\link{validate_arg_f}()},
+\code{\link{validate_arg_function_name}()},
 \code{\link{validate_arg_max_cor}()},
 \code{\link{validate_arg_max_vif}()},
 \code{\link{validate_arg_predictors}()},
 \code{\link{validate_arg_predictors_cor}()},
 \code{\link{validate_arg_predictors_vif}()},
+\code{\link{validate_arg_quiet}()},
 \code{\link{validate_arg_response}()},
 \code{\link{validate_args_target_encoding_lab}()}
 }

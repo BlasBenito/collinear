@@ -35,24 +35,24 @@ f_r2_rf(df, ...)
 \item{...}{(optional) Other arguments. Currently used for the internal argument \code{function_name}.}
 }
 \value{
-numeric: R-squared
+numeric: R2
 }
 \description{
-These functions take a data frame with two numeric continuous columns "x" (predictor) and "y" (response), fit a univariate model, and return the R-squared of the observations versus the model predictions:
+These functions take a data frame with two numeric continuous columns "x" (predictor) and "y" (response), fit a univariate model, and return the R2 of the observations versus the model predictions:
 \itemize{
 
-\item \code{f_r2_pearson()}: Pearson's R-squared.
+\item \code{f_r2_pearson()}: Pearson's R2.
 
-\item \code{f_r2_spearman()}: Spearman's R-squared.
+\item \code{f_r2_spearman()}: Spearman's R2.
 
-\item \code{f_r2_glm_gaussian()}: Pearson's R-squared of a GLM model fitted with \code{\link[stats:glm]{stats::glm()}}, with formula \code{y ~ s(x)} and family \code{stats::gaussian(link = "identity")}.
+\item \code{f_r2_glm_gaussian()}: Pearson's R2 of a GLM model fitted with \code{\link[stats:glm]{stats::glm()}}, with formula \code{y ~ s(x)} and family \code{stats::gaussian(link = "identity")}.
 
-\item \code{f_r2_glm_gaussian_poly2()}: Pearson's R-squared of a GLM model fitted with \code{\link[stats:glm]{stats::glm()}}, with formula \code{y ~ stats::poly(x, degree = 2, raw = TRUE)} and family \code{stats::gaussian(link = "identity")}.
+\item \code{f_r2_glm_gaussian_poly2()}: Pearson's R2 of a GLM model fitted with \code{\link[stats:glm]{stats::glm()}}, with formula \code{y ~ stats::poly(x, degree = 2, raw = TRUE)} and family \code{stats::gaussian(link = "identity")}.
 
-\item \code{f_r2_gam_gaussian()}: Pearson's R-squared of a GAM model fitted with \code{\link[mgcv:gam]{mgcv::gam()}}, with formula \code{y ~ s(x)} and family \code{stats::gaussian(link = "identity")}.
-\item \code{f_r2_rpart()}: Pearson's R-squared of a Recursive Partition Tree fitted with \code{\link[rpart:rpart]{rpart::rpart()}} with formula \code{y ~ x}.
+\item \code{f_r2_gam_gaussian()}: Pearson's R2 of a GAM model fitted with \code{\link[mgcv:gam]{mgcv::gam()}}, with formula \code{y ~ s(x)} and family \code{stats::gaussian(link = "identity")}.
+\item \code{f_r2_rpart()}: Pearson's R2 of a Recursive Partition Tree fitted with \code{\link[rpart:rpart]{rpart::rpart()}} with formula \code{y ~ x}.
 
-\item \code{f_r2_rf()}: Pearson's R-squared of a 100 trees Random Forest model fitted with \code{\link[ranger:ranger]{ranger::ranger()}} and formula \code{y ~ x}.
+\item \code{f_r2_rf()}: Pearson's R2 of a 100 trees Random Forest model fitted with \code{\link[ranger:ranger]{ranger::ranger()}} and formula \code{y ~ x}.
 
 }
 }
@@ -73,19 +73,19 @@ df <- data.frame(
 
 # Continuous response
 
-#Pearson R-squared
+#Pearson R2
 f_r2_pearson(df = df)
 
-#Spearman R-squared
+#Spearman R2
 f_r2_spearman(df = df)
 
-#R-squared of a gaussian gam
+#R2 of a gaussian gam
 f_r2_glm_gaussian(df = df)
 
 #gaussian glm with second-degree polynomials
 f_r2_glm_gaussian_poly2(df = df)
 
-#R-squared of a gaussian gam
+#R2 of a gaussian gam
 f_r2_gam_gaussian(df = df)
 
 #recursive partition tree
@@ -110,19 +110,19 @@ df <- data.frame(
 
 # Continuous response
 
-#Pearson R-squared
+#Pearson R2
 f_r2_pearson(df = df)
 
-#Spearman R-squared
+#Spearman R2
 f_r2_spearman(df = df)
 
-#R-squared of a gaussian gam
+#R2 of a gaussian gam
 f_r2_glm_gaussian(df = df)
 
 #gaussian glm with second-degree polynomials
 f_r2_glm_gaussian_poly2(df = df)
 
-#R-squared of a gaussian gam
+#R2 of a gaussian gam
 f_r2_gam_gaussian(df = df)
 
 #recursive partition tree

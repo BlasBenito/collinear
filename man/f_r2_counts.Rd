@@ -23,18 +23,18 @@ f_r2_gam_poisson(df, ...)
 \item{...}{(optional) Other arguments. Currently used for the internal argument \code{function_name}.}
 }
 \description{
-These functions take a data frame with a integer counts response "y", and a continuous predictor "x", fit a univariate model, and return the R-squared of observations versus predictions:
+These functions take a data frame with a integer counts response "y", and a continuous predictor "x", fit a univariate model, and return the R2 of observations versus predictions:
 \itemize{
 
-\item \code{f_r2_glm_poisson()} Pearson's R-squared between a count response and the predictions of a GLM model with formula \code{y ~ x} and family \code{stats::poisson(link = "log")}.
+\item \code{f_r2_glm_poisson()} Pearson's R2 between a count response and the predictions of a GLM model with formula \code{y ~ x} and family \code{stats::poisson(link = "log")}.
 
-\item \code{f_r2_glm_poisson_poly2()} Pearson's R-squared between a count response and the predictions of a GLM model with formula \code{y ~ stats::poly(x, degree = 2, raw = TRUE)} and family \code{stats::poisson(link = "log")}.
+\item \code{f_r2_glm_poisson_poly2()} Pearson's R2 between a count response and the predictions of a GLM model with formula \code{y ~ stats::poly(x, degree = 2, raw = TRUE)} and family \code{stats::poisson(link = "log")}.
 
-\item \code{f_r2_gam_poisson()} Pearson's R-squared between a count response and the predictions of a \code{\link[mgcv:gam]{mgcv::gam()}} model with formula \code{y ~ s(x)} and family \code{stats::poisson(link = "log")}.
+\item \code{f_r2_gam_poisson()} Pearson's R2 between a count response and the predictions of a \code{\link[mgcv:gam]{mgcv::gam()}} model with formula \code{y ~ s(x)} and family \code{stats::poisson(link = "log")}.
 
-\item \code{f_r2_rpart()}: Pearson's R-squared of a Recursive Partition Tree fitted with \code{\link[rpart:rpart]{rpart::rpart()}} with formula \code{y ~ x}.
+\item \code{f_r2_rpart()}: Pearson's R2 of a Recursive Partition Tree fitted with \code{\link[rpart:rpart]{rpart::rpart()}} with formula \code{y ~ x}.
 
-\item \code{f_r2_rf()}: Pearson's R-squared of a 100 trees Random Forest model fitted with \code{\link[ranger:ranger]{ranger::ranger()}} and formula \code{y ~ x}.
+\item \code{f_r2_rf()}: Pearson's R2 of a 100 trees Random Forest model fitted with \code{\link[ranger:ranger]{ranger::ranger()}} and formula \code{y ~ x}.
 }
 }
 \examples{

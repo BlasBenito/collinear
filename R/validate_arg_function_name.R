@@ -9,6 +9,7 @@
 #' @inheritParams collinear
 #'
 #' @returns character
+#' @family data_validation
 #' @export
 #' @autoglobal
 validate_arg_function_name <- function(

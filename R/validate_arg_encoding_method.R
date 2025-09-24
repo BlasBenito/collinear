@@ -5,6 +5,7 @@
 #' @inheritParams validate_arg_quiet
 #'
 #' @returns character
+#' @family data_validation
 #' @examples
 #' x <- validate_arg_encoding_method(
 #'   encoding_method = "wrong_method"

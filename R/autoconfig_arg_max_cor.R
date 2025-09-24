@@ -9,6 +9,7 @@
 #' @returns numeric
 #' @export
 #' @autoglobal
+#' @family data_validation
 #' @examples
 #' max_cor <- autoconfig_arg_max_cor(
 #'   df = vi_smol,

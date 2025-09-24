@@ -6,6 +6,7 @@
 #'
 #' @return function
 #' @autoglobal
+#' @family data_validation
 #' @export
 #' @examples
 #' x <- validate_arg_df(df = f_auto)

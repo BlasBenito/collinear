@@ -9,6 +9,7 @@
 #' @returns numeric
 #' @export
 #' @autoglobal
+#' @family data_validation
 #' @examples
 #' max_vif <- autoconfig_arg_max_vif(
 #'   df = vi_smol,

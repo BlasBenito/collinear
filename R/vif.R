@@ -12,7 +12,7 @@
 #' @inheritParams collinear
 #'
 #' @return named numeric vector
-#' @family vif
+#' @family variance_inflation_factor
 #' @inherit vif_select references
 #' @autoglobal
 #' @export

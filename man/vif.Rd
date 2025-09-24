@@ -47,8 +47,8 @@ vif(m)
 }
 }
 \seealso{
-Other vif: 
+Other variance_inflation_factor: 
 \code{\link{vif_df}()},
 \code{\link{vif_select}()}
 }
-\concept{vif}
+\concept{variance_inflation_factor}
