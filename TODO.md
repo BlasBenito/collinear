@@ -129,11 +129,11 @@
 - documentation DONE
 - test file DONE
 
-#preference_order.R
+#preference_order.R IN PROGRESS
 
-- code examples
-- documentation
-- test file
+- code examples DONE
+- documentation DONE
+- test file IN PROGRESS
 
 #S3_classes.R
 

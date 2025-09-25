@@ -381,15 +381,15 @@ testthat::test_that("`collinear()` works", {
   ### valid dataframe ----
   preference_df <- preference_order(
     df = vi_smol,
-    responses = "vi_numeric",
+    responses = c("vi_numeric", "vi_categorical"),
     predictors = vi_predictors_numeric,
-    f = f_r2_pearson,
+    f = f_auto,
     quiet = TRUE
   )
 
   x <- collinear(
     df = vi_smol,
-    responses = "vi_numeric",
+    responses = c("vi_numeric", "vi_categorical"),
     predictors = vi_predictors_numeric,
     encoding_method = NULL,
     preference_order = preference_df,
@@ -401,17 +401,23 @@ testthat::test_that("`collinear()` works", {
 
   testthat::expect_true(
     all.equal(
-    target = x$arguments$preference_order,
-    current = x$vi_numeric$preference$df
+      target = preference_df,
+      current = x$arguments$preference_order
     )
   )
 
   testthat::expect_true(
-    x$arguments$preference_order$f[1] == "f_r2_pearson"
+    all.equal(
+      target = preference_df[preference_df$response == "vi_numeric", ],
+      current = x$vi_numeric$preference$df
+    )
   )
 
   testthat::expect_true(
-    x$vi_numeric$preference$f$name == "f_r2_pearson"
+    all.equal(
+      target = preference_df[preference_df$response == "vi_categorical", ],
+      current = x$vi_categorical$preference$df
+    )
   )
 
   ### invalid data frame ----
@@ -430,74 +436,12 @@ testthat::test_that("`collinear()` works", {
       max_vif = 5,
       quiet = FALSE
     ),
-    regexp = "does not match the values in argument 'responses'"
+    regexp = "dataframe 'preference_order' does not have the column 'response', or the column has not matching values with the argument 'responses'"
   ) |>
     suppressMessages()
 
   testthat::expect_null(
     x$arguments$preference_order
-  )
-
-  ### valid list ----
-  preference_list <- preference_order(
-    df = vi_smol,
-    responses = c("vi_numeric", "vi_binomial"),
-    predictors = vi_predictors_numeric,
-    f = f_r2_pearson,
-    quiet = TRUE
-  )
-
-  x <- collinear(
-    df = vi_smol,
-    responses = c("vi_numeric", "vi_binomial"),
-    predictors = vi_predictors_numeric,
-    encoding_method = NULL,
-    preference_order = preference_list,
-    f = NULL,
-    max_cor = 0.75,
-    max_vif = 5,
-    quiet = TRUE
-  )
-
-  testthat::expect_true(
-    all(
-      c("vi_numeric", "vi_binomial") %in% names(x$arguments$preference_order)
-    )
-  )
-
-  testthat::expect_true(
-    x$arguments$preference_order$vi_numeric$f[1] == preference_list$vi_numeric$f[1]
-  )
-
-  testthat::expect_true(
-    x$arguments$preference_order$vi_binomial$f[1] == preference_list$vi_binomial$f[1]
-  )
-
-  #invalid list
-  names(preference_list) <- c("a", "b")
-
-  testthat::expect_message(
-    x <- collinear(
-      df = vi_smol,
-      responses = "vi_numeric",
-      predictors = vi_predictors_numeric,
-      encoding_method = NULL,
-      preference_order = preference_list,
-      f = NULL,
-      max_cor = 0.75,
-      max_vif = 5,
-      quiet = FALSE
-    ),
-    regexp = "list 'preference_order' does not contain any element named after the values in 'responses'"
-  ) |>
-    suppressMessages()
-
-  testthat::expect_null(
-    x$arguments$preference_order
-  )
-
-  testthat::expect_null(
-    x$vi_numeric$preference
   )
 
   ### NULL response ----

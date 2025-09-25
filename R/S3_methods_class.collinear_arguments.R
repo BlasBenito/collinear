@@ -23,17 +23,9 @@ class.collinear_arguments <- function(
     f_name = NULL,
     max_cor = 0.75,
     max_vif = 5,
-    quiet = FALSE,
-    ...
+    function_name = NULL,
+    quiet = FALSE
 ){
-
-  dots <- list(...)
-  if("function_name" %in% names(dots)){
-    function_name <- dots$function_name
-    dots$function_name <- NULL
-  } else {
-    function_name <- NULL
-  }
 
   function_name <- validate_arg_function_name(
     default_name = "collinear::class.collinear_arguments()",
@@ -158,45 +150,7 @@ class.collinear_arguments <- function(
         message(
           "\n",
           function_name,
-          ": argument 'preference_order' cannot be of class 'dataframe' or 'list' when 'responses' is NULL and will be ignored."
-        )
-
-      }
-
-      preference_order <- NULL
-
-    } else if(length(responses) == 1){
-
-      if(
-        !"response" %in% colnames(preference_order) ||
-        (
-          "response" %in% colnames(preference_order) &&
-          any(!responses %in% preference_order$response)
-        )
-      ){
-
-        if(quiet == FALSE){
-
-          message(
-            "\n",
-            function_name,
-            ": column 'response' of the dataframe 'preference_order' is absent or does not match the values in argument 'responses' and will be ignored."
-          )
-
-        }
-
-        preference_order <- NULL
-
-      }
-
-    } else {
-
-      if(quiet == FALSE){
-
-        message(
-          "\n",
-          function_name,
-          ": argument 'preference_order' must be a character vector or a named list when 'responses' has more than one element, it will be ignored."
+          ": argument 'preference_order' cannot be of class 'dataframe' when 'responses' is NULL and will be ignored."
         )
 
       }
@@ -205,35 +159,17 @@ class.collinear_arguments <- function(
 
     }
 
-  } else if(is.list(preference_order)){
-
-    if(is.null(responses)){
-
-      if(quiet == FALSE){
-
-        message(
-          "\n",
-          function_name,
-          ": argument 'preference_order' cannot be of class 'dataframe' or 'list' when 'responses' is NULL and will be ignored."
-        )
-
-      }
-
-      preference_order <- NULL
-
-    } else if(any(responses %in% names(preference_order))){
-
-      preference_order <- preference_order[responses]
-
-
-    } else {
+    if(
+      !"response" %in% colnames(preference_order) ||
+      any(!responses %in% preference_order$response)
+    ){
 
       if(quiet == FALSE){
 
         message(
           "\n",
           function_name,
-          ": list 'preference_order' does not contain any element named after the values in 'responses' and will be ignored."
+          ": dataframe 'preference_order' does not have the column 'response', or the column has not matching values with the argument 'responses'."
         )
 
       }

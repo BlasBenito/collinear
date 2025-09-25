@@ -1,9 +1,10 @@
 #' Quantitative Variable Prioritization for Multicollinearity Filtering
 #'
 #' @description
-#' Ranks a set of predictors by the strength of their association with a response. Aims to minimize the loss of important predictors during multicollinearity filtering.
+#' Ranks predictors by the strength of their association with a response. Aims to minimize the loss of important predictors during multicollinearity filtering.
 #'
-#' The strength of association between the response and each predictor is computed by the function \code{f}. The \code{f} functions available are:
+#' The strength of association between the response and each predictor is computed by the function \code{f}. The function [f_auto()] can select a suitable one automatically depending on the data types of the response and the predictors. For more fine-tuned control, the package offers the following functions:
+#'
 #' \itemize{
 #'   \item **Numeric response vs numeric predictor**:
 #'   \itemize{
@@ -39,8 +40,6 @@
 #'   }
 #' }
 #'
-#' The name of the used function is stored in the attribute "f_name" of the output data frame. It can be retrieved via \code{attributes(df)$f_name}.
-#'
 #' Additionally, any custom function accepting a data frame with the columns "x" (predictor) and "y" (response) and returning a numeric indicator of association where higher numbers indicate higher association will work.
 #'
 #' This function returns a data frame with the column "predictor", with predictor names ordered by the column "preference", with the result of \code{f}. This data frame, or the column "predictor" alone, can be used as inputs for the argument \code{preference_order} in [collinear()], [cor_select()], and [vif_select()].
@@ -64,75 +63,60 @@
 #'   \item \code{metric}: optional, name of the metric in \code{preference}, only returned when \code{f} is in [f_functions()].
 #' }
 #' @examples
-#' data(vi, vi_predictors, vi_predictors_numeric)
-#'
-#' #subsets to limit example run time
-#' df <- vi[1:1000, ]
-#' predictors <- vi_predictors[1:10]
-#' predictors_numeric <- vi_predictors_numeric[1:10]
-#'
-#' #parallelization setup
-#' future::plan(
-#'   future::multisession,
-#'   workers = 2 #set to parallelly::availableCores() - 1
+#' data(
+#'   vi_smol,
+#'   vi_predictors_categorical,
+#'   vi_predictors_numeric
 #' )
 #'
-#' #progress bar
-#' # progressr::handlers(global = TRUE)
+#' ##OPTIONAL: parallelization setup
+#' # future::plan(
+#' #   future::multisession,
+#' #   workers = 2
+#' # )
+#'
+#' ##OPTIONAL: progress bar
+#' ##does not work in R examples
+#' #progressr::handlers(global = TRUE)
 #'
 #' #numeric response and predictors
 #' #------------------------------------------------
 #' #selects f automatically depending on data features
 #' #applies f_r2_pearson() to compute correlation between response and predictors
-#' df_preference <- preference_order(
-#'   df = df,
-#'   responses = "vi_numeric",
-#'   predictors = predictors_numeric,
+#' #returns data frame ordered by preference
+#' x <- preference_order(
+#'   df = vi_smol,
+#'   responses = c("vi_categorical", "vi_counts"),
+#'   predictors = vi_predictors_numeric[1:10],
 #'   f = f_auto
 #'   )
 #'
-#' #returns data frame ordered by preference
-#' df_preference
+#' x
+#'
+#' #f_auto selects a different function and metric for each response
+#' unique(x$f)
+#' unique(x$metric)
 #'
 #'
-#' #several responses
-#' #------------------------------------------------
-#' responses <- c(
-#'   "vi_categorical",
-#'   "vi_counts"
+#' #it can be plugged into collinear
+#' y <- collinear(
+#'   df = vi_smol,
+#'   responses = c("vi_categorical", "vi_counts"),
+#'   predictors = vi_predictors_numeric[1:10],
+#'   preference_order = x
 #' )
-#'
-#' preference_list <- preference_order(
-#'   df = df,
-#'   responses = responses,
-#'   predictors = predictors
-#' )
-#'
-#' #returns a named list
-#' names(preference_list)
-#' preference_list[[1]]
-#' preference_list[[2]]
-#'
-#' #can be used in collinear()
-#' # x <- collinear(
-#' #   df = df,
-#' #   responses = responses,
-#' #   predictors = predictors,
-#' #   preference_order = preference_list
-#' # )
 #'
 #' #f function selected by user
 #' #for binomial response and numeric predictors
-#' # preference_order(
-#' #   df = vi,
-#' #   responses = "vi_binomial",
-#' #   predictors = predictors_numeric,
-#' #   f = f_auc_glm_binomial
-#' # )
+#' x <- preference_order(
+#'   df = vi,
+#'   responses = "vi_binomial",
+#'   predictors = vi_predictors_numeric[1:10],
+#'   f = f_auc_glm_binomial
+#' )
 #'
-#'
-#' #disable parallelization
-#' future::plan(future::sequential)
+#' #resetting to sequential processing
+#' #future::plan(future::sequential)
 #' @autoglobal
 #' @author Blas M. Benito, PhD
 #' @export
@@ -368,6 +352,9 @@ preference_order <- function(
     args = out_list
   )
 
+  rownames(out_df) <- NULL
+
+  out_df <- out_df[, c("response", "predictor", "preference", "f", "metric")]
 
   out_df
 

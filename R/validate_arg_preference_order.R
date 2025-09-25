@@ -138,7 +138,7 @@ validate_arg_preference_order <- function(
       message(
         "\n",
         function_name,
-        ": these columns in 'preference_order' are not in 'predictors' and will be ignored:\n - ",
+        ": these variables in 'preference_order' are not in 'predictors' and will be ignored:\n - ",
         paste(
           predictors.missing,
           collapse = "\n - "
