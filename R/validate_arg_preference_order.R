@@ -49,6 +49,7 @@
 #'   #all other variables ordered according to preference_order_auto
 #'   my_order
 validate_arg_preference_order <- function(
+    responses = NULL,
     predictors = NULL,
     preference_order = NULL,
     preference_order_auto = NULL,
@@ -61,15 +62,11 @@ validate_arg_preference_order <- function(
     function_name = function_name
   )
 
-  if(is.null(preference_order_auto)){
-    stop(
-      "\n",
-      function_name,
-      ": argument 'preference_order_auto' cannot be NULL.",
-      call. = FALSE
-    )
+  if(
+    !is.null(preference_order) %%
+    isTRUE(attr(x = preference_order, which = "validated"))){
+    return(preference_order)
   }
-
 
   if(!isTRUE(attr(x = predictors, which = "validated"))){
 
@@ -81,6 +78,12 @@ validate_arg_preference_order <- function(
     )
 
   }
+
+
+  if(is.null(preference_order_auto)){
+    preference_order_auto <- predictors
+  }
+
 
   if(is.null(preference_order)){
 
@@ -103,7 +106,7 @@ validate_arg_preference_order <- function(
 
     if("predictor" %in% colnames(preference_order)){
 
-      preference_order <- preference_order$predictor
+      preference_order <- preference_order[preference_order$predictor %in% predictors, ]
 
     } else {
 
@@ -113,7 +116,69 @@ validate_arg_preference_order <- function(
         ": argument 'preference_order' must be the output of 'preference_order()' or a data frame with a column named 'predictor'.",
         call. = FALSE
       )
+
     }
+
+    if(
+      "response" %in% colnames(preference_order) &&
+      !is.null(responses)
+    ){
+
+      preference_order <- preference_order[preference_order$response %in% responses, ]
+
+    }
+
+    if(nrow(preference_order) == 0){
+
+      message(
+        "\n",
+        function_name,
+        ": argument 'preference_order' is a data frame with zero rows, ignoring it.",
+        call. = FALSE
+      )
+
+      preference_order <- NULL
+
+    }
+
+    if("preference" %in% colnames(preference_order)){
+
+      preference_order <- preference_order[
+        order(
+          preference_order$preference,
+          decreasing = TRUE),
+      ]
+
+    } else {
+
+      stop(
+        "\n",
+        function_name,
+        ": argument 'preference_order' must have the column 'preference'.",
+        call. = FALSE
+      )
+
+    }
+
+    preference_order <- preference_order$predictor
+
+  }
+
+  if(!is.character(preference_order)){
+
+    message(
+      "\n",
+      function_name,
+      ": argument 'preference_order' is not valid and will be ignored."
+    )
+
+    message(
+      "\n",
+      function_name,
+      ": ranking predictors from lower to higher multicollinearity."
+    )
+
+    return(preference_order_auto)
 
   }
 
@@ -126,26 +191,21 @@ validate_arg_preference_order <- function(
     y = predictors
   )
 
-  predictors.missing <- setdiff(
-    x = preference_order_arg,
-    y = preference_order
-  )
+  if(length(preference_order) == 0){
 
-  if(length(predictors.missing) > 0){
+    message(
+      "\n",
+      function_name,
+      ": character vector 'preference_order' contains no valid predictors and will be ignored."
+    )
 
-    if(quiet == FALSE){
+    message(
+      "\n",
+      function_name,
+      ": ranking predictors from lower to higher multicollinearity."
+    )
 
-      message(
-        "\n",
-        function_name,
-        ": these variables in 'preference_order' are not in 'predictors' and will be ignored:\n - ",
-        paste(
-          predictors.missing,
-          collapse = "\n - "
-        )
-      )
-
-    }
+    return(preference_order_auto)
 
   }
 

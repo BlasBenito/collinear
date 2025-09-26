@@ -129,13 +129,14 @@
 - documentation DONE
 - test file DONE
 
-#preference_order.R IN PROGRESS
+#preference_order.R DONE
 
 - code examples DONE
 - documentation DONE
-- test file IN PROGRESS
+- test file DONE
 
-#S3_classes.R
+
+#S3_methods_print.collinear_arguments.R
 
 - code examples
 - documentation
@@ -147,11 +148,7 @@
 - documentation
 - test file
 
-#S3_methods_print.collinear_arguments.R
 
-- code examples
-- documentation
-- test file
 
 #S3_methods_print.collinear_output.R
 

@@ -27,7 +27,7 @@ validate_arg_max_cor <- function(
     function_name = function_name
   )
 
-  max_cor_default <- 0.75
+  max_cor_default <- 0.70
 
   if(isTRUE(attr(x = max_cor, which = "validated_cor"))){
     return(max_cor)

@@ -294,6 +294,17 @@ preference_order <- function(
 
     rownames(preference) <- NULL
 
+    #join metric
+    if(unique(preference$f) %in% unique(f_df$f)){
+
+      preference <- merge(
+        x = preference,
+        y = f_df,
+        by = "f"
+      )
+
+    }
+
     #assess extreme associations
     if(
       is.numeric(warn_limit) &&
@@ -304,14 +315,16 @@ preference_order <- function(
 
       if(nrow(preference_extreme) > 0){
 
-         message(
+         warning(
            "\n",
            function_name,
            ": predictors with associations to '",
            response,
-           "' higher than ",
+           "' higher than 'warn_limit' (",
+           unique(preference$metric),
+           " > ",
            warn_limit,
-           ": \n - ",
+           "): \n - ",
            paste0(
              preference_extreme$predictor,
              ": ",
@@ -320,21 +333,11 @@ preference_order <- function(
                2
                ),
              collapse = "\n - "
-           )
+           ),
+           call. = FALSE
          )
 
       }
-
-    }
-
-    #join metric
-    if(unique(preference$f) %in% unique(f_df$f)){
-
-      preference <- merge(
-        x = preference,
-        y = f_df,
-        by = "f"
-      )
 
     }
 
@@ -355,6 +358,11 @@ preference_order <- function(
   rownames(out_df) <- NULL
 
   out_df <- out_df[, c("response", "predictor", "preference", "f", "metric")]
+
+  attr(
+    x = out_df,
+    which = "validated"
+  ) <- TRUE
 
   out_df
 

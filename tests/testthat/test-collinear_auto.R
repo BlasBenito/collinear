@@ -277,8 +277,14 @@ testthat::test_that("`collinear_auto()` works", {
     all(x$vi_numeric$preference$df$predictor %in% vi_predictors_numeric)
   )
 
+  preference_order_auto <- vif_df(
+    df = vi_smol,
+    predictors = vi_predictors_numeric,
+    quiet = TRUE
+  )$predictor
+
   testthat::expect_true(
-    is.null(x$arguments$preference_order)
+    all(x$arguments$preference_order == rev(preference_order_auto))
   )
 
 })

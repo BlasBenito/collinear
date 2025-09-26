@@ -338,7 +338,7 @@ testthat::test_that("`collinear()` works", {
       max_vif = 5,
       quiet = FALSE
     ),
-    regexp = "character vector 'preference_order' does not contain any column names in 'df' and  will be ignored"
+    regexp = "character vector 'preference_order' contains no valid predictors"
   ) |>
     suppressMessages()
 
@@ -347,7 +347,7 @@ testthat::test_that("`collinear()` works", {
   )
 
   testthat::expect_true(
-    is.null(x$arguments$preference_order)
+    is.character(x$arguments$preference_order)
   )
 
   ### valid character vector ----
@@ -399,11 +399,17 @@ testthat::test_that("`collinear()` works", {
     quiet = TRUE
   )
 
+  a <- preference_df
+  rownames(a) <- NULL
+
+  b <- rbind(x$vi_numeric$preference$df, x$vi_categorical$preference$df)
+  rownames(b) <- NULL
+
   testthat::expect_true(
-    all.equal(
-      target = preference_df,
-      current = x$arguments$preference_order
-    )
+    isTRUE(all.equal(
+      target = a,
+      current = b
+    ))
   )
 
   testthat::expect_true(

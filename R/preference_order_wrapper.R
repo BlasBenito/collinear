@@ -145,14 +145,18 @@ preference_order_wrapper <- function(
             times = n
           ),
           predictor = preference_order,
-          f = rep(
-            x = NA,
-            times = n
-          ),
           preference = seq(
             from = 1,
             to = 0,
             length.out = n
+          ),
+          f = rep(
+            x = NA_character_,
+            times = n
+          ),
+          metric = rep(
+            x = NA_character_,
+            times = n
           )
         )
 

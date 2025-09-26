@@ -55,11 +55,23 @@ Accepted inputs are:
 \item{quiet}{(optional; logical) If FALSE, messages are printed to the console. Default: FALSE}
 }
 \value{
-list
-TODO: describe class output
+list:
+\itemize{
+\item \code{df}: validated data frame.
+\item \code{responses}: character vector of response names or NULL
+\item \code{predictors}: character vector of predictor names.
+\item \code{encoding_method}: character string or NULL.
+\item \code{preference_order}: character vector, data frame resulting from \link{preference_order}, or NULL.
+\item \code{f}: function or NULL.
+\item \code{f_name}: character string with the name of \code{f} or NULL.
+\item \code{max_cor}: numeric or NULL.
+\item \code{max_vif}: numeric or NULL,
+\item \code{timestamp}: execution time and date.
+\item \code{quiet}: logical.
+}
 }
 \description{
-List with the validated arguments of a \code{\link[=collinear]{collinear()}} call.
+Internal function to validate the arguments of of a \code{\link[=collinear]{collinear()}} call.
 }
 \seealso{
 \code{\link[=print.collinear_arguments]{print.collinear_arguments()}}

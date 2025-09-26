@@ -1,14 +1,24 @@
 #' Builds \code{class.collinear_arguments}
 #'
 #' @description
-#' List with the validated arguments of a [collinear()] call.
+#' Internal function to validate the arguments of of a [collinear()] call.
 #'
 #'
 #' @inheritParams collinear
 #' @inheritParams validate_arg_f
 #'
-#' @returns list
-#' TODO: describe class output
+#' @returns list:
+#' - \code{df}: validated data frame.
+#' - \code{responses}: character vector of response names or NULL
+#' - \code{predictors}: character vector of predictor names.
+#' - \code{encoding_method}: character string or NULL.
+#' - \code{preference_order}: character vector, data frame resulting from [preference_order], or NULL.
+#' - \code{f}: function or NULL.
+#' - \code{f_name}: character string with the name of \code{f} or NULL.
+#' - \code{max_cor}: numeric or NULL.
+#' - \code{max_vif}: numeric or NULL,
+#' - \code{timestamp}: execution time and date.
+#' - \code{quiet}: logical.
 #' @seealso [print.collinear_arguments()]
 #' @family S3_methods
 #' @autoglobal
@@ -29,6 +39,11 @@ class.collinear_arguments <- function(
 
   function_name <- validate_arg_function_name(
     default_name = "collinear::class.collinear_arguments()",
+    function_name = function_name
+  )
+
+  df <- validate_arg_df_not_null(
+    df = df,
     function_name = function_name
   )
 
@@ -118,108 +133,57 @@ class.collinear_arguments <- function(
   )
 
   ## preference_order ----
-  if(is.character(preference_order)){
+  if(!is.null(preference_order)){
 
-    preference_order <- intersect(
-      x = preference_order,
-      y = colnames(df)
+    preference_order_auto <- vif_df(
+      df = df,
+      predictors = predictors,
+      quiet = TRUE
     )
 
-    if(length(preference_order) == 0){
+    preference_order <- validate_arg_preference_order(
+      responses = responses,
+      predictors = predictors,
+      preference_order = preference_order,
+      preference_order_auto = rev(preference_order_auto$predictor),
+      function_name = function_name,
+      quiet = quiet
+    )
+
+    if(!is.null(f)){
 
       if(quiet == FALSE){
 
         message(
           "\n",
           function_name,
-          ": character vector 'preference_order' does not contain any column names in 'df' and  will be ignored."
+          ": resetting 'f' to NULL (overridden by 'preference_order')."
         )
 
       }
 
-      preference_order <- NULL
+
+      f <- NULL
+      f_name <- NULL
 
     }
-
-  } else if(is.data.frame(preference_order)){
-
-    if(is.null(responses)){
-
-      if(quiet == FALSE){
-
-        message(
-          "\n",
-          function_name,
-          ": argument 'preference_order' cannot be of class 'dataframe' when 'responses' is NULL and will be ignored."
-        )
-
-      }
-
-      preference_order <- NULL
-
-    }
-
-    if(
-      !"response" %in% colnames(preference_order) ||
-      any(!responses %in% preference_order$response)
-    ){
-
-      if(quiet == FALSE){
-
-        message(
-          "\n",
-          function_name,
-          ": dataframe 'preference_order' does not have the column 'response', or the column has not matching values with the argument 'responses'."
-        )
-
-      }
-
-      preference_order <- NULL
-
-    }
-
-  } else if(!is.null(preference_order)){
-
-    if(quiet == FALSE){
-
-      message(
-        "\n",
-        function_name,
-        ": argument 'preference_order' is not valid and will be ignored."
-      )
-
-    }
-
-    preference_order <- NULL
 
   }
+
 
   ## f ----
-  if(!is.null(preference_order) && !is.null(f)){
+  if(!is.null(f)){
 
+    f <- validate_arg_f(
+      f = f,
+      f_name = f_name,
+      function_name = function_name
+    )
 
-    if(quiet == FALSE){
-
-      message(
-        "\n",
-        function_name,
-        ": resetting 'f' to NULL (overridden by 'preference_order')."
-      )
-
-    }
-
-
-    f <- NULL
+    f_name <- attributes(f)$name
 
   }
 
-  f <- validate_arg_f(
-    f = f,
-    f_name = f_name,
-    function_name = function_name
-  )
-
-  f_name <- attributes(f)$name
 
   #store args list for output
   args <- list(

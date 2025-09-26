@@ -33,8 +33,8 @@ validate_arg_encoding_method <- function(
   }
 
   valid_methods <- c(
-    "mean",
     "loo",
+    "mean",
     "rank"
   )
 

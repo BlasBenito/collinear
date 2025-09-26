@@ -15,12 +15,13 @@ class.collinear_selection <- function(
     preference_order = NULL,
     selection = NULL,
     quiet = FALSE,
+    function_name = NULL,
     ...
 ){
 
   function_name <- validate_arg_function_name(
     default_name = "collinear::class.collinear_selection()",
-    ... = ...
+    function_name = function_name
   )
 
   # preference order ----
@@ -37,8 +38,8 @@ class.collinear_selection <- function(
 
     if(nrow(f_df) > 0){
 
-      f_expression <- f_df$expression
-      f_metric <- f_df$preference_metric
+      f_expression <- unique(f_df$expression)
+      f_metric <- unique(f_df$preference_metric)
 
     }
 

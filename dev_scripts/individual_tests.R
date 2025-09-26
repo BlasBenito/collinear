@@ -61,7 +61,12 @@ testthat::test_file("tests/testthat/test-performance_score_v.R")
 testthat::test_file("tests/testthat/test-preference_order_methods.R")
 #[ FAIL 0 | WARN 0 | SKIP 0 | PASS 34 ]
 
+testthat::test_file("tests/testthat/test-preference_order.R")
+#[ FAIL 0 | WARN 0 | SKIP 0 | PASS 39 ]
+
+
 #TODO
+
 
 testthat::test_file("tests/testthat/test-vif.R")
 #[ FAIL 0 | WARN 0 | SKIP 0 | PASS 7 ]
@@ -74,8 +79,7 @@ testthat::test_file("tests/testthat/test-vif_select.R")
 
 #secondary functions
 
-testthat::test_file("tests/testthat/test-preference_order.R")
-#[ FAIL 0 | WARN 0 | SKIP 0 | PASS 34 ]
+
 
 testthat::test_file("tests/testthat/test-preference_order_wrapper.R")
 #[ FAIL 0 | WARN 0 | SKIP 0 | PASS 14 ]

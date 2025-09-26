@@ -3,22 +3,17 @@ testthat::test_that("`preference_order()` works", {
   expected_colnames <- c(
     "response",
     "predictor",
+    "preference",
     "f",
-    "preference"
+    "metric"
   )
 
   data(
-    vi,
+    vi_smol,
     vi_predictors,
     vi_predictors_categorical,
     vi_predictors_numeric
   )
-
-  #subsets to limit example run time
-  df <- vi[1:1000, ]
-  vi_predictors <- vi_predictors[1:10]
-  vi_predictors_numeric <- vi_predictors_numeric[1:10]
-  vi_predictors_categorical <- vi_predictors_categorical[1:10]
 
   #several responses
   responses <- c(
@@ -34,12 +29,11 @@ testthat::test_that("`preference_order()` works", {
   #test that one message per response is printed
   testthat::expect_message(
     x <- preference_order(
-      df = df,
+      df = vi_smol,
       response = responses,
       predictors = vi_predictors,
       f = f_auto,
-      quiet = FALSE,
-      warn_limit = NULL
+      quiet = FALSE
     ),
     regexp = "processing response 'vi_numeric'"
   ) |>
@@ -47,7 +41,7 @@ testthat::test_that("`preference_order()` works", {
 
   testthat::expect_message(
     x <- preference_order(
-      df = df,
+      df = vi_smol,
       response = responses,
       predictors = vi_predictors,
       f = f_auto,
@@ -60,7 +54,7 @@ testthat::test_that("`preference_order()` works", {
 
   testthat::expect_message(
     x <- preference_order(
-      df = df,
+      df = vi_smol,
       response = responses,
       predictors = vi_predictors,
       f = f_auto,
@@ -73,7 +67,7 @@ testthat::test_that("`preference_order()` works", {
 
   testthat::expect_message(
     x <- preference_order(
-      df = df,
+      df = vi_smol,
       response = responses,
       predictors = vi_predictors,
       f = f_auto,
@@ -86,7 +80,7 @@ testthat::test_that("`preference_order()` works", {
 
   testthat::expect_message(
     x <- preference_order(
-      df = df,
+      df = vi_smol,
       response = responses,
       predictors = vi_predictors,
       f = f_auto,
@@ -99,15 +93,15 @@ testthat::test_that("`preference_order()` works", {
 
 
   testthat::expect_true(
-    is.list(x)
+    is.data.frame(x)
   )
 
   testthat::expect_true(
-    all(names(x) %in% responses)
+    all(responses %in% x$response)
   )
 
   testthat::expect_true(
-    all(colnames(x[[1]]) %in% expected_colnames)
+    all(colnames(x) %in% expected_colnames)
   )
 
   #f NULL
@@ -126,12 +120,11 @@ testthat::test_that("`preference_order()` works", {
 
   ##all types
   x <- preference_order(
-    df = df,
+    df = vi_smol,
     response = "vi_numeric",
     predictors = vi_predictors,
     f = f_r2_rf,
-    quiet = FALSE,
-    warn_limit = NULL
+    quiet = TRUE
   )
 
   testthat::expect_true(
@@ -153,7 +146,7 @@ testthat::test_that("`preference_order()` works", {
 
   testthat::expect_message(
     x <- preference_order(
-      df = df,
+      df = vi_smol,
       response = "vi_numeric",
       predictors = vi_predictors,
       f = f_auto,
@@ -161,6 +154,23 @@ testthat::test_that("`preference_order()` works", {
       warn_limit = NULL
     ),
     regexp = "f_r2_rf"
+  ) |>
+    suppressMessages()
+
+  testthat::expect_true(
+    is.data.frame(x)
+  )
+
+  testthat::expect_true(
+    unique(x$f) == "f_r2_rf"
+  )
+
+  testthat::expect_true(
+    nrow(x) == length(vi_predictors)
+  )
+
+  testthat::expect_true(
+    all(colnames(x) %in% expected_colnames)
   )
 
 
@@ -168,12 +178,11 @@ testthat::test_that("`preference_order()` works", {
 
   ## all types
   x <- preference_order(
-    df = df,
+    df = vi_smol,
     response = "vi_counts",
     predictors = vi_predictors_numeric,
     f = f_r2_glm_poisson,
-    warn_limit = NULL,
-    quiet = FALSE
+    quiet = TRUE
   )
 
   testthat::expect_true(
@@ -185,7 +194,7 @@ testthat::test_that("`preference_order()` works", {
   )
 
   testthat::expect_true(
-    nrow(x) == length(vi_predictors)
+    nrow(x) == length(vi_predictors_numeric)
   )
 
   testthat::expect_true(
@@ -195,7 +204,7 @@ testthat::test_that("`preference_order()` works", {
   #wrong f function
   testthat::expect_message(
     x <- preference_order(
-      df = df,
+      df = vi_smol,
       response = "vi_counts",
       predictors = vi_predictors,
       f = f_auto,
@@ -203,16 +212,16 @@ testthat::test_that("`preference_order()` works", {
       quiet = FALSE
     ),
     regexp = "f_r2_rf"
-  )
+  ) |>
+    suppressMessages()
 
   #binomial response
   x <- preference_order(
-    df = df,
+    df = vi_smol,
     response = "vi_binomial",
     predictors = vi_predictors_numeric,
     f = f_auc_glm_binomial,
-    warn_limit = NULL,
-    quiet = FALSE
+    quiet = TRUE
   )
 
   testthat::expect_true(
@@ -224,7 +233,7 @@ testthat::test_that("`preference_order()` works", {
   )
 
   testthat::expect_true(
-    nrow(x) == length(vi_predictors)
+    nrow(x) == length(vi_predictors_numeric)
   )
 
   testthat::expect_true(
@@ -233,7 +242,7 @@ testthat::test_that("`preference_order()` works", {
 
   testthat::expect_message(
     x <- preference_order(
-      df = df,
+      df = vi_smol,
       response = "vi_binomial",
       predictors = vi_predictors,
       f = f_auto,
@@ -241,15 +250,15 @@ testthat::test_that("`preference_order()` works", {
       warn_limit = NULL
     ),
     regexp = "f_auc_rf"
-  )
+  ) |>
+    suppressMessages()
 
   #categorical response and predictors
   x <- preference_order(
-    df = df,
+    df = vi_smol,
     response = "vi_categorical",
     predictors = vi_predictors_categorical,
     f = f_v,
-    warn_limit = NULL,
     quiet = FALSE
   )
 
@@ -262,7 +271,7 @@ testthat::test_that("`preference_order()` works", {
   )
 
   testthat::expect_true(
-    nrow(x) == length(vi_predictors)
+    nrow(x) == length(vi_predictors_categorical)
   )
 
   testthat::expect_true(
@@ -271,7 +280,7 @@ testthat::test_that("`preference_order()` works", {
 
   testthat::expect_message(
     x <- preference_order(
-      df = df,
+      df = vi_smol,
       response = "vi_categorical",
       predictors = vi_predictors_categorical,
       f = f_auto,
@@ -284,12 +293,12 @@ testthat::test_that("`preference_order()` works", {
 
   #categorical response and categorical and numeric predictors
   x <- preference_order(
-    df = df,
+    df = vi_smol,
     response = "vi_categorical",
     predictors = vi_predictors_numeric,
     f = f_v_rf_categorical,
     warn_limit = NULL,
-    quiet = FALSE
+    quiet = TRUE
   )
 
   testthat::expect_true(
@@ -301,7 +310,7 @@ testthat::test_that("`preference_order()` works", {
   )
 
   testthat::expect_true(
-    nrow(x) == length(vi_predictors)
+    nrow(x) == length(vi_predictors_numeric)
   )
 
   testthat::expect_true(
@@ -310,7 +319,7 @@ testthat::test_that("`preference_order()` works", {
 
   testthat::expect_message(
     x <- preference_order(
-      df = df,
+      df = vi_smol,
       response = "vi_categorical",
       predictors = vi_predictors_numeric,
       f = f_auto,
@@ -318,7 +327,22 @@ testthat::test_that("`preference_order()` works", {
       quiet = FALSE
     ),
     regexp = "f_v_rf_categorical"
-  )
+  ) |>
+    suppressMessages()
+
+  #warn limit
+  testthat::expect_warning(
+    x <- preference_order(
+      df = vi_smol,
+      response = "vi_categorical",
+      predictors = vi_predictors_numeric,
+      f = f_auto,
+      warn_limit = 0.5,
+      quiet = FALSE
+    ),
+    regexp = "predictors with associations to 'vi_categorical' higher than 'warn_limit'"
+  ) |>
+    suppressMessages()
 
 
 
