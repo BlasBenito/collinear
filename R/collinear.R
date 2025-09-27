@@ -427,14 +427,22 @@ collinear <- function(
 
         #filter preference order
         if(is.data.frame(preference_order.response)){
-          preference_order.response.vif <- preference_order.response[preference_order.response$predictor %in% selection.response.type$numeric, ]
+
+          preference_order.response.vif <- preference_order.response[
+            preference_order.response$predictor %in% selection.response.type$numeric,
+            ]
+
         } else if(is.character(preference_order.response)){
+
           preference_order.response.vif <- intersect(
             x = preference_order.response,
             y = selection.response.type$numeric
           )
+
         } else {
+
           preference_order.response.vif <- preference_order.response
+
         }
 
         selection.vif <- vif_select(

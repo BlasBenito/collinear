@@ -174,6 +174,13 @@ cor_select <- function(
     quiet = quiet
   )
 
+  if(
+    is.data.frame(preference.order) &&
+    "predictor" %in% colnames(preference.order)
+  ){
+    preference.order <- preference.order$predictor
+  }
+
   #organize the correlation matrix according to preference_order
   m <- m[
     preference.order,

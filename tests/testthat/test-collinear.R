@@ -427,10 +427,12 @@ testthat::test_that("`collinear()` works", {
   )
 
   ### invalid data frame ----
-  preference_df$response <- "hola"
-  preference_df$f <- NULL
+  preference_df <- data.frame(
+    response = "hola",
+    f = NA
+  )
 
-  testthat::expect_message(
+  testthat::expect_error(
     x <- collinear(
       df = vi_smol,
       responses = "vi_numeric",
@@ -440,14 +442,9 @@ testthat::test_that("`collinear()` works", {
       f = NULL,
       max_cor = 0.75,
       max_vif = 5,
-      quiet = FALSE
+      quiet = TRUE
     ),
-    regexp = "dataframe 'preference_order' does not have the column 'response', or the column has not matching values with the argument 'responses'"
-  ) |>
-    suppressMessages()
-
-  testthat::expect_null(
-    x$arguments$preference_order
+    regexp = "must be the output of"
   )
 
   ### NULL response ----

@@ -359,6 +359,11 @@ preference_order <- function(
 
   out_df <- out_df[, c("response", "predictor", "preference", "f", "metric")]
 
+  out_df$preference <- round(
+    x = out_df$preference,
+    digits = 4
+  )
+
   attr(
     x = out_df,
     which = "validated"

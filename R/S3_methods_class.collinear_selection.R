@@ -2,6 +2,7 @@
 #'
 #' @inheritParams collinear
 #' @inheritParams f_auto
+#' @inheritParams validate_arg_quiet
 #' @param selection (required, character vector) Names of the selected predictors. Default: NULL
 #'
 #' @return list

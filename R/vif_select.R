@@ -127,7 +127,6 @@ vif_select <- function(
   predictors <- validate_arg_predictors_vif(
     df = df,
     predictors = predictors,
-    preference_order = preference_order,
     function_name = function_name,
     quiet = quiet
   )
@@ -182,7 +181,7 @@ vif_select <- function(
   preference_order_auto <- rev(preference_order_auto$predictor)
 
   #validate preference order
-  preference_order <- validate_arg_preference_order(
+  preference.order <- validate_arg_preference_order(
     predictors = predictors,
     preference_order = preference_order,
     preference_order_auto = preference_order_auto,
@@ -190,9 +189,16 @@ vif_select <- function(
     quiet = quiet
   )
 
+  if(
+    is.data.frame(preference.order) &&
+    "predictor" %in% colnames(preference.order)
+  ){
+    preference.order <- preference.order$predictor
+  }
+
   #vectors with selected and candidates
-  selected <- preference_order[1]
-  candidates <- preference_order[-1]
+  selected <- preference.order[1]
+  candidates <- preference.order[-1]
 
   #iterate over candidate variables
   for(candidate in candidates){

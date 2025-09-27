@@ -63,7 +63,7 @@ validate_arg_preference_order <- function(
   )
 
   if(
-    !is.null(preference_order) %%
+    !is.null(preference_order) &&
     isTRUE(attr(x = preference_order, which = "validated"))){
     return(preference_order)
   }

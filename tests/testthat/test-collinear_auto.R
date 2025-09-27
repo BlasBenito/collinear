@@ -145,7 +145,7 @@ testthat::test_that("`collinear_auto()` works", {
 
   ##numeric numeric ----
   x <- collinear_auto(
-    df = vi,
+    df = vi_smol,
     responses = "vi_numeric",
     predictors = vi_predictors_numeric,
     quiet = TRUE

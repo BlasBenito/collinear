@@ -37,7 +37,6 @@
 validate_arg_predictors_vif <- function(
     df = NULL,
     predictors = NULL,
-    preference_order = NULL,
     function_name = NULL,
     quiet = FALSE
 ){
@@ -71,19 +70,9 @@ validate_arg_predictors_vif <- function(
       return(NULL)
     }
 
-  }
-
-  if(!is.null(preference_order)){
-
-    preference_order <- validate_arg_preference_order(
-      predictors = predictors,
-      preference_order = preference_order,
-      preference_order_auto = predictors,
-      function_name = function_name,
-      quiet = quiet
-    )
-
-    predictors <- preference_order[preference_order %in% predictors]
+    if(length(predictors) == 1){
+      return(predictors)
+    }
 
   }
 
