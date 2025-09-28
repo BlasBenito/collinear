@@ -364,11 +364,6 @@ preference_order <- function(
     digits = 4
   )
 
-  attr(
-    x = out_df,
-    which = "validated"
-  ) <- TRUE
-
   out_df
 
 }

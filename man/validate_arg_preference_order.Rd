@@ -5,16 +5,18 @@
 \title{Validate Argument \code{preference_order}}
 \usage{
 validate_arg_preference_order(
-  responses = NULL,
+  df = NULL,
+  response = NULL,
   predictors = NULL,
   preference_order = NULL,
-  preference_order_auto = NULL,
   function_name = NULL,
   quiet = FALSE
 )
 }
 \arguments{
-\item{responses}{(optional; character, character vector, or NULL) Name of one or several response variables in \code{df}. When \code{encoding_method} is not NULL, response/s are used as reference to map categorical predictors, if any, to numeric (see \code{\link[=target_encoding_lab]{target_encoding_lab()}}). When \code{f} is not NULL, responses are used to rank predictors and preserve important ones during multicollinearity filtering (see \code{\link[=preference_order]{preference_order()}}). If no response is provided, the predictors are ranked from lower to higher multicollinearity. When several responses are provided, the selection results are named after each response in the output list. If no response is provided, the variable selection shows with the name "result" in the output list. Default: NULL.}
+\item{df}{(required; data frame, tibble, or sf) A data frame with responses (optional) and predictors. Must have at least 10 rows for pairwise correlation analysis, and \code{10 * (length(predictors) - 1)} for VIF analysis.  Default: NULL.}
+
+\item{response}{(optional, character string) Name of a numeric response variable in \code{df}. Default: NULL.}
 
 \item{predictors}{(optional; character vector or NULL) Names of the predictors in \code{df} involved in the multicollinearity filtering. If NULL, all columns in \code{df} (except those with constant values or near zero variance) are used. Default: NULL}
 
@@ -32,8 +34,6 @@ Accepted inputs are:
 
 \item \strong{named list}: list of data frames, output of \code{\link[=preference_order]{preference_order()}} when argument \code{responses} is a vector of length two or more. This option sets \code{f} to NULL.
 }. Default: NULL}
-
-\item{preference_order_auto}{(required, character vector) names of the predictors in the automated preference order returned by \code{\link[=vif_select]{vif_select()}} or \code{\link[=cor_select]{cor_select()}}}
 
 \item{function_name}{(optional, character string) Name of the function performing the argument check. Default: NULL}
 
@@ -72,6 +72,7 @@ It performs the following actions:
   )
 
   my_order <- validate_arg_preference_order(
+  df = vi_smol,
     predictors = predictors,
     preference_order = my_preference_order,
     preference_order_auto = vi_predictors

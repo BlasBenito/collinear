@@ -71,7 +71,7 @@ list:
 }
 }
 \description{
-Internal function to validate the arguments of of a \code{\link[=collinear]{collinear()}} call.
+Internal function to validate the arguments of of a \code{\link[=collinear]{collinear()}} call and generate an object of class \code{collinear_arguments}.
 }
 \seealso{
 \code{\link[=print.collinear_arguments]{print.collinear_arguments()}}

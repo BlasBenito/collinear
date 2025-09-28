@@ -18,7 +18,6 @@ f_auto_rules()
 \seealso{
 Other preference_order_tools: 
 \code{\link{f_auto}()},
-\code{\link{f_functions}()},
-\code{\link{preference_order_wrapper}()}
+\code{\link{f_functions}()}
 }
 \concept{preference_order_tools}

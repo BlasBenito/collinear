@@ -140,19 +140,19 @@ testthat::test_that("`class.collinear_arguments()` works", {
       responses = "vi_numeric",
       predictors = vi_predictors_categorical,
       encoding_method = "loo",
-      preference_order = c("hola"),
+      preference_order = "hola",
       f = NULL,
       f_name = NULL,
-      max_cor = 10,
-      max_vif = 20,
+      max_cor = 0.7,
+      max_vif = 5,
       function_name = NULL,
       quiet = FALSE
     ),
-    regexp = "character vector 'preference_order' does not contain"
+    regexp = "character vector 'preference_order' contains no valid predictors"
   ) |>
     suppressMessages()
 
-  testthat::expect_message(
+  testthat::expect_error(
     x <- class.collinear_arguments(
       df = vi_smol,
       responses = "vi_numeric",
@@ -164,8 +164,8 @@ testthat::test_that("`class.collinear_arguments()` works", {
       ),
       f = NULL,
       f_name = NULL,
-      max_cor = 10,
-      max_vif = 20,
+      max_cor = 0.7,
+      max_vif = 5,
       function_name = NULL,
       quiet = FALSE
     ),

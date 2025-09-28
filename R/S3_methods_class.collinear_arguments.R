@@ -1,7 +1,7 @@
 #' Builds \code{class.collinear_arguments}
 #'
 #' @description
-#' Internal function to validate the arguments of of a [collinear()] call.
+#' Internal function to validate the arguments of of a [collinear()] call and generate an object of class \code{collinear_arguments}.
 #'
 #'
 #' @inheritParams collinear
@@ -135,17 +135,10 @@ class.collinear_arguments <- function(
   ## preference_order ----
   if(!is.null(preference_order)){
 
-    preference_order_auto <- vif_df(
+    preference_order <- validate_arg_preference_order(
       df = df,
       predictors = predictors,
-      quiet = TRUE
-    )
-
-    preference_order <- validate_arg_preference_order(
-      responses = responses,
-      predictors = predictors,
       preference_order = preference_order,
-      preference_order_auto = rev(preference_order_auto$predictor),
       function_name = function_name,
       quiet = quiet
     )

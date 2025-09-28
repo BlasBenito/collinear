@@ -109,7 +109,7 @@ testthat::test_that("`collinear_lite()` works", {
 
   ## no target encoding ----
 
-  ### invalid character vector ----
+  ### valid character vector ----
   x <- collinear_lite(
     df = vi_smol,
     predictors = vi_predictors_numeric,

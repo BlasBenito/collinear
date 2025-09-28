@@ -158,28 +158,16 @@ cor_select <- function(
 
   }
 
-  #auto preference order
-  #variables with lower sum of correlation with others go higher
-  preference_order_auto <- m |>
-    colSums() |>
-    sort() |>
-    names()
-
   #validate preference order
   preference.order <- validate_arg_preference_order(
+    df = df,
     predictors = predictors,
     preference_order = preference_order,
-    preference_order_auto = preference_order_auto,
     function_name = function_name,
     quiet = quiet
   )
 
-  if(
-    is.data.frame(preference.order) &&
-    "predictor" %in% colnames(preference.order)
-  ){
-    preference.order <- preference.order$predictor
-  }
+  preference.order <- preference.order$predictor
 
   #organize the correlation matrix according to preference_order
   m <- m[

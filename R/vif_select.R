@@ -149,52 +149,16 @@ vif_select <- function(
     return(predictors)
   }
 
-  #auto preference order
-  preference_order_auto <- vif_df(
-    df = df,
-    predictors = predictors,
-    quiet = TRUE,
-    function_name = function_name
-  )
-
-  if(max(preference_order_auto$vif) <= max_vif){
-
-    if(quiet == FALSE){
-
-      message(
-        "\n",
-        function_name,
-        ": maximum VIF in 'predictors' is lower than ",
-        max_vif,
-        ", nothing to do."
-      )
-
-    }
-
-    attr(predictors, "validated_vif") <- NULL
-
-    return(predictors)
-
-  }
-
-  #reorder because vif_df returns higher VIF first
-  preference_order_auto <- rev(preference_order_auto$predictor)
-
   #validate preference order
   preference.order <- validate_arg_preference_order(
+    df = df,
     predictors = predictors,
     preference_order = preference_order,
-    preference_order_auto = preference_order_auto,
     function_name = function_name,
     quiet = quiet
   )
 
-  if(
-    is.data.frame(preference.order) &&
-    "predictor" %in% colnames(preference.order)
-  ){
-    preference.order <- preference.order$predictor
-  }
+  preference.order <- preference.order$predictor
 
   #vectors with selected and candidates
   selected <- preference.order[1]

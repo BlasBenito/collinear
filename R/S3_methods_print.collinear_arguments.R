@@ -129,7 +129,6 @@ print.collinear_arguments <- function(
   }
 
   ## Preference order
-  #TODO: does not support preference_order lists yet
   if(!is.null(x$preference_order)){
 
     if(is.data.frame(x$preference_order)){
@@ -173,7 +172,7 @@ print.collinear_arguments <- function(
   }
 
   #f
-  if(!is.null(x$f_name)){
+  if(!is.null(x$f)){
 
     cat(
       " - f:",

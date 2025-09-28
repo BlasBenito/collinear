@@ -383,16 +383,23 @@ collinear <- function(
     }
 
     ## PREFERENCE ORDER ----
-    preference_order.response <- preference_order_wrapper(
-      df = df.response,
-      response = response,
-      predictors = predictors.response,
-      preference_order = args$preference_order,
-      f = args$f,
-      f_name = args$f_name,
-      quiet = args$quiet,
-      function_name = function_name
-    )
+    preference_order.response <- args$preference_order
+
+    if(
+      is.null(args$preference_order) &&
+      !is.null(response) && !is.null(args$f)
+    ){
+
+      preference_order.response <- preference_order(
+        df = df.response,
+        responses = response,
+        predictors = predictors.response,
+        f = args$f,
+        quiet = args$quiet,
+        function_name = function_name
+      )
+
+    }
 
     ##MULTICOLLINEARITY ANALYSIS ----
 
@@ -478,14 +485,18 @@ collinear <- function(
     ##ORDER SELECTION ----
     if(length(selection.response) > 0){
 
+      if(is.data.frame(preference_order.response)){
+        preference_order.response <- preference_order.response$predictor
+      }
+
       selection_in_preference_order <- intersect(
-        x = preference_order.response$predictor,
+        x = preference_order.response,
         y = selection.response
       )
 
       selection_no_in_preference_order <- setdiff(
         x = selection.response,
-        y = preference_order.response$predictor
+        y = preference_order.response
       )
 
       selection.response <- c(

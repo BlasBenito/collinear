@@ -111,32 +111,73 @@ print.collinear_selection <- function(
   }
 
   # preference ----
-  if(!is.null(x$preference)){
+  if(!is.null(x$preference_order)){
 
     cat("\n")
 
-    cat(" + preference order:", fill = TRUE)
-    cat("   + df:", fill = TRUE)
+    if(is.character(x$preference_order)){
 
-    cat("     - rows:", nrow(x$preference$df), fill = TRUE)
+      selection <- stats::na.omit(x$preference_order[1:n])
 
-    cat("     - cols:", ncol(x$preference$df))
+      omitted <- length(x$preference_order) - n
 
-    cat("\n")
+      symbol <- ifelse(
+        test = length(selection) == 1,
+        yes = " -",
+        no = " +"
+      )
 
-    if(!is.null(x$preference$f)){
+      cat(
+        symbol,
+        "preference order:\n   -",
+        paste(
+          selection,
+          collapse = "\n   - "
+        )
+      )
 
-      cat("   + f:", fill = TRUE)
+      if(omitted > 0){
 
-      cat("     - function:", x$preference$f$name, fill = TRUE)
+        cat(
+          paste0(
+            "\n   - ... (",
+            omitted,
+            " ommited)"
+          )
+        )
 
-      cat("     - expression:", x$preference$f$expression, fill = TRUE)
+      }
 
-      cat("     - metric:", x$preference$f$metric)
+    }
+
+
+    if(is.list(x$preference_order)){
+
+      cat(" + preference order:", fill = TRUE)
+
+      cat("   + df:", fill = TRUE)
+
+      cat("     - rows:", nrow(x$preference_order$df), fill = TRUE)
+
+      cat("     - cols:", ncol(x$preference_order$df))
 
       cat("\n")
 
+      if(!is.null(x$preference_order$f)){
+
+        cat("   + f:", fill = TRUE)
+
+        cat("     - function:", x$preference_order$f$name, fill = TRUE)
+
+        cat("     - expression:", x$preference_order$f$expression, fill = TRUE)
+
+        cat("     - metric:", x$preference_order$f$metric)
+
+      }
+
     }
+
+    cat("\n")
 
   }
 

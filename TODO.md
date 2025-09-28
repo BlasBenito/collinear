@@ -1,3 +1,25 @@
+#validate_arg_preference_order
+
+create function preference_order_auto with arguments df and predictors:
+
+  m <- cor_matrix(
+    df = df,
+    predictors = predictors,
+    function_name = function_name
+  ) |>
+    abs()
+    
+  preference_order_auto <- m |>
+    colSums() |>
+    sort() |>
+    names()
+
+add the function preference_order_auto inside of validate_arg_preference_order
+
+This requires adding the argument df and removing the argument preference_order_auto from validate_arg_preference_order
+
+Make sure that the output of collinear returns a preference order data frame if preference_order() is triggered
+
 
 #README.Rmd
 

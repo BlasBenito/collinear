@@ -4,91 +4,115 @@ testthat::test_that("`validate_arg_preference_order()` works", {
     vi_smol,
     vi_predictors,
     vi_predictors_numeric
-    )
+  )
 
   #no arguments
   testthat::expect_error(
-    preference_order <- validate_arg_preference_order(
+    x <- validate_arg_preference_order(
+      df = NULL,
       predictors = NULL,
       preference_order = NULL,
-      preference_order_auto = NULL,
       function_name = NULL,
       quiet = FALSE
     ),
-    regexp = "argument 'predictors' must be validated"
+    regexp = "argument 'df' cannot be NULL"
   )
 
-  #predictors not validated
-  testthat::expect_error(
-    preference_order <- validate_arg_preference_order(
-      predictors = vi_predictors[1:5],
-      preference_order = NULL,
-      preference_order_auto = NULL,
-      quiet = FALSE
-    ),
-    regexp = "must be validated"
+  #df only
+  x <- validate_arg_preference_order(
+    df = vi_smol[, vi_predictors_numeric[1:5]],
+    response = NULL,
+    predictors = NULL,
+    preference_order = NULL,
+    quiet = FALSE
   )
 
-  #predictors validated
-  predictors <- validate_arg_predictors(
+  testthat::expect_true(
+    attributes(x)$validated
+  )
+
+  testthat::expect_true(
+    all(vi_predictors_numeric[1:5] %in% x$predictor)
+  )
+
+  #df and predictors
+  x <- validate_arg_preference_order(
     df = vi_smol,
-    predictors = vi_predictors
-  )
-
-  testthat::expect_message(
-    preference_order <- validate_arg_preference_order(
-      predictors = predictors,
-      preference_order = NULL,
-      preference_order_auto = NULL,
-      quiet = FALSE
-    ),
-    regexp = "using argument 'predictors' as preference order"
-  )
-
-  #missing predictor
-  testthat::expect_message(
-    preference_order <- validate_arg_preference_order(
-      predictors = predictors,
-      preference_order = c(vi_predictors, "hola"),
-      preference_order_auto = vi_predictors,
-      function_name = NULL,
-      quiet = FALSE
-    ),
-    regexp = "hola"
+    response = NULL,
+    predictors = vi_predictors_numeric[1:5],
+    preference_order = NULL,
+    quiet = FALSE
   )
 
   testthat::expect_true(
-    attributes(preference_order)$validated
+    attributes(x)$validated
   )
 
   testthat::expect_true(
-    all(preference_order %in% vi_predictors)
+    all(vi_predictors_numeric[1:5] %in% x$predictor)
   )
+
+  #using preference_order
+  x <- validate_arg_preference_order(
+    df = vi_smol,
+    response = NULL,
+    predictors = vi_predictors_numeric[1:10],
+    preference_order = vi_predictors_numeric[1:10],
+    quiet = FALSE
+  )
+
+  testthat::expect_true(
+    attributes(x)$validated
+  )
+
+  testthat::expect_true(
+    all(vi_predictors_numeric[1:10] %in% x$predictor)
+  )
+
+  #incomplete preference order
+  x <- validate_arg_preference_order(
+    df = vi_smol,
+    response = NULL,
+    predictors = vi_predictors_numeric[1:10],
+    preference_order = vi_predictors_numeric[10:5],
+    quiet = FALSE
+  )
+
+  testthat::expect_true(
+    attributes(x)$validated
+  )
+
+  testthat::expect_true(
+    x$predictor[1] == vi_predictors_numeric[10]
+  )
+
+  testthat::expect_true(
+    all(vi_predictors_numeric[1:10] %in% x$predictor)
+  )
+
 
   #using data frame from preference_order()
   preference_df <- preference_order(
     df = vi_smol,
     response = "vi_numeric",
-    predictors = vi_predictors_numeric,
+    predictors = vi_predictors_numeric[1:12],
     quiet = TRUE
   )
 
-  testthat::expect_no_message(
-    preference_order <- validate_arg_preference_order(
-      predictors = predictors,
-      preference_order = preference_df,
-      preference_order_auto = vi_predictors,
-      function_name = NULL,
-      quiet = FALSE
-    )
+  x <- validate_arg_preference_order(
+    df = vi_smol,
+    predictors = vi_predictors_numeric[1:10],
+    preference_order = preference_df,
+    function_name = NULL,
+    quiet = FALSE
   )
 
   testthat::expect_true(
-    attributes(preference_order)$validated
+    attributes(x)$validated
   )
 
   testthat::expect_true(
-    all(preference_order %in% vi_predictors)
+    length(setdiff(preference_df$predictor, vi_predictors_numeric[1:10])) == 2
   )
 
 

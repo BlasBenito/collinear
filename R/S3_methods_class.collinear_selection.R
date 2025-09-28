@@ -139,7 +139,9 @@ class.collinear_selection <- function(
   }
 
   if(!is.null(preference_order_list)){
-    out$preference <- preference_order_list
+    out$preference_order <- preference_order_list
+  } else {
+    out$preference_order <- preference_order
   }
 
   ## class ----

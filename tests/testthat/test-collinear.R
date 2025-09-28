@@ -310,7 +310,7 @@ testthat::test_that("`collinear()` works", {
 
   #check that a categorical predictor was converted to numeric for "vi_numeric"
   testthat::expect_true(
-    !is.numeric(vi[["soil_type"]]) &&
+    !is.numeric(vi_smol[["soil_type"]]) &&
       !is.numeric(x$vi_categorical$df[["soil_type"]]) &&
       is.numeric(x$vi_numeric$df[["soil_type"]])
   )
@@ -338,7 +338,7 @@ testthat::test_that("`collinear()` works", {
       max_vif = 5,
       quiet = FALSE
     ),
-    regexp = "character vector 'preference_order' contains no valid predictors"
+    regexp = "ranking predictors from lower to higher multicollinearity"
   ) |>
     suppressMessages()
 
@@ -347,7 +347,7 @@ testthat::test_that("`collinear()` works", {
   )
 
   testthat::expect_true(
-    is.character(x$arguments$preference_order)
+    is.null(x$arguments$preference_order)
   )
 
   ### valid character vector ----
