@@ -59,28 +59,10 @@ validate_arg_response <- function(
     return(NULL)
   }
 
-  #check that the response is in df
-  if(any(!response %in% colnames(df)) == TRUE){
-
-    missing_response <- setdiff(
-      x = response,
-      y = colnames(df)
-    )
-
-    warning(
-      "\n",
-      function_name,
-      ": the following column/s in 'response' are not in 'df' and will be ignored: \n - ",
-      paste(missing_response, collapse = "\n - "),
-      call. = FALSE
-    )
-
-    response <- intersect(
-      x = names(df),
-      y = response
-    )
-
-  }
+  response <- intersect(
+    x = names(df),
+    y = response
+  )
 
   #check length
   if(length(response) > 1){
@@ -88,7 +70,9 @@ validate_arg_response <- function(
     message(
       "\n",
       function_name,
-      ": multiple columns are named in the argument 'response'. Using first one with value '", response[1], "'."
+      ": argument 'response' must be of length 1, using value '",
+      response,
+      "'."
     )
 
     response <- response[1]
@@ -97,10 +81,10 @@ validate_arg_response <- function(
 
   if(length(response) == 0){
 
-    warning(
+    message(
       "\n",
       function_name,
-      ": no response available, returning NULL.",
+      ": argument 'response' does not contain column names of 'df' and will be ignored",
       call. = FALSE
     )
 
