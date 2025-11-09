@@ -9,85 +9,107 @@ validate_arg_preference_order(
   response = NULL,
   predictors = NULL,
   preference_order = NULL,
+  quiet = FALSE,
   function_name = NULL,
-  quiet = FALSE
+  ...
 )
 }
 \arguments{
-\item{df}{(required; data frame, tibble, or sf) A data frame with responses (optional) and predictors. Must have at least 10 rows for pairwise correlation analysis, and \code{10 * (length(predictors) - 1)} for VIF analysis.  Default: NULL.}
+\item{df}{(required; dataframe, tibble, or sf) A dataframe with responses (optional) and predictors. Must have at least 10 rows for pairwise correlation analysis, and \code{10 * (length(predictors) - 1)} for VIF analysis.  Default: NULL.}
 
 \item{response}{(optional, character string) Name of a numeric response variable in \code{df}. Default: NULL.}
 
-\item{predictors}{(optional; character vector or NULL) Names of the predictors in \code{df} involved in the multicollinearity filtering. If NULL, all columns in \code{df} (except those with constant values or near zero variance) are used. Default: NULL}
+\item{predictors}{(optional; character vector or NULL) Names of the predictors in \code{df}. If NULL, all columns in \code{df} except the ones in \code{responses} and those with constant values or near zero variance are used. Default: NULL}
 
-\item{preference_order}{(optional; character vector, output of \code{\link[=preference_order]{preference_order()}}, or NULL). Incompatible with \code{f} (overrides it when provided). Prioritizes predictors to preserve the most relevant ones during multicollinearity filtering.
+\item{preference_order}{(optional; character vector, dataframe resulting from \code{\link[=preference_order]{preference_order()}}, or NULL). Prioritizes predictors to preserve the most relevant ones during multicollinearity filtering. Overrides \code{f} when not NULL.}
 
-Accepted inputs are:
-
-\itemize{
-
-\item \strong{NULL} (default): If argument \code{f} is NULL (default), predictors are ranked from lower to higher multicollinearity. Otherwise, \code{\link[=preference_order]{preference_order()}} ranks the predictors according to their relationship with \code{responses} using the function defined in \code{f}. NOTE: The output of this setting might differ to an external call to \code{\link[=preference_order]{preference_order()}} if target encoding is triggered.
-
-\item \strong{character vector}: Predictor names in a user-defined priority order. The first predictor in this vector is always selected, unless it has near zero-variance values. This option sets \code{f} to NULL.
-
-\item \strong{data frame}: output of \code{\link[=preference_order]{preference_order()}} computed on the given \code{responses}. This option sets \code{f} to NULL.
-
-\item \strong{named list}: list of data frames, output of \code{\link[=preference_order]{preference_order()}} when argument \code{responses} is a vector of length two or more. This option sets \code{f} to NULL.
-}. Default: NULL}
+\item{quiet}{(optional; logical) If FALSE, messages are printed to the console. Default: FALSE}
 
 \item{function_name}{(optional, character string) Name of the function performing the argument check. Default: NULL}
 
-\item{quiet}{(optional; logical) If FALSE, messages are printed to the console. Default: FALSE}
+\item{...}{(optional) Used to pass internal arguments such as \code{function_name} for \link{validate_arg_function_name} in nested calls, or \code{m}, a correlation matrix generated via \code{\link[stats:cor]{stats::cor()}} or \code{\link[=cor_matrix]{cor_matrix()}}.}
 }
 \value{
 character vector: ranked variable names
 }
 \description{
-Internal function to validate the argument \code{preference_order}.
-
-It performs the following actions:
-\itemize{
-\item Returns \code{preference_order} as-is if already tagged with \code{validated = TRUE}.
-\item Stops if \code{preference_order_auto} is \code{NULL}.
-\item Stops if \code{predictors} is not validated.
-\item Uses \code{preference_order_auto} if \code{preference_order} is \code{NULL}.
-\item Extracts variable names from a data frame with column \code{predictor}, if applicable.
-\item Filters \code{preference_order} to keep only variables in \code{predictors}.
-\item Appends missing predictors in the order defined by \code{preference_order_auto}.
-\item Tags the result with the attribute \code{validated = TRUE}.
-}
+Internal function to validate the argument \code{preference_order} in \code{\link[=cor_select]{cor_select()}}, \code{\link[=vif_select]{vif_select()}}, \code{\link[=collinear_select]{collinear_select()}}, \code{\link[=collinear_auto]{collinear_auto()}}, and \code{\link[=collinear]{collinear()}}. Predictors not in \code{preference_order} are ranked from lower to higher sum of absolute Pearson correlations with all other predictors.
 }
 \examples{
-  data(vi, vi_predictors)
-
-  predictors <- validate_arg_predictors(
-    df = vi,
-    predictors = vi_predictors
+data(
+  vi_smol,
+  vi_predictors_numeric
   )
 
-  my_preference_order <- c(
+#input arguments must be validated first
+df <- validate_arg_df(
+  df = vi_smol,
+  response = "vi_numeric",
+  predictors = vi_predictors_numeric,
+  quiet = TRUE
+)
+
+response <- validate_arg_responses(
+  df = df,
+  responses = "vi_numeric"
+)
+
+predictors <- validate_arg_predictors(
+  df = df,
+  response = response,
+  predictors = vi_predictors_numeric[1:10]
+)
+
+
+
+#no preference order
+#no response
+#ranks predictor from lower to higher multicollinearity
+y <- validate_arg_preference_order(
+  df = df,
+  predictors = predictors,
+  preference_order = NULL
+)
+
+y
+attributes(y)$validated
+
+
+#validate character vector
+y <- validate_arg_preference_order(
+  df = df,
+  predictors = predictors,
+  preference_order = c(
     "swi_max",
     "swi_min",
     "swi_deviance" #does not exist
   )
+)
 
-  my_order <- validate_arg_preference_order(
-  df = vi_smol,
-    predictors = predictors,
-    preference_order = my_preference_order,
-    preference_order_auto = vi_predictors
-  )
+y
+attributes(y)$validated
 
-  #has my_order first
-  #excludes non-existing columns
-  #all other variables ordered according to preference_order_auto
-  my_order
+#validate output of preference order
+x <- preference_order(
+  df = df,
+  responses = response,
+  predictors = predictors
+)
+
+x
+
+y <- validate_arg_preference_order(
+  df = df,
+  response = response,
+  predictors = predictors,
+  preference_order = x
+)
+
+y
+attributes(y)$validated
 }
 \seealso{
-Other data_validation: 
-\code{\link{autoconfig_arg_max_cor}()},
-\code{\link{autoconfig_arg_max_vif}()},
-\code{\link{tolerance}()},
+Other argument_validation: 
 \code{\link{validate_arg_df}()},
 \code{\link{validate_arg_df_not_null}()},
 \code{\link{validate_arg_encoding_method}()},
@@ -96,10 +118,7 @@ Other data_validation:
 \code{\link{validate_arg_max_cor}()},
 \code{\link{validate_arg_max_vif}()},
 \code{\link{validate_arg_predictors}()},
-\code{\link{validate_arg_predictors_cor}()},
-\code{\link{validate_arg_predictors_vif}()},
 \code{\link{validate_arg_quiet}()},
-\code{\link{validate_arg_response}()},
-\code{\link{validate_args_target_encoding_lab}()}
+\code{\link{validate_arg_responses}()}
 }
-\concept{data_validation}
+\concept{argument_validation}

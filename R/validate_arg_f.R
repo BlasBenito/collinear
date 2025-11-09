@@ -6,10 +6,10 @@
 #'
 #' @return function
 #' @autoglobal
-#' @family data_validation
+#' @family argument_validation
 #' @export
 #' @examples
-#' x <- validate_arg_df(df = f_auto)
+#' x <- validate_arg_f(f = f_auto)
 validate_arg_f <- function(
     f = NULL,
     f_name = NULL,
@@ -27,7 +27,7 @@ validate_arg_f <- function(
   }
 
   #valid
-  if(!is.null(attributes(f)$validated)){
+  if(isTRUE(attr(x = f, which = "validated"))){
     return(f)
   }
 
@@ -47,7 +47,7 @@ validate_arg_f <- function(
     stop(
       "\n",
       function_name,
-      ": the function 'f' must have the argument 'df' to receive a data frame with the column names 'x' and 'y'.",
+      ": the function 'f' must have the argument 'df'.",
       call. = FALSE
     )
   }

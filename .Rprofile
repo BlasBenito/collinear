@@ -4,13 +4,22 @@ minicheck <- function() {
 }
 
 maxicheck <- function() {
-  devtools::document()
+  doc()
   devtools::check(args = c("--no-tests"))
 }
 
 testcheck <- function(){
-  devtools::document()
+  doc()
   devtools::check()
+}
+
+load <- function(){
+  devtools::load_all()
+}
+
+doc <- function(){
+  devtools::document()
+  devtools::document()
 }
 
 

@@ -6,20 +6,19 @@
 #' @return numeric or NULL
 #' @autoglobal
 #' @export
-#' @family data_validation
+#' @family argument_validation
 #' @examples
-#' max_cor <- validate_arg_max_cor(
+#' x <- validate_arg_max_cor(
 #'   max_cor = 1.5, #wrong value
-#'   function_name = "f()",
 #'   quiet = FALSE
 #' )
 #'
-#' max_cor
-#' attributes(max_cor)$validated
+#' x
+#' attributes(x)$validated
 validate_arg_max_cor <- function(
     max_cor = NULL,
-    function_name = NULL,
-    quiet = FALSE
+    quiet = FALSE,
+    function_name = NULL
     ){
 
   function_name <- validate_arg_function_name(
@@ -29,7 +28,7 @@ validate_arg_max_cor <- function(
 
   max_cor_default <- 0.70
 
-  if(isTRUE(attr(x = max_cor, which = "validated_cor"))){
+  if(isTRUE(attr(x = max_cor, which = "validated"))){
     return(max_cor)
   }
 
@@ -45,34 +44,36 @@ validate_arg_max_cor <- function(
 
     }
 
-
     return(NULL)
+
   }
 
-  if(length(max_cor) > 1){
+  if(is.numeric(max_cor)){
 
-    max_cor <- max_cor[1]
+    if(length(max_cor) > 1){
 
-    if(quiet == FALSE){
+      max_cor <- max_cor[1]
 
-      message(
-        "\n",
-        function_name,
-        ": argument 'max_cor' has more than one value, using the first one (", max_cor, ")."
-      )
+      if(quiet == FALSE){
+
+        message(
+          "\n",
+          function_name,
+          ": argument 'max_cor' must be of length one, using value '", max_cor, "'."
+        )
+
+      }
 
     }
 
-  }
-
-  if(!is.numeric(max_cor)){
+  } else {
 
     if(quiet == FALSE){
 
       message(
         "\n",
         function_name,
-        ": argument 'max_cor' is non-numeric, resetting it to its default value (", max_cor_default, ")."
+        ": argument 'max_cor' is non-numeric, resetting it to '", max_cor_default, "'."
       )
 
     }
@@ -88,7 +89,7 @@ validate_arg_max_cor <- function(
       message(
         "\n",
         function_name,
-        ": argument 'max_cor' is outside its valid range (>=0.1 to <=1), resetting it to its default value (", max_cor_default, ")."
+        ": argument 'max_cor' is outside its valid range (>=0.1 to <=1), resetting it to '", max_cor_default, "'."
       )
 
     }

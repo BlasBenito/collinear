@@ -2,24 +2,28 @@
 % Please edit documentation in R/vif_df.R
 \name{vif_df}
 \alias{vif_df}
-\title{Data Frame with Variance Inflation Factors}
+\title{Variance Inflation Factors Dataframe}
 \usage{
 vif_df(df = NULL, predictors = NULL, quiet = FALSE, ...)
 }
 \arguments{
-\item{df}{(required; data frame, tibble, or sf) A data frame with responses (optional) and predictors. Must have at least 10 rows for pairwise correlation analysis, and \code{10 * (length(predictors) - 1)} for VIF analysis.  Default: NULL.}
+\item{df}{(required; dataframe, tibble, or sf) A dataframe with responses (optional) and predictors. Must have at least 10 rows for pairwise correlation analysis, and \code{10 * (length(predictors) - 1)} for VIF analysis.  Default: NULL.}
 
-\item{predictors}{(optional; character vector or NULL) Names of the predictors in \code{df} involved in the multicollinearity filtering. If NULL, all columns in \code{df} (except those with constant values or near zero variance) are used. Default: NULL}
+\item{predictors}{(optional; character vector or NULL) Names of the predictors in \code{df}. If NULL, all columns in \code{df} except the ones in \code{responses} and those with constant values or near zero variance are used. Default: NULL}
 
 \item{quiet}{(optional; logical) If FALSE, messages are printed to the console. Default: FALSE}
 
-\item{...}{(optional) Other arguments. Currently used for the internal argument \code{function_name}.}
+\item{...}{(optional) Used to pass internal arguments such as \code{function_name} for \link{validate_arg_function_name} in nested calls, or \code{m}, a correlation matrix generated via \code{\link[stats:cor]{stats::cor()}} or \code{\link[=cor_matrix]{cor_matrix()}}.}
 }
 \value{
-data frame; predictors names and their Variance Inflation Factors
+dataframe with columns:
+\itemize{
+\item \code{predictor}: Character, predictor name.
+\item \code{vif}: Numeric, variance inflation factor
+}
 }
 \description{
-Applies \code{\link[=vif]{vif()}} to compute the Variance Inflation Factors of a set of numeric predictors.
+Computes the absolute pairwise correlation matrix between all pairs of predictors via \code{\link[=cor_df]{cor_df()}} and \code{\link[=cor_matrix]{cor_matrix()}}, applies \code{\link[=vif]{vif()}} to the resulting matrix to compute Variance Inflation Factors, and returns the result as a dataframe.
 }
 \section{Variance Inflation Factors}{
 
@@ -33,14 +37,36 @@ The range of VIF values is (1, Inf]. The recommended thresholds for maximum VIF 
 
 \examples{
 
-data(vi, vi_predictors_numeric)
+data(vi_smol)
 
-v <- vif_df(
-  df = vi[1:1000, ],
-  predictors = vi_predictors_numeric[1:5]
+# ## OPTIONAL: parallelization setup
+# ## irrelevant when all predictors are numeric
+# ## only worth it for large data with many categoricals
+# future::plan(
+#   future::multisession,
+#   workers = future::availableCores() - 1
+# )
+
+# ## OPTIONAL: progress bar
+# progressr::handlers(global = TRUE)
+
+#predictors
+predictors = c(
+  "koppen_zone", #character
+  "soil_type", #factor
+  "topo_elevation", #numeric
+  "soil_temperature_mean" #numeric
 )
 
-v
+x <- vif_df(
+  df = vi_smol,
+  predictors = predictors
+)
+
+x
+
+## OPTIONAL: disable parallelization
+#future::plan(future::sequential)
 
 }
 \references{
@@ -51,6 +77,7 @@ v
 \seealso{
 Other variance_inflation_factor: 
 \code{\link{vif}()},
-\code{\link{vif_select}()}
+\code{\link{vif_select}()},
+\code{\link{vif_stats}()}
 }
 \concept{variance_inflation_factor}

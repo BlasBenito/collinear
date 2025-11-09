@@ -7,7 +7,7 @@
 validate_arg_f(f = NULL, f_name = NULL, function_name = NULL)
 }
 \arguments{
-\item{f}{(optional: function name) Unquoted name of the function to compute preference order. Available functions are listed in the column \code{name} of the dataframe returned by \code{\link[=f_functions]{f_functions()}}. By default calls to \code{\link[=f_auto]{f_auto()}} to select a suitable method depending on the nature of the data (see \code{\link[=f_auto_rules]{f_auto_rules()}}). Default: f_auto}
+\item{f}{(optional: function name) Unquoted function name without parenthesis (see \link{f_functions}). By default calls to \code{\link[=f_auto]{f_auto()}}, which selects a suitable function depending on the nature of the response and predictors. Set to NULL if \code{responses = NULL}. If NULL, predictors are ranked from lower to higher multicollinearity. Default: \code{f_auto}}
 
 \item{f_name}{(optional, string) Name of the function \code{f}, as returned by \code{deparse(substitute(f))}. Default: NULL}
 
@@ -20,13 +20,10 @@ function
 Validate Argument \code{f}
 }
 \examples{
-x <- validate_arg_df(df = f_auto)
+x <- validate_arg_f(f = f_auto)
 }
 \seealso{
-Other data_validation: 
-\code{\link{autoconfig_arg_max_cor}()},
-\code{\link{autoconfig_arg_max_vif}()},
-\code{\link{tolerance}()},
+Other argument_validation: 
 \code{\link{validate_arg_df}()},
 \code{\link{validate_arg_df_not_null}()},
 \code{\link{validate_arg_encoding_method}()},
@@ -34,11 +31,8 @@ Other data_validation:
 \code{\link{validate_arg_max_cor}()},
 \code{\link{validate_arg_max_vif}()},
 \code{\link{validate_arg_predictors}()},
-\code{\link{validate_arg_predictors_cor}()},
-\code{\link{validate_arg_predictors_vif}()},
 \code{\link{validate_arg_preference_order}()},
 \code{\link{validate_arg_quiet}()},
-\code{\link{validate_arg_response}()},
-\code{\link{validate_args_target_encoding_lab}()}
+\code{\link{validate_arg_responses}()}
 }
-\concept{data_validation}
+\concept{argument_validation}

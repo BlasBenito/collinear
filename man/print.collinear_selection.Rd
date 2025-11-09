@@ -18,10 +18,7 @@ Print \code{class.collinear_selection}
 }
 \seealso{
 Other S3_methods: 
-\code{\link{class.collinear_arguments}()},
-\code{\link{class.collinear_output}()},
 \code{\link{class.collinear_selection}()},
-\code{\link{print.collinear_arguments}()},
 \code{\link{print.collinear_output}()},
 \code{\link{summary.collinear_output}()},
 \code{\link{summary.collinear_selection}()}

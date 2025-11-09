@@ -6,58 +6,42 @@
 \usage{
 validate_arg_predictors(
   df = NULL,
-  response = NULL,
+  responses = NULL,
   predictors = NULL,
-  function_name = NULL,
-  quiet = FALSE
+  quiet = FALSE,
+  function_name = NULL
 )
 }
 \arguments{
-\item{df}{(required; data frame, tibble, or sf) A data frame with responses (optional) and predictors. Must have at least 10 rows for pairwise correlation analysis, and \code{10 * (length(predictors) - 1)} for VIF analysis.  Default: NULL.}
+\item{df}{(required; dataframe, tibble, or sf) A dataframe with responses (optional) and predictors. Must have at least 10 rows for pairwise correlation analysis, and \code{10 * (length(predictors) - 1)} for VIF analysis.  Default: NULL.}
 
-\item{response}{(optional, character string) Name of a numeric response variable in \code{df}. Default: NULL.}
+\item{responses}{(optional; character, character vector, or NULL) Name of one or several response variables in \code{df}. Default: NULL.}
 
-\item{predictors}{(optional; character vector or NULL) Names of the predictors in \code{df} involved in the multicollinearity filtering. If NULL, all columns in \code{df} (except those with constant values or near zero variance) are used. Default: NULL}
-
-\item{function_name}{(optional, character string) Name of the function performing the argument check. Default: NULL}
+\item{predictors}{(optional; character vector or NULL) Names of the predictors in \code{df}. If NULL, all columns in \code{df} except the ones in \code{responses} and those with constant values or near zero variance are used. Default: NULL}
 
 \item{quiet}{(optional; logical) If FALSE, messages are printed to the console. Default: FALSE}
+
+\item{function_name}{(optional, character string) Name of the function performing the argument check. Default: NULL}
 }
 \value{
 character vector: predictor names
 }
 \description{
-Internal function. Validates the argument \code{predictors} as follows:
-\itemize{
-\item Returns \code{predictors} as-is if it has the attribute \code{validated = TRUE}.
-\item Stops if \code{df} is \code{NULL}, using \code{\link[=validate_arg_df_not_null]{validate_arg_df_not_null()}}.
-\item If \code{predictors} is \code{NULL}, uses all column names in \code{df} except those in the \code{response} argument.
-\item Removes any elements in \code{predictors} that are also in \code{response}.
-\item Ignores \code{predictors} not present as column names in \code{df}, issuing a message if \code{quiet = FALSE}.
-\item If \code{df} has at least 10 rows:
-\itemize{
-\item Removes numeric predictors with near zero variance, with message if \code{quiet = FALSE}.
-\item Removes categorical predictors with constant values, with message if \code{quiet = FALSE}.
-}
-\item Adds the attribute \code{validated = TRUE} to the returned vector.
-}
+Validates the argument \code{predictors} by ensuring that all provided predictors are in \code{df} and don't intersect with \code{responses}, if any.
 }
 \examples{
-data(vi, vi_predictors)
+data(vi_smol, vi_predictors)
 
-predictors <- validate_arg_predictors(
-  df = vi,
+x <- validate_arg_predictors(
+  df = vi_smol,
   predictors = vi_predictors
 )
 
-attributes(predictors)$validated
+attributes(x)$validated
 
 }
 \seealso{
-Other data_validation: 
-\code{\link{autoconfig_arg_max_cor}()},
-\code{\link{autoconfig_arg_max_vif}()},
-\code{\link{tolerance}()},
+Other argument_validation: 
 \code{\link{validate_arg_df}()},
 \code{\link{validate_arg_df_not_null}()},
 \code{\link{validate_arg_encoding_method}()},
@@ -65,11 +49,8 @@ Other data_validation:
 \code{\link{validate_arg_function_name}()},
 \code{\link{validate_arg_max_cor}()},
 \code{\link{validate_arg_max_vif}()},
-\code{\link{validate_arg_predictors_cor}()},
-\code{\link{validate_arg_predictors_vif}()},
 \code{\link{validate_arg_preference_order}()},
 \code{\link{validate_arg_quiet}()},
-\code{\link{validate_arg_response}()},
-\code{\link{validate_args_target_encoding_lab}()}
+\code{\link{validate_arg_responses}()}
 }
-\concept{data_validation}
+\concept{argument_validation}

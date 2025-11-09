@@ -6,6 +6,7 @@
 \usage{
 cor_select(
   df = NULL,
+  response = NULL,
   predictors = NULL,
   preference_order = NULL,
   max_cor = 0.7,
@@ -14,46 +15,29 @@ cor_select(
 )
 }
 \arguments{
-\item{df}{(required; data frame, tibble, or sf) A data frame with responses (optional) and predictors. Must have at least 10 rows for pairwise correlation analysis, and \code{10 * (length(predictors) - 1)} for VIF analysis.  Default: NULL.}
+\item{df}{(required; dataframe, tibble, or sf) A dataframe with responses (optional) and predictors. Must have at least 10 rows for pairwise correlation analysis, and \code{10 * (length(predictors) - 1)} for VIF analysis.  Default: NULL.}
 
-\item{predictors}{(optional; character vector or NULL) Names of the predictors in \code{df} involved in the multicollinearity filtering. If NULL, all columns in \code{df} (except those with constant values or near zero variance) are used. Default: NULL}
+\item{response}{(optional; character or NULL) Name of one response variable in \code{df}. Used to exclude columns when \code{predictors} is NULL, and to filter \code{preference_order} when it is a dataframe and contains several responses. Default: NULL.}
 
-\item{preference_order}{(optional; character vector, output of \code{\link[=preference_order]{preference_order()}}, or NULL). Incompatible with \code{f} (overrides it when provided). Prioritizes predictors to preserve the most relevant ones during multicollinearity filtering.
+\item{predictors}{(optional; character vector or NULL) Names of the predictors in \code{df}. If NULL, all columns in \code{df} except the ones in \code{responses} and those with constant values or near zero variance are used. Default: NULL}
 
-Accepted inputs are:
-
-\itemize{
-
-\item \strong{NULL} (default): If argument \code{f} is NULL (default), predictors are ranked from lower to higher multicollinearity. Otherwise, \code{\link[=preference_order]{preference_order()}} ranks the predictors according to their relationship with \code{responses} using the function defined in \code{f}. NOTE: The output of this setting might differ to an external call to \code{\link[=preference_order]{preference_order()}} if target encoding is triggered.
-
-\item \strong{character vector}: Predictor names in a user-defined priority order. The first predictor in this vector is always selected, unless it has near zero-variance values. This option sets \code{f} to NULL.
-
-\item \strong{data frame}: output of \code{\link[=preference_order]{preference_order()}} computed on the given \code{responses}. This option sets \code{f} to NULL.
-
-\item \strong{named list}: list of data frames, output of \code{\link[=preference_order]{preference_order()}} when argument \code{responses} is a vector of length two or more. This option sets \code{f} to NULL.
-}. Default: NULL}
+\item{preference_order}{(optional; character vector, dataframe resulting from \code{\link[=preference_order]{preference_order()}}, or NULL). Prioritizes predictors to preserve the most relevant ones during multicollinearity filtering. Overrides \code{f} when not NULL.}
 
 \item{max_cor}{(optional; numeric or NULL) Maximum correlation allowed between pairs of \code{predictors}. Valid values are between 0.01 and 0.99, and recommended values are between 0.5 (strict) and 0.9 (permissive). If NULL, the pairwise correlation analysis is disabled. Default: 0.7}
 
 \item{quiet}{(optional; logical) If FALSE, messages are printed to the console. Default: FALSE}
 
-\item{...}{(optional) Other arguments. Currently used for the internal argument \code{function_name}.}
+\item{...}{(optional) Used to pass internal arguments such as \code{function_name} for \link{validate_arg_function_name} in nested calls, or \code{m}, a correlation matrix generated via \code{\link[stats:cor]{stats::cor()}} or \code{\link[=cor_matrix]{cor_matrix()}}.}
 }
 \value{
-list of class \code{class.collinear_output}
+character vector of selected predictors
 }
 \description{
-Reduces multicollinearity among predictors using the following steps:
-\itemize{
-\item Computes the pairwise correlations between predictors.
-\item Orders predictors according to the user preference (argument \code{preference_order}) or from lower to higher multicollinearity otherwise.
-\item Iteratively selects predictors:
-\itemize{
-\item Starts with the top-preference predictor.
-\item Adds predictors one by one only if their correlation with already selected predictors does not exceed \code{max_cor}.
-}
-\item Returns the set of selected predictors.
-}
+Wraps \code{\link[=collinear_select]{collinear_select()}} to automatize multicollinearity filtering via absolute pairwise correlation in dataframes with numeric and categorical predictors.
+
+The argument \code{max_cor} determines the maximum variance inflation factor allowed in the resulting selection of predictors.
+
+The argument \code{preference_order} accepts a character vector of predictor names ranked from first to last index, or a dataframe resulting from \code{\link[=preference_order]{preference_order()}}. When two predictors in this vector or dataframe are highly collinear, the one with a lower ranking is removed. This option helps protect predictors of interest. If not provided, predictors are ranked from lower to higher multicollinearity.
 
 Please check the section \strong{Pairwise Correlation Filtering} at the end of this help file for further details.
 }
@@ -82,6 +66,17 @@ This filtering method ensures that all predictors in the selection are correlate
 \examples{
 data(vi_smol)
 
+## OPTIONAL: parallelization setup
+## irrelevant when all predictors are numeric
+## only worth it for large data with many categoricals
+# future::plan(
+#   future::multisession,
+#   workers = future::availableCores() - 1
+# )
+
+## OPTIONAL: progress bar
+# progressr::handlers(global = TRUE)
+
 #predictors
 predictors = c(
   "koppen_zone", #character
@@ -89,16 +84,6 @@ predictors = c(
   "topo_elevation", #numeric
   "soil_temperature_mean" #numeric
 )
-
-#OPTIONAL: parallelization setup
-# only worth it for large data
-# future::plan(
-#   future::multisession,
-#   workers = 2
-# )
-#
-#OPTIONAL: progress bar
-# progressr::handlers(global = TRUE)
 
 #predictors ordered from lower to higher multicollinearity
 x <- cor_select(
@@ -121,6 +106,7 @@ x <- cor_select(
   max_cor = 0.7
 )
 
+x
 
 #with automated preference order
 df_preference <- preference_order(
@@ -138,13 +124,15 @@ x <- cor_select(
   max_cor = 0.7
 )
 
+x
+
 #OPTIONAL: disable parallelization
 #future::plan(future::sequential)
 }
 \seealso{
 Other pairwise_correlation: 
 \code{\link{cor_clusters}()},
-\code{\link{cor_cramer_v}()},
+\code{\link{cor_cramer}()},
 \code{\link{cor_df}()},
 \code{\link{cor_matrix}()},
 \code{\link{cor_stats}()}

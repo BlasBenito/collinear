@@ -2,19 +2,19 @@
 % Please edit documentation in R/drop_geometry_column.R
 \name{drop_geometry_column}
 \alias{drop_geometry_column}
-\title{Removes geometry column in sf data frames}
+\title{Removes \code{geometry} Column From \code{sf} Dataframes}
 \usage{
 drop_geometry_column(df = NULL, quiet = FALSE, ...)
 }
 \arguments{
-\item{df}{(required; data frame, tibble, or sf) A data frame with responses (optional) and predictors. Must have at least 10 rows for pairwise correlation analysis, and \code{10 * (length(predictors) - 1)} for VIF analysis.  Default: NULL.}
+\item{df}{(required; dataframe, tibble, or sf) A dataframe with responses (optional) and predictors. Must have at least 10 rows for pairwise correlation analysis, and \code{10 * (length(predictors) - 1)} for VIF analysis.  Default: NULL.}
 
 \item{quiet}{(optional; logical) If FALSE, messages are printed to the console. Default: FALSE}
 
-\item{...}{(optional) Other arguments. Currently used for the internal argument \code{function_name}.}
+\item{...}{(optional) Used to pass internal arguments such as \code{function_name} for \link{validate_arg_function_name} in nested calls, or \code{m}, a correlation matrix generated via \code{\link[stats:cor]{stats::cor()}} or \code{\link[=cor_matrix]{cor_matrix()}}.}
 }
 \value{
-data frame
+dataframe
 }
 \description{
 Replicates the functionality of \code{sf::st_drop_geometry()} without depending on the \code{sf} package.

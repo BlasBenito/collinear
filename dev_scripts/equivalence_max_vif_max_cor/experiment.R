@@ -49,7 +49,7 @@ max_rows <- 10000
 #candidate values
 max_vif_candidates <- seq(from = 1, to = 10, by = 0.1)
 max_cor_candidates <- seq(from = 0.1, to = 0.99, by = 0.01)
-n_cols_candidates <- seq(from = min_cols, to = max_cols)
+input_predictors_candidates <- seq(from = min_cols, to = max_cols)
 
 #random seed
 set.seed(1)
@@ -60,15 +60,15 @@ iterations <- seq_len(n)
 
 iterations_df <- data.frame(
   max_cor = sample(x = max_cor_candidates, size = n, replace = TRUE),
-  n_cols = sample(x = n_cols_candidates, size = n, replace = TRUE),
-  out_max_vif = rep(NA, n),
-  out_similarity = rep(NA, n),
-  out_length = rep(NA, n)
+  input_predictors = sample(x = input_predictors_candidates, size = n, replace = TRUE),
+  output_max_vif = rep(NA, n),
+  jaccard_cor_vs_vif_selection = rep(NA, n),
+  output_predictors = rep(NA, n)
 )
 
-#compute n_rows (minimum of 30 per column)
-iterations_df$n_rows <- vapply(
-  iterations_df$n_cols,
+#compute input_rows (minimum of 30 per column)
+iterations_df$input_rows <- vapply(
+  iterations_df$input_predictors,
   function(nc) sample(seq(nc * 30, nrow(df)), 1),
   numeric(1)
 )
@@ -94,8 +94,8 @@ progressr::with_progress({
 
       #subset data frame
       df.i <- df[
-        sample(x = seq_len(nrow(df)), size = iterations.df.i$n_rows),
-        sample(x = seq_len(ncol(df)), size = iterations.df.i$n_cols)
+        sample(x = seq_len(nrow(df)), size = iterations.df.i$input_rows),
+        sample(x = seq_len(ncol(df)), size = iterations.df.i$input_predictors)
       ]
 
       #cor
@@ -130,9 +130,9 @@ progressr::with_progress({
       }
 
       #fill results
-      iterations.df.i$out_max_vif <- max_vif_candidates[j]
-      iterations.df.i$out_similarity <- length(intersect(out.vif, out.cor)) / length(union(out.vif, out.cor))
-      iterations.df.i$out_length <- length(out.vif)
+      iterations.df.i$output_max_vif <- max_vif_candidates[j]
+      iterations.df.i$jaccard_cor_vs_vif_selection <- length(intersect(out.vif, out.cor)) / length(union(out.vif, out.cor))
+      iterations.df.i$output_predictors <- length(out.vif)
 
       return(iterations.df.i)
 
@@ -158,8 +158,8 @@ save(experiment_df, file = "dev_scripts/equivalency_max_vif_max_cor/experiment_r
 
 #gam model
 m <- mgcv::gam(
-  formula = out_max_vif ~ s(max_cor, k = 9),
-  weights = experiment_df$out_similarity^3,
+  formula = output_max_vif ~ s(max_cor, k = 9),
+  weights = experiment_df$jaccard_cor_vs_vif_selection^3,
   data = experiment_df,
   select = TRUE
 )
@@ -173,12 +173,12 @@ plotmo::plotmo(
   col.response = "turbo",           # optional viridis turbo palette
   pt.col = "grey40",                # training data color
   pt.cex = 0.6,                     # point size
-  main = "mgcv::gam: out_max_vif ~ s(max_cor)"
+  main = "mgcv::gam: output_max_vif ~ s(max_cor)"
 )
 
 experiment_df <- experiment_df |>
   dplyr::arrange(
-    out_similarity
+    jaccard_cor_vs_vif_selection
   )
 
 ggplot(
@@ -186,9 +186,9 @@ ggplot(
   ) +
   aes(
     x = max_cor,
-    y = out_max_vif,
-    color = out_similarity,
-    weight = out_similarity^3
+    y = output_max_vif,
+    color = jaccard_cor_vs_vif_selection,
+    weight = jaccard_cor_vs_vif_selection^3
   ) +
   geom_point(alpha = 0.5) +
   geom_smooth(
@@ -226,8 +226,8 @@ ggplot(
 ) +
   aes(
     x = max_cor,
-    y = out_length/n_cols,
-    color = n_rows,
+    y = output_predictors/input_predictors,
+    color = input_rows,
   ) +
   geom_point()
 

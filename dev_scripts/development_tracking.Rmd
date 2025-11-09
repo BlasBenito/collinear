@@ -1,0 +1,1685 @@
+---
+title: "Development Tracking"
+output: html_document
+---
+
+# Development Tools
+
+```{r, message = FALSE, warning = FALSE}
+library(testthat)
+library(devtools)
+library(covr)
+library(codetools)
+library(pkgnet)
+```
+
+Load package functions
+
+```{r}
+devtools::load_all()
+```
+
+# Internal Dependencies
+
+```{r, eval = FALSE}
+out <- pkgnet::CreatePackageReport(
+  "collinear", 
+  report_path = "report.html"
+  )
+```
+
+# List Functions
+
+```{r, eval = FALSE}
+#copy-paste output below
+message(
+  paste(
+    ls(getNamespace("collinear"), all.names = TRUE), 
+    collapse = "\n")
+  )
+```
+
+```         
+DONE case_weights
+DONE class.collinear_selection
+DONE collinear_stats
+DONE collinear
+DONE collinear_select
+collinear_auto
+DONE cor_clusters
+DONE cor_cramer
+DONE cor_df
+DONE cor_matrix
+DONE cor_select
+DONE cor_stats
+DONE drop_geometry_column
+DONE f_binomial_gam
+DONE f_binomial_glm
+DONE f_binomial_rf
+DONE f_auto
+DONE f_auto_rules
+DONE f_functions
+DONE f_numeric_gam
+DONE f_count_gam
+DONE f_count_rf
+DONE f_count_glm
+DONE f_numeric_rf
+DONE f_numeric_glm
+DONE f_numeric_gam
+DONE f_categorical_rf
+DONE identify_valid_variables
+DONE identify_categorical_variables
+DONE identify_logical_variables
+DONE identify_numeric_variables
+DONE identify_zero_variance_variables
+DONE identify_response_type
+DONE model_formula
+DONE score_auc
+DONE score_r2
+DONE score_cramer
+DONE preference_order
+DONE print.collinear_output
+DONE print.collinear_selection
+DONE summary.collinear_output
+DONE summary.collinear_selection
+DONE target_encoding_lab
+DONE target_encoding_loo
+DONE target_encoding_mean
+DONE target_encoding_rank
+DONE validate_arg_df
+DONE validate_arg_df_not_null
+DONE validate_arg_encoding_method
+DONE validate_arg_f
+DONE validate_arg_function_name
+DONE validate_arg_predictors
+DONE validate_arg_preference_order
+DONE validate_arg_quiet
+DONE validate_arg_responses
+DONE validate_arg_max_cor
+DONE validate_arg_max_vif
+DONE vif
+DONE vif_df
+DONE vif_stats
+DONE vif_select
+```
+
+# TODO
+
+- Modify `collinear()` because `vif_select()` accepts non-numeric predictors, as it uses `cor_matrix()` behind the scenes.
+
+# Function by Function
+
+## DONE validate_arg_function_name
+
+Depends: none
+
+```{r}
+f_name <- "validate_arg_function_name"
+f_source <- paste0("../R/", f_name, ".R")
+f_test <- paste0("../tests/testthat/test-", f_name, ".R")
+
+testthat::test_file(f_test)
+
+covr::file_coverage(
+  source_files = f_source,
+  test_files = f_test
+)
+```
+
+## DONE validate_arg_quiet
+
+Depends:
+
+-   validate_arg_function_name
+
+```{r}
+f_name <- "validate_arg_quiet"
+f_source <- paste0("../R/", f_name, ".R")
+f_test <- paste0("../tests/testthat/test-", f_name, ".R")
+
+testthat::test_file(f_test)
+
+covr::file_coverage(
+  source_files = f_source,
+  test_files = f_test
+)
+```
+
+## DONE validate_arg_df_not_null
+
+Depends:
+
+-   validate_arg_function_name
+
+```{r}
+f_name <- "validate_arg_df_not_null"
+f_source <- paste0("../R/", f_name, ".R")
+f_test <- paste0("../tests/testthat/test-", f_name, ".R")
+
+testthat::test_file(f_test)
+
+covr::file_coverage(
+  source_files = f_source,
+  test_files = f_test
+)
+```
+
+## DONE validate_arg_predictors
+
+Depends:
+
+- validate_arg_df_not_null  
+- validate_arg_function_name
+
+```{r}
+f_name <- "validate_arg_predictors"
+f_source <- paste0("../R/", f_name, ".R")
+f_test <- paste0("../tests/testthat/test-", f_name, ".R")
+
+testthat::test_file(f_test)
+
+covr::file_coverage(
+  source_files = f_source,
+  test_files = f_test
+)
+```
+
+## DONE validate_arg_responses
+
+Depends:
+
+-   validate_arg_df_not_null
+-   validate_arg_function_name
+
+```{r}
+f_name <- "validate_arg_responses"
+f_source <- paste0("../R/", f_name, ".R")
+f_test <- paste0("../tests/testthat/test-", f_name, ".R")
+
+testthat::test_file(f_test)
+
+covr::file_coverage(
+  source_files = f_source,
+  test_files = f_test
+)
+```
+
+## DONE drop_geometry_column
+
+Depends:
+
+-   validate_arg_function_name
+
+```{r}
+f_name <- "drop_geometry_column"
+f_source <- paste0("../R/", f_name, ".R")
+f_test <- paste0("../tests/testthat/test-", f_name, ".R")
+
+testthat::test_file(f_test)
+
+covr::file_coverage(
+  source_files = f_source,
+  test_files = f_test
+)
+```
+
+## DONE identify_zero_variance_variables
+
+Depends:
+
+ - validate_arg_df_not_null  
+ - validate_arg_function_name
+ - validate_arg_predictors  
+ - validate_arg_responses 
+ - validate_arg_quiet
+
+```{r}
+f_name <- "identify_zero_variance_variables"
+f_source <- paste0("../R/", f_name, ".R")
+f_test <- paste0("../tests/testthat/test-", f_name, ".R")
+
+testthat::test_file(f_test)
+
+covr::file_coverage(
+  source_files = f_source,
+  test_files = f_test
+)
+```
+
+
+
+## DONE identify_numeric_variables
+
+Depends:
+
+-   identify_zero_variance_variables
+-   validate_arg_df_not_null        
+-   validate_arg_function_name      
+-   validate_arg_predictors
+-   validate_arg_responses
+-   validate_arg_quiet
+
+```{r}
+f_name <- "identify_numeric_variables"
+f_source <- paste0("../R/", f_name, ".R")
+f_test <- paste0("../tests/testthat/test-", f_name, ".R")
+
+testthat::test_file(f_test)
+
+covr::file_coverage(
+  source_files = f_source,
+  test_files = f_test
+)
+```
+
+## DONE identify_logical_variables
+
+Depends:
+
+-   validate_arg_df_not_null 
+-   validate_arg_function_name
+-   validate_arg_predictors 
+-   validate_arg_responses
+-   validate_arg_quiet
+
+```{r}
+f_name <- "identify_logical_variables"
+f_source <- paste0("../R/", f_name, ".R")
+f_test <- paste0("../tests/testthat/test-", f_name, ".R")
+
+testthat::test_file(f_test)
+
+covr::file_coverage(
+  source_files = f_source,
+  test_files = f_test
+)
+```
+
+## DONE identify_categorical_variables
+
+Depends:
+
+-   validate_arg_df_not_null  
+-   validate_arg_function_name
+-   validate_arg_predictors
+-   validate_arg_responses
+-   validate_arg_quiet
+
+```{r}
+f_name <- "identify_categorical_variables"
+f_source <- paste0("../R/", f_name, ".R")
+f_test <- paste0("../tests/testthat/test-", f_name, ".R")
+
+testthat::test_file(f_test)
+
+covr::file_coverage(
+  source_files = f_source,
+  test_files = f_test
+)
+```
+
+## DONE identify_valid_variables
+
+Depends:
+
+-  identify_categorical_variables
+-  identify_logical_variables    
+-  identify_numeric_variables
+-  validate_arg_df_not_null       
+-  validate_arg_function_name     
+-  validate_arg_predictors
+
+```{r}
+f_name <- "identify_valid_variables"
+f_source <- paste0("../R/", f_name, ".R")
+f_test <- paste0("../tests/testthat/test-", f_name, ".R")
+
+testthat::test_file(f_test)
+
+covr::file_coverage(
+  source_files = f_source,
+  test_files = f_test
+)
+```
+
+
+## DONE identify_response_type
+
+Depends:
+
+- validate_arg_df           
+- validate_arg_df_not_null 
+- validate_arg_function_name
+- validate_arg_quiet        
+- validate_arg_responses 
+
+```{r}
+f_name <- "identify_response_type"
+f_source <- paste0("../R/", f_name, ".R")
+f_test <- paste0("../tests/testthat/test-", f_name, ".R")
+
+testthat::test_file(f_test)
+
+covr::file_coverage(
+  source_files = f_source,
+  test_files = f_test
+)
+```
+
+
+
+## DONE validate_arg_df
+
+Depends:
+
+-   drop_geometry_column
+-   identify_valid_variables
+-   validate_arg_df_not_null 
+-   validate_arg_function_name
+-   validate_arg_quiet 
+
+```{r}
+f_name <- "validate_arg_df"
+f_source <- paste0("../R/", f_name, ".R")
+f_test <- paste0("../tests/testthat/test-", f_name, ".R")
+
+testthat::test_file(f_test)
+
+covr::file_coverage(
+  source_files = f_source,
+  test_files = f_test
+)
+```
+
+
+
+
+
+
+# TARGET ENCODING
+
+## DONE validate_arg_encoding_method
+
+Depends:
+
+-   validate_arg_function_name
+
+```{r}
+f_name <- "validate_arg_encoding_method"
+f_source <- paste0("../R/", f_name, ".R")
+f_test <- paste0("../tests/testthat/test-", f_name, ".R")
+
+testthat::test_file(f_test)
+
+covr::file_coverage(
+  source_files = f_source,
+  test_files = f_test
+)
+```
+
+## DONE target_encoding_mean
+
+Depends:
+
+-   none
+
+```{r}
+f_name <- "target_encoding_mean"
+f_source <- paste0("../R/", f_name, ".R")
+f_test <- paste0("../tests/testthat/test-", f_name, ".R")
+
+testthat::test_file(f_test)
+
+covr::file_coverage(
+  source_files = f_source,
+  test_files = f_test
+)
+```
+
+## DONE target_encoding_rank
+
+Depends:
+
+-   none
+
+```{r}
+f_name <- "target_encoding_rank"
+f_source <- paste0("../R/", f_name, ".R")
+f_test <- paste0("../tests/testthat/test-", f_name, ".R")
+
+testthat::test_file(f_test)
+
+covr::file_coverage(
+  source_files = f_source,
+  test_files = f_test
+)
+```
+
+## DONE target_encoding_loo
+
+Depends:
+
+-   none
+
+```{r}
+f_name <- "target_encoding_loo"
+f_source <- paste0("../R/", f_name, ".R")
+f_test <- paste0("../tests/testthat/test-", f_name, ".R")
+
+testthat::test_file(f_test)
+
+covr::file_coverage(
+  source_files = f_source,
+  test_files = f_test
+)
+```
+
+## DONE target_encoding_lab
+
+Depends:
+
+- identify_categorical_variables
+- identify_response_type    
+- validate_arg_df           
+- validate_arg_df_not_null  
+- validate_arg_encoding_method
+- validate_arg_function_name 
+- validate_arg_quiet
+
+```{r}
+f_name <- "target_encoding_lab"
+f_source <- paste0("../R/", f_name, ".R")
+f_test <- paste0("../tests/testthat/test-", f_name, ".R")
+
+testthat::test_file(f_test)
+
+covr::file_coverage(
+  source_files = f_source,
+  test_files = f_test
+)
+```
+
+# PREFERENCE ORDER
+
+
+## DONE case_weights
+
+Depends:
+
+-   validate_arg_function_name
+
+```{r}
+f_name <- "case_weights"
+f_source <- paste0("../R/", f_name, ".R")
+f_test <- paste0("../tests/testthat/test-", f_name, ".R")
+
+#codetools::findGlobals(fun = get(f_name))
+
+testthat::test_file(f_test)
+
+covr::file_coverage(
+  source_files = f_source,
+  test_files = f_test
+)
+```
+
+
+## DONE score_auc
+
+Depends:
+
+-   validate_arg_function_name
+
+```{r}
+f_name <- "score_auc"
+f_source <- paste0("../R/", f_name, ".R")
+f_test <- paste0("../tests/testthat/test-", f_name, ".R")
+
+testthat::test_file(f_test)
+
+covr::file_coverage(
+  source_files = f_source,
+  test_files = f_test
+)
+```
+
+## DONE score_r2
+
+Depends:
+
+-   validate_arg_function_name
+
+```{r}
+f_name <- "score_r2"
+f_source <- paste0("../R/", f_name, ".R")
+f_test <- paste0("../tests/testthat/test-", f_name, ".R")
+
+testthat::test_file(f_test)
+
+covr::file_coverage(
+  source_files = f_source,
+  test_files = f_test
+)
+```
+
+## DONE score_cramer
+
+Depends:
+
+-   validate_arg_function_name
+
+```{r}
+f_name <- "score_cramer"
+f_source <- paste0("../R/", f_name, ".R")
+f_test <- paste0("../tests/testthat/test-", f_name, ".R")
+
+testthat::test_file(f_test)
+
+covr::file_coverage(
+  source_files = f_source,
+  test_files = f_test
+)
+```
+## DONE f_auto_rules
+
+Depends:
+
+-   none
+
+```{r}
+f_name <- "f_auto_rules"
+f_source <- paste0("../R/", f_name, ".R")
+f_test <- paste0("../tests/testthat/test-", f_name, ".R")
+
+testthat::test_file(f_test)
+
+covr::file_coverage(
+  source_files = f_source,
+  test_files = f_test
+)
+```
+
+## DONE f_functions
+
+Depends:
+
+-   none
+
+```{r}
+f_name <- "f_functions"
+f_source <- paste0("../R/", f_name, ".R")
+f_test <- paste0("../tests/testthat/test-", f_name, ".R")
+
+testthat::test_file(f_test)
+
+covr::file_coverage(
+  source_files = f_source,
+  test_files = f_test
+)
+```
+## DONE f_auto
+
+Depends:
+
+- f_auto_rules    
+- identify_response_type 
+- validate_arg_df        
+- validate_arg_function_name
+- validate_arg_predictors 
+- validate_arg_quiet    
+- validate_arg_responses
+
+```{r}
+f_name <- "f_auto"
+f_source <- paste0("../R/", f_name, ".R")
+f_test <- paste0("../tests/testthat/test-", f_name, ".R")
+
+testthat::test_file(f_test)
+
+covr::file_coverage(
+  source_files = f_source,
+  test_files = f_test
+)
+#cannot go beyond 87%
+```
+
+
+## DONE f_numeric_glm
+
+Depends:
+
+-   validate_arg_function_name
+
+```{r}
+f_name <- "f_numeric_glm"
+f_source <- paste0("../R/", f_name, ".R")
+f_test <- paste0("../tests/testthat/test-", f_name, ".R")
+
+testthat::test_file(f_test)
+
+covr::file_coverage(
+  source_files = f_source,
+  test_files = f_test
+)
+```
+## DONE f_count_glm
+
+Depends:
+
+-   validate_arg_function_name
+
+```{r}
+f_name <- "f_count_glm"
+f_source <- paste0("../R/", f_name, ".R")
+f_test <- paste0("../tests/testthat/test-", f_name, ".R")
+
+testthat::test_file(f_test)
+
+covr::file_coverage(
+  source_files = f_source,
+  test_files = f_test
+)
+```
+
+## DONE f_binomial_glm
+
+Depends:
+
+-   validate_arg_function_name
+
+```{r}
+f_name <- "f_binomial_glm"
+f_source <- paste0("../R/", f_name, ".R")
+f_test <- paste0("../tests/testthat/test-", f_name, ".R")
+
+testthat::test_file(f_test)
+
+covr::file_coverage(
+  source_files = f_source,
+  test_files = f_test
+)
+```
+
+
+
+## DONE f_numeric_gam
+
+Depends:
+
+-   validate_arg_function_name
+
+```{r}
+f_name <- "f_numeric_gam"
+f_source <- paste0("../R/", f_name, ".R")
+f_test <- paste0("../tests/testthat/test-", f_name, ".R")
+
+testthat::test_file(f_test)
+
+covr::file_coverage(
+  source_files = f_source,
+  test_files = f_test
+)
+```
+
+## DONE f_count_gam
+
+Depends:
+
+-   validate_arg_function_name
+
+```{r}
+f_name <- "f_count_gam"
+f_source <- paste0("../R/", f_name, ".R")
+f_test <- paste0("../tests/testthat/test-", f_name, ".R")
+
+testthat::test_file(f_test)
+
+covr::file_coverage(
+  source_files = f_source,
+  test_files = f_test
+)
+```
+
+## DONE f_binomial_gam
+
+Depends:
+
+-   validate_arg_function_name
+
+```{r}
+f_name <- "f_binomial_gam"
+f_source <- paste0("../R/", f_name, ".R")
+f_test <- paste0("../tests/testthat/test-", f_name, ".R")
+
+testthat::test_file(f_test)
+
+covr::file_coverage(
+  source_files = f_source,
+  test_files = f_test
+)
+```
+
+
+
+## DONE f_numeric_rf
+
+Depends:
+
+-   validate_arg_function_name
+
+```{r}
+f_name <- "f_numeric_rf"
+f_source <- paste0("../R/", f_name, ".R")
+f_test <- paste0("../tests/testthat/test-", f_name, ".R")
+
+testthat::test_file(f_test)
+
+covr::file_coverage(
+  source_files = f_source,
+  test_files = f_test
+)
+```
+## DONE f_count_rf
+
+Depends:
+
+-   validate_arg_function_name
+
+```{r}
+f_name <- "f_count_rf"
+f_source <- paste0("../R/", f_name, ".R")
+f_test <- paste0("../tests/testthat/test-", f_name, ".R")
+
+testthat::test_file(f_test)
+
+covr::file_coverage(
+  source_files = f_source,
+  test_files = f_test
+)
+```
+
+## DONE f_binomial_rf
+
+Depends:
+
+-   validate_arg_function_name
+
+```{r}
+f_name <- "f_binomial_rf"
+f_source <- paste0("../R/", f_name, ".R")
+f_test <- paste0("../tests/testthat/test-", f_name, ".R")
+
+testthat::test_file(f_test)
+
+covr::file_coverage(
+  source_files = f_source,
+  test_files = f_test
+)
+```
+
+## DONE f_categorical_rf
+
+Depends:
+
+-   validate_arg_function_name
+
+```{r}
+f_name <- "f_categorical_rf"
+f_source <- paste0("../R/", f_name, ".R")
+f_test <- paste0("../tests/testthat/test-", f_name, ".R")
+
+testthat::test_file(f_test)
+
+covr::file_coverage(
+  source_files = f_source,
+  test_files = f_test
+)
+```
+
+## DONE validate_arg_f
+
+Depends:
+
+-   validate_arg_function_name
+
+```{r}
+f_name <- "validate_arg_f"
+f_source <- paste0("../R/", f_name, ".R")
+f_test <- paste0("../tests/testthat/test-", f_name, ".R")
+
+testthat::test_file(f_test)
+
+covr::file_coverage(
+  source_files = f_source,
+  test_files = f_test
+)
+```
+
+## DONE preference_order
+
+Depends:
+
+- f_functions
+- validate_arg_df     
+- validate_arg_df_not_null 
+- validate_arg_f      
+- validate_arg_function_name
+- validate_arg_predictors 
+- validate_arg_quiet     
+- validate_arg_responses
+
+```{r}
+f_name <- "preference_order"
+f_source <- paste0("../R/", f_name, ".R")
+f_test <- paste0("../tests/testthat/test-", f_name, ".R")
+
+testthat::test_file(f_test)
+
+covr::file_coverage(
+  source_files = f_source,
+  test_files = f_test
+)
+```
+
+## DONE validate_arg_preference_order
+
+Depends:
+
+- validate_arg_df_not_null  
+- validate_arg_function_name
+- validate_arg_predictors   
+- validate_arg_responses 
+
+```{r}
+f_name <- "validate_arg_preference_order"
+f_source <- paste0("../R/", f_name, ".R")
+f_test <- paste0("../tests/testthat/test-", f_name, ".R")
+
+testthat::test_file(f_test)
+
+covr::file_coverage(
+  source_files = f_source,
+  test_files = f_test
+)
+```
+
+
+# CORRELATION
+
+
+## DONE validate_arg_max_cor
+
+Depends:
+
+-   validate_arg_function_name
+
+```{r}
+f_name <- "validate_arg_max_cor"
+f_source <- paste0("../R/", f_name, ".R")
+f_test <- paste0("../tests/testthat/test-", f_name, ".R")
+
+#codetools::findGlobals(fun = get(f_name))
+
+testthat::test_file(f_test)
+
+covr::file_coverage(
+  source_files = f_source,
+  test_files = f_test
+)
+```
+
+## DONE cor_cramer
+
+Depends:
+
+-   validate_arg_function_name
+
+```{r}
+f_name <- "cor_cramer"
+f_source <- paste0("../R/", f_name, ".R")
+f_test <- paste0("../tests/testthat/test-", f_name, ".R")
+
+#codetools::findGlobals(fun = get(f_name))
+
+testthat::test_file(f_test)
+
+covr::file_coverage(
+  source_files = f_source,
+  test_files = f_test
+)
+```
+
+## DONE cor_df
+
+Depends:
+
+- validate_arg_df              
+- validate_arg_df_not_null   
+- validate_arg_function_name    
+- validate_arg_predictors     
+- validate_arg_quiet
+
+```{r}
+f_name <- "cor_df"
+f_source <- paste0("../R/", f_name, ".R")
+f_test <- paste0("../tests/testthat/test-", f_name, ".R")
+
+#codetools::findGlobals(fun = get(f_name))
+
+testthat::test_file(f_test)
+
+covr::file_coverage(
+  source_files = f_source,
+  test_files = f_test
+)
+```
+
+
+
+## DONE cor_matrix
+
+Depends:
+
+-   cor_df
+
+```{r}
+f_name <- "cor_matrix"
+f_source <- paste0("../R/", f_name, ".R")
+f_test <- paste0("../tests/testthat/test-", f_name, ".R")
+
+#codetools::findGlobals(fun = get(f_name))
+
+testthat::test_file(f_test)
+
+covr::file_coverage(
+  source_files = f_source,
+  test_files = f_test
+)
+```
+
+## DONE cor_select
+
+Depends:
+
+- collinear_select
+- validate_arg_df         
+- validate_arg_df_not_null
+- validate_arg_function_name  
+- validate_arg_predictors 
+- validate_arg_quiet 
+
+```{r}
+f_name <- "cor_select"
+f_source <- paste0("../R/", f_name, ".R")
+f_test <- paste0("../tests/testthat/test-", f_name, ".R")
+
+#codetools::findGlobals(fun = get(f_name))
+
+testthat::test_file(f_test)
+
+covr::file_coverage(
+  source_files = f_source,
+  test_files = f_test
+)
+```
+
+## DONE cor_stats
+
+Depends:
+
+- cor_df
+- validate_arg_df_not_null 
+- validate_arg_function_name
+- validate_arg_quiet 
+
+```{r}
+f_name <- "cor_stats"
+f_source <- paste0("../R/", f_name, ".R")
+f_test <- paste0("../tests/testthat/test-", f_name, ".R")
+
+#codetools::findGlobals(fun = get(f_name))
+
+testthat::test_file(f_test)
+
+covr::file_coverage(
+  source_files = f_source,
+  test_files = f_test
+)
+```
+
+## DONE cor_clusters
+
+Depends:
+
+-   validate_arg_function_name
+-   cor_matrix
+
+```{r}
+f_name <- "cor_clusters"
+f_source <- paste0("../R/", f_name, ".R")
+f_test <- paste0("../tests/testthat/test-", f_name, ".R")
+
+#codetools::findGlobals(fun = get(f_name))
+
+testthat::test_file(f_test)
+
+covr::file_coverage(
+  source_files = f_source,
+  test_files = f_test
+)
+#cannot go further
+```
+
+# VIF
+
+## DONE vif
+
+Depends:
+
+-   validate_arg_function_name
+
+```{r}
+f_name <- "vif"
+f_source <- paste0("../R/", f_name, ".R")
+f_test <- paste0("../tests/testthat/test-", f_name, ".R")
+
+#codetools::findGlobals(fun = get(f_name))
+
+testthat::test_file(f_test)
+
+covr::file_coverage(
+  source_files = f_source,
+  test_files = f_test
+)
+```
+
+## DONE validate_arg_max_vif
+
+Depends:
+
+-   validate_arg_function_name
+
+```{r}
+f_name <- "validate_arg_max_vif"
+f_source <- paste0("../R/", f_name, ".R")
+f_test <- paste0("../tests/testthat/test-", f_name, ".R")
+
+#codetools::findGlobals(fun = get(f_name))
+
+testthat::test_file(f_test)
+
+covr::file_coverage(
+  source_files = f_source,
+  test_files = f_test
+)
+```
+
+## DONE vif_df
+
+Depends:
+
+- cor_matrix
+- validate_arg_df     - validate_arg_df_not_null  
+- validate_arg_function_name
+- validate_arg_predictors   
+- validate_arg_quiet  - vif 
+
+```{r}
+f_name <- "vif_df"
+f_source <- paste0("../R/", f_name, ".R")
+f_test <- paste0("../tests/testthat/test-", f_name, ".R")
+
+#codetools::findGlobals(fun = get(f_name))
+
+testthat::test_file(f_test)
+
+covr::file_coverage(
+  source_files = f_source,
+  test_files = f_test
+)
+```
+
+
+## DONE vif_stats
+
+Depends:
+
+- validate_arg_df_not_null 
+- validate_arg_function_name
+- vif_df
+
+```{r}
+f_name <- "vif_stats"
+f_source <- paste0("../R/", f_name, ".R")
+f_test <- paste0("../tests/testthat/test-", f_name, ".R")
+
+#codetools::findGlobals(fun = get(f_name))
+
+testthat::test_file(f_test)
+
+covr::file_coverage(
+  source_files = f_source,
+  test_files = f_test
+)
+
+```
+
+
+## DONE vif_select
+
+Depends:
+
+- collinear_select
+- validate_arg_df         
+- validate_arg_df_not_null
+- validate_arg_function_name  
+- validate_arg_predictors 
+- validate_arg_quiet 
+
+```{r}
+f_name <- "vif_select"
+f_source <- paste0("../R/", f_name, ".R")
+f_test <- paste0("../tests/testthat/test-", f_name, ".R")
+
+#codetools::findGlobals(fun = get(f_name))
+
+testthat::test_file(f_test)
+
+covr::file_coverage(
+  source_files = f_source,
+  test_files = f_test
+)
+```
+
+#MISC
+
+## DONE model_formula
+
+Depends:
+
+- identify_valid_variables
+- validate_arg_df_not_null  
+- validate_arg_function_name
+- validate_arg_predictors   
+- validate_arg_quiet        
+- validate_arg_responses 
+
+```{r}
+f_name <- "model_formula"
+f_source <- paste0("../R/", f_name, ".R")
+f_test <- paste0("../tests/testthat/test-", f_name, ".R")
+
+#codetools::findGlobals(fun = get(f_name))
+
+testthat::test_file(f_test)
+
+covr::file_coverage(
+  source_files = f_source,
+  test_files = f_test
+)
+```
+
+#COLLINEAR
+
+
+## DONE collinear_stats
+
+Depends:
+
+- cor_df                  
+- cor_matrix              
+- cor_stats
+- validate_arg_df         
+- validate_arg_df_not_null
+- validate_arg_function_name
+- validate_arg_predictors   
+- vif_stats
+
+```{r}
+f_name <- "collinear_stats"
+f_source <- paste0("../R/", f_name, ".R")
+f_test <- paste0("../tests/testthat/test-", f_name, ".R")
+
+#codetools::findGlobals(fun = get(f_name))
+
+testthat::test_file(f_test)
+
+covr::file_coverage(
+  source_files = f_source,
+  test_files = f_test
+)
+```
+
+## DONE collinear_select
+
+Depends:
+
+- cor_matrix
+- validate_arg_df              
+- validate_arg_df_not_null   
+- validate_arg_function_name 
+- validate_arg_max_cor      
+- validate_arg_max_vif      
+- validate_arg_predictors    
+- validate_arg_preference_order
+- validate_arg_quiet        
+- validate_arg_responses    
+- vif
+
+```{r}
+f_name <- "collinear_select"
+f_source <- paste0("../R/", f_name, ".R")
+f_test <- paste0("../tests/testthat/test-", f_name, ".R")
+
+#codetools::findGlobals(fun = get(f_name))
+
+testthat::test_file(f_test)
+
+covr::file_coverage(
+  source_files = f_source,
+  test_files = f_test
+)
+```
+
+## DONE class.collinear_selection
+
+Depends:
+
+- identify_valid_variables
+- model_formula
+- validate_arg_function_name
+- f_functions
+
+```{r}
+f_name <- "class.collinear_selection"
+f_source <- paste0("../R/S3_methods_", f_name, ".R")
+f_test <- paste0("../tests/testthat/test-", f_name, ".R")
+
+#codetools::findGlobals(fun = get(f_name))
+
+testthat::test_file(f_test)
+
+covr::file_coverage(
+  source_files = f_source,
+  test_files = f_test
+)
+```
+
+## DONE summary.collinear_selection
+
+Depends:
+
+```{r}
+f_name <- "summary.collinear_selection"
+f_source <- paste0("../R/S3_methods_", f_name, ".R")
+f_test <- paste0("../tests/testthat/test-", f_name, ".R")
+
+testthat::test_file(f_test)
+
+covr::file_coverage(
+  source_files = f_source,
+  test_files = f_test
+)
+```
+
+## DONE collinear
+
+Depends:
+
+- class.collinear_selection   
+- collinear_select            
+- cor_matrix             
+- identify_valid_variables  
+- target_encoding_lab          
+- validate_arg_df             
+- validate_arg_df_not_null    
+- validate_arg_function_name  
+- validate_arg_predictors   
+- validate_arg_preference_order
+- validate_arg_quiet          
+- validate_arg_responses
+
+```{r}
+f_name <- "collinear"
+f_source <- paste0("../R/", f_name, ".R")
+f_test <- paste0("../tests/testthat/test-", f_name, ".R")
+
+#codetools::findGlobals(fun = get(f_name))
+
+testthat::test_file(f_test)
+
+covr::file_coverage(
+  source_files = f_source,
+  test_files = f_test
+)
+```
+
+
+## DONE collinear_auto
+
+Depends:
+
+- cor_df                  
+- cor_matrix              
+- cor_stats               
+- data.frame             
+- f_auto
+- validate_arg_df         
+- validate_arg_df_not_null
+- validate_arg_function_name
+- validate_arg_predictors  
+- validate_arg_quiet    
+- validate_arg_responses
+
+```{r}
+f_name <- "collinear_auto"
+f_source <- paste0("../R/", f_name, ".R")
+f_test <- paste0("../tests/testthat/test-", f_name, ".R")
+
+codetools::findGlobals(fun = get(f_name))
+
+testthat::test_file(f_test)
+
+covr::file_coverage(
+  source_files = f_source,
+  test_files = f_test
+)
+
+covr::report(
+  x = covr::file_coverage(
+    source_files = f_source,
+    test_files = f_test
+  )
+)
+```
+
+## DONE summary.collinear_output
+
+Depends:
+
+-   none
+
+```{r}
+f_name <- "summary.collinear_output"
+f_source <- paste0("../R/S3_methods_", f_name, ".R")
+f_test <- paste0("../tests/testthat/test-", f_name, ".R")
+
+#codetools::findGlobals(fun = get(f_name))
+
+testthat::test_file(f_test)
+
+covr::file_coverage(
+  source_files = f_source,
+  test_files = f_test
+)
+```
+
+## DONE print.collinear_selection
+
+Depends:
+
+-   whatevs
+
+```{r}
+f_name <- "print.collinear_selection"
+f_source <- paste0("../R/S3_methods_", f_name, ".R")
+f_test <- paste0("../tests/testthat/test-", f_name, ".R")
+
+testthat::test_file(f_test)
+
+covr::file_coverage(
+  source_files = f_source,
+  test_files = f_test
+)
+```
+
+## DONE print.collinear_output
+
+Depends:
+
+-   whatevs
+
+```{r}
+f_name <- "print.collinear_output"
+f_source <- paste0("../R/S3_methods_", f_name, ".R")
+f_test <- paste0("../tests/testthat/test-", f_name, ".R")
+
+testthat::test_file(f_test)
+
+covr::file_coverage(
+  source_files = f_source,
+  test_files = f_test
+)
+```
+
+
+## template
+
+Depends:
+
+-   whatevs
+
+```{r}
+f_name <- "whatevs"
+f_source <- paste0("../R/", f_name, ".R")
+f_test <- paste0("../tests/testthat/test-", f_name, ".R")
+
+codetools::findGlobals(fun = get(f_name))
+
+testthat::test_file(f_test)
+
+covr::file_coverage(
+  source_files = f_source,
+  test_files = f_test
+)
+
+covr::report(
+  x = covr::file_coverage(
+    source_files = f_source,
+    test_files = f_test
+  )
+)
+```
+
+## template
+
+Depends:
+
+-   whatevs
+
+```{r}
+f_name <- "whatevs"
+f_source <- paste0("../R/", f_name, ".R")
+f_test <- paste0("../tests/testthat/test-", f_name, ".R")
+
+codetools::findGlobals(fun = get(f_name))
+
+testthat::test_file(f_test)
+
+covr::file_coverage(
+  source_files = f_source,
+  test_files = f_test
+)
+
+covr::report(
+  x = covr::file_coverage(
+    source_files = f_source,
+    test_files = f_test
+  )
+)
+```
+
+
+
+## template
+
+Depends:
+
+-   whatevs
+
+```{r}
+f_name <- "whatevs"
+f_source <- paste0("../R/", f_name, ".R")
+f_test <- paste0("../tests/testthat/test-", f_name, ".R")
+
+codetools::findGlobals(fun = get(f_name))
+
+testthat::test_file(f_test)
+
+covr::file_coverage(
+  source_files = f_source,
+  test_files = f_test
+)
+
+covr::report(
+  x = covr::file_coverage(
+    source_files = f_source,
+    test_files = f_test
+  )
+)
+```
+
+
+## template
+
+Depends:
+
+-   whatevs
+
+```{r}
+f_name <- "whatevs"
+f_source <- paste0("../R/", f_name, ".R")
+f_test <- paste0("../tests/testthat/test-", f_name, ".R")
+
+codetools::findGlobals(fun = get(f_name))
+
+testthat::test_file(f_test)
+
+covr::file_coverage(
+  source_files = f_source,
+  test_files = f_test
+)
+
+covr::report(
+  x = covr::file_coverage(
+    source_files = f_source,
+    test_files = f_test
+  )
+)
+```
+
+
+## template
+
+Depends:
+
+-   whatevs
+
+```{r}
+f_name <- "whatevs"
+f_source <- paste0("../R/", f_name, ".R")
+f_test <- paste0("../tests/testthat/test-", f_name, ".R")
+
+codetools::findGlobals(fun = get(f_name))
+
+testthat::test_file(f_test)
+
+covr::file_coverage(
+  source_files = f_source,
+  test_files = f_test
+)
+
+covr::report(
+  x = covr::file_coverage(
+    source_files = f_source,
+    test_files = f_test
+  )
+)
+```
+
+
+## template
+
+Depends:
+
+-   whatevs
+
+```{r}
+f_name <- "whatevs"
+f_source <- paste0("../R/", f_name, ".R")
+f_test <- paste0("../tests/testthat/test-", f_name, ".R")
+
+codetools::findGlobals(fun = get(f_name))
+
+testthat::test_file(f_test)
+
+covr::file_coverage(
+  source_files = f_source,
+  test_files = f_test
+)
+
+covr::report(
+  x = covr::file_coverage(
+    source_files = f_source,
+    test_files = f_test
+  )
+)
+```
+
+
+## template
+
+Depends:
+
+-   whatevs
+
+```{r}
+f_name <- "whatevs"
+f_source <- paste0("../R/", f_name, ".R")
+f_test <- paste0("../tests/testthat/test-", f_name, ".R")
+
+codetools::findGlobals(fun = get(f_name))
+
+testthat::test_file(f_test)
+
+covr::file_coverage(
+  source_files = f_source,
+  test_files = f_test
+)
+
+covr::report(
+  x = covr::file_coverage(
+    source_files = f_source,
+    test_files = f_test
+  )
+)
+```
+
+
+## template
+
+Depends:
+
+-   whatevs
+
+```{r}
+f_name <- "whatevs"
+f_source <- paste0("../R/", f_name, ".R")
+f_test <- paste0("../tests/testthat/test-", f_name, ".R")
+
+codetools::findGlobals(fun = get(f_name))
+
+testthat::test_file(f_test)
+
+covr::file_coverage(
+  source_files = f_source,
+  test_files = f_test
+)
+
+covr::report(
+  x = covr::file_coverage(
+    source_files = f_source,
+    test_files = f_test
+  )
+)
+```

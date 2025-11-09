@@ -2,7 +2,7 @@
 % Please edit documentation in R/cor_clusters.R
 \name{cor_clusters}
 \alias{cor_clusters}
-\title{Hierarchical Clustering from Pairwise Correlation Matrix}
+\title{Hierarchical Correlation Clustering}
 \usage{
 cor_clusters(
   df = NULL,
@@ -14,42 +14,44 @@ cor_clusters(
 )
 }
 \arguments{
-\item{df}{(required; data frame, tibble, or sf) A data frame with responses (optional) and predictors. Must have at least 10 rows for pairwise correlation analysis, and \code{10 * (length(predictors) - 1)} for VIF analysis.  Default: NULL.}
+\item{df}{(required; dataframe, tibble, or sf) A dataframe with predictors or the output of \code{\link[=cor_df]{cor_df()}}. Default: NULL.}
 
-\item{predictors}{(optional; character vector or NULL) Names of the predictors in \code{df} involved in the multicollinearity filtering. If NULL, all columns in \code{df} (except those with constant values or near zero variance) are used. Default: NULL}
+\item{predictors}{(optional; character vector or NULL) Names of the predictors in \code{df}. If NULL, all columns in \code{df} except the ones in \code{responses} and those with constant values or near zero variance are used. Default: NULL}
 
-\item{max_cor}{(optional; numeric or NULL) Maximum correlation allowed between pairs of \code{predictors}. Valid values are between 0.01 and 0.99, and recommended values are between 0.5 (strict) and 0.9 (permissive). If NULL, the pairwise correlation analysis is disabled. Default: 0.7}
+\item{max_cor}{(optional; numeric or NULL) Absolute correlation values used to separate clustering groups. Valid values are between 0.01 and 0.99. Default: 0.7}
 
 \item{method}{(optional, character string) Argument of \code{\link[stats:hclust]{stats::hclust()}} defining the agglomerative method. One of: "ward.D", "ward.D2", "single", "complete", "average" (= UPGMA), "mcquitty" (= WPGMA), "median" (= WPGMC) or "centroid" (= UPGMC). Unambiguous abbreviations are accepted as well. Default: "complete".}
 
 \item{quiet}{(optional; logical) If FALSE, messages are printed to the console. Default: FALSE}
 
-\item{...}{(optional) Other arguments. Currently used for the internal argument \code{function_name}.}
+\item{...}{(optional) Used to pass internal arguments such as \code{function_name} for \link{validate_arg_function_name} in nested calls, or \code{m}, a correlation matrix generated via \code{\link[stats:cor]{stats::cor()}} or \code{\link[=cor_matrix]{cor_matrix()}}.}
 }
 \value{
 list:
 \itemize{
-\item df: data frame with predictor names and their cluster IDs.
+\item df: dataframe with predictor names and their cluster IDs.
 \item hclust: clustering obect
 }
 }
 \description{
-Hierarchical clustering of predictors from their pairwise correlation matrix. Computes the correlation matrix with \code{\link[=cor_df]{cor_df()}} and \code{\link[=cor_matrix]{cor_matrix()}}, transforms it to a distance matrix using \code{\link[stats:dist]{stats::dist()}}, computes a clustering solution with \code{\link[stats:hclust]{stats::hclust()}}, and applies \code{\link[stats:cutree]{stats::cutree()}} to separate groups based on the value of the argument \code{max_cor}.
+Hierarchical clustering of predictors from their absolute correlation matrix. Computes the correlation matrix with \code{\link[=cor_df]{cor_df()}} and \code{\link[=cor_matrix]{cor_matrix()}}, transforms it to a distance matrix using \code{\link[stats:dist]{stats::dist()}}, computes a clustering solution with \code{\link[stats:hclust]{stats::hclust()}}, and applies \code{\link[stats:cutree]{stats::cutree()}} to separate groups based on the value of the argument \code{max_cor}.
 
-Returns a data frame with predictor names and their clusters, and optionally, prints a dendrogram of the clustering solution.
+Returns a dataframe with predictor names and their clusters, and optionally, prints a dendrogram of the clustering solution.
 
 Accepts a parallelization setup via \code{\link[future:plan]{future::plan()}} and a progress bar via \code{\link[progressr:handlers]{progressr::handlers()}} (see examples).
 }
 \examples{
 data(vi_smol)
 
-#OPTIONAL: parallelization setup
+## OPTIONAL: parallelization setup
+## irrelevant when all predictors are numeric
+## only worth it for large data with many categoricals
 # future::plan(
 #   future::multisession,
-#   workers = 2
+#   workers = future::availableCores() - 1
 # )
 
-#OPTIONAL: progress bar
+## OPTIONAL: progress bar
 # progressr::handlers(global = TRUE)
 
 #group predictors using max_cor as clustering threshold
@@ -64,7 +66,7 @@ clusters <- cor_clusters(
   max_cor = 0.75
 )
 
-#clusters data frame
+#clusters dataframe
 clusters$df
 
 ##plot hclust object
@@ -78,12 +80,12 @@ clusters$df
 #   lwd = 2
 # )
 
-#OPTIONAL: disable parallelization
+## OPTIONAL: disable parallelization
 #future::plan(future::sequential)
 }
 \seealso{
 Other pairwise_correlation: 
-\code{\link{cor_cramer_v}()},
+\code{\link{cor_cramer}()},
 \code{\link{cor_df}()},
 \code{\link{cor_matrix}()},
 \code{\link{cor_select}()},

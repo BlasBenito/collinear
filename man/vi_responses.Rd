@@ -3,7 +3,7 @@
 \docType{data}
 \name{vi_responses}
 \alias{vi_responses}
-\title{Response Names in Example Data Frame \code{vi}}
+\title{Response Names in Example Dataframe \code{vi}}
 \format{
 Character vector with response names.
 }
@@ -11,7 +11,7 @@ Character vector with response names.
 data(vi_responses)
 }
 \description{
-Response Names in Example Data Frame \code{vi}
+Response Names in Example Dataframe \code{vi}
 }
 \seealso{
 \link{vi}

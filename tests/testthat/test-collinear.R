@@ -2,9 +2,7 @@ testthat::test_that("`collinear()` works", {
 
   #load data
   data(
-    vi,
     vi_smol,
-    vi_predictors,
     vi_predictors_numeric,
     vi_predictors_categorical,
     vi_responses
@@ -19,25 +17,59 @@ testthat::test_that("`collinear()` works", {
 
   #DF ONLY ----
 
+  ##fewer than 3 rows ----
+  testthat::expect_error(
+    x <- collinear(
+      df = vi_smol[1:2, ],
+      predictors = vi_predictors_numeric
+    ),
+    regexp = "has fewer than 3 rows"
+  ) |>
+    suppressMessages() |>
+    suppressWarnings()
+
   ##fewer than 10 rows ----
-  testthat::expect_warning(
+  testthat::expect_message(
     x <- collinear(
       df = vi_smol[1:9, ],
       predictors = vi_predictors_numeric
     ),
     regexp = "has fewer than 10 rows"
   ) |>
+    suppressMessages() |>
+    suppressWarnings()
+
+  testthat::expect_warning(
+    x <- collinear(
+      df = vi_smol[1:9, ],
+      predictors = vi_predictors_numeric
+    ),
+    regexp = "the correlation matrix is singular and cannot be solved"
+  ) |>
+    suppressWarnings() |>
+    suppressMessages()
+
+  testthat::expect_message(
+    x <- collinear(
+      df = vi_smol[1:9, ],
+      predictors = vi_predictors_numeric,
+      max_vif = NULL
+    ),
+    regexp = "skipping VIF filtering"
+  ) |>
+    suppressWarnings() |>
     suppressMessages()
 
   ##fewer than 30 rows ----
   testthat::expect_message(
     x <- collinear(
-      df = vi_smol[1:11, ],
+      df = vi_smol[1:29, ],
       predictors = vi_predictors_numeric
     ),
     regexp = "has fewer than 30 rows"
   ) |>
-    suppressMessages()
+    suppressMessages() |>
+    suppressWarnings()
 
   ##more than 30 rows ----
 
@@ -48,7 +80,8 @@ testthat::test_that("`collinear()` works", {
       predictors = vi_predictors_numeric,
       max_cor = NULL,
       max_vif = NULL
-    )
+    ),
+    regexp = "arguments 'max_cor' and 'max_vif' cannot be NULL at once"
   )
 
   #max_cor and max_vif invalid
@@ -85,7 +118,7 @@ testthat::test_that("`collinear()` works", {
       f = NULL,
       quiet = FALSE
     ),
-    regexp = "ranking predictors from lower to higher multicollinearity"
+    regexp = "processing response 'vi_numeric'"
   ) |>
     suppressMessages()
 
@@ -114,7 +147,7 @@ testthat::test_that("`collinear()` works", {
       f = NULL,
       quiet = FALSE
     ),
-    regexp = "ranking predictors from lower to higher multicollinearity"
+    regexp = "selected predictors"
   ) |>
     suppressMessages()
 
@@ -132,13 +165,13 @@ testthat::test_that("`collinear()` works", {
     x <- collinear(
       df = vi_smol,
       responses = NULL,
-      predictors = vi_predictors_categorical[1:5],
+      predictors = vi_predictors_categorical[1:4],
       encoding_method = NULL,
       preference_order = NULL,
       f = NULL,
       quiet = FALSE
     ),
-    regexp = "no numeric predictors available for VIF filtering"
+    regexp = "ranking 4 'predictors' from lower to higher multicollinearity"
   ) |>
     suppressMessages()
 
@@ -155,7 +188,7 @@ testthat::test_that("`collinear()` works", {
   x <- collinear(
     df = vi_smol,
     responses = NULL,
-    predictors = c(vi_predictors_numeric[1:3], vi_predictors_categorical[1:3]),
+    predictors = c(vi_predictors_numeric[1:3], vi_predictors_categorical[1:2]),
     encoding_method = NULL,
     preference_order = NULL,
     f = NULL,
@@ -174,15 +207,20 @@ testthat::test_that("`collinear()` works", {
   #PREDICTORS + RESPONSE ----
 
   ##numeric numeric ----
-  x <- collinear(
-    df = vi,
-    responses = "vi_numeric",
-    predictors = vi_predictors_numeric,
-    encoding_method = NULL,
-    preference_order = NULL,
-    f = NULL,
-    quiet = TRUE
-  )
+  testthat::expect_message(
+    x <- collinear(
+      df = vi,
+      responses = "vi_numeric",
+      predictors = vi_predictors_numeric,
+      encoding_method = NULL,
+      preference_order = NULL,
+      f = NULL,
+      quiet = FALSE
+    ),
+    regexp = "ranking 49 'predictors' from lower to higher multicollinearity"
+  ) |>
+    suppressMessages()
+
 
   testthat::expect_true(
     inherits(x = x, what = "collinear_output")
@@ -194,15 +232,20 @@ testthat::test_that("`collinear()` works", {
 
 
   ##categorical numeric ----
-  x <- collinear(
-    df = vi,
-    responses = "vi_categorical",
-    predictors = vi_predictors_numeric,
-    encoding_method = NULL,
-    preference_order = NULL,
-    f = NULL,
-    quiet = TRUE
-  )
+  testthat::expect_message(
+    x <- collinear(
+      df = vi,
+      responses = "vi_categorical",
+      predictors = vi_predictors_numeric,
+      encoding_method = NULL,
+      preference_order = NULL,
+      f = NULL,
+      quiet = FALSE
+    ),
+    regexp = "ranking 49 'predictors' from lower to higher multicollinearity"
+  ) |>
+    suppressMessages()
+
 
   testthat::expect_true(
     inherits(x = x, what = "collinear_output")
@@ -213,13 +256,13 @@ testthat::test_that("`collinear()` works", {
     x <- collinear(
       df = vi_smol,
       responses = "vi_categorical",
-      predictors = vi_predictors_categorical,
+      predictors = vi_predictors_categorical[1:4],
       encoding_method = NULL,
       preference_order = NULL,
       f = NULL,
       quiet = FALSE
     ),
-    regexp = "no numeric predictors available for VIF filtering, skipping it"
+    regexp = "ranking 4 'predictors' from lower to higher multicollinearity"
   ) |>
     suppressMessages()
 
@@ -233,7 +276,7 @@ testthat::test_that("`collinear()` works", {
     x <- collinear(
       df = vi_smol,
       responses = vi_responses,
-      predictors = vi_predictors_numeric,
+      predictors = c(vi_responses, vi_predictors_numeric),
       encoding_method = NULL,
       preference_order = NULL,
       f = NULL,
@@ -243,23 +286,12 @@ testthat::test_that("`collinear()` works", {
   ) |>
     suppressMessages()
 
-  #check that all responses are in x
-  testthat::expect_true(
-    all(vi_responses %in% names(x))
-  )
-
-  #check for identical selections because encoding_method and preference_order are NULL
-  selections <- lapply(
-    X = x,
-    FUN = function(x) x$selection
-  ) |>
-    unlist() |>
-    table() |>
-    as.data.frame()
-
-  testthat::expect_true(
-    all(selections$Freq == length(vi_responses))
-  )
+  #check that the given response does not appear in the selections
+  for(i in names(x)){
+    testthat::expect_true(
+      !i %in% x[[i]]$selection
+    )
+  }
 
   #checking formulas
   testthat::expect_true(
@@ -288,7 +320,7 @@ testthat::test_that("`collinear()` works", {
     collinear(
       df = vi_smol,
       responses = c("vi_numeric", "vi_categorical"),
-      predictors = vi_predictors_categorical,
+      predictors = vi_predictors_categorical[1:4],
       encoding_method = "loo",
       preference_order = NULL,
       f = NULL,
@@ -298,13 +330,13 @@ testthat::test_that("`collinear()` works", {
 
   testthat::expect_message(
     x <- f_test(),
-    regexp = "using response 'vi_numeric' to encode"
+    regexp = "using response 'vi_numeric' to encode these categorical predictors"
   ) |>
     suppressMessages()
 
   testthat::expect_message(
     x <- f_test(),
-    regexp = "argument 'response' is categorical"
+    regexp = "processing response 'vi_categorical'"
   ) |>
     suppressMessages()
 
@@ -338,16 +370,32 @@ testthat::test_that("`collinear()` works", {
       max_vif = 5,
       quiet = FALSE
     ),
-    regexp = "ranking predictors from lower to higher multicollinearity"
+    regexp = "invalid values in argument 'preference_order'"
+  ) |>
+    suppressMessages()
+
+  testthat::expect_message(
+    x <- collinear(
+      df = vi_smol,
+      responses = "vi_numeric",
+      predictors = vi_predictors_numeric,
+      encoding_method = NULL,
+      preference_order = preference_order,
+      f = NULL,
+      max_cor = 0.75,
+      max_vif = 5,
+      quiet = FALSE
+    ),
+    regexp = "ranking 49 'predictors' from lower to higher multicollinearity"
   ) |>
     suppressMessages()
 
   testthat::expect_true(
-    !all(preference_order %in% x$result$selection)
+    !all(preference_order %in% x$vi_numeric$selection)
   )
 
   testthat::expect_true(
-    is.null(x$arguments$preference_order)
+    all(vi_predictors_numeric %in% x$vi_numeric$preference_order$df$predictor)
   )
 
   ### valid character vector ----
@@ -358,25 +406,36 @@ testthat::test_that("`collinear()` works", {
     "growing_season_temperature"
   )
 
-  x <- collinear(
-    df = vi_smol,
-    responses = "vi_numeric",
-    predictors = vi_predictors_numeric,
-    encoding_method = NULL,
-    preference_order = preference_order,
-    f = NULL,
-    max_cor = 0.75,
-    max_vif = 5,
-    quiet = TRUE
-  )
+  testthat::expect_message(
+    x <- collinear(
+      df = vi_smol,
+      responses = "vi_numeric",
+      predictors = vi_predictors_numeric,
+      encoding_method = NULL,
+      preference_order = preference_order,
+      f = NULL,
+      max_cor = 0.75,
+      max_vif = 5,
+      quiet = FALSE
+    ),
+    regexp = paste0(
+      "ranking ",
+      length(vi_predictors_numeric) - length(preference_order),
+      " 'predictors' from lower to higher multicollinearity"
+    )
+  ) |>
+    suppressMessages()
+
 
   testthat::expect_true(
     all(preference_order %in% x$vi_numeric$selection)
   )
 
+
   testthat::expect_true(
-    all(preference_order %in% x$arguments$preference_order)
+    all(vi_predictors_numeric %in% x$vi_numeric$preference_order$df$predictor)
   )
+
 
   ### valid dataframe ----
   preference_df <- preference_order(
@@ -399,31 +458,8 @@ testthat::test_that("`collinear()` works", {
     quiet = TRUE
   )
 
-  a <- preference_df
-  rownames(a) <- NULL
-
-  b <- rbind(x$vi_numeric$preference$df, x$vi_categorical$preference$df)
-  rownames(b) <- NULL
-
   testthat::expect_true(
-    isTRUE(all.equal(
-      target = a,
-      current = b
-    ))
-  )
-
-  testthat::expect_true(
-    all.equal(
-      target = preference_df[preference_df$response == "vi_numeric", ],
-      current = x$vi_numeric$preference$df
-    )
-  )
-
-  testthat::expect_true(
-    all.equal(
-      target = preference_df[preference_df$response == "vi_categorical", ],
-      current = x$vi_categorical$preference$df
-    )
+    unique(x$vi_categorical$preference_order$df$response) == "vi_categorical"
   )
 
   ### invalid data frame ----
@@ -444,7 +480,7 @@ testthat::test_that("`collinear()` works", {
       max_vif = 5,
       quiet = TRUE
     ),
-    regexp = "must be the output of"
+    regexp = "dataframe 'preference_order' must have these columns"
   )
 
   ### NULL response ----
@@ -454,25 +490,35 @@ testthat::test_that("`collinear()` works", {
     "growing_season_temperature"
   )
 
-  x <- collinear(
-    df = vi_smol,
-    responses = NULL,
-    predictors = vi_predictors_numeric,
-    encoding_method = NULL,
-    preference_order = preference,
-    f = NULL,
-    max_cor = 0.75,
-    max_vif = 5,
-    quiet = TRUE
-  )
+  testthat::expect_message(
+    x <- collinear(
+      df = vi_smol,
+      responses = NULL,
+      predictors = vi_predictors_numeric,
+      encoding_method = NULL,
+      preference_order = preference,
+      f = NULL,
+      max_cor = 0.75,
+      max_vif = 5,
+      quiet = FALSE
+    ),
+    regexp = "ranking 47 'predictors' from lower to higher multicollinearity"
+  ) |>
+    suppressMessages()
+
 
   testthat::expect_true(
     all(preference %in% x$result$selection)
   )
 
   testthat::expect_true(
-    all(preference %in% x$arguments$preference_order)
+    preference[1] == x$result$preference_order$df$predictor[1]
   )
+
+  testthat::expect_true(
+    preference[2] == x$result$preference_order$df$predictor[2]
+  )
+
 
   ### f_auto ----
   testthat::expect_message(
@@ -487,7 +533,7 @@ testthat::test_that("`collinear()` works", {
       max_vif = 5,
       quiet = FALSE
     ),
-    regexp = "f_auto"
+    regexp = "selected function 'f_numeric_glm"
   ) |>
     suppressMessages()
 
@@ -496,21 +542,17 @@ testthat::test_that("`collinear()` works", {
   )
 
   testthat::expect_true(
-    x$arguments$f_name == "f_auto"
+    x$vi_numeric$preference$df$f[1] == "f_numeric_glm"
   )
 
-  testthat::expect_true(
-    x$vi_numeric$preference$df$f[1] == "f_r2_pearson"
-  )
-
-  ### f_r2_rf ----
+  ### f_numeric_rf ----
   x <- collinear(
     df = vi_smol,
     responses = "vi_numeric",
     predictors = vi_predictors_numeric,
     encoding_method = NULL,
     preference_order = NULL,
-    f = f_r2_rf,
+    f = f_numeric_rf,
     max_cor = 0.75,
     max_vif = 5,
     quiet = TRUE
@@ -520,13 +562,6 @@ testthat::test_that("`collinear()` works", {
     x$vi_numeric$selection[1] == x$vi_numeric$preference$df$predictor[1]
   )
 
-  testthat::expect_true(
-    !is.null(x$arguments$f)
-  )
-
-  testthat::expect_true(
-    x$arguments$f_name == "f_r2_rf"
-  )
 
   ### bad function name ----
   my_f <- function(){return(NULL)}
@@ -535,7 +570,7 @@ testthat::test_that("`collinear()` works", {
     x <- collinear(
       df = vi_smol,
       responses = "vi_numeric",
-      predictors = vi_predictors,
+      predictors = vi_predictors_numeric,
       encoding_method = NULL,
       preference_order = NULL,
       f = my_f,
@@ -543,7 +578,7 @@ testthat::test_that("`collinear()` works", {
       max_vif = 5,
       quiet = TRUE
     ),
-    regexp = "to receive a data frame with the column names"
+    regexp = "the function 'f' must have the argument 'df'"
   )
 
   ### character function name ----
@@ -551,7 +586,7 @@ testthat::test_that("`collinear()` works", {
     x <- collinear(
       df = vi_smol,
       responses = "vi_numeric",
-      predictors = vi_predictors,
+      predictors = vi_predictors_numeric,
       encoding_method = NULL,
       preference_order = NULL,
       f = "my_f",
@@ -560,6 +595,75 @@ testthat::test_that("`collinear()` works", {
       quiet = TRUE
     ),
     regexp = "must be a uquoted function name"
+  )
+
+  #passing a correlation matrix
+  time_no_matrix <- system.time(
+    expr = {
+      x <- collinear(
+        df = vi_smol,
+        responses = "vi_numeric",
+        predictors = vi_predictors_categorical[1:4],
+        encoding_method = NULL,
+        preference_order = NULL,
+        f = NULL,
+        max_cor = 0.75,
+        max_vif = 5,
+        quiet = TRUE
+      )
+    }
+  )
+
+  m <- cor_matrix(
+    df = vi_smol,
+    predictors = vi_predictors_categorical[1:4],
+    quiet = TRUE
+  )
+
+  time_matrix <- system.time(
+    expr = {
+      x <- collinear(
+        df = vi_smol,
+        responses = "vi_numeric",
+        predictors = vi_predictors_categorical[1:4],
+        encoding_method = NULL,
+        preference_order = NULL,
+        f = NULL,
+        max_cor = 0.75,
+        max_vif = 5,
+        quiet = TRUE,
+        m = m
+      )
+    }
+  )
+
+  testthat::expect_true(
+    time_no_matrix[3] > time_matrix[3]
+  )
+
+
+  #losing one column
+  df <- vi_smol
+  df$logical <- TRUE
+
+  testthat::expect_message(
+    x <- collinear(
+      df = df,
+      responses = "vi_numeric",
+      predictors = c("logical", vi_predictors_numeric),
+      encoding_method = NULL,
+      preference_order = NULL,
+      f = NULL,
+      max_cor = 0.75,
+      max_vif = 5,
+      quiet = FALSE
+    ),
+    regexp = "invalid logical variables due to constant values"
+  ) |>
+    suppressMessages()
+
+  testthat::expect_true(
+    !"logical" %in% colnames(x$vi_numeric$df)
   )
 
 

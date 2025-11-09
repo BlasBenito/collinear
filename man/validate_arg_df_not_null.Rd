@@ -2,33 +2,29 @@
 % Please edit documentation in R/validate_arg_df_not_null.R
 \name{validate_arg_df_not_null}
 \alias{validate_arg_df_not_null}
-\title{Checks That Argument \code{df} Is Not NULL}
+\title{Ensures \code{df} Is Not \code{NULL}}
 \usage{
 validate_arg_df_not_null(df = NULL, function_name = NULL)
 }
 \arguments{
-\item{df}{(required; data frame, tibble, or sf) A data frame with responses (optional) and predictors. Must have at least 10 rows for pairwise correlation analysis, and \code{10 * (length(predictors) - 1)} for VIF analysis.  Default: NULL.}
+\item{df}{(required; dataframe, tibble, or sf) A dataframe with responses (optional) and predictors. Must have at least 10 rows for pairwise correlation analysis, and \code{10 * (length(predictors) - 1)} for VIF analysis.  Default: NULL.}
 
 \item{function_name}{(optional, character string) Name of the function performing the argument check. Default: NULL}
 }
 \value{
-data frame
+dataframe
 }
 \description{
 Internal function to validate the default value of the argument \code{df}.
 }
 \examples{
-data(vi)
+data(vi_smol)
 df <- validate_arg_df_not_null(
-  df = vi,
-  function_name = "f()"
+  df = vi_smol
   )
 }
 \seealso{
-Other data_validation: 
-\code{\link{autoconfig_arg_max_cor}()},
-\code{\link{autoconfig_arg_max_vif}()},
-\code{\link{tolerance}()},
+Other argument_validation: 
 \code{\link{validate_arg_df}()},
 \code{\link{validate_arg_encoding_method}()},
 \code{\link{validate_arg_f}()},
@@ -36,11 +32,8 @@ Other data_validation:
 \code{\link{validate_arg_max_cor}()},
 \code{\link{validate_arg_max_vif}()},
 \code{\link{validate_arg_predictors}()},
-\code{\link{validate_arg_predictors_cor}()},
-\code{\link{validate_arg_predictors_vif}()},
 \code{\link{validate_arg_preference_order}()},
 \code{\link{validate_arg_quiet}()},
-\code{\link{validate_arg_response}()},
-\code{\link{validate_args_target_encoding_lab}()}
+\code{\link{validate_arg_responses}()}
 }
-\concept{data_validation}
+\concept{argument_validation}

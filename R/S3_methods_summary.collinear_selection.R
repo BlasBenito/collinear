@@ -1,4 +1,5 @@
 #' Summary of \code{class.collinear_selection}
+#'
 #' @param object (required, output of [class.collinear_selection()]) Object to summarize. Default: NULL
 #' @param ... Ignored, kept for consistency with generic.
 #' @return list
@@ -12,17 +13,14 @@ summary.collinear_selection <- function(
     ...
 ){
 
-  x <- list(
-    response = object$response,
-    selection = object$selection
-  )
+  out <- object$selection
 
   # response ----
-  if(!is.null(x$response)){
+  if(!is.null(object$response)){
 
     msg <- paste0(
       "response: ",
-      x$response
+      object$response
     )
 
     msg_length <- nchar(msg)
@@ -42,34 +40,26 @@ summary.collinear_selection <- function(
 
 
   # selection ----
-  if(!is.null(x$selection)){
+  if(length(out) > 1){
 
-    if(length(x$selection) > 1){
-
-      cat(
-        "+ selection:\n  -",
-        paste(
-          x$selection,
-          collapse = "\n  - "
-        )
+    cat(
+      "+ selection:\n  -",
+      paste(
+        out,
+        collapse = "\n  - "
       )
+    )
 
-    } else {
+  } else {
 
-      cat(
-        "- selection:\n  -", x$selection
-      )
-
-    }
-
-    cat("\n")
+    cat(
+      "- selection:\n  -", out
+    )
 
   }
 
   cat("\n")
 
-  class(x) <- c(class(x), "summary.collinear_selection")
-
-  x
+  out
 
 }

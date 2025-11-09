@@ -2,22 +2,24 @@
 % Please edit documentation in R/vif.R
 \name{vif}
 \alias{vif}
-\title{Variance Inflation Factors From Correlation Matrix}
+\title{Variance Inflation Factors From Absolute Correlation Matrix}
 \usage{
-vif(m = NULL, ...)
+vif(m = NULL, quiet = FALSE, ...)
 }
 \arguments{
 \item{m}{(required, matrix) Correlation matrix generated via \code{\link[stats:cor]{stats::cor()}} or \code{\link[=cor_matrix]{cor_matrix()}}. Must have named dimensions. Default: NULL}
 
-\item{...}{(optional) Other arguments. Currently used for the internal argument \code{function_name}.}
+\item{quiet}{(optional; logical) If FALSE, messages are printed to the console. Default: FALSE}
+
+\item{...}{(optional) Used to pass internal arguments such as \code{function_name} for \link{validate_arg_function_name} in nested calls, or \code{m}, a correlation matrix generated via \code{\link[stats:cor]{stats::cor()}} or \code{\link[=cor_matrix]{cor_matrix()}}.}
 }
 \value{
 named numeric vector
 }
 \description{
-Computes the Variance Inflation Factors of numeric variables from their correlation matrix in two steps:
+Computes the Variance Inflation Factors from an absolute correlation matrix in two steps:
 \itemize{
-\item Applies \code{\link[base:solve]{base::solve()}} to transform the correlation matrix into a precision matrix, which is the inverse of the covariance matrix between all variables in \code{predictors}.
+\item Applies \code{\link[base:solve]{base::solve()}} to transform the absolute correlation matrix into a precision matrix, which is the inverse of the covariance matrix between all variables in \code{predictors}.
 \item Applies \code{\link[base:diag]{base::diag()}} to extract the diagonal of the precision matrix, which contains the variance of the regression of each predictor against all other predictors, also known as Variance Inflation Factor
 }
 }
@@ -32,10 +34,10 @@ The range of VIF values is (1, Inf]. The recommended thresholds for maximum VIF 
 }
 
 \examples{
-data(vi, vi_predictors_numeric)
+data(vi_smol, vi_predictors_numeric)
 
 m <- cor_matrix(
-  df = vi[1:1000, ],
+  df = vi_smol,
   predictors = vi_predictors_numeric[1:5]
 )
 
@@ -49,6 +51,7 @@ vif(m)
 \seealso{
 Other variance_inflation_factor: 
 \code{\link{vif_df}()},
-\code{\link{vif_select}()}
+\code{\link{vif_select}()},
+\code{\link{vif_stats}()}
 }
 \concept{variance_inflation_factor}

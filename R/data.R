@@ -6,7 +6,7 @@
 #' \itemize{
 #'  \item \code{vi_numeric}: continuous vegetation index values in the range 0-1.
 #'  \item \code{vi_counts}: simulated integer counts created by multiplying \code{vi_numeric} by 1000 and coercing the result to integer.
-#'  \item \code{vi_binomial}: simulated binomial variable created by transforming \code{vi_numeric} to zeros and ones.
+#'  \item \code{vi_binomial}: simulated integer binomial variable created by transforming \code{vi_numeric} to zeros and ones.
 #'  \item \code{vi_categorical}: character variable with the categories "very_low", "low", "medium", "high", and "very_high", with thresholds located at the quantiles of \code{vi_numeric}.
 #'  \item \code{vi_factor}: \code{vi_categorical} converted to factor.
 #' }
@@ -16,7 +16,7 @@
 #' @usage data(vi)
 #' @seealso [vi_predictors]
 #'
-#' @format Data frame with 30.000 rows and 68 columns.
+#' @format dataframe with 30.000 rows and 68 columns.
 #' @family example_data
 "vi"
 
@@ -29,11 +29,11 @@
 #' @usage data(vi_smol)
 #' @seealso [vi_predictors]
 #'
-#' @format Data frame with 100 rows and 68 columns.
+#' @format dataframe with 100 rows and 68 columns.
 #' @family example_data
 "vi_smol"
 
-#' Response Names in Example Data Frame `vi`
+#' Response Names in Example Dataframe `vi`
 #'
 #' @usage data(vi_responses)
 #' @seealso [vi]
@@ -42,7 +42,7 @@
 #' @family example_data
 "vi_responses"
 
-#' All Predictor Names in Example Data Frame vi
+#' All Predictor Names in Example Dataframe vi
 #'
 #' @usage data(vi_predictors)
 #' @seealso [vi]
@@ -51,7 +51,7 @@
 #' @family example_data
 "vi_predictors"
 
-#' All Numeric Predictor Names in Example Data Frame vi
+#' All Numeric Predictor Names in Example Dataframe vi
 #'
 #' @usage data(vi_predictors_numeric)
 #' @seealso [vi]
@@ -60,7 +60,7 @@
 #' @family example_data
 "vi_predictors_numeric"
 
-#' All Categorical and Factor Predictor Names in Example Data Frame vi
+#' All Categorical and Factor Predictor Names in Example Dataframe vi
 #'
 #' @usage data(vi_predictors_categorical)
 #' @seealso [vi]
@@ -72,7 +72,7 @@
 
 #' One response and four predictors with varying levels of multicollinearity
 #'
-#' Data frame with known relationship between responses and predictors useful
+#' dataframe with known relationship between responses and predictors useful
 #' to illustrate multicollinearity concepts. Created from [vi] using the code
 #' shown in the example.
 #'
@@ -94,43 +94,66 @@
 #'
 #' @usage data(toy)
 #'
-#' @format Data frame with 2000 rows and 5 columns.
+#' @format dataframe with 2000 rows and 5 columns.
 #' @family example_data
 "toy"
 
 #' Results of a Collinearity-Filtering Simulation
 #'
-#' A data frame summarising 10,000 random draws used to benchmark
-#' the functions [cor_select()] and [vif_select()]. Each row records the input sampling parameters and the resulting feature-selection metrics.
+#' A dataframe summarising 10,000 experiments comparing the output of [cor_select()] and [vif_select()]. Each row records the input sampling parameters and the resulting feature-selection metrics.
 #'
 #' The source data is [vi] plus 200 synthetic columns, for a total of 249 columns and 30.000 rows.
 #'
-#' @format A data frame with 9354 rows and 6 variables:
+#' @format A dataframe with 9354 rows and 6 variables:
 #' \describe{
-#'   \item{in_columns}{Number of predictor columns sampled.}
-#'   \item{in_rows}{Number of rows sampled (≥30 per column).}
-#'   \item{max_cor}{Maximum allowed pairwise correlation supplied to [cor_select()].}
-#'   \item{max_vif}{Smallest VIF threshold at which [vif_select()] produced the most similar to [cor_select()] for the given \code{max_cor}.}
+#'   \item{input_rows}{Number of rows in the input data.}
+#'   \item{input_predictors}{Number of predictors in the input data.}
+#'   \item{output_predictors}{Number of predictors selected by [cor_select()].}
+#'   \item{input_max_cor}{Maximum allowed pairwise correlation supplied to [cor_select()].}
+#'   \item{output_max_vif}{Smallest VIF threshold at which [vif_select()] produced the most similar to [cor_select()] for the given \code{input_max_cor}.}
 #'   \item{out_selection_length}{Number of variables returned from the multicollinearity filtering.}
-#'   \item{out_selection_jaccard}{Jaccard similarity between the sets selected by the correlation and VIF procedures.}
+#'   \item{jaccard_cor_vs_vif_selection}{Jaccard similarity between the predictors selected [cor_select()] and [vif_select()].}
 #' }
 #'
 #' @examples
-#' data(experiment_df)
-#' str(experiment_df)
-"experiment_df"
+#' data(experiment_cor_vs_vif)
+#' str(experiment_cor_vs_vif)
+"experiment_cor_vs_vif"
+
+
+#' Testing Capabilities of [collinear_auto()]
+#'
+#' A dataframe with 10,000 experiment to test the capability of [collinear_auto()] to automatically reduce multicollinearity.
+#'
+#' The source data is [vi] plus 200 synthetic columns, for a total of 249 columns and 30.000 rows that are randomly subset on each iteration.
+#'
+#' @format A dataframe with 10000 rows and 7 variables:
+#' \describe{
+#'   \item{input_rows}{Number of rows in the input data.}
+#'   \item{input_predictors}{Number of predictors in the input data.}
+#'   \item{output_predictors}{Number of predictors selected by [collinear_auto()].}
+#'   \item{input_cor_median}{Median correlation of the input predictors as returned by [collinear_stats()].}
+#'   \item{output_cor_median}{Median correlation of the selected predictors.}
+#'   \item{input_vif_max}{Maximum VIF of the input predictors as returned by [collinear_stats()].}
+#'   \item{output_vif_max}{Maximum VIF of the selected predictors.}
+#' }
+#'
+#' @examples
+#' data(experiment_collinear_auto)
+#' str(experiment_collinear_auto)
+"experiment_collinear_auto"
 
 #' GAM Relating Maximum Correlation to VIF Threshold
 #'
-#' A fitted generalized additive model describing \code{max_vif} as a function of \code{max_cor} in [experiment_df].
+#' A fitted generalized additive model describing \code{max_vif} as a function of \code{max_cor} in [experiment_cor_vs_vif].
 #'
 #' The model was fitted with a smooth term in \code{max_cor} (basis dimension \code{k = 9}) and cubic weights proportional to the Jaccard similarity between the results of [cor_select()] and [vif_select()] to emphasise cases with high agreement between the two selection methods.
 #'
 #' \preformatted{
 #' gam_cor_to_vif <- mgcv::gam(
-#'  formula = max_vif ~ s(max_cor, k = 9),
-#'  weights = experiment_df$out_selection_jaccard^3,
-#'  data = experiment_df,
+#'  formula = output_max_vif ~ s(input_max_cor, k = 9),
+#'  weights = experiment_cor_vs_vif$out_selection_jaccard^3,
+#'  data = experiment_cor_vs_vif,
 #'  select = TRUE
 #'  )
 #'}
@@ -145,7 +168,7 @@
 #'
 #' @format A \code{\link[mgcv]{gam}} object.
 #'
-#' @source Generated internally from \link{experiment_df}.
+#' @source Generated internally from \link{experiment_cor_vs_vif}.
 #' @examples
 #' data(gam_cor_to_vif)
 #' plot(gam_cor_to_vif, shade = TRUE)
@@ -160,7 +183,7 @@
 #'
 #' Values were generated by applying \code{mgcv::predict.gam} to the fitted model [gam_cor_to_vif] and rounding to two decimal places.
 #'
-#' @format A data frame with 91 rows and 2 numeric columns:
+#' @format A dataframe with 91 rows and 2 numeric columns:
 #' \describe{
 #'   \item{max_cor}{Maximum allowed pairwise correlation, from 0.10 to 1.00 in steps of 0.01.}
 #'   \item{max_vif}{Predicted VIF threshold corresponding to each \code{max_cor}.}

@@ -1,40 +1,44 @@
-testthat::test_that("`case_weights()` works", {
+testthat::test_that("`drop_geometry_column()` works", {
 
   data(vi_smol)
 
-  df <- vi_smol
+  vi_smol
 
   #creating fake geometry column without sf loaded
-  df$geometry <- NA
+  vi_smol$geometry <- NA
 
   attr(
-    x = df,
+    x = vi_smol,
     which = "sf_column"
     ) <- "geometry"
 
   #check new attribute
   testthat::expect_true(
-    attributes(df)$sf_column == "geometry"
+    attributes(vi_smol)$sf_column == "geometry"
   )
 
   testthat::expect_true(
-    "geometry" %in% colnames(df)
+    "geometry" %in% colnames(vi_smol)
   )
 
 
   #drop geometry column
-  df <- drop_geometry_column(
-    df = df,
-    quiet = TRUE
-    )
+  testthat::expect_message(
+    vi_smol <- drop_geometry_column(
+      df = vi_smol,
+      quiet = FALSE
+    ),
+    regexp = "dropping geometry column from 'df'"
+  )
+
 
   #checking that the geometry was droppped
   testthat::expect_false(
-    "geometry" %in% colnames(df)
+    "geometry" %in% colnames(vi_smol)
   )
 
   testthat::expect_true(
-    is.null(attributes(df)$sf_column)
+    is.null(attributes(vi_smol)$sf_column)
   )
 
 

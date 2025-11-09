@@ -2,6 +2,20 @@ testthat::test_that("`model_formula()` works", {
 
   data(vi_smol, vi_predictors_numeric)
 
+  #null df
+  testthat::expect_error(
+    x <- model_formula(),
+    regexp = "argument 'df' cannot be NULL"
+  )
+
+  testthat::expect_error(
+    x <- model_formula(
+      df = vi_smol,
+      response = NULL
+    ),
+    regexp = "argument 'response' cannot be NULL"
+  )
+
   #additive formula
   x <- model_formula(
     df = vi_smol,
@@ -68,6 +82,27 @@ testthat::test_that("`model_formula()` works", {
   )
 
   #random effect
+  testthat::expect_error(
+    x <- model_formula(
+      df = vi_smol,
+      response = "vi_numeric",
+      predictors = vi_predictors_numeric[1:3],
+      random_effects = 2
+    ),
+    regexp = "argument 'random_effects' must be a character string or vector"
+  )
+
+  testthat::expect_error(
+    x <- model_formula(
+      df = vi_smol,
+      response = "vi_numeric",
+      predictors = c(vi_predictors_numeric[1:3], "country_name"),
+      random_effects = "country_name"
+    ),
+    regexp = "argument 'random_effects' must name variables not in argument 'predictors'"
+  )
+
+
   x <- model_formula(
     df = vi_smol,
     response = "vi_numeric",

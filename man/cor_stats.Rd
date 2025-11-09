@@ -7,23 +7,16 @@
 cor_stats(df = NULL, predictors = NULL, quiet = FALSE, ...)
 }
 \arguments{
-\item{df}{(required; data frame, tibble, or sf) A dataframe with predictors or the output of\code{\link[=cor_df]{cor_df()}}. Default: NULL.}
+\item{df}{(required; dataframe, tibble, or sf) A dataframe with predictors or the output of \code{\link[=cor_df]{cor_df()}}. Default: NULL.}
 
-\item{predictors}{(optional; character vector or NULL) Names of the predictors in \code{df} involved in the multicollinearity filtering. If NULL, all columns in \code{df} (except those with constant values or near zero variance) are used. Default: NULL}
+\item{predictors}{(optional; character vector or NULL) Names of the predictors in \code{df}. If NULL, all columns in \code{df} except the ones in \code{responses} and those with constant values or near zero variance are used. Default: NULL}
 
 \item{quiet}{(optional; logical) If FALSE, messages are printed to the console. Default: FALSE}
 
-\item{...}{(optional) Other arguments. Currently used for the internal argument \code{function_name}.}
+\item{...}{(optional) Used to pass internal arguments such as \code{function_name} for \link{validate_arg_function_name} in nested calls, or \code{m}, a correlation matrix generated via \code{\link[stats:cor]{stats::cor()}} or \code{\link[=cor_matrix]{cor_matrix()}}.}
 }
 \value{
-\itemize{
-\item if \code{df} is the output of \code{\link[=cor_df]{cor_df()}}: stats dataframe with the columns \code{statistic} and \code{correlation}.
-\item if \code{df} is a data frame with predictors: list with:
-\itemize{
-\item \code{correlation}: result from \code{\link[=cor_df]{cor_df()}}.
-\item \code{stats} data frame.
-}
-}
+dataframe with columns \code{method} (with value "correlation"), \code{statistic} and \code{value}
 }
 \description{
 Computes the the minimum, mean, maximum, and quantiles 0.05, 0.25, median (0.5), 0.75, and 0.95 of the column "correlation" in the output of \code{\link[=cor_df]{cor_df()}}.
@@ -34,48 +27,31 @@ data(
   vi_predictors_numeric
   )
 
-#OPTIONAL: parallelization setup
-# only worth it for large data
+## OPTIONAL: parallelization setup
+## irrelevant when all predictors are numeric
+## only worth it for large data with many categoricals
 # future::plan(
 #   future::multisession,
-#   workers = 2
+#   workers = future::availableCores() - 1
 # )
-#
-#OPTIONAL: progress bar
+
+## OPTIONAL: progress bar
 # progressr::handlers(global = TRUE)
 
-#returns correlation and stats dataframes
-stats <- cor_stats(
+x <- cor_stats(
   df = vi_smol,
-  predictors = vi_predictors_numeric[1:10]
+  predictors = vi_predictors_numeric
 )
 
-#vector of correlation values
-head(stats$correlation)
+x
 
-#stats data frame
-stats$stats
-
-#using output of cor_df
-df_correlation <- cor_df(
-  df = vi_smol,
-  predictors = vi_predictors_numeric[1:10]
-)
-
-#returns stats dataframe only
-stats <- cor_stats(
-  df = df_correlation
-)
-
-stats
-
-#OPTIONAL: disable parallelization
+## OPTIONAL: disable parallelization
 #future::plan(future::sequential)
 }
 \seealso{
 Other pairwise_correlation: 
 \code{\link{cor_clusters}()},
-\code{\link{cor_cramer_v}()},
+\code{\link{cor_cramer}()},
 \code{\link{cor_df}()},
 \code{\link{cor_matrix}()},
 \code{\link{cor_select}()}

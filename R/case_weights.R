@@ -5,14 +5,14 @@
 #' \itemize{
 #'   \item numeric binomial (1 and 0).
 #'   \item logical (TRUE and FALSE): converted to numeric internally.
-#'   \item categorical
+#'   \item categorical (character or factor)
 #' }
 #'
-#' Values NA, Inf, -Inf, and NaN are invalid for numeric and logical variables and will result in errors. For categorical variables, these, if present, are converted to their respective categories ("NA", "Inf", "-Inf", and "NaN") with their assigned case weights.
+#' Values NA, Inf, -Inf, and NaN are invalid for numeric and logical variables and will result in errors. For categorical variables, these are converted to their respective categories ("NA", "Inf", "-Inf", and "NaN") with their assigned case weights.
 #'
 #' All returned weights sum to one.
 #'
-#' @param x (required, integer, character, or factor vector) Binomial, categorical, or factor response variable. Default: NULL
+#' @param x (required, integer, character, or factor vector) Values of a binomial, categorical, or factor variable. Default: NULL
 #' @inheritParams collinear
 #' @return numeric vector: case weights
 #' @examples
@@ -83,9 +83,9 @@ case_weights <- function(
     stop(
       "\n",
       function_name,
-      ": something went wrong when computing case weights, the length of the input is ",
+      ": something went wrong when computing case weights, the input length is ",
       length(x),
-      ", but the length of the output is ",
+      ", but the output length is ",
       length(out),
       ".",
       call. = FALSE

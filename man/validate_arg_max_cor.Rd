@@ -4,14 +4,14 @@
 \alias{validate_arg_max_cor}
 \title{Validate Argument \code{max_cor}}
 \usage{
-validate_arg_max_cor(max_cor = NULL, function_name = NULL, quiet = FALSE)
+validate_arg_max_cor(max_cor = NULL, quiet = FALSE, function_name = NULL)
 }
 \arguments{
 \item{max_cor}{(optional; numeric or NULL) Maximum correlation allowed between pairs of \code{predictors}. Valid values are between 0.01 and 0.99, and recommended values are between 0.5 (strict) and 0.9 (permissive). If NULL, the pairwise correlation analysis is disabled. Default: 0.7}
 
-\item{function_name}{(optional, character string) Name of the function performing the argument check. Default: NULL}
-
 \item{quiet}{(optional; logical) If FALSE, messages are printed to the console. Default: FALSE}
+
+\item{function_name}{(optional, character string) Name of the function performing the argument check. Default: NULL}
 }
 \value{
 numeric or NULL
@@ -20,20 +20,16 @@ numeric or NULL
 Validate Argument \code{max_cor}
 }
 \examples{
-max_cor <- validate_arg_max_cor(
+x <- validate_arg_max_cor(
   max_cor = 1.5, #wrong value
-  function_name = "f()",
   quiet = FALSE
 )
 
-max_cor
-attributes(max_cor)$validated
+x
+attributes(x)$validated
 }
 \seealso{
-Other data_validation: 
-\code{\link{autoconfig_arg_max_cor}()},
-\code{\link{autoconfig_arg_max_vif}()},
-\code{\link{tolerance}()},
+Other argument_validation: 
 \code{\link{validate_arg_df}()},
 \code{\link{validate_arg_df_not_null}()},
 \code{\link{validate_arg_encoding_method}()},
@@ -41,11 +37,8 @@ Other data_validation:
 \code{\link{validate_arg_function_name}()},
 \code{\link{validate_arg_max_vif}()},
 \code{\link{validate_arg_predictors}()},
-\code{\link{validate_arg_predictors_cor}()},
-\code{\link{validate_arg_predictors_vif}()},
 \code{\link{validate_arg_preference_order}()},
 \code{\link{validate_arg_quiet}()},
-\code{\link{validate_arg_response}()},
-\code{\link{validate_args_target_encoding_lab}()}
+\code{\link{validate_arg_responses}()}
 }
-\concept{data_validation}
+\concept{argument_validation}

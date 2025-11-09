@@ -5,7 +5,7 @@
 \alias{equivalence_cor_vif}
 \title{Equivalence Table of Maximum Correlation and VIF Threshold}
 \format{
-A data frame with 91 rows and 2 numeric columns:
+A dataframe with 91 rows and 2 numeric columns:
 \describe{
 \item{max_cor}{Maximum allowed pairwise correlation, from 0.10 to 1.00 in steps of 0.01.}
 \item{max_vif}{Predicted VIF threshold corresponding to each \code{max_cor}.}

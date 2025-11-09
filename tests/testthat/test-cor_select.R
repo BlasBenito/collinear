@@ -2,16 +2,14 @@ testthat::test_that("`cor_select()` works", {
 
   data(vi_smol, vi_predictors)
 
-  predictors <- vi_predictors[1:10]
-
   # mixed types ----
   testthat::expect_message(
     x <- cor_select(
       df = vi_smol,
-      predictors = predictors,
+      predictors = vi_predictors[1:10],
       quiet = FALSE
     ),
-    regexp = "ranking predictors"
+    regexp = "from lower to higher multicollinearity"
   ) |>
     suppressMessages()
 
@@ -20,11 +18,11 @@ testthat::test_that("`cor_select()` works", {
   )
 
   testthat::expect_true(
-    all(x %in% predictors)
+    all(x %in% vi_predictors[1:10])
   )
 
   testthat::expect_true(
-   length(predictors) > length(x)
+   length(vi_predictors[1:10]) > length(x)
   )
 
   #custom preference order
@@ -33,23 +31,32 @@ testthat::test_that("`cor_select()` works", {
     "topo_elevation"
   )
 
-  x <- cor_select(
-    df = vi_smol,
-    predictors = predictors,
-    preference_order = preference_order,
-    quiet = TRUE
-  )
+  testthat::expect_message(
+    x <- cor_select(
+      df = vi_smol,
+      predictors = vi_predictors_numeric,
+      preference_order = preference_order,
+      quiet = FALSE
+    ),
+    regexp = paste0(
+      "ranking ",
+      length(vi_predictors_numeric) - length(preference_order),
+      " 'predictors' from lower to higher multicollinearity"
+    )
+  ) |>
+    suppressMessages()
+
 
   testthat::expect_true(
     is.character(x)
   )
 
   testthat::expect_true(
-    all(x %in% predictors)
+    all(x %in% vi_predictors_numeric)
   )
 
   testthat::expect_true(
-    length(predictors) > length(x)
+    length(vi_predictors_numeric) > length(x)
   )
 
   testthat::expect_true(
@@ -57,18 +64,17 @@ testthat::test_that("`cor_select()` works", {
   )
 
   #automated preference order
-  preference_order <- preference_order(
+  preference_order_df <- preference_order(
     df = vi_smol,
     response = "vi_numeric",
-    predictors = predictors,
-    quiet = TRUE,
-    warn_limit = NULL
+    predictors = vi_predictors_numeric,
+    quiet = TRUE
   )
 
   x <- cor_select(
     df = vi_smol,
-    predictors = predictors,
-    preference_order = preference_order,
+    predictors = vi_predictors_numeric,
+    preference_order = preference_order_df,
     quiet = TRUE
   )
 
@@ -77,23 +83,21 @@ testthat::test_that("`cor_select()` works", {
   )
 
   testthat::expect_true(
-    all(x %in% predictors)
+    all(x %in% vi_predictors_numeric)
   )
 
   testthat::expect_true(
-    length(predictors) > length(x)
+    length(vi_predictors_numeric) > length(x)
   )
 
   testthat::expect_true(
-    all(preference_order$predictor[1] == x[1])
+    all(preference_order_df$predictor[1] == x[1])
   )
 
   # categorical only ----
-  predictors <- vi_predictors_categorical[1:5]
-
   x <- cor_select(
     df = vi_smol,
-    predictors = predictors,
+    predictors = vi_predictors_categorical[1:4],
     quiet = TRUE
   )
 
@@ -102,12 +106,23 @@ testthat::test_that("`cor_select()` works", {
   )
 
   testthat::expect_true(
-    all(x %in% predictors)
+    all(x %in% vi_predictors_categorical[1:4])
   )
 
   testthat::expect_true(
-    length(predictors) > length(x)
+    length(vi_predictors_categorical[1:4]) > length(x)
   )
+
+  testthat::expect_message(
+    y <- cor_select(
+      df = vi_smol,
+      predictors = x,
+      quiet = FALSE
+    ),
+    regexp = "maximum pairwise correlation is <="
+  ) |>
+    suppressMessages()
+
 
   # edge cases ----
 
@@ -138,6 +153,16 @@ testthat::test_that("`cor_select()` works", {
     regexp = "argument 'df' has fewer than 3 rows"
   )
 
+  #null max cor
+  testthat::expect_error(
+    x <- cor_select(
+      df = vi_smol[, 1:5],
+      predictors = NULL,
+      max_cor = NULL,
+      quiet = FALSE
+    ),
+    regexp = "argument 'max_cor' cannot be NULL"
+  )
 
   #no predictors
   x <- cor_select(
@@ -151,14 +176,12 @@ testthat::test_that("`cor_select()` works", {
   )
 
   #single predictor
-  predictors <- vi_predictors_categorical[1]
-
   testthat::expect_message(
     x <- cor_select(
       df = vi_smol,
-      predictors = predictors
+      predictors = vi_predictors_categorical[1]
     ),
-    regexp = "only one predictor"
+    regexp = "only one valid predictor"
   ) |>
     suppressMessages()
 
@@ -167,11 +190,11 @@ testthat::test_that("`cor_select()` works", {
   )
 
   testthat::expect_true(
-    all(x %in% predictors)
+    all(x %in% vi_predictors_categorical[1])
   )
 
   testthat::expect_true(
-    length(predictors) == length(x)
+    length(vi_predictors_categorical[1]) == length(x)
   )
 
 })

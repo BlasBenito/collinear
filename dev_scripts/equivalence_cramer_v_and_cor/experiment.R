@@ -33,7 +33,7 @@ for(i in seq_len(nrow(iterations_df))){
   ) |>
     abs()
 
-  iterations_df[i, "cramer_v"] <- collinear::cor_cramer_v(
+  iterations_df[i, "cramer_v"] <- collinear::cor_cramer(
     x = x,
     y = y
   )

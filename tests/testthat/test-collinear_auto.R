@@ -3,14 +3,13 @@ testthat::test_that("`collinear_auto()` works", {
   data(
     vi,
     vi_smol,
-    vi_predictors,
     vi_predictors_numeric,
     vi_predictors_categorical,
     vi_responses
   )
 
   #DEFAULT CALL ----
-  #Error: collinear::collinear(): argument 'df' cannot be NULL
+  #Error: collinear_auto::collinear_auto(): argument 'df' cannot be NULL
   testthat::expect_error(
     x <- collinear_auto(),
     regexp = "'df' cannot be NULL"
@@ -19,14 +18,25 @@ testthat::test_that("`collinear_auto()` works", {
   #DF ONLY ----
 
   ##fewer than 10 rows ----
+  testthat::expect_message(
+    x <- collinear_auto(
+      df = vi_smol[1:9, ],
+      predictors = vi_predictors_numeric
+    ),
+    regexp = "argument 'df' has fewer than 10 rows"
+  ) |>
+    suppressMessages() |>
+    suppressWarnings()
+
   testthat::expect_warning(
     x <- collinear_auto(
       df = vi_smol[1:9, ],
       predictors = vi_predictors_numeric
     ),
-    regexp = "has fewer than 10 rows"
+    regexp = "the correlation matrix is singular"
   ) |>
-    suppressMessages()
+    suppressMessages() |>
+    suppressWarnings()
 
   ##fewer than 30 rows ----
   testthat::expect_message(
@@ -36,7 +46,18 @@ testthat::test_that("`collinear_auto()` works", {
     ),
     regexp = "has fewer than 30 rows"
   ) |>
-    suppressMessages()
+    suppressMessages() |>
+    suppressWarnings()
+
+  testthat::expect_warning(
+    x <- collinear_auto(
+      df = vi_smol[1:11, ],
+      predictors = vi_predictors_numeric
+    ),
+    regexp = "the correlation matrix is singular"
+  ) |>
+    suppressMessages() |>
+    suppressWarnings()
 
   ##more than 30 rows ----
 
@@ -48,7 +69,7 @@ testthat::test_that("`collinear_auto()` works", {
       max_cor = NULL,
       max_vif = NULL
     ),
-    regexp = "autoconfiguring 'max_cor'"
+    regexp = "setting 'max_cor' to"
   ) |>
     suppressMessages()
 
@@ -59,7 +80,7 @@ testthat::test_that("`collinear_auto()` works", {
       max_cor = NULL,
       max_vif = NULL
     ),
-    regexp = "autoconfiguring 'max_vif'"
+    regexp = "setting 'max_vif' to"
   ) |>
     suppressMessages()
 
@@ -111,26 +132,9 @@ testthat::test_that("`collinear_auto()` works", {
       predictors = vi_predictors_categorical[1:5],
       quiet = FALSE
     ),
-    regexp = "max_vif = NULL"
+    regexp = "ranking 5 'predictors' from lower to higher multicollinearity"
   ) |>
     suppressMessages()
-
-  testthat::expect_true(
-    inherits(x = x, what = "collinear_output")
-  )
-
-  #test lack of formulas because there is no response
-  testthat::expect_true(
-    !any(c("formula", "formulas") %in% names(x))
-  )
-
-  ##mixed predictors ----
-  x <- collinear_auto(
-    df = vi_smol,
-    responses = NULL,
-    predictors = c(vi_predictors_numeric[1:3], vi_predictors_categorical[1:3]),
-    quiet = TRUE
-  )
 
   testthat::expect_true(
     inherits(x = x, what = "collinear_output")
@@ -145,7 +149,7 @@ testthat::test_that("`collinear_auto()` works", {
 
   ##numeric numeric ----
   x <- collinear_auto(
-    df = vi_smol,
+    df = vi,
     responses = "vi_numeric",
     predictors = vi_predictors_numeric,
     quiet = TRUE
@@ -164,7 +168,7 @@ testthat::test_that("`collinear_auto()` works", {
   x <- collinear_auto(
     df = vi_smol,
     responses = "vi_categorical",
-    predictors = vi_predictors_numeric[1:10],
+    predictors = vi_predictors_numeric[1:5],
     quiet = TRUE
   )
 
@@ -177,10 +181,10 @@ testthat::test_that("`collinear_auto()` works", {
     x <- collinear_auto(
       df = vi_smol,
       responses = "vi_categorical",
-      predictors = vi_predictors_categorical,
+      predictors = vi_predictors_categorical[1:5],
       quiet = FALSE
     ),
-    regexp = "max_vif = NULL"
+    regexp = "f_categorical_rf"
   ) |>
     suppressMessages()
 
@@ -194,7 +198,7 @@ testthat::test_that("`collinear_auto()` works", {
     x <- collinear_auto(
       df = vi_smol,
       responses = vi_responses,
-      predictors = c(vi_predictors_numeric[1:10], vi_predictors_categorical[1:2]),
+      predictors = vi_predictors_numeric,
       quiet = FALSE
     ),
     regexp = "processing response"
@@ -205,6 +209,8 @@ testthat::test_that("`collinear_auto()` works", {
   testthat::expect_true(
     all(vi_responses %in% names(x))
   )
+
+
 
   #checking formulas
   testthat::expect_true(
@@ -229,36 +235,16 @@ testthat::test_that("`collinear_auto()` works", {
 
 
   #TARGET ENCODING ----
-  f_test <- function(){
-    collinear_auto(
+  testthat::expect_message(
+    x <- collinear_auto(
       df = vi_smol,
       responses = c("vi_numeric", "vi_categorical"),
-      predictors = vi_predictors_categorical,
+      predictors = vi_predictors_categorical[1:5],
       quiet = FALSE
-    )
-  }
-
-  testthat::expect_message(
-    x <- f_test(),
+    ),
     regexp = "using response 'vi_numeric' to encode"
   ) |>
     suppressMessages()
-
-  testthat::expect_message(
-    x <- f_test(),
-    regexp = "argument 'response' is categorical"
-  ) |>
-    suppressMessages()
-
-  #check that a categorical predictor was converted to numeric for "vi_numeric"
-
-  varname <- x$vi_numeric$selection[1]
-
-  testthat::expect_true(
-    !is.numeric(vi_smol[[varname]]) &&
-      !is.numeric(x$vi_categorical$df[[varname]]) &&
-      is.numeric(x$vi_numeric$df[[varname]])
-  )
 
 
   # PREFERENCE ORDER ----
@@ -266,25 +252,15 @@ testthat::test_that("`collinear_auto()` works", {
   ## no target encoding ----
 
   ### invalid character vector ----
-  x <- collinear_auto(
-    df = vi_smol,
-    responses = "vi_numeric",
-    predictors = vi_predictors_numeric,
-    quiet = TRUE
-  )
-
-  testthat::expect_true(
-    all(x$vi_numeric$preference$df$predictor %in% vi_predictors_numeric)
-  )
-
-  preference_order_auto <- vif_df(
-    df = vi_smol,
-    predictors = vi_predictors_numeric,
-    quiet = TRUE
-  )$predictor
-
-  testthat::expect_true(
-    all(x$arguments$preference_order == rev(preference_order_auto))
-  )
+  testthat::expect_message(
+    x <- collinear_auto(
+      df = vi_smol,
+      responses = "vi_numeric",
+      predictors = vi_predictors_numeric,
+      quiet = FALSE
+    ),
+    regexp = "f_numeric_glm"
+  ) |>
+    suppressMessages()
 
 })

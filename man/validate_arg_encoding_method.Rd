@@ -5,26 +5,26 @@
 \title{Validate Argument \code{encoding_method}}
 \usage{
 validate_arg_encoding_method(
-  encoding_method = NULL,
+  encoding_method = c("loo", "mean", "rank"),
   overwrite = NULL,
-  function_name = NULL,
-  quiet = FALSE
+  quiet = FALSE,
+  function_name = NULL
 )
 }
 \arguments{
-\item{encoding_method}{(optional; character or NULL). Name of one target encoding method. One of: "loo", "mean", or "rank" (see \code{\link[=target_encoding_lab]{target_encoding_lab()}} for further details). If NULL, target encoding is disabled. Default: NULL}
+\item{encoding_method}{(optional; character vector or NULL). Name of the target encoding methods. One or several of: "mean", "rank", "loo". If NULL, target encoding is ignored, and \code{df} is returned with no modification. Default: c("loo", "mean", "rank")}
 
 \item{overwrite}{(optional; logical) If TRUE, the original predictors in \code{df} are overwritten with their encoded versions, but only one encoding method, smoothing, white noise, and seed are allowed. Otherwise, encoded predictors with their descriptive names are added to \code{df}. Default: FALSE}
 
-\item{function_name}{(optional, character string) Name of the function performing the argument check. Default: NULL}
-
 \item{quiet}{(optional; logical) If FALSE, messages are printed to the console. Default: FALSE}
+
+\item{function_name}{(optional, character string) Name of the function performing the argument check. Default: NULL}
 }
 \value{
 character
 }
 \description{
-Validate Argument \code{encoding_method}
+Internal function to validate the argument \code{encoding_method} of \code{\link[=target_encoding_lab]{target_encoding_lab()}}.
 }
 \examples{
 x <- validate_arg_encoding_method(
@@ -32,10 +32,7 @@ x <- validate_arg_encoding_method(
   )
 }
 \seealso{
-Other data_validation: 
-\code{\link{autoconfig_arg_max_cor}()},
-\code{\link{autoconfig_arg_max_vif}()},
-\code{\link{tolerance}()},
+Other argument_validation: 
 \code{\link{validate_arg_df}()},
 \code{\link{validate_arg_df_not_null}()},
 \code{\link{validate_arg_f}()},
@@ -43,11 +40,8 @@ Other data_validation:
 \code{\link{validate_arg_max_cor}()},
 \code{\link{validate_arg_max_vif}()},
 \code{\link{validate_arg_predictors}()},
-\code{\link{validate_arg_predictors_cor}()},
-\code{\link{validate_arg_predictors_vif}()},
 \code{\link{validate_arg_preference_order}()},
 \code{\link{validate_arg_quiet}()},
-\code{\link{validate_arg_response}()},
-\code{\link{validate_args_target_encoding_lab}()}
+\code{\link{validate_arg_responses}()}
 }
-\concept{data_validation}
+\concept{argument_validation}

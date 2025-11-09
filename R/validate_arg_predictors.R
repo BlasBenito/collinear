@@ -1,56 +1,47 @@
 #' Validate Argument \code{predictors}
 #'
 #' @description
-#' Internal function. Validates the argument \code{predictors} as follows:
-#' \itemize{
-#'   \item Returns \code{predictors} as-is if it has the attribute \code{validated = TRUE}.
-#'   \item Stops if \code{df} is \code{NULL}, using [validate_arg_df_not_null()].
-#'   \item If \code{predictors} is \code{NULL}, uses all column names in \code{df} except those in the \code{response} argument.
-#'   \item Removes any elements in \code{predictors} that are also in \code{response}.
-#'   \item Ignores \code{predictors} not present as column names in \code{df}, issuing a message if \code{quiet = FALSE}.
-#'   \item If \code{df} has at least 10 rows:
-#'     \itemize{
-#'       \item Removes numeric predictors with near zero variance, with message if \code{quiet = FALSE}.
-#'       \item Removes categorical predictors with constant values, with message if \code{quiet = FALSE}.
-#'     }
-#'   \item Adds the attribute \code{validated = TRUE} to the returned vector.
-#' }
+#' Validates the argument \code{predictors} by ensuring that all provided predictors are in \code{df} and don't intersect with \code{responses}, if any.
 #'
 #' @inheritParams collinear
-#' @inheritParams target_encoding_lab
 #' @inheritParams validate_arg_quiet
 #'
 #' @return character vector: predictor names
 #' @examples
-#' data(vi, vi_predictors)
+#' data(vi_smol, vi_predictors)
 #'
-#' predictors <- validate_arg_predictors(
-#'   df = vi,
+#' x <- validate_arg_predictors(
+#'   df = vi_smol,
 #'   predictors = vi_predictors
 #' )
 #'
-#' attributes(predictors)$validated
+#' attributes(x)$validated
 #'
 #' @autoglobal
-#' @family data_validation
+#' @family argument_validation
 #' @export
 validate_arg_predictors <- function(
     df = NULL,
-    response = NULL,
+    responses = NULL,
     predictors = NULL,
-    function_name = NULL,
-    quiet = FALSE
+    quiet = FALSE,
+    function_name = NULL
 ){
+
+  #if already validated, return it
+  if(
+    isTRUE(attr(x = predictors, which = "validated")) &&
+    all(predictors %in% colnames(df))
+  ){
+
+    return(predictors)
+
+  }
 
   function_name <- validate_arg_function_name(
     default_name = "collinear::validate_arg_predictors()",
     function_name = function_name
   )
-
-  #if already validated, return it
-  if(isTRUE(attr(x = predictors, which = "validated"))){
-    return(predictors)
-  }
 
   #if df is NULL, stop
   df <- validate_arg_df_not_null(
@@ -63,7 +54,7 @@ validate_arg_predictors <- function(
 
     predictors <- setdiff(
       x = colnames(df),
-      y = response
+      y = responses
     )
 
   }
@@ -71,7 +62,7 @@ validate_arg_predictors <- function(
   #remove response from predictors
   predictors <- setdiff(
     x = predictors,
-    y = response
+    y = responses
   )
 
   #identify wrongly named predictors
@@ -81,6 +72,19 @@ validate_arg_predictors <- function(
   )
 
   if(length(predictors.missing) > 0){
+
+    if(length(predictors.missing) == length(predictors)){
+
+      warning(
+        "\n",
+        function_name,
+        ": none of the 'predictors' are column names of 'df'.",
+        call. = FALSE
+      )
+
+      return(NULL)
+
+    }
 
     if(quiet == FALSE){
 
@@ -96,94 +100,13 @@ validate_arg_predictors <- function(
 
     }
 
-    #getting predictors in df only
-    predictors <- intersect(
-      x = predictors,
-      y = colnames(df)
-    )
-
   }
 
-  if(nrow(df) >= 10){
-
-    #removing zero variance predictors
-    predictors.zero.variance <- identify_predictors_zero_variance(
-      df = df,
-      predictors = predictors,
-      function_name = function_name
-    )
-
-    if(length(predictors.zero.variance) > 0){
-
-      if(quiet == FALSE){
-
-        message(
-          "\n",
-          function_name,
-          ": these predictors have near zero variance and will be ignored: \n - ",
-          paste0(
-            predictors.zero.variance,
-            collapse = "\n - "
-          )
-        )
-
-      }
-
-      predictors <- setdiff(
-        predictors,
-        predictors.zero.variance
-      )
-
-    }
-
-    #removing constant categoricals
-    predictors.constant <- predictors[
-      vapply(
-        X = df[, predictors, drop = FALSE],
-        FUN = function(x){
-          length(unique(x)) == 1
-        },
-        FUN.VALUE = logical(1)
-      )
-    ]
-
-    if(length(predictors.constant) > 0){
-
-      if(quiet == FALSE){
-
-        message(
-          "\n",
-          function_name,
-          ": these predictors have constant values and will be ignored: \n - ",
-          paste0(
-            predictors.constant,
-            collapse = "\n - "
-          )
-        )
-
-      }
-
-      predictors <- setdiff(
-        predictors,
-        predictors.constant
-      )
-
-    }
-
-  }
-
-  if(length(predictors) == 0){
-
-    warning(
-      "\n",
-      function_name,
-      ": no valid predictors available, please check that values in argument 'predictors' match the column names in 'df'",
-      call. = FALSE
-    )
-
-    return(NULL)
-
-  }
+  #getting predictors in df only
+  predictors <- intersect(
+    x = predictors,
+    y = colnames(df)
+  )
 
   attr(
     x = predictors,

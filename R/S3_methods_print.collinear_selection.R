@@ -1,4 +1,5 @@
 #' Print \code{class.collinear_selection}
+#'
 #' @param x (required, output of [class.collinear_selection()]) Object to print. Default: NULL
 #' @param n (optional, integer) Maximum printed vector length. Default: 5.
 #' @param ... Ignored, kept for consistency with generic.
@@ -11,6 +12,40 @@ print.collinear_selection <- function(
     n = 5,
     ...
 ){
+
+  #function to shorten formulas
+  short_formula <- function(f = NULL, n = 5){
+
+    terms <- attr(terms(f), "term.labels")
+    nterms <- length(terms)
+
+    n <- max(n, 1)
+    n <- min(n, nterms)
+
+    #adding one term if needed
+    if(nterms == (n + 1)){
+      n <- nterms
+    }
+
+    lhs <- deparse(f[[2]])
+
+    rhs <- paste0(terms[1:n], collapse = " + ")
+
+    f_string <- paste(lhs, rhs, sep = " ~ ")
+
+    notice <- if(n < nterms){
+      paste0(
+        "+ ... (",
+        nterms - n,
+        " terms omitted)"
+      )
+    } else {
+      NULL
+    }
+
+    paste(f_string, notice)
+
+  }
 
   # response ----
   if(!is.null(x$response)){
@@ -115,42 +150,6 @@ print.collinear_selection <- function(
 
     cat("\n")
 
-    if(is.character(x$preference_order)){
-
-      selection <- stats::na.omit(x$preference_order[1:n])
-
-      omitted <- length(x$preference_order) - n
-
-      symbol <- ifelse(
-        test = length(selection) == 1,
-        yes = " -",
-        no = " +"
-      )
-
-      cat(
-        symbol,
-        "preference order:\n   -",
-        paste(
-          selection,
-          collapse = "\n   - "
-        )
-      )
-
-      if(omitted > 0){
-
-        cat(
-          paste0(
-            "\n   - ... (",
-            omitted,
-            " ommited)"
-          )
-        )
-
-      }
-
-    }
-
-
     if(is.list(x$preference_order)){
 
       cat(" + preference order:", fill = TRUE)
@@ -163,15 +162,63 @@ print.collinear_selection <- function(
 
       cat("\n")
 
+      selection <- x$preference_order$df$predictor[1:n]
+
+      omitted <- length(x$preference_order$df$predictor) - n
+
+      symbol <- ifelse(
+        test = length(selection) == 1,
+        yes = " -",
+        no = "   +"
+      )
+
+      cat(
+        symbol,
+        "preference:\n     -",
+        paste(
+          selection,
+          collapse = "\n     - "
+        )
+      )
+
+      if(omitted > 0){
+
+        cat(
+          paste0(
+            "\n     - ... (",
+            omitted,
+            " ommited)"
+          )
+        )
+
+      }
+
+      cat("\n")
+
+
       if(!is.null(x$preference_order$f)){
 
+        if(all(!is.na(x$preference_order$f$name))){
+
         cat("   + f:", fill = TRUE)
+          cat("     - function:", x$preference_order$f$name, fill = TRUE)
 
-        cat("     - function:", x$preference_order$f$name, fill = TRUE)
+          if(!is.null(x$preference_order$f$expression)){
+            cat("     - expression:", x$preference_order$f$expression, fill = TRUE)
+          }
 
-        cat("     - expression:", x$preference_order$f$expression, fill = TRUE)
+          if(!is.na(x$preference_order$f$metric)){
+            cat("     - metric:", x$preference_order$f$metric)
+          }
 
-        cat("     - metric:", x$preference_order$f$metric)
+
+        } else {
+
+          if(all(!is.na(x$preference_order$f$metric))){
+            cat("   - metric:", paste(x$preference_order$f$metric, collapse = ", "))
+          }
+
+        }
 
       }
 
@@ -184,58 +231,5 @@ print.collinear_selection <- function(
   cat("\n\n")
 
   invisible(x)
-}
-
-
-#' Shorten Formula for Concise Printing
-#'
-#' Produces a compact string representation of a formula.
-#'
-#' @param f (required, model formula) Model formula to shorten. Default: NULL
-#'
-#' @return character string
-#' @autoglobal
-#' @keywords internal
-#' Shorten Formula for Concise Printing
-#'
-#' Produces a compact string representation of a formula.
-#'
-#' @param f (required, model formula) Model formula to shorten. Default: NULL
-#' @param n (required, integer) Number of terms to print. Default: 5
-#'
-#' @return character string
-#' @autoglobal
-#' @keywords internal
-short_formula <- function(f = NULL, n = 5){
-
-  terms <- attr(terms(f), "term.labels")
-  nterms <- length(terms)
-
-  n <- max(n, 1)
-  n <- min(n, nterms)
-
-  #adding one term if needed
-  if(nterms == (n + 1)){
-    n <- nterms
-  }
-
-  lhs <- deparse(f[[2]])
-
-  rhs <- paste0(terms[1:n], collapse = " + ")
-
-  f_string <- paste(lhs, rhs, sep = " ~ ")
-
-  notice <- if(n < nterms){
-    paste0(
-      "+ ... (",
-      nterms - n,
-      " terms omitted)"
-    )
-  } else {
-    NULL
-  }
-
-  paste(f_string, notice)
-
 }
 

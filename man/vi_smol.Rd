@@ -5,7 +5,7 @@
 \alias{vi_smol}
 \title{Small Version (100 rows) of the Dataset \code{vi}}
 \format{
-Data frame with 100 rows and 68 columns.
+dataframe with 100 rows and 68 columns.
 }
 \usage{
 data(vi_smol)

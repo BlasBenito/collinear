@@ -1,4 +1,5 @@
 #' Print \code{class.collinear_output}
+#'
 #' @param x (required, list of class \code{class.collinear_output}) Object to print. Default: NULL
 #' @param n (optional, integer) Maximum printed vector length. Default: 5.
 #' @param ... Ignored, kept for consistency with generic.
@@ -12,13 +13,7 @@ print.collinear_output <- function(
     ...
 ){
 
-  if(!is.null(x$arguments)){
-    print(x$arguments)
-  }
-
-  y <- x[names(x) != "arguments"]
-
-  if(length(names(y)) > 1){
+  if(length(names(x)) > 1){
     cat("Results\n")
     cat("===================\n")
     cat("\n")
@@ -28,7 +23,7 @@ print.collinear_output <- function(
   }
 
   lapply(
-    X = x[names(x) != "arguments"],
+    X = x,
     FUN = print,
     n = n
   )

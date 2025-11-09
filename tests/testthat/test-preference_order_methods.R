@@ -15,7 +15,7 @@ testthat::test_that("Preference order methods work.", {
 
   #Pearson R-squared
   testthat::expect_true(
-    f_r2_pearson(df = df) == 1
+    f_numeric_glm(df = df) == 1
   )
 
   #Spearman R-squared
@@ -26,31 +26,21 @@ testthat::test_that("Preference order methods work.", {
 
   #R-squared of a gaussian gam
   testthat::expect_true(
-    f_r2_glm_gaussian(df = df) == 1
+    f_numeric_glm(df = df) == 1
   )
 
-
-  #gaussian glm with second-degree polynomials
-  testthat::expect_true(
-    f_r2_glm_gaussian_poly2(df = df) == 1
-  )
 
 
   #R-squared of a gaussian gam
   testthat::expect_true(
-    f_r2_gam_gaussian(df = df) == 1
+    f_numeric_gam(df = df) == 1
   )
 
-
-  #recursive partition tree
-  testthat::expect_true(
-    f_r2_rpart(df = df) < 1
-  )
 
 
   #random forest model
   testthat::expect_true(
-    f_r2_rf(df = df) < 1
+    f_numeric_rf(df = df) < 1
   )
 
   #continuous response and predictor
@@ -65,7 +55,7 @@ testthat::test_that("Preference order methods work.", {
 
   #Pearson R-squared
   testthat::expect_true(
-    f_r2_pearson(df = df) < 1
+    f_numeric_glm(df = df) < 1
   )
 
   #Spearman R-squared
@@ -76,31 +66,18 @@ testthat::test_that("Preference order methods work.", {
 
   #R-squared of a gaussian gam
   testthat::expect_true(
-    f_r2_glm_gaussian(df = df) < 1
-  )
-
-
-  #gaussian glm with second-degree polynomials
-  testthat::expect_true(
-    f_r2_glm_gaussian_poly2(df = df) < 1
+    f_numeric_glm(df = df) < 1
   )
 
 
   #R-squared of a gaussian gam
   testthat::expect_true(
-    f_r2_gam_gaussian(df = df) < 1
+    f_numeric_gam(df = df) < 1
   )
-
-
-  #recursive partition tree
-  testthat::expect_true(
-    f_r2_rpart(df = df) < 1
-  )
-
 
   #random forest model
   testthat::expect_true(
-    f_r2_rf(df = df) < 1
+    f_numeric_rf(df = df) < 1
   )
 
 
@@ -114,19 +91,14 @@ testthat::test_that("Preference order methods work.", {
 
   #GLM model with Poisson family
   testthat::expect_true(
-    f_r2_glm_poisson(df = df) < 1
+    f_count_glm(df = df) < 1
   )
 
-
-  #GLM model with second degree polynomials and Poisson family
-  testthat::expect_true(
-    f_r2_glm_poisson_poly2(df = df) < 1
-  )
 
 
   #GAM model with Poisson family
   testthat::expect_true(
-    f_r2_gam_poisson(df = df) < 1
+    f_count_gam(df = df) < 1
   )
 
   df <- data.frame(
@@ -137,19 +109,14 @@ testthat::test_that("Preference order methods work.", {
 
   #GLM model with Poisson family
   testthat::expect_true(
-    f_r2_glm_poisson(df = df) < 1
+    f_count_glm(df = df) < 1
   )
 
-
-  #GLM model with second degree polynomials and Poisson family
-  testthat::expect_true(
-    f_r2_glm_poisson_poly2(df = df) < 1
-  )
 
 
   #GAM model with Poisson family
   testthat::expect_true(
-    f_r2_gam_poisson(df = df) < 1
+    f_count_gam(df = df) < 1
   )
 
 
@@ -164,32 +131,22 @@ testthat::test_that("Preference order methods work.", {
 
   #AUC of GLM with binomial response and weighted cases
   testthat::expect_true(
-    f_auc_glm_binomial(df = df) == 1
+    f_binomial_glm(df = df) == 1
   )
 
-
-  #AUC of GLM as above plus second degree polynomials
-   testthat::expect_true(
-     f_auc_glm_binomial_poly2(df = df) == 1
-   )
 
 
   #AUC of binomial GAM with weighted cases
   testthat::expect_error(
-    f_auc_gam_binomial(df = df),
+    f_binomial_gam(df = df),
     regexp  = "A term has fewer unique covariate combinations"
   )
 
 
-  #AUC of recursive partition tree with weighted cases
-  testthat::expect_true(
-    f_auc_rpart(df = df) == 1
-  )
-
 
   #AUC of random forest with weighted cases
   testthat::expect_true(
-    is.numeric(f_auc_rf(df = df))
+    is.numeric(f_binomial_rf(df = df))
   )
 
 
@@ -201,31 +158,19 @@ testthat::test_that("Preference order methods work.", {
 
   #AUC of GLM with binomial response and weighted cases
   testthat::expect_true(
-    f_auc_glm_binomial(df = df) < 1
-  )
-
-
-  #AUC of GLM as above plus second degree polynomials
-  testthat::expect_true(
-    f_auc_glm_binomial_poly2(df = df) < 1
+    f_binomial_glm(df = df) < 1
   )
 
 
   #AUC of binomial GAM with weighted cases
   testthat::expect_true(
-    f_auc_gam_binomial(df = df) < 1
-  )
-
-
-  #AUC of recursive partition tree with weighted cases
-  testthat::expect_true(
-    f_auc_rpart(df = df) < 1
+    f_binomial_gam(df = df) < 1
   )
 
 
   #AUC of random forest with weighted cases
   testthat::expect_true(
-    f_auc_rf(df = df) < 1
+    f_binomial_rf(df = df) < 1
   )
 
 
@@ -240,11 +185,11 @@ testthat::test_that("Preference order methods work.", {
 
   #Cramer's V of Random Forest model
   testthat::expect_true(
-    f_v(df = df) == 1
+    f_categorical_rf(df = df) == 1
   )
 
   testthat::expect_true(
-    f_v_rf_categorical(df = df) == 1
+    f_categorical_rf(df = df) == 1
   )
 
 
@@ -258,11 +203,11 @@ testthat::test_that("Preference order methods work.", {
 
   #Cramer's V of Random Forest model
   testthat::expect_true(
-    f_v(df = df) < 1
+    f_categorical_rf(df = df) < 1
   )
 
   testthat::expect_true(
-    f_v_rf_categorical(df = df) < 1
+    f_categorical_rf(df = df) < 1
   )
 
 })

@@ -8,22 +8,22 @@
 A \code{\link[mgcv]{gam}} object.
 }
 \source{
-Generated internally from \link{experiment_df}.
+Generated internally from \link{experiment_cor_vs_vif}.
 }
 \usage{
 gam_cor_to_vif
 }
 \description{
-A fitted generalized additive model describing \code{max_vif} as a function of \code{max_cor} in \link{experiment_df}.
+A fitted generalized additive model describing \code{max_vif} as a function of \code{max_cor} in \link{experiment_cor_vs_vif}.
 }
 \details{
 The model was fitted with a smooth term in \code{max_cor} (basis dimension \code{k = 9}) and cubic weights proportional to the Jaccard similarity between the results of \code{\link[=cor_select]{cor_select()}} and \code{\link[=vif_select]{vif_select()}} to emphasise cases with high agreement between the two selection methods.
 
 \preformatted{
 gam_cor_to_vif <- mgcv::gam(
- formula = max_vif ~ s(max_cor, k = 9),
- weights = experiment_df$out_selection_jaccard^3,
- data = experiment_df,
+ formula = output_max_vif ~ s(input_max_cor, k = 9),
+ weights = experiment_cor_vs_vif$out_selection_jaccard^3,
+ data = experiment_cor_vs_vif,
  select = TRUE
  )
 }

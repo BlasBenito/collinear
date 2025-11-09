@@ -1,8 +1,9 @@
 #' Summary of \code{class.collinear_output}
+#'
 #' @param object (required, list of class \code{collinear_output}) Object to summarize. Default: NULL
 #' @param ... Ignored, kept for consistency with generic.
-#' @return list
-#' TODO describe list structure
+#' @return list:
+#' If \code{object} was created with \code{responses = NULL}, a sublist named "result" containing a vector with the selected predictors. Otherwise, a list named after each response containing the corresponding variable selection.
 #' @method summary collinear_output
 #' @family S3_methods
 #' @autoglobal
@@ -12,16 +13,10 @@ summary.collinear_output <- function(
     ...
 ){
 
-  x <- object[names(object) != "arguments"]
-
   #print summary of selections
-  x.summary <- lapply(
-    X = x,
+  lapply(
+    X = object,
     FUN = summary
   )
-
-  class(x.summary) <- c(class(x.summary), "summary.collinear_output")
-
-  x.summary
 
 }

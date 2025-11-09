@@ -5,7 +5,7 @@
 \alias{vi}
 \title{Example Data With Different Response and Predictor Types}
 \format{
-Data frame with 30.000 rows and 68 columns.
+dataframe with 30.000 rows and 68 columns.
 }
 \usage{
 data(vi)
@@ -15,7 +15,7 @@ The response variable is a Vegetation Index encoded in different ways to help hi
 \itemize{
 \item \code{vi_numeric}: continuous vegetation index values in the range 0-1.
 \item \code{vi_counts}: simulated integer counts created by multiplying \code{vi_numeric} by 1000 and coercing the result to integer.
-\item \code{vi_binomial}: simulated binomial variable created by transforming \code{vi_numeric} to zeros and ones.
+\item \code{vi_binomial}: simulated integer binomial variable created by transforming \code{vi_numeric} to zeros and ones.
 \item \code{vi_categorical}: character variable with the categories "very_low", "low", "medium", "high", and "very_high", with thresholds located at the quantiles of \code{vi_numeric}.
 \item \code{vi_factor}: \code{vi_categorical} converted to factor.
 }

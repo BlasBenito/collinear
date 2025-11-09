@@ -1,27 +1,16 @@
 testthat::test_that("`vif_select()` works", {
 
-  data(vi, vi_predictors)
+  data(vi, vi_predictors, vi_predictors_numeric)
 
-  predictors <- vi_predictors[1:10]
-  df <- vi[1:1000, ]
-
-  # mixed types ----
   testthat::expect_message(
     x <- vif_select(
-      df = df,
-      predictors = predictors,
+      df = vi_smol,
+      predictors = vi_predictors[1:10],
       quiet = FALSE
-    )
+    ),
+    regexp = "ranking 10 'predictors' from lower to higher multicollinearity"
   ) |>
     suppressMessages()
-
-  testthat::expect_no_message(
-    x <- vif_select(
-      df = df,
-      predictors = predictors,
-      quiet = TRUE
-    )
-  )
 
 
   testthat::expect_true(
@@ -29,11 +18,26 @@ testthat::test_that("`vif_select()` works", {
   )
 
   testthat::expect_true(
-    all(x %in% predictors)
+    all(x %in% vi_predictors[1:10])
   )
 
   testthat::expect_true(
-    length(predictors) > length(x)
+    length(vi_predictors[1:10]) > length(x)
+  )
+
+  testthat::expect_message(
+    y <- vif_select(
+      df = vi_smol,
+      predictors = x,
+      quiet = FALSE
+    ),
+    regexp = "maximum VIF is <= 5, multicollinearity filtering is not required"
+  ) |>
+    suppressMessages()
+
+
+  testthat::expect_true(
+    all(x %in% y)
   )
 
   #custom preference order
@@ -45,10 +49,11 @@ testthat::test_that("`vif_select()` works", {
 
   testthat::expect_message(
     x <- vif_select(
-      df = df,
-      predictors = predictors,
+      df = vi_smol,
+      predictors = vi_predictors[1:10],
       preference_order = preference_order
-    )
+    ),
+    regexp = "ranking 8 'predictors' from lower to higher multicollinearity"
   ) |>
     suppressMessages()
 
@@ -57,11 +62,11 @@ testthat::test_that("`vif_select()` works", {
   )
 
   testthat::expect_true(
-    all(x %in% predictors)
+    all(x %in% vi_predictors[1:10])
   )
 
   testthat::expect_true(
-    length(predictors) > length(x)
+    length(vi_predictors[1:10]) > length(x)
   )
 
   testthat::expect_true(
@@ -70,52 +75,35 @@ testthat::test_that("`vif_select()` works", {
 
   #automated preference order
   preference_order <- preference_order(
-    df = df,
+    df = vi_smol,
     response = "vi_numeric",
-    predictors = predictors,
-    quiet = TRUE,
-    warn_limit = NULL
+    predictors = vi_predictors[1:10],
+    quiet = TRUE
   )
 
-  testthat::expect_message(
-    x <- vif_select(
-      df = df,
-      predictors = predictors,
-      preference_order = preference_order
-    )
-  ) |>
-    suppressMessages()
+  x <- vif_select(
+    df = vi_smol,
+    predictors = vi_predictors[1:10],
+    preference_order = preference_order,
+    quiet = TRUE
+  )
 
   testthat::expect_true(
     is.character(x)
   )
 
   testthat::expect_true(
-    all(x %in% predictors)
+    all(x %in% vi_predictors[1:10])
   )
 
   testthat::expect_true(
-    length(predictors) > length(x)
+    length(vi_predictors[1:10]) > length(x)
   )
 
   testthat::expect_true(
     all(preference_order$predictor[1] == x[1])
   )
 
-  # categorical only ----
-  predictors <- vi_predictors_categorical[1:5]
-
-  testthat::expect_message(
-    x <- vif_select(
-      df = df,
-      predictors = predictors
-    )
-  ) |>
-    suppressMessages()
-
-  testthat::expect_true(
-    is.null(x)
-  )
 
   # edge cases ----
 
@@ -124,71 +112,45 @@ testthat::test_that("`vif_select()` works", {
     x <- vif_select(
       df = NULL,
       predictors = NULL
-    )
+    ),
+    regexp = "argument 'df' cannot be NULL"
   )
 
-  #predictors only
   testthat::expect_error(
     x <- vif_select(
-      df = NULL,
-      predictors = vi_predictors
-    )
+      df = vi_smol,
+      predictors = vi_predictors,
+      max_vif = NULL
+    ),
+    regexp = "argument 'max_vif' cannot be NULL"
   )
-
-  #few rows
-  testthat::expect_error(
-    x <- vif_select(
-      df = df[1:2, ],
-      predictors = predictors
-    ),
-    regexp = "has fewer than 3 rows"
-  )
-
-  testthat::expect_warning(
-    x <- vif_select(
-      df = df[1:9, ],
-      predictors = predictors
-    ),
-    regexp = "has fewer than 10 rows"
-  ) |>
-    suppressMessages()
-
-  testthat::expect_message(
-    x <- vif_select(
-      df = df[1:29, ],
-      predictors = predictors
-    ),
-    regexp = "has fewer than 30 rows"
-  ) |>
-    suppressMessages()
-
 
   #no predictors
   x <- vif_select(
-    df = df[, 1:5],
+    df = vi_smol[, 1:5],
     predictors = NULL,
     preference_order = NULL,
     quiet = TRUE
   )
 
   testthat::expect_true(
-    all(x %in% colnames(df)[1:5])
+    all(x %in% colnames(vi_smol)[1:5])
   )
 
   #single predictor
-  predictors <- vi_predictors_numeric[1]
 
   testthat::expect_message(
     x <- vif_select(
-      df = vi[1:1000, ],
-      predictors = predictors
-    )
+      df = vi_smol,
+      predictors = vi_predictors_numeric[1]
+    ),
+    regexp = "only one valid predictor in 'predictors', skipping multicollinearity filtering"
   ) |>
     suppressMessages()
 
 
   testthat::expect_true(
-    x == predictors
+    x == vi_predictors_numeric[1]
   )
 
 })

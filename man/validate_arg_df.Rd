@@ -2,64 +2,48 @@
 % Please edit documentation in R/validate_arg_df.R
 \name{validate_arg_df}
 \alias{validate_arg_df}
-\title{Validate Argument \code{df}}
+\title{Validate Structure and Values of Argument \code{df}}
 \usage{
 validate_arg_df(
   df = NULL,
   responses = NULL,
   predictors = NULL,
-  function_name = NULL,
-  quiet = FALSE
+  quiet = FALSE,
+  function_name = NULL
 )
 }
 \arguments{
-\item{df}{(required; data frame, tibble, or sf) A data frame with responses (optional) and predictors. Must have at least 10 rows for pairwise correlation analysis, and \code{10 * (length(predictors) - 1)} for VIF analysis.  Default: NULL.}
+\item{df}{(required; dataframe, tibble, or sf) A dataframe with responses (optional) and predictors. Must have at least 10 rows for pairwise correlation analysis, and \code{10 * (length(predictors) - 1)} for VIF analysis.  Default: NULL.}
 
-\item{responses}{(optional; character, character vector, or NULL) Name of one or several response variables in \code{df}. When \code{encoding_method} is not NULL, response/s are used as reference to map categorical predictors, if any, to numeric (see \code{\link[=target_encoding_lab]{target_encoding_lab()}}). When \code{f} is not NULL, responses are used to rank predictors and preserve important ones during multicollinearity filtering (see \code{\link[=preference_order]{preference_order()}}). If no response is provided, the predictors are ranked from lower to higher multicollinearity. When several responses are provided, the selection results are named after each response in the output list. If no response is provided, the variable selection shows with the name "result" in the output list. Default: NULL.}
+\item{responses}{(optional; character, character vector, or NULL) Name of one or several response variables in \code{df}. Default: NULL.}
 
-\item{predictors}{(optional; character vector or NULL) Names of the predictors in \code{df} involved in the multicollinearity filtering. If NULL, all columns in \code{df} (except those with constant values or near zero variance) are used. Default: NULL}
-
-\item{function_name}{(optional, character string) Name of the function performing the argument check. Default: NULL}
+\item{predictors}{(optional; character vector or NULL) Names of the predictors in \code{df}. If NULL, all columns in \code{df} except the ones in \code{responses} and those with constant values or near zero variance are used. Default: NULL}
 
 \item{quiet}{(optional; logical) If FALSE, messages are printed to the console. Default: FALSE}
+
+\item{function_name}{(optional, character string) Name of the function performing the argument check. Default: NULL}
 }
 \value{
-data frame
+dataframe
 }
 \description{
-Internal function to validate the integrity of the argument \code{df}.
-
-It performs the following actions:
-\itemize{
-\item Returns \code{df} as-is if already tagged with \code{validated = TRUE}.
-\item Stops if \code{df} is \code{NULL}, not coercible to a data frame, or has zero rows.
-\item Drops geometry column if present.
-\item Subsets \code{df} to the \code{responses} and \code{predictors} columns.
-\item Converts logical columns to numeric.
-\item Replaces \code{NaN}, \code{Inf}, and \code{-Inf} values with \code{NA} in numeric columns.
-\item Reorders columns to match original \code{responses} + \code{predictors} order.
-\item Tags the result with the attribute \code{validated = TRUE}.
-}
+Internal function to validate the integrity of the argument \code{df}. It ensures that the dataframe has suitable dimensions for a multicollinearity analysis, transforms logical columns to numeric, and converts \code{NaN}, \code{Inf} and \code{-Inf} to NA. Additionally, it checks the values of \code{responses} and \code{predictors} if these arguments are provided.
 }
 \examples{
 
-data(vi, vi_predictors)
+data(vi_smol, vi_predictors)
 
-vi <- validate_arg_df(
-  df = vi,
+df <- validate_arg_df(
+  df = vi_smol,
   responses = "vi_numeric",
-  predictors = vi_predictors,
-  function_name = "f()",
+  predictors = vi_predictors_numeric,
   quiet = FALSE
 )
 
 attributes(vi)$validated
 }
 \seealso{
-Other data_validation: 
-\code{\link{autoconfig_arg_max_cor}()},
-\code{\link{autoconfig_arg_max_vif}()},
-\code{\link{tolerance}()},
+Other argument_validation: 
 \code{\link{validate_arg_df_not_null}()},
 \code{\link{validate_arg_encoding_method}()},
 \code{\link{validate_arg_f}()},
@@ -67,11 +51,8 @@ Other data_validation:
 \code{\link{validate_arg_max_cor}()},
 \code{\link{validate_arg_max_vif}()},
 \code{\link{validate_arg_predictors}()},
-\code{\link{validate_arg_predictors_cor}()},
-\code{\link{validate_arg_predictors_vif}()},
 \code{\link{validate_arg_preference_order}()},
 \code{\link{validate_arg_quiet}()},
-\code{\link{validate_arg_response}()},
-\code{\link{validate_args_target_encoding_lab}()}
+\code{\link{validate_arg_responses}()}
 }
-\concept{data_validation}
+\concept{argument_validation}

@@ -10,7 +10,7 @@ Fixed issue where function `cor_matrix()` returned absolute correlations only.
 
 Added new internal function `validate_arg_df()` to convert logicals to numeric, and NaN, Inf and -Inf to NA.
 
-Added new internal function `identify_predictors_logical()`.
+Added new internal function `identify_logical_variables()`.
 
 Added function `vif()` with fast method to compute VIF from a correlation matrix.
 

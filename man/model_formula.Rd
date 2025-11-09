@@ -16,11 +16,11 @@ model_formula(
 )
 }
 \arguments{
-\item{df}{(required; data frame, tibble, or sf) A data frame with responses (optional) and predictors. Must have at least 10 rows for pairwise correlation analysis, and \code{10 * (length(predictors) - 1)} for VIF analysis.  Default: NULL.}
+\item{df}{(required; dataframe, tibble, or sf) A dataframe with responses (optional) and predictors. Must have at least 10 rows for pairwise correlation analysis, and \code{10 * (length(predictors) - 1)} for VIF analysis.  Default: NULL.}
 
 \item{response}{(optional, character string) Name of a response variable in \code{df}. Default: NULL.}
 
-\item{predictors}{(optional; character vector or NULL) Names of the predictors in \code{df} involved in the multicollinearity filtering. If NULL, all columns in \code{df} (except those with constant values or near zero variance) are used. Default: NULL}
+\item{predictors}{(optional; character vector or NULL) Names of the predictors in \code{df}. If NULL, all columns in \code{df} except the ones in \code{responses} and those with constant values or near zero variance are used. Default: NULL}
 
 \item{term_f}{(optional; string). Name of function to apply to each term in the formula, such as "s" for \code{\link[mgcv:s]{mgcv::s()}} or any other smoothing function, "poly" for \code{\link[stats:poly]{stats::poly()}}. Default: NULL}
 
@@ -30,13 +30,13 @@ model_formula(
 
 \item{quiet}{(optional; logical) If FALSE, messages are printed to the console. Default: FALSE}
 
-\item{...}{(optional) Other arguments. Currently used for the internal argument \code{function_name}.}
+\item{...}{(optional) Used to pass internal arguments such as \code{function_name} for \link{validate_arg_function_name} in nested calls, or \code{m}, a correlation matrix generated via \code{\link[stats:cor]{stats::cor()}} or \code{\link[=cor_matrix]{cor_matrix()}}.}
 }
 \value{
 list if \code{predictors} is a list or length of \code{response} is higher than one, and character vector otherwise.
 }
 \description{
-Generates model formulas from a dataframe, a response name, and a vector of predictors. Intended to help fit an exploratory model from the results of a multicollinearity analysis.
+Generates model formulas from a dataframe, a response name, and a vector of predictors that can be the output of a multicollinearity management function such as \code{\link[=collinear_select]{collinear_select()}} and the likes. Intended to help fit exploratory models from the result of a multicollinearity analysis.
 
 The types of formulas it can generate are:
 \itemize{
@@ -47,63 +47,80 @@ The types of formulas it can generate are:
 }
 }
 \examples{
+data(
+  vi_smol,
+  vi_predictors_numeric
+  )
 
-data(vi_smol, vi_predictors_numeric)
-
-#additive formula
-x <- model_formula(
+#reduce collinearity
+x <- collinear_select(
   df = vi_smol,
-  response = "vi_numeric",
-  predictors = vi_predictors_numeric[1:3]
+  predictors = vi_predictors_numeric
 )
 
-x
+#additive formula
+y <- model_formula(
+  df = vi_smol,
+  response = "vi_numeric",
+  predictors = x
+)
+
+y
 
 #using a formula in a model
 m <- stats::lm(
- formula = x,
+ formula = y,
  data = vi_smol
  )
 
 summary(m)
 
+#classification formula (character response)
+y <- model_formula(
+  df = vi_smol,
+  response = "vi_categorical",
+  predictors = x
+)
 
-#polynomial formula
-x <- model_formula(
+y
+
+
+#polynomial formula (3rd degree)
+y <- model_formula(
   df = vi_smol,
   response = "vi_numeric",
-  predictors = vi_predictors_numeric[1:3],
+  predictors = x,
   term_f = "poly",
   term_args = "degree = 3, raw = TRUE"
 )
 
-x
+y
 
 #gam formula
-x <- model_formula(
+y <- model_formula(
   df = vi_smol,
   response = "vi_numeric",
-  predictors = vi_predictors_numeric[1:3],
+  predictors = x,
   term_f = "s"
 )
 
-x
+y
 
 #random effect
-x <- model_formula(
+y <- model_formula(
   df = vi_smol,
   response = "vi_numeric",
-  predictors = vi_predictors_numeric[1:3],
+  predictors = x,
   random_effects = "country_name" #from vi_smol$country_name
 )
 
-x
+y
 }
 \seealso{
 Other modelling_tools: 
 \code{\link{case_weights}()},
-\code{\link{performance_score_auc}()},
-\code{\link{performance_score_r2}()},
-\code{\link{performance_score_v}()}
+\code{\link{score_auc}()},
+\code{\link{score_cramer}()},
+\code{\link{score_r2}()}
 }
 \concept{modelling_tools}

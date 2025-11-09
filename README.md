@@ -129,7 +129,7 @@ sum(is.na(df))
 #numeric and categorical predictors
 predictors <- collinear::vi_predictors
 
-collinear::identify_predictors(
+collinear::identify_valid_variables(
   df = df,
   predictors = predictors
 )

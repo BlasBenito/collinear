@@ -1,24 +1,50 @@
-#' @title Data Frame with Variance Inflation Factors
+#' Variance Inflation Factors Dataframe
 #'
 #' @description
 #'
-#' Applies [vif()] to compute the Variance Inflation Factors of a set of numeric predictors.
+#' Computes the absolute pairwise correlation matrix between all pairs of predictors via [cor_df()] and [cor_matrix()], applies [vif()] to the resulting matrix to compute Variance Inflation Factors, and returns the result as a dataframe.
 #'
 #' @inheritSection collinear Variance Inflation Factors
 #'
 #' @inheritParams collinear
-#' @return data frame; predictors names and their Variance Inflation Factors
+#' @return dataframe with columns:
+#' \itemize{
+#'   \item \code{predictor}: Character, predictor name.
+#'   \item \code{vif}: Numeric, variance inflation factor
+#' }
 #'
 #' @examples
 #'
-#' data(vi, vi_predictors_numeric)
+#' data(vi_smol)
 #'
-#' v <- vif_df(
-#'   df = vi[1:1000, ],
-#'   predictors = vi_predictors_numeric[1:5]
+#' # ## OPTIONAL: parallelization setup
+#' # ## irrelevant when all predictors are numeric
+#' # ## only worth it for large data with many categoricals
+#' # future::plan(
+#' #   future::multisession,
+#' #   workers = future::availableCores() - 1
+#' # )
+#'
+#' # ## OPTIONAL: progress bar
+#' # progressr::handlers(global = TRUE)
+#'
+#' #predictors
+#' predictors = c(
+#'   "koppen_zone", #character
+#'   "soil_type", #factor
+#'   "topo_elevation", #numeric
+#'   "soil_temperature_mean" #numeric
 #' )
 #'
-#' v
+#' x <- vif_df(
+#'   df = vi_smol,
+#'   predictors = predictors
+#' )
+#'
+#' x
+#'
+#' ## OPTIONAL: disable parallelization
+#' #future::plan(future::sequential)
 #'
 #' @autoglobal
 #' @family variance_inflation_factor
@@ -31,43 +57,65 @@ vif_df <- function(
     ...
 ){
 
+  dots <- list(...)
+
   function_name <- validate_arg_function_name(
     default_name = "collinear::vif_df()",
-    ... = ...
+    function_name = dots$function_name
+  )
+
+  df <- validate_arg_df_not_null(
+    df = df,
+    function_name = function_name
   )
 
   quiet <- validate_arg_quiet(
-    function_name = function_name,
-    quiet = quiet
+    quiet = quiet,
+    function_name = function_name
   )
+
+  predictors <- validate_arg_predictors(
+    df = df,
+    predictors = predictors,
+    quiet = quiet,
+    function_name = function_name
+  )
+
+  df.ncol <- ncol(df)
 
   df <- validate_arg_df(
     df = df,
     predictors = predictors,
-    function_name = function_name,
-    quiet = quiet
+    quiet = quiet,
+    function_name = function_name
   )
 
-  predictors <- validate_arg_predictors_vif(
-    df = df,
-    predictors = predictors,
-    function_name = function_name,
-    quiet = quiet
-  )
+  #revalidate predictors if any columns were removed
+  if(ncol(df) < df.ncol){
 
-  #if no predictors
-  if(length(predictors) == 0){
+    attributes(predictors)$validated <- NULL
 
-    return(
-      data.frame(
-        variable = character(),
-        vif = numeric()
-      )
+    predictors <- validate_arg_predictors(
+      df = df,
+      predictors = predictors,
+      quiet = quiet,
+      function_name = function_name
     )
 
   }
 
+  #if no predictors
   if(length(predictors) == 1){
+
+    if(quiet == FALSE){
+
+      message(
+        "\n",
+        function_name,
+        ": only one valid predictor, returning one-row dataframe."
+      )
+
+    }
 
     return(
       data.frame(
@@ -82,20 +130,25 @@ vif_df <- function(
   m <- cor_matrix(
     df = df,
     predictors = predictors,
-    quiet = quiet,
-    function_name = function_name
+    function_name = function_name,
+    m = dots$m
   )
 
   out <- vif(
     m = m,
+    quiet = quiet,
     function_name = function_name
     ) |>
-    data.frame(stringsAsFactors = FALSE)
+    data.frame(
+      stringsAsFactors = FALSE
+      )
 
-  #format data frame
+  #format dataframe
   colnames(out) <- "vif"
   out$predictor <- colnames(m)
   rownames(out) <- NULL
+
+  class(out) <- c("collinear_vif_df", class(out))
 
   out
 

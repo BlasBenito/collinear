@@ -1,7 +1,7 @@
 #' Generate Model Formulas
 #'
 #' @description
-#' Generates model formulas from a dataframe, a response name, and a vector of predictors. Intended to help fit an exploratory model from the results of a multicollinearity analysis.
+#' Generates model formulas from a dataframe, a response name, and a vector of predictors that can be the output of a multicollinearity management function such as [collinear_select()] and the likes. Intended to help fit exploratory models from the result of a multicollinearity analysis.
 #'
 #' The types of formulas it can generate are:
 #' \itemize{
@@ -24,57 +24,74 @@
 #' @export
 #' @autoglobal
 #' @examples
+#' data(
+#'   vi_smol,
+#'   vi_predictors_numeric
+#'   )
 #'
-#' data(vi_smol, vi_predictors_numeric)
-#'
-#' #additive formula
-#' x <- model_formula(
+#' #reduce collinearity
+#' x <- collinear_select(
 #'   df = vi_smol,
-#'   response = "vi_numeric",
-#'   predictors = vi_predictors_numeric[1:3]
+#'   predictors = vi_predictors_numeric
 #' )
 #'
-#' x
+#' #additive formula
+#' y <- model_formula(
+#'   df = vi_smol,
+#'   response = "vi_numeric",
+#'   predictors = x
+#' )
+#'
+#' y
 #'
 #' #using a formula in a model
 #' m <- stats::lm(
-#'  formula = x,
+#'  formula = y,
 #'  data = vi_smol
 #'  )
 #'
 #' summary(m)
 #'
+#' #classification formula (character response)
+#' y <- model_formula(
+#'   df = vi_smol,
+#'   response = "vi_categorical",
+#'   predictors = x
+#' )
 #'
-#' #polynomial formula
-#' x <- model_formula(
+#' y
+#'
+#'
+#' #polynomial formula (3rd degree)
+#' y <- model_formula(
 #'   df = vi_smol,
 #'   response = "vi_numeric",
-#'   predictors = vi_predictors_numeric[1:3],
+#'   predictors = x,
 #'   term_f = "poly",
 #'   term_args = "degree = 3, raw = TRUE"
 #' )
 #'
-#' x
+#' y
 #'
 #' #gam formula
-#' x <- model_formula(
+#' y <- model_formula(
 #'   df = vi_smol,
 #'   response = "vi_numeric",
-#'   predictors = vi_predictors_numeric[1:3],
+#'   predictors = x,
 #'   term_f = "s"
 #' )
 #'
-#' x
+#' y
 #'
 #' #random effect
-#' x <- model_formula(
+#' y <- model_formula(
 #'   df = vi_smol,
 #'   response = "vi_numeric",
-#'   predictors = vi_predictors_numeric[1:3],
+#'   predictors = x,
 #'   random_effects = "country_name" #from vi_smol$country_name
 #' )
 #'
-#' x
+#' y
 #' @family modelling_tools
 model_formula <- function(
     df = NULL,
@@ -92,33 +109,41 @@ model_formula <- function(
     ... = ...
   )
 
-  quiet <- validate_arg_quiet(
-    function_name = function_name,
-    quiet = quiet
+  df <- validate_arg_df_not_null(
+    df = df,
+    function_name = function_name
   )
 
-  df <- validate_arg_df(
+  quiet <- validate_arg_quiet(
+    quiet = quiet,
+    function_name = function_name
+  )
+
+  response <- validate_arg_responses(
     df = df,
     responses = response,
-    predictors = predictors,
-    function_name = function_name,
-    quiet = quiet
+    max_responses = 1,
+    quiet = quiet,
+    function_name = function_name
   )
 
   if(is.null(response)){
+
     stop(
       "\n",
       function_name,
       ": argument 'response' cannot be NULL.",
       call. = FALSE
     )
+
   }
 
-  response <- validate_arg_response(
+  predictors <- validate_arg_predictors(
     df = df,
-    response = response,
-    function_name = function_name,
-    quiet = quiet
+    responses = response,
+    predictors = predictors,
+    quiet = quiet,
+    function_name = function_name
   )
 
   if(is.null(predictors)){
@@ -130,15 +155,7 @@ model_formula <- function(
     )
   }
 
-  predictors <- validate_arg_predictors(
-    df = df,
-    response = response,
-    predictors = predictors,
-    function_name = function_name,
-    quiet = quiet
-  )
-
-  predictors_types <- identify_predictors(
+  predictors_types <- identify_valid_variables(
     df = df,
     predictors = predictors
   )

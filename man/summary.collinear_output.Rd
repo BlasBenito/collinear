@@ -12,18 +12,15 @@
 \item{...}{Ignored, kept for consistency with generic.}
 }
 \value{
-list
-TODO describe list structure
+list:
+If \code{object} was created with \code{responses = NULL}, a sublist named "result" containing a vector with the selected predictors. Otherwise, a list named after each response containing the corresponding variable selection.
 }
 \description{
 Summary of \code{class.collinear_output}
 }
 \seealso{
 Other S3_methods: 
-\code{\link{class.collinear_arguments}()},
-\code{\link{class.collinear_output}()},
 \code{\link{class.collinear_selection}()},
-\code{\link{print.collinear_arguments}()},
 \code{\link{print.collinear_output}()},
 \code{\link{print.collinear_selection}()},
 \code{\link{summary.collinear_selection}()}

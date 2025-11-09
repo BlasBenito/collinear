@@ -1,84 +1,86 @@
-#' @title Automated Multicollinearity Filtering with Variance Inflation Factors
+#' Automated Multicollinearity Filtering with Variance Inflation Factors
 #'
 #' @description
 #'
-#' This function automatizes multicollinearity filtering in data frames with numeric predictors by combining two methods:
-#' \itemize{
+#' Wraps [collinear_select()] to automatize multicollinearity filtering via variance inflation factors (VIF) in dataframes with numeric and categorical predictors.
 #'
-#'   \item **Preference Order**: System to rank predictors and protect important ones during multicollinearity filtering. The function offers two alternative options:
+#' The argument \code{max_vif} determines the maximum variance inflation factor allowed in the resulting selection of predictors.
 #'
-#'   \itemize{
+#' The argument \code{preference_order} accepts a character vector of predictor names ranked from first to last index, or a dataframe resulting from [preference_order()]. When two predictors in this vector or dataframe are highly collinear, the one with a lower ranking is removed. This option helps protect predictors of interest. If not provided, predictors are ranked from lower to higher multicollinearity.
 #'
-#'     \item Argument \code{preference_order}: Helps preserve predictors of interest for the user. Requires a character vector of predictors names. When two predictors in this vector are highly correlated, the one with a higher index is removed.
-#'
-#'
-#'    \item If \code{preference_order} is NULL, predictors are ranked from lower to higher VIF, as returned by [vif_df()]. This option preserves rare predictors over redundant ones, but does not guarantee strong statistical models.
-#'
-#'   }
-#'
-#'    \item **VIF-based Filtering**: Computes Variance Inflation Factors for numeric predictors and removes redundant ones iteratively, while taking preference order into account. See [vif()] and [vif_df()] for further details.
-#' }
+#' Please check the sections **Variance Inflation Factors** and **VIF-based Filtering** at the end of this help file for further details.
 #'
 #' @inheritSection collinear Variance Inflation Factors
 #' @inheritSection collinear VIF-based Filtering
 #'
-#' @inheritParams collinear
-#' @inherit collinear return
+#' @inheritParams collinear_select
+#' @return character vector of selected predictors
 #' @examples
-#'   data(vi, vi_predictors)
+#' data(vi_smol)
 #'
-#'   df <- vi[1:1000, ]
+#' ## OPTIONAL: parallelization setup
+#' ## irrelevant when all predictors are numeric
+#' ## only worth it for large data with many categoricals
+#' # future::plan(
+#' #   future::multisession,
+#' #   workers = future::availableCores() - 1
+#' # )
 #'
-#'   #predictors has mixed types
-#'   sapply(
-#'     X = df[, vi_predictors, drop = FALSE],
-#'     FUN = class
-#'   ) |>
-#'     unique()
+#' ## OPTIONAL: progress bar
+#' # progressr::handlers(global = TRUE)
 #'
-#'   #categorical predictors are ignored
-#'   selected_predictors <- vif_select(
-#'     df = df,
-#'     predictors = vi_predictors,
-#'     max_vif = 5,
-#'     quiet = FALSE
-#'   )
+#' #predictors
+#' predictors = c(
+#'   "koppen_zone", #character
+#'   "soil_type", #factor
+#'   "topo_elevation", #numeric
+#'   "soil_temperature_mean" #numeric
+#' )
 #'
-#'   #all these have a VIF lower than max_vif (2.5)
-#'   vif_df(
-#'     df = df,
-#'     predictors = selected_predictors,
-#'     quiet = TRUE
-#'   )
+#' #predictors ordered from lower to higher multicollinearity
+#' x <- vif_select(
+#'   df = vi_smol,
+#'   predictors = predictors,
+#'   max_vif = 5
+#' )
 #'
-#'   #custom preference order
-#'   selected_predictors <- vif_select(
-#'     df = df,
-#'     predictors = vi_predictors,
-#'     preference_order = c(
-#'       "swi_mean",
-#'       "soil_temperature_mean",
-#'       "topo_elevation",
-#'       "wrong_name" #ignored
-#'     ),
-#'     max_vif = 2.5,
-#'     quiet = FALSE
-#'   )
+#' x
 #'
-#'   #using automated preference order
-#'   df_preference <- preference_order(
-#'     df = df,
-#'     responses = "vi_numeric",
-#'     predictors = vi_predictors[1:10]
-#'   )
 #'
-#'   selected_predictors <- vif_select(
-#'     df = df,
-#'     predictors = vi_predictors,
-#'     preference_order = df_preference,
-#'     max_vif = 5,
-#'     quiet = FALSE
-#'   )
+#' #with custom preference order
+#' x <- vif_select(
+#'   df = vi_smol,
+#'   predictors = predictors,
+#'   preference_order = c(
+#'     "koppen_zone",
+#'     "soil_type"
+#'   ),
+#'   max_vif = 5
+#' )
+#'
+#' x
+#'
+#'
+#' #with automated preference order
+#' df_preference <- preference_order(
+#'   df = vi_smol,
+#'   response = "vi_numeric",
+#'   predictors = predictors
+#' )
+#'
+#' df_preference
+#'
+#' x <- cor_select(
+#'   df = vi_smol,
+#'   predictors = predictors,
+#'   preference_order = df_preference,
+#'   max_cor = 0.7
+#' )
+#'
+#' x
+#'
+#' ## OPTIONAL: disable parallelization
+#' #future::plan(future::sequential)
 #' @autoglobal
 #' @family variance_inflation_factor
 #' @author Blas M. Benito, PhD
@@ -89,6 +91,7 @@
 #' @export
 vif_select <- function(
     df = NULL,
+    response = NULL,
     predictors = NULL,
     preference_order = NULL,
     max_vif = 5,
@@ -96,117 +99,36 @@ vif_select <- function(
     ...
 ){
 
+  dots <- list(...)
+
   function_name <- validate_arg_function_name(
     default_name = "collinear::vif_select()",
-    ... = ...
-  )
-
-  df <- validate_arg_df(
-    df = df,
-    predictors = predictors,
-    function_name = function_name,
-    quiet = quiet
-  )
-
-  quiet <- validate_arg_quiet(
-    function_name = function_name,
-    quiet = quiet
-  )
-
-  max_vif <- validate_arg_max_vif(
-    max_vif = max_vif,
-    function_name = function_name,
-    quiet = quiet
+    function_name = dots$function_name
   )
 
   if(is.null(max_vif)){
-    return(NULL)
-  }
 
-  #validate predictors for vif analysis
-  predictors <- validate_arg_predictors_vif(
-    df = df,
-    predictors = predictors,
-    function_name = function_name,
-    quiet = quiet
-  )
-
-  if(
-    length(predictors) == 1 ||
-    is.null(predictors)
-  ){
-
-    if(quiet == FALSE){
-
-      message(
-        "\n",
-        function_name,
-        ": at least two predictors are required for VIF filtering."
-      )
-
-    }
-
-    return(predictors)
-  }
-
-  #validate preference order
-  preference.order <- validate_arg_preference_order(
-    df = df,
-    predictors = predictors,
-    preference_order = preference_order,
-    function_name = function_name,
-    quiet = quiet
-  )
-
-  preference.order <- preference.order$predictor
-
-  #vectors with selected and candidates
-  selected <- preference.order[1]
-  candidates <- preference.order[-1]
-
-  #iterate over candidate variables
-  for(candidate in candidates){
-
-    #compute correlation matrix
-    vif.max <- cor_matrix(
-      df = df,
-      predictors = c(selected, candidate),
-      quiet = quiet,
-      function_name = function_name
-    ) |>
-      vif(function_name = function_name) |>
-      max()
-
-
-    #if candidate keeps vif below the threshold
-    if(vif.max <= max_vif){
-
-      #add candidate to selected
-      selected <- c(
-        selected,
-        candidate
-      )
-
-    }
-
-  }
-
-  if(quiet == FALSE){
-
-    message(
+    stop(
       "\n",
       function_name,
-      ": selected predictors: \n - ",
-      paste(selected, collapse = "\n - ")
+      ": argument 'max_vif' cannot be NULL.",
+      call. = FALSE
     )
 
   }
 
-  attr(
-    x = selected,
-    which = "validated"
-  ) <- TRUE
+  out <- collinear_select(
+    df = df,
+    response = response,
+    predictors = predictors,
+    preference_order = preference_order,
+    max_cor = NULL,
+    max_vif = max_vif,
+    quiet = quiet,
+    function_name = function_name,
+    m = dots$m
+  )
 
-  selected
+  out
 
 }

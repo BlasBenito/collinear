@@ -1,32 +1,35 @@
-#' Hierarchical Clustering from Pairwise Correlation Matrix
+#' Hierarchical Correlation Clustering
 #'
 #' @description
 #'
-#' Hierarchical clustering of predictors from their pairwise correlation matrix. Computes the correlation matrix with [cor_df()] and [cor_matrix()], transforms it to a distance matrix using [stats::dist()], computes a clustering solution with [stats::hclust()], and applies [stats::cutree()] to separate groups based on the value of the argument \code{max_cor}.
+#' Hierarchical clustering of predictors from their absolute correlation matrix. Computes the correlation matrix with [cor_df()] and [cor_matrix()], transforms it to a distance matrix using [stats::dist()], computes a clustering solution with [stats::hclust()], and applies [stats::cutree()] to separate groups based on the value of the argument \code{max_cor}.
 #'
-#' Returns a data frame with predictor names and their clusters, and optionally, prints a dendrogram of the clustering solution.
+#' Returns a dataframe with predictor names and their clusters, and optionally, prints a dendrogram of the clustering solution.
 #'
 #' Accepts a parallelization setup via [future::plan()] and a progress bar via [progressr::handlers()] (see examples).
 #'
-#' @inheritParams collinear
+#' @inheritParams cor_matrix
+#' @param max_cor (optional; numeric or NULL) Absolute correlation values used to separate clustering groups. Valid values are between 0.01 and 0.99. Default: 0.7
 #' @param method (optional, character string) Argument of [stats::hclust()] defining the agglomerative method. One of: "ward.D", "ward.D2", "single", "complete", "average" (= UPGMA), "mcquitty" (= WPGMA), "median" (= WPGMC) or "centroid" (= UPGMC). Unambiguous abbreviations are accepted as well. Default: "complete".
 #'
 #' @return list:
 #' \itemize{
-#'   \item df: data frame with predictor names and their cluster IDs.
+#'   \item df: dataframe with predictor names and their cluster IDs.
 #'   \item hclust: clustering obect
 #' }
 #'
 #' @examples
 #'data(vi_smol)
 #'
-#' #OPTIONAL: parallelization setup
+#' ## OPTIONAL: parallelization setup
+#' ## irrelevant when all predictors are numeric
+#' ## only worth it for large data with many categoricals
 #' # future::plan(
 #' #   future::multisession,
-#' #   workers = 2
+#' #   workers = future::availableCores() - 1
 #' # )
 #'
-#' #OPTIONAL: progress bar
+#' ## OPTIONAL: progress bar
 #' # progressr::handlers(global = TRUE)
 #'
 #' #group predictors using max_cor as clustering threshold
@@ -41,7 +44,7 @@
 #'   max_cor = 0.75
 #' )
 #'
-#' #clusters data frame
+#' #clusters dataframe
 #' clusters$df
 #'
 #' ##plot hclust object
@@ -55,7 +58,7 @@
 #' #   lwd = 2
 #' # )
 #'
-#' #OPTIONAL: disable parallelization
+#' ## OPTIONAL: disable parallelization
 #' #future::plan(future::sequential)
 #' @export
 #' @family pairwise_correlation
@@ -81,7 +84,7 @@ cor_clusters <- function(
     function_name = function_name
   )
 
-  m <- stats::as.dist(1 - abs(m))
+  m <- stats::as.dist(1 - m)
 
   hc <- tryCatch(
     stats::hclust(d = m, method = method),

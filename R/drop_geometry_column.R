@@ -1,10 +1,10 @@
-#' Removes geometry column in sf data frames
+#' Removes \code{geometry} Column From \code{sf} Dataframes
 #'
 #' Replicates the functionality of \code{sf::st_drop_geometry()} without depending on the \code{sf} package.
 #'
 #' @inheritParams collinear
 #'
-#' @return data frame
+#' @return dataframe
 #' @family data_preparation
 #' @autoglobal
 #' @author Blas M. Benito, PhD
@@ -36,14 +36,15 @@ drop_geometry_column <- function(
     quiet = FALSE,
     ...
     ){
+
   function_name <- validate_arg_function_name(
     default_name = "collinear::drop_geometry_column()",
     ... = ...
   )
 
-  quiet <- validate_arg_quiet(
-    function_name = function_name,
-    quiet = quiet
+  df <- validate_arg_df_not_null(
+    df = df,
+    function_name = function_name
   )
 
   #remove geometry column from df

@@ -3,7 +3,7 @@ library(codetools)
 
 
 # get list of functions called by a particular function
-codetools::findGlobals(fun = rf)
+codetools::findGlobals(fun = validate_arg_df_not_null)
 
 #fe_target_encoding
 covr::report(

@@ -4,34 +4,30 @@
 \alias{validate_arg_quiet}
 \title{Validate Argument \code{quiet}}
 \usage{
-validate_arg_quiet(function_name = NULL, quiet = NULL)
+validate_arg_quiet(quiet = FALSE, function_name = NULL)
 }
 \arguments{
-\item{function_name}{(optional, character string) Name of the function performing the argument check. Default: NULL}
-
 \item{quiet}{(optional; logical) If FALSE, messages are printed to the console. Default: FALSE}
+
+\item{function_name}{(optional, character string) Name of the function performing the argument check. Default: NULL}
 }
 \value{
 logical
 }
 \description{
-Internal function to validate the argument \code{quiet}.
+Internal function to validate the logical argument \code{quiet}, which triggers messaging when \code{FALSE}
 }
 \examples{
 
-quiet <- validate_arg_quiet(
-  function_name = "f()",
+x <- validate_arg_quiet(
   quiet = TRUE
   )
 
-attributes(quiet)$validated
+attributes(x)$validated
 
 }
 \seealso{
-Other data_validation: 
-\code{\link{autoconfig_arg_max_cor}()},
-\code{\link{autoconfig_arg_max_vif}()},
-\code{\link{tolerance}()},
+Other argument_validation: 
 \code{\link{validate_arg_df}()},
 \code{\link{validate_arg_df_not_null}()},
 \code{\link{validate_arg_encoding_method}()},
@@ -40,10 +36,7 @@ Other data_validation:
 \code{\link{validate_arg_max_cor}()},
 \code{\link{validate_arg_max_vif}()},
 \code{\link{validate_arg_predictors}()},
-\code{\link{validate_arg_predictors_cor}()},
-\code{\link{validate_arg_predictors_vif}()},
 \code{\link{validate_arg_preference_order}()},
-\code{\link{validate_arg_response}()},
-\code{\link{validate_args_target_encoding_lab}()}
+\code{\link{validate_arg_responses}()}
 }
-\concept{data_validation}
+\concept{argument_validation}

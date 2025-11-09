@@ -5,13 +5,13 @@
 \alias{toy}
 \title{One response and four predictors with varying levels of multicollinearity}
 \format{
-Data frame with 2000 rows and 5 columns.
+dataframe with 2000 rows and 5 columns.
 }
 \usage{
 data(toy)
 }
 \description{
-Data frame with known relationship between responses and predictors useful
+dataframe with known relationship between responses and predictors useful
 to illustrate multicollinearity concepts. Created from \link{vi} using the code
 shown in the example.
 }

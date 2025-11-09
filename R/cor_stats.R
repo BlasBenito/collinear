@@ -3,58 +3,33 @@
 #' Computes the the minimum, mean, maximum, and quantiles 0.05, 0.25, median (0.5), 0.75, and 0.95 of the column "correlation" in the output of [cor_df()].
 #'
 #' @inheritParams cor_matrix
+#' @returns dataframe with columns \code{method} (with value "correlation"), \code{statistic} and \code{value}
 #'
-#' @returns
-#' \itemize{
-#'   \item if \code{df} is the output of [cor_df()]: stats dataframe with the columns \code{statistic} and \code{correlation}.
-#'   \item if \code{df} is a data frame with predictors: list with:
-#'   \itemize{
-#'     \item \code{correlation}: result from [cor_df()].
-#'     \item \code{stats} data frame.
-#'   }
-#' }
 #' @examples
 #' data(
 #'   vi_smol,
 #'   vi_predictors_numeric
 #'   )
 #'
-#' #OPTIONAL: parallelization setup
-#' # only worth it for large data
+#' ## OPTIONAL: parallelization setup
+#' ## irrelevant when all predictors are numeric
+#' ## only worth it for large data with many categoricals
 #' # future::plan(
 #' #   future::multisession,
-#' #   workers = 2
+#' #   workers = future::availableCores() - 1
 #' # )
-#' #
-#' #OPTIONAL: progress bar
+#'
+#' ## OPTIONAL: progress bar
 #' # progressr::handlers(global = TRUE)
 #'
-#' #returns correlation and stats dataframes
-#' stats <- cor_stats(
+#' x <- cor_stats(
 #'   df = vi_smol,
-#'   predictors = vi_predictors_numeric[1:10]
+#'   predictors = vi_predictors_numeric
 #' )
 #'
-#' #vector of correlation values
-#' head(stats$correlation)
+#' x
 #'
-#' #stats data frame
-#' stats$stats
-#'
-#' #using output of cor_df
-#' df_correlation <- cor_df(
-#'   df = vi_smol,
-#'   predictors = vi_predictors_numeric[1:10]
-#' )
-#'
-#' #returns stats dataframe only
-#' stats <- cor_stats(
-#'   df = df_correlation
-#' )
-#'
-#' stats
-#'
-#' #OPTIONAL: disable parallelization
+#' ## OPTIONAL: disable parallelization
 #' #future::plan(future::sequential)
 #' @autoglobal
 #' @family pairwise_correlation
@@ -76,66 +51,24 @@ cor_stats <- function(
     function_name = function_name
   )
 
-  #cor_df data frame
-  if(
-    all(
-      names(df) %in% c(
-        "x",
-        "y",
-        "correlation",
-        "metric"
-      )
-    )
-  ){
+  #cor_df dataframe
+  if(!"collinear_cor_df" %in% class(df)){
 
-    correlation_df <- df
-    rm(df)
-
-    out_type <- "df"
-
-  } else {
-
-    #data frame of predictors
-    correlation_df <- cor_df(
+    df <- cor_df(
       df = df,
       predictors = predictors,
       quiet = quiet,
       function_name = function_name
     )
 
-    out_type <- "list"
-
   }
 
-
-  values <- stats::na.omit(correlation_df$correlation)
-
-  if(length(values) < 10){
-
-    stop(
-      "\n",
-      function_name,
-      ": not enough correlation values to compute meaningful stats.",
-      call. = FALSE
-    )
-
-  }
-
-  if(length(values) < 30){
-
-    if(quiet == FALSE){
-
-      message(
-        "\n",
-        function_name,
-        ": correlation stats were computed with fewer than 30 cases, interpret them with care."
-      )
-
-    }
-
-  }
+  values <- stats::na.omit(df$correlation)
 
   stats <- c(
+
+    "n" = length(values),
+
     "minimum" = min(values),
 
     "quantile_0.05" = stats::quantile(
@@ -177,19 +110,11 @@ cor_stats <- function(
   stats_names <- names(stats)
   names(stats) <- NULL
 
-  stats_df <- data.frame(
+  out <- data.frame(
+    method = "correlation",
     statistic = stats_names,
-    correlation = stats
+    value = stats
   )
-
-  if(out_type == "list"){
-    out <- list(
-      correlation = correlation_df,
-      stats = stats_df
-    )
-  } else {
-    out <- stats_df
-  }
 
   out
 

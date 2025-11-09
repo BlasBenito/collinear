@@ -111,7 +111,7 @@ The variable selections are different because `collinear()` follows different pa
 | **Functionality** | **numeric `response`** | **categorical `response`** |
 |------------|----------------|--------------------|
 | **Target-encoding** | executed: 12 categorical `predictors` transformed to numeric | skipped: categorical `predictors` continue to next steps |
-| **Preference order** | `f_r2_pearson()`: R-squared between `response` and `predictors` | `f_v_rf_categorical()`: Cramer's V of `response` against univariate random forest predictions |
+| **Preference order** | `f_numeric_r2()`: R-squared between `response` and `predictors` | `f_categorical_rf()`: Cramer's V of `response` against univariate random forest predictions |
 | **Pairwise correlation filtering** | - *numeric vs numeric*: Pearson correlation | - *numeric vs numeric*: Pearson correlation  <br>  - *numeric vs categorical*: target-encoding + R-squared <br> - *categorical vs categorical*: Cramer's V|
 | **VIF filtering** | Applied to all remaining `predictors` | Applied to numeric remaining `predictors` |
 
@@ -202,7 +202,7 @@ df_vi_numeric <- collinear::target_encoding_lab(
 This operation results in zero categorical predictors in the data frame `df_vi_numeric`:
 
 ```{r}
-collinear::identify_predictors_categorical(
+collinear::identify_categorical_variables(
   df = df_vi_numeric,
   predictors = vi_predictors
 )
@@ -213,7 +213,7 @@ On the other hand, target encoding is skipped for the categorical `response` "vi
 ```{r}
 df_vi_categorical <- df
 
-collinear::identify_predictors_categorical(
+collinear::identify_categorical_variables(
   df = df_vi_categorical,
   predictors = vi_predictors
 )
@@ -379,7 +379,7 @@ reactable::reactable(
   )
 ```
 
-Here `f_auto()` selects `f_v()`, which computes Cramer's V between categorical responses and predictors. 
+Here `f_auto()` selects `f_categorical_rf()`, which computes Cramer's V between categorical responses and predictors. 
 
 #### Preference List
 
@@ -662,7 +662,7 @@ The function `vif_select()` calls `vif_df()` iteratively to remove predictors wi
 max_vif <- 2.5
 
 #filter out categorical predictors
-selected <- collinear::identify_predictors_numeric(
+selected <- collinear::identify_numeric_variables(
   df = df,
   predictors = selected
 )

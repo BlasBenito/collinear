@@ -2,28 +2,33 @@
 % Please edit documentation in R/validate_arg_function_name.R
 \name{validate_arg_function_name}
 \alias{validate_arg_function_name}
-\title{Validates Argument \code{function_name}}
+\title{Validate Argument \code{function_name}}
 \usage{
 validate_arg_function_name(default_name = NULL, function_name = NULL, ...)
 }
 \arguments{
 \item{default_name}{(optional, character) Name of the calling function. Default: NULL}
 
-\item{function_name}{(optional, character) Name of the parent function.}
+\item{function_name}{(optional, character) Name of the parent function. Default: NULL}
 
-\item{...}{(optional) Other arguments. Currently used for the internal argument \code{function_name}.}
+\item{...}{(optional) Used to pass \code{function_name} within these functions that don't have this argument.}
 }
 \value{
 character
 }
 \description{
-Contatenates function names for a better message trace.
+Concatenates parent and child function names for a better message, warning, and error tracing.
+}
+\examples{
+x <- validate_arg_function_name(
+  default_name = "child_function",
+  function_name = "parent_function"
+)
+
+message(x)
 }
 \seealso{
-Other data_validation: 
-\code{\link{autoconfig_arg_max_cor}()},
-\code{\link{autoconfig_arg_max_vif}()},
-\code{\link{tolerance}()},
+Other argument_validation: 
 \code{\link{validate_arg_df}()},
 \code{\link{validate_arg_df_not_null}()},
 \code{\link{validate_arg_encoding_method}()},
@@ -31,11 +36,8 @@ Other data_validation:
 \code{\link{validate_arg_max_cor}()},
 \code{\link{validate_arg_max_vif}()},
 \code{\link{validate_arg_predictors}()},
-\code{\link{validate_arg_predictors_cor}()},
-\code{\link{validate_arg_predictors_vif}()},
 \code{\link{validate_arg_preference_order}()},
 \code{\link{validate_arg_quiet}()},
-\code{\link{validate_arg_response}()},
-\code{\link{validate_args_target_encoding_lab}()}
+\code{\link{validate_arg_responses}()}
 }
-\concept{data_validation}
+\concept{argument_validation}

@@ -72,7 +72,7 @@ testthat::test_that("`preference_order_wrapper()` works", {
     df = vi_smol,
     response = "vi_numeric",
     predictors = vi_predictors_numeric,
-    f = f_r2_pearson,
+    f = f_numeric_glm,
     quiet = TRUE
   )
 
@@ -95,7 +95,7 @@ testthat::test_that("`preference_order_wrapper()` works", {
   )
 
   testthat::expect_true(
-    x$f[1] == "f_r2_pearson"
+    x$f[1] == "f_numeric_glm"
   )
 
 
@@ -156,28 +156,28 @@ testthat::test_that("`preference_order_wrapper()` works", {
       f = f_auto,
       quiet = FALSE
     ),
-    regexp = "f_r2_pearson"
+    regexp = "f_numeric_glm"
   ) |>
     suppressMessages()
 
   testthat::expect_true(
-    all(x$f == "f_r2_pearson")
+    all(x$f == "f_numeric_glm")
   )
 
 
-  ### f_r2_rf ----
+  ### f_numeric_rf ----
   x <- preference_order_wrapper(
     df = vi_smol,
     response = "vi_numeric",
     predictors = vi_predictors_numeric,
     preference_order = NULL,
-    f = f_r2_rf,
-    f_name = "f_r2_rf",
+    f = f_numeric_rf,
+    f_name = "f_numeric_rf",
     quiet = TRUE
   )
 
   testthat::expect_true(
-    all(x$f == "f_r2_rf")
+    all(x$f == "f_numeric_rf")
   )
 
   ### bad function name ----

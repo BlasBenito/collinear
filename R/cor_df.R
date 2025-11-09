@@ -1,28 +1,38 @@
-#' Absolute Pairwise Correlations Dataframe
+#' Pairwise Correlation Dataframe
 #'
 #' @description
-#'
-#' Computes a absolute pairwise correlation data frame. Implements methods to compare different types of predictors:
+#' Computes absolute pairwise correlations between predictors using appropriate methods for different variable types:
 #' \itemize{
-#'   \item **numeric vs. numeric**: as computed with [stats::cor()] using the methods "pearson" or "spearman", via [cor_numeric_vs_numeric()].
-#'   \item **numeric vs. categorical**: the function [cor_numeric_vs_categorical()] target-encodes the categorical variable using the numeric variable as reference with [target_encoding_lab()] and the method "loo" (leave-one-out), and then their correlation is computed with [stats::cor()].
-#'   \item **categorical vs. categorical**: the function [cor_categorical_vs_categorical()] computes Cramer's V (see [cor_cramer_v()]) as indicator of the association between character or factor variables. Please read the documentation of [cor_cramer_v()] to better understand the caveats of mixing Pearson Correlation and Cramer's V in a multicollinearity analysis.
-#'   }
+#'   \item **Numeric vs. Numeric**: Absolute Pearson correlation via [stats::cor()].
+#'   \item **Numeric vs. Categorical**: Target-encodes the categorical variable  using the numeric variable as reference via [target_encoding_lab()] with leave-one-out method, then computes absolute Pearson correlation.
+#'   \item **Categorical vs. Categorical**: Cramer's V via [cor_cramer()] as a measure of association. See [cor_cramer()] for important notes on mixing Pearson correlation and Cramer's V in multicollinearity analysis.
+#' }
 #'
-#' Accepts a parallelization setup via [future::plan()] and a progress bar via [progressr::handlers()] (see examples).
+#' Parallelization via [future::plan()] and progress bars via [progressr::handlers()] are supported but only beneficial for large datasets with categorical predictors. Numeric-only correlations do not use parallelization or progress bars. Example: With 16 workers, 30k rows (dataframe [vi]), 49 numeric and 12 categorical predictors (see [vi_predictors]), parallelization achieves a 5.4x speedup (147s → 27s).
 #'
 #' @inheritParams collinear
-#
-#' @return data frame:
+#'
+#' @return dataframe with columns:
 #' \itemize{
-#'   \item \code{x} predictor name.
-#'   \item \code{y} predictor name.
-#'   \item \code{correlation} Absolute Pearson correlation for numeric vs. numeric and numeric vs. categorical, or Cramer's V for categorical vs categorical.
-#'   \item \code{metric} "pearson" for absolute Pearson correlation for numeric vs. numeric and numeric vs. categorical and "cramer_v" for Cramer's V association between categorical predictors.
+#'   \item \code{x}: character, first predictor name.
+#'   \item \code{y}: character, second predictor name.
+#'   \item \code{correlation}: numeric, absolute Pearson correlation (numeric vs. numeric and numeric vs. categorical) or Cramer's V (categorical vs. categorical).
 #' }
+#'
 #'
 #' @examples
 #' data(vi_smol)
+#'
+#' ## OPTIONAL: parallelization setup
+#' ## irrelevant when all predictors are numeric
+#' ## only worth it for large data with many categoricals
+#' # future::plan(
+#' #   future::multisession,
+#' #   workers = future::availableCores() - 1
+#' # )
+#'
+#' ## OPTIONAL: progress bar
+#' # progressr::handlers(global = TRUE)
 #'
 #' #predictors
 #' predictors = c(
@@ -32,17 +42,6 @@
 #'   "soil_temperature_mean" #numeric
 #' )
 #'
-#' #OPTIONAL: parallelization setup
-#' # only worth it for large data
-#' # future::plan(
-#' #   future::multisession,
-#' #   workers = 2
-#' # )
-#' #
-#' #OPTIONAL: progress bar
-#' # progressr::handlers(global = TRUE)
-#'
-#' #predictors ordered from lower to higher multicollinearity
 #' x <- cor_df(
 #'   df = vi_smol,
 #'   predictors = predictors
@@ -50,7 +49,7 @@
 #'
 #' x
 #'
-#' #OPTIONAL: disable parallelization
+#' ## OPTIONAL: disable parallelization
 #' #future::plan(future::sequential)
 #' @autoglobal
 #' @family pairwise_correlation
@@ -67,440 +66,267 @@ cor_df <- function(
     ... = ...
   )
 
-  quiet <- validate_arg_quiet(
-    function_name = function_name,
-    quiet = quiet
+  df <- validate_arg_df_not_null(
+    df = df,
+    function_name = function_name
   )
+
+  quiet <- validate_arg_quiet(
+    quiet = quiet,
+    function_name = function_name
+  )
+
+  predictors <- validate_arg_predictors(
+    df = df,
+    predictors = predictors,
+    quiet = quiet,
+    function_name = function_name
+  )
+
+  df.ncol <- ncol(df)
 
   df <- validate_arg_df(
     df = df,
     predictors = predictors,
-    function_name = function_name,
-    quiet = quiet
+    quiet = quiet,
+    function_name = function_name
   )
 
-  #validate input data frame
-  predictors <- validate_arg_predictors_cor(
-    df = df,
-    predictors = predictors,
-    function_name = function_name,
-    quiet = quiet
-  )
+  #revalidate predictors if any columns were removed
+  if(ncol(df) < df.ncol){
 
-  #if no numerics, return predictors
-  if(length(predictors) == 0){
+    attributes(predictors)$validated <- NULL
 
-    return(
-      data.frame(
-        x = NA,
-        y = NA,
-        correlation = NA
-      )
+    predictors <- validate_arg_predictors(
+      df = df,
+      predictors = predictors,
+      quiet = quiet,
+      function_name = function_name
     )
 
   }
 
-  #early output if only one predictor
-  if(length(predictors) == 1){
+  #identify predictors types
+  predictors <- identify_valid_variables(
+    df = df,
+    predictors = predictors,
+    quiet = quiet,
+    function_name = function_name
+  )
 
-    return(
-      data.frame(
-        x = predictors,
-        y = predictors,
-        correlation = 1.0
+  #univariate case
+  if(length(c(predictors$numeric, predictors$categorical)) == 1){
+
+    if(quiet == FALSE){
+
+      message(
+        "\n",
+        function_name,
+        ": only one valid predictor, returning one-row dataframe."
       )
+
+    }
+
+    temp <- c(predictors$numeric, predictors$categorical)
+
+    out_df <- data.frame(
+      x = temp,
+      y = temp,
+      correlation = 1,
+      metric = ifelse(
+        test = length(predictors$categorical) == 1,
+        yes = "cramer_v",
+        no = "pearson"
+      )
+    )
+
+    class(out_df) <- c("collinear_cor_df", class(out_df))
+
+    return(out_df)
+
+  }
+
+  #initialize output dataframes
+  numerics_df <- NULL
+  categoricals_df <- NULL
+
+  #categoricals
+  df_num_cat <- NULL
+  df_cat_cat <- NULL
+
+  #num vs cat
+  if(
+    all(
+      c(
+        length(predictors$categorical),
+        length(predictors$numeric)
+      ) > 0
+    )
+  ){
+
+    #numerics_vs_categoricals
+    df_num_cat <- expand.grid(
+      x = predictors$numeric,
+      y = predictors$categorical,
+      correlation = NA_real_,
+      metric = "Pearson",
+      type = 1,
+      stringsAsFactors = FALSE
     )
 
   }
 
-  #list to store correlation data frames
-  cor.list <- list()
+  #cat vs cat
+  if(length(predictors$categorical) > 1){
 
-  #correlation between numeric variables
-  cor.list[["num-vs-num"]] <- cor_numeric_vs_numeric(
-    df = df,
-    predictors = predictors,
-    quiet = quiet,
-    function_name = function_name
+    pairs_cat_cat <- t(
+      utils::combn(
+        x = predictors$categorical,
+        m = 2
+      )
+    )
+
+    df_cat_cat <- data.frame(
+      x = pairs_cat_cat[, 1],
+      y = pairs_cat_cat[, 2],
+      correlation = NA_real_,
+      metric = "Cramer's V",
+      type = 2,
+      stringsAsFactors = FALSE
+    )
+
+  }
+
+  #df to iterate over
+  categoricals_df <- rbind(
+    df_num_cat,
+    df_cat_cat
   )
 
-  #correlation between numeric and character variables
-  cor.list[["num-vs-cat"]] <- cor_numeric_vs_categorical(
-    df = df,
-    predictors = predictors,
-    quiet = quiet,
-    function_name = function_name
+  #compute iterations for categorical vars
+  iterations_categorical <- ifelse(
+    test = !is.null(categoricals_df) && nrow(categoricals_df) > 0,
+    yes = nrow(categoricals_df),
+    no = 0
   )
 
-  #correlation between characters
-  cor.list[["cat-vs-cat"]] <- cor_categorical_vs_categorical(
-    df = df,
-    predictors = predictors,
-    quiet = quiet,
-    function_name = function_name
+  if(iterations_categorical > 0){
+
+    p <- progressr::progressor(
+      steps = iterations_categorical
+    )
+
+
+    categoricals_df$correlation <- future.apply::future_apply(
+      X = categoricals_df,
+      MARGIN = 1,
+      FUN = function(x){
+
+        p()
+
+        df.x <- data.frame(
+          x = df[[x[1]]],
+          y = df[[x[2]]]
+        ) |>
+          stats::na.omit()
+
+        #num_vs_cat
+        if(x[5] == "1"){
+
+          attr(
+            x = df.x,
+            which = "validated"
+          ) <- TRUE
+
+          #target encode
+          df.x <- target_encoding_lab(
+            df = df.x,
+            response = "x",
+            predictors = "y",
+            encoding_method = "loo",
+            overwrite = TRUE,
+            quiet = TRUE,
+            function_name = function_name
+          )
+
+          #compute correlation
+          score <- stats::cor(
+            x = df.x$x,
+            y = df.x$y,
+            use = "complete.obs",
+            method = "pearson"
+          ) |>
+            abs()
+
+        } else {
+
+          #cat vs cat
+          score <- cor_cramer(
+            x = df.x$x,
+            y = df.x$y,
+            check_input = FALSE,
+            function_name = function_name
+          ) |>
+            abs()
+
+        }
+
+        score
+
+      }, #end of lambda function
+      future.seed = TRUE
+    )
+
+    #remove type
+    categoricals_df$type <- NULL
+
+  }
+
+
+  #numerics
+  if(length(predictors$numeric) > 1){
+
+    numerics_matrix <- stats::cor(
+      x = df[, predictors$numeric, drop = FALSE],
+      use = "complete.obs",
+      method = "pearson"
+    ) |>
+      abs()
+
+    upper_indices <- which(
+      x = upper.tri(numerics_matrix),
+      arr.ind = TRUE
+    )
+
+    numerics_df <- data.frame(
+      x = rownames(numerics_matrix)[upper_indices[, 1]],
+      y = colnames(numerics_matrix)[upper_indices[, 2]],
+      correlation = numerics_matrix[upper_indices],
+      metric = "Pearson",
+      stringsAsFactors = FALSE
+    )
+
+  }
+
+  out_df <- rbind(
+    numerics_df,
+    categoricals_df
   )
 
-  #join results
-  cor.df <- do.call(
-    what = "rbind",
-    args = cor.list
-  )
-
-  #arrange by absolute correlation values
-  cor.df <- cor.df[
+  #arrange by correlation values
+  out_df <- out_df[
     order(
-      abs(cor.df$correlation),
+      out_df$correlation,
       decreasing = TRUE
     ),
     , drop = FALSE
   ]
 
+  rownames(out_df) <- NULL
 
-  rownames(cor.df) <- NULL
+  class(out_df) <- c("collinear_cor_df", class(out_df))
 
-  cor.df
-
-}
-
-
-
-
-#' Pairwise Correlation Between Numeric Variables
-#'
-#' @inheritParams collinear
-#' @inherit cor_df return
-#' @rdname cor_df
-#' @export
-#' @family pairwise_correlation
-#' @autoglobal
-cor_numeric_vs_numeric <- function(
-    df = NULL,
-    predictors = NULL,
-    quiet = FALSE,
-    ...
-){
-
-  function_name <- validate_arg_function_name(
-    default_name = "collinear::cor_numeric_vs_numeric()",
-    ... = ...
-  )
-
-  quiet <- validate_arg_quiet(
-    function_name = function_name,
-    quiet = quiet
-  )
-
-  #validate input data frame
-  df <- validate_arg_df(
-    df = df,
-    predictors = predictors,
-    function_name = function_name,
-    quiet = quiet
-  )
-
-  #validate predictors
-  #get numeric predictors only
-  predictors <- validate_arg_predictors_cor(
-    df = df,
-    predictors = predictors,
-    function_name = function_name,
-    quiet = quiet
-  )
-
-  #identify numerics
-  predictors <- identify_predictors_numeric(
-    df = df,
-    predictors = predictors,
-    function_name = function_name
-  )$valid
-
-  if(length(predictors) <= 1){
-    return(NULL)
-  }
-
-  #correlation matrix to data frame
-  cor.df <- stats::cor(
-    x = df[, predictors, drop = FALSE],
-    use = "pairwise.complete.obs",
-    method = "pearson"
-  ) |>
-    as.table() |>
-    as.data.frame()
-
-  #remove factors
-  cor.df$Var1 <- as.character(cor.df$Var1)
-  cor.df$Var2 <- as.character(cor.df$Var2)
-  cor.df$metric <- "pearson"
-
-  #rename columns
-  colnames(cor.df) <- c(
-    "x",
-    "y",
-    "correlation",
-    "metric"
-  )
-
-  cor.df$correlation <- abs(cor.df$correlation)
-
-  #filter out x == y
-  cor.df <- cor.df[
-    cor.df$x != cor.df$y,
-    , drop = FALSE
-  ]
-
-  #identify pairs
-  cor.df$pair_name <- apply(
-    X = cor.df[, c("x", "y"), drop = FALSE],
-    MARGIN = 1,
-    FUN = function(x){
-      paste0(
-        sort(x),
-        collapse = " "
-      )
-    }
-  )
-
-  #remove duplicated pairs
-  cor.df <- cor.df[
-    !duplicated(cor.df$pair_name),
-    , drop = FALSE
-  ]
-
-  #remove pair name
-  cor.df$pair_name <- NULL
-
-  cor.df
+  out_df
 
 }
 
-
-#' Pairwise Correlation Between Numeric and Categorical Variables
-#'
-#' @inheritParams collinear
-#'
-#' @inherit cor_df return
-#' @rdname cor_df
-#' @export
-#' @family pairwise_correlation
-#' @autoglobal
-cor_numeric_vs_categorical <- function(
-    df = NULL,
-    predictors = NULL,
-    quiet = FALSE,
-    ...
-){
-
-  function_name <- validate_arg_function_name(
-    default_name = "collinear::cor_numeric_vs_categorical()",
-    ... = ...
-  )
-
-  quiet <- validate_arg_quiet(
-    function_name = function_name,
-    quiet = quiet
-  )
-
-  #validate input data frame
-  df <- validate_arg_df(
-    df = df,
-    predictors = predictors,
-    function_name = function_name,
-    quiet = quiet
-  )
-
-  #validate predictors
-  predictors <- validate_arg_predictors_cor(
-    df = df,
-    predictors = predictors,
-    function_name = function_name,
-    quiet = quiet
-  )
-
-  #identify numeric and categorical predictors
-  predictors_types <- identify_predictors(
-    df = df,
-    predictors = predictors,
-    quiet = quiet,
-    function_name = function_name
-  )
-
-  if(
-    any(
-      length(predictors_types$numeric) == 0,
-      length(predictors_types$categorical) == 0
-    )
-  ){
-    return(NULL)
-  }
-
-  #data frame to store results
-  cor.df <- expand.grid(
-    x = predictors_types$numeric,
-    y = predictors_types$categorical,
-    stringsAsFactors = FALSE
-  )
-
-  #progress bar
-  p <- progressr::progressor(
-    steps = nrow(cor.df)
-  )
-
-  #parallelized version
-  cor.df$correlation <- future.apply::future_apply(
-    X = cor.df,
-    MARGIN = 1,
-    FUN = function(x){
-
-      #x <- c("longitude", "vi_categorical")
-
-      p()
-
-      df.x <- data.frame(
-        x = df[[x[1]]],
-        y = df[[x[2]]]
-      ) |>
-        stats::na.omit()
-
-      attr(
-        x = df.x,
-        which = "validated"
-      ) <- TRUE
-
-      #target encode
-      df.x <- target_encoding_lab(
-        df = df.x,
-        response = "x",
-        predictors = "y",
-        encoding_method = "loo",
-        overwrite = TRUE,
-        quiet = TRUE,
-        function_name = function_name
-      )
-
-      #compute correlation
-      val <- stats::cor(
-        x = df.x$x,
-        y = df.x$y,
-        use = "pairwise.complete.obs",
-        method = "pearson"
-      ) |>
-        abs()
-
-    }, #end of lambda function
-    future.seed = TRUE
-  )
-
-  cor.df$metric <- "pearson"
-
-  cor.df
-
-}
-
-#' Pairwise Cramer's V Between Categorical Variables
-#'
-#' @inheritParams collinear
-#'
-#' @inherit cor_df return
-#' @rdname cor_df
-#' @export
-#' @family pairwise_correlation
-#' @autoglobal
-cor_categorical_vs_categorical <- function(
-    df = NULL,
-    predictors = NULL,
-    quiet = FALSE,
-    ...
-){
-
-  function_name <- validate_arg_function_name(
-    default_name = "collinear::cor_categorical_vs_categorical()",
-    ... = ...
-  )
-
-  quiet <- validate_arg_quiet(
-    function_name = function_name,
-    quiet = quiet
-  )
-
-  #validate input data frame
-  df <- validate_arg_df(
-    df = df,
-    predictors = predictors,
-    function_name = function_name,
-    quiet = quiet
-  )
-
-  #validate predictors
-  predictors <- validate_arg_predictors_cor(
-    df = df,
-    predictors = predictors,
-    function_name = function_name,
-    quiet = quiet
-  )
-
-  #get only categorical predictors
-  predictors <- identify_predictors_categorical(
-    df = df,
-    predictors = predictors,
-    function_name = function_name
-  )$valid
-
-  #empty output if no predictors
-  if(length(predictors) <= 1){
-    return(NULL)
-  }
-
-  #data frame to store results
-  cor.df <- expand.grid(
-    x = predictors,
-    y = predictors,
-    correlation = NA,
-    stringsAsFactors = FALSE
-  )
-
-  #filter out mirrored pairs
-  cor.df <- within(cor.df, {
-    x <- ifelse(x < y, x, y)
-    y <- ifelse(x < y, y, x)
-  })
-
-  #filter out x == y
-  cor.df <- cor.df[cor.df$x != cor.df$y, ]
-
-  #future apply
-  #progress bar
-  p <- progressr::progressor(
-    steps = nrow(cor.df)
-  )
-
-  #parallelized version
-  cor.df$correlation <- future.apply::future_apply(
-    X = cor.df,
-    MARGIN = 1,
-    FUN = function(x){
-
-      p()
-
-      df.x <- data.frame(
-        x = df[[x[1]]],
-        y = df[[x[2]]]
-      ) |>
-        stats::na.omit()
-
-      val <- cor_cramer_v(
-        x = df.x$x,
-        y = df.x$y,
-        check_input = FALSE,
-        function_name = function_name
-      ) |>
-        abs()
-
-    },
-    future.seed = TRUE
-  )
-
-  cor.df$metric <- "cramer_v"
-
-  cor.df
-
-}
