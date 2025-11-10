@@ -45,7 +45,7 @@ DONE class.collinear_selection
 DONE collinear_stats
 DONE collinear
 DONE collinear_select
-collinear_auto
+DONE collinear_auto
 DONE cor_clusters
 DONE cor_cramer
 DONE cor_df

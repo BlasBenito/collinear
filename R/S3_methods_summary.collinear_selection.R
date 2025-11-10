@@ -1,6 +1,6 @@
 #' Summary of \code{class.collinear_selection}
 #'
-#' @param object (required, output of [class.collinear_selection()]) Object to summarize. Default: NULL
+#' @param object (sub-list in output of [collinear()] or [collinear_auto()]) Object to summarize. Default: NULL
 #' @param ... Ignored, kept for consistency with generic.
 #' @return list
 #' TODO describe list structure

@@ -100,7 +100,7 @@
 
 #' Results of a Collinearity-Filtering Simulation
 #'
-#' A dataframe summarising 10,000 experiments comparing the output of [cor_select()] and [vif_select()]. Each row records the input sampling parameters and the resulting feature-selection metrics.
+#' A dataframe summarizing 10,000 experiments comparing the output of [cor_select()] and [vif_select()]. Each row records the input sampling parameters and the resulting feature-selection metrics.
 #'
 #' The source data is [vi] plus 200 synthetic columns, for a total of 249 columns and 30.000 rows.
 #'
@@ -147,7 +147,7 @@
 #'
 #' A fitted generalized additive model describing \code{max_vif} as a function of \code{max_cor} in [experiment_cor_vs_vif].
 #'
-#' The model was fitted with a smooth term in \code{max_cor} (basis dimension \code{k = 9}) and cubic weights proportional to the Jaccard similarity between the results of [cor_select()] and [vif_select()] to emphasise cases with high agreement between the two selection methods.
+#' The model was fitted with a smooth term in \code{max_cor} (basis dimension \code{k = 9}) and cubic weights proportional to the Jaccard similarity between the results of [cor_select()] and [vif_select()] to emphasize cases with high agreement between the two selection methods.
 #'
 #' \preformatted{
 #' gam_cor_to_vif <- mgcv::gam(

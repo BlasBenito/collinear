@@ -7,7 +7,7 @@
 \method{summary}{collinear_selection}(object = NULL, ...)
 }
 \arguments{
-\item{object}{(required, output of \code{\link[=class.collinear_selection]{class.collinear_selection()}}) Object to summarize. Default: NULL}
+\item{object}{(sub-list in output of \code{\link[=collinear]{collinear()}} or \code{\link[=collinear_auto]{collinear_auto()}}) Object to summarize. Default: NULL}
 
 \item{...}{Ignored, kept for consistency with generic.}
 }
@@ -20,7 +20,6 @@ Summary of \code{class.collinear_selection}
 }
 \seealso{
 Other S3_methods: 
-\code{\link{class.collinear_selection}()},
 \code{\link{print.collinear_output}()},
 \code{\link{print.collinear_selection}()},
 \code{\link{summary.collinear_output}()}

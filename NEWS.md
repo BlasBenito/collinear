@@ -1,24 +1,23 @@
-# collinear 2.0.1
+# collinear 3.0.0
 
-## Bugfixes
+Extensive re-write focused on internal consistency, better messaging, comprehensive testing, and a few new functions and features.
 
-Function `vif_select()` now passes the argument `quiet` to `validate_arg_preference_order()`. Fixes [issue](https://github.com/BlasBenito/collinear/issues/12), first described in [this PR](https://github.com/BlasBenito/collinear/pull/11).
+## Main Changes
 
-Fixed issue where function `cor_matrix()` returned absolute correlations only.
+- New function `collinear_select()` with an improved variable selection algorithm that can apply correlation and VIF thresholds at once. This function is a replacement for `vif_select()` and `cor_select()`, and these functions are now wrappers to `collinear_select()`.
 
-## Changes
+- New function `collinear_auto()` for automated multicollinearity filtering with a minimal user input.
 
-Added new internal function `validate_arg_df()` to convert logicals to numeric, and NaN, Inf and -Inf to NA.
+- Functions `collinear()` and `collinear_auto()` now return objects of the class `collinear_output`, which contains everything needed after a multicollinearity analysis.
 
-Added new internal function `identify_logical_variables()`.
+- All VIF functions have been reworked for efficiency, and now accept categorical and factor predictors.
 
-Added function `vif()` with fast method to compute VIF from a correlation matrix.
+- All functions to compute preference order have been re-written and renamed to offer a more logical framework. Additionally, `preference_order()` now computes the default (predictors sorted from lower to higher multicollinearity) that used to be in `vif_select()` and `cor_select()`.
 
-Removed argument `warn_limit` of `preference_order()` from `collinear()` and its internal function `preference_order_wrapper()` to simplify their signatures.
+- The function `preference_order()` now allows a cross-validation setup via the arguments `cv_training_fraction` and `cv_iterations`. All `f_xxx()` functions now perform cross-validation when these args are provided.
 
-Default value of argument `f` in all functions is now NULL instead of "auto". When NULL, `f_auto()` is called to select a suitable function depending on the data features.
+- All nested functions are now clearly identified whey they return a controlled message or warning (and some predictable errors).
 
-Previous `error()` when `df` had fewer than 10 rows has been replaced with `warning()`.
 
 
 # collinear 2.0.0

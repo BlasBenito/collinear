@@ -1,6 +1,6 @@
-#' Print \code{class.collinear_selection}
+#' Print \code{collinear_selection}
 #'
-#' @param x (required, output of [class.collinear_selection()]) Object to print. Default: NULL
+#' @param x (required, sub-list in output of [collinear()] or [collinear_auto()]) Object to print. Default: NULL
 #' @param n (optional, integer) Maximum printed vector length. Default: 5.
 #' @param ... Ignored, kept for consistency with generic.
 #' @method print collinear_selection
@@ -131,7 +131,6 @@ print.collinear_selection <- function(
   }
 
   # df ----
-  if(!is.null(x$df)){
 
     cat("\n")
 
@@ -143,26 +142,22 @@ print.collinear_selection <- function(
 
     cat("\n")
 
-  }
-
   # preference ----
   if(!is.null(x$preference_order)){
 
     cat("\n")
 
-    if(is.list(x$preference_order)){
-
       cat(" + preference order:", fill = TRUE)
 
       cat("   + df:", fill = TRUE)
 
-      cat("     - rows:", nrow(x$preference_order$df), fill = TRUE)
+      cat("     - rows:", nrow(x$preference_order), fill = TRUE)
 
-      cat("     - cols:", ncol(x$preference_order$df))
+      cat("     - cols:", ncol(x$preference_order))
 
       cat("\n")
 
-      selection <- x$preference_order$df$predictor[1:n]
+      selection <- x$preference_order$predictor[1:n]
 
       omitted <- length(x$preference_order$df$predictor) - n
 
@@ -195,36 +190,7 @@ print.collinear_selection <- function(
 
       cat("\n")
 
-
-      if(!is.null(x$preference_order$f)){
-
-        if(all(!is.na(x$preference_order$f$name))){
-
-        cat("   + f:", fill = TRUE)
-          cat("     - function:", x$preference_order$f$name, fill = TRUE)
-
-          if(!is.null(x$preference_order$f$expression)){
-            cat("     - expression:", x$preference_order$f$expression, fill = TRUE)
-          }
-
-          if(!is.na(x$preference_order$f$metric)){
-            cat("     - metric:", x$preference_order$f$metric)
-          }
-
-
-        } else {
-
-          if(all(!is.na(x$preference_order$f$metric))){
-            cat("   - metric:", paste(x$preference_order$f$metric, collapse = ", "))
-          }
-
-        }
-
-      }
-
-    }
-
-    cat("\n")
+        cat("   + f:", unique(x$preference_order$f), fill = TRUE)
 
   }
 

@@ -395,7 +395,7 @@ testthat::test_that("`collinear()` works", {
   )
 
   testthat::expect_true(
-    all(vi_predictors_numeric %in% x$vi_numeric$preference_order$df$predictor)
+    all(vi_predictors_numeric %in% x$vi_numeric$preference_order$predictor)
   )
 
   ### valid character vector ----
@@ -433,7 +433,7 @@ testthat::test_that("`collinear()` works", {
 
 
   testthat::expect_true(
-    all(vi_predictors_numeric %in% x$vi_numeric$preference_order$df$predictor)
+    all(vi_predictors_numeric %in% x$vi_numeric$preference_order$predictor)
   )
 
 
@@ -459,7 +459,7 @@ testthat::test_that("`collinear()` works", {
   )
 
   testthat::expect_true(
-    unique(x$vi_categorical$preference_order$df$response) == "vi_categorical"
+    unique(x$vi_categorical$preference_order$response) == "vi_categorical"
   )
 
   ### invalid data frame ----
@@ -512,11 +512,11 @@ testthat::test_that("`collinear()` works", {
   )
 
   testthat::expect_true(
-    preference[1] == x$result$preference_order$df$predictor[1]
+    preference[1] == x$result$preference_order$predictor[1]
   )
 
   testthat::expect_true(
-    preference[2] == x$result$preference_order$df$predictor[2]
+    preference[2] == x$result$preference_order$predictor[2]
   )
 
 
@@ -538,11 +538,11 @@ testthat::test_that("`collinear()` works", {
     suppressMessages()
 
   testthat::expect_true(
-    x$vi_numeric$selection[1] == x$vi_numeric$preference$df$predictor[1]
+    x$vi_numeric$selection[1] == x$vi_numeric$preference$predictor[1]
   )
 
   testthat::expect_true(
-    x$vi_numeric$preference$df$f[1] == "f_numeric_glm"
+    x$vi_numeric$preference$f[1] == "f_numeric_glm"
   )
 
   ### f_numeric_rf ----
@@ -559,7 +559,7 @@ testthat::test_that("`collinear()` works", {
   )
 
   testthat::expect_true(
-    x$vi_numeric$selection[1] == x$vi_numeric$preference$df$predictor[1]
+    x$vi_numeric$selection[1] == x$vi_numeric$preference$predictor[1]
   )
 
 

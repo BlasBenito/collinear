@@ -17,7 +17,7 @@ gam_cor_to_vif
 A fitted generalized additive model describing \code{max_vif} as a function of \code{max_cor} in \link{experiment_cor_vs_vif}.
 }
 \details{
-The model was fitted with a smooth term in \code{max_cor} (basis dimension \code{k = 9}) and cubic weights proportional to the Jaccard similarity between the results of \code{\link[=cor_select]{cor_select()}} and \code{\link[=vif_select]{vif_select()}} to emphasise cases with high agreement between the two selection methods.
+The model was fitted with a smooth term in \code{max_cor} (basis dimension \code{k = 9}) and cubic weights proportional to the Jaccard similarity between the results of \code{\link[=cor_select]{cor_select()}} and \code{\link[=vif_select]{vif_select()}} to emphasize cases with high agreement between the two selection methods.
 
 \preformatted{
 gam_cor_to_vif <- mgcv::gam(

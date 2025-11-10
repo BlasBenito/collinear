@@ -15,7 +15,7 @@
 #' @return list:
 #' \itemize{
 #'   \item df: dataframe with predictor names and their cluster IDs.
-#'   \item hclust: clustering obect
+#'   \item hclust: clustering object
 #' }
 #'
 #' @examples

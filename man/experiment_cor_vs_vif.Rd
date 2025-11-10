@@ -20,7 +20,7 @@ A dataframe with 9354 rows and 6 variables:
 experiment_cor_vs_vif
 }
 \description{
-A dataframe summarising 10,000 experiments comparing the output of \code{\link[=cor_select]{cor_select()}} and \code{\link[=vif_select]{vif_select()}}. Each row records the input sampling parameters and the resulting feature-selection metrics.
+A dataframe summarizing 10,000 experiments comparing the output of \code{\link[=cor_select]{cor_select()}} and \code{\link[=vif_select]{vif_select()}}. Each row records the input sampling parameters and the resulting feature-selection metrics.
 }
 \details{
 The source data is \link{vi} plus 200 synthetic columns, for a total of 249 columns and 30.000 rows.

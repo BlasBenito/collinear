@@ -1,7 +1,7 @@
 #' Validate Structure and Values of Argument \code{df}
 #'
 #' @description
-#' Internal function to validate the integrity of the argument \code{df}. It ensures that the dataframe has suitable dimensions for a multicollinearity analysis, transforms logical columns to numeric, and converts \code{NaN}, \code{Inf} and \code{-Inf} to NA. Additionally, it checks the values of \code{responses} and \code{predictors} if these arguments are provided.
+#' Internal function to validate the integrity of the argument \code{df}. It ensures that the dataframe has suitable dimensions for a multicollinearity analysis, transforms logical columns to numeric, character columns to factors, and converts \code{NaN}, \code{Inf} and \code{-Inf} to NA. Additionally, it checks the values of \code{responses} and \code{predictors} if these arguments are provided.
 #'
 #' @inheritParams collinear
 #' @inheritParams f_auto
@@ -256,11 +256,45 @@ validate_arg_df <- function(
 
   }
 
+  #transform character categoricals to factors
+  if(length(column_types$categorical) > 0){
+
+    #identify character categoricals
+    char_cols <- column_types$categorical[
+      vapply(
+        X = df[, column_types$categorical, drop = FALSE],
+        FUN = is.character,
+        logical(1)
+        )
+    ]
+
+    if(length(char_cols) > 0){
+
+      if(quiet == FALSE){
+
+        message(
+          "\n",
+          function_name,
+          ": converted the following character columns to factor:\n - ",
+          paste0(char_cols, collapse = "\n - ")
+        )
+
+      }
+
+      #convert to factor
+      df[char_cols] <- lapply(
+        X = df[char_cols],
+        FUN = as.factor
+        )
+
+    }
+
+  }
+
   #replace invalid numeric values
   if(length(column_types$numeric) > 0){
 
     df_numeric <- df[, column_types$numeric, drop = FALSE]
-
 
     # replace inf with NA ----
     n_inf <- sum(

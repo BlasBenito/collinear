@@ -20,7 +20,6 @@ Summary of \code{class.collinear_output}
 }
 \seealso{
 Other S3_methods: 
-\code{\link{class.collinear_selection}()},
 \code{\link{print.collinear_output}()},
 \code{\link{print.collinear_selection}()},
 \code{\link{summary.collinear_selection}()}
