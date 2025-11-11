@@ -36,26 +36,31 @@ knitr::opts_chunk$set(
 
 ## Warning
 
-Version 3.0.0 of `collinear` includes changes that may disrupt existing workflows, and results from previous versions may not be reproducible due to enhancements in the automated selection algorithms.
+Version 3.0.0 of `collinear` includes changes that may disrupt existing workflows, and results from previous versions may not be reproducible due to enhancements in the predictor selection algorithm.
 
 ## Summary
 
-[Multicollinearity hinders the interpretability](https://www.blasbenito.com/post/multicollinearity-model-interpretability/) of linear and machine learning models.
+[Multicollinearity hinders the interpretability](https://www.blasbenito.com/post/multicollinearity-model-interpretability/) of linear and machine learning models. 
 
-The `collinear` package combines four methods for easy management of multicollinearity in modelling data frames with numeric and categorical variables:
+The R package `collinear` provides a comprehensive toolkit for automated multicollinearity management in datasets with mixed variable types (numeric, categorical, and logical).
 
-- **Target Encoding**: Transforms categorical predictors to numeric using a numeric response as reference.
-- **Preference Order**: Ranks predictors by their association with a response variable to preserve important ones in multicollinearity filtering.
-- **Pairwise Correlation Filtering**: Automated multicollinearity filtering of numeric and categorical predictors based on pairwise correlations.
-- **Variance Inflation Factor Filtering**: Automated multicollinearity filtering of numeric predictors based on Variance Inflation Factors.
+It is built around these concepts:
 
-These four methods are combined in the functions `collinear()` and `collinear_auto()`, which serves as single entry point for most of the functionalities in the package. The article [How It Works](https://blasbenito.github.io/collinear/articles/how_it_works.html) explains how these functions work in detail.
+ - **Target Encoding Integration** (function [target_encoding_lab()]): Transparently converts categorical predictors to numeric when required, enabling VIF and correlation analysis across mixed data types.
 
-## Citation
+ - **Unified Correlation Framework** (function [cor_df()]): Computes pairwise correlations between any variable types using Pearson correlation (numeric-numeric), target encoding (numeric-categorical), and Cramer's V (categorical-categorical) within a single, consistent workflow.
 
-If you find this package useful, please cite it as:
+ - **Intelligent Predictor Ranking** (function [preference_order()]): Prioritizes predictors by their association with the response, or allows a user-defined ranking to ensure that the most relevant ones are retained during filtering.
 
-*Blas M. Benito (2025). collinear: R Package for Seamless Multicollinearity Management. Version 3.0.0. doi: 10.5281/zenodo.10039489*
+- **Dual Filtering Strategy** (function [collinear_select()]): Combines pairwise correlation and Variance Inflation Factor filtering while considering predictor rankings to manage multicollinearity while maximizing the predictive power of the resulting selection of predictors.
+
+These methods are integrated in two main functions:
+
+ - [collinear()]: Handles the complete workflow from data validation to variable selection, returning filtered datasets and modeling formulas. 
+ 
+ - [collinear_auto()]: Automatically configures all parameters based on data characteristics for a simplified experience.
+
+The package also provides diagnostic functions ([cor_df()], [vif_df()], [collinear_stats()]) to help users assess multicollinearity in their data before and after filtering.
 
 ## Install
 
@@ -88,42 +93,77 @@ remotes::install_github(
 
 ## Getting Started
 
-The function `collinear_auto()` has the lowest entry barrier, as it handles multicollinearity management all by itself.
+### Setup
+
+Most functions in the `collinear` package support parallelization and progress bars via [`future`](https://future.futureverse.org/) and [`progressr`](https://progressr.futureverse.org/). 
+
 
 ```{r}
 library(collinear)
 library(future)
+library(progressr)
 
-#parallelization setup
-#only worth it for large data with categorical predictors
 future::plan(
   future::multisession,
   workers = future::availableCores() - 1
   )
 
-#progress bar (does not work in Rmarkdown)
+#does not work in Rmarkdown
 #progressr::handlers(global = TRUE)
+```
 
-#multicollinearity filtering
-#two responses
-#numeric and categorical predictors
+### Example Data
+
+The example dataframe [vi] has several response variables and a large set of predictors. Here we focus on the numeric response `vi_numeric`, and the complete set of numeric and categorical predictors, stored in the vector [vi_predictors].
+
+```{r}
+data(vi, vi_predictors)
+nrow(vi)
+length(vi_predictors)
+```
+
+The function [identify_valid_variables()] is used below to check the types of the predictors.
+
+```{r}
+collinear::identify_valid_variables(
+  df = vi,
+  predictors = vi_predictors
+)
+```
+### Multicollinearity Analysis
+
+The package provides several functions to assess multicollinearity. 
+
+The functions [cor_df()] and [vif_df()] generate dataframes with the pairwise correlations and VIF scores of the predictors, while the functions [cor_stats()],  [vif_stats()] (used below) and [collinear_stats()] generate descriptive multicollinearity statistics.
+
+```{r}
+collinear::vif_stats(
+  df = vi,
+  predictors = vi_predictors,
+  quiet = TRUE
+)
+```
+The quantile 0.75 returned by `vif_stats()` indicates that 25% of the predictors have a VIF score higher than 10. This is a robust indicator of high multicollinearity in our modelling data.
+
+### Multicollinearity Filtering
+
+The function [collinear_auto()] is designed to reduce multicollinearity in complex modelling data with a minimal setup. In this case, it performs the following actions:
+
+```{r}
 x <- collinear::collinear_auto(
-  df = collinear::vi_smol,
-  response = c(
-    "vi_numeric",    #numeric response
-    "vi_categorical" #categorical response
-    ),
-  predictors = collinear::vi_predictors,
-  quiet = TRUE #set to FALSE to see all messages
+  df = vi,
+  response = "vi_numeric",
+  predictors = vi_predictors
 )
 ```
 
-The output is a list of class `collinear_output`, that has a proper `print()` method.
+The functions `collinear_auto()` and `collinear()` return an object of class `collinear_output`, that has its own `print()` method.
 
 ```{r}
 x
 ```
-The function `vif_df()` provides the simplest way to check that the variable selections returned by `collinear_auto()` show low multicollinearity.
+
+The object `selection` contains predictors chosen by `collinear_auto()`. We can use [vif_df()] to check their level of multicollinearity.
 
 ```{r}
 vif_df(
@@ -131,23 +171,14 @@ vif_df(
   predictors = x$vi_numeric$selection
 )
 ```
+All VIF scores are below 2.5, meaning that `collinear_auto()` did a good job here.
+
+### Model Fitting
+
+The output of `collinear_auto()` can be used right away to fit exploratory models, as shown below.
 
 ```{r}
-vif_df(
-  df = x$vi_categorical$df,
-  predictors = x$vi_categorical$selection
-)
-```
-The output of `preference_order()` computed internally by `collinear_auto()` and used to preserve important predictors is available in the function's output. For example, for the response `vi_numeric`, the R-squared of the observations vs the predictors of a GLM fitted on the response against each predictor was used to ran the predictors.
-
-```{r}
-x$vi_numeric$preference_order
-```
-
-We can also use the results of `collinear_output()` to fit exploratory models. For example, for the response `vi_numeric` we can fit a GLM.
-
-```{r}
-m <- stats::glm(
+m.lm <- stats::lm(
   formula = x$vi_numeric$formulas$linear, 
   data = x$vi_numeric$df,
   na.action = na.omit
@@ -156,16 +187,21 @@ m <- stats::glm(
 summary(m)
 ```
 
-For `vi_categorical`, a factor variable, we can fit a classification model with Random Forest:
+```{r}
+m.gam <- mgcv::gam(
+  formula = x$vi_numeric$formulas$smooth, 
+  data = x$vi_numeric$df
+  )
 
-```{r, eval = FALSE}
-m <- ranger::ranger(
-  formula = x$vi_categorical$formulas$classification,
-  data = x$vi_categorical$df
-)
-
-print(m)
+summary(m.gam)
 ```
+
+
+## Citation
+
+If you find this package useful, please cite it as:
+
+*Blas M. Benito (2025). collinear: R Package for Seamless Multicollinearity Management. Version 3.0.0. doi: 10.5281/zenodo.10039489*
 
 ## Getting help
 

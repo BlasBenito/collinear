@@ -71,6 +71,70 @@ print.collinear_selection <- function(
 
   }
 
+  # df ----
+
+  cat("\n")
+
+  cat(" + df:", fill = TRUE)
+
+  cat("   - rows:", nrow(x$df), fill = TRUE)
+
+  cat("   - cols:", ncol(x$df))
+
+  cat("\n")
+
+  # preference ----
+  if(!is.null(x$preference_order)){
+
+    cat("\n")
+
+    cat(" + preference order:", fill = TRUE)
+
+    cat("   + df:", fill = TRUE)
+
+    cat("     - rows:", nrow(x$preference_order), fill = TRUE)
+
+    cat("     - cols:", ncol(x$preference_order))
+
+    cat("\n")
+
+    selection <- x$preference_order$predictor[1:n]
+
+    omitted <- length(x$preference_order$df$predictor) - n
+
+    symbol <- ifelse(
+      test = length(selection) == 1,
+      yes = " -",
+      no = "   +"
+    )
+
+    cat(
+      symbol,
+      "preference:\n     -",
+      paste(
+        selection,
+        collapse = "\n     - "
+      )
+    )
+
+    if(omitted > 0){
+
+      cat(
+        paste0(
+          "\n     - ... (",
+          omitted,
+          " ommited)"
+        )
+      )
+
+    }
+
+    cat("\n")
+
+    cat("   + f:", unique(x$preference_order$f), fill = TRUE)
+
+  }
+
 
   # selection ----
   if(!is.null(x$selection)){
@@ -127,70 +191,6 @@ print.collinear_selection <- function(
     for(i in names(x$formulas)){
       cat(paste0("   - ", i, ": ", short_formula(f = x$formulas[[i]], n = n)), "\n")
     }
-
-  }
-
-  # df ----
-
-    cat("\n")
-
-    cat(" + df:", fill = TRUE)
-
-    cat("   - rows:", nrow(x$df), fill = TRUE)
-
-    cat("   - cols:", ncol(x$df))
-
-    cat("\n")
-
-  # preference ----
-  if(!is.null(x$preference_order)){
-
-    cat("\n")
-
-      cat(" + preference order:", fill = TRUE)
-
-      cat("   + df:", fill = TRUE)
-
-      cat("     - rows:", nrow(x$preference_order), fill = TRUE)
-
-      cat("     - cols:", ncol(x$preference_order))
-
-      cat("\n")
-
-      selection <- x$preference_order$predictor[1:n]
-
-      omitted <- length(x$preference_order$df$predictor) - n
-
-      symbol <- ifelse(
-        test = length(selection) == 1,
-        yes = " -",
-        no = "   +"
-      )
-
-      cat(
-        symbol,
-        "preference:\n     -",
-        paste(
-          selection,
-          collapse = "\n     - "
-        )
-      )
-
-      if(omitted > 0){
-
-        cat(
-          paste0(
-            "\n     - ... (",
-            omitted,
-            " ommited)"
-          )
-        )
-
-      }
-
-      cat("\n")
-
-        cat("   + f:", unique(x$preference_order$f), fill = TRUE)
 
   }
 

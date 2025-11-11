@@ -86,6 +86,8 @@ vif_stats <- function(
       names = FALSE
       ),
 
+    "mean" = mean(values),
+
     "median" = stats::median(
       x = values
       ),
@@ -102,13 +104,10 @@ vif_stats <- function(
       names = FALSE
       ),
 
-    "mean" = mean(values),
-
     "maximum" = max(values)
 
   ) |>
-    round(digits = 4) |>
-    sort()
+    round(digits = 4)
 
   stats_names <- names(stats)
   names(stats) <- NULL

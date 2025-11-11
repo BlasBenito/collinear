@@ -95,11 +95,20 @@ identify_valid_variables <- function(
     function_name = function_name
   )$valid
 
-  out_list <- list(
-    numeric = variables_numeric,
-    categorical = variables_categorical,
-    logical = variables_logical
-  )
+  out_list <- list()
+
+  if(!is.null(variables_numeric)){
+    out_list$numeric <- variables_numeric
+  }
+
+  if(!is.null(variables_categorical)){
+    out_list$categorical <- variables_categorical
+  }
+
+  if(!is.null(variables_logical)){
+    out_list$logical <- variables_logical
+  }
+
 
   out_list
 

@@ -526,6 +526,8 @@ collinear <- function(
     out.response <- list()
 
     out.response$response <- paste(response)
+    out.response$df <- df.response
+    out.response$preference_order <- preference_order.response
     out.response$selection <- paste(selection.response)
 
     if(
@@ -538,7 +540,7 @@ collinear <- function(
     ){
 
       response_type <- identify_valid_variables(
-        df = df,
+        df = df.response,
         predictors = response,
         function_name = function_name
       ) |>
@@ -546,7 +548,7 @@ collinear <- function(
         names()
 
       selection_type <- identify_valid_variables(
-        df = df,
+        df = df.response,
         predictors = selection.response,
         function_name = function_name
       )
@@ -554,7 +556,7 @@ collinear <- function(
       out.response$formulas <- list()
 
       general_formula <- model_formula(
-        df = df,
+        df = df.response,
         response = response,
         predictors = selection.response,
         quiet = quiet,
@@ -576,7 +578,7 @@ collinear <- function(
       ){
 
         out.response$formulas[["smooth"]] <- model_formula(
-          df = df,
+          df = df.response,
           response = response,
           predictors = selection.response,
           term_f = "s",
@@ -587,9 +589,6 @@ collinear <- function(
       }
 
     }
-
-    out.response$df <- df.response
-    out.response$preference_order <- preference_order.response
 
     class(out.response) <- c(
       "collinear_selection",
@@ -603,7 +602,6 @@ collinear <- function(
 
     out[[slot_name]] <- out.response
 
-    # end ----
   } #end of loop
 
   class(out) <- c("collinear_output", class(out))
