@@ -2,11 +2,12 @@ testthat::test_that("`vif_df()` works", {
 
   data(vi_smol, vi_predictors)
 
-  testthat::expect_no_message(
+  testthat::expect_message(
     x <- vif_df(
       df = vi_smol,
       predictors = vi_predictors[1:10]
-    )
+    ),
+    regexp = "converted the following character columns to factor"
   )
 
   testthat::expect_true(
@@ -42,7 +43,8 @@ testthat::test_that("`vif_df()` works", {
       predictors = vi_predictors[1]
     ),
     regexp = "only one valid predictor"
-  )
+  ) |>
+    suppressMessages()
 
 
   testthat::expect_true(

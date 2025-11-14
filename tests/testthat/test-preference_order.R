@@ -305,7 +305,7 @@ testthat::test_that("`preference_order()` works", {
     response = "vi_categorical",
     predictors = vi_predictors_categorical,
     f = f_categorical_rf,
-    quiet = FALSE
+    quiet = TRUE
   )
 
   testthat::expect_true(

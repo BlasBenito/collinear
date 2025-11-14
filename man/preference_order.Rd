@@ -52,7 +52,7 @@ dataframe:
 }
 }
 \description{
-Generates a valid input for the argument \code{preference_order} of the functions \code{\link[=vif_select]{vif_select()}}, \code{\link[=cor_select]{cor_select()}}, \code{\link[=collinear_select]{collinear_select()}}, \code{\link[=collinear_auto]{collinear_auto()}}, and \code{\link[=collinear]{collinear()}}. This argument helps preserve important predictors during multicollinearity filtering.
+Generates a valid input for the argument \code{preference_order} of the functions \code{\link[=vif_select]{vif_select()}}, \code{\link[=cor_select]{cor_select()}}, \code{\link[=collinear_select]{collinear_select()}}, and \code{\link[=collinear]{collinear()}}. This argument helps preserve important predictors during multicollinearity filtering.
 
 The function works in two different ways:
 \itemize{

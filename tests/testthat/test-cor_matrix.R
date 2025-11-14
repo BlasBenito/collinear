@@ -6,7 +6,8 @@ testthat::test_that("`cor_matrix()` works", {
 
   df <- cor_df(
     df = vi_smol,
-    predictors = vi_predictors[1:15]
+    predictors = vi_predictors[1:15],
+    quiet = TRUE
     )
 
   m <- cor_matrix(df = df)
@@ -38,10 +39,14 @@ testthat::test_that("`cor_matrix()` works", {
       predictors = vi_predictors[1]
     ),
     regexp = "only one valid predictor"
-  )
+  ) |>
+    suppressMessages()
 
 
-  m <- cor_matrix(df = df)
+  m <- cor_matrix(
+    df = df,
+    quiet = TRUE
+    )
 
   testthat::expect_true(
     "collinear_cor_matrix" %in% class(m)

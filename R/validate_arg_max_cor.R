@@ -1,6 +1,6 @@
 #' Validate Argument \code{max_cor}
 #'
-#' @inheritParams collinear
+#' @inheritParams collinear_select
 #' @inheritParams validate_arg_quiet
 #'
 #' @return numeric or NULL

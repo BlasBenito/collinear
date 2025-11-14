@@ -51,7 +51,6 @@ x
 \seealso{
 Other automated_multicollinearity_analysis: 
 \code{\link{collinear}()},
-\code{\link{collinear_auto}()},
 \code{\link{collinear_select}()}
 }
 \concept{automated_multicollinearity_analysis}

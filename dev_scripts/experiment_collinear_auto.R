@@ -124,7 +124,7 @@ progressr::with_progress({
         )
 
       #cor
-      selection <- collinear::collinear_auto(
+      selection <- collinear::collinear(
         df = df.i,
         predictors = colnames(df.i),
         quiet = TRUE

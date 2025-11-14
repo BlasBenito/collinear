@@ -6,7 +6,7 @@ testthat::test_that("`cor_df()` works", {
   x <- cor_df(
     df = vi_smol,
     predictors = vi_predictors[1:10],
-    quiet = FALSE
+    quiet = TRUE
   )
 
   testthat::expect_true(
@@ -71,7 +71,8 @@ testthat::test_that("`cor_df()` works", {
   #no predictors
   x <- cor_df(
     df = vi_smol[, 1:5],
-    predictors = NULL
+    predictors = NULL,
+    quiet = TRUE
   )
 
 
@@ -98,7 +99,8 @@ testthat::test_that("`cor_df()` works", {
       quiet = FALSE
     ),
     regexp = "only one valid predictor, returning one-row dataframe"
-  )
+  ) |>
+    suppressMessages()
 
 
   testthat::expect_true(

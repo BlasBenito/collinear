@@ -6,9 +6,7 @@ Extensive re-write focused on internal consistency, better messaging, comprehens
 
 - New function `collinear_select()` with an improved variable selection algorithm that can apply correlation and VIF thresholds at once. This function is a replacement for `vif_select()` and `cor_select()`, and these functions are now wrappers to `collinear_select()`.
 
-- New function `collinear_auto()` for automated multicollinearity filtering with a minimal user input.
-
-- Functions `collinear()` and `collinear_auto()` now return objects of the class `collinear_output`, which contains everything needed after a multicollinearity analysis.
+- Function `collinear()` returns an object of the class `collinear_output`, which contains everything needed after a multicollinearity analysis.
 
 - All VIF functions have been reworked for efficiency, and now accept categorical and factor predictors.
 

@@ -25,13 +25,14 @@ testthat::test_that("`vif_stats()` works", {
   #from m results
   m <- cor_matrix(
     df = vi_smol,
-    predictors = vi_predictors_numeric
+    predictors = vi_predictors_numeric,
+    quiet = TRUE
   )
 
   x <- vif_stats(
     df = vi_smol,
     predictors = vi_predictors_numeric,
-    quiet = FALSE,
+    quiet = TRUE,
     m = m
   )
 

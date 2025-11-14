@@ -57,8 +57,6 @@ It is built around these concepts:
 These methods are integrated in two main functions:
 
  - [collinear()]: Handles the complete workflow from data validation to variable selection, returning filtered datasets and modeling formulas. 
- 
- - [collinear_auto()]: Automatically configures all parameters based on data characteristics for a simplified experience.
 
 The package also provides diagnostic functions ([cor_df()], [vif_df()], [collinear_stats()]) to help users assess multicollinearity in their data before and after filtering.
 
@@ -147,23 +145,23 @@ The quantile 0.75 returned by `vif_stats()` indicates that 25% of the predictors
 
 ### Multicollinearity Filtering
 
-The function [collinear_auto()] is designed to reduce multicollinearity in complex modelling data with a minimal setup. In this case, it performs the following actions:
+The function [collinear()] is designed to reduce multicollinearity in complex modelling data with a minimal setup. In this case, it performs the following actions:
 
 ```{r}
-x <- collinear::collinear_auto(
+x <- collinear::collinear(
   df = vi,
   response = "vi_numeric",
   predictors = vi_predictors
 )
 ```
 
-The functions `collinear_auto()` and `collinear()` return an object of class `collinear_output`, that has its own `print()` method.
+The functions `collinear()` and `collinear()` return an object of class `collinear_output`, that has its own `print()` method.
 
 ```{r}
 x
 ```
 
-The object `selection` contains predictors chosen by `collinear_auto()`. We can use [vif_df()] to check their level of multicollinearity.
+The object `selection` contains predictors chosen by `collinear()`. We can use [vif_df()] to check their level of multicollinearity.
 
 ```{r}
 vif_df(
@@ -171,11 +169,11 @@ vif_df(
   predictors = x$vi_numeric$selection
 )
 ```
-All VIF scores are below 2.5, meaning that `collinear_auto()` did a good job here.
+All VIF scores are below 2.5, meaning that `collinear()` did a good job here.
 
 ### Model Fitting
 
-The output of `collinear_auto()` can be used right away to fit exploratory models, as shown below.
+The output of `collinear()` can be used right away to fit exploratory models, as shown below.
 
 ```{r}
 m.lm <- stats::lm(

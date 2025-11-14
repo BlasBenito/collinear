@@ -33,7 +33,7 @@ validate_arg_preference_order(
 character vector: ranked variable names
 }
 \description{
-Internal function to validate the argument \code{preference_order} in \code{\link[=cor_select]{cor_select()}}, \code{\link[=vif_select]{vif_select()}}, \code{\link[=collinear_select]{collinear_select()}}, \code{\link[=collinear_auto]{collinear_auto()}}, and \code{\link[=collinear]{collinear()}}. Predictors not in \code{preference_order} are ranked from lower to higher sum of absolute Pearson correlations with all other predictors.
+Internal function to validate the argument \code{preference_order} in \code{\link[=cor_select]{cor_select()}}, \code{\link[=vif_select]{vif_select()}}, \code{\link[=collinear_select]{collinear_select()}}, \code{\link[=collinear]{collinear()}}, and \code{\link[=collinear]{collinear()}}. Predictors not in \code{preference_order} are ranked from lower to higher sum of absolute Pearson correlations with all other predictors.
 }
 \examples{
 data(

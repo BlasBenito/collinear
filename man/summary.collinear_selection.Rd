@@ -7,7 +7,7 @@
 \method{summary}{collinear_selection}(object = NULL, ...)
 }
 \arguments{
-\item{object}{(sub-list in output of \code{\link[=collinear]{collinear()}} or \code{\link[=collinear_auto]{collinear_auto()}}) Object to summarize. Default: NULL}
+\item{object}{(sub-list in output of \code{\link[=collinear]{collinear()}} ) Object to summarize. Default: NULL}
 
 \item{...}{Ignored, kept for consistency with generic.}
 }

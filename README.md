@@ -44,7 +44,7 @@ variables:
   filtering of numeric predictors based on Variance Inflation Factors.
 
 These four methods are combined in the functions `collinear()` and
-`collinear_auto()`, which serves as single entry point for most of the
+`collinear()`, which serves as single entry point for most of the
 functionalities in the package. The article [How It
 Works](https://blasbenito.github.io/collinear/articles/how_it_works.html)
 explains how these functions work in detail.
@@ -86,7 +86,7 @@ remotes::install_github(
 
 ## Getting Started
 
-The function `collinear_auto()` has the lowest entry barrier, as it
+The function `collinear()` has the lowest entry barrier, as it
 handles multicollinearity management all by itself.
 
 ``` r
@@ -106,7 +106,7 @@ future::plan(
 #multicollinearity filtering
 #two responses
 #numeric and categorical predictors
-x <- collinear::collinear_auto(
+x <- collinear::collinear(
   df = collinear::vi_smol,
   response = c(
     "vi_numeric",    #numeric response
@@ -189,7 +189,7 @@ x
 ```
 
 The function `vif_df()` provides the simplest way to check that the
-variable selections returned by `collinear_auto()` show low
+variable selections returned by `collinear()` show low
 multicollinearity.
 
 ``` r
@@ -233,7 +233,7 @@ vif_df(
 ```
 
 The output of `preference_order()` computed internally by
-`collinear_auto()` and used to preserve important predictors is
+`collinear()` and used to preserve important predictors is
 available in the function’s output. For example, for the response
 `vi_numeric`, the R-squared of the observations vs the predictors of a
 GLM fitted on the response against each predictor was used to ran the

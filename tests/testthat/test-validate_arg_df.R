@@ -203,5 +203,14 @@ testthat::test_that("`validate_arg_df()` works", {
     "zero_variance" %in% colnames(x)
   )
 
+  #categorical
+  testthat::expect_message(
+    x <- validate_arg_df(
+      df = vi_smol,
+      predictors = vi_predictors_categorical
+    ),
+    regexp = "converted the following character columns to factor"
+  )
+
 
 })

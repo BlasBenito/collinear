@@ -1,7 +1,7 @@
 #' Validate Argument \code{preference_order}
 #'
 #' @description
-#' Internal function to validate the argument \code{preference_order} in [cor_select()], [vif_select()], [collinear_select()], [collinear_auto()], and [collinear()]. Predictors not in \code{preference_order} are ranked from lower to higher sum of absolute Pearson correlations with all other predictors.
+#' Internal function to validate the argument \code{preference_order} in [cor_select()], [vif_select()], [collinear_select()], [collinear()], and [collinear()]. Predictors not in \code{preference_order} are ranked from lower to higher sum of absolute Pearson correlations with all other predictors.
 #'
 #' @inheritParams collinear
 #' @inheritParams validate_arg_quiet

@@ -1,7 +1,7 @@
 #' Quantitative Prioritization for Multicollinearity Filtering
 #'
 #' @description
-#' Generates a valid input for the argument \code{preference_order} of the functions [vif_select()], [cor_select()], [collinear_select()], [collinear_auto()], and [collinear()]. This argument helps preserve important predictors during multicollinearity filtering.
+#' Generates a valid input for the argument \code{preference_order} of the functions [vif_select()], [cor_select()], [collinear_select()], and [collinear()]. This argument helps preserve important predictors during multicollinearity filtering.
 #'
 #' The function works in two different ways:
 #' \itemize{

@@ -7,7 +7,7 @@
 \method{print}{collinear_selection}(x = NULL, n = 5, ...)
 }
 \arguments{
-\item{x}{(required, sub-list in output of \code{\link[=collinear]{collinear()}} or \code{\link[=collinear_auto]{collinear_auto()}}) Object to print. Default: NULL}
+\item{x}{(required, sub-list in output of \code{\link[=collinear]{collinear()}}) Object to print. Default: NULL}
 
 \item{n}{(optional, integer) Maximum printed vector length. Default: 5.}
 

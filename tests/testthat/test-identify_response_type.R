@@ -20,7 +20,8 @@ testthat::test_that("`identify_response_type()` works", {
 
   x <- identify_response_type(
     df = vi_smol,
-    response = "vi_numeric"
+    response = "vi_numeric",
+    quiet = TRUE
   )
 
   testthat::expect_true(
@@ -30,7 +31,8 @@ testthat::test_that("`identify_response_type()` works", {
 
   x <- identify_response_type(
     df = vi_smol,
-    response = "vi_counts"
+    response = "vi_counts",
+    quiet = TRUE
   )
 
   testthat::expect_true(
@@ -39,7 +41,8 @@ testthat::test_that("`identify_response_type()` works", {
 
   x <- identify_response_type(
     df = vi_smol,
-    response = "vi_binomial"
+    response = "vi_binomial",
+    quiet = TRUE
   )
 
   testthat::expect_true(
@@ -48,7 +51,8 @@ testthat::test_that("`identify_response_type()` works", {
 
   x <- identify_response_type(
     df = vi_smol,
-    response = "vi_categorical"
+    response = "vi_categorical",
+    quiet = TRUE
   )
 
   testthat::expect_true(
@@ -57,7 +61,8 @@ testthat::test_that("`identify_response_type()` works", {
 
   x <- identify_response_type(
     df = vi_smol,
-    response = "vi_factor"
+    response = "vi_factor",
+    quiet = TRUE
   )
 
   testthat::expect_true(
@@ -83,13 +88,15 @@ testthat::test_that("`identify_response_type()` works", {
       response = "response_binary"
     ),
     regexp = "argument 'response' names a numeric non-integer column with two unique values"
-  )
+  ) |>
+    suppressMessages()
 
   vi_smol$response_binary <- c(1, 2)
 
   x <- identify_response_type(
     df = vi_smol,
-    response = "response_binary"
+    response = "response_binary",
+    quiet = TRUE
   )
 
   testthat::expect_true(
@@ -104,13 +111,15 @@ testthat::test_that("`identify_response_type()` works", {
       response = "response_trinary"
     ),
     regexp = "argument 'response' names a numeric non-integer column with 5 or fewer values"
-  )
+  ) |>
+    suppressMessages()
 
   vi_smol$response_trinary <- sample(c(1, 2, 3), size = nrow(vi_smol), replace = TRUE)
 
   x <- identify_response_type(
     df = vi_smol,
-    response = "response_trinary"
+    response = "response_trinary",
+    quiet = TRUE
   )
 
   testthat::expect_true(

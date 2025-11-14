@@ -23,7 +23,7 @@ cor_select(
 
 \item{preference_order}{(optional; character vector, dataframe resulting from \code{\link[=preference_order]{preference_order()}}, or NULL). Prioritizes predictors to preserve the most relevant ones during multicollinearity filtering. Overrides \code{f} when not NULL.}
 
-\item{max_cor}{(optional; numeric or NULL) Maximum correlation allowed between pairs of \code{predictors}. Valid values are between 0.01 and 0.99, and recommended values are between 0.5 (strict) and 0.9 (permissive). If NULL, the pairwise correlation analysis is disabled. Default: 0.7}
+\item{max_cor}{(optional; numeric or NULL) Maximum correlation allowed between pairs of \code{predictors}. Valid values are between 0.01 and 0.99, and recommended values are between 0.5 (strict) and 0.9 (permissive). Default: 0.7}
 
 \item{quiet}{(optional; logical) If FALSE, messages are printed to the console. Default: FALSE}
 

@@ -1,6 +1,6 @@
 #' Print \code{collinear_selection}
 #'
-#' @param x (required, sub-list in output of [collinear()] or [collinear_auto()]) Object to print. Default: NULL
+#' @param x (required, sub-list in output of [collinear()]) Object to print. Default: NULL
 #' @param n (optional, integer) Maximum printed vector length. Default: 5.
 #' @param ... Ignored, kept for consistency with generic.
 #' @method print collinear_selection

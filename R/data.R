@@ -121,9 +121,9 @@
 "experiment_cor_vs_vif"
 
 
-#' Testing Capabilities of [collinear_auto()]
+#' Testing Capabilities of [collinear()] to Auto Configure \code{max_cor} and \code{max_vif}
 #'
-#' A dataframe with 10,000 experiment to test the capability of [collinear_auto()] to automatically reduce multicollinearity.
+#' A dataframe with 10,000 experiment to test the capability of [collinear()] to automatically reduce multicollinearity when \code{max_cor} and \code{max_vif} are NULL.
 #'
 #' The source data is [vi] plus 200 synthetic columns, for a total of 249 columns and 30.000 rows that are randomly subset on each iteration.
 #'
@@ -131,7 +131,7 @@
 #' \describe{
 #'   \item{input_rows}{Number of rows in the input data.}
 #'   \item{input_predictors}{Number of predictors in the input data.}
-#'   \item{output_predictors}{Number of predictors selected by [collinear_auto()].}
+#'   \item{output_predictors}{Number of predictors selected by [collinear()].}
 #'   \item{input_cor_median}{Median correlation of the input predictors as returned by [collinear_stats()].}
 #'   \item{output_cor_median}{Median correlation of the selected predictors.}
 #'   \item{input_vif_max}{Maximum VIF of the input predictors as returned by [collinear_stats()].}

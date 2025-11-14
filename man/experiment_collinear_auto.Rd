@@ -3,13 +3,13 @@
 \docType{data}
 \name{experiment_collinear_auto}
 \alias{experiment_collinear_auto}
-\title{Testing Capabilities of \code{\link[=collinear_auto]{collinear_auto()}}}
+\title{Testing Capabilities of \code{\link[=collinear]{collinear()}} to Auto Configure \code{max_cor} and \code{max_vif}}
 \format{
 A dataframe with 10000 rows and 7 variables:
 \describe{
 \item{input_rows}{Number of rows in the input data.}
 \item{input_predictors}{Number of predictors in the input data.}
-\item{output_predictors}{Number of predictors selected by \code{\link[=collinear_auto]{collinear_auto()}}.}
+\item{output_predictors}{Number of predictors selected by \code{\link[=collinear]{collinear()}}.}
 \item{input_cor_median}{Median correlation of the input predictors as returned by \code{\link[=collinear_stats]{collinear_stats()}}.}
 \item{output_cor_median}{Median correlation of the selected predictors.}
 \item{input_vif_max}{Maximum VIF of the input predictors as returned by \code{\link[=collinear_stats]{collinear_stats()}}.}
@@ -20,7 +20,7 @@ A dataframe with 10000 rows and 7 variables:
 experiment_collinear_auto
 }
 \description{
-A dataframe with 10,000 experiment to test the capability of \code{\link[=collinear_auto]{collinear_auto()}} to automatically reduce multicollinearity.
+A dataframe with 10,000 experiment to test the capability of \code{\link[=collinear]{collinear()}} to automatically reduce multicollinearity when \code{max_cor} and \code{max_vif} are NULL.
 }
 \details{
 The source data is \link{vi} plus 200 synthetic columns, for a total of 249 columns and 30.000 rows that are randomly subset on each iteration.

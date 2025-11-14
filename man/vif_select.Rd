@@ -23,7 +23,7 @@ vif_select(
 
 \item{preference_order}{(optional; character vector, dataframe resulting from \code{\link[=preference_order]{preference_order()}}, or NULL). Prioritizes predictors to preserve the most relevant ones during multicollinearity filtering. Overrides \code{f} when not NULL.}
 
-\item{max_vif}{(optional, numeric or NULL) Maximum Variance Inflation Factor allowed for \code{predictors} during multicollinearity filtering. Recommended values are between 2.5 (strict) and 10 (permissive). If NULL, the variance inflation analysis is disabled. Default: 5.}
+\item{max_vif}{(optional, numeric or NULL) Maximum Variance Inflation Factor allowed for \code{predictors} during multicollinearity filtering. Recommended values are between 2.5 (strict) and 10 (permissive). Default: 5}
 
 \item{quiet}{(optional; logical) If FALSE, messages are printed to the console. Default: FALSE}
 

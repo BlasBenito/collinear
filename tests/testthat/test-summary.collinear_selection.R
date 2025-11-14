@@ -6,7 +6,7 @@ testthat::test_that("`summary.collinear_selection()` works", {
     )
 
   #normal usage
-  x <- collinear_auto(
+  x <- collinear(
     df = vi_smol,
     response = "vi_numeric",
     predictors = vi_predictors_numeric,

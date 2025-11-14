@@ -45,7 +45,6 @@ DONE class.collinear_selection
 DONE collinear_stats
 DONE collinear
 DONE collinear_select
-DONE collinear_auto
 DONE cor_clusters
 DONE cor_cramer
 DONE cor_df
@@ -1281,29 +1280,7 @@ covr::file_coverage(
 )
 ```
 
-## DONE class.collinear_selection
 
-Depends:
-
-- identify_valid_variables
-- model_formula
-- validate_arg_function_name
-- f_functions
-
-```{r}
-f_name <- "class.collinear_selection"
-f_source <- paste0("../R/S3_methods_", f_name, ".R")
-f_test <- paste0("../tests/testthat/test-", f_name, ".R")
-
-#codetools::findGlobals(fun = get(f_name))
-
-testthat::test_file(f_test)
-
-covr::file_coverage(
-  source_files = f_source,
-  test_files = f_test
-)
-```
 
 ## DONE summary.collinear_selection
 
@@ -1354,44 +1331,6 @@ covr::file_coverage(
 )
 ```
 
-
-## DONE collinear_auto
-
-Depends:
-
-- cor_df                  
-- cor_matrix              
-- cor_stats               
-- data.frame             
-- f_auto
-- validate_arg_df         
-- validate_arg_df_not_null
-- validate_arg_function_name
-- validate_arg_predictors  
-- validate_arg_quiet    
-- validate_arg_responses
-
-```{r}
-f_name <- "collinear_auto"
-f_source <- paste0("../R/", f_name, ".R")
-f_test <- paste0("../tests/testthat/test-", f_name, ".R")
-
-codetools::findGlobals(fun = get(f_name))
-
-testthat::test_file(f_test)
-
-covr::file_coverage(
-  source_files = f_source,
-  test_files = f_test
-)
-
-covr::report(
-  x = covr::file_coverage(
-    source_files = f_source,
-    test_files = f_test
-  )
-)
-```
 
 ## DONE summary.collinear_output
 

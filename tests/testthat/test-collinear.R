@@ -53,6 +53,7 @@ testthat::test_that("`collinear()` works", {
     x <- collinear(
       df = vi_smol[1:9, ],
       predictors = vi_predictors_numeric,
+      max_cor = 0.7,
       max_vif = NULL
     ),
     regexp = "skipping VIF filtering"
@@ -73,16 +74,28 @@ testthat::test_that("`collinear()` works", {
 
   ##more than 30 rows ----
 
-  #max_cor and max_vif NULL
-  testthat::expect_error(
+  #max_cor and max_vif
+  testthat::expect_message(
     x <- collinear(
       df = vi_smol,
       predictors = vi_predictors_numeric,
       max_cor = NULL,
       max_vif = NULL
     ),
-    regexp = "arguments 'max_cor' and 'max_vif' cannot be NULL at once"
-  )
+    regexp = "setting 'max_cor' to"
+  ) |>
+    suppressMessages()
+
+  testthat::expect_message(
+    x <- collinear(
+      df = vi_smol,
+      predictors = vi_predictors_numeric,
+      max_cor = NULL,
+      max_vif = NULL
+    ),
+    regexp = "setting 'max_vif' to"
+  ) |>
+    suppressMessages()
 
   #max_cor and max_vif invalid
   f_test <- function(){
@@ -276,7 +289,7 @@ testthat::test_that("`collinear()` works", {
     x <- collinear(
       df = vi_smol,
       responses = vi_responses,
-      predictors = c(vi_responses, vi_predictors_numeric),
+      predictors = vi_predictors_numeric,
       encoding_method = NULL,
       preference_order = NULL,
       f = NULL,
@@ -603,7 +616,7 @@ testthat::test_that("`collinear()` works", {
       x <- collinear(
         df = vi_smol,
         responses = "vi_numeric",
-        predictors = vi_predictors_categorical[1:4],
+        predictors = vi_predictors_categorical[1:10],
         encoding_method = NULL,
         preference_order = NULL,
         f = NULL,
@@ -616,7 +629,7 @@ testthat::test_that("`collinear()` works", {
 
   m <- cor_matrix(
     df = vi_smol,
-    predictors = vi_predictors_categorical[1:4],
+    predictors = vi_predictors_categorical[1:10],
     quiet = TRUE
   )
 
@@ -625,7 +638,7 @@ testthat::test_that("`collinear()` works", {
       x <- collinear(
         df = vi_smol,
         responses = "vi_numeric",
-        predictors = vi_predictors_categorical[1:4],
+        predictors = vi_predictors_categorical[1:10],
         encoding_method = NULL,
         preference_order = NULL,
         f = NULL,
