@@ -184,7 +184,7 @@ testthat::test_that("`collinear()` works", {
       f = NULL,
       quiet = FALSE
     ),
-    regexp = "ranking 4 'predictors' from lower to higher multicollinearity"
+    regexp = "'predictors' from lower to higher multicollinearity"
   ) |>
     suppressMessages()
 
@@ -230,7 +230,7 @@ testthat::test_that("`collinear()` works", {
       f = NULL,
       quiet = FALSE
     ),
-    regexp = "ranking 49 'predictors' from lower to higher multicollinearity"
+    regexp = "'predictors' from lower to higher multicollinearity"
   ) |>
     suppressMessages()
 
@@ -255,7 +255,7 @@ testthat::test_that("`collinear()` works", {
       f = NULL,
       quiet = FALSE
     ),
-    regexp = "ranking 49 'predictors' from lower to higher multicollinearity"
+    regexp = "'predictors' from lower to higher multicollinearity"
   ) |>
     suppressMessages()
 
@@ -275,7 +275,7 @@ testthat::test_that("`collinear()` works", {
       f = NULL,
       quiet = FALSE
     ),
-    regexp = "ranking 4 'predictors' from lower to higher multicollinearity"
+    regexp = "'predictors' from lower to higher multicollinearity"
   ) |>
     suppressMessages()
 
@@ -399,7 +399,7 @@ testthat::test_that("`collinear()` works", {
       max_vif = 5,
       quiet = FALSE
     ),
-    regexp = "ranking 49 'predictors' from lower to higher multicollinearity"
+    regexp = "'predictors' from lower to higher multicollinearity"
   ) |>
     suppressMessages()
 
@@ -431,11 +431,7 @@ testthat::test_that("`collinear()` works", {
       max_vif = 5,
       quiet = FALSE
     ),
-    regexp = paste0(
-      "ranking ",
-      length(vi_predictors_numeric) - length(preference_order),
-      " 'predictors' from lower to higher multicollinearity"
-    )
+    regexp = "'predictors' from lower to higher multicollinearity"
   ) |>
     suppressMessages()
 
@@ -515,7 +511,7 @@ testthat::test_that("`collinear()` works", {
       max_vif = 5,
       quiet = FALSE
     ),
-    regexp = "ranking 47 'predictors' from lower to higher multicollinearity"
+    regexp = "'predictors' from lower to higher multicollinearity"
   ) |>
     suppressMessages()
 

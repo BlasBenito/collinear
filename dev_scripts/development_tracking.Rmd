@@ -1396,10 +1396,10 @@ covr::file_coverage(
 
 Depends:
 
--   whatevs
+-   step_collinear
 
 ```{r}
-f_name <- "whatevs"
+f_name <- "step_collinear"
 f_source <- paste0("../R/", f_name, ".R")
 f_test <- paste0("../tests/testthat/test-", f_name, ".R")
 

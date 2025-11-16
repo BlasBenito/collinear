@@ -1,30 +1,32 @@
 #' @title Tidymodels Integration of [collinear()]
-#' @description
-#' Adds a step to a [recipes::recipe()] that removes collinear predictors using
-#' [collinear::collinear()]. Unlike [collinear::collinear()], this wrapper does not perform target encoding.
 #'
-#' This step requires the **recipes** package to be installed.
+#' @description
+#'
+#' Adds a step to a recipe created by [recipes::recipe()] to apply multicollinearity filtering via [collinear::collinear()].
+#'
+#' This function requires the \code{recipes} package to be installed.
+#'
+#'Unlike \code{collinear()}, this wrapper does not perform target encoding, and the default value for the argument \code{quiet} is \code{TRUE}.
 #'
 #' @param recipe (required, recipe) A recipe object to which this step will be added.
 #' @param ... (optional, selector functions) Variables to consider. Typically [recipes::all_predictors()] or [recipes::all_numeric_predictors()].
-#' @param role (optional, character) Not used by this step since no new variables are created.
-#' @param trained (optional, logical) Indicates if the step has been trained.
-#' @param options (optional, list) Named list of arguments passed to
-#'   [collinear::collinear()]. Common options include:
+#' @param role (optional, character) Not used by this step since no new variables are created. Default: NA
+#' @param trained (optional, logical) Indicates if the step has been trained. Default: FALSE
+#' @param options (optional, list) Named list of arguments passed to [collinear::collinear()]. Common options include:
 #'   \itemize{
-#'     \item \code{max_cor}: Maximum correlation threshold (default: auto)
-#'     \item \code{max_vif}: Maximum VIF threshold (default: auto)
-#'     \item \code{preference_order}: Vector of predictor names in priority order
-#'     \item \code{f}:
-#'     \item \code{quiet}: Suppress messages (default: FALSE)
+#'     \item \code{max_cor}: Maximum correlation threshold. If NULL (default), automatically set based on median correlation of predictors.
+#'     \item \code{max_vif}: Maximum VIF threshold. If NULL (default), automatically set to match the auto-computed max_cor.
+#'     \item \code{preference_order}: Vector of predictor names in priority order.
+#'     \item \code{f}: Function to compute preference order (default: \code{f_auto})
+#'     \item \code{quiet}: Suppress messages (default: TRUE)
 #'   }
-#'   Note: \code{encoding_method} is not supported in this step.
-#' @param selected (character, internal) Predictors retained after filtering.
-#' @param skip (logical, optional) Should the step be skipped when baking? Defaults to FALSE.
-#' @param keep_original_cols (logical, optional) Whether to keep original columns. Default: FALSE.
-#' @param id (character, optional) Unique identifier for this step.
+#'   Note: \code{encoding_method} is not supported in this step. The automatic threshold selection adapts to each dataset's correlation structure.
+#' @param selected (character vector) Predictors retained after filtering. Populated during training and used during baking. Default: NULL
+#' @param skip (optional, logical) Trigger to skip this step when baking. Default: FALSE.
+#' @param keep_original_cols (optional, logical) Whether to keep original columns. Default: FALSE.
+#' @param id (optional, character) Unique identifier for this step.
 #'
-#' @return A \code{step_collinear} object.
+#' @return Updated recipe with new step.
 #'
 #' @examples
 #' \dontrun{
@@ -81,7 +83,8 @@
 #' @autoglobal
 #' @export
 step_collinear <- function(
-    recipe, ...,
+    recipe,
+    ...,
     role = NA,
     trained = FALSE,
     options = list(),
@@ -93,15 +96,29 @@ step_collinear <- function(
 
   if (!requireNamespace("recipes", quietly = TRUE)) {
     stop(
-      "collinear::step_collinear(): Package 'recipes' is not installed.",
+      "collinear::step_collinear(): Package 'recipes' is required but not installed.",
       call. = FALSE
       )
   }
 
+  # recipes::add_step(
+  #   recipe,
+  #   step_collinear_new(
+  #     terms = recipes::ellipse_check(...),
+  #     role = role,
+  #     trained = trained,
+  #     options = options,
+  #     selected = selected,
+  #     skip = skip,
+  #     keep_original_cols = keep_original_cols,
+  #     id = id
+  #   )
+  # )
+
   recipes::add_step(
     recipe,
     step_collinear_new(
-      terms = recipes::ellipse_check(...),
+      terms = rlang::enquos(...),  # ← Changed: store quosures
       role = role,
       trained = trained,
       options = options,
@@ -144,41 +161,39 @@ step_collinear_new <- function(
 }
 
 #' @rdname step_collinear
-#' @param x (step_collinear object) The step to be trained.
-#' @param training (data.frame) The training dataset used to estimate quantities.
-#' @param info (data.frame, optional) Preprocessed information about variables in `training`.
-#' @param object (step_collinear object) The trained step.
-#' @param new_data (data.frame) New data to apply the step to.
+#' @param x (required, step_collinear object) The step to be trained. Default: NULL
+#' @param training (required, data.frame) The training dataset used to estimate quantities.
+#' @param info (optional, data.frame) Preprocessed information about variables in `training`. Default: NULL
 #' @param ... (optional) Additional arguments (currently ignored).
 #' @importFrom recipes prep
 #' @method prep step_collinear
 #' @export
 prep.step_collinear <- function(
-    x,
-    training,
+    x = NULL,
+    training = NULL,
     info = NULL,
     ...
     ) {
 
   if (!requireNamespace("recipes", quietly = TRUE)) {
     stop(
-      "collinear::step_collinear(): Package 'recipes' is not installed.",
+      "collinear::step_collinear(): Package 'recipes' is required but not installed.",
       call. = FALSE
     )
   }
 
   # outcomes from the recipe
   responses <- recipes::recipes_eval_select(
-    rlang::quo(recipes::all_outcomes()),
-    training,
-    info
+    quos = list(rlang::quo(recipes::all_outcomes())),
+    data = training,
+    info = info
   )
 
   # predictors selected by the step
   predictors <- recipes::recipes_eval_select(
-    x$terms,      # already a quosure created by ellipse_check()
-    training,
-    info
+    quos = x$terms,
+    data = training,
+    info = info
   )
 
   # remove outcomes if any selector accidentally included them
@@ -203,6 +218,11 @@ prep.step_collinear <- function(
   x$options$predictors <- predictors
   x$options$encoding_method <- NULL
 
+  # Set quiet = TRUE as default unless user specified otherwise
+  if (is.null(x$options$quiet)) {
+    x$options$quiet <- TRUE
+  }
+
   result <- do.call(
     what = collinear::collinear,
     args = c(
@@ -211,15 +231,23 @@ prep.step_collinear <- function(
       )
     )
 
+  if(length(result) == 0 || is.null(result[[1]])) {
+    stop("collinear::step_collinear(): multicollinearity filtering failed,  function collinear::collinear() returned empty results.", call. = FALSE)
+  }
+
+  # In prep.step_collinear, around line 129
+  selected = if(is.null(result[[1]]$response)) {
+    result[[1]]$selection
+  } else {
+    c(result[[1]]$response, result[[1]]$selection)
+  }
+
   step_collinear_new(
     terms = x$terms,
     role = x$role,
     trained = TRUE,
     options = x$options,
-    selected = c(
-      result[[1]]$response,
-      result[[1]]$selection
-      ),
+    selected = selected,
     skip = x$skip,
     keep_original_cols = x$keep_original_cols,
     id = x$id
@@ -228,13 +256,24 @@ prep.step_collinear <- function(
 }
 
 #' @rdname step_collinear
-#' @param object (step_collinear object) The trained step.
-#' @param new_data (data.frame) New data to apply the step to.
+#' @param object (required, \code{step_collinear} object) The trained step. Default: NULL
+#' @param new_data (required, data.frame) New data to apply the step to. Default: NULL
 #' @param ... (optional) Additional arguments (currently ignored).
 #' @importFrom recipes bake
 #' @method bake step_collinear
 #' @export
-bake.step_collinear <- function(object, new_data, ...) {
+bake.step_collinear <- function(
+    object = NULL,
+    new_data = NULL,
+    ...
+    ) {
+
+  if (!requireNamespace("recipes", quietly = TRUE)) {
+    stop(
+      "collinear::step_collinear(): Package 'recipes' is required but not installed.",
+      call. = FALSE
+    )
+  }
 
   if (is.null(object$selected)) {
     warning(
@@ -245,9 +284,11 @@ bake.step_collinear <- function(object, new_data, ...) {
   }
 
   recipes::check_new_data(
-    new_data = new_data,
-    req = object$selected
+    req = object$selected,
+    object = object,
+    new_data = new_data
   )
 
   new_data[, object$selected, drop = FALSE]
+
 }

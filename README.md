@@ -16,46 +16,50 @@ status](https://www.r-pkg.org/badges/version/collinear)](https://cran.r-project.
 
 <!-- badges: end -->
 
-## Warning
-
-Version 3.0.0 of `collinear` includes changes that may disrupt existing
-workflows, and results from previous versions may not be reproducible
-due to enhancements in the automated selection algorithms.
-
 ## Summary
 
-[Multicollinearity hinders the
-interpretability](https://www.blasbenito.com/post/multicollinearity-model-interpretability/)
-of linear and machine learning models.
+The R package `collinear` provides a comprehensive toolkit for smart
+multicollinearity management in datasets with mixed variable types. The
+main function, \[collinear()\], is designed around five core components
+that work together to handle multicollinearity across numeric and
+categorical predictors:
 
-The `collinear` package combines four methods for easy management of
-multicollinearity in modelling data frames with numeric and categorical
-variables:
+- **Target Encoding** (function \[target_encoding_lab()\]):
+  Transparently converts categorical predictors to numeric when
+  required, enabling VIF and correlation analysis across mixed data
+  types.
 
-- **Target Encoding**: Transforms categorical predictors to numeric
-  using a numeric response as reference.
-- **Preference Order**: Ranks predictors by their association with a
-  response variable to preserve important ones in multicollinearity
-  filtering.
-- **Pairwise Correlation Filtering**: Automated multicollinearity
-  filtering of numeric and categorical predictors based on pairwise
-  correlations.
-- **Variance Inflation Factor Filtering**: Automated multicollinearity
-  filtering of numeric predictors based on Variance Inflation Factors.
+- **Intelligent Predictor Ranking** (function \[preference_order()\]):
+  Prioritizes predictors by their association with the response, or
+  allows a user-defined ranking to ensure that the most relevant ones
+  are retained during filtering.
 
-These four methods are combined in the functions `collinear()` and
-`collinear()`, which serves as single entry point for most of the
-functionalities in the package. The article [How It
-Works](https://blasbenito.github.io/collinear/articles/how_it_works.html)
-explains how these functions work in detail.
+- **Unified Correlation Framework** (function \[cor_df()\]): Computes
+  pairwise correlations between any variable types using Pearson
+  correlation (numeric-numeric), target encoding (numeric-categorical),
+  and Cramer’s V (categorical-categorical) within a single, consistent
+  workflow.
 
-## Citation
+- **Adaptive Filtering Thresholds** (function \[collinear()\]):
+  Automatically configures correlation and VIF thresholds based on each
+  dataset’s correlation structure, eliminating guesswork while allowing
+  manual override.
 
-If you find this package useful, please cite it as:
+- **Dual Filtering Strategy** (function \[collinear_select()\]):
+  Combines pairwise correlation and Variance Inflation Factor filtering
+  while considering predictor rankings to manage multicollinearity while
+  maximizing the predictive power of the resulting selection of
+  predictors.
 
-*Blas M. Benito (2025). collinear: R Package for Seamless
-Multicollinearity Management. Version 3.0.0. doi:
-10.5281/zenodo.10039489*
+These methods are fully integrated into the function \[collinear()\] and
+its `tidymodels` wrapper, \[step_collinear()\]. This function handles
+the complete multicollinearity filtering workflow, from data validation
+to variable selection, returning filtered datasets and modeling
+formulas.
+
+The package also provides diagnostic functions (\[cor_df()\],
+\[vif_df()\], \[collinear_stats()\]) to help users assess
+multicollinearity in their data before and after filtering.
 
 ## Install
 
@@ -86,230 +90,251 @@ remotes::install_github(
 
 ## Getting Started
 
-The function `collinear()` has the lowest entry barrier, as it
-handles multicollinearity management all by itself.
+### Setup
+
+Most functions in the `collinear` package support parallelization and
+progress bars via [`future`](https://future.futureverse.org/) and
+[`progressr`](https://progressr.futureverse.org/). Parallelization,
+however, is only advantageous for large datasets including categorical
+predictors.
 
 ``` r
 library(collinear)
 library(future)
+library(progressr)
 
-#parallelization setup
-#only worth it for large data with categorical predictors
 future::plan(
   future::multisession,
   workers = future::availableCores() - 1
   )
 
-#progress bar (does not work in Rmarkdown)
+#does not work in Rmarkdown
 #progressr::handlers(global = TRUE)
-
-#multicollinearity filtering
-#two responses
-#numeric and categorical predictors
-x <- collinear::collinear(
-  df = collinear::vi_smol,
-  response = c(
-    "vi_numeric",    #numeric response
-    "vi_categorical" #categorical response
-    ),
-  predictors = collinear::vi_predictors,
-  quiet = TRUE #set to FALSE to see all messages
-)
 ```
 
-The output is a list of class `collinear_output`, that has a proper
-`print()` method.
+### Example Data
+
+The example dataframe \[vi_smol\] has several response variables and a
+large set of predictors. Here we focus on the numeric response
+`vi_numeric`, and the complete set of numeric and categorical
+predictors, stored in the vector \[vi_predictors\].
+
+``` r
+data(vi_smol, vi_predictors)
+nrow(vi_smol)
+#> [1] 610
+length(vi_predictors)
+#> [1] 58
+```
+
+### Multicollinearity Analysis
+
+The package provides several functions to assess multicollinearity.
+
+The functions \[cor_df()\] and \[vif_df()\] generate dataframes with the
+pairwise correlations and VIF scores of the predictors, while the
+functions \[cor_stats()\], \[vif_stats()\] (used below) and
+\[collinear_stats()\] generate descriptive multicollinearity statistics.
+
+``` r
+collinear::vif_stats(
+  df = vi_smol,
+  predictors = vi_predictors,
+  quiet = TRUE
+)
+#>   method     statistic   value
+#> 1    vif             n 58.0000
+#> 2    vif       minimum  0.1788
+#> 3    vif quantile_0.05  0.3865
+#> 4    vif quantile_0.25  1.2504
+#> 5    vif          mean  4.9427
+#> 6    vif        median  2.7136
+#> 7    vif quantile_0.75  6.5669
+#> 8    vif quantile_0.95 13.0459
+#> 9    vif       maximum 41.9967
+```
+
+The quantile 0.75 returned by `vif_stats()` indicates that 25% of the
+predictors have a VIF score higher than 6. This is a robust indicator of
+high multicollinearity in our predictors.
+
+### Multicollinearity Filtering
+
+The function \[collinear()\] is designed to reduce multicollinearity in
+complex modelling data with a minimal setup.
+
+``` r
+x <- collinear::collinear(
+  df = vi_smol,
+  response = "vi_numeric",
+  predictors = vi_predictors
+)
+#> 
+#> collinear::collinear()
+#> └── collinear::validate_arg_df(): converted the following character columns to factor:
+#>  - koppen_zone
+#>  - koppen_group
+#>  - koppen_description
+#>  - biogeo_ecoregion
+#>  - biogeo_biome
+#>  - biogeo_realm
+#>  - country_name
+#>  - continent
+#>  - region
+#>  - subregion
+#> 
+#> collinear::collinear(): setting 'max_cor' to 0.58.
+#> 
+#> collinear::collinear(): setting 'max_vif' to 2.5.
+#> 
+#> collinear::collinear()
+#> └── collinear::preference_order()
+#>     └── collinear::f_auto(): selected function 'f_numeric_rf()' to compute preference order.
+#> 
+#> collinear::collinear(): selected predictors: 
+#>  - rainfall_mean
+#>  - soil_temperature_max
+#>  - swi_range
+#>  - temperature_seasonality
+#>  - humidity_range
+#>  - topo_elevation
+#>  - soil_sand
+#>  - topo_diversity
+#>  - topo_slope
+```
+
+The function returns an object of class `collinear_output`, that has its
+own `print()` and `summary()` methods.
 
 ``` r
 x
-#> Results
+#> Result
 #> ===================
-#> 
 #>  - response: vi_numeric
 #>    --------------------
 #> 
-#>  + selection:
-#>    - growing_season_length
-#>    - temperature_seasonality
-#>    - swi_min
-#>    - continent
-#>    - rainfall_min
-#>    - ... (7 ommited)
-#> 
-#>  + formulas:
-#>    - linear: vi_numeric ~ growing_season_length + temperature_seasonality + swi_min + continent + rainfall_min + ... (7 terms omitted) 
-#>    - smooth: vi_numeric ~ s(growing_season_length) + s(temperature_seasonality) + s(swi_min) + continent + s(rainfall_min) + ... (7 terms omitted) 
-#> 
 #>  + df:
 #>    - rows: 610
-#>    - cols: 13
+#>    - cols: 10
 #> 
 #>  + preference order:
 #>    + df:
-#>      - rows: 61
-#>      - cols: 6
-#>    + preference:
-#>      - growing_season_length
-#>      - koppen_zone
-#>      - soil_ph
-#>      - koppen_description
-#>      - swi_mean
-#>    + f: f_numeric_glm
-#> 
-#> 
-#>  - response: vi_categorical
-#>    ------------------------
-#> 
-#>  + selection:
-#>    - rainfall_mean
-#>    - soil_temperature_max
-#>    - swi_range
-#>    - country_gdp
-#>    - country_population
-#>    - ... (7 ommited)
-#> 
-#>  - formula:
-#>    - classification: vi_categorical ~ rainfall_mean + soil_temperature_max + swi_range + country_gdp + country_population + ... (7 terms omitted) 
-#> 
-#>  + df:
-#>    - rows: 610
-#>    - cols: 13
-#> 
-#>  + preference order:
-#>    + df:
-#>      - rows: 61
+#>      - rows: 58
 #>      - cols: 6
 #>    + preference:
 #>      - rainfall_mean
 #>      - growing_season_rainfall
 #>      - growing_season_length
-#>      - aridity_index
 #>      - swi_mean
-#>    + f: f_categorical_rf
+#>      - aridity_index
+#>    + f: f_numeric_rf
+#> 
+#>  + selection:
+#>    - rainfall_mean
+#>    - soil_temperature_max
+#>    - swi_range
+#>    - temperature_seasonality
+#>    - humidity_range
+#>    - ... (4 ommited)
+#> 
+#>  + formulas:
+#>    - linear: vi_numeric ~ rainfall_mean + soil_temperature_max + swi_range + temperature_seasonality + humidity_range + ... (4 terms omitted) 
+#>    - smooth: vi_numeric ~ s(rainfall_mean) + s(soil_temperature_max) + s(swi_range) + s(temperature_seasonality) + s(humidity_range) + ... (4 terms omitted)
 ```
 
-The function `vif_df()` provides the simplest way to check that the
-variable selections returned by `collinear()` show low
-multicollinearity.
+The object `df` contains the response and the selected predictors.
 
 ``` r
-vif_df(
+colnames(x$vi_numeric$df)
+#>  [1] "vi_numeric"              "rainfall_mean"          
+#>  [3] "soil_temperature_max"    "swi_range"              
+#>  [5] "temperature_seasonality" "humidity_range"         
+#>  [7] "topo_elevation"          "soil_sand"              
+#>  [9] "topo_diversity"          "topo_slope"
+```
+
+The object `preference_order` contains the ranking of predictors. It is
+computed by the function \[preference_order\] by assessing the
+association between the response and the predictors. In this case, it
+fits univariate models between the response and each predictor using
+\[f_numeric_rf\], and returns the R-squared of the observations vs the
+model predictions. This ranking ensures that the most important
+predictors are protected during multicollinearity filtering.
+
+``` r
+head(x$vi_numeric$preference_order)
+#>     response               predictor            f    metric  score rank
+#> 1 vi_numeric           rainfall_mean f_numeric_rf R-squared 0.8835    1
+#> 2 vi_numeric growing_season_rainfall f_numeric_rf R-squared 0.8731    2
+#> 3 vi_numeric   growing_season_length f_numeric_rf R-squared 0.8644    3
+#> 4 vi_numeric                swi_mean f_numeric_rf R-squared 0.8333    4
+#> 5 vi_numeric           aridity_index f_numeric_rf R-squared 0.8279    5
+#> 6 vi_numeric             koppen_zone f_numeric_rf R-squared 0.8174    6
+```
+
+The object `selection` contains non-collinear predictors chosen by
+taking into account their pairwise correlation and VIF against all other
+predictors, and their position in the ranking above.
+
+``` r
+x$vi_numeric$selection
+#> [1] "rainfall_mean"           "soil_temperature_max"   
+#> [3] "swi_range"               "temperature_seasonality"
+#> [5] "humidity_range"          "topo_elevation"         
+#> [7] "soil_sand"               "topo_diversity"         
+#> [9] "topo_slope"
+```
+
+We can check that this selection of predictors shows low
+multicollinearity by running the function \[vif_df()\] on them.
+
+``` r
+collinear::vif_df(
   df = x$vi_numeric$df,
   predictors = x$vi_numeric$selection
 )
-#>       vif               predictor
-#> 1  2.4659       cloud_cover_range
-#> 2  1.8341               continent
-#> 3  1.7570          country_income
-#> 4  1.6957   growing_season_length
-#> 5  1.6780          humidity_range
-#> 6  1.6665            rainfall_min
-#> 7  1.6139               soil_clay
-#> 8  1.4381                 swi_min
-#> 9  1.3525 temperature_seasonality
-#> 10 1.3502          topo_diversity
-#> 11 1.2706          topo_elevation
-#> 12 1.0510              topo_slope
+#>      vif               predictor
+#> 1 2.4773          humidity_range
+#> 2 2.1802           rainfall_mean
+#> 3 2.0626               soil_sand
+#> 4 1.7707    soil_temperature_max
+#> 5 1.7192               swi_range
+#> 6 1.5906 temperature_seasonality
+#> 7 1.3148          topo_diversity
+#> 8 1.1651          topo_elevation
+#> 9 1.1454              topo_slope
 ```
 
+All VIF scores are below 2.5, `collinear()` did a good job here!
+
+Finally, `collinear()` also returns modeling formulas to help kick start
+exploratory modelling.
+
 ``` r
-vif_df(
-  df = x$vi_categorical$df,
-  predictors = x$vi_categorical$selection
-)
-#>       vif            predictor
-#> 1  2.1982          country_gdp
-#> 2  1.9782       country_income
-#> 3  1.8466   country_population
-#> 4  1.8244       humidity_range
-#> 5  1.8215        rainfall_mean
-#> 6  1.7090            soil_sand
-#> 7  1.5910 soil_temperature_max
-#> 8  1.5287            swi_range
-#> 9  1.4617      temperature_min
-#> 10 1.4566       topo_diversity
-#> 11 1.3260       topo_elevation
-#> 12 1.1720           topo_slope
+x$vi_numeric$formulas
+#> $linear
+#> vi_numeric ~ rainfall_mean + soil_temperature_max + swi_range + 
+#>     temperature_seasonality + humidity_range + topo_elevation + 
+#>     soil_sand + topo_diversity + topo_slope
+#> <environment: 0x5dfd75f8f020>
+#> 
+#> $smooth
+#> vi_numeric ~ s(rainfall_mean) + s(soil_temperature_max) + s(swi_range) + 
+#>     s(temperature_seasonality) + s(humidity_range) + s(topo_elevation) + 
+#>     s(soil_sand) + s(topo_diversity) + s(topo_slope)
+#> <environment: 0x5dfd75f8f020>
 ```
 
-The output of `preference_order()` computed internally by
-`collinear()` and used to preserve important predictors is
-available in the function’s output. For example, for the response
-`vi_numeric`, the R-squared of the observations vs the predictors of a
-GLM fitted on the response against each predictor was used to ran the
-predictors.
+The function returns linear formulas for numeric outcomes, and
+classification formulas for categorical outcomes.
+
+### Model Fitting
+
+The output of `collinear()` can be used right away to fit exploratory
+models, as shown below.
 
 ``` r
-x$vi_numeric$preference_order
-#>      response                  predictor             f    metric  score rank
-#> 1  vi_numeric      growing_season_length f_numeric_glm R-squared 0.8149    1
-#> 2  vi_numeric                koppen_zone f_numeric_glm R-squared 0.7972    2
-#> 3  vi_numeric                    soil_ph f_numeric_glm R-squared 0.7683    3
-#> 4  vi_numeric         koppen_description f_numeric_glm R-squared 0.7657    4
-#> 5  vi_numeric                   swi_mean f_numeric_glm R-squared 0.7182    5
-#> 6  vi_numeric               koppen_group f_numeric_glm R-squared 0.7109    6
-#> 7  vi_numeric              humidity_mean f_numeric_glm R-squared 0.6920    7
-#> 8  vi_numeric                  soil_type f_numeric_glm R-squared 0.6189    8
-#> 9  vi_numeric           cloud_cover_mean f_numeric_glm R-squared 0.5959    9
-#> 10 vi_numeric           biogeo_ecoregion f_numeric_glm R-squared 0.5815   10
-#> 11 vi_numeric               country_name f_numeric_glm R-squared 0.5786   11
-#> 12 vi_numeric               humidity_max f_numeric_glm R-squared 0.5681   12
-#> 13 vi_numeric            cloud_cover_max f_numeric_glm R-squared 0.5662   13
-#> 14 vi_numeric               humidity_min f_numeric_glm R-squared 0.5630   14
-#> 15 vi_numeric                    swi_max f_numeric_glm R-squared 0.5549   15
-#> 16 vi_numeric     soil_temperature_range f_numeric_glm R-squared 0.5501   16
-#> 17 vi_numeric       soil_temperature_max f_numeric_glm R-squared 0.5462   17
-#> 18 vi_numeric               biogeo_biome f_numeric_glm R-squared 0.5435   18
-#> 19 vi_numeric              rainfall_mean f_numeric_glm R-squared 0.5354   19
-#> 20 vi_numeric                  subregion f_numeric_glm R-squared 0.5079   20
-#> 21 vi_numeric    growing_season_rainfall f_numeric_glm R-squared 0.4748   21
-#> 22 vi_numeric              solar_rad_max f_numeric_glm R-squared 0.4669   22
-#> 23 vi_numeric               rainfall_max f_numeric_glm R-squared 0.4631   23
-#> 24 vi_numeric     evapotranspiration_max f_numeric_glm R-squared 0.4590   24
-#> 25 vi_numeric   evapotranspiration_range f_numeric_glm R-squared 0.4489   25
-#> 26 vi_numeric              aridity_index f_numeric_glm R-squared 0.4347   26
-#> 27 vi_numeric                  swi_range f_numeric_glm R-squared 0.4225   27
-#> 28 vi_numeric               biogeo_realm f_numeric_glm R-squared 0.4076   28
-#> 29 vi_numeric            cloud_cover_min f_numeric_glm R-squared 0.3769   29
-#> 30 vi_numeric          temperature_range f_numeric_glm R-squared 0.3752   30
-#> 31 vi_numeric             rainfall_range f_numeric_glm R-squared 0.3501   31
-#> 32 vi_numeric    temperature_seasonality f_numeric_glm R-squared 0.2579   32
-#> 33 vi_numeric                    swi_min f_numeric_glm R-squared 0.2130   33
-#> 34 vi_numeric                  continent f_numeric_glm R-squared 0.2046   34
-#> 35 vi_numeric             solar_rad_mean f_numeric_glm R-squared 0.1965   35
-#> 36 vi_numeric               rainfall_min f_numeric_glm R-squared 0.1865   36
-#> 37 vi_numeric                     region f_numeric_glm R-squared 0.1796   37
-#> 38 vi_numeric              soil_nitrogen f_numeric_glm R-squared 0.1759   38
-#> 39 vi_numeric            temperature_max f_numeric_glm R-squared 0.1508   39
-#> 40 vi_numeric            solar_rad_range f_numeric_glm R-squared 0.1397   40
-#> 41 vi_numeric                   soil_soc f_numeric_glm R-squared 0.1365   41
-#> 42 vi_numeric    evapotranspiration_mean f_numeric_glm R-squared 0.1292   42
-#> 43 vi_numeric          cloud_cover_range f_numeric_glm R-squared 0.1282   43
-#> 44 vi_numeric            temperature_min f_numeric_glm R-squared 0.1176   44
-#> 45 vi_numeric       soil_temperature_min f_numeric_glm R-squared 0.0972   45
-#> 46 vi_numeric                  soil_clay f_numeric_glm R-squared 0.0815   46
-#> 47 vi_numeric             topo_diversity f_numeric_glm R-squared 0.0663   47
-#> 48 vi_numeric             humidity_range f_numeric_glm R-squared 0.0533   48
-#> 49 vi_numeric                  soil_sand f_numeric_glm R-squared 0.0460   49
-#> 50 vi_numeric             topo_elevation f_numeric_glm R-squared 0.0351   50
-#> 51 vi_numeric             country_income f_numeric_glm R-squared 0.0320   51
-#> 52 vi_numeric growing_season_temperature f_numeric_glm R-squared 0.0176   52
-#> 53 vi_numeric                 topo_slope f_numeric_glm R-squared 0.0176   53
-#> 54 vi_numeric      soil_temperature_mean f_numeric_glm R-squared 0.0151   54
-#> 55 vi_numeric                  soil_silt f_numeric_glm R-squared 0.0070   55
-#> 56 vi_numeric           temperature_mean f_numeric_glm R-squared 0.0067   56
-#> 57 vi_numeric        growing_degree_days f_numeric_glm R-squared 0.0048   57
-#> 58 vi_numeric     evapotranspiration_min f_numeric_glm R-squared 0.0034   58
-#> 59 vi_numeric                country_gdp f_numeric_glm R-squared 0.0032   59
-#> 60 vi_numeric         country_population f_numeric_glm R-squared 0.0007   60
-#> 61 vi_numeric              solar_rad_min f_numeric_glm R-squared 0.0001   61
-```
-
-We can also use the results of `collinear_output()` to fit exploratory
-models. For example, for the response `vi_numeric` we can fit a GLM.
-
-``` r
-m <- stats::glm(
+m <- stats::lm(
   formula = x$vi_numeric$formulas$linear, 
   data = x$vi_numeric$df,
   na.action = na.omit
@@ -318,47 +343,117 @@ m <- stats::glm(
 summary(m)
 #> 
 #> Call:
-#> stats::glm(formula = x$vi_numeric$formulas$linear, data = x$vi_numeric$df, 
+#> stats::lm(formula = x$vi_numeric$formulas$linear, data = x$vi_numeric$df, 
 #>     na.action = na.omit)
+#> 
+#> Residuals:
+#>      Min       1Q   Median       3Q      Max 
+#> -0.49279 -0.04788 -0.00118  0.05560  0.23998 
 #> 
 #> Coefficients:
 #>                           Estimate Std. Error t value Pr(>|t|)    
-#> (Intercept)              5.666e-02  4.260e-02   1.330 0.183979    
-#> growing_season_length    1.040e-03  5.190e-05  20.036  < 2e-16 ***
-#> temperature_seasonality -1.163e-04  1.423e-05  -8.176 1.76e-15 ***
-#> swi_min                  4.290e-03  4.342e-04   9.881  < 2e-16 ***
-#> continent                1.920e-01  3.786e-02   5.071 5.30e-07 ***
-#> rainfall_min            -3.102e-05  8.098e-05  -0.383 0.701829    
-#> cloud_cover_range        4.555e-04  3.276e-04   1.390 0.164955    
-#> soil_clay               -4.830e-04  4.597e-04  -1.051 0.293785    
-#> topo_diversity           1.573e-03  8.799e-04   1.787 0.074384 .  
-#> humidity_range           3.473e-04  6.156e-04   0.564 0.572813    
-#> topo_elevation          -2.105e-05  6.144e-06  -3.427 0.000653 ***
-#> country_income           2.919e-02  7.619e-02   0.383 0.701794    
-#> topo_slope               2.826e-04  1.333e-03   0.212 0.832194    
+#> (Intercept)              7.125e-01  4.448e-02  16.017  < 2e-16 ***
+#> rainfall_mean            2.888e-05  5.931e-06   4.870 1.43e-06 ***
+#> soil_temperature_max    -1.155e-02  5.621e-04 -20.553  < 2e-16 ***
+#> swi_range                4.306e-03  2.899e-04  14.851  < 2e-16 ***
+#> temperature_seasonality -1.106e-04  1.332e-05  -8.307 6.57e-16 ***
+#> humidity_range          -3.055e-03  6.044e-04  -5.054 5.75e-07 ***
+#> topo_elevation          -4.405e-05  6.181e-06  -7.126 2.97e-12 ***
+#> soil_sand               -1.703e-04  2.536e-04  -0.672   0.5020    
+#> topo_diversity           1.728e-03  9.043e-04   1.911   0.0564 .  
+#> topo_slope               7.480e-04  1.350e-03   0.554   0.5797    
 #> ---
 #> Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 #> 
-#> (Dispersion parameter for gaussian family taken to be 0.006568831)
-#> 
-#>     Null deviance: 27.0525  on 609  degrees of freedom
-#> Residual deviance:  3.9216  on 597  degrees of freedom
-#> AIC: -1319.5
-#> 
-#> Number of Fisher Scoring iterations: 2
+#> Residual standard error: 0.0823 on 600 degrees of freedom
+#> Multiple R-squared:  0.8498, Adjusted R-squared:  0.8475 
+#> F-statistic: 377.1 on 9 and 600 DF,  p-value: < 2.2e-16
 ```
 
-For `vi_categorical`, a factor variable, we can fit a classification
-model with Random Forest:
+## Integration with `tidymodels`
+
+The function \[step_collinear()\] wraps \[collinear()\] to facilitate
+its usage in `tidymodels` recipes.
 
 ``` r
-m <- ranger::ranger(
-  formula = x$vi_categorical$formulas$classification,
-  data = x$vi_categorical$df
+library(dplyr)
+#> 
+#> Attaching package: 'dplyr'
+#> The following objects are masked from 'package:stats':
+#> 
+#>     filter, lag
+#> The following objects are masked from 'package:base':
+#> 
+#>     intersect, setdiff, setequal, union
+library(recipes)
+#> 
+#> Attaching package: 'recipes'
+#> The following object is masked from 'package:stats':
+#> 
+#>     step
+library(parsnip)
+library(workflows)
+
+# model formula
+vi_formula <- collinear::model_formula(
+  df = vi_smol,
+  response = "vi_numeric",
+  predictors = vi_predictors
 )
 
-print(m)
+# recipe
+vi_recipe <- recipes::recipe(
+  formula = vi_formula,
+  data = vi_smol
+  ) |>
+  #multicollinearity filtering
+  collinear::step_collinear(
+    recipes::all_predictors()
+  )
+
+#linear model
+vi_model <- parsnip::linear_reg() |>
+  parsnip::set_engine("lm")
+
+#create and fit workflow
+vi_workflow <- workflows::workflow() |>
+  workflows::add_recipe(vi_recipe) |>
+  workflows::add_model(vi_model) |>
+  workflows::fit(data = vi_smol)
+
+vi_workflow
+#> ══ Workflow [trained] ══════════════════════════════════════════════════════════
+#> Preprocessor: Recipe
+#> Model: linear_reg()
+#> 
+#> ── Preprocessor ────────────────────────────────────────────────────────────────
+#> 1 Recipe Step
+#> 
+#> • step_collinear()
+#> 
+#> ── Model ───────────────────────────────────────────────────────────────────────
+#> 
+#> Call:
+#> stats::lm(formula = ..y ~ ., data = data)
+#> 
+#> Coefficients:
+#>             (Intercept)            rainfall_mean     soil_temperature_max  
+#>               7.125e-01                2.888e-05               -1.155e-02  
+#>               swi_range  temperature_seasonality           humidity_range  
+#>               4.306e-03               -1.106e-04               -3.055e-03  
+#>          topo_elevation                soil_sand           topo_diversity  
+#>              -4.405e-05               -1.703e-04                1.728e-03  
+#>              topo_slope  
+#>               7.480e-04
 ```
+
+## Citation
+
+If you find this package useful, please cite it as:
+
+*Blas M. Benito (2025). collinear: R Package for Seamless
+Multicollinearity Management. Version 3.0.0. doi:
+10.5281/zenodo.10039489*
 
 ## Getting help
 

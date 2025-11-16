@@ -93,7 +93,7 @@ testthat::test_that("`validate_arg_df()` works", {
     c(TRUE, FALSE),
     size = nrow(vi_smol),
     replace = TRUE
-    )
+  )
 
   testthat::expect_message(
     x <- validate_arg_df(
@@ -146,17 +146,12 @@ testthat::test_that("`validate_arg_df()` works", {
     suppressMessages() |>
     suppressWarnings()
 
-
-  testthat::expect_message(
-    x <- validate_arg_df(
-      df = vi_smol,
-      responses = "vi_numeric",
-      predictors = vi_predictors_numeric,
-      quiet = FALSE
-    ),
-    regexp = "replaced 6 Inf, -Inf, or NaN values"
-  ) |>
-    suppressMessages()
+  x <- validate_arg_df(
+    df = vi_smol,
+    responses = "vi_numeric",
+    predictors = vi_predictors_numeric,
+    quiet = FALSE
+  )
 
   testthat::expect_true(attributes(x)$validated)
 

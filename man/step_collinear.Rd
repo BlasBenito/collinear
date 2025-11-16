@@ -18,56 +18,56 @@ step_collinear(
   id = recipes::rand_id("collinear")
 )
 
-\method{prep}{step_collinear}(x, training, info = NULL, ...)
+\method{prep}{step_collinear}(x = NULL, training = NULL, info = NULL, ...)
 
-\method{bake}{step_collinear}(object, new_data, ...)
+\method{bake}{step_collinear}(object = NULL, new_data = NULL, ...)
 }
 \arguments{
 \item{recipe}{(required, recipe) A recipe object to which this step will be added.}
 
 \item{...}{(optional) Additional arguments (currently ignored).}
 
-\item{role}{(optional, character) Not used by this step since no new variables are created.}
+\item{role}{(optional, character) Not used by this step since no new variables are created. Default: NA}
 
-\item{trained}{(optional, logical) Indicates if the step has been trained.}
+\item{trained}{(optional, logical) Indicates if the step has been trained. Default: FALSE}
 
-\item{options}{(optional, list) Named list of arguments passed to
-\code{\link[=collinear]{collinear()}}. Common options include:
+\item{options}{(optional, list) Named list of arguments passed to \code{\link[=collinear]{collinear()}}. Common options include:
 \itemize{
-\item \code{max_cor}: Maximum correlation threshold (default: auto)
-\item \code{max_vif}: Maximum VIF threshold (default: auto)
-\item \code{preference_order}: Vector of predictor names in priority order
-\item \code{f}:
-\item \code{quiet}: Suppress messages (default: FALSE)
+\item \code{max_cor}: Maximum correlation threshold. If NULL (default), automatically set based on median correlation of predictors.
+\item \code{max_vif}: Maximum VIF threshold. If NULL (default), automatically set to match the auto-computed max_cor.
+\item \code{preference_order}: Vector of predictor names in priority order.
+\item \code{f}: Function to compute preference order (default: \code{f_auto})
+\item \code{quiet}: Suppress messages (default: TRUE)
 }
-Note: \code{encoding_method} is not supported in this step.}
+Note: \code{encoding_method} is not supported in this step. The automatic threshold selection adapts to each dataset's correlation structure.}
 
-\item{selected}{(character, internal) Predictors retained after filtering.}
+\item{selected}{(character vector) Predictors retained after filtering. Populated during training and used during baking. Default: NULL}
 
-\item{skip}{(logical, optional) Should the step be skipped when baking? Defaults to FALSE.}
+\item{skip}{(optional, logical) Trigger to skip this step when baking. Default: FALSE.}
 
-\item{keep_original_cols}{(logical, optional) Whether to keep original columns. Default: FALSE.}
+\item{keep_original_cols}{(optional, logical) Whether to keep original columns. Default: FALSE.}
 
-\item{id}{(character, optional) Unique identifier for this step.}
+\item{id}{(optional, character) Unique identifier for this step.}
 
-\item{x}{(step_collinear object) The step to be trained.}
+\item{x}{(required, step_collinear object) The step to be trained. Default: NULL}
 
-\item{training}{(data.frame) The training dataset used to estimate quantities.}
+\item{training}{(required, data.frame) The training dataset used to estimate quantities.}
 
-\item{info}{(data.frame, optional) Preprocessed information about variables in \code{training}.}
+\item{info}{(optional, data.frame) Preprocessed information about variables in \code{training}. Default: NULL}
 
-\item{object}{(step_collinear object) The trained step.}
+\item{object}{(required, \code{step_collinear} object) The trained step. Default: NULL}
 
-\item{new_data}{(data.frame) New data to apply the step to.}
+\item{new_data}{(required, data.frame) New data to apply the step to. Default: NULL}
 }
 \value{
-A \code{step_collinear} object.
+Updated recipe with new step.
 }
 \description{
-Adds a step to a \code{\link[recipes:recipe]{recipes::recipe()}} that removes collinear predictors using
-\code{\link[=collinear]{collinear()}}. Unlike \code{\link[=collinear]{collinear()}}, this wrapper does not perform target encoding.
+Adds a step to a recipe created by \code{\link[recipes:recipe]{recipes::recipe()}} to apply multicollinearity filtering via \code{\link[=collinear]{collinear()}}.
 
-This step requires the \strong{recipes} package to be installed.
+This function requires the \code{recipes} package to be installed.
+
+Unlike \code{collinear()}, this wrapper does not perform target encoding, and the default value for the argument \code{quiet} is \code{TRUE}.
 }
 \examples{
 \dontrun{

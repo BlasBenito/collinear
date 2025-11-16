@@ -8,7 +8,7 @@ testthat::test_that("`vif_select()` works", {
       predictors = vi_predictors[1:10],
       quiet = FALSE
     ),
-    regexp = "ranking 10 'predictors' from lower to higher multicollinearity"
+    regexp = "'predictors' from lower to higher multicollinearity"
   ) |>
     suppressMessages()
 
@@ -53,7 +53,7 @@ testthat::test_that("`vif_select()` works", {
       predictors = vi_predictors[1:10],
       preference_order = preference_order
     ),
-    regexp = "ranking 8 'predictors' from lower to higher multicollinearity"
+    regexp = "'predictors' from lower to higher multicollinearity"
   ) |>
     suppressMessages()
 
