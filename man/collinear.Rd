@@ -36,7 +36,7 @@ collinear(
 
 \item{quiet}{(optional; logical) If FALSE, messages are printed to the console. Default: FALSE}
 
-\item{...}{(optional) Used to pass internal arguments such as \code{function_name} for \link{validate_arg_function_name} in nested calls, or \code{m}, a correlation matrix generated via \code{\link[stats:cor]{stats::cor()}} or \code{\link[=cor_matrix]{cor_matrix()}}.}
+\item{...}{(optional) Used to pass internal arguments such as \code{function_name} for \link{validate_arg_function_name} in nested calls, or \code{m}, a correlation matrix generated via \code{\link[stats:cor]{stats::cor()}} or \code{\link[=cor_matrix]{cor_matrix()}}, and the cross-validation arguments of \code{\link[=preference_order]{preference_order()}}: \code{cv_iterations}, and \code{cv_training_fraction}.}
 }
 \value{
 list of class \code{collinear_output} with sub-lists of class \code{collinear_selection}.
@@ -63,7 +63,7 @@ Automates multicollinearity management in datasets with mixed variable types (nu
 
 \if{html}{\out{<div class="sourceCode">}}\preformatted{\\item **User-defined ranking** (argument \code{preference_order}): Accepts a character vector of predictor names or a dataframe resulting from [preference_order()]. When collinear predictors are detected, those with lower ranking are removed. This option focuses the analysis on predictors of particular interest.
 
-\\item **Response-based ranking** (\code{f}): Uses functions like [f_auto], [f_numeric_glm], or [f_binomial_rf] to rank predictors by their association with the response. Preserves predictors with stronger relationships to the response, yielding stronger predictive models. Requires valid \code{responses} and \code{preference_order = NULL}.
+\\item **Response-based ranking** (\code{f}): Uses functions like [f_auto], [f_numeric_glm], or [f_binomial_rf] to rank predictors by their association with the response. This functionality now supports cross-validation (see [preference_order()] for further details). Preserves predictors with stronger relationships to the response, yielding stronger predictive models. Requires valid \code{responses} and \code{preference_order = NULL}.
 
 \\item **Multicollinearity-based ranking** (default): When both \code{preference_order} and \code{f} are \code{NULL}, predictors are ranked from lower to higher multicollinearity. This preserves rare predictors over redundant ones, but might not result in robust models.
 }\if{html}{\out{</div>}}

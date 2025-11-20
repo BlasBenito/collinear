@@ -5,14 +5,14 @@
 \title{Validate Argument \code{encoding_method}}
 \usage{
 validate_arg_encoding_method(
-  encoding_method = c("loo", "mean", "rank"),
+  encoding_method = "loo",
   overwrite = NULL,
   quiet = FALSE,
   function_name = NULL
 )
 }
 \arguments{
-\item{encoding_method}{(optional; character vector or NULL). Name of the target encoding methods. One or several of: "mean", "rank", "loo". If NULL, target encoding is ignored, and \code{df} is returned with no modification. Default: c("loo", "mean", "rank")}
+\item{encoding_method}{(optional; character vector or NULL). Name of the target encoding methods. One or several of: "mean", "rank", "loo". If NULL, target encoding is ignored, and \code{df} is returned with no modification. Default: "loo"}
 
 \item{overwrite}{(optional; logical) If TRUE, the original predictors in \code{df} are overwritten with their encoded versions, but only one encoding method, smoothing, white noise, and seed are allowed. Otherwise, encoded predictors with their descriptive names are added to \code{df}. Default: FALSE}
 

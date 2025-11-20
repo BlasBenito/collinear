@@ -20,9 +20,9 @@ status](https://www.r-pkg.org/badges/version/collinear)](https://cran.r-project.
 
 The R package `collinear` provides a comprehensive toolkit for smart
 multicollinearity management in datasets with mixed variable types. The
-main function, \[collinear()\], is designed around five core components
-that work together to handle multicollinearity across numeric and
-categorical predictors:
+main function, \[collinear()\], integrates five core components to
+handle multicollinearity across numeric and categorical predictors while
+protecting important predictors:
 
 - **Target Encoding** (function \[target_encoding_lab()\]):
   Transparently converts categorical predictors to numeric when
@@ -78,7 +78,7 @@ remotes::install_github(
   )
 ```
 
-Previous versions are in the “archive_xxx” branches of the GitHub
+Previous versions are in the `archive_xxx` branches of the GitHub
 repository.
 
 ``` r
@@ -155,8 +155,8 @@ collinear::vif_stats(
 ```
 
 The quantile 0.75 returned by `vif_stats()` indicates that 25% of the
-predictors have a VIF score higher than 6. This is a robust indicator of
-high multicollinearity in our predictors.
+predictors have a VIF score higher than 6. This suggests substantial
+redundancy in the set of predictors.
 
 ### Multicollinearity Filtering
 
@@ -254,7 +254,7 @@ colnames(x$vi_numeric$df)
 ```
 
 The object `preference_order` contains the ranking of predictors. It is
-computed by the function \[preference_order\] by assessing the
+computed by the function \[preference_order()\] by assessing the
 association between the response and the predictors. In this case, it
 fits univariate models between the response and each predictor using
 \[f_numeric_rf\], and returns the R-squared of the observations vs the
@@ -316,13 +316,13 @@ x$vi_numeric$formulas
 #> vi_numeric ~ rainfall_mean + soil_temperature_max + swi_range + 
 #>     temperature_seasonality + humidity_range + topo_elevation + 
 #>     soil_sand + topo_diversity + topo_slope
-#> <environment: 0x5dfd75f8f020>
+#> <environment: 0x5d5d662f75c0>
 #> 
 #> $smooth
 #> vi_numeric ~ s(rainfall_mean) + s(soil_temperature_max) + s(swi_range) + 
 #>     s(temperature_seasonality) + s(humidity_range) + s(topo_elevation) + 
 #>     s(soil_sand) + s(topo_diversity) + s(topo_slope)
-#> <environment: 0x5dfd75f8f020>
+#> <environment: 0x5d5d662f75c0>
 ```
 
 The function returns linear formulas for numeric outcomes, and
@@ -334,46 +334,54 @@ The output of `collinear()` can be used right away to fit exploratory
 models, as shown below.
 
 ``` r
-m <- stats::lm(
-  formula = x$vi_numeric$formulas$linear, 
+m <- mgcv::gam(
+  formula = x$vi_numeric$formulas$smooth, 
   data = x$vi_numeric$df,
   na.action = na.omit
   )
 
 summary(m)
 #> 
-#> Call:
-#> stats::lm(formula = x$vi_numeric$formulas$linear, data = x$vi_numeric$df, 
-#>     na.action = na.omit)
+#> Family: gaussian 
+#> Link function: identity 
 #> 
-#> Residuals:
-#>      Min       1Q   Median       3Q      Max 
-#> -0.49279 -0.04788 -0.00118  0.05560  0.23998 
+#> Formula:
+#> vi_numeric ~ s(rainfall_mean) + s(soil_temperature_max) + s(swi_range) + 
+#>     s(temperature_seasonality) + s(humidity_range) + s(topo_elevation) + 
+#>     s(soil_sand) + s(topo_diversity) + s(topo_slope)
 #> 
-#> Coefficients:
-#>                           Estimate Std. Error t value Pr(>|t|)    
-#> (Intercept)              7.125e-01  4.448e-02  16.017  < 2e-16 ***
-#> rainfall_mean            2.888e-05  5.931e-06   4.870 1.43e-06 ***
-#> soil_temperature_max    -1.155e-02  5.621e-04 -20.553  < 2e-16 ***
-#> swi_range                4.306e-03  2.899e-04  14.851  < 2e-16 ***
-#> temperature_seasonality -1.106e-04  1.332e-05  -8.307 6.57e-16 ***
-#> humidity_range          -3.055e-03  6.044e-04  -5.054 5.75e-07 ***
-#> topo_elevation          -4.405e-05  6.181e-06  -7.126 2.97e-12 ***
-#> soil_sand               -1.703e-04  2.536e-04  -0.672   0.5020    
-#> topo_diversity           1.728e-03  9.043e-04   1.911   0.0564 .  
-#> topo_slope               7.480e-04  1.350e-03   0.554   0.5797    
+#> Parametric coefficients:
+#>             Estimate Std. Error t value Pr(>|t|)    
+#> (Intercept) 0.387803   0.002669   145.3   <2e-16 ***
 #> ---
 #> Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 #> 
-#> Residual standard error: 0.0823 on 600 degrees of freedom
-#> Multiple R-squared:  0.8498, Adjusted R-squared:  0.8475 
-#> F-statistic: 377.1 on 9 and 600 DF,  p-value: < 2.2e-16
+#> Approximate significance of smooth terms:
+#>                              edf Ref.df      F p-value    
+#> s(rainfall_mean)           8.179  8.805 15.468 < 2e-16 ***
+#> s(soil_temperature_max)    7.723  8.584 35.040 < 2e-16 ***
+#> s(swi_range)               4.688  5.810  7.023 7.9e-07 ***
+#> s(temperature_seasonality) 1.000  1.000 40.832 < 2e-16 ***
+#> s(humidity_range)          1.770  2.227  2.544  0.0669 .  
+#> s(topo_elevation)          5.099  6.205 11.725 < 2e-16 ***
+#> s(soil_sand)               2.548  3.269  1.694  0.1636    
+#> s(topo_diversity)          3.086  3.984  1.565  0.1883    
+#> s(topo_slope)              1.000  1.001  0.208  0.6489    
+#> ---
+#> Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+#> 
+#> R-sq.(adj) =  0.902   Deviance explained = 90.8%
+#> GCV = 0.0046196  Scale est. = 0.0043463  n = 610
 ```
 
-## Integration with `tidymodels`
+### Integration with `tidymodels`
 
 The function \[step_collinear()\] wraps \[collinear()\] to facilitate
-its usage in `tidymodels` recipes.
+its usage in `tidymodels` recipes. This integration enables automated
+multicollinearity filtering within cross-validation and hyperparameter
+tuning workflows. Please notice that `step_collinear()` does not perform
+target encoding, as combining this functionality with multicollinearity
+filtering does not fit well with how `recipes` works.
 
 ``` r
 library(dplyr)

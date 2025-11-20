@@ -8,7 +8,7 @@ target_encoding_lab(
   df = NULL,
   response = NULL,
   predictors = NULL,
-  encoding_method = c("loo", "mean", "rank"),
+  encoding_method = "loo",
   smoothing = 0,
   overwrite = FALSE,
   quiet = FALSE,
@@ -22,7 +22,7 @@ target_encoding_lab(
 
 \item{predictors}{(optional; character vector or NULL) Names of the predictors in \code{df}. If NULL, all columns in \code{df} except the ones in \code{responses} and those with constant values or near zero variance are used. Default: NULL}
 
-\item{encoding_method}{(optional; character vector or NULL). Name of the target encoding methods. One or several of: "mean", "rank", "loo". If NULL, target encoding is ignored, and \code{df} is returned with no modification. Default: c("loo", "mean", "rank")}
+\item{encoding_method}{(optional; character vector or NULL). Name of the target encoding methods. One or several of: "mean", "rank", "loo". If NULL, target encoding is ignored, and \code{df} is returned with no modification. Default: "loo"}
 
 \item{smoothing}{(optional; integer vector) Argument of the method "mean". Groups smaller than this number have their means pulled towards the mean of the response across all cases. Default: 0}
 
@@ -30,7 +30,7 @@ target_encoding_lab(
 
 \item{quiet}{(optional; logical) If FALSE, messages are printed to the console. Default: FALSE}
 
-\item{...}{(optional) Used to pass internal arguments such as \code{function_name} for \link{validate_arg_function_name} in nested calls, or \code{m}, a correlation matrix generated via \code{\link[stats:cor]{stats::cor()}} or \code{\link[=cor_matrix]{cor_matrix()}}.}
+\item{...}{(optional) Used to pass internal arguments such as \code{function_name} for \link{validate_arg_function_name} in nested calls, or \code{m}, a correlation matrix generated via \code{\link[stats:cor]{stats::cor()}} or \code{\link[=cor_matrix]{cor_matrix()}}, and the cross-validation arguments of \code{\link[=preference_order]{preference_order()}}: \code{cv_iterations}, and \code{cv_training_fraction}.}
 }
 \value{
 dataframe

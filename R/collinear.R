@@ -14,7 +14,7 @@
 #'
 #'     \item **User-defined ranking** (argument \code{preference_order}): Accepts a character vector of predictor names or a dataframe resulting from [preference_order()]. When collinear predictors are detected, those with lower ranking are removed. This option focuses the analysis on predictors of particular interest.
 #'
-#'     \item **Response-based ranking** (\code{f}): Uses functions like [f_auto], [f_numeric_glm], or [f_binomial_rf] to rank predictors by their association with the response. Preserves predictors with stronger relationships to the response, yielding stronger predictive models. Requires valid \code{responses} and \code{preference_order = NULL}.
+#'     \item **Response-based ranking** (\code{f}): Uses functions like [f_auto], [f_numeric_glm], or [f_binomial_rf] to rank predictors by their association with the response. This functionality now supports cross-validation (see [preference_order()] for further details). Preserves predictors with stronger relationships to the response, yielding stronger predictive models. Requires valid \code{responses} and \code{preference_order = NULL}.
 #'
 #'     \item **Multicollinearity-based ranking** (default): When both \code{preference_order} and \code{f} are \code{NULL}, predictors are ranked from lower to higher multicollinearity. This preserves rare predictors over redundant ones, but might not result in robust models.
 #'   }
@@ -122,7 +122,7 @@
 #'
 #' @param quiet (optional; logical) If FALSE, messages are printed to the console. Default: FALSE
 #'
-#' @param ... (optional) Used to pass internal arguments such as \code{function_name} for [validate_arg_function_name] in nested calls, or \code{m}, a correlation matrix generated via [stats::cor()] or [cor_matrix()].
+#' @param ... (optional) Used to pass internal arguments such as \code{function_name} for [validate_arg_function_name] in nested calls, or \code{m}, a correlation matrix generated via [stats::cor()] or [cor_matrix()], and the cross-validation arguments of [preference_order()]: \code{cv_iterations}, and \code{cv_training_fraction}.
 #'
 #' @return list of class \code{collinear_output} with sub-lists of class \code{collinear_selection}.
 #'
@@ -382,7 +382,25 @@ collinear <- function(
     any(responses %in% var.types$numeric) &&
     any(predictors %in% var.types$categorical)
     ){
-      target_encoding_needed <- TRUE
+
+    target_encoding_needed <- TRUE
+
+    if(length(responses) == 1){
+
+      df <- target_encoding_lab(
+        df = df,
+        response = responses,
+        predictors = predictors,
+        encoding_method = encoding_method,
+        overwrite = TRUE,
+        quiet = quiet,
+        function_name = function_name
+      )
+
+      target_encoding_needed <- FALSE
+
+    }
+
   }
 
   #setup max cor and max vif if NULL
@@ -568,11 +586,22 @@ collinear <- function(
       !is.null(f)
     ){
 
+
+      if(is.null(dots$cv_training_fraction)){
+        dots$cv_training_fraction <- 1
+      }
+
+      if(is.null(dots$cv_iterations)){
+        dots$cv_iterations <- 1
+      }
+
       preference_order.response <- preference_order(
         df = df.response,
         responses = response,
         predictors = predictors.response,
         f = f,
+        cv_training_fraction = dots$cv_training_fraction,
+        cv_iterations = dots$cv_iterations,
         quiet = quiet,
         function_name = function_name,
         m = m

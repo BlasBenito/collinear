@@ -37,7 +37,7 @@ knitr::opts_chunk$set(
 
 ## Summary
 
-The R package `collinear` provides a comprehensive toolkit for smart multicollinearity management in datasets with mixed variable types. The main function, [collinear()], is designed around five core components that work together to handle multicollinearity across numeric and categorical predictors:
+The R package `collinear` provides a comprehensive toolkit for smart multicollinearity management in datasets with mixed variable types. The main function, [collinear()], integrates five core components to handle multicollinearity across numeric and categorical predictors while protecting important predictors:
 
  - **Target Encoding** (function [target_encoding_lab()]): Transparently converts categorical predictors to numeric when required, enabling VIF and correlation analysis across mixed data types.
  
@@ -72,7 +72,7 @@ remotes::install_github(
 ```
 
 
-Previous versions are in the “archive_xxx” branches of the GitHub repository.
+Previous versions are in the `archive_xxx` branches of the GitHub repository.
 
 ```{r, eval = FALSE}
 remotes::install_github(
@@ -117,7 +117,7 @@ length(vi_predictors)
 
 The package provides several functions to assess multicollinearity. 
 
-The functions [cor_df()] and [vif_df()] generate dataframes with the pairwise correlations and VIF scores of the predictors, while the functions [cor_stats()],  [vif_stats()] (used below) and [collinear_stats()] generate descriptive multicollinearity statistics.
+The functions [cor_df()] and [vif_df()] generate dataframes with the pairwise correlations and VIF scores of the predictors, while the functions [cor_stats()],  [vif_stats()] (used below) and [collinear_stats()] generate descriptive multicollinearity statistics. Notice that the function takes a while to execute because computing correlations for the categorical variables in `vi_predictors` is computationally expensive.
 
 ```{r}
 collinear::vif_stats(
@@ -126,11 +126,12 @@ collinear::vif_stats(
   quiet = TRUE
 )
 ```
-The quantile 0.75 returned by `vif_stats()` indicates that 25% of the predictors have a VIF score higher than 6. This is a robust indicator of high multicollinearity in our predictors.
+
+The quantile 0.75 returned by `vif_stats()` indicates that 25% of the predictors have a VIF score higher than 6.5. This suggests substantial redundancy in the set of predictors.
 
 ### Multicollinearity Filtering
 
-The function [collinear()] is designed to reduce multicollinearity in complex modelling data with a minimal setup.
+To reduce multicollinearity in `vi_smol` we apply [collinear()] with a minimal setup.
 
 ```{r}
 x <- collinear::collinear(
@@ -151,7 +152,8 @@ The object `df` contains the response and the selected predictors.
 ```{r}
 colnames(x$vi_numeric$df)
 ```
-The object `preference_order` contains the ranking of predictors. It is computed by the function [preference_order] by assessing the association between the response and the predictors. In this case, it fits univariate models between the response and each predictor using [f_numeric_rf], and returns the R-squared of the observations vs the model predictions. This ranking ensures that the most important predictors are protected during multicollinearity filtering.
+
+The object `preference_order` contains the ranking of predictors. It is computed by the function [preference_order()] by assessing the association between the response and the predictors. In this case, it fits univariate models between the response and each predictor using [f_numeric_rf], and returns the R-squared of the observations vs the model predictions. This ranking ensures that the most important predictors are protected during multicollinearity filtering.
 
 ```{r}
 head(x$vi_numeric$preference_order)
@@ -162,7 +164,8 @@ The object `selection` contains non-collinear predictors chosen by taking into a
 ```{r}
 x$vi_numeric$selection
 ```
-We can check that this selection of predictors shows low multicollinearity by running the function [vif_df()] on them.
+
+We can check that this selection of predictors shows low multicollinearity by running the function [vif_df()] on them. 
 
 ```{r}
 collinear::vif_df(
@@ -170,6 +173,7 @@ collinear::vif_df(
   predictors = x$vi_numeric$selection
 )
 ```
+
 All VIF scores are below 2.5, `collinear()` did a good job here!
 
 Finally, `collinear()` also returns modeling formulas to help kick start exploratory modelling.
@@ -177,6 +181,7 @@ Finally, `collinear()` also returns modeling formulas to help kick start explora
 ```{r}
 x$vi_numeric$formulas
 ```
+
 The function returns linear formulas for numeric outcomes, and classification formulas for categorical outcomes.
 
 ### Model Fitting
@@ -184,7 +189,7 @@ The function returns linear formulas for numeric outcomes, and classification fo
 The output of `collinear()` can be used right away to fit exploratory models, as shown below.
 
 ```{r}
-m <- stats::lm(
+m <- lm(
   formula = x$vi_numeric$formulas$linear, 
   data = x$vi_numeric$df,
   na.action = na.omit
@@ -192,9 +197,10 @@ m <- stats::lm(
 
 summary(m)
 ```
-## Integration with `tidymodels`
 
-The function [step_collinear()] wraps [collinear()] to facilitate its usage in `tidymodels` recipes.
+### Integration with `tidymodels`
+
+The function [step_collinear()] wraps [collinear()] to facilitate its usage in `tidymodels` recipes. Please notice that `step_collinear()` does not perform target encoding, as combining this functionality with multicollinearity filtering does not fit well with how `recipes` works.
 
 ```{r}
 library(dplyr)
@@ -220,16 +226,22 @@ vi_recipe <- recipes::recipe(
   )
 
 #linear model
+vi_model <- parsnip::rand_forest() |>
+  parsnip::set_engine("ranger", importance = "permutation") |>
+  parsnip::set_mode("regression")
+
+#create and fit workflow
 vi_model <- parsnip::linear_reg() |>
   parsnip::set_engine("lm")
 
-#create and fit workflow
+# create and fit workflow
 vi_workflow <- workflows::workflow() |>
   workflows::add_recipe(vi_recipe) |>
   workflows::add_model(vi_model) |>
   workflows::fit(data = vi_smol)
 
 vi_workflow
+  
 ```
 
 

@@ -2,8 +2,7 @@
 #'
 #' @param object (sub-list in output of [collinear()] ) Object to summarize. Default: NULL
 #' @param ... Ignored, kept for consistency with generic.
-#' @return list
-#' TODO describe list structure
+#' @return list: response name and character vector of selected predictors.
 #' @method summary collinear_selection
 #' @family S3_methods
 #' @autoglobal

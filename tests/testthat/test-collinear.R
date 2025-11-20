@@ -676,5 +676,45 @@ testthat::test_that("`collinear()` works", {
   )
 
 
+  #cross validation
+  time_no_cv <- system.time(
+    expr = {
+      x <- collinear(
+        df = vi_smol,
+        responses = "vi_numeric",
+        predictors = vi_predictors_numeric,
+        encoding_method = NULL,
+        preference_order = NULL,
+        f = f_auto,
+        max_cor = 0.75,
+        max_vif = 5,
+        quiet = TRUE
+      )
+    }
+  )
+
+  time_cv <- system.time(
+    expr = {
+      x <- collinear(
+        df = vi_smol,
+        responses = "vi_numeric",
+        predictors = vi_predictors_numeric,
+        encoding_method = NULL,
+        preference_order = NULL,
+        f = f_auto,
+        max_cor = 0.75,
+        max_vif = 5,
+        quiet = TRUE,
+        cv_iterations = 100,
+        cv_training_fraction = 0.5
+      )
+    }
+  )
+
+  testthat::expect_true(
+    time_cv[3] > time_no_cv[3]
+  )
+
+
 
 })

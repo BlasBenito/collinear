@@ -16,11 +16,7 @@
 #' @export
 #' @autoglobal
 validate_arg_encoding_method <- function(
-    encoding_method = c(
-      "loo",
-      "mean",
-      "rank"
-    ),
+    encoding_method = "loo",
     overwrite = NULL,
     quiet = FALSE,
     function_name = NULL

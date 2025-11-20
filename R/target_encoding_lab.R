@@ -16,7 +16,7 @@
 #'
 #' @param response (optional, character string) Name of a numeric response variable in \code{df}. Default: NULL.
 #'
-#' @param encoding_method (optional; character vector or NULL). Name of the target encoding methods. One or several of: "mean", "rank", "loo". If NULL, target encoding is ignored, and \code{df} is returned with no modification. Default: c("loo", "mean", "rank")
+#' @param encoding_method (optional; character vector or NULL). Name of the target encoding methods. One or several of: "mean", "rank", "loo". If NULL, target encoding is ignored, and \code{df} is returned with no modification. Default: "loo"
 #'
 #' @param smoothing (optional; integer vector) Argument of the method "mean". Groups smaller than this number have their means pulled towards the mean of the response across all cases. Default: 0
 #'
@@ -63,11 +63,7 @@ target_encoding_lab <- function(
     df = NULL,
     response = NULL,
     predictors = NULL,
-    encoding_method = c(
-      "loo",
-      "mean",
-      "rank"
-    ),
+    encoding_method = "loo",
     smoothing = 0,
     overwrite = FALSE,
     quiet = FALSE,
