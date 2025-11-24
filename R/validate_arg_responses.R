@@ -92,7 +92,7 @@ validate_arg_responses <- function(
     y = colnames(df)
   )
 
-  if(length(wrong_responses) > 0){
+  if(length(wrong_responses) > 0L){
 
     if(all(responses %in% wrong_responses)){
 

@@ -2,9 +2,11 @@
 #'
 #' @description
 #'
-#' Cramer's V extends the chi-squared test to quantify how strongly the categories of two variables co-occur. The value ranges from 0 to 1, where 0 indicates no association and 1 indicates perfect association.
+#' Cramer's V extends the chi-squared test to quantify how strongly the categories of two variables co-occur. The value ranges from 0 to 1, where 0 indicates no  association and 1 indicates perfect association.
 #'
-#' When both variables are binary, Cramer's V is mathematically identical to the absolute Pearson correlation. With more than two categories the relationship diverges: as the number of categories increases, Pearson correlation (which depends on numeric coding) and Cramer's V (which depends only on the contingency table) become progressively less comparable.
+#' This function implements a bias-corrected version of Cramer's V, which adjusts for sample size and is more accurate for small samples. However, this bias correction means that even for binary variables, Cramer's V will no equal the absolute Pearson correlation (the standard, uncorrected Cramer's V does match Pearson for binary data).
+#'
+#' As the number of categories increases, Cramer's V and Pearson correlationmeasure increasingly different aspects of association and should not be directly compared.
 #'
 #' If you intend to combine these measures in a multicollinearity analysis, interpret them with care. It is often preferable to convert non-numeric variables to numeric form (for example, via target encoding) before assessing multicollinearity.
 #'
@@ -193,6 +195,6 @@ cor_cramer <- function(
   #remove names from the output
   names(v) <- NULL
 
-  v
+  abs(v)
 
 }

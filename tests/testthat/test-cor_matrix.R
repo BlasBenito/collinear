@@ -4,11 +4,15 @@ testthat::test_that("`cor_matrix()` works", {
 
   #nput from cor_df()
 
-  df <- cor_df(
-    df = vi_smol,
-    predictors = vi_predictors[1:15],
-    quiet = TRUE
-    )
+  testthat::expect_warning(
+    df <- cor_df(
+      df = vi_smol,
+      predictors = vi_predictors[1:15],
+      quiet = TRUE
+    ),
+    regexp = "may bias the multicollinearity analysis"
+  )
+
 
   m <- cor_matrix(df = df)
 

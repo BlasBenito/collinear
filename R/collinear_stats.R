@@ -53,25 +53,7 @@ collinear_stats <- function(
     function_name = function_name
   )
 
-  predictors <- validate_arg_predictors(
-    df = df,
-    predictors = predictors,
-    quiet = quiet,
-    function_name = function_name
-  )
-
-  ncol.df <- ncol(df)
-
-  df <- validate_arg_df(
-    df = df,
-    predictors = predictors,
-    quiet = quiet,
-    function_name = function_name
-  )
-
-  if(ncol.df > ncol(df)){
-
-    attributes(predictors)$validated <- NULL
+  if(!inherits(x = df, what = "collinear_cor_df")){
 
     predictors <- validate_arg_predictors(
       df = df,
@@ -80,14 +62,44 @@ collinear_stats <- function(
       function_name = function_name
     )
 
+    ncol.df <- ncol(df)
+
+    df <- validate_arg_df(
+      df = df,
+      predictors = predictors,
+      quiet = quiet,
+      function_name = function_name
+    )
+
+    if(ncol.df > ncol(df)){
+
+      attributes(predictors)$validated <- NULL
+
+      predictors <- validate_arg_predictors(
+        df = df,
+        predictors = predictors,
+        quiet = quiet,
+        function_name = function_name
+      )
+
+    }
+
+    cor.df <- cor_df(
+      df = df,
+      predictors = predictors,
+      quiet = quiet,
+      function_name = function_name
+    )
+
+  } else {
+
+    cor.df <- df
+    predictors <- unique(
+      c(cor.df$x, cor.df$y)
+    )
+
   }
 
-  cor.df <- cor_df(
-    df = df,
-    predictors = predictors,
-    quiet = quiet,
-    function_name = function_name
-  )
 
   cor.m <- cor_matrix(
     df = cor.df,
@@ -105,7 +117,7 @@ collinear_stats <- function(
   )
 
   cor.vif <- vif_stats(
-    df = df,
+    df = cor.df,
     predictors = predictors,
     quiet = quiet,
     function_name = function_name,

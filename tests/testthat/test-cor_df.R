@@ -3,11 +3,15 @@ testthat::test_that("`cor_df()` works", {
   data(vi_smol, vi_predictors, vi_predictors_categorical)
 
   #mixed types
-  x <- cor_df(
-    df = vi_smol,
-    predictors = vi_predictors[1:10],
-    quiet = TRUE
+  testthat::expect_warning(
+    x <- cor_df(
+      df = vi_smol,
+      predictors = vi_predictors[1:10],
+      quiet = TRUE
+    ),
+    regexp = "may bias the multicollinearity analysis"
   )
+
 
   testthat::expect_true(
     "collinear_cor_df" %in% class(x)

@@ -206,7 +206,8 @@ testthat::test_that("`collinear()` works", {
     preference_order = NULL,
     f = NULL,
     quiet = TRUE
-  )
+  ) |>
+    suppressWarnings()
 
   testthat::expect_true(
     inherits(x = x, what = "collinear_output")
@@ -571,6 +572,10 @@ testthat::test_that("`collinear()` works", {
     x$vi_numeric$selection[1] == x$vi_numeric$preference$predictor[1]
   )
 
+  testthat::expect_true(
+    x$vi_numeric$preference_order$f[1] == "f_numeric_rf"
+  )
+
 
   ### bad function name ----
   my_f <- function(){return(NULL)}
@@ -707,7 +712,7 @@ testthat::test_that("`collinear()` works", {
         quiet = TRUE,
         cv_iterations = 100,
         cv_training_fraction = 0.5
-      )
+        )
     }
   )
 

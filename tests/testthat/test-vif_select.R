@@ -1,6 +1,6 @@
 testthat::test_that("`vif_select()` works", {
 
-  data(vi, vi_predictors, vi_predictors_numeric)
+  data(vi_smol, vi_predictors, vi_predictors_numeric)
 
   testthat::expect_message(
     x <- vif_select(
@@ -11,6 +11,15 @@ testthat::test_that("`vif_select()` works", {
     regexp = "'predictors' from lower to higher multicollinearity"
   ) |>
     suppressMessages()
+
+  testthat::expect_warning(
+    x <- vif_select(
+      df = vi_smol,
+      predictors = vi_predictors[1:10],
+      quiet = TRUE
+    )
+  ) |>
+    suppressWarnings()
 
 
   testthat::expect_true(
@@ -81,12 +90,16 @@ testthat::test_that("`vif_select()` works", {
     quiet = TRUE
   )
 
-  x <- vif_select(
-    df = vi_smol,
-    predictors = vi_predictors[1:10],
-    preference_order = preference_order,
-    quiet = TRUE
-  )
+  testthat::expect_warning(
+    x <- vif_select(
+      df = vi_smol,
+      predictors = vi_predictors[1:10],
+      preference_order = preference_order,
+      quiet = TRUE
+    )
+  ) |>
+    suppressWarnings()
+
 
   testthat::expect_true(
     is.character(x)

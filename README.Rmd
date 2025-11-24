@@ -41,7 +41,7 @@ The R package `collinear` provides a comprehensive toolkit for smart multicollin
 
  - **Target Encoding** (function [target_encoding_lab()]): Transparently converts categorical predictors to numeric when required, enabling VIF and correlation analysis across mixed data types.
  
- - **Intelligent Predictor Ranking** (function [preference_order()]): Prioritizes predictors by their association with the response, or allows a user-defined ranking to ensure that the most relevant ones are retained during filtering.
+ - **Intelligent Predictor Ranking** (function [preference_order()]): Prioritizes predictors by their univariate association with the response to ensure that the most relevant ones are retained during filtering.
  
  - **Unified Correlation Framework** (function [cor_df()]): Computes pairwise correlations between any variable types using Pearson correlation (numeric-numeric), target encoding (numeric-categorical), and Cramer's V (categorical-categorical) within a single, consistent workflow.
  

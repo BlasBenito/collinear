@@ -146,6 +146,37 @@ cor_df <- function(
 
   }
 
+  #warning about cramers v
+  if(
+    length(predictors$categorical) >= 2L &&
+    length(predictors$numeric) >= 1L
+    ){
+
+    cardinality <- vapply(
+      X = df[predictors$categorical],
+      FUN = function(x) length(unique(x)),
+      integer(1L)
+    )
+
+    vars_above_2 <- sum(cardinality > 2L)
+
+    if(vars_above_2 > 0L){
+
+      msg <- paste0(
+        "\n",
+        function_name, ": ",
+        vars_above_2,
+        " categorical predictors have cardinality > 2 and may bias the multicollinearity analysis. Applying target encoding to convert them to numeric will solve this issue."
+      )
+
+      if(isFALSE(quiet)){
+        message(msg)
+      } else {
+        warning(msg, call. = FALSE)
+      }
+    }
+  }
+
   #initialize output dataframes
   numerics_df <- NULL
   categoricals_df <- NULL

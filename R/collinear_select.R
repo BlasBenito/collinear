@@ -241,6 +241,7 @@ collinear_select <- function(
     df = df,
     predictors = predictors,
     function_name = function_name,
+    quiet = quiet,
     m = dots$m
   )
 

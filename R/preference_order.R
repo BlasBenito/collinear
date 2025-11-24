@@ -283,6 +283,7 @@ preference_order <- function(
       df = df,
       predictors = predictors,
       function_name = function_name,
+      quiet = quiet,
       m = dots$m
     )
 
@@ -291,7 +292,8 @@ preference_order <- function(
     m.colmeans <- sort(
       x = 1 - colMeans(m),
       decreasing = TRUE
-    )
+    ) |>
+      round(digits = 4)
 
 
     m.names <- names(m.colmeans)

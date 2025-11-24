@@ -8,7 +8,27 @@ testthat::test_that("`vif_df()` works", {
       predictors = vi_predictors[1:10]
     ),
     regexp = "converted the following character columns to factor"
+  ) |>
+    suppressMessages()
+
+  testthat::expect_message(
+    x <- vif_df(
+      df = vi_smol,
+      predictors = vi_predictors[1:10]
+    ),
+    regexp = "may bias the multicollinearity analysis"
+  ) |>
+    suppressMessages()
+
+  testthat::expect_warning(
+    x <- vif_df(
+      df = vi_smol,
+      predictors = vi_predictors[1:10],
+      quiet = TRUE
+    ),
+    regexp = "may bias the multicollinearity analysis"
   )
+
 
   testthat::expect_true(
     is.data.frame(x)

@@ -13,7 +13,7 @@ collinear_stats(df = NULL, predictors = NULL, quiet = FALSE, ...)
 
 \item{quiet}{(optional; logical) If FALSE, messages are printed to the console. Default: FALSE}
 
-\item{...}{(optional) Used to pass internal arguments such as \code{function_name} for \link{validate_arg_function_name} in nested calls, or \code{m}, a correlation matrix generated via \code{\link[stats:cor]{stats::cor()}} or \code{\link[=cor_matrix]{cor_matrix()}}, and the cross-validation arguments of \code{\link[=preference_order]{preference_order()}}: \code{cv_iterations}, and \code{cv_training_fraction}.}
+\item{...}{(optional) Used to pass internal arguments such as \code{function_name} for \link{validate_arg_function_name} in nested calls, or \code{m}, a correlation matrix generated via \code{\link[stats:cor]{stats::cor()}} or \code{\link[=cor_matrix]{cor_matrix()}}.}
 }
 \value{
 dataframe with columns \code{method} (with values "correlation" and "vif"), \code{statistic} and \code{value}

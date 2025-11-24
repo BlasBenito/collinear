@@ -64,36 +64,17 @@ vif_df <- function(
     function_name = dots$function_name
   )
 
-  df <- validate_arg_df_not_null(
-    df = df,
-    function_name = function_name
-  )
+  if(!inherits(dots$m, "collinear_cor_matrix")){
 
-  quiet <- validate_arg_quiet(
-    quiet = quiet,
-    function_name = function_name
-  )
+    df <- validate_arg_df_not_null(
+      df = df,
+      function_name = function_name
+    )
 
-  predictors <- validate_arg_predictors(
-    df = df,
-    predictors = predictors,
-    quiet = quiet,
-    function_name = function_name
-  )
-
-  df.ncol <- ncol(df)
-
-  df <- validate_arg_df(
-    df = df,
-    predictors = predictors,
-    quiet = quiet,
-    function_name = function_name
-  )
-
-  #revalidate predictors if any columns were removed
-  if(ncol(df) < df.ncol){
-
-    attributes(predictors)$validated <- NULL
+    quiet <- validate_arg_quiet(
+      quiet = quiet,
+      function_name = function_name
+    )
 
     predictors <- validate_arg_predictors(
       df = df,
@@ -102,27 +83,52 @@ vif_df <- function(
       function_name = function_name
     )
 
-  }
+    df.ncol <- ncol(df)
 
-  #if no predictors
-  if(length(predictors) == 1){
+    df <- validate_arg_df(
+      df = df,
+      predictors = predictors,
+      quiet = quiet,
+      function_name = function_name
+    )
 
-    if(quiet == FALSE){
+    #revalidate predictors if any columns were removed
+    if(ncol(df) < df.ncol){
 
-      message(
-        "\n",
-        function_name,
-        ": only one valid predictor, returning one-row dataframe."
+      attributes(predictors)$validated <- NULL
+
+      predictors <- validate_arg_predictors(
+        df = df,
+        predictors = predictors,
+        quiet = quiet,
+        function_name = function_name
       )
 
     }
 
-    return(
-      data.frame(
-        variable = predictors,
-        vif = 0
+    #if no predictors
+    if(length(predictors) == 1){
+
+      if(quiet == FALSE){
+
+        message(
+          "\n",
+          function_name,
+          ": only one valid predictor, returning one-row dataframe."
+        )
+
+      }
+
+      return(
+        data.frame(
+          variable = predictors,
+          vif = 0
+        )
       )
-    )
+
+    }
+
+
 
   }
 
@@ -131,6 +137,7 @@ vif_df <- function(
     df = df,
     predictors = predictors,
     function_name = function_name,
+    quiet = quiet,
     m = dots$m
   )
 

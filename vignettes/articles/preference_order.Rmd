@@ -1,0 +1,337 @@
+---
+title: "Preference Order"
+output: 
+  rmarkdown::html_document:
+    toc: true
+    toc_title: "Content"
+    source: false
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  eval = TRUE,
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%"
+)
+
+library(DT)
+```
+
+## Summary
+
+The package `collinear` implements an automated multicollinearity filtering method devised to preserve as many *relevant* predictors as possible. This principle helps balance multicollinearity reduction with predictive power retention.
+
+This feature is implemented in [collinear()], [collinear_select()], [vif_select()] and [cor_select()] via the argument `preference_order`. This argument allows representing predictor relevance in three ways:
+
+  - **Expert Mode**: Vector of predictor names ordered from left to right according to the user's preference. This option helps `collinear` get domain expertise into account, and lets the user focus on specific predictors.
+  
+  - **Intelligent Predictor Ranking**: This functionality, implemented in [preference_order()], prioritizes predictors by their univariate association with the response to ensure that the most relevant ones are retained during multicollinearity filtering. This option maximizes the predictive power of the filtered predictors.
+  
+  - **Naive Option**: If none of the options above are used, `collinear` ranks predictors from lower to higher collinearity with all other predictors. This option preserves the less redundant predictors, but it might not lead to robust models.
+  
+These options are explained in detail in the following sections.
+  
+## Expert Mode
+
+Let's consider a little hypothetical. 
+
+The user has dataframe `x` with three variables `a`, `b` and `c`, and domain knowledge indicating that `a` and `b` are key and should be preserved when possible. Then, the user calls `collinear()` as follows:
+
+```{r, eval = FALSE}
+y <- collinear::collinear(
+  df = x,
+  predictors = c("a", "b", "c"),
+  preference_order = c("a", "b"),
+  max_cor = 0.5
+)
+```
+
+Notice that the argument `responses` is missing: this option ignores it, making a response variable entirely optional.
+
+What happens from here?:
+  
+  - `"a"`: Selected.
+  - `"b"`: Selected if its correlation with `"a"` is <= 0.5, and filtered away otherwise.
+  - `"c"`: Selected if its maximum correlation with `"a"` and `"b"` is <= 0.5, and filtered away otherwise.
+  
+In summary, the first predictor in `preference_order` is always selected, and the other ones are selected or rejected conditionally on their collinearity with the already selected ones.
+
+In case you wonder: `predictors` not in `preference_order` are ranked from lower to higher collinearity among themselves, and added in such order to the preference vector.
+
+Let's take a look at a more tangible case now. The code below calls `collinear()` on the dataset `vi_smol`, which contains a numeric response `vi_numeric` (values of a vegetation index) and a bunch of numeric predictors named in the vector `vi_predictors_numeric`.
+
+```{r}
+library(collinear)
+
+data(vi_smol, vi_predictors_numeric)
+
+vi_predictors_numeric
+```
+
+Let's say we'd like to focus our analysis in the limiting role of the soil water content (variables `swi_xxx`, from soil water index) in controlling `vi_numeric`. In such case, we can call `collinear()` as follows:
+  
+```{r}
+y <- collinear::collinear(
+  df = vi_smol,
+  response = "vi_numeric",
+  predictors = vi_predictors_numeric,
+  preference_order = c(
+    "swi_min",
+    "swi_max",
+    "swi_mean",
+    "swi_range"
+  ),
+  max_cor = 0.5,
+  max_vif = 2.5,
+  quiet = TRUE
+)
+
+y$vi_numeric$selection
+```
+
+Notice how `swi_min` and `swi_range` are selected, but `swi_max` and `swi_mean` are removed because they are collinear with `swi_min`. As said before, all predictors not in `preference_order` were ranked from lower to higher mutual collinearity.
+
+Now we can quickly fit a quick exploratory model, and save the R-squared for later.
+
+```{r}
+m1 <- stats::lm(
+  formula = y$vi_numeric$formulas$linear,
+  data = y$vi_numeric$df
+) |> 
+  summary()
+
+m1
+```
+
+## Intelligent Predictor Ranking
+
+Let's go back to our little hypothetical with the dataframe `x`, and the three variables `a`, `b` and `c`. But this time we also have a response `y`, and a user with not as much domain knowledge as they'd like (it happens, I've seen it).
+
+In this case, `collinear` first fits the univariate models `y ~ a`, `y ~ b`, and `y ~ c`, computes the R-squared between observations and model predictions, and ranks the predictors from best to worse according to this metric.
+
+This functionality is implemented in the function [preference_order()], which can take advantage of a parallelization backend to speed-up operations. Let's take a look at how it works, step by step. Let me start with the simplest approach.
+
+```{r}
+library(future)
+
+future::plan(
+  future::multisession,
+  workers = future::availableCores() - 1
+  )
+
+x <- collinear::preference_order(
+  df = vi_smol,
+  responses = "vi_numeric",
+  predictors = vi_predictors_numeric,
+  quiet = TRUE
+)
+```
+
+```{r, echo = FALSE}
+DT::datatable(x)
+```
+
+The function returns a dataframe with the predictors ordered from better to worse modelling performance against the response. The column `f` indicates the name of the function used to fit the univariate models, [f_numeric_glm()] in this case. This function has been selected automatically because the argument `f` of `preference_order()` is set to [f_auto()] by default. This function looks at the types of the responses and predictors, and select one of the functions in returned by [f_functions()] to perform the operation. 
+
+Let's talk more about that later, but for now, we can plug the preference order dataframe directly into `collinear()`.
+
+```{r}
+y <- collinear::collinear(
+  df = vi_smol,
+  response = "vi_numeric",
+  predictors = vi_predictors_numeric,
+  preference_order = x,
+  max_cor = 0.5,
+  max_vif = 2.5,
+  quiet = TRUE
+)
+
+y$vi_numeric$selection
+```
+
+Again, we can use the `collinear()` output to fit a little model.
+
+```{r}
+m2 <- stats::lm(
+  formula = y$vi_numeric$formulas$linear,
+  data = y$vi_numeric$df
+) |> 
+  summary()
+
+m2
+```
+
+If we compare the R-squared of the two models we have created so far, we can see that [preference_order()] helps balance aggressive multicollinearity filtering and robust modelling outcomes.
+
+```{r}
+m1$r.squared
+m2$r.squared
+```
+
+Let's go back to what [f_auto()] does for a moment. This function looks at the input data to assess the type of the response and the predictors, and then looks at the dataframe below to choose a function.
+
+```{r, eval = FALSE}
+collinear::f_auto_rules()
+```
+
+```{r, echo = FALSE}
+collinear::f_auto_rules() |> 
+  DT::datatable()
+```
+You can see it in action across different settings below.
+
+```{r}
+collinear::f_auto(
+  df = vi_smol,
+  response = "vi_categorical",
+  predictors = vi_predictors_categorical,
+  quiet = TRUE
+)
+```
+
+```{r}
+collinear::f_auto(
+  df = vi_smol,
+  response = "vi_binomial", #ones and zeros
+  predictors = vi_predictors_numeric,
+  quiet = TRUE
+)
+```
+
+```{r}
+collinear::f_auto(
+  df = vi_smol,
+  response = "vi_counts", #integer counts
+  predictors = vi_predictors_numeric,
+  quiet = TRUE
+)
+```
+
+```{r}
+collinear::f_auto(
+  df = vi_smol,
+  response = "vi_counts",
+  predictors = vi_predictors, #numeric and categorical
+  quiet = TRUE
+)
+```
+
+
+All `f_...()` functions available for usage in `preference_order()` are listed in the dataframe returned by [f_functions()].
+
+```{r, eval = FALSE}
+collinear::f_functions()
+```
+
+```{r, echo = FALSE}
+collinear::f_functions() |> 
+  DT::datatable()
+```
+
+Once you know your way around these functions, you can choose the one you prefer for your case. For example, below we replace `f_auto` with `f_numeric_gam` to fit univariate GAM models.
+
+```{r}
+x <- collinear::preference_order(
+  df = vi_smol,
+  responses = "vi_numeric",
+  predictors = vi_predictors_numeric,
+  f = f_numeric_gam,
+  quiet = TRUE
+)
+```
+
+```{r, echo = FALSE}
+DT::datatable(x)
+```
+
+
+A gentle reminder to finish this section: `collinear()` runs `preference_order()` internally when `preference_order`is NULL and the argument `f` receives a valid function. And like `preference_order()`, it can use cross-validation to assess the association between response and predictor in a more robust manner.
+
+```{r}
+y <- collinear::collinear(
+  df = vi_smol,
+  response = "vi_numeric",
+  predictors = vi_predictors_numeric,
+  preference_order = NULL,
+  f = f_numeric_glm,
+  quiet = FALSE,
+  cv_iterations = 100, #number of repetitions
+  cv_training_fraction = 0.5 #50% rows of vi_smol
+)
+```
+
+The output of `preference_order()` is returned by `collinear()`.
+
+```{r, eval = FALSE}
+y$vi_numeric$preference_order
+```
+
+```{r, echo = FALSE}
+y$vi_numeric$preference_order |> 
+  DT::datatable()
+```
+
+## Naive Option
+
+For this final option, our hypothetical user does not care about what I have written above, and sets `f = NULL` in `preference_order()`. 
+
+In this scenario, `preference_order()` computes the pairwise correlation between all pairs of predictors `a`, `b`, and `c` with [cor_matrix()], and sums the correlations of each predictor with all others. Finally, it ranks the predictors from lowest to highest sum of correlations. 
+
+This option gives preference to those predictors that contain more *exclusive* information, but in exchange, might not lead to robust models.
+
+```{r}
+x <- collinear::preference_order(
+  df = vi_smol,
+  responses = "vi_numeric",
+  predictors = vi_predictors_numeric,
+  f = NULL
+)
+```
+The output shows a column `score` computed as 1 minus the sum of correlations, as indicated in the column `metric`.
+
+```{r, echo = FALSE}
+x |> 
+  DT::datatable()
+```
+
+Let's use this ranking in `collinear()` to then fit a linear model.
+
+```{r}
+y <- collinear::collinear(
+  df = vi_smol,
+  responses = "vi_numeric",
+  predictors = vi_predictors_numeric,
+  preference_order = x,
+  max_cor = 0.5,
+  max_vif = 2.5,
+  quiet = TRUE
+)
+
+m3 <- stats::lm(
+  formula = y$vi_numeric$formulas$linear,
+  data = y$vi_numeric$df
+) |> 
+  summary()
+```
+
+And finally, an informal comparison between the three preference order methods described in this article.
+
+```{r}
+#expert mode: focused on specific variables (swi_...)
+m1$r.squared
+```
+```{r}
+#intelligent predictor ranking: optimized for prediction
+m2$r.squared
+```
+```{r}
+#naive option: minimizes redundancy, not optimized for prediction
+m3$r.squared
+```
+Please, take in mind that these R-squared values are just coarse indicators of model robustness, and should not be interpreted as proof that one method is better than any other.
+
+```{r cleanup, include=FALSE}
+future::plan(future::sequential)
+```

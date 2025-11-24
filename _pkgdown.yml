@@ -19,7 +19,7 @@ articles:
 - title: "Tutorials"
   navbar: "Tutorials"
   contents:
-  - articles/how_it_works
+  - articles/target_encoding
 
 - title: "Blog Posts"
   navbar: "Blog Posts"
