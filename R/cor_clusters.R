@@ -66,7 +66,7 @@
 cor_clusters <- function(
     df = NULL,
     predictors = NULL,
-    max_cor = 0.75,
+    max_cor = 0.7,
     method = "complete",
     quiet = FALSE,
     ...

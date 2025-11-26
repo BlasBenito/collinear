@@ -19,110 +19,295 @@ knitr::opts_chunk$set(
 
 ## Summary
 
-The `collinear` package automatically configures multicollinearity filtering thresholds when users don't specify them explicitly. This adaptive approach:
+The function [collinear()] configures multicollinearity filtering thresholds automatically when users don't specify them explicitly. This adaptive approach eliminates the guesswork of choosing values for the `max_cor`and `max_vif` arguments, and adapts filtering strength to the correlation structure of the data.
 
-- Eliminates the guesswork of choosing appropriate `max_cor` and `max_vif` values
-- Adapts to each dataset's correlation structure
-- Ensures alignment between correlation and VIF thresholds
-- Maintains a minimum filtering level even for datasets with low multicollinearity
+This article explains how the automatic threshold configuration works, and describes the experiments used to tune it.
 
-This article explains how the automatic threshold configuration works and when to use it versus manual configuration.
+## Setup
 
-## Required Libraries
+For this article we need the following packages and configuration. Notice the vector `predictors_high_collinearity` with a subset of `vi_predictors_numeric` with a very high collinearity.
 
-```{r}
+```{r, message = FALSE, warning = FALSE, results = "hide"}
 library(collinear)
+library(future)
 library(ggplot2)
-```
+library(patchwork)
 
-## How Automatic Configuration Works
-
-When both `max_cor` and `max_vif` are `NULL` (the default), `collinear()` follows a three-step process:
-
-### Step 1: Assess Dataset Multicollinearity
-
-The function computes the correlation matrix and its statistics:
-
-```{r, include = FALSE}
-data(vi_smol, vi_predictors)
-```
-
-```{r}
-# Compute correlation statistics
-cor_statistics <- collinear::cor_stats(
-  df = vi_smol,
-  predictors = vi_predictors,
-  quiet = TRUE
+#parallelization setup
+#only useful for categorical predictors
+future::plan(
+  future::multisession,
+  workers = future::availableCores() - 1
 )
 
-cor_statistics
+#progress bar (does not work in Rmarkdown)
+#progressr::handlers(global = TRUE)
+
+#example data
+data(vi_smol, vi_predictors_numeric)
+
+#highly correlated predictors
+predictors_high_collinearity <- c(
+  "evapotranspiration_min", 
+  "growing_degree_days", 
+  "growing_season_temperature", 
+  "soil_temperature_mean", 
+  "soil_temperature_min", 
+  "solar_rad_min", 
+  "solar_rad_range", 
+  "temperature_mean", 
+  "temperature_min" 
+)
 ```
 
-The median correlation provides a robust indicator of the overall multicollinearity level in the dataset.
 
-### Step 2: Configure max_cor
+## Adaptive Threshold Selection
 
-The `max_cor` threshold is set as:
+The arguments `max_cor` and `max_vif` define the maximum pairwise correlation and variance inflation factors allowed during multicollinearity filtering. 
 
-```r
-max_cor <- max(0.58, round(median_correlation, 2))
-```
+Unlike `collinear_select()`, `cor_select()`, and `vif_select()`, which use fixed defaults (`max_cor = 0.7`, `max_vif = 5`), the function `collinear()` sets these to NULL and computes appropriate thresholds from the data.
 
-This formula ensures:
+Let me show you why.
 
-- **Data-driven**: Uses the dataset's median correlation as baseline
-- **Minimum threshold**: The floor of 0.58 (approximately matching VIF = 2.5) prevents overly permissive filtering
-- **Rounded**: Two decimal places for interpretability
-
-Let's see this in action:
+The vector `predictors_high_collinearity` names predictors with a high multicollinearity, as the stats below show.
 
 ```{r}
-# Extract median correlation
-median_cor <- cor_statistics[
-  cor_statistics$statistic == "median",
-  "value"
-]
-
-# Compute max_cor as collinear() does
-max_cor_auto <- max(0.58, round(median_cor, 2))
-
-cat("Median correlation:", median_cor, "\n")
-cat("Automatic max_cor:", max_cor_auto, "\n")
+collinear::collinear_stats(
+  df = vi_smol,
+  predictors = predictors_high_collinearity
+) |> 
+  dplyr::filter(
+    statistic %in% c("median", "maximum")
+  )
 ```
-
-### Step 3: Configure max_vif
-
-Once `max_cor` is determined, `max_vif` is computed using a pre-trained GAM model that establishes the equivalence between correlation and VIF thresholds:
+We can run them through `collinear()`.
 
 ```{r}
-# Predict matching VIF threshold
-max_vif_auto <- mgcv::predict.gam(
+x <- collinear::collinear(
+  df = vi_smol,
+  predictors = predictors_high_collinearity
+)
+```
+
+The first two messages above indicate the values of `max_cor` and `max_vif` selected by `collinear()` based on the data properties. The last message indicates the predictors selected in this run. Their stats are shown below.
+
+```{r}
+collinear::collinear_stats(
+  df = x$result$df,
+  predictors = x$result$selection
+) |> 
+  dplyr::filter(
+    statistic %in% c("median", "maximum")
+  )
+```
+These stats show a high median correlation but reasonable VIF scores.
+
+Let's repeat this experiment, but pretending that `collinear()` has the default values `max_cor = 0.7` and `max_vif = 5` (same as [collinear_select()]).
+
+```{r}
+x <- collinear::collinear(
+  df = vi_smol,
+  predictors = predictors_high_collinearity,
+  max_cor = 0.7,
+  max_vif = 5
+)
+
+collinear::collinear_stats(
+  df = x$result$df,
+  predictors = x$result$selection
+) |> 
+  dplyr::filter(
+    statistic %in% c("median", "maximum")
+  )
+```
+
+Notice how this time `collinear()` returns 2 predictors (instead of 4) with a very low VIF.
+
+Arguably, in this case `collinear()` has *over-filtered* the predictors, which might be statistically correct but is not practical for many use cases. 
+
+By adapting thresholds to each dataset's structure, `collinear()` provides sensible defaults while still allowing manual override when needed.
+
+## Effectiveness
+
+To assess the effectiveness of this adaptive threshold selection method I ran `collinear()` on 10.000 random subsets of a large dataset (250 columns and 30k rows).
+
+The results of this simulation are in the dataframe [experiment_adaptive_thresholds]. It contains the input  data size, the number of predictors selected by `collinear()`, and the collinearity stats before and after the multicollinearity filtering.
+
+```{r, echo = FALSE}
+experiment_adaptive_thresholds <- experiment_adaptive_thresholds |> 
+  dplyr::mutate(
+    cor_median_diff = input_cor_median - output_cor_median,
+    vif_max_diff = input_vif_max - output_vif_max
+  )
+
+cor_plot <- experiment_adaptive_thresholds |> 
+  ggplot2::ggplot() + 
+  ggplot2::aes(
+    x = input_cor_median,
+    y = output_cor_median,
+    color = output_vif_max
+  ) + 
+  ggplot2::geom_point(alpha = 0.5) + 
+  ggplot2::geom_abline(slope = 1) + 
+  ggplot2::scale_color_viridis_c(option = "turbo") + 
+  ggplot2::coord_fixed(
+    xlim = c(0, 0.65), 
+    ylim = c(0, 0.65)
+    ) + 
+  ggplot2::labs(
+    title = "Input vs. Output Median Correlation",
+    x = "Input Median Correlation",
+    y = "Output Median Correlation",
+    color = "Output\nmax VIF"
+  ) + 
+  ggplot2::theme_bw()
+
+preds_plot <- experiment_adaptive_thresholds |> 
+  ggplot2::ggplot() + 
+  ggplot2::aes(
+    x = input_predictors,
+    y = output_predictors,
+    color = output_vif_max
+  ) + 
+  ggplot2::geom_point(alpha = 0.5) + 
+  ggplot2::geom_abline(slope = 1) + 
+  ggplot2::scale_color_viridis_c(option = "turbo") + 
+  ggplot2::labs(
+    title = "Input Predictors vs. Selected Predictors",
+    x = "Input Predictors",
+    y = "Selected Predictors",
+    color = "Output\nmax VIF"
+  ) + 
+  ggplot2::theme_bw()
+
+cor_plot | preds_plot
+```
+The simulation results shows that the adaptive threshold selection works well in most use cases. Only in one case out the resulting selection had a maximum VIF higher than 2.5, and only `r (sum(experiment_adaptive_thresholds$cor_median_diff <= 0)/nrow(experiment_adaptive_thresholds))/100`% of the instances (cases over the diagonal in the lower-left corner of the scatterplot) the system produced suboptimal results.
+
+
+## Step By Step
+
+The adaptive filtering of multicollinearity thresholds requires three steps:
+
+1. Computation of the median correlation of the input predictors via [cor_stats()].
+
+```{r}
+cor_median <- collinear::cor_stats(
+  df = vi_smol,
+  predictors = predictors_high_collinearity,
+  quiet = TRUE
+) |> 
+  dplyr::filter(statistic == "median") |> 
+  dplyr::pull(value)
+
+cor_median
+```
+
+2. Selection of the maximum between 0.58 and the median correlation as `max_cor`.
+
+```{r}
+max_cor <- max(0.58, cor_median)
+
+max_cor
+```
+
+3. The pre-trained GAM model [gam_cor_to_vif] predicts a suitable `max_vif` from the given `max_cor`. 
+
+```{r}
+max_vif <- mgcv::predict.gam(
   object = collinear::gam_cor_to_vif,
-  newdata = data.frame(max_cor = max_cor_auto)
-) |>
-  round(2)
+  newdata = data.frame(max_cor = max_cor)
+) 
 
-cat("Automatic max_vif:", max_vif_auto, "\n")
+max_vif
 ```
 
-This ensures that the correlation and VIF filtering strategies are aligned and complementary.
+Steps 1 and 2 are quite clear, but... where is the model used in step 3 coming from? 
 
-## The Correlation-VIF Equivalence Model
+This model was trained on data resulting from a simulation that:
 
-The relationship between `max_cor` and `max_vif` is based on extensive simulations stored in the dataset `experiment_cor_vs_vif`. The GAM model `gam_cor_to_vif` captures this relationship:
+ - Generated random subset of a larger numeric dataset (250 columns and 30k rows).
+ - Applied [cor_select()] to the with `max_cor` value selected at random from a uniform distribution.
+ - Applied [vif_select()] with increasing `max_vif` values until finding a predictor selection with the highest Jaccard similarity to the one resulting from [cor_select()].
+ 
+The input `max_cor`, and the `max_vif` leading to a higher selection similarity were stored in the dataframe [experiment_cor_vs_vif], with `r (nrow(collinear::experiment_cor_vs_vif))` rows.
+
+This dataframe was used to fit the model below. Notice how the `weights` argument is adjusted to the cubic transformation of the Jaccard scores to give more relevance to the cases with higher similarity between predictor selections.
+
+```{r}
+m <- mgcv::gam(
+  formula = output_max_vif ~ s(input_max_cor, k = 9),
+  weights = experiment_cor_vs_vif$jaccard_cor_vs_vif_selection^3,
+  data = experiment_cor_vs_vif,
+  select = TRUE
+)
+
+summary(m)
+```
+
+```{r}
+collinear::experiment_cor_vs_vif |> 
+  dplyr::arrange(
+    jaccard_cor_vs_vif_selection
+  ) |> 
+ggplot2::ggplot() + 
+  ggplot2::aes(
+    x = input_max_cor,
+    y = output_max_vif,
+    color = jaccard_cor_vs_vif_selection,
+    weight = jaccard_cor_vs_vif_selection^3
+  ) + 
+  ggplot2::geom_point(alpha = 0.5) + 
+  ggplot2::geom_smooth(
+    method = "gam",
+    formula = y ~ s(x, k = 9),
+    method.args = list(
+      select = TRUE
+    ),
+    color = "black",
+    se = TRUE
+  ) +
+  ggplot2::scale_color_viridis_c(
+    option = "turbo", 
+    direction = 1
+    ) + 
+  ggplot2::labs(
+    title = "Experiment Pearson Correlation vs. VIF",
+    x = "Input max_cor",
+    y = "max_vif leading to most similar selection",
+    color = "Jaccard\nsimilarity\nbetween\nselections"
+  ) + 
+  ggplot2::theme_bw()
+```
+
+
+
+
+```{r}
+m <- mgcv::gam(
+  formula = output_max_vif ~ s(input_max_cor, k = 9),
+  weights = experiment_cor_vs_vif$jaccard_cor_vs_vif_selection^3,
+  data = experiment_cor_vs_vif,
+  select = TRUE
+)
+
+summary(m)
+```
+
 
 ```{r, fig.width=7, fig.height=5}
 # Load the equivalence data
 data(equivalence_cor_vif)
 
 # Visualize the relationship
-ggplot2::ggplot(equivalence_cor_vif) +
+ggplot2::ggplot(experiment_cor_vs_vif) +
   ggplot2::aes(x = max_cor, y = max_vif) +
+  ggplot2::geom_point(color = "gray50") +
   ggplot2::geom_line(color = "steelblue", linewidth = 1) +
   ggplot2::geom_point(
     data = data.frame(
-      max_cor = max_cor_auto,
-      max_vif = max_vif_auto
+      max_cor = max_cor,
+      max_vif = max_vif
     ),
     color = "red",
     size = 3

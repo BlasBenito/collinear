@@ -112,7 +112,7 @@
 #'   \item{input_max_cor}{Maximum allowed pairwise correlation supplied to [cor_select()].}
 #'   \item{output_max_vif}{Smallest VIF threshold at which [vif_select()] produced the most similar to [cor_select()] for the given \code{input_max_cor}.}
 #'   \item{out_selection_length}{Number of variables returned from the multicollinearity filtering.}
-#'   \item{jaccard_cor_vs_vif_selection}{Jaccard similarity between the predictors selected [cor_select()] and [vif_select()].}
+#'   \item{selection_similarity}{Jaccard similarity between the predictors selected [cor_select()] and [vif_select()].}
 #' }
 #'
 #' @examples
@@ -121,9 +121,9 @@
 "experiment_cor_vs_vif"
 
 
-#' Testing Capabilities of [collinear()] to Auto Configure \code{max_cor} and \code{max_vif}
+#' Testing the Adaptive Thresholds Selection Method Implemented in [collinear()]
 #'
-#' A dataframe with 10,000 experiment to test the capability of [collinear()] to automatically reduce multicollinearity when \code{max_cor} and \code{max_vif} are NULL.
+#' A dataframe with 10,000 experiment to test the efficacy of the adaptive multicollinearity threshold used by [collinear()] when \code{max_cor} and \code{max_vif} are NULL.
 #'
 #' The source data is [vi] plus 200 synthetic columns, for a total of 249 columns and 30.000 rows that are randomly subset on each iteration.
 #'
@@ -139,9 +139,9 @@
 #' }
 #'
 #' @examples
-#' data(experiment_collinear_auto)
-#' str(experiment_collinear_auto)
-"experiment_collinear_auto"
+#' data(experiment_adaptive_thresholds)
+#' str(experiment_adaptive_thresholds)
+"experiment_adaptive_thresholds"
 
 #' GAM Relating Maximum Correlation to VIF Threshold
 #'
@@ -190,7 +190,7 @@
 #' }
 #'
 #' @examples
-#' data(equivalence_cor_vif)
-#' head(equivalence_cor_vif)
-#' plot(max_vif ~ max_cor, data = equivalence_cor_vif, type = "l")
-"equivalence_cor_vif"
+#' data(prediction_cor_to_vif)
+#' head(prediction_cor_to_vif)
+#' plot(max_vif ~ max_cor, data = prediction_cor_to_vif, type = "l")
+"prediction_cor_to_vif"

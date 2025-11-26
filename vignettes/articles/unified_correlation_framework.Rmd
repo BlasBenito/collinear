@@ -28,19 +28,14 @@ The function `cor_df()` combines several methods to compute pairwise association
 
 This article provides fine-grained details on this functionality and describes the caveats of combining Pearson correlation and Cramer's V when the cardinality of categorical predictors is high.
 
-## Required Libraries
-```{r}
+## Setup
+
+This article requires the following setup Don't miss the object `predictors` and the variables it contains, as most of the explanatory code herein will be focusing on these.
+
+```{r, message = FALSE, warning = FALSE, include = FALSE}
 library(collinear)
+library(future)
 library(ggplot2)
-```
-
-## Understanding `cor_df()`
-
-This section explains in detail how `cor_df()` handles the computation of associations between different variable types.
-
-Let's start by setting up the session and loading the example data.
-```{r packages, message = FALSE, warning = FALSE, include = FALSE}
-library(collinear)
 
 #parallelization setup
 #only useful for categorical predictors
@@ -64,7 +59,12 @@ predictors <- c(
 )
 ```
 
+## Understanding `cor_df()`
+
+This section explains in detail how `cor_df()` handles the computation of associations between different variable types.
+
 When we apply `cor_df()` to a dataframe and a vector of predictors, it returns a dataframe with the Pearson or Cramer's V association between all unique pairs of predictors.
+
 ```{r, warning = FALSE}
 x <- collinear::cor_df(
   df = vi_smol,
@@ -82,6 +82,7 @@ Let's examine how the function handles different predictor types.
 This is the simplest and most reliable case `cor_df()` handles, as absolute pairwise Pearson correlations are computed with the very fast `stats::cor()`. 
 
 The parallelization setup is ignored in this case.
+
 ```{r}
 predictors_numeric <- collinear::identify_numeric_variables(
   df = vi_smol,
@@ -99,6 +100,7 @@ stats::cor(
 ### Numeric vs. Categorical
 
 To handle this situation, `cor_df()` first applies target encoding to the categorical predictor using the numeric variable as reference, then applies `stats::cor()` to compute the absolute Pearson correlation.
+
 ```{r}
 #transform koppen_zone to numeric
 df <- target_encoding_lab(
@@ -122,6 +124,7 @@ stats::cor(
 ### Categorical vs. Categorical
 
 This case is solved via bias-corrected [Cramer's V](https://en.wikipedia.org/wiki/Cram%C3%A9r%27s_V), based on Pearson's chi-squared statistic. This method is implemented in the function `cor_cramer()`.
+
 ```{r}
 collinear::cor_cramer(
   x = vi_smol[["koppen_zone"]],
@@ -133,7 +136,8 @@ collinear::cor_cramer(
 
 Now that you know how `cor_df()` handles different cases, there is an important question to answer: *Are Cramer's V and Pearson correlation comparable?*
 
-Let's try to answer that question empirically with a small simulation. It generates integer vectors with different cardinality levels and compares them using both `stats::cor()` and `collinear::cor_cramer()`. 
+Let's try to answer that question empirically with a small simulation. It generates integer vectors with different cardinality levels and compares them using both `stats::cor()` and `collinear::cor_cramer()`.
+
 ```{r}
 set.seed(1)
 
@@ -163,6 +167,7 @@ for(i in seq_len(nrow(sim))) {
 ```
 
 The scatterplot below shows the simulation results across cardinality levels, with linear smooths for each group.
+
 ```{r, fig.width=7, fig.height=5}
 library(ggplot2)
 
@@ -196,6 +201,7 @@ Moreover, Cramer's V tends to produce smaller values than Pearson's correlation.
 To make users aware of this issue, the function returns either a message or a warning.
 
 The message appears when there are at least two categorical and one numeric predictor and `quiet = FALSE`.
+
 ```{r, echo = FALSE}
 vi_smol <- collinear::validate_arg_df(
   df = vi_smol,
@@ -212,6 +218,7 @@ x <- collinear::cor_df(
 ```
 
 The warning appears when `quiet = TRUE`.
+
 ```{r}
 x <- collinear::cor_df(
   df = vi_smol,
@@ -229,9 +236,10 @@ Based on the analysis above, here are practical recommendations:
 2. **For mixed predictors with low-cardinality categoricals**: `cor_df()` works well as-is, though be aware of slight underestimation in Cramer's V values.
 
 3. **For high-cardinality categoricals**:
-   - Consider using `target_encoding_lab()` to convert them to numeric before analysis
-   - Alternatively, use `collinear()` with `encoding_method = "loo"`, which handles this automatically
-   - This provides more reliable multicollinearity assessment
+   - Consider using `target_encoding_lab()` to convert them to numeric before analysis.
+   - Alternatively, use `collinear()` with `encoding_method = "loo"`, which handles this automatically.
+   - This provides more reliable multicollinearity assessment.
+   
 ```{r cleanup, include=FALSE}
 future::plan(future::sequential)
 ```

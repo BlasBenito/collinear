@@ -13,7 +13,7 @@ A dataframe with 9354 rows and 6 variables:
 \item{input_max_cor}{Maximum allowed pairwise correlation supplied to \code{\link[=cor_select]{cor_select()}}.}
 \item{output_max_vif}{Smallest VIF threshold at which \code{\link[=vif_select]{vif_select()}} produced the most similar to \code{\link[=cor_select]{cor_select()}} for the given \code{input_max_cor}.}
 \item{out_selection_length}{Number of variables returned from the multicollinearity filtering.}
-\item{jaccard_cor_vs_vif_selection}{Jaccard similarity between the predictors selected \code{\link[=cor_select]{cor_select()}} and \code{\link[=vif_select]{vif_select()}}.}
+\item{selection_similarity}{Jaccard similarity between the predictors selected \code{\link[=cor_select]{cor_select()}} and \code{\link[=vif_select]{vif_select()}}.}
 }
 }
 \usage{

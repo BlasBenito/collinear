@@ -11,7 +11,7 @@ score_auc(o = NULL, p = NULL, ...)
 
 \item{p}{(required, numeric vector) Prediction of binomial model in the range 0-1. Default: NULL}
 
-\item{...}{(optional) Used to pass internal arguments such as \code{function_name} for \link{validate_arg_function_name} in nested calls, or \code{m}, a correlation matrix generated via \code{\link[stats:cor]{stats::cor()}} or \code{\link[=cor_matrix]{cor_matrix()}}.}
+\item{...}{(optional) Used to pass internal arguments such as \code{function_name} for \link{validate_arg_function_name} in nested calls, or \code{m}, a correlation matrix generated via \code{\link[stats:cor]{stats::cor()}} or \code{\link[=cor_matrix]{cor_matrix()}}, and the cross-validation arguments of \code{\link[=preference_order]{preference_order()}}: \code{cv_iterations}, and \code{cv_training_fraction}.}
 }
 \value{
 numeric: Area Under the ROC Curve

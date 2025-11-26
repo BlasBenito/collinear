@@ -26,8 +26,30 @@ This functionality, implemented in [target_encoding_lab()], is used in two diffe
   - [cor_df()] applies it to compute pairwise correlations between numeric and categorical predictors, if any.
   - [collinear()] applies it optionally if the user requests it and the response is numeric to transform all categorical predictors to numeric and speed-up the multicollinearity analysis.
 
+## Setup
 
-## Target Encoding
+The code chunk below prepares the session for this article. 
+
+```{r, message = FALSE, warning = FALSE, include = FALSE}
+library(collinear)
+library(future)
+library(dplyr)
+
+#parallelization setup
+#only useful for categorical predictors
+future::plan(
+  future::multisession,
+  workers = future::availableCores() - 1
+)
+
+#progress bar (does not work in Rmarkdown)
+#progressr::handlers(global = TRUE)
+
+#example data
+data(vi_smol, vi_predictors_categorical)
+```
+
+## How It Works
 
 To explain how target encoding works, let's first create a little silly dataframe:
 
@@ -56,8 +78,6 @@ df
 This is equivalent to the "mean" encoding method implemented in `target_encoding_lab()`.
 
 ```{r}
-library(collinear)
-
 df <- collinear::target_encoding_lab(
   df = df,
   response = "num",
@@ -153,8 +173,6 @@ df
 When computing pairwise correlations between numeric and categorical predictors, [cor_df()] automatically applies leave-one-out target encoding behind the scenes. 
 
 ```{r}
-data(vi_smol)
-
 x <- collinear::cor_df(
   df = collinear::vi_smol,
   predictors = c(
@@ -171,7 +189,7 @@ This is the same as applying `target_encoding_lab()` with method `"loo"` and the
 
 ```{r}
 df <- collinear::target_encoding_lab(
-  df = collinear::vi_smol,
+  df = vi_smol,
   response = "soil_temperature_mean",
   predictor = "koppen_zone",
   encoding_method = "loo",
@@ -193,9 +211,9 @@ Enabling target encoding when working with numeric responses and categorical pre
 # without target encoding
 time_without <- system.time({
   result_without_encoding <- collinear::collinear(
-    df = collinear::vi_smol,
+    df = vi_smol,
     responses = "vi_numeric",
-    predictors = collinear::vi_predictors_categorical,
+    predictors = vi_predictors_categorical,
     encoding_method = NULL,
     quiet = TRUE
   )
@@ -204,9 +222,9 @@ time_without <- system.time({
 # with target encoding
 time_with <- system.time({
   result_with_encoding <- collinear::collinear(
-    df = collinear::vi_smol,
+    df = vi_smol,
     responses = "vi_numeric",
-    predictors = collinear::vi_predictors_categorical,
+    predictors = vi_predictors_categorical,
     encoding_method = "loo",
     quiet = TRUE
   )
@@ -239,3 +257,7 @@ Hence, when target encoding is applied, `collinear()` captures true multicolline
 **Category Frequency**: Target encoding works best with categories that have sufficient observations. Categories with very few observations may produce unstable encoded values.
 
 **When to Use Target Encoding**: Enable `encoding_method = "loo"` in `collinear()` when you have a numeric response and categorical predictors, and you want the most accurate multicollinearity assessment. The improved statistical soundness and computational speed make it the preferred approach for mixed data types.
+
+```{r cleanup, include=FALSE}
+future::plan(future::sequential)
+```

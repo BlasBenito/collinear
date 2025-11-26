@@ -15,8 +15,6 @@ knitr::opts_chunk$set(
   fig.path = "man/figures/README-",
   out.width = "100%"
 )
-
-library(DT)
 ```
 
 ## Summary
@@ -32,6 +30,30 @@ This feature is implemented in [collinear()], [collinear_select()], [vif_select(
   - **Naive Option**: If none of the options above are used, `collinear` ranks predictors from lower to higher collinearity with all other predictors. This option preserves the less redundant predictors, but it might not lead to robust models.
   
 These options are explained in detail in the following sections.
+
+## Setup
+
+This article requires the following setup.
+
+```{r, message = FALSE, warning = FALSE, include = FALSE}
+library(collinear)
+library(future)
+library(DT)
+library(ggplot2)
+
+#parallelization setup
+#only useful for categorical predictors
+future::plan(
+  future::multisession,
+  workers = future::availableCores() - 1
+)
+
+#progress bar (does not work in Rmarkdown)
+#progressr::handlers(global = TRUE)
+
+#example data
+data(vi_smol, vi_predictors_numeric)
+```
   
 ## Expert Mode
 
@@ -61,14 +83,6 @@ In summary, the first predictor in `preference_order` is always selected, and th
 In case you wonder: `predictors` not in `preference_order` are ranked from lower to higher collinearity among themselves, and added in such order to the preference vector.
 
 Let's take a look at a more tangible case now. The code below calls `collinear()` on the dataset `vi_smol`, which contains a numeric response `vi_numeric` (values of a vegetation index) and a bunch of numeric predictors named in the vector `vi_predictors_numeric`.
-
-```{r}
-library(collinear)
-
-data(vi_smol, vi_predictors_numeric)
-
-vi_predictors_numeric
-```
 
 Let's say we'd like to focus our analysis in the limiting role of the soil water content (variables `swi_xxx`, from soil water index) in controlling `vi_numeric`. In such case, we can call `collinear()` as follows:
   
@@ -111,16 +125,11 @@ Let's go back to our little hypothetical with the dataframe `x`, and the three v
 
 In this case, `collinear` first fits the univariate models `y ~ a`, `y ~ b`, and `y ~ c`, computes the R-squared between observations and model predictions, and ranks the predictors from best to worse according to this metric.
 
-This functionality is implemented in the function [preference_order()], which can take advantage of a parallelization backend to speed-up operations. Let's take a look at how it works, step by step. Let me start with the simplest approach.
+This functionality is implemented in the function [preference_order()], which can take advantage of a parallelization backend to speed-up operations. 
+
+Let's take a look at how it works, step by step. Let me start with the simplest approach.
 
 ```{r}
-library(future)
-
-future::plan(
-  future::multisession,
-  workers = future::availableCores() - 1
-  )
-
 x <- collinear::preference_order(
   df = vi_smol,
   responses = "vi_numeric",
@@ -289,11 +298,11 @@ x <- collinear::preference_order(
   f = NULL
 )
 ```
+
 The output shows a column `score` computed as 1 minus the sum of correlations, as indicated in the column `metric`.
 
 ```{r, echo = FALSE}
-x |> 
-  DT::datatable()
+DT::datatable(x)
 ```
 
 Let's use this ranking in `collinear()` to then fit a linear model.
