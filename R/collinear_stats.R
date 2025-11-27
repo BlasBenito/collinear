@@ -44,7 +44,7 @@ collinear_stats <- function(
   dots <- list(...)
 
   function_name <- validate_arg_function_name(
-    default_name = "collinear::vif_stats()",
+    default_name = "collinear::collinear_stats()",
     function_name = dots$function_name
   )
 

@@ -21,7 +21,7 @@
 #'
 #'   \item **Unified Correlation Framework** (active by default): Computes pairwise correlations between any variable types using Pearson correlation (numeric-numeric), target encoding (numeric-categorical), and Cramer's V (categorical-categorical) within a single, consistent workflow. See [cor_df()], [cor_matrix()], and [cor_cramer()] for details.
 #'
-#'   \item **Adaptive Filtering Thresholds** (active by default): When both \code{max_cor} and \code{max_vif} are \code{NULL}, optimal thresholds are automatically determined based on the median correlation structure of the predictors (see "Automatic Threshold Configuration" section). This data-driven approach adapts filtering stringency to each dataset while maintaining conservative defaults (minimum \code{max_cor} of 0.58 ≈ VIF of 2.5).
+#'   \item **Adaptive Filtering Thresholds** (active by default): When both \code{max_cor} and \code{max_vif} are \code{NULL}, optimal thresholds are automatically determined based on the median correlation structure of the predictors (see "Adaptive Multicollinearity Thresholds" section).
 #'
 #'   \item **Dual Filtering Strategy** (active by default): Combines two complementary methods while respecting predictor rankings:
 #'
@@ -35,7 +35,7 @@
 #'
 #' This function accepts parallelization via [future::plan()] and progress bars via [progressr::handlers()]. Parallelization benefits [target_encoding_lab()], [preference_order()], and [cor_select()] operations, particularly with categorical variables or large datasets.
 #'
-#' @section Automatic Threshold Configuration:
+#' @section Adaptive Multicollinearity Thresholds:
 #'
 #' When both \code{max_cor} and \code{max_vif} are \code{NULL}, the function automatically determines optimal filtering thresholds based on the correlation structure of the predictors:
 #'
@@ -43,15 +43,15 @@
 #'
 #'   \item The median correlation between all predictors is computed via [cor_stats()].
 #'
-#'   \item The value of \code{max_cor} is set to \code{max(median_correlation, 0.58)}, ensuring a minimum threshold of 0.58, which approximately corresponds to a VIF of 2.5.
+#'   \item The value of \code{max_cor} is set to the median correlation of the dataset.
 #'
 #'   \item The value of \code{max_vif} is computed from \code{max_cor} using the model [gam_cor_to_vif], which maps correlation thresholds to their equivalent VIF values.
 #'
 #' }
 #'
-#' This data-driven approach adapts the filtering stringency to each dataset's multicollinearity structure. Datasets with lower median correlation receive stricter thresholds, while those with higher baseline correlation are filtered more permissively, preventing over-filtering of genuinely informative predictors.
+#' Under this data-drive approach, datasets with lower median correlation receive stricter thresholds, while those with higher baseline correlation are filtered more permissively, preventing over-filtering of genuinely informative predictors.
 #'
-#' In validation experiments, this automatic configuration reduced predictor sets by 68% on average (range: 44-80%), decreased median correlation by 0.16, and achieved a maximum VIF of 2.75 (mean: 2.3) across selections. These results demonstrate robust multicollinearity management with minimal user input.
+#' In validation experiments (see [experiment_adaptive_thresholds]), this automatic configuration method decreased median correlation by an average of -0.24, and achieved an average maximum VIF of 1.40 across selections. These results indicate this system is robust to an ample set of use cases.
 #'
 #' Users can override automatic configuration by explicitly setting either \code{max_cor} or \code{max_vif} (or both) to specific numeric values.
 #'
@@ -116,7 +116,7 @@
 #'
 #' @param f (optional: unquoted function name or NULL). Function to rank \code{predictors} depending on their relationship with the \code{responses}. Available functions are listed by [f_functions()] and described in the manual of [preference_order()]. Requires valid \code{responses} and \code{preference_order = NULL}. Default: `f_auto`
 #'
-#' @param max_cor (optional; numeric or NULL) Maximum correlation allowed between pairs of \code{predictors}. Valid values are between 0.01 and 0.99, and recommended values are between 0.5 (strict) and 0.9 (permissive). If NULL and \code{max_vif = NULL}, it is set to the median correlation of all predictors (with a minimum of 0.58). Otherwise it is ignored. Default: NULL
+#' @param max_cor (optional; numeric or NULL) Maximum correlation allowed between pairs of \code{predictors}. Valid values are between 0.01 and 0.99, and recommended values are between 0.5 (strict) and 0.9 (permissive). If NULL and \code{max_vif = NULL}, it is set to the median correlation of all predictors. Otherwise it is ignored. Default: NULL
 #'
 #' @param max_vif (optional, numeric or NULL) Maximum Variance Inflation Factor allowed for \code{predictors} during multicollinearity filtering. Recommended values are between 2.5 (strict) and 10 (permissive). If NULL and \code{max_cor = NULL}, it is configured automatically to a VIF matching the median correlation of the predictors. Otherwise it is ignored. Default: NULL.
 #'
@@ -432,15 +432,10 @@ collinear <- function(
       function_name = function_name
     )
 
-    cor.median <- cor.stats[
+    max_cor <- cor.stats[
       cor.stats$statistic == "median",
       "value"
     ]
-
-    max_cor <- max(
-      0.58, #approx matches VIF = 2.5
-      round(x = cor.median, digits = 4)
-    )
 
     if(quiet == FALSE){
 
@@ -532,8 +527,6 @@ collinear <- function(
         response,
         "'"
       )
-
-      msg_length <- nchar(msg)
 
       message("\n", msg)
       message(rep(x = "-", times = nchar(msg)))

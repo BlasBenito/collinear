@@ -134,6 +134,8 @@
 #'   \item{output_predictors}{Number of predictors selected by [collinear()].}
 #'   \item{input_cor_median}{Median correlation of the input predictors as returned by [collinear_stats()].}
 #'   \item{output_cor_median}{Median correlation of the selected predictors.}
+#'   \item{input_cor_max}{Maximum correlation of the input predictors as returned by [collinear_stats()].}
+#'   \item{output_cor_max}{Maximum correlation of the selected predictors.}
 #'   \item{input_vif_max}{Maximum VIF of the input predictors as returned by [collinear_stats()].}
 #'   \item{output_vif_max}{Maximum VIF of the selected predictors.}
 #' }

@@ -44,7 +44,11 @@ future::plan(
 #progressr::handlers(global = TRUE)
 
 #example data
-data(vi_smol, vi_predictors_numeric)
+data(
+  vi_smol, 
+  vi_predictors_numeric,
+  experiment_adaptive_thresholds
+  )
 
 #highly correlated predictors
 predictors_high_collinearity <- c(
@@ -80,6 +84,7 @@ collinear::collinear_stats(
     statistic %in% c("median", "maximum")
   )
 ```
+
 We can run them through `collinear()`.
 
 ```{r}
@@ -133,51 +138,47 @@ To assess the effectiveness of this adaptive threshold selection method I ran `c
 
 The results of this simulation are in the dataframe [experiment_adaptive_thresholds]. It contains the input  data size, the number of predictors selected by `collinear()`, and the collinearity stats before and after the multicollinearity filtering.
 
-```{r, echo = FALSE}
+```{r, echo = FALSE, fig.width=7, fig.height=3.5}
 experiment_adaptive_thresholds <- experiment_adaptive_thresholds |> 
   dplyr::mutate(
     cor_median_diff = input_cor_median - output_cor_median,
     vif_max_diff = input_vif_max - output_vif_max
   )
 
-cor_plot <- experiment_adaptive_thresholds |> 
-  ggplot2::ggplot() + 
+cor_plot <- experiment_adaptive_thresholds |>
+  ggplot2::ggplot() +
   ggplot2::aes(
     x = input_cor_median,
-    y = output_cor_median,
-    color = output_vif_max
-  ) + 
-  ggplot2::geom_point(alpha = 0.5) + 
-  ggplot2::geom_abline(slope = 1) + 
-  ggplot2::scale_color_viridis_c(option = "turbo") + 
-  ggplot2::coord_fixed(
-    xlim = c(0, 0.65), 
-    ylim = c(0, 0.65)
-    ) + 
+    y = output_vif_max,
+    color = (output_predictors/input_predictors)*100
+  ) +
+  ggplot2::geom_point(alpha = 0.5) +
+  ggplot2::scale_color_viridis_c(option = "turbo", direction = 1) +
   ggplot2::labs(
-    title = "Input vs. Output Correlation",
+    title = "Input Correlation vs Output VIF",
     x = "Input Median Correlation",
-    y = "Output Median Correlation",
-    color = "Output\nmax VIF"
-  ) + 
+    y = "Output Maximum VIF",
+    color = "Selected\nPredictors\n(%)"
+  ) +
   ggplot2::theme_bw()
 
-preds_plot <- experiment_adaptive_thresholds |> 
-  ggplot2::ggplot() + 
+preds_plot <- experiment_adaptive_thresholds |>
+  ggplot2::ggplot() +
   ggplot2::aes(
     x = input_predictors,
     y = output_predictors,
     color = output_vif_max
-  ) + 
-  ggplot2::geom_point(alpha = 0.5) + 
-  ggplot2::geom_abline(slope = 1) + 
-  ggplot2::scale_color_viridis_c(option = "turbo") + 
+  ) +
+  ggplot2::geom_point(alpha = 0.5) +
+  ggplot2::geom_smooth(method = "gam", formula = y ~ s(x, k = 3), color = "gray50", se = TRUE) +
+  ggplot2::scale_color_viridis_c(option = "turbo", direction = 1) +
   ggplot2::labs(
     title = "Input vs. Selected Predictors",
     x = "Input Predictors",
-    y = "Selected Predictors",
+    y = "Output Predictors",
     color = "Output\nmax VIF"
-  ) + 
+  ) +
+  ggplot2::scale_y_continuous(breaks = c(0, 5, 10, 15, 20)) +
   ggplot2::theme_bw()
 
 cor_plot | preds_plot
