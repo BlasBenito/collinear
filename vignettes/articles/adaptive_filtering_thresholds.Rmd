@@ -49,19 +49,6 @@ data(
   vi_predictors_numeric,
   experiment_adaptive_thresholds
   )
-
-#highly correlated predictors
-predictors_high_collinearity <- c(
-  "evapotranspiration_min", 
-  "growing_degree_days", 
-  "growing_season_temperature", 
-  "soil_temperature_mean", 
-  "soil_temperature_min", 
-  "solar_rad_min", 
-  "solar_rad_range", 
-  "temperature_mean", 
-  "temperature_min" 
-)
 ```
 
 
@@ -73,15 +60,15 @@ Unlike `collinear_select()`, `cor_select()`, and `vif_select()`, which use fixed
 
 Let me show you why.
 
-The vector `predictors_high_collinearity` names predictors with a high multicollinearity, as the stats below show.
+The vector `vi_predictors_numeric` names numeric predictors with a moderate multicollinearity, as the stats below show.
 
 ```{r}
 collinear::collinear_stats(
   df = vi_smol,
-  predictors = predictors_high_collinearity
+  predictors = vi_predictors_numeric
 ) |> 
   dplyr::filter(
-    statistic %in% c("median", "maximum")
+    statistic %in% c("quantile_0.75", "maximum")
   )
 ```
 
@@ -90,7 +77,7 @@ We can run them through `collinear()`.
 ```{r}
 x <- collinear::collinear(
   df = vi_smol,
-  predictors = predictors_high_collinearity
+  predictors = vi_predictors_numeric
 )
 ```
 
@@ -102,9 +89,10 @@ collinear::collinear_stats(
   predictors = x$result$selection
 ) |> 
   dplyr::filter(
-    statistic %in% c("median", "maximum")
+    statistic %in% c("quantile_0.75", "maximum")
   )
 ```
+
 These stats show a high median correlation but reasonable VIF scores.
 
 Let's repeat this experiment, but pretending that `collinear()` has the default values `max_cor = 0.7` and `max_vif = 5` (same as [collinear_select()]).
@@ -112,7 +100,7 @@ Let's repeat this experiment, but pretending that `collinear()` has the default 
 ```{r}
 x <- collinear::collinear(
   df = vi_smol,
-  predictors = predictors_high_collinearity,
+  predictors = vi_predictors_numeric,
   max_cor = 0.7,
   max_vif = 5
 )
@@ -122,7 +110,7 @@ collinear::collinear_stats(
   predictors = x$result$selection
 ) |> 
   dplyr::filter(
-    statistic %in% c("median", "maximum")
+    statistic %in% c("quantile_0.75", "maximum")
   )
 ```
 
@@ -138,7 +126,7 @@ To assess the effectiveness of this adaptive threshold selection method I ran `c
 
 The results of this simulation are in the dataframe [experiment_adaptive_thresholds]. It contains the input  data size, the number of predictors selected by `collinear()`, and the collinearity stats before and after the multicollinearity filtering.
 
-```{r, echo = FALSE, fig.width=7, fig.height=3.5}
+```{r, echo = FALSE, fig.width=8, fig.height=3.5}
 experiment_adaptive_thresholds <- experiment_adaptive_thresholds |> 
   dplyr::mutate(
     cor_median_diff = input_cor_median - output_cor_median,
@@ -189,12 +177,12 @@ The simulation results shows that the adaptive threshold selection works well in
 
 ## Step By Step
 
-The adaptive filtering of multicollinearity thresholds requires three steps:
+The adaptive selection of multicollinearity thresholds requires two steps:
 
 1. Computation of the median correlation of the input predictors via [cor_stats()].
 
 ```{r}
-cor_median <- collinear::cor_stats(
+max_cor <- collinear::cor_stats(
   df = vi_smol,
   predictors = predictors_high_collinearity,
   quiet = TRUE
@@ -202,18 +190,11 @@ cor_median <- collinear::cor_stats(
   dplyr::filter(statistic == "median") |> 
   dplyr::pull(value)
 
-cor_median
-```
-
-2. Selection of the maximum between 0.58 and the median correlation as `max_cor`.
-
-```{r}
-max_cor <- max(0.58, cor_median)
-
 max_cor
 ```
 
-3. The pre-trained GAM model [gam_cor_to_vif] predicts a suitable `max_vif` from the given `max_cor`. 
+
+2. The pre-trained GAM model [gam_cor_to_vif] predicts a suitable `max_vif` from the given `max_cor`. 
 
 ```{r}
 max_vif <- mgcv::predict.gam(

@@ -432,10 +432,18 @@ collinear <- function(
       function_name = function_name
     )
 
-    max_cor <- cor.stats[
-      cor.stats$statistic == "median",
+    cor.median <- cor.stats[
+      cor.stats$statistic == "quantile_0.75",
       "value"
     ]
+
+    max_cor <- max(
+      0.58, #vif 2.5
+      min(
+        cor.median,
+        0.96 #vif 10
+        )
+      )
 
     if(quiet == FALSE){
 

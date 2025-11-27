@@ -23,7 +23,7 @@ n <- 10000
 iterations <- seq_len(n)
 min_cols <- 4
 max_cols <- 100
-seed <- 1
+seed <- 2
 
 #synthetic dataset
 #with seasons
@@ -51,8 +51,8 @@ iterations_df <- data.frame(
     replace = TRUE
     ),
   output_predictors = rep(NA, n),
-  input_cor_median = rep(NA, n),
-  output_cor_median = rep(NA, n),
+  input_cor_q75 = rep(NA, n),
+  output_cor_q75 = rep(NA, n),
   input_cor_max = rep(NA, n),
   output_cor_max = rep(NA, n),
   input_vif_max = rep(NA, n),
@@ -93,10 +93,10 @@ progressr::with_progress({
         quiet = TRUE
       )
 
-      iterations.df.i$input_cor_median <- input_stats |>
+      iterations.df.i$input_cor_q75 <- input_stats |>
         dplyr::filter(
           method == "correlation",
-          statistic == "median"
+          statistic == "quantile_0.75"
         ) |>
         dplyr::pull(
           value
@@ -132,14 +132,14 @@ progressr::with_progress({
 
       #output stats
       output_stats <- collinear_stats(
-        df = df.i,
+        df = selection$result$df,
         predictors = selection$result$selection
       )
 
-      iterations.df.i$output_cor_median <- output_stats |>
+      iterations.df.i$output_cor_q75 <- output_stats |>
         dplyr::filter(
           method == "correlation",
-          statistic == "median"
+          statistic == "quantile_0.75"
         ) |>
         dplyr::pull(
           value
@@ -181,8 +181,8 @@ experiment_adaptive_thresholds <- experiment_list |>
   dplyr::select(
     input_predictors,
     output_predictors,
-    input_cor_median,
-    output_cor_median,
+    input_cor_q75,
+    output_cor_q75,
     input_cor_max,
     output_cor_max,
     input_vif_max,
@@ -196,18 +196,18 @@ experiment_adaptive_thresholds <- experiment_list |>
 experiment_adaptive_thresholds |>
   ggplot2::ggplot() +
   ggplot2::aes(
-    x = input_cor_median,
+    x = input_cor_q75,
     y = output_vif_max
   ) +
   ggplot2::geom_point()
 
 
-mean(experiment_adaptive_thresholds$input_cor_median)
+mean(experiment_adaptive_thresholds$input_cor_q75)
 
 cor_plot <- experiment_adaptive_thresholds |>
   ggplot2::ggplot() +
   ggplot2::aes(
-    x = input_cor_median,
+    x = input_cor_q75,
     y = output_vif_max,
     color = (output_predictors/input_predictors)*100
   ) +
@@ -215,7 +215,7 @@ cor_plot <- experiment_adaptive_thresholds |>
   ggplot2::scale_color_viridis_c(option = "turbo", direction = 1) +
   ggplot2::labs(
     title = "Input Correlation vs Output VIF",
-    x = "Input Median Correlation",
+    x = "Input Correlation (quantile 0.75)",
     y = "Output Maximum VIF",
     color = "Selected\nPredictors\n(%)"
   ) +
