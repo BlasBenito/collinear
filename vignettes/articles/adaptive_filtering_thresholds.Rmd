@@ -155,7 +155,7 @@ cor_plot <- experiment_adaptive_thresholds |>
     ylim = c(0, 0.65)
     ) + 
   ggplot2::labs(
-    title = "Input vs. Output Median Correlation",
+    title = "Input vs. Output Correlation",
     x = "Input Median Correlation",
     y = "Output Median Correlation",
     color = "Output\nmax VIF"
@@ -173,7 +173,7 @@ preds_plot <- experiment_adaptive_thresholds |>
   ggplot2::geom_abline(slope = 1) + 
   ggplot2::scale_color_viridis_c(option = "turbo") + 
   ggplot2::labs(
-    title = "Input Predictors vs. Selected Predictors",
+    title = "Input vs. Selected Predictors",
     x = "Input Predictors",
     y = "Selected Predictors",
     color = "Output\nmax VIF"
@@ -182,7 +182,8 @@ preds_plot <- experiment_adaptive_thresholds |>
 
 cor_plot | preds_plot
 ```
-The simulation results shows that the adaptive threshold selection works well in most use cases. Only in one case out the resulting selection had a maximum VIF higher than 2.5, and only `r (sum(experiment_adaptive_thresholds$cor_median_diff <= 0)/nrow(experiment_adaptive_thresholds))/100`% of the instances (cases over the diagonal in the lower-left corner of the scatterplot) the system produced suboptimal results.
+
+The simulation results shows that the adaptive threshold selection works well in most use cases, with only `r (sum(experiment_adaptive_thresholds$cor_median_diff <= 0)/nrow(experiment_adaptive_thresholds))/100`% of the instances producing suboptimal results.
 
 
 ## Step By Step
