@@ -22,8 +22,8 @@ knitr::opts_chunk$set(
 
 The function `cor_df()` combines several methods to compute pairwise associations between variables of different types:
 
-  - *Numeric vs. numeric*: Absolute Pearson correlation.
-  - *Numeric vs. categorical*: Combines target encoding and absolute Pearson correlation.
+  - *Numeric vs. numeric*: Pearson correlation.
+  - *Numeric vs. categorical*: Combines target encoding and Pearson correlation.
   - *Categorical vs. categorical*: Bias-corrected Cramer's V.
 
 This article provides fine-grained details on this functionality and describes the caveats of combining Pearson correlation and Cramer's V when the cardinality of categorical predictors is high.
@@ -79,7 +79,7 @@ Let's examine how the function handles different predictor types.
 
 ### Numeric vs. Numeric
 
-This is the simplest and most reliable case `cor_df()` handles, as absolute pairwise Pearson correlations are computed with the very fast `stats::cor()`. 
+This is the simplest and most reliable case `cor_df()` handles, as pairwise Pearson correlations are computed with the very fast `stats::cor()`. 
 
 The parallelization setup is ignored in this case.
 
@@ -99,7 +99,7 @@ stats::cor(
 
 ### Numeric vs. Categorical
 
-To handle this situation, `cor_df()` first applies target encoding to the categorical predictor using the numeric variable as reference, then applies `stats::cor()` to compute the absolute Pearson correlation.
+To handle this situation, `cor_df()` first applies target encoding to the categorical predictor using the numeric variable as reference, then applies `stats::cor()` to compute the Pearson correlation.
 
 ```{r}
 #transform koppen_zone to numeric

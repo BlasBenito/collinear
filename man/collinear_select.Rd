@@ -36,7 +36,7 @@ collinear_select(
 character vector: names of selected predictors
 }
 \description{
-Automatizes multicollinearity filtering via absolute pairwise correlation and/or variance inflation factors in dataframes with numeric and categorical predictors.
+Automatizes multicollinearity filtering via pairwise correlation and/or variance inflation factors in dataframes with numeric and categorical predictors.
 
 The argument \code{max_cor} determines the maximum variance inflation factor allowed in the resulting selection of predictors.
 

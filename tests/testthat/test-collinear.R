@@ -39,12 +39,12 @@ testthat::test_that("`collinear()` works", {
     suppressMessages() |>
     suppressWarnings()
 
-  testthat::expect_warning(
+  testthat::expect_message(
     x <- collinear(
       df = vi_smol[1:9, ],
       predictors = vi_predictors_numeric
     ),
-    regexp = "the correlation matrix is singular and cannot be solved"
+    regexp = "VIF values may be numerically unstable due to severe multicollinearity"
   ) |>
     suppressWarnings() |>
     suppressMessages()

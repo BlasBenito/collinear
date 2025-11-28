@@ -2,7 +2,7 @@
 % Please edit documentation in R/vif.R
 \name{vif}
 \alias{vif}
-\title{Variance Inflation Factors From Absolute Correlation Matrix}
+\title{Variance Inflation Factors From Correlation Matrix}
 \usage{
 vif(m = NULL, quiet = FALSE, ...)
 }
@@ -17,9 +17,9 @@ vif(m = NULL, quiet = FALSE, ...)
 named numeric vector
 }
 \description{
-Computes the Variance Inflation Factors from an absolute correlation matrix in two steps:
+Computes the Variance Inflation Factors from a correlation matrix in two steps:
 \itemize{
-\item Applies \code{\link[base:solve]{base::solve()}} to transform the absolute correlation matrix into a precision matrix, which is the inverse of the covariance matrix between all variables in \code{predictors}.
+\item Applies \code{\link[base:solve]{base::solve()}} to transform the correlation matrix into a precision matrix, which is the inverse of the covariance matrix between all variables in \code{predictors}.
 \item Applies \code{\link[base:diag]{base::diag()}} to extract the diagonal of the precision matrix, which contains the variance of the regression of each predictor against all other predictors, also known as Variance Inflation Factor
 }
 }

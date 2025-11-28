@@ -23,7 +23,7 @@ dataframe with columns:
 }
 }
 \description{
-Computes the absolute pairwise correlation matrix between all pairs of predictors via \code{\link[=cor_df]{cor_df()}} and \code{\link[=cor_matrix]{cor_matrix()}}, applies \code{\link[=vif]{vif()}} to the resulting matrix to compute Variance Inflation Factors, and returns the result as a dataframe.
+Computes the pairwise correlation matrix between all pairs of predictors via \code{\link[=cor_df]{cor_df()}} and \code{\link[=cor_matrix]{cor_matrix()}}, applies \code{\link[=vif]{vif()}} to the resulting matrix to compute Variance Inflation Factors, and returns the result as a dataframe.
 }
 \section{Variance Inflation Factors}{
 

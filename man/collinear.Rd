@@ -95,17 +95,17 @@ When both \code{max_cor} and \code{max_vif} are \code{NULL}, the function automa
 
 \enumerate{
 
-\item The median correlation between all predictors is computed via \code{\link[=cor_stats]{cor_stats()}}.
+\item The 75th percentile of pairwise correlations between all predictors is computed via \code{\link[=cor_stats]{cor_stats()}}.
 
-\item The value of \code{max_cor} is set to the median correlation of the dataset.
+\item The value of \code{max_cor} is determined using a sigmoid transformation that smoothly transitions between a conservative floor (0.545, corresponding to VIF ≈ 2.5) and a permissive ceiling (0.785, corresponding to VIF ≈ 7.5), centered at the midpoint (0.665).
 
 \item The value of \code{max_vif} is computed from \code{max_cor} using the model \link{gam_cor_to_vif}, which maps correlation thresholds to their equivalent VIF values.
 
 }
 
-Under this data-drive approach, datasets with lower median correlation receive stricter thresholds, while those with higher baseline correlation are filtered more permissively, preventing over-filtering of genuinely informative predictors.
+This sigmoid-based approach ensures smooth transitions across the full range of correlation structures, eliminating artificial threshold hinges while keeping output VIF bounded within sensible limits (approximately 2.5 to 7.5).
 
-In validation experiments (see \link{experiment_adaptive_thresholds}), this automatic configuration method decreased median correlation by an average of -0.24, and achieved an average maximum VIF of 1.40 across selections. These results indicate this system is robust to an ample set of use cases.
+Under this data-driven approach, datasets with lower correlation receive stricter thresholds, while those with higher baseline correlation are filtered more permissively, preventing over-filtering of genuinely informative predictors.
 
 Users can override automatic configuration by explicitly setting either \code{max_cor} or \code{max_vif} (or both) to specific numeric values.
 }

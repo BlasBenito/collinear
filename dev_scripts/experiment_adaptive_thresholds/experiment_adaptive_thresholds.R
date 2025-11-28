@@ -1,3 +1,8 @@
+if(basename(getwd()) != "experiment_adaptive_thresholds"){
+  setwd(here::here())
+  setwd("dev_scripts/experiment_adaptive_thresholds")
+}
+
 library(collinear)
 library(future)
 library(tictoc)
@@ -162,6 +167,12 @@ progressr::with_progress({
         dplyr::pull(
           value
         )
+
+      if(iterations.df.i$output_vif_max > 10){
+
+        save(df.i, file = paste0("wrong_data_", i, ".RData"))
+
+      }
 
       iterations.df.i$output_predictors <- length(selection$result$selection)
 

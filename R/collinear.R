@@ -41,17 +41,17 @@
 #'
 #' \enumerate{
 #'
-#'   \item The median correlation between all predictors is computed via [cor_stats()].
+#'   \item The 75th percentile of pairwise correlations between all predictors is computed via [cor_stats()].
 #'
-#'   \item The value of \code{max_cor} is set to the median correlation of the dataset.
+#'   \item The value of \code{max_cor} is determined using a sigmoid transformation that smoothly transitions between a conservative floor (0.545, corresponding to VIF ≈ 2.5) and a permissive ceiling (0.785, corresponding to VIF ≈ 7.5), centered at the midpoint (0.665).
 #'
 #'   \item The value of \code{max_vif} is computed from \code{max_cor} using the model [gam_cor_to_vif], which maps correlation thresholds to their equivalent VIF values.
 #'
 #' }
 #'
-#' Under this data-drive approach, datasets with lower median correlation receive stricter thresholds, while those with higher baseline correlation are filtered more permissively, preventing over-filtering of genuinely informative predictors.
+#' This sigmoid-based approach ensures smooth transitions across the full range of correlation structures, eliminating artificial threshold hinges while keeping output VIF bounded within sensible limits (approximately 2.5 to 7.5).
 #'
-#' In validation experiments (see [experiment_adaptive_thresholds]), this automatic configuration method decreased median correlation by an average of -0.24, and achieved an average maximum VIF of 1.40 across selections. These results indicate this system is robust to an ample set of use cases.
+#' Under this data-driven approach, datasets with lower correlation receive stricter thresholds, while those with higher baseline correlation are filtered more permissively, preventing over-filtering of genuinely informative predictors.
 #'
 #' Users can override automatic configuration by explicitly setting either \code{max_cor} or \code{max_vif} (or both) to specific numeric values.
 #'
@@ -432,18 +432,30 @@ collinear <- function(
       function_name = function_name
     )
 
-    cor.median <- cor.stats[
+    #adaptive max_cor threshold using sigmoid soft clamping
+    #smooth transition between conservative and permissive filtering
+
+    #correlation structure of the input data
+    cor.statistic <- cor.stats[
       cor.stats$statistic == "quantile_0.75",
       "value"
     ]
 
-    max_cor <- max(
-      0.58, #vif 2.5
-      min(
-        cor.median,
-        0.96 #vif 10
-        )
-      )
+    #max_cor = 0.545 corresponds to VIF ≈ 2.5 (conservative)
+    sigmoid_floor <- 0.545
+
+    #max_cor = 0.785 corresponds to VIF ≈ 7.5 (permissive)
+    sigmoid_ceiling <- 0.785
+
+    #sigmoid params
+    sigmoid_midpoint <- (sigmoid_floor + sigmoid_ceiling) / 2
+    sigmoid_range <- sigmoid_ceiling - sigmoid_floor
+
+    #smooth sigmoid transition between floor and ceiling
+    #parameter (-15) controls transition sharpness
+    max_cor <- sigmoid_floor +
+      sigmoid_range /
+      (1 + exp(-15 * (cor.statistic - sigmoid_midpoint)))
 
     if(quiet == FALSE){
 

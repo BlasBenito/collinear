@@ -21,7 +21,7 @@ numeric: Cramer's V
 \description{
 Cramer's V extends the chi-squared test to quantify how strongly the categories of two variables co-occur. The value ranges from 0 to 1, where 0 indicates no  association and 1 indicates perfect association.
 
-This function implements a bias-corrected version of Cramer's V, which adjusts for sample size and is more accurate for small samples. However, this bias correction means that even for binary variables, Cramer's V will no equal the absolute Pearson correlation (the standard, uncorrected Cramer's V does match Pearson for binary data).
+This function implements a bias-corrected version of Cramer's V, which adjusts for sample size and is more accurate for small samples. However, this bias correction means that even for binary variables, Cramer's V will no equal the Pearson correlation (the standard, uncorrected Cramer's V does match Pearson for binary data).
 
 As the number of categories increases, Cramer's V and Pearson correlationmeasure increasingly different aspects of association and should not be directly compared.
 

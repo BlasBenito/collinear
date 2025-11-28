@@ -1,7 +1,7 @@
 #' @title Automated Multicollinearity Filtering
 #'
 #' @description
-#' Automatizes multicollinearity filtering via absolute pairwise correlation and/or variance inflation factors in dataframes with numeric and categorical predictors.
+#' Automatizes multicollinearity filtering via pairwise correlation and/or variance inflation factors in dataframes with numeric and categorical predictors.
 #'
 #' The argument \code{max_cor} determines the maximum variance inflation factor allowed in the resulting selection of predictors.
 #'
@@ -284,7 +284,7 @@ collinear_select <- function(
   #check cor threshold
   if(!is.null(max_cor)){
 
-    if(max(m[upper.tri(m)]) <= max_cor){
+    if(max(abs(m[upper.tri(m)])) <= max_cor){
 
       skip_cor <- TRUE
 
@@ -361,7 +361,7 @@ collinear_select <- function(
 
     if(!is.null(max_cor) && !skip_cor){
 
-      cor_ok <- max(m[selected, candidate]) <= max_cor
+      cor_ok <- max(abs(m[selected, candidate])) <= max_cor
 
     }
 

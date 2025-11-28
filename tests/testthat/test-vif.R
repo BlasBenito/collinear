@@ -9,8 +9,9 @@ testthat::test_that("`vif()` works", {
     quiet = TRUE
   )
 
-  testthat::expect_no_message(
-    v <- vif(m = m)
+  testthat::expect_message(
+    v <- vif(m = m),
+    regexp = "VIF values may be numerically unstable due to severe multicollinearity"
   )
 
   testthat::expect_true(
@@ -65,7 +66,7 @@ testthat::test_that("`vif()` works", {
   )
 
   testthat::expect_true(
-    all(is.infinite(v))
+    all(v == 900.01)
   )
 
 })

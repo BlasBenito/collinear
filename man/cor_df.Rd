@@ -20,14 +20,14 @@ dataframe with columns:
 \itemize{
 \item \code{x}: character, first predictor name.
 \item \code{y}: character, second predictor name.
-\item \code{correlation}: numeric, absolute Pearson correlation (numeric vs. numeric and numeric vs. categorical) or Cramer's V (categorical vs. categorical).
+\item \code{correlation}: numeric, Pearson correlation (numeric vs. numeric and numeric vs. categorical) or Cramer's V (categorical vs. categorical).
 }
 }
 \description{
-Computes absolute pairwise correlations between predictors using appropriate methods for different variable types:
+Computes pairwise correlations between predictors using appropriate methods for different variable types:
 \itemize{
-\item \strong{Numeric vs. Numeric}: Absolute Pearson correlation via \code{\link[stats:cor]{stats::cor()}}.
-\item \strong{Numeric vs. Categorical}: Target-encodes the categorical variable  using the numeric variable as reference via \code{\link[=target_encoding_lab]{target_encoding_lab()}} with leave-one-out method, then computes absolute Pearson correlation.
+\item \strong{Numeric vs. Numeric}: Pearson correlation via \code{\link[stats:cor]{stats::cor()}}.
+\item \strong{Numeric vs. Categorical}: Target-encodes the categorical variable  using the numeric variable as reference via \code{\link[=target_encoding_lab]{target_encoding_lab()}} with leave-one-out method, then computes Pearson correlation.
 \item \strong{Categorical vs. Categorical}: Cramer's V via \code{\link[=cor_cramer]{cor_cramer()}} as a measure of association. See \code{\link[=cor_cramer]{cor_cramer()}} for important notes on mixing Pearson correlation and Cramer's V in multicollinearity analysis.
 }
 

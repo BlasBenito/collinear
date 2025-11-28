@@ -2,7 +2,7 @@
 #'
 #' @description
 #'
-#' Computes the absolute pairwise correlation matrix between all pairs of predictors via [cor_df()] and [cor_matrix()], applies [vif()] to the resulting matrix to compute Variance Inflation Factors, and returns the result as a dataframe.
+#' Computes the pairwise correlation matrix between all pairs of predictors via [cor_df()] and [cor_matrix()], applies [vif()] to the resulting matrix to compute Variance Inflation Factors, and returns the result as a dataframe.
 #'
 #' @inheritSection collinear Variance Inflation Factors
 #'

@@ -10,10 +10,9 @@ A dataframe with 9354 rows and 6 variables:
 \item{input_rows}{Number of rows in the input data.}
 \item{input_predictors}{Number of predictors in the input data.}
 \item{output_predictors}{Number of predictors selected by \code{\link[=cor_select]{cor_select()}}.}
-\item{input_max_cor}{Maximum allowed pairwise correlation supplied to \code{\link[=cor_select]{cor_select()}}.}
-\item{output_max_vif}{Smallest VIF threshold at which \code{\link[=vif_select]{vif_select()}} produced the most similar to \code{\link[=cor_select]{cor_select()}} for the given \code{input_max_cor}.}
-\item{out_selection_length}{Number of variables returned from the multicollinearity filtering.}
-\item{selection_similarity}{Jaccard similarity between the predictors selected \code{\link[=cor_select]{cor_select()}} and \code{\link[=vif_select]{vif_select()}}.}
+\item{max_cor}{Maximum allowed pairwise correlation supplied to \code{\link[=cor_select]{cor_select()}}.}
+\item{max_vif}{Smallest VIF threshold at which \code{\link[=vif_select]{vif_select()}} produced the most similar to \code{\link[=cor_select]{cor_select()}} for the given \code{input_max_cor}.}
+\item{selection_similarity}{Jaccard similarity between the predictors selected by \code{\link[=cor_select]{cor_select()}} and \code{\link[=vif_select]{vif_select()}}.}
 }
 }
 \usage{

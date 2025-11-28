@@ -2,7 +2,7 @@
 % Please edit documentation in R/cor_select.R
 \name{cor_select}
 \alias{cor_select}
-\title{Automated Multicollinearity Filtering with Absolute Pairwise Correlations}
+\title{Automated Multicollinearity Filtering with Pairwise Correlations}
 \usage{
 cor_select(
   df = NULL,
@@ -33,7 +33,7 @@ cor_select(
 character vector of selected predictors
 }
 \description{
-Wraps \code{\link[=collinear_select]{collinear_select()}} to automatize multicollinearity filtering via absolute pairwise correlation in dataframes with numeric and categorical predictors.
+Wraps \code{\link[=collinear_select]{collinear_select()}} to automatize multicollinearity filtering via pairwise correlation in dataframes with numeric and categorical predictors.
 
 The argument \code{max_cor} determines the maximum variance inflation factor allowed in the resulting selection of predictors.
 

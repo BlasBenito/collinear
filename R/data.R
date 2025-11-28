@@ -109,10 +109,9 @@
 #'   \item{input_rows}{Number of rows in the input data.}
 #'   \item{input_predictors}{Number of predictors in the input data.}
 #'   \item{output_predictors}{Number of predictors selected by [cor_select()].}
-#'   \item{input_max_cor}{Maximum allowed pairwise correlation supplied to [cor_select()].}
-#'   \item{output_max_vif}{Smallest VIF threshold at which [vif_select()] produced the most similar to [cor_select()] for the given \code{input_max_cor}.}
-#'   \item{out_selection_length}{Number of variables returned from the multicollinearity filtering.}
-#'   \item{selection_similarity}{Jaccard similarity between the predictors selected [cor_select()] and [vif_select()].}
+#'   \item{max_cor}{Maximum allowed pairwise correlation supplied to [cor_select()].}
+#'   \item{max_vif}{Smallest VIF threshold at which [vif_select()] produced the most similar to [cor_select()] for the given \code{input_max_cor}.}
+#'   \item{selection_similarity}{Jaccard similarity between the predictors selected by [cor_select()] and [vif_select()].}
 #' }
 #'
 #' @examples

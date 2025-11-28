@@ -5,7 +5,7 @@
 #'
 #' The function works in two different ways:
 #' \itemize{
-#'   \item When \code{f} is NULL, it ranks the predictors from lower to higher multicollinearity, computed as one minus the average absolute Pearson correlation between the given predictor against all others. This option is useful when the goal is to limit redundancy in a large dataset and there is not an specific model to train in mind.
+#'   \item When \code{f} is NULL, it ranks the predictors from lower to higher multicollinearity, computed as one minus the average Pearson correlation between the given predictor against all others. This option is useful when the goal is to limit redundancy in a large dataset and there is not an specific model to train in mind.
 #'   \item When \code{responses} and \code{f} are not NULL, it ranks the predictors by the strength of their association with a response based on the evaluation of univariate models. This is the best possible option when the end-goal is training a model.
 #' }
 #'
@@ -285,7 +285,8 @@ preference_order <- function(
       function_name = function_name,
       quiet = quiet,
       m = dots$m
-    )
+    ) |>
+      abs()
 
     diag(x = m) <- 0
 

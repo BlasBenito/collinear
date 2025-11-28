@@ -1,8 +1,8 @@
-#' Variance Inflation Factors From Absolute Correlation Matrix
+#' Variance Inflation Factors From Correlation Matrix
 #'
-#' @description Computes the Variance Inflation Factors from an absolute correlation matrix in two steps:
+#' @description Computes the Variance Inflation Factors from a correlation matrix in two steps:
 #' \itemize{
-#'   \item Applies [base::solve()] to transform the absolute correlation matrix into a precision matrix, which is the inverse of the covariance matrix between all variables in \code{predictors}.
+#'   \item Applies [base::solve()] to transform the correlation matrix into a precision matrix, which is the inverse of the covariance matrix between all variables in \code{predictors}.
 #'   \item Applies [base::diag()] to extract the diagonal of the precision matrix, which contains the variance of the regression of each predictor against all other predictors, also known as Variance Inflation Factor
 #'}
 #'
@@ -83,43 +83,39 @@ vif <- function(
     )
 
   out <- tryCatch(
+
     #first attempt with original matrix
     {diag(solve(m, tol = tol))},
+
     #try with adjusted matrix
     error = function(e){
-      #look for perfect correlations that break solve()
-      # and replace them with slightly smaller values
-      m_adj <- m
-      m_range <- range(m[upper.tri(m)])
 
-      # Threshold for "too perfect" correlation
-      max_cor <- 0.9999999999
-      min_cor <- -max_cor
+      #compute minimum eigenvalue
+      min_eigen <- min(eigen(m, only.values = TRUE)$values)
 
-      #replace extreme values
-      if(max(m_range) > max_cor){
-        m_adj[m_adj > max_cor] <- max_cor
-        diag(m_adj) <- 1
-      }
-      if(min(m_range) < min_cor){
-        m_adj[m_adj < min_cor] <- min_cor
+      #apply ridge regularization if needed
+      if(min_eigen < 0.001){
+
+        #shift eigenvalues to ensure positive definiteness
+        ridge <- abs(min_eigen) + 0.001
+        m_adj <- m + diag(ridge, nrow(m))
+
+      } else {
+        m_adj <- m
       }
 
-      # try again with adjusted matrix
+      #try again with adjusted matrix
       tryCatch(
         {diag(solve(m_adj, tol = tol))},
-        error = function(e) {
+        error = function(e2) {
           warning(
             "\n",
             function_name,
             ": the correlation matrix is singular and cannot be solved, returning infinite VIF scores.",
             call. = FALSE
           )
-
           out <- rep(Inf, times = ncol(m))
-
           names(out) <- colnames(m)
-
           return(out)
         }
       )
@@ -127,14 +123,24 @@ vif <- function(
   )
 
   # cap
-  out[out > .Machine$integer.max ] <- Inf
+  vif_cap <- 1e6
+  if(any(out > vif_cap, na.rm = TRUE)){
+    if(quiet == FALSE){
+      message(
+        "\n",
+        function_name,
+        ": some VIF values exceeded 1M and were set to Inf."
+      )
+    }
+    out[out > vif_cap] <- Inf
+  }
 
   #add names
   names(out) <- colnames(m)
 
   #sort
   out <- sort(
-    x = abs(out),
+    x = out,
     decreasing = TRUE
   ) |>
     round(digits = 4)

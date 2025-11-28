@@ -1,10 +1,10 @@
 #' Pairwise Correlation Dataframe
 #'
 #' @description
-#' Computes absolute pairwise correlations between predictors using appropriate methods for different variable types:
+#' Computes pairwise correlations between predictors using appropriate methods for different variable types:
 #' \itemize{
-#'   \item **Numeric vs. Numeric**: Absolute Pearson correlation via [stats::cor()].
-#'   \item **Numeric vs. Categorical**: Target-encodes the categorical variable  using the numeric variable as reference via [target_encoding_lab()] with leave-one-out method, then computes absolute Pearson correlation.
+#'   \item **Numeric vs. Numeric**: Pearson correlation via [stats::cor()].
+#'   \item **Numeric vs. Categorical**: Target-encodes the categorical variable  using the numeric variable as reference via [target_encoding_lab()] with leave-one-out method, then computes Pearson correlation.
 #'   \item **Categorical vs. Categorical**: Cramer's V via [cor_cramer()] as a measure of association. See [cor_cramer()] for important notes on mixing Pearson correlation and Cramer's V in multicollinearity analysis.
 #' }
 #'
@@ -16,7 +16,7 @@
 #' \itemize{
 #'   \item \code{x}: character, first predictor name.
 #'   \item \code{y}: character, second predictor name.
-#'   \item \code{correlation}: numeric, absolute Pearson correlation (numeric vs. numeric and numeric vs. categorical) or Cramer's V (categorical vs. categorical).
+#'   \item \code{correlation}: numeric, Pearson correlation (numeric vs. numeric and numeric vs. categorical) or Cramer's V (categorical vs. categorical).
 #' }
 #'
 #'
@@ -286,8 +286,7 @@ cor_df <- function(
             y = df.x$y,
             use = "complete.obs",
             method = "pearson"
-          ) |>
-            abs()
+          )
 
         } else {
 
@@ -297,8 +296,7 @@ cor_df <- function(
             y = df.x$y,
             check_input = FALSE,
             function_name = function_name
-          ) |>
-            abs()
+          )
 
         }
 
@@ -321,8 +319,7 @@ cor_df <- function(
       x = df[, predictors$numeric, drop = FALSE],
       use = "complete.obs",
       method = "pearson"
-    ) |>
-      abs()
+    )
 
     upper_indices <- which(
       x = upper.tri(numerics_matrix),
@@ -347,7 +344,7 @@ cor_df <- function(
   #arrange by correlation values
   out_df <- out_df[
     order(
-      out_df$correlation,
+      abs(out_df$correlation),
       decreasing = TRUE
     ),
     , drop = FALSE
