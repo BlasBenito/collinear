@@ -66,14 +66,14 @@ vif <- function(
   }
 
   #condition number
-  kappa_m <- kappa(m, exact = TRUE)
-  if(kappa_m > 1e10 && quiet == FALSE){
-    message(
-      "\n",
-      function_name,
-      ": VIF values may be numerically unstable due to severe multicollinearity."
-    )
-  }
+  # kappa_m <- kappa(m, exact = TRUE)
+  # if(kappa_m > 1e10 && quiet == FALSE){
+  #   message(
+  #     "\n",
+  #     function_name,
+  #     ": VIF values may be numerically unstable due to severe multicollinearity."
+  #   )
+  # }
 
   #tol arg of solve()
   #prevents both false singularity detection and numerical instability

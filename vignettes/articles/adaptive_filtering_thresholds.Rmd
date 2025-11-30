@@ -19,9 +19,14 @@ knitr::opts_chunk$set(
 
 ## Summary
 
-The function [collinear()] configures multicollinearity filtering thresholds automatically when users don't specify them explicitly. This adaptive approach eliminates the guesswork of choosing values for the `max_cor`and `max_vif` arguments, and adapts filtering strength to the correlation structure of the data.
+The function `collinear()` automatically configures multicollinearity filtering thresholds when the arguments `max_cor` and `max_vif` are not specified. This adaptive approach:
 
-This article explains how the automatic threshold configuration works, and describes the experiments used to tune it.
+- Eliminates the guesswork of choosing threshold values.
+- Adapts filtering intensity to the correlation structure of the data.
+- Keeps output VIF bounded within sensible limits (approximately 2.5 to 7.5).
+- Allows manual override when specific thresholds are needed.
+
+This article explains how the automatic threshold configuration works, demonstrates its effectiveness across varied datasets, and provides guidance on when manual configuration might be preferred.
 
 ## Setup
 
@@ -81,7 +86,9 @@ x <- collinear::collinear(
 )
 ```
 
-The first two messages above indicate the values of `max_cor` and `max_vif` selected by `collinear()` based on the data properties. The last message indicates the predictors selected in this run. Their stats are shown below.
+The first two messages above indicate the values of `max_cor` and `max_vif` selected by `collinear()` based on the data properties (more about that later). 
+
+The last message indicates the predictors selected in this run. Their stats are shown below.
 
 ```{r}
 collinear::collinear_stats(
@@ -93,9 +100,9 @@ collinear::collinear_stats(
   )
 ```
 
-These stats show a high median correlation but reasonable VIF scores.
+These stats show very reasonable VIF scores now.
 
-Let's repeat this experiment, but pretending that `collinear()` has the default values `max_cor = 0.7` and `max_vif = 5` (same as [collinear_select()]).
+However, if you are aiming for specific multicollinearity thresholds, the automatic setup can be overriden by providing the desired values for `max_cor` and/or `max_vif`. If one of them is not defined, it will be ignored.
 
 ```{r}
 x <- collinear::collinear(
@@ -113,40 +120,31 @@ collinear::collinear_stats(
     statistic %in% c("quantile_0.75", "maximum")
   )
 ```
-
-Notice how this time `collinear()` returns 2 predictors (instead of 4) with a very low VIF.
-
-Arguably, in this case `collinear()` has *over-filtered* the predictors, which might be statistically correct but is not practical for many use cases. 
-
 By adapting thresholds to each dataset's structure, `collinear()` provides sensible defaults while still allowing manual override when needed.
 
 ## Effectiveness
 
-To assess the effectiveness of this adaptive threshold selection method I ran `collinear()` on 10.000 random subsets of a large dataset (250 columns and 30k rows).
+To assess the effectiveness of this adaptive threshold selection method I ran `collinear()` on 10.000 random subsets between 4 and 100 randomly selected columns of a 500 columns and 3000 rows dataset, and compared the input and output multicollinearity stats and number of predictors across runs.
 
-The results of this simulation are in the dataframe [experiment_adaptive_thresholds]. It contains the input  data size, the number of predictors selected by `collinear()`, and the collinearity stats before and after the multicollinearity filtering.
+The results of this simulation are in the dataframe [experiment_adaptive_thresholds], summarized below. 
+
+The left panel shows the quantile 0.75 of the input correlation, against the mximum VIF of the resulting selection. The right panel shows the number of predictors before and after multicollinearity filtering.
 
 ```{r, echo = FALSE, fig.width=8, fig.height=3.5}
-experiment_adaptive_thresholds <- experiment_adaptive_thresholds |> 
-  dplyr::mutate(
-    cor_median_diff = input_cor_median - output_cor_median,
-    vif_max_diff = input_vif_max - output_vif_max
-  )
-
 cor_plot <- experiment_adaptive_thresholds |>
   ggplot2::ggplot() +
   ggplot2::aes(
-    x = input_cor_median,
+    x = input_cor_q75,
     y = output_vif_max,
-    color = (output_predictors/input_predictors)*100
+    color = input_predictors
   ) +
   ggplot2::geom_point(alpha = 0.5) +
   ggplot2::scale_color_viridis_c(option = "turbo", direction = 1) +
   ggplot2::labs(
     title = "Input Correlation vs Output VIF",
-    x = "Input Median Correlation",
+    x = "Input Correlation (quantile 0.75)",
     y = "Output Maximum VIF",
-    color = "Selected\nPredictors\n(%)"
+    color = "Input\nPredictors"
   ) +
   ggplot2::theme_bw()
 
@@ -163,7 +161,7 @@ preds_plot <- experiment_adaptive_thresholds |>
   ggplot2::labs(
     title = "Input vs. Selected Predictors",
     x = "Input Predictors",
-    y = "Output Predictors",
+    y = "Selected Predictors",
     color = "Output\nmax VIF"
   ) +
   ggplot2::scale_y_continuous(breaks = c(0, 5, 10, 15, 20)) +
@@ -172,29 +170,71 @@ preds_plot <- experiment_adaptive_thresholds |>
 cor_plot | preds_plot
 ```
 
-The simulation results shows that the adaptive threshold selection works well in most use cases, with only `r (sum(experiment_adaptive_thresholds$cor_median_diff <= 0)/nrow(experiment_adaptive_thresholds))/100`% of the instances producing suboptimal results.
+The simulation results shows that the adaptive threshold selection works well in most use cases.
 
 
 ## Step By Step
 
-The adaptive selection of multicollinearity thresholds requires two steps:
+The adaptive selection of multicollinearity thresholds requires three steps:
 
-1. Computation of the median correlation of the input predictors via [cor_stats()].
+**1.** Compute the quantile 0.75 of the correlation for the input predictors via [cor_stats()].
 
 ```{r}
-max_cor <- collinear::cor_stats(
+cor_0.75 <- collinear::cor_stats(
   df = vi_smol,
-  predictors = predictors_high_collinearity,
+  predictors = vi_predictors_numeric,
   quiet = TRUE
 ) |> 
-  dplyr::filter(statistic == "median") |> 
+  dplyr::filter(statistic == "quantile_0.75") |> 
   dplyr::pull(value)
+
+cor_0.75
+```
+The 75th percentile of correlations is used rather than the median because it better captures where problematic multicollinearity begins — the upper tail of the correlation distribution.
+
+**2.** Sigmoidal transformation of the `cor_0.75` value.
+
+```{r}
+max_cor <- 0.545 + 0.24 / (1 + exp(-15 * (cor_0.75 - 0.665)))
 
 max_cor
 ```
 
+This sigmoid function smoothly maps the input correlation to a bounded `max_cor` threshold:
 
-2. The pre-trained GAM model [gam_cor_to_vif] predicts a suitable `max_vif` from the given `max_cor`. 
+ - `0.545`: floor of the curve, corresponding to VIF ≈ 2.5 (conservative filtering).
+ - `0.785`: ceiling of the curve (0.545 + 0.24), corresponding to VIF ≈ 7.5 (permissive filtering).
+ - `0.665`: midpoint where the transition is steepest.
+ - `-15`: steepness parameter controlling how sharply the curve transitions.
+ 
+The full sigmoid curve is shown below.
+
+```{r, echo = FALSE, fig.width=6, fig.height=3.5}
+sigmoid_df <- data.frame(
+  cor_input = seq(0, 1, by = 0.01)
+) |>
+  dplyr::mutate(
+    max_cor = 0.545 + 0.24 / (1 + exp(-15 * (cor_input - 0.665)))
+  )
+
+ggplot2::ggplot(sigmoid_df) +
+  ggplot2::aes(x = cor_input, y = max_cor) +
+  ggplot2::geom_line(linewidth = 1, color = "red4") +
+  ggplot2::geom_hline(yintercept = c(0.545, 0.785), linetype = "dashed", alpha = 0.5) +
+  ggplot2::geom_vline(xintercept = 0.665, linetype = "dotted", alpha = 0.5) +
+  ggplot2::labs(
+    title = "Sigmoid Transformation",
+    x = "Input Correlation (quantile 0.75)",
+    y = "Adaptive max_cor threshold"
+  ) +
+  ggplot2::annotate("text", x = 0.15, y = 0.56, label = "floor (VIF ≈ 2.5)", size = 3) +
+  ggplot2::annotate("text", x = 0.15, y = 0.80, label = "ceiling (VIF ≈ 7.5)", size = 3) +
+  ggplot2::theme_bw()
+```
+
+Datasets with low correlation (quantile 0.75 < 0.5) receive thresholds near the floor, while highly correlated datasets (quantile 0.75 > 0.8) approach the ceiling. This prevents both over-filtering of clean datasets and under-filtering of problematic ones.
+
+3. The pre-trained GAM model [gam_cor_to_vif] predicts a suitable `max_vif` from the `max_cor` resulting from the transformation.
 
 ```{r}
 max_vif <- mgcv::predict.gam(
@@ -204,41 +244,36 @@ max_vif <- mgcv::predict.gam(
 
 max_vif
 ```
+The model [gam_cor_to_vif] returns the `max_vif` value that produces the most similar variable selection to a given `max_cor`.
 
-Steps 1 and 2 are quite clear, but... where is the model used in step 3 coming from? 
+This model was fitted on the simulation results in [experiment_cor_vs_vif], where both filtering methods were applied across 10,000 random dataset configurations. For each `max_cor` value, the `max_vif` producing the highest Jaccard similarity between the two selections was identified.
 
-This model was trained on data resulting from a simulation that:
-
- - Generated random subset of a larger numeric dataset (250 columns and 30k rows).
- - Applied [cor_select()] to the with `max_cor` value selected at random from a uniform distribution.
- - Applied [vif_select()] with increasing `max_vif` values until finding a predictor selection with the highest Jaccard similarity to the one resulting from [cor_select()].
- 
-The input `max_cor`, and the `max_vif` leading to a higher selection similarity were stored in the dataframe [experiment_cor_vs_vif], with `r (nrow(collinear::experiment_cor_vs_vif))` rows.
-
-This dataframe was used to fit the model below. Notice how the `weights` argument is adjusted to the cubic transformation of the Jaccard scores to give more relevance to the cases with higher similarity between predictor selections.
+The model uses cubic weights on the Jaccard similarity scores to emphasize cases where the two methods achieved strong agreement.
 
 ```{r}
 m <- mgcv::gam(
-  formula = output_max_vif ~ s(input_max_cor, k = 9),
-  weights = experiment_cor_vs_vif$jaccard_cor_vs_vif_selection^3,
+  formula = max_vif ~ s(max_cor, k = 9),
+  weights = experiment_cor_vs_vif$selection_similarity^3,
   data = experiment_cor_vs_vif,
   select = TRUE
 )
 
 summary(m)
 ```
+The plot below shows the simulation results and the fitted model.
 
-```{r}
+```{r, echo = FALSE, fig.width=7, fig.height=3.5}
+
 collinear::experiment_cor_vs_vif |> 
   dplyr::arrange(
-    jaccard_cor_vs_vif_selection
+    selection_similarity
   ) |> 
 ggplot2::ggplot() + 
   ggplot2::aes(
-    x = input_max_cor,
-    y = output_max_vif,
-    color = jaccard_cor_vs_vif_selection,
-    weight = jaccard_cor_vs_vif_selection^3
+    x = max_cor,
+    y = max_vif,
+    color = selection_similarity,
+    weight = selection_similarity^3
   ) + 
   ggplot2::geom_point(alpha = 0.5) + 
   ggplot2::geom_smooth(
@@ -255,262 +290,32 @@ ggplot2::ggplot() +
     direction = 1
     ) + 
   ggplot2::labs(
-    title = "Experiment Pearson Correlation vs. VIF",
+    title = "Experiment Correlation vs. VIF",
     x = "Input max_cor",
-    y = "max_vif leading to most similar selection",
+    y = "max_vif with most similar selection",
     color = "Jaccard\nsimilarity\nbetween\nselections"
   ) + 
   ggplot2::theme_bw()
 ```
 
 
+The adaptive threshold system in `collinear()` removes the guesswork from multicollinearity filtering by:
 
+**Assessing the data**: Using the 75th percentile of pairwise correlations to characterize the dataset's correlation structure.
 
-```{r}
-m <- mgcv::gam(
-  formula = output_max_vif ~ s(input_max_cor, k = 9),
-  weights = experiment_cor_vs_vif$jaccard_cor_vs_vif_selection^3,
-  data = experiment_cor_vs_vif,
-  select = TRUE
-)
+**Applying bounded adaptation**: A sigmoid transformation maps this statistic to a `max_cor` threshold between 0.545 (VIF ≈ 2.5) and 0.785 (VIF ≈ 7.5), ensuring filtering is neither too aggressive nor too permissive.
 
-summary(m)
-```
+**Maintaining consistency**: The GAM model translates `max_cor` to an equivalent `max_vif`, so both filtering criteria work in harmony.
 
+This approach was validated across 10,000 simulated datasets with varying correlation structures and predictor counts, consistently producing output VIF values in the 2–7 range while retaining informative predictors.
 
-```{r, fig.width=7, fig.height=5}
-# Load the equivalence data
-data(equivalence_cor_vif)
+## When to Override
 
-# Visualize the relationship
-ggplot2::ggplot(experiment_cor_vs_vif) +
-  ggplot2::aes(x = max_cor, y = max_vif) +
-  ggplot2::geom_point(color = "gray50") +
-  ggplot2::geom_line(color = "steelblue", linewidth = 1) +
-  ggplot2::geom_point(
-    data = data.frame(
-      max_cor = max_cor,
-      max_vif = max_vif
-    ),
-    color = "red",
-    size = 3
-  ) +
-  ggplot2::labs(
-    x = "Maximum Correlation Threshold",
-    y = "Maximum VIF Threshold",
-    title = "Correlation-VIF Equivalence",
-    subtitle = "Red point shows auto-configured thresholds for vi_smol dataset"
-  ) +
-  ggplot2::theme_bw()
-```
+While the adaptive defaults work well for most cases, consider setting thresholds manually when:
 
-The red point shows where our example dataset falls on this curve. Datasets with higher median correlation receive higher thresholds, while those with lower correlation get more conservative thresholds (but never below 0.58).
+- **Strict interpretability is required**: Set `max_vif = 2.5` or lower for inference-focused models where coefficient stability is critical.
 
-## Practical Examples
+- **Maximizing predictor retention**: Set `max_cor = 0.8` and `max_vif = 10` for prediction-focused models where some multicollinearity is acceptable.
 
-### Example 1: Automatic Configuration (Default)
+- **Domain knowledge suggests specific thresholds**: When you know certain predictors should or shouldn't be retained together.
 
-When you don't specify thresholds, `collinear()` configures them automatically:
-
-```{r}
-result_auto <- collinear::collinear(
-  df = vi_smol,
-  response = "vi_numeric",
-  predictors = vi_predictors,
-  quiet = FALSE  # Show messages about automatic configuration
-)
-```
-
-The function messages inform you of the chosen thresholds. These adapt to your specific dataset's correlation structure.
-
-### Example 2: Manual Configuration
-
-You can override automatic configuration by specifying one or both thresholds:
-
-```{r}
-# Specify only max_cor (max_vif is ignored, not auto-configured)
-result_cor_only <- collinear::collinear(
-  df = vi_smol,
-  response = "vi_numeric",
-  predictors = vi_predictors,
-  max_cor = 0.7,
-  quiet = TRUE
-)
-
-# Specify both thresholds
-result_manual <- collinear::collinear(
-  df = vi_smol,
-  response = "vi_numeric",
-  predictors = vi_predictors,
-  max_cor = 0.7,
-  max_vif = 5,
-  quiet = TRUE
-)
-```
-
-### Example 3: High vs. Low Multicollinearity Datasets
-
-Let's compare how automatic configuration adapts to datasets with different multicollinearity levels:
-
-```{r}
-# Simulate low multicollinearity dataset
-set.seed(123)
-n <- 1000
-df_low <- data.frame(
-  y = rnorm(n),
-  x1 = rnorm(n),
-  x2 = rnorm(n),
-  x3 = rnorm(n),
-  x4 = rnorm(n)
-)
-
-# Check median correlation
-cor_low <- collinear::cor_stats(
-  df = df_low,
-  predictors = c("x1", "x2", "x3", "x4"),
-  quiet = TRUE
-)
-
-median_cor_low <- cor_low[cor_low$statistic == "median", "value"]
-
-cat("Low multicollinearity dataset:\n")
-cat("  Median correlation:", round(median_cor_low, 3), "\n")
-cat("  Auto max_cor:", max(0.58, round(median_cor_low, 2)), "\n\n")
-
-# Simulate high multicollinearity dataset
-df_high <- data.frame(
-  y = rnorm(n),
-  x1 = rnorm(n)
-)
-df_high$x2 <- df_high$x1 + rnorm(n, sd = 0.3)
-df_high$x3 <- df_high$x1 + rnorm(n, sd = 0.3)
-df_high$x4 <- df_high$x2 + rnorm(n, sd = 0.3)
-
-# Check median correlation
-cor_high <- collinear::cor_stats(
-  df = df_high,
-  predictors = c("x1", "x2", "x3", "x4"),
-  quiet = TRUE
-)
-
-median_cor_high <- cor_high[cor_high$statistic == "median", "value"]
-
-cat("High multicollinearity dataset:\n")
-cat("  Median correlation:", round(median_cor_high, 3), "\n")
-cat("  Auto max_cor:", max(0.58, round(median_cor_high, 2)), "\n")
-```
-
-Notice how the low multicollinearity dataset gets the minimum threshold (0.58), while the high multicollinearity dataset receives a more permissive threshold adapted to its correlation structure.
-
-## Comparison of Filtering Results
-
-Let's examine how automatic versus manual configuration affects the final selection:
-
-```{r}
-# Get selections from different approaches
-selection_auto <- result_auto$vi_numeric$selection
-selection_manual <- result_manual$selection
-
-cat("Automatic configuration:\n")
-cat("  Selected predictors:", length(selection_auto), "\n")
-cat("  Thresholds: max_cor =", max_cor_auto, ", max_vif =", max_vif_auto, "\n\n")
-
-cat("Manual configuration:\n")
-cat("  Selected predictors:", length(selection_manual), "\n")
-cat("  Thresholds: max_cor = 0.7, max_vif = 5\n")
-```
-
-We can visualize the overlap between selections:
-
-```{r, fig.width=7, fig.height=5}
-# Create comparison data
-comparison <- data.frame(
-  predictor = unique(c(selection_auto, selection_manual)),
-  auto = NA,
-  manual = NA
-)
-
-comparison$auto <- ifelse(comparison$predictor %in% selection_auto, "Selected", "Not Selected")
-comparison$manual <- ifelse(comparison$predictor %in% selection_manual, "Selected", "Not Selected")
-
-# Count agreement
-both_selected <- sum(comparison$auto == "Selected" & comparison$manual == "Selected")
-only_auto <- sum(comparison$auto == "Selected" & comparison$manual == "Not Selected")
-only_manual <- sum(comparison$auto == "Not Selected" & comparison$manual == "Selected")
-
-cat("\nSelection agreement:\n")
-cat("  Both methods:", both_selected, "\n")
-cat("  Only automatic:", only_auto, "\n")
-cat("  Only manual:", only_manual, "\n")
-```
-
-## When to Use Automatic vs. Manual Configuration
-
-### Use Automatic Configuration When:
-
-1. **Exploratory analysis**: You're getting familiar with a new dataset
-2. **No domain knowledge**: You don't have strong priors about appropriate thresholds
-3. **Multiple datasets**: You're applying the same analysis to datasets with varying correlation structures
-4. **Reproducibility**: You want filtering criteria that adapt to data changes
-
-### Use Manual Configuration When:
-
-1. **Specific requirements**: Your field has established threshold conventions
-2. **Regulatory compliance**: Your analysis must meet predetermined criteria
-3. **Comparative studies**: You need consistent thresholds across multiple analyses
-4. **Fine-tuning**: You want more or less aggressive filtering than automatic configuration provides
-
-## Best Practices
-
-1. **Start with automatic**: Begin with automatic configuration to understand your data's natural threshold
-2. **Inspect the results**: Check the selected predictors and multicollinearity statistics
-3. **Adjust if needed**: Use manual configuration if automatic thresholds don't meet your needs
-4. **Document your choice**: Always note whether you used automatic or manual configuration in your analysis
-
-## Performance Testing
-
-The automatic configuration approach has been validated through extensive simulations (see `experiment_collinear_auto`):
-
-```{r}
-data(experiment_collinear_auto)
-
-# Summary of reduction in predictors
-reduction <- (experiment_collinear_auto$input_predictors - 
-              experiment_collinear_auto$output_predictors) / 
-             experiment_collinear_auto$input_predictors * 100
-
-cat("Simulation results (n =", nrow(experiment_collinear_auto), "experiments):\n")
-cat("  Mean predictor reduction:", round(mean(reduction), 1), "%\n")
-cat("  Mean output max VIF:", round(mean(experiment_collinear_auto$output_vif_max), 2), "\n")
-cat("  Mean output median correlation:", round(mean(experiment_collinear_auto$output_cor_median), 2), "\n")
-```
-
-These results demonstrate that automatic configuration consistently produces selections with low multicollinearity while retaining a substantial proportion of the original predictors.
-
-## Recommendations
-
-1. **Default behavior**: Trust the automatic configuration for most analyses. It's designed to work well across a wide range of datasets.
-
-2. **Monitor messages**: Pay attention to the messages showing auto-configured thresholds. If they seem unusual for your data, investigate further.
-
-3. **Check outputs**: Always inspect the resulting VIF scores and correlations using `vif_df()` or `cor_df()` to ensure the filtering meets your needs.
-
-4. **Iterate if needed**: If automatic configuration is too aggressive or too permissive, switch to manual configuration with appropriate thresholds.
-
-5. **Document your approach**: Whether using automatic or manual configuration, document your choice and reasoning for reproducibility.
-
-## Summary
-
-The adaptive filtering threshold feature in `collinear`:
-
-- Eliminates guesswork by analyzing each dataset's correlation structure
-- Uses a validated correlation-VIF equivalence model
-- Maintains minimum filtering standards (max_cor ≥ 0.58)
-- Provides flexibility through manual override options
-- Has been tested across thousands of simulated scenarios
-
-This approach makes multicollinearity management more accessible while maintaining statistical rigor, allowing researchers to focus on interpretation rather than threshold selection.
-
-```{r cleanup, include=FALSE}
-# Reset any settings if needed
-```

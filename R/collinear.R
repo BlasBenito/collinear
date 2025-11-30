@@ -457,6 +457,8 @@ collinear <- function(
       sigmoid_range /
       (1 + exp(-15 * (cor.statistic - sigmoid_midpoint)))
 
+    max_cor <- round(x = max_cor, digits = 4)
+
     if(quiet == FALSE){
 
       message(

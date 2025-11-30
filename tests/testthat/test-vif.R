@@ -9,10 +9,7 @@ testthat::test_that("`vif()` works", {
     quiet = TRUE
   )
 
-  testthat::expect_message(
-    v <- vif(m = m),
-    regexp = "VIF values may be numerically unstable due to severe multicollinearity"
-  )
+  v <- vif(m = m)
 
   testthat::expect_true(
     is.numeric(v)
@@ -60,10 +57,7 @@ testthat::test_that("`vif()` works", {
 
   class(m) <- c("collinear_cor_matrix", class(m))
 
-  testthat::expect_message(
-    v <- vif(m = m),
-    regexp = "VIF values may be numerically unstable due to severe multicollinearity"
-  )
+  v <- vif(m = m)
 
   testthat::expect_true(
     all(v == 900.01)

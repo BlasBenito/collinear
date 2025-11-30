@@ -42,16 +42,6 @@ testthat::test_that("`collinear()` works", {
   testthat::expect_message(
     x <- collinear(
       df = vi_smol[1:9, ],
-      predictors = vi_predictors_numeric
-    ),
-    regexp = "VIF values may be numerically unstable due to severe multicollinearity"
-  ) |>
-    suppressWarnings() |>
-    suppressMessages()
-
-  testthat::expect_message(
-    x <- collinear(
-      df = vi_smol[1:9, ],
       predictors = vi_predictors_numeric,
       max_cor = 0.7,
       max_vif = NULL
