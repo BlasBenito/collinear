@@ -124,7 +124,7 @@ By adapting thresholds to each dataset's structure, `collinear()` provides sensi
 
 ## Effectiveness
 
-To assess the effectiveness of this adaptive threshold selection method I ran `collinear()` on 10.000 random subsets between 4 and 100 randomly selected columns of a 500 columns and 3000 rows dataset, and compared the input and output multicollinearity stats and number of predictors across runs.
+To assess the effectiveness of this adaptive threshold selection method I ran `collinear()` on 10.000 random subsets between 4 and 100 randomly selected columns of a 500 columns and 3000 rows dataset, and compared the input and output multicollinearity stats and number of predictors across runs (see  *Annex I*).
 
 The results of this simulation are in the dataframe [experiment_adaptive_thresholds], summarized below. 
 
@@ -318,4 +318,274 @@ While the adaptive defaults work well for most cases, consider setting threshold
 - **Maximizing predictor retention**: Set `max_cor = 0.8` and `max_vif = 10` for prediction-focused models where some multicollinearity is acceptable.
 
 - **Domain knowledge suggests specific thresholds**: When you know certain predictors should or shouldn't be retained together.
+
+## Annex 
+
+### 
+
+```{r}
+# =============================================================================
+# Simulation: Testing Adaptive Multicollinearity Thresholds
+# =============================================================================
+# This script evaluates the effectiveness of the sigmoid-based adaptive
+# threshold selection in collinear(). It runs 10,000 iterations on random
+# subsets of a synthetic dataset with varying correlation structures,
+# comparing input and output multicollinearity statistics.
+# =============================================================================
+
+# Working directory setup
+if (basename(getwd()) != "experiment_adaptive_thresholds") {
+ setwd(here::here())
+ setwd("dev_scripts/experiment_adaptive_thresholds")
+}
+
+# Dependencies
+library(collinear)
+library(future)
+library(ggplot2)
+library(patchwork)
+library(distantia)
+library(progressr)
+
+# Parallelization setup
+future::plan(
+ strategy = future::multisession,
+ workers = future::availableCores() - 1
+)
+
+# =============================================================================
+# Simulation Parameters
+# =============================================================================
+
+# Synthetic dataset dimensions
+ncols <- 100
+nrows <- 3000
+
+# Simulation setup
+n <- 10000
+iterations <- seq_len(n)
+min_cols <- 4
+max_cols <- 100
+seed <- 2
+
+# =============================================================================
+# Synthetic Dataset Generation
+# =============================================================================
+
+# Generate correlated time series data using distantia
+# The zoo_simulate() function creates realistic correlation structures
+x1 <- distantia::zoo_simulate(
+ name = "sim",
+ cols = ncols,
+ rows = nrows,
+ seed = seed,
+ seasons = 2,
+ independent = FALSE
+) |>
+ as.data.frame()
+
+# Replicate to create a larger pool of predictors (500 columns)
+# This ensures sufficient redundancy for multicollinearity testing
+df <- dplyr::bind_cols(x1, x1, x1, x1, x1)
+
+# =============================================================================
+# Results Template
+# =============================================================================
+
+# Pre-allocate dataframe to store simulation results
+iterations_df <- data.frame(
+ input_predictors = sample(
+   x = seq(from = min_cols, to = max_cols),
+   size = n,
+   replace = TRUE
+ ),
+ output_predictors = NA_integer_,
+ input_cor_q75 = NA_real_,
+ output_cor_q75 = NA_real_,
+ input_cor_max = NA_real_,
+ output_cor_max = NA_real_,
+ input_vif_max = NA_real_,
+ output_vif_max = NA_real_
+)
+
+# =============================================================================
+# Run Simulation
+# =============================================================================
+
+set.seed(seed)
+
+# Progress bar setup
+progressr::handlers(global = TRUE)
+progressr::handlers("txtprogressbar")
+
+progressr::with_progress({
+
+ p <- progressr::progressor(along = iterations)
+
+ experiment_list <- future.apply::future_lapply(
+   X = iterations,
+   FUN = function(i) {
+
+     p()
+
+     # Get iteration parameters
+     iterations.df.i <- iterations_df[i, ]
+
+     # Random subset of predictors
+     df.i <- df[
+       ,
+       sample(x = seq_len(ncol(df)), size = iterations.df.i$input_predictors)
+     ]
+
+     # Validate and clean the subset
+     df.i <- validate_arg_df(
+       df = df.i,
+       predictors = colnames(df.i),
+       quiet = TRUE
+     )
+
+     # Compute input multicollinearity statistics
+     input_stats <- collinear_stats(
+       df = df.i,
+       quiet = TRUE
+     )
+
+     iterations.df.i$input_cor_q75 <- input_stats |>
+       dplyr::filter(method == "correlation", statistic == "quantile_0.75") |>
+       dplyr::pull(value)
+
+     iterations.df.i$input_cor_max <- input_stats |>
+       dplyr::filter(method == "correlation", statistic == "maximum") |>
+       dplyr::pull(value)
+
+     iterations.df.i$input_vif_max <- input_stats |>
+       dplyr::filter(method == "vif", statistic == "maximum") |>
+       dplyr::pull(value)
+
+     # Skip datasets with negligible multicollinearity
+     # These don't test the adaptive threshold system meaningfully
+     if (iterations.df.i$input_vif_max <= 2.5) {
+       return(NULL)
+     }
+
+     # Apply adaptive multicollinearity filtering
+     selection <- collinear::collinear(
+       df = df.i,
+       predictors = colnames(df.i),
+       quiet = TRUE
+     )
+
+     # Compute output multicollinearity statistics
+     output_stats <- collinear_stats(
+       df = selection$result$df,
+       predictors = selection$result$selection
+     )
+
+     iterations.df.i$output_cor_q75 <- output_stats |>
+       dplyr::filter(method == "correlation", statistic == "quantile_0.75") |>
+       dplyr::pull(value)
+
+     iterations.df.i$output_cor_max <- output_stats |>
+       dplyr::filter(method == "correlation", statistic == "maximum") |>
+       dplyr::pull(value)
+
+     iterations.df.i$output_vif_max <- output_stats |>
+       dplyr::filter(method == "vif", statistic == "maximum") |>
+       dplyr::pull(value)
+
+     # Flag unexpected results for debugging
+     if (iterations.df.i$output_vif_max > 10) {
+       save(df.i, file = paste0("wrong_data_", i, ".RData"))
+     }
+
+     iterations.df.i$output_predictors <- length(selection$result$selection)
+
+     return(iterations.df.i)
+
+   },
+   future.seed = TRUE
+ )
+
+})
+
+# =============================================================================
+# Process Results
+# =============================================================================
+
+experiment_adaptive_thresholds <- experiment_list |>
+ dplyr::bind_rows() |>
+ dplyr::select(
+   input_predictors,
+   output_predictors,
+   input_cor_q75,
+   output_cor_q75,
+   input_cor_max,
+   output_cor_max,
+   input_vif_max,
+   output_vif_max
+ ) |>
+ dplyr::arrange(output_vif_max)
+
+# =============================================================================
+# Visualization
+# =============================================================================
+
+# Left panel: Input correlation vs output VIF
+# Shows how the adaptive system bounds output VIF across correlation structures
+cor_plot <- experiment_adaptive_thresholds |>
+ ggplot2::ggplot() +
+ ggplot2::aes(
+   x = input_cor_q75,
+   y = output_vif_max,
+   color = (output_predictors / input_predictors) * 100
+ ) +
+ ggplot2::geom_point(alpha = 0.5) +
+ ggplot2::scale_color_viridis_c(option = "turbo", direction = 1) +
+ ggplot2::labs(
+   title = "Input Correlation vs Output VIF",
+   x = "Input Correlation (quantile 0.75)",
+   y = "Output Maximum VIF",
+   color = "Selected\nPredictors\n(%)"
+ ) +
+ ggplot2::theme_bw()
+
+# Right panel: Input vs output predictor counts
+# Shows filtering intensity across different input sizes
+preds_plot <- experiment_adaptive_thresholds |>
+ ggplot2::ggplot() +
+ ggplot2::aes(
+   x = input_predictors,
+   y = output_predictors,
+   color = output_vif_max
+ ) +
+ ggplot2::geom_point(alpha = 0.5) +
+ ggplot2::geom_smooth(
+   method = "gam",
+   formula = y ~ s(x, k = 3),
+   color = "gray50",
+   se = TRUE
+ ) +
+ ggplot2::scale_color_viridis_c(option = "turbo", direction = 1) +
+ ggplot2::labs(
+   title = "Input vs. Selected Predictors",
+   x = "Input Predictors",
+   y = "Selected Predictors",
+   color = "Output\nmax VIF"
+ ) +
+ ggplot2::scale_y_continuous(breaks = c(0, 5, 10, 15, 20)) +
+ ggplot2::theme_bw()
+
+# Combined figure
+cor_plot | preds_plot
+
+# =============================================================================
+# Cleanup and Export
+# =============================================================================
+
+# Reset parallelization backend
+future::plan(sequential)
+
+# Save results to package data
+usethis::use_data(experiment_adaptive_thresholds, overwrite = TRUE)
+```
 

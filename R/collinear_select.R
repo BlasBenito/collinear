@@ -3,9 +3,7 @@
 #' @description
 #' Automatizes multicollinearity filtering via pairwise correlation and/or variance inflation factors in dataframes with numeric and categorical predictors.
 #'
-#' The argument \code{max_cor} determines the maximum variance inflation factor allowed in the resulting selection of predictors.
-#'
-#' The argument \code{max_vif} determines the maximum variance inflation factor allowed in the resulting selection of predictors.
+#' The argument \code{max_cor} determines the maximum pairwise correlation allowed in the resulting selection of predictors, while \code{max_vif} does the same for variance inflation factors.
 #'
 #' The argument \code{preference_order} accepts a character vector of predictor names ranked from first to last index, or a dataframe resulting from [preference_order()]. When two predictors in this vector or dataframe are highly collinear, the one with a lower ranking is removed. This option helps protect predictors of interest. If not provided, predictors are ranked from lower to higher multicollinearity.
 #' Please check the sections **Variance Inflation Factors**, **VIF-based Filtering**, and **Pairwise Correlation Filtering** at the end of this help file for further details.

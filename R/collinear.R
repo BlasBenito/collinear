@@ -425,39 +425,71 @@ collinear <- function(
       function_name = function_name
     )
 
-    cor.stats <- cor_stats(
+    cor.stats <- collinear_stats(
       df = cor.df,
       predictors = predictors,
       quiet = TRUE,
       function_name = function_name
     )
 
-    #adaptive max_cor threshold using sigmoid soft clamping
-    #smooth transition between conservative and permissive filtering
+    #check if filtering is needed at all
+    vif.max <- cor.stats[
+      cor.stats$method == "vif" &
+        cor.stats$statistic == "maximum",
+      "value"
+      ]
 
-    #correlation structure of the input data
-    cor.statistic <- cor.stats[
-      cor.stats$statistic == "quantile_0.75",
+    cor.max <- cor.stats[
+      cor.stats$method == "correlation" &
+        cor.stats$statistic == "maximum",
       "value"
     ]
 
-    #max_cor = 0.545 corresponds to VIF ≈ 2.5 (conservative)
-    sigmoid_floor <- 0.545
+    #data needs no filtering
+    if(vif.max <= 2.5){
 
-    #max_cor = 0.785 corresponds to VIF ≈ 7.5 (permissive)
-    sigmoid_ceiling <- 0.785
+      max_vif <- 2.5
+      max_cor <- cor.max + 0.01
 
-    #sigmoid params
-    sigmoid_midpoint <- (sigmoid_floor + sigmoid_ceiling) / 2
-    sigmoid_range <- sigmoid_ceiling - sigmoid_floor
+    } else {
 
-    #smooth sigmoid transition between floor and ceiling
-    #parameter (-15) controls transition sharpness
-    max_cor <- sigmoid_floor +
-      sigmoid_range /
-      (1 + exp(-15 * (cor.statistic - sigmoid_midpoint)))
+      #adaptive max_cor threshold using sigmoid soft clamping
+      #smooth transition between conservative and permissive filtering
 
-    max_cor <- round(x = max_cor, digits = 4)
+      #correlation structure of the input data
+      cor.statistic <- cor.stats[
+        cor.stats$statistic == "quantile_0.75",
+        "value"
+      ]
+
+      #max_cor = 0.545 corresponds to VIF ≈ 2.5 (conservative)
+      sigmoid_floor <- 0.545
+
+      #max_cor = 0.785 corresponds to VIF ≈ 7.5 (permissive)
+      sigmoid_ceiling <- 0.785
+
+      #sigmoid params
+      sigmoid_midpoint <- (sigmoid_floor + sigmoid_ceiling) / 2
+      sigmoid_range <- sigmoid_ceiling - sigmoid_floor
+
+      #smooth sigmoid transition between floor and ceiling
+      #parameter (-15) controls transition sharpness
+      max_cor <- sigmoid_floor +
+        sigmoid_range /
+        (1 + exp(-15 * (cor.statistic - sigmoid_midpoint)))
+
+      max_cor <- round(x = max_cor, digits = 4)
+
+      max_vif <- mgcv::predict.gam(
+        object = collinear::gam_cor_to_vif,
+        newdata = data.frame(
+          max_cor = max_cor
+        )
+      ) |>
+        round(digits = 4)
+
+    }
+
 
     if(quiet == FALSE){
 
@@ -468,18 +500,6 @@ collinear <- function(
         max_cor,
         "."
       )
-
-    }
-
-    max_vif <- mgcv::predict.gam(
-      object = collinear::gam_cor_to_vif,
-      newdata = data.frame(
-        max_cor = max_cor
-      )
-    ) |>
-      round(digits = 4)
-
-    if(quiet == FALSE){
 
       message(
         "\n",
@@ -492,7 +512,6 @@ collinear <- function(
     }
 
   }
-
 
   #compute correlation matrix if needed
   if(
