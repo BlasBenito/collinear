@@ -30,5 +30,11 @@ The source data is \link{vi} plus 200 synthetic columns, for a total of 249 colu
 \examples{
 data(experiment_adaptive_thresholds)
 str(experiment_adaptive_thresholds)
+
+#experiment's code
+system.file(
+  "experiments/validation_adaptive_thresholds.R",
+  package = "collinear"
+  )
 }
 \keyword{datasets}

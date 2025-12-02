@@ -463,10 +463,12 @@ collinear <- function(
       ]
 
       #max_cor = 0.545 corresponds to VIF ≈ 2.5 (conservative)
-      sigmoid_floor <- 0.545
+      prediction_df <- collinear::prediction_cor_to_vif
+
+      sigmoid_floor <- prediction_df[which.min(abs(prediction_df$max_vif - 2.5)), "max_cor"]
 
       #max_cor = 0.785 corresponds to VIF ≈ 7.5 (permissive)
-      sigmoid_ceiling <- 0.785
+      sigmoid_ceiling <- prediction_df[which.min(abs(prediction_df$max_vif - 7.5)), "max_cor"]
 
       #sigmoid params
       sigmoid_midpoint <- (sigmoid_floor + sigmoid_ceiling) / 2

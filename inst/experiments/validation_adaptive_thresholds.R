@@ -1,6 +1,5 @@
-# =============================================================================
-# Simulation: Validating Adaptive Multicollinearity Thresholds
-# =============================================================================
+# Experiment: Validating Adaptive Multicollinearity Thresholds
+
 # This experiment validates the sigmoid-based adaptive threshold system in
 # collinear() by running 10,000 iterations on random subsets of a synthetic
 # dataset with realistic correlation structures.
@@ -9,9 +8,8 @@
 # 1. Output VIF stays bounded between ~2.5 and ~7.5 across most input conditions
 # 2. The system adapts appropriately to different correlation structures
 # 3. Predictor retention scales reasonably with input size
-# =============================================================================
 
-#dependencies
+#dependencies ----
 library(collinear)
 library(future)
 library(future.apply)
@@ -21,12 +19,19 @@ library(ggplot2)
 library(patchwork)
 library(distantia)
 
-#simulation parameters
-##simulated data size
+# parallelization ----
+future::plan(
+  strategy = future::multisession,
+  workers = future::availableCores() - 1
+)
+
+# simulation parameters ----
+
+#simulated data size
 input_columns <- 500
 input_rows <- 10000
 
-## total number of repetitions
+#total number of repetitions
 n_iterations <- 10000
 
 #minimum and maximum number of predictors allowed during subsetting
@@ -36,7 +41,7 @@ max_predictors <- 100
 #random seed
 seed <- 1
 
-#synthetic data
+#synthetic data ----
 df <- distantia::zoo_simulate(
   name = "sim",
   cols = input_columns,
@@ -47,7 +52,27 @@ df <- distantia::zoo_simulate(
 ) |>
   as.data.frame()
 
-# functions
+#iteration parameters ----
+#rows = predictors * 30 to ensure stable VIF estimates
+set.seed(seed)
+iterations_df <- data.frame(
+  n_cols = sample(
+    x = min_predictors:max_predictors,
+    size = n_iterations,
+    replace = TRUE
+  )
+) |>
+  dplyr::rowwise() |>
+  dplyr::mutate(
+    n_rows = n_cols * sample(
+      x = 30:100,
+      size = 1
+    )
+  ) |>
+  dplyr::ungroup() |>
+  as.data.frame()
+
+# functions ----
 
 #' Extract multicollinearity stats
 #' @param stats output from collinear_stats()
@@ -138,42 +163,24 @@ run_iteration <- function(df, n_cols, n_rows) {
 
 }
 
-#iteration parameters
-iteration_params <- data.frame(
-  n_cols = sample(
-    x = min_predictors:max_predictors,
-    size = n_iterations,
-    replace = TRUE
-  )
-) |>
-  #rows = predictors * 30 to ensure stable VIF estimates
-  dplyr::mutate(
-    n_rows = n_cols * 30
-  )
 
-#parallelization
-future::plan(
-  strategy = future::multisession,
-  workers = future::availableCores() - 1
-)
 
-#progress bar
+#progress bar ----
 progressr::handlers(global = TRUE)
 progressr::handlers("txtprogressbar")
-
-#run iterations in parallel
 progressr::with_progress({
 
   p <- progressr::progressor(steps = n_iterations)
 
+#run iterations in parallel ----
   results_list <- future.apply::future_lapply(
     X = seq_len(n_iterations),
     FUN = function(i) {
       p()
       run_iteration(
         df = df,
-        n_cols = iteration_params$n_cols[i],
-        n_rows = iteration_params$n_rows[i]
+        n_cols = iterations_df$n_cols[i],
+        n_rows = iterations_df$n_rows[i]
       )
     },
     future.seed = TRUE
@@ -181,12 +188,12 @@ progressr::with_progress({
 
 })
 
-#combine experiment results
+#combine results ----
 experiment_adaptive_thresholds <- results_list |>
   dplyr::bind_rows() |>
   dplyr::arrange(output_vif_max)
 
-#plots
+#visualization ----
 #left panel: shows output VIF across correlation structures
 p1 <- ggplot2::ggplot(experiment_adaptive_thresholds) +
   ggplot2::aes(
@@ -241,8 +248,9 @@ p2 <- ggplot2::ggplot(experiment_adaptive_thresholds) +
 #combine panels
 p1 | p2
 
-#disable parallelization
-future::plan(sequential)
 
-#export example dataset
+#save results ----
 usethis::use_data(experiment_adaptive_thresholds, overwrite = TRUE)
+
+#reset parallelization ----
+future::plan(sequential)
