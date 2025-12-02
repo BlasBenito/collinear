@@ -275,7 +275,7 @@ collinear_select <- function(
   ]
   class(m) <- m.class
 
-  # Check if filtering is needed
+  #check if filtering is needed
   skip_cor <- FALSE
   skip_vif <- FALSE
 

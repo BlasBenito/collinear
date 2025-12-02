@@ -2,7 +2,7 @@
 % Please edit documentation in R/cor_stats.R
 \name{cor_stats}
 \alias{cor_stats}
-\title{Pairwise Correlation Stats}
+\title{Absolute Correlation Stats}
 \usage{
 cor_stats(df = NULL, predictors = NULL, quiet = FALSE, ...)
 }
@@ -19,7 +19,7 @@ cor_stats(df = NULL, predictors = NULL, quiet = FALSE, ...)
 dataframe with columns \code{method} (with value "correlation"), \code{statistic} and \code{value}
 }
 \description{
-Computes the the minimum, mean, maximum, and quantiles 0.05, 0.25, median (0.5), 0.75, and 0.95 of the column "correlation" in the output of \code{\link[=cor_df]{cor_df()}}.
+Computes the the minimum, mean, maximum, and quantiles 0.05, 0.25, median (0.5), 0.75, and 0.95 on the absolute values of the column "correlation" in the output of \code{\link[=cor_df]{cor_df()}}.
 }
 \examples{
 data(

@@ -142,6 +142,12 @@
 #' @examples
 #' data(experiment_adaptive_thresholds)
 #' str(experiment_adaptive_thresholds)
+#'
+#' #experiment's code
+#' system.file(
+#'   "experiments/validation_adaptive_thresholds.R",
+#'   package = "collinear"
+#'   )
 "experiment_adaptive_thresholds"
 
 #' GAM Relating Maximum Correlation to VIF Threshold

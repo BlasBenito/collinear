@@ -448,8 +448,8 @@ collinear <- function(
     #data needs no filtering
     if(vif.max <= 2.5){
 
-      max_vif <- 2.5
-      max_cor <- cor.max + 0.01
+      max_vif <- 2.5000
+      max_cor <- round(x = cor.max, digits = 4)
 
     } else {
 
