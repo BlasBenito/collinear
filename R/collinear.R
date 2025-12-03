@@ -425,7 +425,7 @@ collinear <- function(
       function_name = function_name
     )
 
-    cor.stats <- collinear_stats(
+    collinearity.stats <- collinear_stats(
       df = cor.df,
       predictors = predictors,
       quiet = TRUE,
@@ -433,15 +433,15 @@ collinear <- function(
     )
 
     #check if filtering is needed at all
-    vif.max <- cor.stats[
-      cor.stats$method == "vif" &
-        cor.stats$statistic == "maximum",
+    vif.max <- collinearity.stats[
+      collinearity.stats$method == "vif" &
+        collinearity.stats$statistic == "maximum",
       "value"
       ]
 
-    cor.max <- cor.stats[
-      cor.stats$method == "correlation" &
-        cor.stats$statistic == "maximum",
+    cor.max <- collinearity.stats[
+      collinearity.stats$method == "correlation" &
+        collinearity.stats$statistic == "maximum",
       "value"
     ]
 
@@ -457,10 +457,12 @@ collinear <- function(
       #smooth transition between conservative and permissive filtering
 
       #correlation structure of the input data
-      cor.statistic <- cor.stats[
-        cor.stats$statistic == "quantile_0.75",
+      cor.statistic <- collinearity.stats[
+        collinearity.stats$method == "correlation" &
+          collinearity.stats$statistic == "quantile_0.75",
         "value"
       ]
+
 
       #max_cor = 0.545 corresponds to VIF ≈ 2.5 (conservative)
       prediction_df <- collinear::prediction_cor_to_vif

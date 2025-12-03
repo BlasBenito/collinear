@@ -26,11 +26,13 @@ The function `collinear()` automatically configures multicollinearity filtering 
 - Keeps output VIF bounded within sensible limits (approximately 2.5 to 7.5).
 - Allows manual override when specific thresholds are needed.
 
+This approach was validated across 10,000 simulated datasets with varying correlation structures and predictor counts, consistently producing output VIF values in the 2–7 range while retaining informative predictors.
+
 This article explains how the automatic threshold configuration works, demonstrates its effectiveness across varied datasets, and provides guidance on when manual configuration might be preferred.
 
 ## Setup
 
-For this article we need the following packages and configuration.
+This article requires the following packages, setup, and example data.
 
 ```{r, message = FALSE, warning = FALSE, results = "hide"}
 library(collinear)
@@ -51,10 +53,14 @@ future::plan(
 
 #example data
 data(
+  #dataframe with predictors
   vi_smol, 
+  #vector of predictor names
   vi_predictors_numeric,
+  #dataframes with experiment data
   experiment_adaptive_thresholds,
   experiment_cor_vs_vif,
+  #pre-trained GAM model
   gam_cor_to_vif
   )
 ```
@@ -80,7 +86,7 @@ collinear::collinear_stats(
   )
 ```
 
-We can run them through `collinear()`.
+Notice that the VIF scores are very large! To fix this issue can run these predictors through `collinear()`.
 
 ```{r}
 x <- collinear::collinear(
@@ -103,7 +109,7 @@ collinear::collinear_stats(
   )
 ```
 
-These stats show very reasonable VIF scores now.
+These stats show much more reasonable VIF scores now.
 
 However, if you are aiming for specific multicollinearity thresholds, the automatic setup can be overriden by providing the desired values for `max_cor` and/or `max_vif`. If one of them is not defined, it will be ignored.
 
@@ -111,8 +117,8 @@ However, if you are aiming for specific multicollinearity thresholds, the automa
 x <- collinear::collinear(
   df = vi_smol,
   predictors = vi_predictors_numeric,
-  max_cor = 0.7,
-  max_vif = 5
+  max_cor = 0.5,
+  max_vif = 2.5
 )
 
 collinear::collinear_stats(
@@ -150,8 +156,16 @@ p1 <- ggplot2::ggplot(experiment_adaptive_thresholds) +
     color = input_predictors
   ) +
   ggplot2::geom_point(alpha = 0.5) +
-  ggplot2::geom_hline(yintercept = 2.5, linetype = "dashed", color = "gray30") +
-  ggplot2::geom_hline(yintercept = 7.5, linetype = "dashed", color = "gray30") +
+  ggplot2::geom_hline(
+    yintercept = 2.5, 
+    linetype = "dashed", 
+    color = "gray30"
+    ) +
+  ggplot2::geom_hline(
+    yintercept = 7.5, 
+    linetype = "dashed", 
+    color = "gray30"
+    ) +
   ggplot2::annotate(
     "text",
     x = min(experiment_adaptive_thresholds$input_cor_q75),
@@ -171,7 +185,10 @@ p1 <- ggplot2::ggplot(experiment_adaptive_thresholds) +
     color = "gray30"
   ) +
   ggplot2::scale_color_viridis_c(option = "turbo") +
-  ggplot2::scale_y_continuous(breaks = c(1, 2, 3, 4, 5, 6, 7, 8), limits = c(1, 8)) +
+  ggplot2::scale_y_continuous(
+    breaks = c(1, 2, 3, 4, 5, 6, 7, 8), 
+    limits = c(1, 8)
+    ) +
   ggplot2::labs(
     title = "Adaptive Threshold Effectiveness",
     x = "Input Correlation (quantile 0.75)",
@@ -233,7 +250,7 @@ cor_0.75 <- collinear::cor_stats(
 cor_0.75
 ```
 
-**2.** Sigmoidal transformation of the `cor_0.75` value. This sigmoid function smoothly maps the input correlation to a bounded `max_cor` threshold.
+**2.** Sigmoid transformation of the `cor_0.75` value. This sigmoid function smoothly maps the input correlation to a bounded `max_cor` threshold.
 
 ```{r}
 max_cor <- 0.493 + 0.242 / (1 + exp(-15 * (cor_0.75 - 0.614)))
@@ -242,8 +259,8 @@ max_cor
 ```
 Where:
 
- - `0.493`: floor of the curve, corresponding to VIF ≈ 2.5 (conservative filtering).
- - `0.735`: ceiling of the curve (0.545 + 0.24), corresponding to VIF ≈ 7.5 (permissive filtering).
+ - `0.493`: floor of the curve, corresponding to VIF ≈ 2.5 in [prediction_cor_to_vif] (conservative filtering).
+ - `0.735`: ceiling of the curve (0.545 + 0.24), corresponding to VIF ≈ 7.5 in [prediction_cor_to_vif] (permissive filtering).
  - `0.614`: midpoint where the transition is steepest.
  - `-15`: steepness parameter controlling how sharply the curve transitions.
  
@@ -287,30 +304,39 @@ max_vif
 
 This model was fitted on the simulation results in [experiment_cor_vs_vif], where both filtering methods were applied across 10,000 random dataset configurations. For each `max_cor` value, the `max_vif` producing the highest Jaccard similarity between the two selections was identified.
 
-The model uses cubic weights on the Jaccard similarity scores to emphasize cases where the two methods achieved strong agreement.
+The experiment script can be opened in RStudio as follows:
 
-```{r}
+```{r, eval = FALSE}
+system.file(
+  "experiments/relationship_cor_vs_vif.R",
+  package = "collinear"
+) |> 
+  rstudioapi::navigateToFile()
+```
+
+The model uses squared Jaccard similarity as weights to emphasize cases where `cor_select()` and `vif_select()` achieved strong agreement.
+
+```{r, eval = FALSE}
 m <- mgcv::gam(
   formula = max_vif ~ s(max_cor, k = 6),
-  weights = experiment_cor_vs_vif$selection_similarity^2,
+  weights = experiment_cor_vs_vif$out_selection_jaccard^2,
   data = experiment_cor_vs_vif
 )
-
-summary(m)
 ```
+
 The plot below shows the simulation results and the fitted model.
 
 ```{r, echo = FALSE, fig.width=7, fig.height=3.5}
 collinear::experiment_cor_vs_vif |> 
   dplyr::arrange(
-    selection_similarity
+    out_selection_jaccard
   ) |> 
 ggplot2::ggplot() + 
   ggplot2::aes(
     x = max_cor,
     y = max_vif,
-    color = selection_similarity,
-    weight = selection_similarity^3
+    color = out_selection_jaccard,
+    weight = out_selection_jaccard^3
   ) + 
   ggplot2::geom_point(alpha = 0.5) + 
   ggplot2::geom_smooth(
@@ -327,24 +353,15 @@ ggplot2::ggplot() +
     direction = 1
     ) + 
   ggplot2::labs(
-    title = "Experiment Correlation vs. VIF",
     x = "Input max_cor",
-    y = "max_vif with most similar selection",
-    color = "Jaccard\nsimilarity\nbetween\nselections"
+    y = "Equivalent max_vif Threshold",
+    color = "Jaccard\nSimilarity"
   ) + 
   ggplot2::theme_bw()
 ```
 
 
-The adaptive threshold system in `collinear()` removes the guesswork from multicollinearity filtering by:
-
-**Assessing the data**: Using the 75th percentile of pairwise correlations to characterize the dataset's correlation structure.
-
-**Applying bounded adaptation**: A sigmoid transformation maps this statistic to a `max_cor` threshold between 0.545 (VIF ≈ 2.5) and 0.785 (VIF ≈ 7.5), ensuring filtering is neither too aggressive nor too permissive.
-
-**Maintaining consistency**: The GAM model translates `max_cor` to an equivalent `max_vif`, so both filtering criteria work in harmony.
-
-This approach was validated across 10,000 simulated datasets with varying correlation structures and predictor counts, consistently producing output VIF values in the 2–7 range while retaining informative predictors.
+The curve tracks through the high-similarity region (red/orange points), indicating that the model successfully captures the relationship between `max_cor` and `max_vif` for cases where both methods agree.
 
 ## When to Override
 
@@ -352,4 +369,12 @@ While the adaptive defaults work well for most cases, consider setting threshold
 
 - **Strict coefficient interpretability is required**: Set `max_vif = 2.5` or lower for models where coefficient stability is critical.
 
-- **Maximizing predictor retention**: Set `max_cor = 0.8` and `max_vif = 10` for prediction-focused models where some multicollinearity is acceptable.
+- **Maximizing predictor retention**: Set `max_cor = 0.9` and `max_vif = 10` for prediction-focused models where some multicollinearity is acceptable.
+
+- **Domain-specific requirements**: Some fields have established VIF thresholds (e.g., VIF < 5 or VIF < 10) that should be used for consistency with existing literature.
+
+```{r, include = FALSE}
+#reset parallelization
+future::plan(future::sequential)
+```
+
