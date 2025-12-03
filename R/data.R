@@ -98,20 +98,53 @@
 #' @family example_data
 "toy"
 
+#' Results of Adaptive Threshold Validation Experiment
+#'
+#' A dataframe summarizing 10,000 experiments validating the adaptive multicollinearity threshold system in [collinear()]. Each row records input data characteristics and the resulting multicollinearity metrics after filtering.
+#'
+#' The source data is a synthetic dataframe with 500 columns and 10,000 rows generated using \code{distantia::zoo_simulate()} with correlated time series (\code{independent = FALSE}, \code{seasons = 0}).
+#'
+#' Each iteration randomly subsets 10-100 predictors and 30-100 rows per predictor, then applies [collinear()] with automatic threshold configuration to assess:
+#' \itemize{
+#'   \item Whether output VIF stays bounded between ~2.5 and ~7.5
+#'   \item How the system adapts to different correlation structures
+#'   \item How predictor retention scales with input size
+#' }
+#'
+#' @format A dataframe with 10,000 rows and 9 variables:
+#' \describe{
+#'   \item{input_rows}{Number of rows in the input data subset.}
+#'   \item{input_predictors}{Number of predictors in the input data subset.}
+#'   \item{output_predictors}{Number of predictors retained after filtering.}
+#'   \item{input_cor_q75}{75th percentile of pairwise correlations in the input data.}
+#'   \item{output_cor_q75}{75th percentile of pairwise correlations in the selected predictors.}
+#'   \item{input_cor_max}{Maximum pairwise correlation in the input data.}
+#'   \item{output_cor_max}{Maximum pairwise correlation in the selected predictors.}
+#'   \item{input_vif_max}{Maximum VIF in the input data.}
+#'   \item{output_vif_max}{Maximum VIF in the selected predictors.}
+#' }
+#'
+#' @examples
+#' data(experiment_adaptive_thresholds)
+#' str(experiment_adaptive_thresholds)
+"experiment_adaptive_thresholds"
+
 #' Results of a Collinearity-Filtering Simulation
 #'
 #' A dataframe summarizing 10,000 experiments comparing the output of [cor_select()] and [vif_select()]. Each row records the input sampling parameters and the resulting feature-selection metrics.
 #'
-#' The source data is [vi] plus 200 synthetic columns, for a total of 249 columns and 30.000 rows.
+#' The source data is a synthetic dataframe with 500 columns and 10,000 rows generated using \code{distantia::zoo_simulate()} with correlated time series (\code{independent = FALSE}).
 #'
-#' @format A dataframe with 9354 rows and 6 variables:
+#' Each iteration randomly subsets 10-50 predictors and 30-100 rows per predictor, applies [cor_select()] with a random \code{max_cor} threshold, then finds the \code{max_vif} value that maximizes Jaccard similarity between the two selections.
+#'
+#' @format A dataframe with 10,000 rows and 6 variables:
 #' \describe{
-#'   \item{input_rows}{Number of rows in the input data.}
-#'   \item{input_predictors}{Number of predictors in the input data.}
-#'   \item{output_predictors}{Number of predictors selected by [cor_select()].}
+#'   \item{input_rows}{Number of rows in the input data subset.}
+#'   \item{input_predictors}{Number of predictors in the input data subset.}
+#'   \item{output_predictors}{Number of predictors selected by [vif_select()] at the best-matching \code{max_vif}.}
 #'   \item{max_cor}{Maximum allowed pairwise correlation supplied to [cor_select()].}
-#'   \item{max_vif}{Smallest VIF threshold at which [vif_select()] produced the most similar to [cor_select()] for the given \code{input_max_cor}.}
-#'   \item{selection_similarity}{Jaccard similarity between the predictors selected by [cor_select()] and [vif_select()].}
+#'   \item{max_vif}{VIF threshold at which [vif_select()] produced the highest Jaccard similarity with [cor_select()] for the given \code{max_cor}.}
+#'   \item{out_selection_jaccard}{Jaccard similarity between the predictors selected by [cor_select()] and [vif_select()].}
 #' }
 #'
 #' @examples
@@ -120,57 +153,27 @@
 "experiment_cor_vs_vif"
 
 
-#' Testing the Adaptive Thresholds Selection Method Implemented in [collinear()]
-#'
-#' A dataframe with 10,000 experiment to test the efficacy of the adaptive multicollinearity threshold used by [collinear()] when \code{max_cor} and \code{max_vif} are NULL.
-#'
-#' The source data is [vi] plus 200 synthetic columns, for a total of 249 columns and 30.000 rows that are randomly subset on each iteration.
-#'
-#' @format A dataframe with 10000 rows and 7 variables:
-#' \describe{
-#'   \item{input_rows}{Number of rows in the input data.}
-#'   \item{input_predictors}{Number of predictors in the input data.}
-#'   \item{output_predictors}{Number of predictors selected by [collinear()].}
-#'   \item{input_cor_median}{Median correlation of the input predictors as returned by [collinear_stats()].}
-#'   \item{output_cor_median}{Median correlation of the selected predictors.}
-#'   \item{input_cor_max}{Maximum correlation of the input predictors as returned by [collinear_stats()].}
-#'   \item{output_cor_max}{Maximum correlation of the selected predictors.}
-#'   \item{input_vif_max}{Maximum VIF of the input predictors as returned by [collinear_stats()].}
-#'   \item{output_vif_max}{Maximum VIF of the selected predictors.}
-#' }
-#'
-#' @examples
-#' data(experiment_adaptive_thresholds)
-#' str(experiment_adaptive_thresholds)
-#'
-#' #experiment's code
-#' system.file(
-#'   "experiments/validation_adaptive_thresholds.R",
-#'   package = "collinear"
-#'   )
-"experiment_adaptive_thresholds"
-
 #' GAM Relating Maximum Correlation to VIF Threshold
 #'
 #' A fitted generalized additive model describing \code{max_vif} as a function of \code{max_cor} in [experiment_cor_vs_vif].
 #'
-#' The model was fitted with a smooth term in \code{max_cor} (basis dimension \code{k = 9}) and cubic weights proportional to the Jaccard similarity between the results of [cor_select()] and [vif_select()] to emphasize cases with high agreement between the two selection methods.
+#' The model parameters (basis dimension \code{k} and weight exponent) were selected via optimization, filtering for models in the top 90\% of R-squared and bottom 10\% of effective degrees of freedom to balance fit quality and parsimony.
+#'
+#' The final model uses squared Jaccard similarity as weights to emphasize cases with high agreement between [cor_select()] and [vif_select()].
 #'
 #' \preformatted{
 #' gam_cor_to_vif <- mgcv::gam(
-#'  formula = output_max_vif ~ s(input_max_cor, k = 9),
-#'  weights = experiment_cor_vs_vif$out_selection_jaccard^3,
-#'  data = experiment_cor_vs_vif,
-#'  select = TRUE
-#'  )
-#'}
+#'   formula = max_vif ~ s(max_cor, k = 6),
+#'   weights = experiment_cor_vs_vif$out_selection_jaccard^2,
+#'   data = experiment_cor_vs_vif
+#' )
+#' }
+#'
 #' Model performance:
 #' \itemize{
-#'   \item Adjusted R-squared: 0.918
-#'   \item Deviance explained: 91.8\%
-#'   \item Estimated scale: 0.238
-#'   \item Effective degrees of freedom for smooth: 7.47 (Ref.df = 8)
-#'   \item F-statistic for smooth term: 13,101 (p < 2e-16)
+#'   \item Adjusted R-squared: 0.834
+#'   \item Deviance explained: 83.4\%
+#'   \item Effective degrees of freedom for smooth: ~6
 #' }
 #'
 #' @format A \code{\link[mgcv]{gam}} object.
@@ -181,18 +184,16 @@
 #' plot(gam_cor_to_vif, shade = TRUE)
 "gam_cor_to_vif"
 
+
 #' Equivalence Table of Maximum Correlation and VIF Threshold
 #'
-#' A look-up table giving the predicted VIF threshold (\code{max_vif})
-#' required for [vif_select()] to match the feature selection of
-#' [cor_select()] at a given maximum allowed pairwise correlation
-#' (\code{max_cor}).
+#' A look-up table giving the predicted VIF threshold (\code{max_vif}) required for [vif_select()] to approximately match the feature selection of [cor_select()] at a given maximum allowed pairwise correlation (\code{max_cor}).
 #'
-#' Values were generated by applying \code{mgcv::predict.gam} to the fitted model [gam_cor_to_vif] and rounding to two decimal places.
+#' Values were generated by applying \code{mgcv::predict.gam()} to the fitted model [gam_cor_to_vif] and rounding to three decimal places.
 #'
-#' @format A dataframe with 91 rows and 2 numeric columns:
+#' @format A dataframe with 901 rows and 2 numeric columns:
 #' \describe{
-#'   \item{max_cor}{Maximum allowed pairwise correlation, from 0.10 to 1.00 in steps of 0.01.}
+#'   \item{max_cor}{Maximum allowed pairwise correlation, from 0.10 to 1.00 in steps of 0.001.}
 #'   \item{max_vif}{Predicted VIF threshold corresponding to each \code{max_cor}.}
 #' }
 #'

@@ -192,19 +192,76 @@ progressr::with_progress({
 experiment_cor_vs_vif <- dplyr::bind_rows(results_list) |>
   dplyr::arrange(out_selection_jaccard)
 
+
+#model gam_cor_to_vif ----
+
+#check source for weights
+hist(experiment_cor_vs_vif$out_selection_jaccard, breaks = 50)
+
+#optimization
+#find suitable k and weight exponent to fit the final model
+optimization_df <- expand.grid(
+  k = 3:9,
+  weight_exp = 2:6
+)
+
+#iterate over combinations of k and weight_exp
+for(i in seq_len(nrow(optimization_df))){
+
+  m.i <- mgcv::gam(
+    formula = max_vif ~ s(max_cor, k = optimization_df[i, "k"]),
+    weights = experiment_cor_vs_vif$out_selection_jaccard^optimization_df[i, "weight_exp"],
+    data = experiment_cor_vs_vif
+  )
+
+  #r-squared
+  optimization_df[i, "r_squared"] <- summary(m.i)$r.sq
+
+  #degrees of freedom
+  optimization_df[i, "edf"] <- sum(m.i$edf)
+
+}
+
+#select top 90% r_squared and bottom 10% edf
+#arrange by r_squared
+#select top 1
+optimization_df <- optimization_df |>
+  dplyr::filter(
+    r_squared >= stats::quantile(x = r_squared, probs = 0.90)
+  ) |>
+  dplyr::filter(
+    edf <= stats::quantile(x = edf, probs = 0.10)
+  ) |>
+  dplyr::arrange(
+    dplyr::desc(r_squared)
+  ) |>
+  dplyr::slice_head(n = 1)
+
+optimization_df
+
+
+#fit model
+gam_cor_to_vif <- mgcv::gam(
+  formula = max_vif ~ s(max_cor, k = optimization_df$k),
+  weights = experiment_cor_vs_vif$out_selection_jaccard^optimization_df$weight_exp,
+  data = experiment_cor_vs_vif
+)
+
+summary(gam_cor_to_vif)
+
+
 #visualization
 ggplot2::ggplot(experiment_cor_vs_vif) +
   ggplot2::aes(
     x = max_cor,
     y = max_vif,
-    color = out_selection_jaccard,
-    weight = out_selection_jaccard^10
+    color = out_selection_jaccard
   ) +
   ggplot2::geom_point(alpha = 0.5) +
   ggplot2::geom_smooth(
     method = "gam",
-    formula = y ~ s(x, k = 5),
-    method.args = list(select = TRUE),
+    formula = as.formula(paste0("y ~ s(x, k = ", optimization_df$k, ")")),
+    mapping = ggplot2::aes(weight = out_selection_jaccard^optimization_df[i, "weight_exp"]),
     color = "black",
     se = TRUE
   ) +
@@ -223,16 +280,7 @@ ggplot2::ggplot(experiment_cor_vs_vif) +
     legend.position = "right"
   )
 
-#GAM model
-gam_cor_to_vif <- mgcv::gam(
-  formula = max_vif ~ s(max_cor, k = 5),
-  weights = experiment_cor_vs_vif$out_selection_jaccard^10,
-  data = experiment_cor_vs_vif,
-  select = TRUE
-)
-
-summary(gam_cor_to_vif)
-
+#dataframe prediction_cor_to_vif ----
 prediction_cor_to_vif <- data.frame(
   max_cor = seq(0.10, 1.00, by = 0.001)
 )
@@ -245,11 +293,11 @@ prediction_cor_to_vif$max_vif <- mgcv::predict.gam(
 
 
 #save results ----
-# usethis::use_data(experiment_cor_vs_vif, overwrite = TRUE)
-#
-# usethis::use_data(gam_cor_to_vif, overwrite = TRUE)
-#
-# usethis::use_data(prediction_cor_to_vif, overwrite = TRUE)
+usethis::use_data(experiment_cor_vs_vif, overwrite = TRUE)
+
+usethis::use_data(gam_cor_to_vif, overwrite = TRUE)
+
+usethis::use_data(prediction_cor_to_vif, overwrite = TRUE)
 
 
 #reset parallelization ----

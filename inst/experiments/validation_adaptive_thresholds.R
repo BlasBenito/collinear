@@ -203,6 +203,16 @@ p1 <- ggplot2::ggplot(experiment_adaptive_thresholds) +
   ) +
   ggplot2::geom_point(alpha = 0.5) +
   ggplot2::geom_hline(yintercept = 2.5, linetype = "dashed", color = "gray30") +
+  ggplot2::geom_hline(yintercept = 7.5, linetype = "dashed", color = "gray30") +
+  ggplot2::annotate(
+    "text",
+    x = min(experiment_adaptive_thresholds$input_cor_q75),
+    y = 7.65,
+    label = "VIF = 7.5",
+    hjust = 0,
+    size = 3.5,
+    color = "gray30"
+  ) +
   ggplot2::annotate(
     "text",
     x = min(experiment_adaptive_thresholds$input_cor_q75),
@@ -213,6 +223,7 @@ p1 <- ggplot2::ggplot(experiment_adaptive_thresholds) +
     color = "gray30"
   ) +
   ggplot2::scale_color_viridis_c(option = "turbo") +
+  ggplot2::scale_y_continuous(breaks = c(1, 2, 3, 4, 5, 6, 7, 8), limits = c(1, 8)) +
   ggplot2::labs(
     title = "Adaptive Threshold Effectiveness",
     x = "Input Correlation (quantile 0.75)",

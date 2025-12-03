@@ -30,7 +30,7 @@ This article explains how the automatic threshold configuration works, demonstra
 
 ## Setup
 
-For this article we need the following packages and configuration. Notice the vector `predictors_high_collinearity` with a subset of `vi_predictors_numeric` with a very high collinearity.
+For this article we need the following packages and configuration.
 
 ```{r, message = FALSE, warning = FALSE, results = "hide"}
 library(collinear)
@@ -53,7 +53,9 @@ future::plan(
 data(
   vi_smol, 
   vi_predictors_numeric,
-  experiment_adaptive_thresholds
+  experiment_adaptive_thresholds,
+  experiment_cor_vs_vif,
+  gam_cor_to_vif
   )
 ```
 
@@ -62,9 +64,9 @@ data(
 
 The arguments `max_cor` and `max_vif` define the maximum pairwise correlation and variance inflation factors allowed during multicollinearity filtering. 
 
-Unlike `collinear_select()`, `cor_select()`, and `vif_select()`, which use fixed defaults (`max_cor = 0.7`, `max_vif = 5`), the function `collinear()` sets these to NULL and computes appropriate thresholds from the data.
+Unlike `collinear_select()`, `cor_select()`, and `vif_select()`, which use fixed defaults (`max_cor = 0.7`, `max_vif = 5`), the function `collinear()` sets these to `NULL` and computes appropriate thresholds from the data.
 
-Let me show you why.
+Let's see how that works.
 
 The vector `vi_predictors_numeric` names numeric predictors with a moderate multicollinearity, as the stats below show.
 
@@ -123,11 +125,11 @@ collinear::collinear_stats(
 ```
 By adapting thresholds to each dataset's structure, `collinear()` provides sensible defaults while still allowing manual override when needed.
 
-## Effectiveness
+## Validation
 
-To assess the effectiveness of this adaptive threshold selection method I ran `collinear()` on 10.000 random subsets between 4 and 100 randomly selected columns of a 500 columns and 3000 rows dataset, and compared the input and output multicollinearity stats and number of predictors across runs. 
+To validate this adaptive threshold selection method I ran `collinear()` on 10,000 random subsets of a synthetic dataset with 500 columns and 10,000 rows generated using `distantia::zoo_simulate()`. Each iteration randomly selected 10-100 predictors and 30-100 rows per predictor, then compared input and output multicollinearity statistics.
 
-The experiment's can be opened in Rstudio as follows:
+The experiment script can be opened in RStudio as follows:
 
 ```{r, eval = FALSE}
 system.file(
@@ -140,6 +142,7 @@ system.file(
 The results of this experiment are in the dataframe [experiment_adaptive_thresholds], plotted below. 
 
 ```{r, echo = FALSE, fig.width=8, fig.height=3.5}
+#left panel: shows output VIF across correlation structures
 p1 <- ggplot2::ggplot(experiment_adaptive_thresholds) +
   ggplot2::aes(
     x = input_cor_q75,
@@ -148,16 +151,27 @@ p1 <- ggplot2::ggplot(experiment_adaptive_thresholds) +
   ) +
   ggplot2::geom_point(alpha = 0.5) +
   ggplot2::geom_hline(yintercept = 2.5, linetype = "dashed", color = "gray30") +
+  ggplot2::geom_hline(yintercept = 7.5, linetype = "dashed", color = "gray30") +
   ggplot2::annotate(
     "text",
     x = min(experiment_adaptive_thresholds$input_cor_q75),
-    y = 2.80,
+    y = 7.65,
+    label = "VIF = 7.5",
+    hjust = 0,
+    size = 3.5,
+    color = "gray30"
+  ) +
+  ggplot2::annotate(
+    "text",
+    x = min(experiment_adaptive_thresholds$input_cor_q75),
+    y = 2.65,
     label = "VIF = 2.5",
     hjust = 0,
-    size = 3,
+    size = 3.5,
     color = "gray30"
   ) +
   ggplot2::scale_color_viridis_c(option = "turbo") +
+  ggplot2::scale_y_continuous(breaks = c(1, 2, 3, 4, 5, 6, 7, 8), limits = c(1, 8)) +
   ggplot2::labs(
     title = "Adaptive Threshold Effectiveness",
     x = "Input Correlation (quantile 0.75)",
@@ -166,8 +180,7 @@ p1 <- ggplot2::ggplot(experiment_adaptive_thresholds) +
   ) +
   ggplot2::theme_bw()
 
-# Right panel: Predictor retention
-# Shows filtering scales reasonably with input size
+#predictor retention: shows filtering scales reasonably with input size
 p2 <- ggplot2::ggplot(experiment_adaptive_thresholds) +
   ggplot2::aes(
     x = input_predictors,
@@ -191,15 +204,15 @@ p2 <- ggplot2::ggplot(experiment_adaptive_thresholds) +
   ) +
   ggplot2::theme_bw()
 
-# Combined figure
+#combined figure
 p1 | p2
 ```
 
-The left panel shows the quantile 0.75 of the input correlation, against the mximum VIF of the resulting selection. The cases below the VIF 2.5 line (`r (sum(experiment_adaptive_thresholds$output_vif_max < 2.5)/nrow(experiment_adaptive_thresholds))*100`% of all cases) are datasets with a small number of predictors where multicollinearity drops sharply when one or several key predictors are removed by `collinear()`.
+The left panel shows the 75th percentile of input correlation against the maximum VIF of the resulting selection. The cases below the VIF = 2.5 line (`r round((sum(experiment_adaptive_thresholds$output_vif_max < 2.5)/nrow(experiment_adaptive_thresholds))*100, 1)`% of all cases) are datasets with a small number of predictors where multicollinearity drops sharply when one or several key predictors are removed
 
-The right panel shows the number of predictors before and after multicollinearity filtering.
+The right panel shows the number of predictors before and after multicollinearity filtering. The sublinear relationship indicates that even with 100 input predictors, the selection stabilizes around 15-20 predictors.
 
-Th results of this experiment indicate that the adaptive threshold selection works well in most use cases.
+These results indicate that the adaptive threshold selection works well across most use cases.
 
 
 ## Step By Step
@@ -223,15 +236,15 @@ cor_0.75
 **2.** Sigmoidal transformation of the `cor_0.75` value. This sigmoid function smoothly maps the input correlation to a bounded `max_cor` threshold.
 
 ```{r}
-max_cor <- 0.545 + 0.24 / (1 + exp(-15 * (cor_0.75 - 0.665)))
+max_cor <- 0.493 + 0.242 / (1 + exp(-15 * (cor_0.75 - 0.614)))
 
 max_cor
 ```
 Where:
 
- - `0.545`: floor of the curve, corresponding to VIF ≈ 2.5 (conservative filtering).
- - `0.785`: ceiling of the curve (0.545 + 0.24), corresponding to VIF ≈ 7.5 (permissive filtering).
- - `0.665`: midpoint where the transition is steepest.
+ - `0.493`: floor of the curve, corresponding to VIF ≈ 2.5 (conservative filtering).
+ - `0.735`: ceiling of the curve (0.545 + 0.24), corresponding to VIF ≈ 7.5 (permissive filtering).
+ - `0.614`: midpoint where the transition is steepest.
  - `-15`: steepness parameter controlling how sharply the curve transitions.
  
 The full sigmoid curve is shown below.
@@ -241,21 +254,21 @@ sigmoid_df <- data.frame(
   cor_input = seq(0, 1, by = 0.01)
 ) |>
   dplyr::mutate(
-    max_cor = 0.545 + 0.24 / (1 + exp(-15 * (cor_input - 0.665)))
+    max_cor = 0.493 + 0.242 / (1 + exp(-15 * (cor_input - 0.614)))
   )
 
 ggplot2::ggplot(sigmoid_df) +
   ggplot2::aes(x = cor_input, y = max_cor) +
   ggplot2::geom_line(linewidth = 1, color = "red4") +
-  ggplot2::geom_hline(yintercept = c(0.545, 0.785), linetype = "dashed", alpha = 0.5) +
-  ggplot2::geom_vline(xintercept = 0.665, linetype = "dotted", alpha = 0.5) +
+  ggplot2::geom_hline(yintercept = c(0.493, 0.735), linetype = "dashed", alpha = 0.5) +
+  ggplot2::geom_vline(xintercept = 0.614, linetype = "dotted", alpha = 0.5) +
   ggplot2::labs(
     title = "Sigmoid Transformation",
     x = "Input Correlation (quantile 0.75)",
-    y = "Adaptive max_cor threshold"
+    y = "Adaptive Correlation Threshold"
   ) +
-  ggplot2::annotate("text", x = 0.15, y = 0.56, label = "floor (VIF ≈ 2.5)", size = 3) +
-  ggplot2::annotate("text", x = 0.15, y = 0.80, label = "ceiling (VIF ≈ 7.5)", size = 3) +
+  ggplot2::annotate("text", x = 0.80, y = 0.493 + 0.015, label = "floor (VIF ≈ 2.5)", size = 3) +
+  ggplot2::annotate("text", x = 0.15, y = 0.735 - 0.015, label = "ceiling (VIF ≈ 7.5)", size = 3) +
   ggplot2::theme_bw()
 ```
 
@@ -271,7 +284,6 @@ max_vif <- mgcv::predict.gam(
 
 max_vif
 ```
-The model [gam_cor_to_vif] returns the `max_vif` value that produces the most similar variable selection to a given `max_cor`.
 
 This model was fitted on the simulation results in [experiment_cor_vs_vif], where both filtering methods were applied across 10,000 random dataset configurations. For each `max_cor` value, the `max_vif` producing the highest Jaccard similarity between the two selections was identified.
 
@@ -279,10 +291,9 @@ The model uses cubic weights on the Jaccard similarity scores to emphasize cases
 
 ```{r}
 m <- mgcv::gam(
-  formula = max_vif ~ s(max_cor, k = 9),
-  weights = experiment_cor_vs_vif$selection_similarity^3,
-  data = experiment_cor_vs_vif,
-  select = TRUE
+  formula = max_vif ~ s(max_cor, k = 6),
+  weights = experiment_cor_vs_vif$selection_similarity^2,
+  data = experiment_cor_vs_vif
 )
 
 summary(m)

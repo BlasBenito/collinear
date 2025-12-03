@@ -5,14 +5,14 @@
 \alias{experiment_cor_vs_vif}
 \title{Results of a Collinearity-Filtering Simulation}
 \format{
-A dataframe with 9354 rows and 6 variables:
+A dataframe with 10,000 rows and 6 variables:
 \describe{
-\item{input_rows}{Number of rows in the input data.}
-\item{input_predictors}{Number of predictors in the input data.}
-\item{output_predictors}{Number of predictors selected by \code{\link[=cor_select]{cor_select()}}.}
+\item{input_rows}{Number of rows in the input data subset.}
+\item{input_predictors}{Number of predictors in the input data subset.}
+\item{output_predictors}{Number of predictors selected by \code{\link[=vif_select]{vif_select()}} at the best-matching \code{max_vif}.}
 \item{max_cor}{Maximum allowed pairwise correlation supplied to \code{\link[=cor_select]{cor_select()}}.}
-\item{max_vif}{Smallest VIF threshold at which \code{\link[=vif_select]{vif_select()}} produced the most similar to \code{\link[=cor_select]{cor_select()}} for the given \code{input_max_cor}.}
-\item{selection_similarity}{Jaccard similarity between the predictors selected by \code{\link[=cor_select]{cor_select()}} and \code{\link[=vif_select]{vif_select()}}.}
+\item{max_vif}{VIF threshold at which \code{\link[=vif_select]{vif_select()}} produced the highest Jaccard similarity with \code{\link[=cor_select]{cor_select()}} for the given \code{max_cor}.}
+\item{out_selection_jaccard}{Jaccard similarity between the predictors selected by \code{\link[=cor_select]{cor_select()}} and \code{\link[=vif_select]{vif_select()}}.}
 }
 }
 \usage{
@@ -22,7 +22,9 @@ experiment_cor_vs_vif
 A dataframe summarizing 10,000 experiments comparing the output of \code{\link[=cor_select]{cor_select()}} and \code{\link[=vif_select]{vif_select()}}. Each row records the input sampling parameters and the resulting feature-selection metrics.
 }
 \details{
-The source data is \link{vi} plus 200 synthetic columns, for a total of 249 columns and 30.000 rows.
+The source data is a synthetic dataframe with 500 columns and 10,000 rows generated using \code{distantia::zoo_simulate()} with correlated time series (\code{independent = FALSE}).
+
+Each iteration randomly subsets 10-50 predictors and 30-100 rows per predictor, applies \code{\link[=cor_select]{cor_select()}} with a random \code{max_cor} threshold, then finds the \code{max_vif} value that maximizes Jaccard similarity between the two selections.
 }
 \examples{
 data(experiment_cor_vs_vif)

@@ -17,23 +17,23 @@ gam_cor_to_vif
 A fitted generalized additive model describing \code{max_vif} as a function of \code{max_cor} in \link{experiment_cor_vs_vif}.
 }
 \details{
-The model was fitted with a smooth term in \code{max_cor} (basis dimension \code{k = 9}) and cubic weights proportional to the Jaccard similarity between the results of \code{\link[=cor_select]{cor_select()}} and \code{\link[=vif_select]{vif_select()}} to emphasize cases with high agreement between the two selection methods.
+The model parameters (basis dimension \code{k} and weight exponent) were selected via optimization, filtering for models in the top 90\\% of R-squared and bottom 10\\% of effective degrees of freedom to balance fit quality and parsimony.
+
+The final model uses squared Jaccard similarity as weights to emphasize cases with high agreement between \code{\link[=cor_select]{cor_select()}} and \code{\link[=vif_select]{vif_select()}}.
 
 \preformatted{
 gam_cor_to_vif <- mgcv::gam(
- formula = output_max_vif ~ s(input_max_cor, k = 9),
- weights = experiment_cor_vs_vif$out_selection_jaccard^3,
- data = experiment_cor_vs_vif,
- select = TRUE
- )
+  formula = max_vif ~ s(max_cor, k = 6),
+  weights = experiment_cor_vs_vif$out_selection_jaccard^2,
+  data = experiment_cor_vs_vif
+)
 }
+
 Model performance:
 \itemize{
-\item Adjusted R-squared: 0.918
-\item Deviance explained: 91.8\\%
-\item Estimated scale: 0.238
-\item Effective degrees of freedom for smooth: 7.47 (Ref.df = 8)
-\item F-statistic for smooth term: 13,101 (p < 2e-16)
+\item Adjusted R-squared: 0.834
+\item Deviance explained: 83.4\\%
+\item Effective degrees of freedom for smooth: ~6
 }
 }
 \examples{
