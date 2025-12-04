@@ -40,13 +40,12 @@
 #' @author Blas M. Benito, PhD
 #' @export
 identify_logical_variables <- function(
-    df = NULL,
-    responses = NULL,
-    predictors = NULL,
-    quiet = FALSE,
-    ...
-){
-
+  df = NULL,
+  responses = NULL,
+  predictors = NULL,
+  quiet = FALSE,
+  ...
+) {
   function_name <- validate_arg_function_name(
     default_name = "collinear::identify_logical_variables()",
     ... = ...
@@ -62,26 +61,22 @@ identify_logical_variables <- function(
     function_name = function_name
   )
 
-  if(!is.null(responses)){
-
+  if (!is.null(responses)) {
     responses <- validate_arg_responses(
       df = df,
       responses = responses,
       quiet = quiet,
       function_name = function_name
     )
-
   }
 
-  if(!is.null(predictors)){
-
+  if (!is.null(predictors)) {
     predictors <- validate_arg_predictors(
       df = df,
       predictors = predictors,
       quiet = quiet,
       function_name = function_name
     )
-
   }
 
   vars_string <- if (!is.null(predictors) && !is.null(responses)) {
@@ -94,11 +89,9 @@ identify_logical_variables <- function(
     "variables"
   }
 
-
   predictors <- c(responses, predictors)
 
-  if(is.null(predictors) || length(predictors) == 0){
-
+  if (is.null(predictors) || length(predictors) == 0) {
     stop(
       "\n",
       function_name,
@@ -107,7 +100,6 @@ identify_logical_variables <- function(
       " to identify.",
       call. = FALSE
     )
-
   }
 
   out_list <- list(
@@ -125,14 +117,16 @@ identify_logical_variables <- function(
   ] |>
     stats::na.omit()
 
-  if(length(predictors_logical_all) == 0){
+  if (length(predictors_logical_all) == 0) {
     return(out_list)
   }
 
   #keep predictors with unique length different than one or nrow(df)
   length_unique <- vapply(
     X = df[, predictors_logical_all, drop = FALSE],
-    FUN = function(x){length(unique(x))},
+    FUN = function(x) {
+      length(unique(x))
+    },
     FUN.VALUE = integer(1)
   )
 
@@ -143,11 +137,10 @@ identify_logical_variables <- function(
     y = predictors_logical_valid
   )
 
-  if(
+  if (
     quiet == FALSE &&
-    length(predictors_logical_invalid) > 0
-  ){
-
+      length(predictors_logical_invalid) > 0
+  ) {
     message(
       "\n",
       function_name,
@@ -159,17 +152,15 @@ identify_logical_variables <- function(
         collapse = "\n - "
       )
     )
-
   }
 
-  if(length(predictors_logical_valid) > 0){
+  if (length(predictors_logical_valid) > 0) {
     out_list$valid <- predictors_logical_valid
   }
 
-  if(length(predictors_logical_invalid) > 0){
+  if (length(predictors_logical_invalid) > 0) {
     out_list$invalid <- predictors_logical_invalid
   }
 
   out_list
-
 }

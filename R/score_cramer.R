@@ -18,11 +18,10 @@
 #'  )
 #'
 score_cramer <- function(
-    o = NULL,
-    p = NULL,
-    ...
-){
-
+  o = NULL,
+  p = NULL,
+  ...
+) {
   function_name <- validate_arg_function_name(
     default_name = "collinear::score_cramer()",
     ... = ...
@@ -30,28 +29,23 @@ score_cramer <- function(
 
   out <- tryCatch(
     {
-
       cor_cramer(
         x = o,
         y = p,
         check_input = FALSE,
         function_name = function_name
       )
-
     },
     error = function(e) {
-
       stop(
         "\n",
         function_name,
-        ": ", conditionMessage(e), call. = FALSE)
+        ": ",
+        conditionMessage(e),
+        call. = FALSE
+      )
     }
-
   )
 
   out
-
 }
-
-
-

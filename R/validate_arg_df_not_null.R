@@ -14,11 +14,10 @@
 #'   df = vi_smol
 #'   )
 validate_arg_df_not_null <- function(
-    df = NULL,
-    function_name = NULL
-){
-
-  if(isTRUE(attr(x = df, which = "validated"))){
+  df = NULL,
+  function_name = NULL
+) {
+  if (isTRUE(attr(x = df, which = "validated"))) {
     return(df)
   }
 
@@ -27,17 +26,14 @@ validate_arg_df_not_null <- function(
     function_name = function_name
   )
 
-  if(is.null(df)){
-
+  if (is.null(df)) {
     stop(
       "\n",
       function_name,
       ": argument 'df' cannot be NULL.",
       call. = FALSE
     )
-
   }
 
   df
-
 }

@@ -55,12 +55,11 @@
 #' @family pairwise_correlation
 #' @export
 cor_df <- function(
-    df = NULL,
-    predictors = NULL,
-    quiet = FALSE,
-    ...
-){
-
+  df = NULL,
+  predictors = NULL,
+  quiet = FALSE,
+  ...
+) {
   function_name <- validate_arg_function_name(
     default_name = "collinear::cor_df()",
     ... = ...
@@ -93,8 +92,7 @@ cor_df <- function(
   )
 
   #revalidate predictors if any columns were removed
-  if(ncol(df) < df.ncol){
-
+  if (ncol(df) < df.ncol) {
     attributes(predictors)$validated <- NULL
 
     predictors <- validate_arg_predictors(
@@ -103,7 +101,6 @@ cor_df <- function(
       quiet = quiet,
       function_name = function_name
     )
-
   }
 
   #identify predictors types
@@ -115,16 +112,13 @@ cor_df <- function(
   )
 
   #univariate case
-  if(length(c(predictors$numeric, predictors$categorical)) == 1){
-
-    if(quiet == FALSE){
-
+  if (length(c(predictors$numeric, predictors$categorical)) == 1) {
+    if (quiet == FALSE) {
       message(
         "\n",
         function_name,
         ": only one valid predictor, returning one-row dataframe."
       )
-
     }
 
     temp <- c(predictors$numeric, predictors$categorical)
@@ -143,15 +137,13 @@ cor_df <- function(
     class(out_df) <- c("collinear_cor_df", class(out_df))
 
     return(out_df)
-
   }
 
   #warning about cramers v
-  if(
+  if (
     length(predictors$categorical) >= 2L &&
-    length(predictors$numeric) >= 1L
-    ){
-
+      length(predictors$numeric) >= 1L
+  ) {
     cardinality <- vapply(
       X = df[predictors$categorical],
       FUN = function(x) length(unique(x)),
@@ -160,16 +152,16 @@ cor_df <- function(
 
     vars_above_2 <- sum(cardinality > 2L)
 
-    if(vars_above_2 > 0L){
-
+    if (vars_above_2 > 0L) {
       msg <- paste0(
         "\n",
-        function_name, ": ",
+        function_name,
+        ": ",
         vars_above_2,
         " categorical predictors have cardinality > 2 and may bias the multicollinearity analysis. Applying target encoding to convert them to numeric will solve this issue."
       )
 
-      if(isFALSE(quiet)){
+      if (isFALSE(quiet)) {
         message(msg)
       } else {
         warning(msg, call. = FALSE)
@@ -186,15 +178,15 @@ cor_df <- function(
   df_cat_cat <- NULL
 
   #num vs cat
-  if(
+  if (
     all(
       c(
         length(predictors$categorical),
         length(predictors$numeric)
-      ) > 0
+      ) >
+        0
     )
-  ){
-
+  ) {
     #numerics_vs_categoricals
     df_num_cat <- expand.grid(
       x = predictors$numeric,
@@ -204,12 +196,10 @@ cor_df <- function(
       type = 1,
       stringsAsFactors = FALSE
     )
-
   }
 
   #cat vs cat
-  if(length(predictors$categorical) > 1){
-
+  if (length(predictors$categorical) > 1) {
     pairs_cat_cat <- t(
       utils::combn(
         x = predictors$categorical,
@@ -225,7 +215,6 @@ cor_df <- function(
       type = 2,
       stringsAsFactors = FALSE
     )
-
   }
 
   #df to iterate over
@@ -241,18 +230,15 @@ cor_df <- function(
     no = 0
   )
 
-  if(iterations_categorical > 0){
-
+  if (iterations_categorical > 0) {
     p <- progressr::progressor(
       steps = iterations_categorical
     )
 
-
     categoricals_df$correlation <- future.apply::future_apply(
       X = categoricals_df,
       MARGIN = 1,
-      FUN = function(x){
-
+      FUN = function(x) {
         p()
 
         df.x <- data.frame(
@@ -262,8 +248,7 @@ cor_df <- function(
           stats::na.omit()
 
         #num_vs_cat
-        if(x[5] == "1"){
-
+        if (x[5] == "1") {
           attr(
             x = df.x,
             which = "validated"
@@ -287,9 +272,7 @@ cor_df <- function(
             use = "complete.obs",
             method = "pearson"
           )
-
         } else {
-
           #cat vs cat
           score <- cor_cramer(
             x = df.x$x,
@@ -297,24 +280,19 @@ cor_df <- function(
             check_input = FALSE,
             function_name = function_name
           )
-
         }
 
         score
-
       }, #end of lambda function
       future.seed = TRUE
     )
 
     #remove type
     categoricals_df$type <- NULL
-
   }
 
-
   #numerics
-  if(length(predictors$numeric) > 1){
-
+  if (length(predictors$numeric) > 1) {
     numerics_matrix <- stats::cor(
       x = df[, predictors$numeric, drop = FALSE],
       use = "complete.obs",
@@ -333,7 +311,6 @@ cor_df <- function(
       metric = "Pearson",
       stringsAsFactors = FALSE
     )
-
   }
 
   out_df <- rbind(
@@ -347,7 +324,8 @@ cor_df <- function(
       abs(out_df$correlation),
       decreasing = TRUE
     ),
-    , drop = FALSE
+    ,
+    drop = FALSE
   ]
 
   rownames(out_df) <- NULL
@@ -355,6 +333,4 @@ cor_df <- function(
   class(out_df) <- c("collinear_cor_df", class(out_df))
 
   out_df
-
 }
-

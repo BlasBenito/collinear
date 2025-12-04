@@ -30,14 +30,13 @@
 #' @author Blas M. Benito, PhD
 #' @export
 identify_numeric_variables <- function(
-    df = NULL,
-    responses = NULL,
-    predictors = NULL,
-    decimals = 4,
-    quiet = FALSE,
-    ...
-){
-
+  df = NULL,
+  responses = NULL,
+  predictors = NULL,
+  decimals = 4,
+  quiet = FALSE,
+  ...
+) {
   function_name <- validate_arg_function_name(
     default_name = "collinear::identify_numeric_variables()",
     ... = ...
@@ -53,20 +52,16 @@ identify_numeric_variables <- function(
     function_name = function_name
   )
 
-  if(!is.null(responses)){
-
+  if (!is.null(responses)) {
     responses <- validate_arg_responses(
       df = df,
       responses = responses,
       quiet = quiet,
       function_name = function_name
     )
-
   }
 
-
-  if(!is.null(predictors)){
-
+  if (!is.null(predictors)) {
     predictors <- validate_arg_predictors(
       df = df,
       responses = responses,
@@ -74,7 +69,6 @@ identify_numeric_variables <- function(
       quiet = quiet,
       function_name = function_name
     )
-
   }
 
   vars_string <- if (!is.null(predictors) && !is.null(responses)) {
@@ -89,8 +83,7 @@ identify_numeric_variables <- function(
 
   predictors <- c(responses, predictors)
 
-  if(is.null(predictors) || length(predictors) == 0){
-
+  if (is.null(predictors) || length(predictors) == 0) {
     stop(
       "\n",
       function_name,
@@ -99,7 +92,6 @@ identify_numeric_variables <- function(
       " to identify.",
       call. = FALSE
     )
-
   }
 
   out_list <- list(
@@ -116,7 +108,7 @@ identify_numeric_variables <- function(
     )
   ]
 
-  if(length(predictors_numeric_all) == 0){
+  if (length(predictors_numeric_all) == 0) {
     return(out_list)
   }
 
@@ -128,20 +120,18 @@ identify_numeric_variables <- function(
     function_name = function_name
   )
 
-  if(quiet == FALSE && length(predictors_numeric_invalid) > 0){
-
+  if (quiet == FALSE && length(predictors_numeric_invalid) > 0) {
     message(
       "\n",
       function_name,
       ": invalid numeric ",
-      vars_string ,
+      vars_string,
       " due to near-zero variance:\n - ",
       paste(
         predictors_numeric_invalid,
         collapse = "\n - "
       )
     )
-
   }
 
   predictors_numeric_valid <- setdiff(
@@ -149,14 +139,13 @@ identify_numeric_variables <- function(
     y = predictors_numeric_invalid
   )
 
-  if(length(predictors_numeric_valid) > 0){
+  if (length(predictors_numeric_valid) > 0) {
     out_list$valid <- predictors_numeric_valid
   }
 
-  if(length(predictors_numeric_invalid) > 0){
+  if (length(predictors_numeric_invalid) > 0) {
     out_list$invalid <- predictors_numeric_invalid
   }
 
   out_list
-
 }

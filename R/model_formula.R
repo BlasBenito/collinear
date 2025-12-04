@@ -94,16 +94,15 @@
 #' y
 #' @family modelling_tools
 model_formula <- function(
-    df = NULL,
-    response = NULL,
-    predictors = NULL,
-    term_f = NULL,
-    term_args = NULL,
-    random_effects = NULL,
-    quiet = FALSE,
-    ...
-){
-
+  df = NULL,
+  response = NULL,
+  predictors = NULL,
+  term_f = NULL,
+  term_args = NULL,
+  random_effects = NULL,
+  quiet = FALSE,
+  ...
+) {
   function_name <- validate_arg_function_name(
     default_name = "collinear::model_formula()",
     ... = ...
@@ -127,15 +126,13 @@ model_formula <- function(
     function_name = function_name
   )
 
-  if(is.null(response)){
-
+  if (is.null(response)) {
     stop(
       "\n",
       function_name,
       ": argument 'response' cannot be NULL.",
       call. = FALSE
     )
-
   }
 
   predictors <- validate_arg_predictors(
@@ -146,7 +143,7 @@ model_formula <- function(
     function_name = function_name
   )
 
-  if(is.null(predictors)){
+  if (is.null(predictors)) {
     stop(
       "\n",
       function_name,
@@ -162,8 +159,7 @@ model_formula <- function(
 
   #prepare terms formula
   term_comma <- ","
-  if(!is.null(term_f)){
-
+  if (!is.null(term_f)) {
     #remove (
     term_f <- gsub(
       pattern = "\\(",
@@ -173,13 +169,10 @@ model_formula <- function(
 
     term_f <- paste0(term_f, "(")
 
-    if(is.null(term_args)){
-
+    if (is.null(term_args)) {
       term_args <- ")"
       term_comma <- NULL
-
     } else {
-
       term_args <- gsub(
         pattern = "\\)",
         replacement = "",
@@ -193,9 +186,7 @@ model_formula <- function(
       )
 
       term_args <- paste0(term_args, ")")
-
     }
-
   } else {
     term_args <- NULL
     term_comma <- NULL
@@ -203,9 +194,8 @@ model_formula <- function(
 
   #random effects
 
-  if(!is.null(random_effects)){
-
-    if(!is.character(random_effects)){
+  if (!is.null(random_effects)) {
+    if (!is.character(random_effects)) {
       stop(
         "\n",
         function_name,
@@ -219,7 +209,7 @@ model_formula <- function(
       y = unique(unlist(predictors))
     )
 
-    if(length(random_effects) == 0){
+    if (length(random_effects) == 0) {
       stop(
         "\n",
         function_name,
@@ -273,28 +263,23 @@ model_formula <- function(
         collapse = " + "
       )
     )
-
   }
 
   #out list
   terms <- vector()
 
   #iterate over responses
-  for(predictor.i in predictors){
-
-    if(predictor.i %in% predictors_types$numeric){
-
+  for (predictor.i in predictors) {
+    if (predictor.i %in% predictors_types$numeric) {
       predictor.i <- paste0(
         term_f,
         predictor.i,
         term_comma,
         term_args
       )
-
     }
 
     terms <- c(terms, predictor.i)
-
   }
 
   out <- paste0(
@@ -310,10 +295,5 @@ model_formula <- function(
 
   environment(out) <- parent.frame()
 
-
   out
-
 }
-
-
-

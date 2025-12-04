@@ -35,12 +35,11 @@
 #' @family variance_inflation_factor
 #' @export
 vif_stats <- function(
-    df = NULL,
-    predictors = NULL,
-    quiet = FALSE,
-    ...
-){
-
+  df = NULL,
+  predictors = NULL,
+  quiet = FALSE,
+  ...
+) {
   dots <- list(...)
 
   function_name <- validate_arg_function_name(
@@ -54,8 +53,7 @@ vif_stats <- function(
   )
 
   #cor_df dataframe
-  if(!"collinear_vif_df" %in% class(df)){
-
+  if (!"collinear_vif_df" %in% class(df)) {
     df <- vif_df(
       df = df,
       predictors = predictors,
@@ -63,13 +61,11 @@ vif_stats <- function(
       function_name = function_name,
       m = dots$m
     )
-
   }
 
   values <- stats::na.omit(df$vif)
 
   stats <- c(
-
     "n" = length(values),
 
     "minimum" = min(values),
@@ -78,34 +74,33 @@ vif_stats <- function(
       x = values,
       probs = 0.05,
       names = FALSE
-      ),
+    ),
 
     "quantile_0.25" = stats::quantile(
       x = values,
       probs = 0.25,
       names = FALSE
-      ),
+    ),
 
     "mean" = mean(values),
 
     "median" = stats::median(
       x = values
-      ),
+    ),
 
     "quantile_0.75" = stats::quantile(
       x = values,
       probs = 0.75,
       names = FALSE
-      ),
+    ),
 
     "quantile_0.95" = stats::quantile(
       x = values,
       probs = 0.95,
       names = FALSE
-      ),
+    ),
 
     "maximum" = max(values)
-
   ) |>
     round(digits = 4)
 
@@ -119,5 +114,4 @@ vif_stats <- function(
   )
 
   out
-
 }

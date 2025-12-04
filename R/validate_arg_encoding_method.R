@@ -16,12 +16,11 @@
 #' @export
 #' @autoglobal
 validate_arg_encoding_method <- function(
-    encoding_method = "loo",
-    overwrite = NULL,
-    quiet = FALSE,
-    function_name = NULL
-){
-
+  encoding_method = "loo",
+  overwrite = NULL,
+  quiet = FALSE,
+  function_name = NULL
+) {
   valid_methods <- c(
     "loo",
     "mean",
@@ -33,23 +32,19 @@ validate_arg_encoding_method <- function(
     function_name = function_name
   )
 
-  if(is.null(encoding_method)){
-
-    if(quiet == FALSE){
-
+  if (is.null(encoding_method)) {
+    if (quiet == FALSE) {
       message(
         "\n",
         function_name,
         ": argument 'encoding_method' is NULL, skipping target encoding."
       )
-
     }
 
     return(NULL)
-
   }
 
-  if(isTRUE(attr(x = encoding_method, which = "validated"))){
+  if (isTRUE(attr(x = encoding_method, which = "validated"))) {
     return(encoding_method)
   }
 
@@ -58,13 +53,11 @@ validate_arg_encoding_method <- function(
     y = valid_methods
   )
 
-  if(
+  if (
     is.null(encoding_method) ||
-    length(encoding_method) == 0
-    ){
-
-    if(quiet == FALSE){
-
+      length(encoding_method) == 0
+  ) {
+    if (quiet == FALSE) {
       message(
         "\n",
         function_name,
@@ -72,17 +65,15 @@ validate_arg_encoding_method <- function(
         valid_methods[1],
         "'."
       )
-
     }
 
     encoding_method <- valid_methods[1]
-
   }
 
-  if(is.logical(overwrite) && overwrite == TRUE && length(encoding_method) > 1){
-
-    if(quiet == FALSE){
-
+  if (
+    is.logical(overwrite) && overwrite == TRUE && length(encoding_method) > 1
+  ) {
+    if (quiet == FALSE) {
       message(
         "\n",
         function_name,
@@ -90,11 +81,9 @@ validate_arg_encoding_method <- function(
         valid_methods[1],
         "'."
       )
-
     }
 
     encoding_method <- valid_methods[1]
-
   }
 
   attr(
@@ -103,6 +92,4 @@ validate_arg_encoding_method <- function(
   ) <- TRUE
 
   encoding_method
-
-
 }

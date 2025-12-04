@@ -40,14 +40,13 @@
 #' @author Blas M. Benito, PhD
 #' @export
 identify_zero_variance_variables <- function(
-    df = NULL,
-    responses = NULL,
-    predictors = NULL,
-    decimals = 4,
-    quiet = FALSE,
-    ...
-){
-
+  df = NULL,
+  responses = NULL,
+  predictors = NULL,
+  decimals = 4,
+  quiet = FALSE,
+  ...
+) {
   function_name <- validate_arg_function_name(
     default_name = "collinear::identify_zero_variance_variables()",
     ... = ...
@@ -63,26 +62,22 @@ identify_zero_variance_variables <- function(
     function_name = function_name
   )
 
-  if(!is.null(responses)){
-
+  if (!is.null(responses)) {
     responses <- validate_arg_responses(
       df = df,
       responses = responses,
       quiet = quiet,
       function_name = function_name
     )
-
   }
 
-  if(!is.null(predictors)){
-
+  if (!is.null(predictors)) {
     predictors <- validate_arg_predictors(
       df = df,
       predictors = predictors,
       quiet = quiet,
       function_name = function_name
     )
-
   }
 
   vars_string <- if (!is.null(predictors) && !is.null(responses)) {
@@ -97,8 +92,7 @@ identify_zero_variance_variables <- function(
 
   predictors <- c(responses, predictors)
 
-  if(is.null(predictors) || length(predictors) == 0){
-
+  if (is.null(predictors) || length(predictors) == 0) {
     stop(
       "\n",
       function_name,
@@ -107,7 +101,6 @@ identify_zero_variance_variables <- function(
       " to identify.",
       call. = FALSE
     )
-
   }
 
   decimals <- as.integer(decimals)
@@ -122,7 +115,7 @@ identify_zero_variance_variables <- function(
     )
   ]
 
-  if(length(predictors) == 0){
+  if (length(predictors) == 0) {
     return(NULL)
   }
 
@@ -133,20 +126,22 @@ identify_zero_variance_variables <- function(
     round(
       sapply(
         X = df,
-        FUN = function(x) stats::var(
-          x = x[is.finite(x)],
-          na.rm = TRUE
-        )
+        FUN = function(x) {
+          stats::var(
+            x = x[is.finite(x)],
+            na.rm = TRUE
+          )
+        }
       ),
       decimals
-    ) == 0
+    ) ==
+      0
   ]
 
-  if(
+  if (
     quiet == FALSE &&
-    length(predictors) > 0
-  ){
-
+      length(predictors) > 0
+  ) {
     message(
       "\n",
       function_name,
@@ -158,13 +153,11 @@ identify_zero_variance_variables <- function(
         collapse = "\n - "
       )
     )
-
   }
 
-  if(length(predictors) == 0){
+  if (length(predictors) == 0) {
     predictors <- NULL
   }
 
   predictors
-
 }

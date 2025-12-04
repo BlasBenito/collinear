@@ -10,8 +10,7 @@
 #' @autoglobal
 #' @examples
 #' f_auto_rules()
-f_auto_rules <- function(){
-
+f_auto_rules <- function() {
   f_list <- list(
     c("f_numeric_glm", "continuous-binary", "numeric"),
     c("f_numeric_rf", "continuous-binary", "categorical"),
@@ -53,5 +52,4 @@ f_auto_rules <- function(){
   )
 
   f_df
-
 }

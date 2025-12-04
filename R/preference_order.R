@@ -163,17 +163,16 @@
 #' @author Blas M. Benito, PhD
 #' @export
 preference_order <- function(
-    df = NULL,
-    responses = NULL,
-    predictors = NULL,
-    f = f_auto,
-    cv_training_fraction = 1,
-    cv_iterations = 1,
-    seed = 1,
-    quiet = FALSE,
-    ...
-){
-
+  df = NULL,
+  responses = NULL,
+  predictors = NULL,
+  f = f_auto,
+  cv_training_fraction = 1,
+  cv_iterations = 1,
+  seed = 1,
+  quiet = FALSE,
+  ...
+) {
   dots <- list(...)
 
   function_name <- validate_arg_function_name(
@@ -219,8 +218,7 @@ preference_order <- function(
   )
 
   #revalidate predictors if any columns were removed
-  if(ncol(df) < df.ncol){
-
+  if (ncol(df) < df.ncol) {
     attributes(responses)$validated <- NULL
     attributes(predictors)$validated <- NULL
 
@@ -239,18 +237,14 @@ preference_order <- function(
       quiet = quiet,
       function_name = function_name
     )
-
   }
 
-
   #check f
-  if(
+  if (
     is.null(responses) &&
-    !is.null(f)
-  ){
-
+      !is.null(f)
+  ) {
     f <- NULL
-
   }
 
   f <- validate_arg_f(
@@ -260,15 +254,12 @@ preference_order <- function(
   )
 
   #DEFAULT
-  if(is.null(f)){
-
-    if(is.null(responses)){
+  if (is.null(f)) {
+    if (is.null(responses)) {
       responses <- "none"
     }
 
-
-    if(quiet == FALSE){
-
+    if (quiet == FALSE) {
       message(
         "\n",
         function_name,
@@ -276,7 +267,6 @@ preference_order <- function(
         length(predictors),
         " 'predictors' from lower to higher multicollinearity."
       )
-
     }
 
     m <- cor_matrix(
@@ -296,116 +286,99 @@ preference_order <- function(
     ) |>
       round(digits = 4)
 
-
     m.names <- names(m.colmeans)
 
     names(m.colmeans) <- NULL
 
     out <- data.frame(
-
       response = sort(
         rep(
           x = responses,
           times = length(m.names) * length(responses)
-          )
-        ),
+        )
+      ),
 
       predictor = rep(
         x = m.names,
         times = length(responses)
-        ),
+      ),
 
       f = rep(
         x = "stats::cor()",
         times = length(m.names) * length(responses)
-        ),
+      ),
 
       metric = rep(
         x = "1 - R-squared",
         times = length(m.names) * length(responses)
-        ),
+      ),
 
       score = rep(
         x = m.colmeans,
         times = length(responses)
-        ),
+      ),
 
       rank = rep(
         x = seq_len(length.out = length(m.names)),
         times = length(responses)
-        )
-
+      )
     )
 
     return(out)
-
   }
 
-  if(
+  if (
     !is.numeric(cv_iterations) ||
-    cv_iterations < 1 ||
-    cv_iterations != floor(cv_iterations))
-  {
-
-    if(quiet == FALSE){
-
+      cv_iterations < 1 ||
+      cv_iterations != floor(cv_iterations)
+  ) {
+    if (quiet == FALSE) {
       message(
         "\n",
         function_name,
         ": argument 'cv_iterations' must be a positive integer, setting it to '1'"
       )
-
     }
 
     cv_iterations <- 1
     cv_training_fraction <- 1
-
   }
 
   #check cross validation arguments
-  if(
+  if (
     !is.numeric(cv_training_fraction) ||
-    cv_training_fraction < 0.1 ||
-    cv_training_fraction > 1
-    ){
-
-    if(quiet == FALSE){
-
+      cv_training_fraction < 0.1 ||
+      cv_training_fraction > 1
+  ) {
+    if (quiet == FALSE) {
       message(
         "\n",
         function_name,
         ": argument 'cv_training_fraction' must be a numeric between 0.1 and 1 (inclusive), setting it to '1'."
       )
-
     }
 
     cv_training_fraction <- 1
     cv_iterations <- 1
-
   }
 
   cv_training_fraction <- cv_training_fraction[1]
   cv_iterations <- as.integer(cv_iterations[1])
 
-  if(
+  if (
     !is.numeric(seed) ||
-    seed != floor(seed)
-    ){
-
-    if(quiet == FALSE){
-
+      seed != floor(seed)
+  ) {
+    if (quiet == FALSE) {
       message(
         "\n",
         function_name,
         ": argument 'seed' is invalid, resetting it to '1'.",
         call. = FALSE
       )
-
     }
 
-
     seed <- 1L
-
   }
 
   f_df <- f_functions()[, c("name", "metric")]
@@ -415,15 +388,13 @@ preference_order <- function(
   out_list <- list()
 
   #iterating over responses
-  for(response in responses){
-
+  for (response in responses) {
     set.seed(seed)
 
-    if(
+    if (
       quiet == FALSE &&
-      length(responses) > 1
-    ){
-
+        length(responses) > 1
+    ) {
       msg <- paste0(
         function_name,
         ": processing response '",
@@ -435,12 +406,12 @@ preference_order <- function(
 
       message("\n", msg)
       message(rep(x = "-", times = nchar(msg)))
-
     }
 
     #use f_auto to get function name
-    if(all(c("df", "response", "predictors", "quiet") %in% names(formals(f)))){
-
+    if (
+      all(c("df", "response", "predictors", "quiet") %in% names(formals(f)))
+    ) {
       #get function name
       f_name <- f(
         df = df,
@@ -456,11 +427,8 @@ preference_order <- function(
         f_name = f_name,
         function_name = function_name
       )
-
     } else {
-
       f.response <- f
-
     }
 
     #dataframe to store results
@@ -468,7 +436,7 @@ preference_order <- function(
       response = rep(
         x = response,
         times = length(predictors)
-        ),
+      ),
       predictor = predictors,
       f = rep(
         x = attributes(f.response)$name,
@@ -484,8 +452,7 @@ preference_order <- function(
     #computing preference order
     preference$score <- future.apply::future_lapply(
       X = preference$predictor,
-      FUN = function(x){
-
+      FUN = function(x) {
         p()
 
         out <- f.response(
@@ -499,8 +466,7 @@ preference_order <- function(
         ) |>
           mean(na.rm = TRUE)
 
-        if(is.na(out)){
-
+        if (is.na(out)) {
           warning(
             "\n",
             function_name,
@@ -512,11 +478,9 @@ preference_order <- function(
             x,
             "."
           )
-
         }
 
         out
-
       },
       future.seed = TRUE
     ) |>
@@ -528,30 +492,25 @@ preference_order <- function(
       order(
         preference$score,
         decreasing = TRUE
-        ),
+      ),
     ]
 
     rownames(preference) <- NULL
 
     #join metric if function is in f_functions()
-    if(unique(preference[["f"]]) %in% unique(f_df[["f"]])){
-
+    if (unique(preference[["f"]]) %in% unique(f_df[["f"]])) {
       preference <- merge(
         x = preference,
         y = f_df,
         by = "f"
       )
-
     } else {
-
       preference$metric <- "custom"
-
     }
 
     preference$rank <- seq_len(length.out = nrow(preference))
 
     out_list[[response]] <- preference
-
   } #end of loop
 
   out_df <- do.call(
@@ -569,5 +528,4 @@ preference_order <- function(
   )
 
   out_df
-
 }

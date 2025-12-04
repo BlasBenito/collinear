@@ -65,22 +65,20 @@
 #' }
 #' @export
 cor_cramer <- function(
-    x = NULL,
-    y = NULL,
-    check_input = TRUE,
-    ...
+  x = NULL,
+  y = NULL,
+  check_input = TRUE,
+  ...
 ) {
-
   function_name <- validate_arg_function_name(
     default_name = "collinear::cor_cramer()",
     ... = ...
   )
 
   #data checks
-  if(check_input == TRUE){
-
+  if (check_input == TRUE) {
     # Check if 'x' is not NULL
-    if(is.null(x)){
+    if (is.null(x)) {
       stop(
         "\n",
         function_name,
@@ -90,7 +88,7 @@ cor_cramer <- function(
     }
 
     # Check if 'y' is not NULL
-    if(is.null(y)){
+    if (is.null(y)) {
       stop(
         "\n",
         function_name,
@@ -100,15 +98,14 @@ cor_cramer <- function(
     }
 
     #x and y have the same length
-    if(length(x) != length(y)){
+    if (length(x) != length(y)) {
       stop(
         "\n",
         function_name,
         ": arguments 'x' and 'y' must be of the same length.",
         call. = FALSE
-        )
+      )
     }
-
   }
 
   #to dataframe to remove NA
@@ -168,21 +165,21 @@ cor_cramer <- function(
     max(
       c(
         0,
-        (xy.chi /  xy.table.sum) - ((xy.table.cols - 1)*(xy.table.rows - 1)) /
-          (xy.table.sum - 1)
+        (xy.chi / xy.table.sum) -
+          ((xy.table.cols - 1) * (xy.table.rows - 1)) /
+            (xy.table.sum - 1)
       )
     ) /
       min(
         c(
-          (
-            xy.table.cols -
-              ((xy.table.cols - 1)^2 /
-                 (xy.table.sum - 1))
-          ) - 1,
+          (xy.table.cols -
+            ((xy.table.cols - 1)^2 /
+              (xy.table.sum - 1))) -
+            1,
           (xy.table.rows -
-             ((xy.table.rows - 1)^2 /
-                (xy.table.sum - 1))
-          ) - 1
+            ((xy.table.rows - 1)^2 /
+              (xy.table.sum - 1))) -
+            1
         )
       )
   )
@@ -196,5 +193,4 @@ cor_cramer <- function(
   names(v) <- NULL
 
   abs(v)
-
 }

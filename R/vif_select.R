@@ -90,15 +90,14 @@
 #' }
 #' @export
 vif_select <- function(
-    df = NULL,
-    response = NULL,
-    predictors = NULL,
-    preference_order = NULL,
-    max_vif = 5,
-    quiet = FALSE,
-    ...
-){
-
+  df = NULL,
+  response = NULL,
+  predictors = NULL,
+  preference_order = NULL,
+  max_vif = 5,
+  quiet = FALSE,
+  ...
+) {
   dots <- list(...)
 
   function_name <- validate_arg_function_name(
@@ -106,15 +105,13 @@ vif_select <- function(
     function_name = dots$function_name
   )
 
-  if(is.null(max_vif)){
-
+  if (is.null(max_vif)) {
     stop(
       "\n",
       function_name,
       ": argument 'max_vif' cannot be NULL.",
       call. = FALSE
     )
-
   }
 
   out <- collinear_select(
@@ -130,5 +127,4 @@ vif_select <- function(
   )
 
   out
-
 }

@@ -20,16 +20,15 @@
 #' message(x)
 #' @autoglobal
 validate_arg_function_name <- function(
-    default_name = NULL,
-    function_name = NULL,
-    ...
-){
-
-  if(all(is.null(c(default_name, function_name)))){
+  default_name = NULL,
+  function_name = NULL,
+  ...
+) {
+  if (all(is.null(c(default_name, function_name)))) {
     return(NULL)
   }
 
-  if(is.null(function_name) && !is.null(default_name)){
+  if (is.null(function_name) && !is.null(default_name)) {
     return(default_name)
   }
 
@@ -60,6 +59,4 @@ validate_arg_function_name <- function(
   )
 
   function_name
-
-
 }

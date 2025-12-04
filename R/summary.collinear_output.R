@@ -9,14 +9,12 @@
 #' @autoglobal
 #' @export
 summary.collinear_output <- function(
-    object = NULL,
-    ...
-){
-
+  object = NULL,
+  ...
+) {
   #print summary of selections
   lapply(
     X = object,
     FUN = summary
   )
-
 }

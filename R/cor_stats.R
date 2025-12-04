@@ -35,12 +35,11 @@
 #' @family pairwise_correlation
 #' @export
 cor_stats <- function(
-    df = NULL,
-    predictors = NULL,
-    quiet = FALSE,
-    ...
-){
-
+  df = NULL,
+  predictors = NULL,
+  quiet = FALSE,
+  ...
+) {
   function_name <- validate_arg_function_name(
     default_name = "collinear::cor_stats()",
     ... = ...
@@ -52,21 +51,18 @@ cor_stats <- function(
   )
 
   #cor_df dataframe
-  if(!"collinear_cor_df" %in% class(df)){
-
+  if (!"collinear_cor_df" %in% class(df)) {
     df <- cor_df(
       df = df,
       predictors = predictors,
       quiet = quiet,
       function_name = function_name
     )
-
   }
 
   values <- abs(stats::na.omit(df$correlation))
 
   stats <- c(
-
     "n" = length(values),
 
     "minimum" = min(values),
@@ -75,34 +71,33 @@ cor_stats <- function(
       x = values,
       probs = 0.05,
       names = FALSE
-      ),
+    ),
 
     "quantile_0.25" = stats::quantile(
       x = values,
       probs = 0.25,
       names = FALSE
-      ),
+    ),
 
     "mean" = mean(values),
 
     "median" = stats::median(
       x = values
-      ),
+    ),
 
     "quantile_0.75" = stats::quantile(
       x = values,
       probs = 0.75,
       names = FALSE
-      ),
+    ),
 
     "quantile_0.95" = stats::quantile(
       x = values,
       probs = 0.95,
       names = FALSE
-      ),
+    ),
 
     "maximum" = max(values)
-
   ) |>
     round(digits = 4)
 
@@ -116,5 +111,4 @@ cor_stats <- function(
   )
 
   out
-
 }

@@ -31,13 +31,12 @@
 #' @author Blas M. Benito, PhD
 #' @export
 identify_categorical_variables <- function(
-    df = NULL,
-    responses = NULL,
-    predictors = NULL,
-    quiet = FALSE,
-    ...
-){
-
+  df = NULL,
+  responses = NULL,
+  predictors = NULL,
+  quiet = FALSE,
+  ...
+) {
   function_name <- validate_arg_function_name(
     default_name = "collinear::identify_categorical_variables()",
     ... = ...
@@ -53,28 +52,23 @@ identify_categorical_variables <- function(
     function_name = function_name
   )
 
-  if(!is.null(responses)){
-
+  if (!is.null(responses)) {
     responses <- validate_arg_responses(
       df = df,
       responses = responses,
       quiet = quiet,
       function_name = function_name
     )
-
   }
 
-  if(!is.null(predictors)){
-
+  if (!is.null(predictors)) {
     predictors <- validate_arg_predictors(
       df = df,
       predictors = predictors,
       quiet = quiet,
       function_name = function_name
     )
-
   }
-
 
   vars_string <- if (!is.null(predictors) && !is.null(responses)) {
     "variables"
@@ -88,8 +82,7 @@ identify_categorical_variables <- function(
 
   predictors <- c(responses, predictors)
 
-  if(is.null(predictors) || length(predictors) == 0){
-
+  if (is.null(predictors) || length(predictors) == 0) {
     stop(
       "\n",
       function_name,
@@ -98,7 +91,6 @@ identify_categorical_variables <- function(
       " to identify.",
       call. = FALSE
     )
-
   }
 
   out_list <- list(
@@ -110,7 +102,7 @@ identify_categorical_variables <- function(
   predictors_categorical_all <- predictors[
     vapply(
       X = df[, predictors, drop = FALSE],
-      FUN = function(x){
+      FUN = function(x) {
         is.character(x) || is.factor(x)
       },
       FUN.VALUE = logical(1)
@@ -118,7 +110,7 @@ identify_categorical_variables <- function(
   ] |>
     stats::na.omit()
 
-  if(length(predictors_categorical_all) == 0){
+  if (length(predictors_categorical_all) == 0) {
     return(out_list)
   }
 
@@ -127,7 +119,9 @@ identify_categorical_variables <- function(
   #keep predictors with unique length different than one or nrow(df)
   length_unique <- vapply(
     X = df[, predictors_categorical_all, drop = FALSE],
-    FUN = function(x){length(unique(x))},
+    FUN = function(x) {
+      length(unique(x))
+    },
     FUN.VALUE = integer(1)
   )
 
@@ -140,11 +134,10 @@ identify_categorical_variables <- function(
     y = predictors_categorical_valid
   )
 
-  if(
+  if (
     quiet == FALSE &&
-    length(predictors_categorical_invalid) > 0
-  ){
-
+      length(predictors_categorical_invalid) > 0
+  ) {
     message(
       "\n",
       function_name,
@@ -156,17 +149,15 @@ identify_categorical_variables <- function(
         collapse = "\n - "
       )
     )
-
   }
 
-  if(length(predictors_categorical_valid) > 0){
+  if (length(predictors_categorical_valid) > 0) {
     out_list$valid <- predictors_categorical_valid
   }
 
-  if(length(predictors_categorical_invalid) > 0){
+  if (length(predictors_categorical_invalid) > 0) {
     out_list$invalid <- predictors_categorical_invalid
   }
 
   out_list
-
 }

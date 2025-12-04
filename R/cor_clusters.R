@@ -64,14 +64,13 @@
 #' @family pairwise_correlation
 #' @autoglobal
 cor_clusters <- function(
-    df = NULL,
-    predictors = NULL,
-    max_cor = 0.7,
-    method = "complete",
-    quiet = FALSE,
-    ...
-){
-
+  df = NULL,
+  predictors = NULL,
+  max_cor = 0.7,
+  method = "complete",
+  quiet = FALSE,
+  ...
+) {
   function_name <- validate_arg_function_name(
     default_name = "collinear::cor_clusters()",
     ... = ...
@@ -94,11 +93,11 @@ cor_clusters <- function(
         function_name <- validate_arg_function_name(
           default_name = "stats::hclust()",
           function_name = function_name
-          ),
+        ),
         ": clustering failed: ",
         e$message,
         call. = FALSE
-        )
+      )
     }
   )
 
@@ -122,6 +121,4 @@ cor_clusters <- function(
   )
 
   out
-
-
 }

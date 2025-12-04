@@ -35,12 +35,11 @@
 #' @family automated_multicollinearity_analysis
 #' @export
 collinear_stats <- function(
-    df = NULL,
-    predictors = NULL,
-    quiet = FALSE,
-    ...
-){
-
+  df = NULL,
+  predictors = NULL,
+  quiet = FALSE,
+  ...
+) {
   dots <- list(...)
 
   function_name <- validate_arg_function_name(
@@ -53,8 +52,7 @@ collinear_stats <- function(
     function_name = function_name
   )
 
-  if(!inherits(x = df, what = "collinear_cor_df")){
-
+  if (!inherits(x = df, what = "collinear_cor_df")) {
     predictors <- validate_arg_predictors(
       df = df,
       predictors = predictors,
@@ -71,8 +69,7 @@ collinear_stats <- function(
       function_name = function_name
     )
 
-    if(ncol.df > ncol(df)){
-
+    if (ncol.df > ncol(df)) {
       attributes(predictors)$validated <- NULL
 
       predictors <- validate_arg_predictors(
@@ -81,7 +78,6 @@ collinear_stats <- function(
         quiet = quiet,
         function_name = function_name
       )
-
     }
 
     cor.df <- cor_df(
@@ -90,16 +86,12 @@ collinear_stats <- function(
       quiet = quiet,
       function_name = function_name
     )
-
   } else {
-
     cor.df <- df
     predictors <- unique(
       c(cor.df$x, cor.df$y)
     )
-
   }
-
 
   cor.m <- cor_matrix(
     df = cor.df,
@@ -130,5 +122,4 @@ collinear_stats <- function(
   )
 
   out
-
 }

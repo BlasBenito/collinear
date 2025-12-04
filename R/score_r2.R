@@ -17,11 +17,10 @@
 #'     p = c(1, 0.8, 0.7, 0.6, 0.5, 0.1, 0)
 #'   )
 score_r2 <- function(
-    o = NULL,
-    p = NULL,
-    ...
-){
-
+  o = NULL,
+  p = NULL,
+  ...
+) {
   function_name <- validate_arg_function_name(
     default_name = "collinear::score_r2()",
     ... = ...
@@ -40,10 +39,12 @@ score_r2 <- function(
       stop(
         "\n",
         function_name,
-        ": ", conditionMessage(e), call. = FALSE)
+        ": ",
+        conditionMessage(e),
+        call. = FALSE
+      )
     }
   )
 
   out
-
 }

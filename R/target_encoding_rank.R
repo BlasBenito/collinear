@@ -2,15 +2,14 @@
 #' @autoglobal
 #' @export
 target_encoding_rank <- function(
-    df = NULL,
-    response = NULL,
-    predictor = NULL,
-    encoded_name = NULL,
-    smoothing = NULL,
-    ...
-){
-
-  if(is.null(encoded_name)){
+  df = NULL,
+  response = NULL,
+  predictor = NULL,
+  encoded_name = NULL,
+  smoothing = NULL,
+  ...
+) {
+  if (is.null(encoded_name)) {
     encoded_name <- paste0(
       predictor,
       "__encoded"
@@ -53,5 +52,4 @@ target_encoding_rank <- function(
   df <- df[, df.cols]
 
   df
-
 }

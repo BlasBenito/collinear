@@ -3,15 +3,14 @@
 #' @autoglobal
 #' @export
 target_encoding_loo <- function(
-    df = NULL,
-    response = NULL,
-    predictor = NULL,
-    encoded_name = NULL,
-    smoothing = NULL,
-    ...
-){
-
-  if(is.null(encoded_name)){
+  df = NULL,
+  response = NULL,
+  predictor = NULL,
+  encoded_name = NULL,
+  smoothing = NULL,
+  ...
+) {
+  if (is.null(encoded_name)) {
     encoded_name <- paste0(
       predictor,
       "__encoded"
@@ -37,14 +36,12 @@ target_encoding_loo <- function(
         f = df[[predictor]]
       ),
       FUN = function(x) {
-
-        (
-          sum(
-            x = x[[response]],
-            na.rm = TRUE
-          ) - x[[response]]
-        ) / (nrow(x) - 1)
-
+        (sum(
+          x = x[[response]],
+          na.rm = TRUE
+        ) -
+          x[[response]]) /
+          (nrow(x) - 1)
       }
     )
   )
@@ -66,5 +63,4 @@ target_encoding_loo <- function(
   df <- df[order(df[["id.."]]), ]
 
   df
-
 }

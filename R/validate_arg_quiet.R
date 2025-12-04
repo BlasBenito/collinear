@@ -18,21 +18,19 @@
 #' @family argument_validation
 #' @export
 validate_arg_quiet <- function(
-    quiet = FALSE,
-    function_name = NULL
-){
-
-  if(isTRUE(attr(x = quiet, which = "validated"))){
+  quiet = FALSE,
+  function_name = NULL
+) {
+  if (isTRUE(attr(x = quiet, which = "validated"))) {
     return(quiet)
   }
-
 
   function_name <- validate_arg_function_name(
     default_name = "collinear::validate_arg_quiet()",
     function_name = function_name
   )
 
-  if(is.logical(quiet)){
+  if (is.logical(quiet)) {
     return(quiet)
   }
 
@@ -50,5 +48,4 @@ validate_arg_quiet <- function(
   ) <- TRUE
 
   quiet
-
 }

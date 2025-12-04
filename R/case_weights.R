@@ -34,16 +34,15 @@
 #' @autoglobal
 #' @export
 case_weights <- function(
-    x = NULL,
-    ...
-){
-
+  x = NULL,
+  ...
+) {
   function_name <- validate_arg_function_name(
     default_name = "collinear::case_weights()",
     ... = ...
   )
 
-  if(is.null(x)){
+  if (is.null(x)) {
     stop(
       "\n",
       function_name,
@@ -52,11 +51,11 @@ case_weights <- function(
     )
   }
 
-  if(is.logical(x)){
+  if (is.logical(x)) {
     x <- as.numeric(x)
   }
 
-  if(is.numeric(x) && any(!is.finite(x))){
+  if (is.numeric(x) && any(!is.finite(x))) {
     stop(
       "\n",
       function_name,
@@ -66,7 +65,7 @@ case_weights <- function(
   }
 
   #convert NA, Inf, -Inf, or NaN to character
-  if(is.character(x)){
+  if (is.character(x)) {
     x <- paste(x)
   }
 
@@ -79,7 +78,7 @@ case_weights <- function(
   #normalize to one
   out <- out / sum(out)
 
-  if(length(out) != length(x)){
+  if (length(out) != length(x)) {
     stop(
       "\n",
       function_name,
@@ -93,5 +92,4 @@ case_weights <- function(
   }
 
   out
-
 }

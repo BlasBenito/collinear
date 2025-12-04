@@ -84,15 +84,14 @@
 #' @family target_encoding
 #' @rdname target_encoding_methods
 target_encoding_mean <- function(
-    df = NULL,
-    response = NULL,
-    predictor = NULL,
-    encoded_name = NULL,
-    smoothing = 0,
-    ...
-){
-
-  if(is.null(encoded_name)){
+  df = NULL,
+  response = NULL,
+  predictor = NULL,
+  encoded_name = NULL,
+  smoothing = 0,
+  ...
+) {
+  if (is.null(encoded_name)) {
     encoded_name <- paste0(
       predictor,
       "__encoded"
@@ -100,16 +99,13 @@ target_encoding_mean <- function(
   }
 
   #mean encoding when smoothing > 0
-  if(smoothing == 0){
-
+  if (smoothing == 0) {
     df[[encoded_name]] <- stats::ave(
       x = df[[response]],
       df[[predictor]],
       FUN = function(x) mean(x, na.rm = TRUE)
     )
-
   } else {
-
     #global response mean
     global_response_mean <- mean(
       x = df[[response]],
@@ -126,9 +122,7 @@ target_encoding_mean <- function(
         (n * mean_x + smoothing * global_response_mean) / (n + smoothing)
       }
     )
-
   }
 
   df
-
 }

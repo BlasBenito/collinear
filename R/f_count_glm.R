@@ -43,19 +43,18 @@
 #' @autoglobal
 #' @export
 f_count_glm <- function(
-    df,
-    ...
-){
-
+  df,
+  ...
+) {
   dots <- list(...)
 
-  cv_training_fraction <- if(
-    is.null(dots$cv_training_fraction)
-  ) 1 else dots$cv_training_fraction
+  cv_training_fraction <- if (is.null(dots$cv_training_fraction)) {
+    1
+  } else {
+    dots$cv_training_fraction
+  }
 
-  cv_iterations <- if(
-    is.null(dots$cv_iterations)
-  ) 1 else dots$cv_iterations
+  cv_iterations <- if (is.null(dots$cv_iterations)) 1 else dots$cv_iterations
 
   function_name <- validate_arg_function_name(
     default_name = "collinear::f_count_glm()",
@@ -63,29 +62,25 @@ f_count_glm <- function(
   )
 
   #check column names in df
-  if(!all(c("x", "y") %in% names(df))){
-
+  if (!all(c("x", "y") %in% names(df))) {
     stop(
       "\n",
       function_name,
       ": dataframe 'df' must have the column names 'x' and 'y'.",
       call. = FALSE
     )
-
   }
 
-  if(
+  if (
     !is.numeric(df[["y"]]) ||
-    !is.integer(df[["y"]])
-    ){
-
+      !is.integer(df[["y"]])
+  ) {
     stop(
       "\n",
       function_name,
       ": column 'y' of dataframe 'df' must be numeric integer.",
       call. = FALSE
     )
-
   }
 
   df <- stats::na.omit(object = df)
@@ -93,11 +88,9 @@ f_count_glm <- function(
   scores <- rep(x = NA_real_, times = cv_iterations)
 
   #iterations
-  for(i in seq_len(cv_iterations)){
-
+  for (i in seq_len(cv_iterations)) {
     #data split
-    if(cv_training_fraction < 1) {
-
+    if (cv_training_fraction < 1) {
       train_indices <- sample(
         x = nrow(df),
         size = floor(nrow(df) * cv_training_fraction),
@@ -107,22 +100,20 @@ f_count_glm <- function(
       train_df <- df[train_indices, , drop = FALSE]
       test_df <- df[-train_indices, , drop = FALSE]
 
-      if(!is.numeric(df[["x"]])){
+      if (!is.numeric(df[["x"]])) {
         test_df <- test_df[test_df[["x"]] %in% train_df[["x"]], ]
       }
-
     } else {
       train_df <- df
       test_df <- df
     }
 
-    if(nrow(test_df) < 2){
+    if (nrow(test_df) < 2) {
       next
     }
 
     scores[i] <- tryCatch(
       {
-
         #train
         m <- stats::glm(
           formula = y ~ x,
@@ -145,19 +136,12 @@ f_count_glm <- function(
           p = p,
           function_name = function_name
         )
-
       },
       error = function(e) {
-
         return(NA)
-
       }
-
     )
-
   }
 
   scores
-
-
 }

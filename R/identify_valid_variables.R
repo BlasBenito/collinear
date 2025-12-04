@@ -28,14 +28,13 @@
 #' @author Blas M. Benito, PhD
 #' @export
 identify_valid_variables <- function(
-    df = NULL,
-    responses = NULL,
-    predictors = NULL,
-    decimals = 4,
-    quiet = FALSE,
-    ...
-){
-
+  df = NULL,
+  responses = NULL,
+  predictors = NULL,
+  decimals = 4,
+  quiet = FALSE,
+  ...
+) {
   function_name <- validate_arg_function_name(
     default_name = "collinear::identify_valid_variables()",
     ... = ...
@@ -46,28 +45,22 @@ identify_valid_variables <- function(
     function_name = function_name
   )
 
-  if(!is.null(responses)){
-
+  if (!is.null(responses)) {
     responses <- validate_arg_responses(
       df = df,
       responses = responses,
       quiet = quiet,
       function_name = function_name
     )
-
   }
 
-
-
-  if(!is.null(predictors)){
-
+  if (!is.null(predictors)) {
     predictors <- validate_arg_predictors(
       df = df,
       predictors = predictors,
       quiet = quiet,
       function_name = function_name
     )
-
   }
 
   variables_numeric <- identify_numeric_variables(
@@ -97,19 +90,17 @@ identify_valid_variables <- function(
 
   out_list <- list()
 
-  if(!is.null(variables_numeric)){
+  if (!is.null(variables_numeric)) {
     out_list$numeric <- variables_numeric
   }
 
-  if(!is.null(variables_categorical)){
+  if (!is.null(variables_categorical)) {
     out_list$categorical <- variables_categorical
   }
 
-  if(!is.null(variables_logical)){
+  if (!is.null(variables_logical)) {
     out_list$logical <- variables_logical
   }
 
-
   out_list
-
 }

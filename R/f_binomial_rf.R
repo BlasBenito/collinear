@@ -39,53 +39,47 @@
 #' @autoglobal
 #' @export
 f_binomial_rf <- function(
-    df,
-    ...
-){
-
+  df,
+  ...
+) {
   dots <- list(...)
 
-  cv_training_fraction <- if(
-    is.null(dots$cv_training_fraction)
-  ) 1 else dots$cv_training_fraction
+  cv_training_fraction <- if (is.null(dots$cv_training_fraction)) {
+    1
+  } else {
+    dots$cv_training_fraction
+  }
 
-  cv_iterations <- if(
-    is.null(dots$cv_iterations)
-  ) 1 else dots$cv_iterations
+  cv_iterations <- if (is.null(dots$cv_iterations)) 1 else dots$cv_iterations
 
   function_name <- validate_arg_function_name(
     default_name = "collinear::f_binomial_rf()",
     function_name = dots$function_name
   )
 
-
   #check column names in df
-  if(!all(c("x", "y") %in% names(df))){
-
+  if (!all(c("x", "y") %in% names(df))) {
     stop(
       "\n",
       function_name,
       ": dataframe 'df' must have the column names 'x' and 'y'.",
       call. = FALSE
     )
-
   }
 
   u <- unique(df[["y"]])
-  if(
+  if (
     !is.numeric(df[["y"]]) ||
-    !is.integer(df[["y"]]) ||
-    length(u) != 2L ||
-    !all(u %in% 0:1)
-  ){
-
+      !is.integer(df[["y"]]) ||
+      length(u) != 2L ||
+      !all(u %in% 0:1)
+  ) {
     stop(
       "\n",
       function_name,
       ": column 'y' of dataframe 'df' must be integer and have 0 and 1 as unique values.",
       call. = FALSE
     )
-
   }
 
   df <- stats::na.omit(object = df)
@@ -93,11 +87,9 @@ f_binomial_rf <- function(
   scores <- rep(x = NA_real_, times = cv_iterations)
 
   #iterations
-  for(i in seq_len(cv_iterations)){
-
+  for (i in seq_len(cv_iterations)) {
     #data split
-    if(cv_training_fraction < 1) {
-
+    if (cv_training_fraction < 1) {
       train_indices <- sample(
         x = nrow(df),
         size = floor(nrow(df) * cv_training_fraction),
@@ -107,22 +99,20 @@ f_binomial_rf <- function(
       train_df <- df[train_indices, , drop = FALSE]
       test_df <- df[-train_indices, , drop = FALSE]
 
-      if(!is.numeric(df[["x"]])){
+      if (!is.numeric(df[["x"]])) {
         test_df <- test_df[test_df[["x"]] %in% train_df[["x"]], ]
       }
-
     } else {
       train_df <- df
       test_df <- df
     }
 
-    if(nrow(test_df) < 2){
+    if (nrow(test_df) < 2) {
       next
     }
 
     scores[i] <- tryCatch(
       {
-
         #train
         m <- ranger::ranger(
           formula = y ~ x,
@@ -149,18 +139,12 @@ f_binomial_rf <- function(
           p = p,
           function_name = function_name
         )
-
       },
       error = function(e) {
-
         return(NA)
-
       }
-
     )
-
   }
 
   scores
-
 }

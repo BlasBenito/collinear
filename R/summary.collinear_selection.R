@@ -8,15 +8,13 @@
 #' @autoglobal
 #' @export
 summary.collinear_selection <- function(
-    object = NULL,
-    ...
-){
-
+  object = NULL,
+  ...
+) {
   out <- object$selection
 
   # response ----
-  if(!is.null(object$response)){
-
+  if (!is.null(object$response)) {
     msg <- paste0(
       "response: ",
       object$response
@@ -34,13 +32,10 @@ summary.collinear_selection <- function(
     cat(underline)
 
     cat("\n")
-
   }
 
-
   # selection ----
-  if(length(out) > 1){
-
+  if (length(out) > 1) {
     cat(
       "+ selection:\n  -",
       paste(
@@ -48,17 +43,14 @@ summary.collinear_selection <- function(
         collapse = "\n  - "
       )
     )
-
   } else {
-
     cat(
-      "- selection:\n  -", out
+      "- selection:\n  -",
+      out
     )
-
   }
 
   cat("\n")
 
   out
-
 }

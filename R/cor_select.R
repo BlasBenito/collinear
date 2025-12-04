@@ -84,15 +84,14 @@
 #' @author Blas M. Benito, PhD
 #' @export
 cor_select <- function(
-    df = NULL,
-    response = NULL,
-    predictors = NULL,
-    preference_order = NULL,
-    max_cor = 0.7,
-    quiet = FALSE,
-    ...
-){
-
+  df = NULL,
+  response = NULL,
+  predictors = NULL,
+  preference_order = NULL,
+  max_cor = 0.7,
+  quiet = FALSE,
+  ...
+) {
   dots <- list(...)
 
   function_name <- validate_arg_function_name(
@@ -100,15 +99,13 @@ cor_select <- function(
     function_name = dots$function_name
   )
 
-  if(is.null(max_cor)){
-
+  if (is.null(max_cor)) {
     stop(
       "\n",
       function_name,
       ": argument 'max_cor' cannot be NULL.",
       call. = FALSE
     )
-
   }
 
   out <- collinear_select(
@@ -124,5 +121,4 @@ cor_select <- function(
   )
 
   out
-
 }

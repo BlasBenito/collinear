@@ -18,17 +18,16 @@
 #'   )
 #'
 score_auc <- function(
-    o = NULL,
-    p = NULL,
-    ...
-){
-
+  o = NULL,
+  p = NULL,
+  ...
+) {
   function_name <- validate_arg_function_name(
     default_name = "collinear::score_auc()",
     ... = ...
   )
 
-  if(is.null(o)){
+  if (is.null(o)) {
     stop(
       "\n",
       function_name,
@@ -37,8 +36,7 @@ score_auc <- function(
     )
   }
 
-
-  if(is.null(p)){
+  if (is.null(p)) {
     stop(
       "\n",
       function_name,
@@ -51,7 +49,7 @@ score_auc <- function(
   ones <- p[o == 1]
   zeros <- p[o == 0]
 
-  if(sum(ones) == 0){
+  if (sum(ones) == 0) {
     stop(
       "\n",
       function_name,
@@ -67,11 +65,11 @@ score_auc <- function(
   #curve computation
   curve <- sum(
     rank(c(ones, zeros))[1:ones.n]
-  ) - (ones.n * (ones.n + 1) / 2)
+  ) -
+    (ones.n * (ones.n + 1) / 2)
 
   #area under the curve
   out <- curve / (zeros.n * ones.n)
 
   out
-
 }

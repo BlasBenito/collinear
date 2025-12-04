@@ -21,21 +21,18 @@
 #' @family argument_validation
 #' @export
 validate_arg_predictors <- function(
-    df = NULL,
-    responses = NULL,
-    predictors = NULL,
-    quiet = FALSE,
-    function_name = NULL
-){
-
+  df = NULL,
+  responses = NULL,
+  predictors = NULL,
+  quiet = FALSE,
+  function_name = NULL
+) {
   #if already validated, return it
-  if(
+  if (
     isTRUE(attr(x = predictors, which = "validated")) &&
-    all(predictors %in% colnames(df))
-  ){
-
+      all(predictors %in% colnames(df))
+  ) {
     return(predictors)
-
   }
 
   function_name <- validate_arg_function_name(
@@ -50,13 +47,11 @@ validate_arg_predictors <- function(
   )
 
   #if predictors is NULL, use colnames(df)
-  if(is.null(predictors)){
-
+  if (is.null(predictors)) {
     predictors <- setdiff(
       x = colnames(df),
       y = responses
     )
-
   }
 
   #remove response from predictors
@@ -71,10 +66,8 @@ validate_arg_predictors <- function(
     y = colnames(df)
   )
 
-  if(length(predictors.missing) > 0){
-
-    if(length(predictors.missing) == length(predictors)){
-
+  if (length(predictors.missing) > 0) {
+    if (length(predictors.missing) == length(predictors)) {
       warning(
         "\n",
         function_name,
@@ -83,11 +76,9 @@ validate_arg_predictors <- function(
       )
 
       return(NULL)
-
     }
 
-    if(quiet == FALSE){
-
+    if (quiet == FALSE) {
       message(
         "\n",
         function_name,
@@ -97,9 +88,7 @@ validate_arg_predictors <- function(
           collapse = "\n - "
         )
       )
-
     }
-
   }
 
   #getting predictors in df only
@@ -114,5 +103,4 @@ validate_arg_predictors <- function(
   ) <- TRUE
 
   predictors
-
 }

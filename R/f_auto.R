@@ -40,13 +40,12 @@
 #' @export
 #' @autoglobal
 f_auto <- function(
-    df = NULL,
-    response = NULL,
-    predictors = NULL,
-    quiet = FALSE,
-    ...
-){
-
+  df = NULL,
+  response = NULL,
+  predictors = NULL,
+  quiet = FALSE,
+  ...
+) {
   function_name <- validate_arg_function_name(
     default_name = "collinear::f_auto()",
     ... = ...
@@ -86,14 +85,12 @@ f_auto <- function(
     function_name = function_name
   )
 
-  if(is.null(response)){
-
+  if (is.null(response)) {
     stop(
       "\n",
       function_name,
       ": argument 'response' must not be NULL."
     )
-
   }
 
   response_type <- identify_response_type(
@@ -103,14 +100,12 @@ f_auto <- function(
     function_name = function_name
   )
 
-  if(response_type == "unknown"){
-
+  if (response_type == "unknown") {
     stop(
       function_name,
       ": response type is 'unknown', please select an f_...() function suitable for your response data.",
       call. = FALSE
     )
-
   }
 
   #identify types of the predictors
@@ -129,19 +124,17 @@ f_auto <- function(
     ) |>
     unique()
 
-  if(length(predictors_type) > 1){
+  if (length(predictors_type) > 1) {
     predictors_type <- "mixed"
   }
 
-  if(!(predictors_type %in% c("numeric", "categorical", "mixed"))){
-
+  if (!(predictors_type %in% c("numeric", "categorical", "mixed"))) {
     stop(
       "\n",
       function_name,
       ": predictors type is 'unknown', please select an f_...() function suitable for your predictors.",
       call. = FALSE
     )
-
   }
 
   #select function
@@ -153,8 +146,7 @@ f_auto <- function(
     "name"
   ]
 
-  if(quiet == FALSE){
-
+  if (quiet == FALSE) {
     message(
       "\n",
       function_name,
@@ -162,10 +154,7 @@ f_auto <- function(
       f_name,
       "()' to compute preference order."
     )
-
   }
 
-
   f_name
-
 }

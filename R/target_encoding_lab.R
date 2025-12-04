@@ -60,16 +60,15 @@
 #' }
 #' @export
 target_encoding_lab <- function(
-    df = NULL,
-    response = NULL,
-    predictors = NULL,
-    encoding_method = "loo",
-    smoothing = 0,
-    overwrite = FALSE,
-    quiet = FALSE,
-    ...
-){
-
+  df = NULL,
+  response = NULL,
+  predictors = NULL,
+  encoding_method = "loo",
+  smoothing = 0,
+  overwrite = FALSE,
+  quiet = FALSE,
+  ...
+) {
   function_name <- validate_arg_function_name(
     default_name = "collinear::target_encoding_lab()",
     ... = ...
@@ -96,7 +95,7 @@ target_encoding_lab <- function(
     function_name = function_name
   )
 
-  if(is.null(encoding_method)){
+  if (is.null(encoding_method)) {
     return(df)
   }
 
@@ -108,20 +107,16 @@ target_encoding_lab <- function(
     function_name = function_name
   )
 
-  if(is.null(response)){
-
-    if(quiet == FALSE){
-
+  if (is.null(response)) {
+    if (quiet == FALSE) {
       message(
         "\n",
         function_name,
         ": argument 'response' is NULL, skipping target encoding."
       )
-
     }
 
     return(df)
-
   }
 
   predictors <- validate_arg_predictors(
@@ -140,7 +135,6 @@ target_encoding_lab <- function(
     function_name = function_name
   )
 
-
   #check that response is numeric
   response_type <- identify_response_type(
     df = df,
@@ -149,20 +143,18 @@ target_encoding_lab <- function(
     function_name = function_name
   )
 
-  if(response_type %in% c("categorical", "unknown")){
-
-    if(quiet == FALSE){
-
+  if (response_type %in% c("categorical", "unknown")) {
+    if (quiet == FALSE) {
       message(
         "\n",
         function_name,
-        ": 'response' column '", response, "' is not numeric, skipping target encoding."
+        ": 'response' column '",
+        response,
+        "' is not numeric, skipping target encoding."
       )
-
     }
 
     return(df)
-
   }
 
   ## predictors ----
@@ -173,52 +165,41 @@ target_encoding_lab <- function(
     function_name = function_name
   )$valid
 
-  if(length(predictors) == 0){
-
-    if(quiet == FALSE){
-
+  if (length(predictors) == 0) {
+    if (quiet == FALSE) {
       message(
         "\n",
         function_name,
-        ": no categorical predictors in argument 'predictors', skipping target encoding.")
-
+        ": no categorical predictors in argument 'predictors', skipping target encoding."
+      )
     }
 
     return(df)
-
   }
 
   # overwrite ----
-  if(is.logical(overwrite) == FALSE){
-
-    if(quiet == FALSE){
-
+  if (is.logical(overwrite) == FALSE) {
+    if (quiet == FALSE) {
       message(
         "\n",
         function_name,
         ": argument 'overwrite' must be logical, resetting it to 'FALSE'."
       )
-
     }
 
     overwrite <- FALSE
-
   }
 
-
   ## smoothing ----
-  if("mean" %in% encoding_method){
-
+  if ("mean" %in% encoding_method) {
     smoothing <- as.integer(smoothing)
 
     smoothing <- smoothing[smoothing >= 0 & smoothing <= nrow(df)]
 
-    if(length(smoothing) == 0){
-
+    if (length(smoothing) == 0) {
       smoothing <- 0
 
-      if(quiet == FALSE){
-
+      if (quiet == FALSE) {
         message(
           "\n",
           function_name,
@@ -226,19 +207,15 @@ target_encoding_lab <- function(
           smoothing,
           "'."
         )
-
       }
-
     }
 
     #depends on overwrite
-    if(
+    if (
       overwrite == TRUE &&
-      length(smoothing) > 1
-    ){
-
-      if(quiet == FALSE){
-
+        length(smoothing) > 1
+    ) {
+      if (quiet == FALSE) {
         message(
           "\n",
           function_name,
@@ -246,19 +223,14 @@ target_encoding_lab <- function(
           smoothing[1],
           "'."
         )
-
       }
 
       smoothing <- smoothing[1]
-
     }
-
   }
 
-
   #message to start encoding
-  if(quiet == FALSE){
-
+  if (quiet == FALSE) {
     message(
       "\n",
       function_name,
@@ -270,7 +242,6 @@ target_encoding_lab <- function(
         collapse = "\n - "
       )
     )
-
   }
 
   # target-encoding ----
@@ -293,8 +264,7 @@ target_encoding_lab <- function(
   encoded_list <- future.apply::future_apply(
     X = combinations.df,
     MARGIN = 1,
-    FUN = function(x){
-
+    FUN = function(x) {
       p()
 
       #testing vector
@@ -339,7 +309,7 @@ target_encoding_lab <- function(
       #get encoding function
       f.i <- switch(
         encoding_method.i,
-        loo  = target_encoding_loo,
+        loo = target_encoding_loo,
         mean = target_encoding_mean,
         rank = target_encoding_rank
       )
@@ -355,22 +325,19 @@ target_encoding_lab <- function(
       )
 
       #replacing original variable with encoded version
-      if(overwrite == TRUE){
-
+      if (overwrite == TRUE) {
         #remove original column
         df.i[[predictor.i]] <- NULL
 
         #rename encoded column
-        colnames(df.i)[colnames(df.i) == predictor_encoded_name.i] <- predictor.i
-
+        colnames(df.i)[
+          colnames(df.i) == predictor_encoded_name.i
+        ] <- predictor.i
       } else {
-
         predictor.i <- predictor_encoded_name.i
-
       }
 
       df.i[, predictor.i, drop = FALSE]
-
     }, #end of lambda function
     future.seed = TRUE
   ) #end of loop
@@ -382,10 +349,8 @@ target_encoding_lab <- function(
   )
 
   #remove original predictors
-  if(overwrite == TRUE){
-
+  if (overwrite == TRUE) {
     df <- df[, !(colnames(df) %in% predictors), drop = FALSE]
-
   }
 
   #merge encoded data
@@ -401,7 +366,4 @@ target_encoding_lab <- function(
   ) <- TRUE
 
   df
-
 }
-
-

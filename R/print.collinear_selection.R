@@ -8,14 +8,12 @@
 #' @autoglobal
 #' @export
 print.collinear_selection <- function(
-    x = NULL,
-    n = 5,
-    ...
-){
-
+  x = NULL,
+  n = 5,
+  ...
+) {
   #function to shorten formulas
-  short_formula <- function(f = NULL, n = 5){
-
+  short_formula <- function(f = NULL, n = 5) {
     terms <- attr(terms(f), "term.labels")
     nterms <- length(terms)
 
@@ -23,7 +21,7 @@ print.collinear_selection <- function(
     n <- min(n, nterms)
 
     #adding one term if needed
-    if(nterms == (n + 1)){
+    if (nterms == (n + 1)) {
       n <- nterms
     }
 
@@ -33,7 +31,7 @@ print.collinear_selection <- function(
 
     f_string <- paste(lhs, rhs, sep = " ~ ")
 
-    notice <- if(n < nterms){
+    notice <- if (n < nterms) {
       paste0(
         "+ ... (",
         nterms - n,
@@ -44,31 +42,28 @@ print.collinear_selection <- function(
     }
 
     paste(f_string, notice)
-
   }
 
   # response ----
-  if(!is.null(x$response)){
-
+  if (!is.null(x$response)) {
     msg <- paste0(
       "response: ",
       x$response
-      )
+    )
 
     msg_length <- nchar(msg)
 
     underline <- paste0(rep(x = "-", times = nchar(msg)), collapse = "")
 
-      cat(
-        " -",
-        msg,
-        fill = TRUE
-      )
+    cat(
+      " -",
+      msg,
+      fill = TRUE
+    )
 
-      cat("  ", underline)
+    cat("  ", underline)
 
-      cat("\n")
-
+    cat("\n")
   }
 
   # df ----
@@ -84,8 +79,7 @@ print.collinear_selection <- function(
   cat("\n")
 
   # preference ----
-  if(!is.null(x$preference_order)){
-
+  if (!is.null(x$preference_order)) {
     cat("\n")
 
     cat(" + preference order:", fill = TRUE)
@@ -117,8 +111,7 @@ print.collinear_selection <- function(
       )
     )
 
-    if(omitted > 0){
-
+    if (omitted > 0) {
       cat(
         paste0(
           "\n     - ... (",
@@ -126,19 +119,15 @@ print.collinear_selection <- function(
           " ommited)"
         )
       )
-
     }
 
     cat("\n")
 
     cat("   + f:", unique(x$preference_order$f), fill = TRUE)
-
   }
 
-
   # selection ----
-  if(!is.null(x$selection)){
-
+  if (!is.null(x$selection)) {
     cat("\n")
 
     selection <- stats::na.omit(x$selection[1:n])
@@ -160,8 +149,7 @@ print.collinear_selection <- function(
       )
     )
 
-    if(omitted > 0){
-
+    if (omitted > 0) {
       cat(
         paste0(
           "\n   - ... (",
@@ -169,33 +157,30 @@ print.collinear_selection <- function(
           " ommited)"
         )
       )
-
     }
 
     cat("\n")
-
   }
 
-
   # formulas ----
-  if(!is.null(x$formulas)){
-
+  if (!is.null(x$formulas)) {
     cat("\n")
 
-    if(length(x$formulas) > 1){
+    if (length(x$formulas) > 1) {
       cat(" + formulas:", fill = TRUE)
     } else {
       cat(" - formula:", fill = TRUE)
     }
 
-    for(i in names(x$formulas)){
-      cat(paste0("   - ", i, ": ", short_formula(f = x$formulas[[i]], n = n)), "\n")
+    for (i in names(x$formulas)) {
+      cat(
+        paste0("   - ", i, ": ", short_formula(f = x$formulas[[i]], n = n)),
+        "\n"
+      )
     }
-
   }
 
   cat("\n\n")
 
   invisible(x)
 }
-

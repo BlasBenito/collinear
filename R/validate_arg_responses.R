@@ -22,18 +22,16 @@
 #' @family argument_validation
 #' @export
 validate_arg_responses <- function(
-    df = NULL,
-    responses = NULL,
-    max_responses = NULL,
-    quiet = FALSE,
-    function_name = NULL
-){
-
+  df = NULL,
+  responses = NULL,
+  max_responses = NULL,
+  quiet = FALSE,
+  function_name = NULL
+) {
   function_name <- validate_arg_function_name(
     default_name = "collinear::validate_arg_responses()",
     function_name = function_name
   )
-
 
   #if df is NULL, stop
   df <- validate_arg_df_not_null(
@@ -42,48 +40,40 @@ validate_arg_responses <- function(
   )
 
   #return responses if NULL
-  if(is.null(responses)){
+  if (is.null(responses)) {
     return(NULL)
   }
 
   #max_responses <-
-  if(is.null(max_responses)){
-
+  if (is.null(max_responses)) {
     max_responses <- Inf
-
   } else {
-
-    if(!is.numeric(max_responses)){
-
+    if (!is.numeric(max_responses)) {
       stop(
         "\n",
         function_name,
         ": argument 'max_responses' must be a integer.",
         call. = FALSE
       )
-
     }
 
     max_responses <- as.integer(max_responses)
-
   }
 
   #arg name for messages
-  if(max_responses == 1){
+  if (max_responses == 1) {
     arg_name <- "response"
   } else {
     arg_name <- "responses"
   }
 
   #return responses if validated
-  if(
+  if (
     isTRUE(attr(x = responses, which = "validated")) &&
-    all(responses %in% colnames(df)) &&
-    length(responses) <= max_responses
-  ){
-
+      all(responses %in% colnames(df)) &&
+      length(responses) <= max_responses
+  ) {
     return(responses)
-
   }
 
   #check wrong responses
@@ -92,12 +82,9 @@ validate_arg_responses <- function(
     y = colnames(df)
   )
 
-  if(length(wrong_responses) > 0L){
-
-    if(all(responses %in% wrong_responses)){
-
-      if(quiet == FALSE){
-
+  if (length(wrong_responses) > 0L) {
+    if (all(responses %in% wrong_responses)) {
+      if (quiet == FALSE) {
         message(
           "\n",
           function_name,
@@ -105,15 +92,12 @@ validate_arg_responses <- function(
           arg_name,
           "' does not contain column names of 'df' and will be ignored."
         )
-
       }
 
       return(NULL)
-
     }
 
-    if(quiet == FALSE){
-
+    if (quiet == FALSE) {
       message(
         "\n",
         function_name,
@@ -125,9 +109,7 @@ validate_arg_responses <- function(
           collapse = "\n - "
         )
       )
-
     }
-
   }
 
   responses <- intersect(
@@ -136,10 +118,8 @@ validate_arg_responses <- function(
   )
 
   #check length
-  if(length(responses) == 0){
-
-    if(quiet == FALSE){
-
+  if (length(responses) == 0) {
+    if (quiet == FALSE) {
       message(
         "\n",
         function_name,
@@ -147,19 +127,15 @@ validate_arg_responses <- function(
         arg_name,
         "' does not contain column names of 'df' and will be ignored."
       )
-
     }
 
     return(NULL)
-
   }
 
-  if(length(responses) > max_responses){
-
+  if (length(responses) > max_responses) {
     responses <- responses[1:max_responses]
 
-    if(quiet == FALSE){
-
+    if (quiet == FALSE) {
       message(
         "\n",
         function_name,
@@ -175,9 +151,7 @@ validate_arg_responses <- function(
           collapse = "\n - "
         )
       )
-
     }
-
   }
 
   attr(
@@ -186,5 +160,4 @@ validate_arg_responses <- function(
   ) <- TRUE
 
   responses
-
 }

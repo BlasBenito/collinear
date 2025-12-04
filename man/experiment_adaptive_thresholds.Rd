@@ -3,38 +3,39 @@
 \docType{data}
 \name{experiment_adaptive_thresholds}
 \alias{experiment_adaptive_thresholds}
-\title{Testing the Adaptive Thresholds Selection Method Implemented in \code{\link[=collinear]{collinear()}}}
+\title{Results of Adaptive Threshold Validation Experiment}
 \format{
-A dataframe with 10000 rows and 7 variables:
+A dataframe with 10,000 rows and 9 variables:
 \describe{
-\item{input_rows}{Number of rows in the input data.}
-\item{input_predictors}{Number of predictors in the input data.}
-\item{output_predictors}{Number of predictors selected by \code{\link[=collinear]{collinear()}}.}
-\item{input_cor_median}{Median correlation of the input predictors as returned by \code{\link[=collinear_stats]{collinear_stats()}}.}
-\item{output_cor_median}{Median correlation of the selected predictors.}
-\item{input_cor_max}{Maximum correlation of the input predictors as returned by \code{\link[=collinear_stats]{collinear_stats()}}.}
-\item{output_cor_max}{Maximum correlation of the selected predictors.}
-\item{input_vif_max}{Maximum VIF of the input predictors as returned by \code{\link[=collinear_stats]{collinear_stats()}}.}
-\item{output_vif_max}{Maximum VIF of the selected predictors.}
+\item{input_rows}{Number of rows in the input data subset.}
+\item{input_predictors}{Number of predictors in the input data subset.}
+\item{output_predictors}{Number of predictors retained after filtering.}
+\item{input_cor_q75}{75th percentile of pairwise correlations in the input data.}
+\item{output_cor_q75}{75th percentile of pairwise correlations in the selected predictors.}
+\item{input_cor_max}{Maximum pairwise correlation in the input data.}
+\item{output_cor_max}{Maximum pairwise correlation in the selected predictors.}
+\item{input_vif_max}{Maximum VIF in the input data.}
+\item{output_vif_max}{Maximum VIF in the selected predictors.}
 }
 }
 \usage{
 experiment_adaptive_thresholds
 }
 \description{
-A dataframe with 10,000 experiment to test the efficacy of the adaptive multicollinearity threshold used by \code{\link[=collinear]{collinear()}} when \code{max_cor} and \code{max_vif} are NULL.
+A dataframe summarizing 10,000 experiments validating the adaptive multicollinearity threshold system in \code{\link[=collinear]{collinear()}}. Each row records input data characteristics and the resulting multicollinearity metrics after filtering.
 }
 \details{
-The source data is \link{vi} plus 200 synthetic columns, for a total of 249 columns and 30.000 rows that are randomly subset on each iteration.
+The source data is a synthetic dataframe with 500 columns and 10,000 rows generated using \code{distantia::zoo_simulate()} with correlated time series (\code{independent = FALSE}, \code{seasons = 0}).
+
+Each iteration randomly subsets 10-100 predictors and 30-100 rows per predictor, then applies \code{\link[=collinear]{collinear()}} with automatic threshold configuration to assess:
+\itemize{
+\item Whether output VIF stays bounded between ~2.5 and ~7.5
+\item How the system adapts to different correlation structures
+\item How predictor retention scales with input size
+}
 }
 \examples{
 data(experiment_adaptive_thresholds)
 str(experiment_adaptive_thresholds)
-
-#experiment's code
-system.file(
-  "experiments/validation_adaptive_thresholds.R",
-  package = "collinear"
-  )
 }
 \keyword{datasets}

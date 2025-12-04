@@ -130,16 +130,15 @@
 #' @author Blas M. Benito, PhD
 #' @export
 collinear_select <- function(
-    df = NULL,
-    response = NULL,
-    predictors = NULL,
-    preference_order = NULL,
-    max_cor = 0.7,
-    max_vif = 5,
-    quiet = FALSE,
-    ...
-){
-
+  df = NULL,
+  response = NULL,
+  predictors = NULL,
+  preference_order = NULL,
+  max_cor = 0.7,
+  max_vif = 5,
+  quiet = FALSE,
+  ...
+) {
   dots <- list(...)
 
   function_name <- validate_arg_function_name(
@@ -184,8 +183,7 @@ collinear_select <- function(
   )
 
   #revalidate predictors if any columns were removed
-  if(ncol(df) < df.ncol){
-
+  if (ncol(df) < df.ncol) {
     attributes(response)$validated <- NULL
     attributes(predictors)$validated <- NULL
 
@@ -204,35 +202,28 @@ collinear_select <- function(
       quiet = quiet,
       function_name = function_name
     )
-
   }
 
   #univariate case
-  if(length(predictors) == 1){
-
-    if(quiet == FALSE){
-
+  if (length(predictors) == 1) {
+    if (quiet == FALSE) {
       message(
         "\n",
         function_name,
         ": only one valid predictor in 'predictors', skipping multicollinearity filtering."
       )
-
     }
 
     return(predictors)
-
   }
 
-  if(is.null(max_cor) && is.null(max_vif)){
-
+  if (is.null(max_cor) && is.null(max_vif)) {
     stop(
       "\n",
       function_name,
       ": arguments 'max_cor' and 'max_vif' cannot be NULL at once.",
       call. = FALSE
     )
-
   }
 
   m <- cor_matrix(
@@ -280,29 +271,25 @@ collinear_select <- function(
   skip_vif <- FALSE
 
   #check cor threshold
-  if(!is.null(max_cor)){
-
-    if(max(abs(m[upper.tri(m)])) <= max_cor){
-
+  if (!is.null(max_cor)) {
+    if (max(abs(m[upper.tri(m)])) <= max_cor) {
       skip_cor <- TRUE
 
-      if(quiet == FALSE && is.null(max_vif)){
-
+      if (quiet == FALSE && is.null(max_vif)) {
         message(
           "\n",
           function_name,
-          ": maximum pairwise correlation is <= ", max_cor,
+          ": maximum pairwise correlation is <= ",
+          max_cor,
           ", multicollinearity filtering is not required."
         )
 
         return(predictors)
-
       }
     }
   }
 
-  if(!is.null(max_vif)) {
-
+  if (!is.null(max_vif)) {
     current_max_vif <- max(
       vif(
         m = m,
@@ -312,39 +299,34 @@ collinear_select <- function(
     )
 
     #check vif threshold
-    if(current_max_vif <= max_vif){
-
+    if (current_max_vif <= max_vif) {
       skip_vif <- TRUE
 
-      if(quiet == FALSE && is.null(max_cor)) {
-
+      if (quiet == FALSE && is.null(max_cor)) {
         message(
           "\n",
           function_name,
-          ": maximum VIF is <= ", max_vif, ", multicollinearity filtering is not required."
+          ": maximum VIF is <= ",
+          max_vif,
+          ", multicollinearity filtering is not required."
         )
 
         return(predictors)
-
       }
     }
   }
 
   #both are below thresholds
-  if(skip_cor && skip_vif){
-
-    if(quiet == FALSE){
-
+  if (skip_cor && skip_vif) {
+    if (quiet == FALSE) {
       message(
         "\n",
         function_name,
         ": multicollinearity is below 'max_cor' and 'max_vif', filtering is not required."
       )
-
     }
 
     return(predictors)
-
   }
 
   #filtering loop
@@ -352,22 +334,18 @@ collinear_select <- function(
   candidates <- preference.order[-1]
 
   #iterate over candidates
-  for(candidate in candidates) {
-
+  for (candidate in candidates) {
     #correlation criterion (if applicable)
     cor_ok <- TRUE
 
-    if(!is.null(max_cor) && !skip_cor){
-
+    if (!is.null(max_cor) && !skip_cor) {
       cor_ok <- max(abs(m[selected, candidate])) <= max_cor
-
     }
 
     #VIF criterion, only checked if cor passed
     vif_ok <- TRUE
 
-    if(!is.null(max_vif) && !skip_vif && cor_ok){
-
+    if (!is.null(max_vif) && !skip_vif && cor_ok) {
       selected_columns <- c(
         selected,
         candidate
@@ -384,16 +362,12 @@ collinear_select <- function(
         max()
 
       vif_ok <- current_vif <= max_vif
-
     }
 
     #add candidate if all criteria is TRUE
-    if(cor_ok && vif_ok){
-
+    if (cor_ok && vif_ok) {
       selected <- c(selected, candidate)
-
     }
-
   }
 
   attr(
@@ -402,5 +376,4 @@ collinear_select <- function(
   ) <- TRUE
 
   selected
-
 }

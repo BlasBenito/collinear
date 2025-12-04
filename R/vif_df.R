@@ -51,12 +51,11 @@
 #' @inherit vif_select references
 #' @export
 vif_df <- function(
-    df = NULL,
-    predictors = NULL,
-    quiet = FALSE,
-    ...
-){
-
+  df = NULL,
+  predictors = NULL,
+  quiet = FALSE,
+  ...
+) {
   dots <- list(...)
 
   function_name <- validate_arg_function_name(
@@ -64,8 +63,7 @@ vif_df <- function(
     function_name = dots$function_name
   )
 
-  if(!inherits(dots$m, "collinear_cor_matrix")){
-
+  if (!inherits(dots$m, "collinear_cor_matrix")) {
     df <- validate_arg_df_not_null(
       df = df,
       function_name = function_name
@@ -93,8 +91,7 @@ vif_df <- function(
     )
 
     #revalidate predictors if any columns were removed
-    if(ncol(df) < df.ncol){
-
+    if (ncol(df) < df.ncol) {
       attributes(predictors)$validated <- NULL
 
       predictors <- validate_arg_predictors(
@@ -103,20 +100,16 @@ vif_df <- function(
         quiet = quiet,
         function_name = function_name
       )
-
     }
 
     #if no predictors
-    if(length(predictors) == 1){
-
-      if(quiet == FALSE){
-
+    if (length(predictors) == 1) {
+      if (quiet == FALSE) {
         message(
           "\n",
           function_name,
           ": only one valid predictor, returning one-row dataframe."
         )
-
       }
 
       return(
@@ -125,11 +118,7 @@ vif_df <- function(
           vif = 0
         )
       )
-
     }
-
-
-
   }
 
   #compute correlation matrix
@@ -145,10 +134,10 @@ vif_df <- function(
     m = m,
     quiet = quiet,
     function_name = function_name
-    ) |>
+  ) |>
     data.frame(
       stringsAsFactors = FALSE
-      )
+    )
 
   #format dataframe
   colnames(out) <- "vif"
@@ -158,10 +147,4 @@ vif_df <- function(
   class(out) <- c("collinear_vif_df", class(out))
 
   out
-
 }
-
-
-
-
-

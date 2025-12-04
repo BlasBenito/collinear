@@ -52,12 +52,11 @@
 #' @family data_types
 #' @autoglobal
 identify_response_type <- function(
-    df = NULL,
-    response = NULL,
-    quiet = FALSE,
-    ...
-){
-
+  df = NULL,
+  response = NULL,
+  quiet = FALSE,
+  ...
+) {
   function_name <- validate_arg_function_name(
     default_name = "collinear::identify_response_type()",
     ... = ...
@@ -73,15 +72,13 @@ identify_response_type <- function(
     function_name = function_name
   )
 
-  if(is.null(response)){
-
+  if (is.null(response)) {
     stop(
       "\n",
       function_name,
       ": argument 'response' must not be NULL.",
       call. = FALSE
     )
-
   }
 
   response <- validate_arg_responses(
@@ -105,8 +102,7 @@ identify_response_type <- function(
   x_length <- length(x)
 
   #if constant, error
-  if(x_length == 1){
-
+  if (x_length == 1) {
     stop(
       "\n",
       function_name,
@@ -115,94 +111,64 @@ identify_response_type <- function(
       "' names a column with constant values. Please select a different response column.",
       call. = FALSE
     )
-
   }
 
   #numeric types
-  if(is.numeric(x)) {
-
+  if (is.numeric(x)) {
     # continuous values
-    if(!all(x %% 1 == 0)) {
-
+    if (!all(x %% 1 == 0)) {
       if (x_length == 2) {
-
-        if(quiet == FALSE){
-
+        if (quiet == FALSE) {
           message(
             "\n",
             function_name,
             ": argument 'response' names a numeric non-integer column with two unique values. Please consider recoding it as categorical, or select a different response column."
           )
-
         }
 
         return("continuous-binary")
-
       } else if (x_length <= 5) {
-
-        if(quiet == FALSE){
-
+        if (quiet == FALSE) {
           message(
             "\n",
             function_name,
             ": argument 'response' names a numeric non-integer column with 5 or fewer values. Please consider recoding it as integer or categorical, or select a different response column."
           )
-
         }
 
         return("continuous-low")
-
       } else {
-
         return("continuous-high")
-
       }
-
     } else {
       #integer values
 
       #integer counts
-      if(all(x == as.integer(x))){
-
-        if(x_length == 2){
-
+      if (all(x == as.integer(x))) {
+        if (x_length == 2) {
           # binomial: 0s and 1s
-          if(all(x %in% c(0, 1))){
-
+          if (all(x %in% c(0, 1))) {
             return("integer-binomial")
-
           } else {
-
             return("integer-binary")
-
           }
-
-        } else if(
+        } else if (
           x_length <= 5 ||
-          max(x) <= 15 ||
-          mean(x) <= 5
-        ){
-
+            max(x) <= 15 ||
+            mean(x) <= 5
+        ) {
           return("integer-low")
-
         } else {
-
           return("integer-high")
-
         }
       }
-
     }
-
   }
 
   # categorical
   if (is.factor(x) || is.character(x)) {
-
     return("categorical")
-
   }
 
   return("unknown")
-
 }

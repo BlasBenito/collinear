@@ -83,22 +83,21 @@
 #' @autoglobal
 #' @export
 step_collinear <- function(
-    recipe,
-    ...,
-    role = NA,
-    trained = FALSE,
-    options = list(),
-    selected = NULL,
-    skip = FALSE,
-    keep_original_cols = FALSE,
-    id = recipes::rand_id("collinear")
-    ){
-
+  recipe,
+  ...,
+  role = NA,
+  trained = FALSE,
+  options = list(),
+  selected = NULL,
+  skip = FALSE,
+  keep_original_cols = FALSE,
+  id = recipes::rand_id("collinear")
+) {
   if (!requireNamespace("recipes", quietly = TRUE)) {
     stop(
       "collinear::step_collinear(): Package 'recipes' is required but not installed.",
       call. = FALSE
-      )
+    )
   }
 
   # recipes::add_step(
@@ -118,7 +117,7 @@ step_collinear <- function(
   recipes::add_step(
     recipe,
     step_collinear_new(
-      terms = rlang::enquos(...),  # ← Changed: store quosures
+      terms = rlang::enquos(...), # ← Changed: store quosures
       role = role,
       trained = trained,
       options = options,
@@ -131,16 +130,15 @@ step_collinear <- function(
 }
 
 step_collinear_new <- function(
-    terms,
-    role,
-    trained,
-    options,
-    selected,
-    skip,
-    keep_original_cols,
-    id
-    ) {
-
+  terms,
+  role,
+  trained,
+  options,
+  selected,
+  skip,
+  keep_original_cols,
+  id
+) {
   structure(
     list(
       terms = terms,
@@ -155,9 +153,8 @@ step_collinear_new <- function(
     class = c(
       "step_collinear",
       "recipes_step"
-      )
     )
-
+  )
 }
 
 #' @rdname step_collinear
@@ -169,12 +166,11 @@ step_collinear_new <- function(
 #' @method prep step_collinear
 #' @export
 prep.step_collinear <- function(
-    x = NULL,
-    training = NULL,
-    info = NULL,
-    ...
-    ) {
-
+  x = NULL,
+  training = NULL,
+  info = NULL,
+  ...
+) {
   if (!requireNamespace("recipes", quietly = TRUE)) {
     stop(
       "collinear::step_collinear(): Package 'recipes' is required but not installed.",
@@ -228,15 +224,18 @@ prep.step_collinear <- function(
     args = c(
       list(df = df),
       x$options
-      )
     )
+  )
 
-  if(length(result) == 0 || is.null(result[[1]])) {
-    stop("collinear::step_collinear(): multicollinearity filtering failed,  function collinear::collinear() returned empty results.", call. = FALSE)
+  if (length(result) == 0 || is.null(result[[1]])) {
+    stop(
+      "collinear::step_collinear(): multicollinearity filtering failed,  function collinear::collinear() returned empty results.",
+      call. = FALSE
+    )
   }
 
   # In prep.step_collinear, around line 129
-  selected = if(is.null(result[[1]]$response)) {
+  selected = if (is.null(result[[1]]$response)) {
     result[[1]]$selection
   } else {
     c(result[[1]]$response, result[[1]]$selection)
@@ -252,7 +251,6 @@ prep.step_collinear <- function(
     keep_original_cols = x$keep_original_cols,
     id = x$id
   )
-
 }
 
 #' @rdname step_collinear
@@ -263,11 +261,10 @@ prep.step_collinear <- function(
 #' @method bake step_collinear
 #' @export
 bake.step_collinear <- function(
-    object = NULL,
-    new_data = NULL,
-    ...
-    ) {
-
+  object = NULL,
+  new_data = NULL,
+  ...
+) {
   if (!requireNamespace("recipes", quietly = TRUE)) {
     stop(
       "collinear::step_collinear(): Package 'recipes' is required but not installed.",
@@ -290,5 +287,4 @@ bake.step_collinear <- function(
   )
 
   new_data[, object$selected, drop = FALSE]
-
 }

@@ -32,11 +32,10 @@
 #' attributes(df)$sf_column
 #'
 drop_geometry_column <- function(
-    df = NULL,
-    quiet = FALSE,
-    ...
-    ){
-
+  df = NULL,
+  quiet = FALSE,
+  ...
+) {
   function_name <- validate_arg_function_name(
     default_name = "collinear::drop_geometry_column()",
     ... = ...
@@ -50,23 +49,15 @@ drop_geometry_column <- function(
   #remove geometry column from df
   sf.column <- attributes(df)$sf_column
 
-  if(!is.null(sf.column)){
-
-    if(quiet == FALSE){
-
-      message("\n",
-      function_name,
-      ": dropping geometry column from 'df'.")
-
+  if (!is.null(sf.column)) {
+    if (quiet == FALSE) {
+      message("\n", function_name, ": dropping geometry column from 'df'.")
     }
 
     df <- as.data.frame(df)
     df[[sf.column]] <- NULL
     attr(df, "sf_column") <- NULL
-
   }
 
   df
-
 }
-

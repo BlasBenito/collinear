@@ -57,12 +57,11 @@
 #' @author Blas M. Benito, PhD
 #' @export
 cor_matrix <- function(
-    df = NULL,
-    predictors = NULL,
-    quiet = FALSE,
-    ...
-){
-
+  df = NULL,
+  predictors = NULL,
+  quiet = FALSE,
+  ...
+) {
   dots <- list(...)
 
   function_name <- validate_arg_function_name(
@@ -80,12 +79,12 @@ cor_matrix <- function(
     function_name = function_name
   )
 
-  if(
-    "collinear_cor_matrix" %in% class(dots$m) &&
-    all(predictors %in% colnames(dots$m))
-  ){
-
-    if(length(predictors) > length(colnames(dots$m))){
+  if (
+    "collinear_cor_matrix" %in%
+      class(dots$m) &&
+      all(predictors %in% colnames(dots$m))
+  ) {
+    if (length(predictors) > length(colnames(dots$m))) {
       m <- dots$m
       m <- m[predictors, predictors]
       class(m) <- c("collinear_cor_matrix", class(m))
@@ -93,21 +92,17 @@ cor_matrix <- function(
     }
 
     return(dots$m)
-
   }
 
   #if df with predictors, compute correlation dataframe
-  if(!"collinear_cor_df" %in% class(df)){
-
+  if (!"collinear_cor_df" %in% class(df)) {
     df <- cor_df(
       df = df,
       predictors = predictors,
       quiet = quiet,
       function_name = function_name
     )
-
   }
-
 
   #create all possible pairs
   df <- rbind(
@@ -118,7 +113,6 @@ cor_matrix <- function(
       correlation = df$correlation
     )
   )
-
 
   #rows and col names
   variables <- sort(
@@ -160,5 +154,4 @@ cor_matrix <- function(
   class(m) <- c("collinear_cor_matrix", class(m))
 
   m
-
 }

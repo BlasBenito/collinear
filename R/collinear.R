@@ -292,18 +292,17 @@
 #' @family automated_multicollinearity_analysis
 #' @export
 collinear <- function(
-    df = NULL,
-    responses = NULL,
-    predictors = NULL,
-    encoding_method = NULL,
-    preference_order = NULL,
-    f = f_auto,
-    max_cor = NULL,
-    max_vif = NULL,
-    quiet = FALSE,
-    ...
-){
-
+  df = NULL,
+  responses = NULL,
+  predictors = NULL,
+  encoding_method = NULL,
+  preference_order = NULL,
+  f = f_auto,
+  max_cor = NULL,
+  max_vif = NULL,
+  quiet = FALSE,
+  ...
+) {
   dots <- list(...)
 
   function_name <- validate_arg_function_name(
@@ -346,8 +345,7 @@ collinear <- function(
   )
 
   #revalidate predictors if columns were removed
-  if(ncol(df) < df.ncol){
-
+  if (ncol(df) < df.ncol) {
     attributes(responses)$validated <- NULL
     attributes(predictors)$validated <- NULL
 
@@ -364,7 +362,6 @@ collinear <- function(
       quiet = quiet,
       function_name = function_name
     )
-
   }
 
   #identify variable types
@@ -377,17 +374,15 @@ collinear <- function(
 
   #check if target encoding will be triggered
   target_encoding_needed <- FALSE
-  if(
+  if (
     !is.null(encoding_method) &&
-    !is.null(responses) &&
-    any(responses %in% var.types$numeric) &&
-    any(predictors %in% var.types$categorical)
-    ){
-
+      !is.null(responses) &&
+      any(responses %in% var.types$numeric) &&
+      any(predictors %in% var.types$categorical)
+  ) {
     target_encoding_needed <- TRUE
 
-    if(length(responses) == 1){
-
+    if (length(responses) == 1) {
       df <- target_encoding_lab(
         df = df,
         response = responses,
@@ -399,18 +394,15 @@ collinear <- function(
       )
 
       target_encoding_needed <- FALSE
-
     }
-
   }
 
   #setup max cor and max vif if NULL
   m <- dots$m
-  if(
+  if (
     is.null(max_cor) &&
-    is.null(max_vif)
-    ){
-
+      is.null(max_vif)
+  ) {
     #computing cor df and m here to avoid recomputation in collinear()
     cor.df <- cor_df(
       df = df,
@@ -437,7 +429,7 @@ collinear <- function(
       collinearity.stats$method == "vif" &
         collinearity.stats$statistic == "maximum",
       "value"
-      ]
+    ]
 
     cor.max <- collinearity.stats[
       collinearity.stats$method == "correlation" &
@@ -446,13 +438,10 @@ collinear <- function(
     ]
 
     #data needs no filtering
-    if(vif.max <= 2.5){
-
+    if (vif.max <= 2.5) {
       max_vif <- 2.5000
       max_cor <- round(x = cor.max, digits = 4)
-
     } else {
-
       #adaptive max_cor threshold using sigmoid soft clamping
       #smooth transition between conservative and permissive filtering
 
@@ -463,14 +452,19 @@ collinear <- function(
         "value"
       ]
 
-
       #max_cor = 0.545 corresponds to VIF ≈ 2.5 (conservative)
       prediction_df <- collinear::prediction_cor_to_vif
 
-      sigmoid_floor <- prediction_df[which.min(abs(prediction_df$max_vif - 2.5)), "max_cor"]
+      sigmoid_floor <- prediction_df[
+        which.min(abs(prediction_df$max_vif - 2.5)),
+        "max_cor"
+      ]
 
       #max_cor = 0.785 corresponds to VIF ≈ 7.5 (permissive)
-      sigmoid_ceiling <- prediction_df[which.min(abs(prediction_df$max_vif - 7.5)), "max_cor"]
+      sigmoid_ceiling <- prediction_df[
+        which.min(abs(prediction_df$max_vif - 7.5)),
+        "max_cor"
+      ]
 
       #sigmoid params
       sigmoid_midpoint <- (sigmoid_floor + sigmoid_ceiling) / 2
@@ -480,7 +474,7 @@ collinear <- function(
       #parameter (-15) controls transition sharpness
       max_cor <- sigmoid_floor +
         sigmoid_range /
-        (1 + exp(-15 * (cor.statistic - sigmoid_midpoint)))
+          (1 + exp(-15 * (cor.statistic - sigmoid_midpoint)))
 
       max_cor <- round(x = max_cor, digits = 4)
 
@@ -491,12 +485,9 @@ collinear <- function(
         )
       ) |>
         round(digits = 4)
-
     }
 
-
-    if(quiet == FALSE){
-
+    if (quiet == FALSE) {
       message(
         "\n",
         function_name,
@@ -512,39 +503,35 @@ collinear <- function(
         max_vif,
         "."
       )
-
     }
-
   }
 
   #compute correlation matrix if needed
-  if(
+  if (
     target_encoding_needed == FALSE &&
-    is.null(m)
-    ){
-
+      is.null(m)
+  ) {
     m <- cor_matrix(
       df = df,
       predictors = predictors,
       quiet = quiet,
       function_name = function_name
     )
-
   }
 
   #manage response for loop
-  if(
+  if (
     length(responses) == 0 ||
-    is.null(responses)
-  ){
+      is.null(responses)
+  ) {
     responses <- list(NULL)
   }
 
   #if several responses, invalidate predictors
-  if(
+  if (
     length(responses) > 1 &&
-    any(responses %in% predictors)
-    ){
+      any(responses %in% predictors)
+  ) {
     attributes(predictors)$validated <- NULL
   }
 
@@ -559,13 +546,11 @@ collinear <- function(
   out <- list()
 
   ## start ----
-  for(response in responses){
-
-    if(
+  for (response in responses) {
+    if (
       quiet == FALSE &&
-      length(responses) > 1
-    ){
-
+        length(responses) > 1
+    ) {
       msg <- paste0(
         function_name,
         ": processing response '",
@@ -575,7 +560,6 @@ collinear <- function(
 
       message("\n", msg)
       message(rep(x = "-", times = nchar(msg)))
-
     }
 
     ## copy df ----
@@ -590,27 +574,24 @@ collinear <- function(
     )
 
     ## subset correlation matrix to the given predictors
-    if(
+    if (
       !is.null(m) &&
-      length(predictors.response) < length(colnames(m))
-    ){
-
+        length(predictors.response) < length(colnames(m))
+    ) {
       m <- m[
         predictors.response,
         predictors.response
-        ]
+      ]
 
       class(m) <- unique(c("collinear_cor_matrix", class(m)))
-
     }
 
     ## TARGET ENCODING ----
-    if(
+    if (
       target_encoding_needed &&
-      response %in% var.types$numeric &&
-      any(predictors.response %in% var.types$categorical)
-    ){
-
+        response %in% var.types$numeric &&
+        any(predictors.response %in% var.types$categorical)
+    ) {
       df.response <- target_encoding_lab(
         df = df.response,
         response = response,
@@ -620,24 +601,21 @@ collinear <- function(
         quiet = quiet,
         function_name = function_name
       )
-
     }
 
     ## PREFERENCE ORDER ----
     preference_order.response <- preference_order
 
-    if(
+    if (
       is.null(preference_order) &&
-      !is.null(response) &&
-      !is.null(f)
-    ){
-
-
-      if(is.null(dots$cv_training_fraction)){
+        !is.null(response) &&
+        !is.null(f)
+    ) {
+      if (is.null(dots$cv_training_fraction)) {
         dots$cv_training_fraction <- 1
       }
 
-      if(is.null(dots$cv_iterations)){
+      if (is.null(dots$cv_iterations)) {
         dots$cv_iterations <- 1
       }
 
@@ -652,7 +630,6 @@ collinear <- function(
         function_name = function_name,
         m = m
       )
-
     }
 
     #validated here so we can put it in the output list
@@ -681,8 +658,7 @@ collinear <- function(
 
     ##PREPARE OUTPUT ----
 
-    df.response <- df.response[
-      ,
+    df.response <- df.response[,
       c(response, selection.response),
       drop = FALSE
     ]
@@ -692,21 +668,19 @@ collinear <- function(
       which = "validated"
     ) <- TRUE
 
-    if(quiet == FALSE){
-
+    if (quiet == FALSE) {
       message(
         "\n",
         function_name,
         ": selected predictors: \n - ",
         paste(selection.response, collapse = "\n - ")
       )
-
     }
 
     #prepare output list
     out.response <- list()
 
-    if(!is.null(response)){
+    if (!is.null(response)) {
       out.response$response <- response
     }
 
@@ -714,15 +688,14 @@ collinear <- function(
     out.response$preference_order <- preference_order.response
     out.response$selection <- selection.response
 
-    if(
+    if (
       all(
         c(
           !is.null(response),
           !is.null(selection.response)
         )
       )
-    ){
-
+    ) {
       response_type <- identify_valid_variables(
         df = df.response,
         predictors = response,
@@ -756,11 +729,10 @@ collinear <- function(
       out.response$formulas[[general_formula_name]] <- general_formula
 
       #add smooth formula if relevant
-      if(
+      if (
         response_type == "numeric" &&
-        length(selection_type$numeric) > 0
-      ){
-
+          length(selection_type$numeric) > 0
+      ) {
         out.response$formulas[["smooth"]] <- model_formula(
           df = df.response,
           response = response,
@@ -769,9 +741,7 @@ collinear <- function(
           quiet = quiet,
           function_name = function_name
         )
-
       }
-
     }
 
     class(out.response) <- c(
@@ -780,16 +750,14 @@ collinear <- function(
     )
 
     slot_name <- response
-    if(is.null(response)){
+    if (is.null(response)) {
       slot_name <- "result"
     }
 
     out[[slot_name]] <- out.response
-
   } #end of loop
 
   class(out) <- c("collinear_output", class(out))
 
   out
-
 }

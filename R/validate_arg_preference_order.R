@@ -84,18 +84,15 @@
 #' y
 #' attributes(y)$validated
 validate_arg_preference_order <- function(
-    df = NULL,
-    response = NULL,
-    predictors = NULL,
-    preference_order = NULL,
-    quiet = FALSE,
-    function_name = NULL,
-    ...
-){
-
-  if(
-    isTRUE(attr(x = preference_order, which = "validated"))
-  ){
+  df = NULL,
+  response = NULL,
+  predictors = NULL,
+  preference_order = NULL,
+  quiet = FALSE,
+  function_name = NULL,
+  ...
+) {
+  if (isTRUE(attr(x = preference_order, which = "validated"))) {
     return(preference_order)
   }
 
@@ -109,8 +106,7 @@ validate_arg_preference_order <- function(
     function_name = function_name
   )
 
-  if(is.null(predictors)){
-
+  if (is.null(predictors)) {
     predictors <- validate_arg_predictors(
       df = df,
       responses = response,
@@ -118,7 +114,6 @@ validate_arg_preference_order <- function(
       quiet = quiet,
       function_name = function_name
     )
-
   }
 
   response <- validate_arg_responses(
@@ -130,26 +125,21 @@ validate_arg_preference_order <- function(
   )
 
   #character
-  if(is.character(preference_order)){
-
+  if (is.character(preference_order)) {
     #remove "auto"
-    if("auto" %in% preference_order){
-
-      if(quiet == FALSE){
-
+    if ("auto" %in% preference_order) {
+      if (quiet == FALSE) {
         message(
           "\n",
           function_name,
           ": value 'auto' for the argument 'preference_order' is deprecated, ignoring it."
         )
-
       }
 
       preference_order <- setdiff(
         x = preference_order,
         y = "auto"
       )
-
     }
 
     preference_order <- intersect(
@@ -162,22 +152,17 @@ validate_arg_preference_order <- function(
       y = response
     )
 
-    if(length(preference_order) == 0){
-
-      if(quiet == FALSE){
-
+    if (length(preference_order) == 0) {
+      if (quiet == FALSE) {
         message(
           "\n",
           function_name,
           ": invalid values in argument 'preference_order', ignoring it."
         )
-
       }
 
       preference_order <- NULL
-
     } else {
-
       #generate dataframe
       preference_order <- data.frame(
         response = rep(
@@ -198,14 +183,11 @@ validate_arg_preference_order <- function(
         ),
         rank = seq_len(length(preference_order))
       )
-
     }
-
   }
 
   #dataframe
-  if(is.data.frame(preference_order)){
-
+  if (is.data.frame(preference_order)) {
     #error if not expected structure
     expected_columns <- c(
       "response",
@@ -216,8 +198,7 @@ validate_arg_preference_order <- function(
       "rank"
     )
 
-    if(!all(expected_columns %in% colnames(preference_order))){
-
+    if (!all(expected_columns %in% colnames(preference_order))) {
       stop(
         "\n",
         function_name,
@@ -226,63 +207,50 @@ validate_arg_preference_order <- function(
         "'.",
         call. = FALSE
       )
-
     }
 
     #subset preference order for the given predictors
-    preference_order <- preference_order[preference_order$predictor %in% predictors, ]
+    preference_order <- preference_order[
+      preference_order$predictor %in% predictors,
+    ]
 
-    if(nrow(preference_order) == 0){
-
+    if (nrow(preference_order) == 0) {
       stop(
         "\n",
         function_name,
         ": column 'preference_order$predictor' does not contain any 'predictors'.",
         call. = FALSE
       )
-
     }
 
-    if(is.null(response)){
-
+    if (is.null(response)) {
       unique_df_response <- unique(preference_order$response)
 
-      if(length(unique_df_response) > 1){
-
+      if (length(unique_df_response) > 1) {
         stop(
           "\n",
           function_name,
           ": dataframe 'preference_order' contains more than one response and there is no valid 'response' argument to filter it.",
           call. = FALSE
         )
-
       }
-
     } else {
-
-
-      if(response %in% preference_order$response){
-
-        preference_order <- preference_order[preference_order$response == response, ]
-
+      if (response %in% preference_order$response) {
+        preference_order <- preference_order[
+          preference_order$response == response,
+        ]
       } else {
-
         stop(
           "\n",
           function_name,
           ": argument 'response' does not match the column 'response' of the dataframe 'preference_order'",
           call. = FALSE
         )
-
       }
-
-
     }
-
   }
 
-  if(is.null(preference_order)){
-
+  if (is.null(preference_order)) {
     #generate empty dataframe
     preference_order <- data.frame(
       response = ifelse(
@@ -297,21 +265,16 @@ validate_arg_preference_order <- function(
       rank = NA
     ) |>
       stats::na.omit()
-
   }
 
-
   #order missing predictors by their multicollinearity
-  if(nrow(preference_order) < length(predictors)){
-
+  if (nrow(preference_order) < length(predictors)) {
     predictors_missing <- setdiff(
       x = predictors,
       y = preference_order$predictor
     )
 
-
-    if(length(predictors_missing) == 1){
-
+    if (length(predictors_missing) == 1) {
       preference_order_default <- data.frame(
         response = ifelse(
           test = is.null(response),
@@ -324,9 +287,7 @@ validate_arg_preference_order <- function(
         score = 0,
         rank = nrow(preference_order) + 1
       )
-
-    } else if(length(predictors_missing) > 1){
-
+    } else if (length(predictors_missing) > 1) {
       preference_order_default <- preference_order(
         df = df,
         responses = response,
@@ -335,14 +296,12 @@ validate_arg_preference_order <- function(
         quiet = quiet,
         function_name = function_name
       )
-
     }
 
     preference_order <- rbind(
       preference_order,
       preference_order_default
     )
-
   }
 
   rownames(preference_order) <- NULL
@@ -355,5 +314,4 @@ validate_arg_preference_order <- function(
   ) <- TRUE
 
   preference_order
-
 }

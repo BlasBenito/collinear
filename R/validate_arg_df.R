@@ -23,14 +23,13 @@
 #' @family argument_validation
 #' @export
 validate_arg_df <- function(
-    df = NULL,
-    responses = NULL,
-    predictors = NULL,
-    quiet = FALSE,
-    function_name = NULL
-){
-
-  if(isTRUE(attr(x = df, which = "validated"))){
+  df = NULL,
+  responses = NULL,
+  predictors = NULL,
+  quiet = FALSE,
+  function_name = NULL
+) {
+  if (isTRUE(attr(x = df, which = "validated"))) {
     return(df)
   }
 
@@ -56,28 +55,24 @@ validate_arg_df <- function(
   )
 
   #handle coercion to df
-  if(is.data.frame(df) == FALSE){
-
-    if(quiet == FALSE){
-
+  if (is.data.frame(df) == FALSE) {
+    if (quiet == FALSE) {
       message(
         "\n",
         function_name,
         ": argument 'df' is not a dataframe, attempting coercion."
       )
-
     }
 
     df <- tryCatch(
       {
         out <- as.data.frame(df)
 
-        if(all(dim(out)) == 1){
+        if (all(dim(out)) == 1) {
           stop()
         }
-
       },
-      error = function(e){
+      error = function(e) {
         stop(
           "\n",
           function_name,
@@ -86,68 +81,55 @@ validate_arg_df <- function(
         )
       }
     )
-
   }
 
   #stop if no columns
-  if(ncol(df) == 0){
-
+  if (ncol(df) == 0) {
     stop(
       "\n",
       function_name,
       ": argument 'df' has zero columns.",
       call. = FALSE
     )
-
   }
 
-  if(ncol(df) == 1){
-
+  if (ncol(df) == 1) {
     stop(
-        "\n",
-        function_name,
-        ": argument 'df' has one valid column, multicollinearity analysis cannot be performed.",
-        call. = FALSE
+      "\n",
+      function_name,
+      ": argument 'df' has one valid column, multicollinearity analysis cannot be performed.",
+      call. = FALSE
+    )
+  }
+
+  #error if not enough rows
+  if (nrow(df) < 3) {
+    stop(
+      function_name,
+      ": argument 'df' has fewer than 3 rows, multicollinearity analysis cannot be performed.",
+      call. = FALSE
     )
 
-  }
-
-    #error if not enough rows
-    if(nrow(df) < 3){
-
-      stop(
+    #warning if not enough rows
+  } else if (nrow(df) < 10) {
+    if (quiet == FALSE) {
+      message(
+        "\n",
         function_name,
-        ": argument 'df' has fewer than 3 rows, multicollinearity analysis cannot be performed.",
-        call. = FALSE
+        ": argument 'df' has fewer than 10 rows, multicollinearity analysis may be unreliable due to insufficient sample size."
       )
-
-      #warning if not enough rows
-    } else if(nrow(df) < 10){
-
-      if(quiet == FALSE){
-
-        message(
-          "\n",
-          function_name,
-          ": argument 'df' has fewer than 10 rows, multicollinearity analysis may be unreliable due to insufficient sample size."
-        )
-
-      }
-
-      #message if not enough rows
-    } else if(nrow(df) < 30){
-
-      if(quiet == FALSE){
-
-        message(
-          "\n",
-          function_name,
-          ": argument 'df' has fewer than 30 rows, results of multicollinearity filtering may be statistically fragile."
-        )
-
-      }
-
     }
+
+    #message if not enough rows
+  } else if (nrow(df) < 30) {
+    if (quiet == FALSE) {
+      message(
+        "\n",
+        function_name,
+        ": argument 'df' has fewer than 30 rows, results of multicollinearity filtering may be statistically fragile."
+      )
+    }
+  }
 
   responses <- validate_arg_responses(
     df = df,
@@ -156,8 +138,7 @@ validate_arg_df <- function(
     function_name = function_name
   )
 
-  if(!is.null(predictors)){
-
+  if (!is.null(predictors)) {
     predictors <- validate_arg_predictors(
       df = df,
       responses = responses,
@@ -165,25 +146,19 @@ validate_arg_df <- function(
       quiet = quiet,
       function_name = function_name
     )
-
   }
 
-  if(all(is.null(c(responses, predictors)))){
-
-    if(quiet == FALSE){
-
+  if (all(is.null(c(responses, predictors)))) {
+    if (quiet == FALSE) {
       message(
         "\n",
         function_name,
         ": arguments 'responses' and 'predictors' are NULL, skipping validation of column values."
       )
-
     }
 
     return(df)
-
   }
-
 
   #subset valid columns
   selected_columns <- unique(c(responses, predictors))
@@ -192,7 +167,6 @@ validate_arg_df <- function(
   df <- df[, selected_columns, drop = FALSE]
 
   column_order <- selected_columns
-
 
   #identify predictors types
   column_types <- identify_valid_variables(
@@ -203,35 +177,32 @@ validate_arg_df <- function(
     function_name = function_name
   )
 
-  if(length(
-    c(
-      column_types$numeric,
-      column_types$categorical
-    )
-  ) == 0
-  ){
-
+  if (
+    length(
+      c(
+        column_types$numeric,
+        column_types$categorical
+      )
+    ) ==
+      0
+  ) {
     stop(
       "\n",
       function_name,
       ": argument 'df' has no valid columns.",
       call. = FALSE
     )
-
   }
 
   #logicals to numeric
-  if(length(column_types$logical) > 0){
-
-    if(quiet == FALSE){
-
+  if (length(column_types$logical) > 0) {
+    if (quiet == FALSE) {
       message(
         "\n",
         function_name,
         ": converted the following logical columns to numeric:\n -",
         paste0(column_types$logical, collapse = "\n - ")
       )
-
     }
 
     #convert logical to numeric
@@ -253,47 +224,39 @@ validate_arg_df <- function(
       column_types$numeric,
       column_types$categorical
     )
-
   }
 
   #transform character categoricals to factors
-  if(length(column_types$categorical) > 0){
-
+  if (length(column_types$categorical) > 0) {
     #identify character categoricals
     char_cols <- column_types$categorical[
       vapply(
         X = df[, column_types$categorical, drop = FALSE],
         FUN = is.character,
         logical(1)
-        )
+      )
     ]
 
-    if(length(char_cols) > 0){
-
-      if(quiet == FALSE){
-
+    if (length(char_cols) > 0) {
+      if (quiet == FALSE) {
         message(
           "\n",
           function_name,
           ": converted the following character columns to factor:\n - ",
           paste0(char_cols, collapse = "\n - ")
         )
-
       }
 
       #convert to factor
       df[char_cols] <- lapply(
         X = df[char_cols],
         FUN = as.factor
-        )
-
+      )
     }
-
   }
 
   #replace invalid numeric values
-  if(length(column_types$numeric) > 0){
-
+  if (length(column_types$numeric) > 0) {
     df_numeric <- df[, column_types$numeric, drop = FALSE]
 
     # replace inf with NA ----
@@ -301,13 +264,12 @@ validate_arg_df <- function(
       vapply(
         X = df_numeric,
         FUN = function(x) sum(!is.finite(x)),
-        FUN.VALUE = integer(1))
+        FUN.VALUE = integer(1)
+      )
     )
 
-    if(n_inf > 0){
-
-      if(quiet == FALSE){
-
+    if (n_inf > 0) {
+      if (quiet == FALSE) {
         #identify involved columns
         columns_inf <- colnames(df_numeric)[
           vapply(
@@ -320,10 +282,11 @@ validate_arg_df <- function(
         message(
           "\n",
           function_name,
-          ": replaced ", n_inf, " Inf, -Inf, or NaN values with NA in these columns: \n - ",
+          ": replaced ",
+          n_inf,
+          " Inf, -Inf, or NaN values with NA in these columns: \n - ",
           paste0(columns_inf, collapse = "\n - ")
         )
-
       }
 
       # replace Inf, -Inf and NaN with NA
@@ -332,7 +295,6 @@ validate_arg_df <- function(
         FUN = function(x) !is.finite(x),
         FUN.VALUE = logical(nrow(df_numeric))
       )
-
     }
 
     #recover non-numeric columns
@@ -348,7 +310,6 @@ validate_arg_df <- function(
     )
 
     df <- df[, column_order, drop = FALSE]
-
   }
 
   attr(
@@ -357,5 +318,4 @@ validate_arg_df <- function(
   ) <- TRUE
 
   df
-
 }

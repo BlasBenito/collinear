@@ -8,12 +8,11 @@
 #' @autoglobal
 #' @export
 print.collinear_output <- function(
-    x = NULL,
-    n = 5,
-    ...
-){
-
-  if(length(names(x)) > 1){
+  x = NULL,
+  n = 5,
+  ...
+) {
+  if (length(names(x)) > 1) {
     cat("Results\n")
     cat("===================\n")
     cat("\n")
@@ -29,5 +28,4 @@ print.collinear_output <- function(
   )
 
   invisible()
-
 }

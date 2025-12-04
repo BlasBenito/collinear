@@ -11,23 +11,22 @@
 #' @examples
 #' x <- validate_arg_f(f = f_auto)
 validate_arg_f <- function(
-    f = NULL,
-    f_name = NULL,
-    function_name = NULL
-){
-
+  f = NULL,
+  f_name = NULL,
+  function_name = NULL
+) {
   function_name <- validate_arg_function_name(
     default_name = "collinear::validate_arg_f()",
     function_name = function_name
   )
 
   #NULL
-  if(is.null(f)){
+  if (is.null(f)) {
     return(NULL)
   }
 
   #valid
-  if(isTRUE(attr(x = f, which = "validated"))){
+  if (isTRUE(attr(x = f, which = "validated"))) {
     return(f)
   }
 
@@ -53,12 +52,11 @@ validate_arg_f <- function(
   }
 
   #attributes
-  if(!is.null(f_name)){
+  if (!is.null(f_name)) {
     attr(x = f, which = "name") <- f_name
   }
 
   attr(x = f, which = "validated") <- TRUE
-
 
   f
 }

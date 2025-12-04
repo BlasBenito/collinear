@@ -38,19 +38,18 @@
 #' @autoglobal
 #' @export
 f_count_rf <- function(
-    df,
-    ...
-){
-
+  df,
+  ...
+) {
   dots <- list(...)
 
-  cv_training_fraction <- if(
-    is.null(dots$cv_training_fraction)
-  ) 1 else dots$cv_training_fraction
+  cv_training_fraction <- if (is.null(dots$cv_training_fraction)) {
+    1
+  } else {
+    dots$cv_training_fraction
+  }
 
-  cv_iterations <- if(
-    is.null(dots$cv_iterations)
-  ) 1 else dots$cv_iterations
+  cv_iterations <- if (is.null(dots$cv_iterations)) 1 else dots$cv_iterations
 
   function_name <- validate_arg_function_name(
     default_name = "collinear::f_count_rf()",
@@ -58,29 +57,25 @@ f_count_rf <- function(
   )
 
   #check column names in df
-  if(!all(c("x", "y") %in% names(df))){
-
+  if (!all(c("x", "y") %in% names(df))) {
     stop(
       "\n",
       function_name,
       ": dataframe 'df' must have the column names 'x' and 'y'.",
       call. = FALSE
     )
-
   }
 
-  if(
+  if (
     !is.numeric(df[["y"]]) ||
-    !is.integer(df[["y"]])
-    ){
-
+      !is.integer(df[["y"]])
+  ) {
     stop(
       "\n",
       function_name,
       ": column 'y' of dataframe 'df' must be numeric integer.",
       call. = FALSE
     )
-
   }
 
   df <- stats::na.omit(object = df)
@@ -88,11 +83,9 @@ f_count_rf <- function(
   scores <- rep(x = NA_real_, times = cv_iterations)
 
   #iterations
-  for(i in seq_len(cv_iterations)){
-
+  for (i in seq_len(cv_iterations)) {
     #data split
-    if(cv_training_fraction < 1) {
-
+    if (cv_training_fraction < 1) {
       train_indices <- sample(
         x = nrow(df),
         size = floor(nrow(df) * cv_training_fraction),
@@ -101,7 +94,6 @@ f_count_rf <- function(
 
       train_df <- df[train_indices, , drop = FALSE]
       test_df <- df[-train_indices, , drop = FALSE]
-
     } else {
       train_df <- df
       test_df <- df
@@ -109,7 +101,6 @@ f_count_rf <- function(
 
     scores[i] <- tryCatch(
       {
-
         #train
         m <- ranger::ranger(
           formula = y ~ x,
@@ -131,18 +122,12 @@ f_count_rf <- function(
           p = p,
           function_name = function_name
         )
-
       },
       error = function(e) {
-
         return(NA)
-
       }
-
     )
-
   }
 
   scores
-
 }
