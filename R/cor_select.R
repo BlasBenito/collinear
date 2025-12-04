@@ -80,7 +80,7 @@
 #' #OPTIONAL: disable parallelization
 #' #future::plan(future::sequential)
 #' @autoglobal
-#' @family pairwise_correlation
+#' @family multicollinearity_filtering
 #' @author Blas M. Benito, PhD
 #' @export
 cor_select <- function(

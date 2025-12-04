@@ -53,6 +53,7 @@ Other preference_order_functions:
 \code{\link{f_count_rf}()},
 \code{\link{f_numeric_gam}()},
 \code{\link{f_numeric_glm}()},
-\code{\link{f_numeric_rf}()}
+\code{\link{f_numeric_rf}()},
+\code{\link{preference_order}()}
 }
 \concept{preference_order_functions}

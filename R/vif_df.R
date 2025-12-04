@@ -47,7 +47,7 @@
 #' #future::plan(future::sequential)
 #'
 #' @autoglobal
-#' @family variance_inflation_factor
+#' @family multicollinearity_assessment
 #' @inherit vif_select references
 #' @export
 vif_df <- function(

@@ -49,9 +49,14 @@ x
 #future::plan(future::sequential)
 }
 \seealso{
-Other variance_inflation_factor: 
+Other multicollinearity_assessment: 
+\code{\link{collinear_stats}()},
+\code{\link{cor_clusters}()},
+\code{\link{cor_cramer}()},
+\code{\link{cor_df}()},
+\code{\link{cor_matrix}()},
+\code{\link{cor_stats}()},
 \code{\link{vif}()},
-\code{\link{vif_df}()},
-\code{\link{vif_select}()}
+\code{\link{vif_df}()}
 }
-\concept{variance_inflation_factor}
+\concept{multicollinearity_assessment}

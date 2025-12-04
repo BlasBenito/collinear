@@ -184,7 +184,20 @@ x
 #resetting to sequential processing
 #future::plan(future::sequential)
 }
+\seealso{
+Other preference_order_functions: 
+\code{\link{f_binomial_gam}()},
+\code{\link{f_binomial_glm}()},
+\code{\link{f_binomial_rf}()},
+\code{\link{f_categorical_rf}()},
+\code{\link{f_count_gam}()},
+\code{\link{f_count_glm}()},
+\code{\link{f_count_rf}()},
+\code{\link{f_numeric_gam}()},
+\code{\link{f_numeric_glm}()},
+\code{\link{f_numeric_rf}()}
+}
 \author{
 Blas M. Benito, PhD
 }
-\concept{preference_order}
+\concept{preference_order_functions}

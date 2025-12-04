@@ -122,3 +122,11 @@ vi_workflow
 }
 }
 }
+\seealso{
+Other multicollinearity_filtering: 
+\code{\link{collinear}()},
+\code{\link{collinear_select}()},
+\code{\link{cor_select}()},
+\code{\link{vif_select}()}
+}
+\concept{multicollinearity_filtering}

@@ -40,4 +40,11 @@ Model performance:
 data(gam_cor_to_vif)
 plot(gam_cor_to_vif, shade = TRUE)
 }
+\seealso{
+Other experiments: 
+\code{\link{experiment_adaptive_thresholds}},
+\code{\link{experiment_cor_vs_vif}},
+\code{\link{prediction_cor_to_vif}}
+}
+\concept{experiments}
 \keyword{datasets}

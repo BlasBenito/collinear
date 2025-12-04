@@ -126,7 +126,7 @@
 #' ## OPTIONAL: disable parallelization
 #' #future::plan(future::sequential)
 #' @autoglobal
-#' @family automated_multicollinearity_analysis
+#' @family multicollinearity_filtering
 #' @author Blas M. Benito, PhD
 #' @export
 collinear_select <- function(

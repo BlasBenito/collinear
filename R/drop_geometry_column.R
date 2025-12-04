@@ -5,7 +5,7 @@
 #' @inheritParams collinear
 #'
 #' @return dataframe
-#' @family data_preparation
+#' @family argument_validation
 #' @autoglobal
 #' @author Blas M. Benito, PhD
 #' @export

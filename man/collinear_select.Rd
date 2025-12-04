@@ -205,11 +205,13 @@ x
 #future::plan(future::sequential)
 }
 \seealso{
-Other automated_multicollinearity_analysis: 
+Other multicollinearity_filtering: 
 \code{\link{collinear}()},
-\code{\link{collinear_stats}()}
+\code{\link{cor_select}()},
+\code{\link{step_collinear}()},
+\code{\link{vif_select}()}
 }
 \author{
 Blas M. Benito, PhD
 }
-\concept{automated_multicollinearity_analysis}
+\concept{multicollinearity_filtering}

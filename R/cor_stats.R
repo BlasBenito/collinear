@@ -32,7 +32,7 @@
 #' ## OPTIONAL: disable parallelization
 #' #future::plan(future::sequential)
 #' @autoglobal
-#' @family pairwise_correlation
+#' @family multicollinearity_assessment
 #' @export
 cor_stats <- function(
   df = NULL,

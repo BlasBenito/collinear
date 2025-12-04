@@ -30,4 +30,11 @@ Each iteration randomly subsets 10-50 predictors and 30-100 rows per predictor, 
 data(experiment_cor_vs_vif)
 str(experiment_cor_vs_vif)
 }
+\seealso{
+Other experiments: 
+\code{\link{experiment_adaptive_thresholds}},
+\code{\link{gam_cor_to_vif}},
+\code{\link{prediction_cor_to_vif}}
+}
+\concept{experiments}
 \keyword{datasets}

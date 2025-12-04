@@ -1,5 +1,5 @@
 Package: collinear
-Title: Comprehensive Multicollinearity Management for Statistical and Machine Learning Workflows
+Title: Automated Multicollinearity Management
 Version: 3.0.0
 Authors@R: 
     person(given = "Blas M.", 

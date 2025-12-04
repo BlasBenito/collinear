@@ -80,6 +80,7 @@
 #'
 #' }
 #' }
+#' @family multicollinearity_filtering
 #' @autoglobal
 #' @export
 step_collinear <- function(

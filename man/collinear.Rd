@@ -320,8 +320,10 @@ x$vi_numeric$selection
 }
 }
 \seealso{
-Other automated_multicollinearity_analysis: 
+Other multicollinearity_filtering: 
 \code{\link{collinear_select}()},
-\code{\link{collinear_stats}()}
+\code{\link{cor_select}()},
+\code{\link{step_collinear}()},
+\code{\link{vif_select}()}
 }
-\concept{automated_multicollinearity_analysis}
+\concept{multicollinearity_filtering}

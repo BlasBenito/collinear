@@ -42,6 +42,7 @@ attributes(x)$validated
 }
 \seealso{
 Other argument_validation: 
+\code{\link{drop_geometry_column}()},
 \code{\link{validate_arg_df}()},
 \code{\link{validate_arg_df_not_null}()},
 \code{\link{validate_arg_encoding_method}()},

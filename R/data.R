@@ -123,7 +123,7 @@
 #'   \item{input_vif_max}{Maximum VIF in the input data.}
 #'   \item{output_vif_max}{Maximum VIF in the selected predictors.}
 #' }
-#'
+#' @family experiments
 #' @examples
 #' data(experiment_adaptive_thresholds)
 #' str(experiment_adaptive_thresholds)
@@ -146,7 +146,7 @@
 #'   \item{max_vif}{VIF threshold at which [vif_select()] produced the highest Jaccard similarity with [cor_select()] for the given \code{max_cor}.}
 #'   \item{out_selection_jaccard}{Jaccard similarity between the predictors selected by [cor_select()] and [vif_select()].}
 #' }
-#'
+#' @family experiments
 #' @examples
 #' data(experiment_cor_vs_vif)
 #' str(experiment_cor_vs_vif)
@@ -177,7 +177,7 @@
 #' }
 #'
 #' @format A \code{\link[mgcv]{gam}} object.
-#'
+#' @family experiments
 #' @source Generated internally from \link{experiment_cor_vs_vif}.
 #' @examples
 #' data(gam_cor_to_vif)
@@ -197,6 +197,7 @@
 #'   \item{max_vif}{Predicted VIF threshold corresponding to each \code{max_cor}.}
 #' }
 #'
+#' @family experiments
 #' @examples
 #' data(prediction_cor_to_vif)
 #' head(prediction_cor_to_vif)

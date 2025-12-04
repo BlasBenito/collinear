@@ -50,3 +50,4 @@ rsconnect/
 .Rproj.user
 docs
 dev_scripts/example_data.R
+_pkgdown.yml.backup

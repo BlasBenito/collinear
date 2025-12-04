@@ -53,7 +53,7 @@
 #' ## OPTIONAL: disable parallelization
 #' #future::plan(future::sequential)
 #' @autoglobal
-#' @family pairwise_correlation
+#' @family multicollinearity_assessment
 #' @author Blas M. Benito, PhD
 #' @export
 cor_matrix <- function(

@@ -49,8 +49,14 @@ x
 #future::plan(future::sequential)
 }
 \seealso{
-Other automated_multicollinearity_analysis: 
-\code{\link{collinear}()},
-\code{\link{collinear_select}()}
+Other multicollinearity_assessment: 
+\code{\link{cor_clusters}()},
+\code{\link{cor_cramer}()},
+\code{\link{cor_df}()},
+\code{\link{cor_matrix}()},
+\code{\link{cor_stats}()},
+\code{\link{vif}()},
+\code{\link{vif_df}()},
+\code{\link{vif_stats}()}
 }
-\concept{automated_multicollinearity_analysis}
+\concept{multicollinearity_assessment}

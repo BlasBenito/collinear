@@ -12,7 +12,6 @@ knitr::opts_chunk$set(
   eval = TRUE,
   collapse = TRUE,
   comment = "#>",
-  fig.path = "man/figures/README-",
   out.width = "100%"
 )
 # options(tibble.print_min = 5, tibble.print_max = 5)

@@ -57,7 +57,7 @@
 #' @param seed (optional, integer) Random seed, required for reproducibility when using cross-validation or random forest models. Default: 1
 #'
 #'
-#' @family preference_order
+#' @family preference_order_functions
 #' @return dataframe:
 #' \itemize{
 #'   \item \code{response}: character, response name, if any, or \code{"none"} otherwise.

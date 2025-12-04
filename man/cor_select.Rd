@@ -130,14 +130,13 @@ x
 #future::plan(future::sequential)
 }
 \seealso{
-Other pairwise_correlation: 
-\code{\link{cor_clusters}()},
-\code{\link{cor_cramer}()},
-\code{\link{cor_df}()},
-\code{\link{cor_matrix}()},
-\code{\link{cor_stats}()}
+Other multicollinearity_filtering: 
+\code{\link{collinear}()},
+\code{\link{collinear_select}()},
+\code{\link{step_collinear}()},
+\code{\link{vif_select}()}
 }
 \author{
 Blas M. Benito, PhD
 }
-\concept{pairwise_correlation}
+\concept{multicollinearity_filtering}

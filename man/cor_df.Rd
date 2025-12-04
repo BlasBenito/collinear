@@ -66,11 +66,14 @@ x
 #future::plan(future::sequential)
 }
 \seealso{
-Other pairwise_correlation: 
+Other multicollinearity_assessment: 
+\code{\link{collinear_stats}()},
 \code{\link{cor_clusters}()},
 \code{\link{cor_cramer}()},
 \code{\link{cor_matrix}()},
-\code{\link{cor_select}()},
-\code{\link{cor_stats}()}
+\code{\link{cor_stats}()},
+\code{\link{vif}()},
+\code{\link{vif_df}()},
+\code{\link{vif_stats}()}
 }
-\concept{pairwise_correlation}
+\concept{multicollinearity_assessment}

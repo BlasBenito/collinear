@@ -146,12 +146,13 @@ x
 }
 }
 \seealso{
-Other variance_inflation_factor: 
-\code{\link{vif}()},
-\code{\link{vif_df}()},
-\code{\link{vif_stats}()}
+Other multicollinearity_filtering: 
+\code{\link{collinear}()},
+\code{\link{collinear_select}()},
+\code{\link{cor_select}()},
+\code{\link{step_collinear}()}
 }
 \author{
 Blas M. Benito, PhD
 }
-\concept{variance_inflation_factor}
+\concept{multicollinearity_filtering}

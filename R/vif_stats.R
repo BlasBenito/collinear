@@ -32,7 +32,7 @@
 #' ## OPTIONAL: disable parallelization
 #' #future::plan(future::sequential)
 #' @autoglobal
-#' @family variance_inflation_factor
+#' @family multicollinearity_assessment
 #' @export
 vif_stats <- function(
   df = NULL,
