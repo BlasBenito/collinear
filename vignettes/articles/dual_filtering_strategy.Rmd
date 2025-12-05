@@ -14,5 +14,109 @@ knitr::opts_chunk$set(
   comment = "#>",
   out.width = "100%"
 )
-# options(tibble.print_min = 5, tibble.print_max = 5)
 ```
+
+## Summary
+
+The function [collinear_select()](reference/collinear_select.html), called by [collinear()](reference/collinear.html), applies two complementary methods to assess different aspects of multicollinearity: pairwise correlation (and/or Cramer's V) and Variance Inflation Factors. The function allows using either method alone or both in combination. At the same time, it respects predictor rankings to protect relevant variables during filtering.
+
+This article explains how this dual filtering algorithm works, demonstrates its behavior with examples, and provides guidance on when to use each filtering method.
+
+## Setup
+
+This article requires the following setup.
+
+```{r, message = FALSE, warning = FALSE, include = FALSE}
+library(collinear)
+library(future)
+library(ggplot2)
+
+#parallelization setup
+#only useful for categorical predictors
+future::plan(
+  future::multisession,
+  workers = future::availableCores() - 1
+)
+
+#progress bar (does not work in Rmarkdown)
+#progressr::handlers(global = TRUE)
+
+#example data
+data(vi_smol, vi_predictors_numeric)
+```
+
+## Combining Pairwise Correlation and VIF
+
+These methods capture different aspects of multicollinearity.
+
+**Pairwise correlation** measures the linear relationship between two variables alone, while **Variance Inflation Factor** measures how much the variance of a regression coefficient is inflated due to multicollinearity with *all other* predictors. A VIF of 5 means the standard error of that predictor's coefficient in a multivariate linear regression is √5 ≈ 2.24 times larger than it would be without multicollinearity.
+
+The key difference is that correlation is *pairwise* while VIF is *multivariate*. Consider three predictors where `a` correlates 0.6 with `b` and 0.6 with `c`, but `b` and `c` are uncorrelated. No pairwise correlation exceeds a typical threshold of 0.7, yet `a` may still have a high VIF because `b` and `c` together explain much of its variance.
+
+By combining a pairwise method (correlation) and a multivariate one (VIF), [collinear_select()](reference/collinear_select.html) catches multicollinearity that either method alone might miss.
+
+## The Algorithm
+
+The dual filtering algorithm in `collinear_select()` works as follows:
+
+  1. Predictors are ranked according to `preference_order`, or from lower to higher overall multicollinearity.
+  
+  2. The correlation matrix between all predictors is computed with [cor_matrix()](reference/cor_matrix.html).
+  
+  3. The first predictor in the ranking is *selected*.
+  
+  4. The remaining candidates are evaluated sequentially. For each new candidate:
+  
+   4a. If `max_cor` is set, and the maximum correlation between the candidate and the selected predictors is higher than `max_cor`, the candidate is discarded and the algorithm moves into the next one. Otherwise, the candidate goes to the next step.
+   
+   4b. If `max_vif` is set, and the maximum VIF of the candidate against all selected predictors is higher than `max_vif`, the candidate is discarded. Otherwise, the candidate is selected, and the algorithm moves into the next candidate.
+   
+To finalize, the selected predictors are returned.
+
+## Step-by-Step Example
+
+This example shows in detail how the multicollinearity filtering algorithm works.
+
+For simplicity, it is focused on these four predictors already ranked from higher to lower *preference*.
+
+```{r}
+predictors <- c(
+  "swi_mean",
+  "soil_temperature_mean", 
+  "rainfall_mean",
+  "growing_season_length"
+)
+```
+
+We also need to define our target multicollinearity thresholds.
+
+```{r}
+max_vif = 5
+max_cor = 0.6
+```
+
+First, `collinear_select()` computes their correlation matrix and orders it according to the preference order.
+
+```{r}
+m <- collinear::cor_matrix(
+  df = vi_smol,
+  predictors = predictors,
+  quiet = TRUE
+)
+
+m <- m[predictors, predictors]
+round(m, 2)
+```
+Second, it creates the vectors `selected` and `candidates`.
+
+```{r}
+selected <- predictors[1]
+candidates <- predictors[-1]
+```
+
+This is where the candidates are evaluated sequentially. Let's start with the first candidate.
+
+```{r}
+candidate <- candidates[1]
+```
+
