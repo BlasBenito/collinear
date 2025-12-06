@@ -1,4 +1,4 @@
-#' Print \code{collinear_selection}
+#' Print single selection results from `collinear`
 #'
 #' @param x (required, sub-list in output of [collinear()]) Object to print. Default: NULL
 #' @param n (optional, integer) Maximum printed vector length. Default: 5.

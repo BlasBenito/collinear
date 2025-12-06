@@ -2,7 +2,7 @@
 % Please edit documentation in R/f_numeric_glm.R
 \name{f_numeric_glm}
 \alias{f_numeric_glm}
-\title{R-squared of Gaussian GLM Predictions vs. Observations}
+\title{R-squared of Gaussian GLM predictions vs. observations}
 \usage{
 f_numeric_glm(df, ...)
 }
@@ -19,7 +19,7 @@ f_numeric_glm(df, ...)
 numeric or numeric vector: R-squared
 }
 \description{
-Fits a Gaussian GLM model \code{y ~ x} with the numeric response \code{y} and the numeric, character, or factor predictor \code{x} using \code{\link[stats:glm]{stats::glm()}} and returns the R-squared of the observations against the predictions (see \code{\link[=score_r2]{score_r2()}}).
+Fits a Gaussian GLM model \code{y ~ x} with the numeric response \code{y} and the numeric, character, or factor predictor \code{x} using \code{stats::glm()} and returns the R-squared of the observations against the predictions (see \code{\link[=score_r2]{score_r2()}}).
 
 Supports cross-validation via the arguments arguments \code{cv_training_fraction} (numeric between 0 and 1) and \code{cv_iterations} (integer between 1 and \code{n}) introduced via ellipsis (\code{...}). See \code{\link[=preference_order]{preference_order()}} for further details.
 }

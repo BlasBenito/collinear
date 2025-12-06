@@ -1,5 +1,5 @@
 testthat::test_that("`f_auto_rules()` works", {
-
+  testthat::skip_on_cran()
 
   df <- f_auto_rules()
 
@@ -8,8 +8,6 @@ testthat::test_that("`f_auto_rules()` works", {
   )
 
   testthat::expect_true(
-    all(df$name %in% ls(getNamespace("collinear"), all.names=TRUE))
+    all(df$name %in% ls(getNamespace("collinear"), all.names = TRUE))
   )
-
-
 })

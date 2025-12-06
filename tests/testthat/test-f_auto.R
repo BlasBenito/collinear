@@ -1,5 +1,5 @@
 testthat::test_that("`f_auto()` works", {
-
+  testthat::skip_on_cran()
 
   data(
     vi_smol,
@@ -27,11 +27,8 @@ testthat::test_that("`f_auto()` works", {
     all.names = TRUE
   )
 
-  for(response in responses_vector){
-
-    for(predictor in predictors_vector){
-
-
+  for (response in responses_vector) {
+    for (predictor in predictors_vector) {
       testthat::expect_no_message(
         x <- f_auto(
           df = vi_smol,
@@ -44,9 +41,7 @@ testthat::test_that("`f_auto()` works", {
       testthat::expect_true(
         x %in% collinear_functions
       )
-
     }
-
   }
 
   #edge cases
@@ -72,5 +67,4 @@ testthat::test_that("`f_auto()` works", {
     regexp = "selected function"
   ) |>
     suppressMessages()
-
 })

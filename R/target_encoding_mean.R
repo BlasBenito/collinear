@@ -1,4 +1,4 @@
-#' Target Encoding Methods
+#' Encode categories as response means
 #'
 #'
 #' @inheritParams target_encoding_lab

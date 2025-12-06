@@ -2,7 +2,7 @@
 % Please edit documentation in R/score_r2.R
 \name{score_r2}
 \alias{score_r2}
-\title{Pearson's R-squared of Observations vs Predictions}
+\title{Compute R-squared between numeric observations and predictions}
 \usage{
 score_r2(o = NULL, p = NULL, ...)
 }
@@ -11,13 +11,15 @@ score_r2(o = NULL, p = NULL, ...)
 
 \item{p}{(required, numeric vector) Predictions. Default: NULL}
 
-\item{...}{(optional) Used to pass internal arguments such as \code{function_name} for \link{validate_arg_function_name} in nested calls, or \code{m}, a correlation matrix generated via \code{\link[stats:cor]{stats::cor()}} or \code{\link[=cor_matrix]{cor_matrix()}}, and the cross-validation arguments of \code{\link[=preference_order]{preference_order()}}: \code{cv_iterations}, and \code{cv_training_fraction}.}
+\item{...}{(optional) Internal args (e.g. \code{function_name} for
+\code{\link{validate_arg_function_name}}, a precomputed correlation matrix
+\code{m}, or cross-validation args for \code{\link{preference_order}}).}
 }
 \value{
 numeric: Pearson R-squared
 }
 \description{
-Internal function to compute the R-squared of observations versus predictions via \code{\link[stats:cor]{stats::cor()}}. Used within \code{\link[=f_numeric_glm]{f_numeric_glm()}}, \code{\link[=f_numeric_gam]{f_numeric_gam()}}, \code{\link[=f_numeric_rf]{f_numeric_rf()}}, \code{\link[=f_count_glm]{f_count_glm()}}, and \code{\link[=f_count_gam]{f_count_gam()}}.
+Internal function to compute the R-squared of observations versus predictions via \code{stats::cor()}. Used within \code{\link[=f_numeric_glm]{f_numeric_glm()}}, \code{\link[=f_numeric_gam]{f_numeric_gam()}}, \code{\link[=f_numeric_rf]{f_numeric_rf()}}, \code{\link[=f_count_glm]{f_count_glm()}}, and \code{\link[=f_count_gam]{f_count_gam()}}.
 }
 \examples{
   score_r2(

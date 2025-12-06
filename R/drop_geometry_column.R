@@ -1,6 +1,6 @@
 #' Removes \code{geometry} Column From \code{sf} Dataframes
 #'
-#' Replicates the functionality of \code{sf::st_drop_geometry()} without depending on the \code{sf} package.
+#' Remove geometry column from sf objects
 #'
 #' @inheritParams collinear
 #'

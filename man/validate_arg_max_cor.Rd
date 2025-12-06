@@ -2,14 +2,14 @@
 % Please edit documentation in R/validate_arg_max_cor.R
 \name{validate_arg_max_cor}
 \alias{validate_arg_max_cor}
-\title{Validate Argument \code{max_cor}}
+\title{Check and constrain argument \code{max_cor}}
 \usage{
 validate_arg_max_cor(max_cor = NULL, quiet = FALSE, function_name = NULL)
 }
 \arguments{
 \item{max_cor}{(optional; numeric or NULL) Maximum correlation allowed between pairs of \code{predictors}. Valid values are between 0.01 and 0.99, and recommended values are between 0.5 (strict) and 0.9 (permissive). Default: 0.7}
 
-\item{quiet}{(optional; logical) If FALSE, messages are printed to the console. Default: FALSE}
+\item{quiet}{(optional; logical) If FALSE, messages are printed. Default: FALSE.}
 
 \item{function_name}{(optional, character string) Name of the function performing the argument check. Default: NULL}
 }
@@ -17,7 +17,7 @@ validate_arg_max_cor(max_cor = NULL, quiet = FALSE, function_name = NULL)
 numeric or NULL
 }
 \description{
-Validate Argument \code{max_cor}
+Check and constrain argument \code{max_cor}
 }
 \examples{
 x <- validate_arg_max_cor(

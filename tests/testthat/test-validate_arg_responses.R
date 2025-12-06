@@ -1,4 +1,5 @@
 testthat::test_that("`validate_arg_responses()` works", {
+  testthat::skip_on_cran()
 
   data(vi_smol)
 
@@ -11,7 +12,6 @@ testthat::test_that("`validate_arg_responses()` works", {
       quiet = FALSE
     )
   )
-
 
   #valid use case
   x <- validate_arg_responses(
@@ -45,7 +45,6 @@ testthat::test_that("`validate_arg_responses()` works", {
     regexp = "argument 'max_responses' must be a integer"
   )
 
-
   #valid use case
   x <- validate_arg_responses(
     df = vi_smol,
@@ -66,7 +65,6 @@ testthat::test_that("`validate_arg_responses()` works", {
     ),
     regexp = "must be of length"
   )
-
 
   testthat::expect_true(
     all(c("vi_numeric", "vi_categorical") %in% x)
@@ -107,7 +105,6 @@ testthat::test_that("`validate_arg_responses()` works", {
     x == "vi_numeric"
   )
 
-
   #wrong response and max_responses
   testthat::expect_message(
     x <- validate_arg_responses(
@@ -129,5 +126,4 @@ testthat::test_that("`validate_arg_responses()` works", {
       responses = NULL
     )
   )
-
 })

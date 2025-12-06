@@ -1,4 +1,5 @@
 testthat::test_that("`vif()` works", {
+  testthat::skip_on_cran()
 
   # numeric types ----
   data(vi_smol, vi_predictors_numeric)
@@ -53,7 +54,7 @@ testthat::test_that("`vif()` works", {
   dimnames(m) <- list(
     letters[1:10],
     letters[1:10]
-    )
+  )
 
   class(m) <- c("collinear_cor_matrix", class(m))
 
@@ -62,5 +63,4 @@ testthat::test_that("`vif()` works", {
   testthat::expect_true(
     all(v == 900.01)
   )
-
 })

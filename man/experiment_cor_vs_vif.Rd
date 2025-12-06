@@ -3,7 +3,7 @@
 \docType{data}
 \name{experiment_cor_vs_vif}
 \alias{experiment_cor_vs_vif}
-\title{Results of a Collinearity-Filtering Simulation}
+\title{Dataframe with results of experiment comparing correlation and VIF thresholds}
 \format{
 A dataframe with 10,000 rows and 6 variables:
 \describe{
@@ -16,7 +16,7 @@ A dataframe with 10,000 rows and 6 variables:
 }
 }
 \usage{
-experiment_cor_vs_vif
+data(experiment_cor_vs_vif)
 }
 \description{
 A dataframe summarizing 10,000 experiments comparing the output of \code{\link[=cor_select]{cor_select()}} and \code{\link[=vif_select]{vif_select()}}. Each row records the input sampling parameters and the resulting feature-selection metrics.

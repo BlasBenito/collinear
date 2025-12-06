@@ -1,11 +1,12 @@
 testthat::test_that("`validate_arg_predictors()` works", {
+  testthat::skip_on_cran()
 
   data(
     vi_smol,
     vi_predictors_numeric,
     vi_predictors,
     vi_predictors_categorical
-    )
+  )
 
   #no arguments
   testthat::expect_error(
@@ -63,7 +64,6 @@ testthat::test_that("`validate_arg_predictors()` works", {
   testthat::expect_true(
     all(predictors %in% colnames(vi_smol))
   )
-
 
   #wrong predictors
   testthat::expect_warning(
@@ -131,6 +131,4 @@ testthat::test_that("`validate_arg_predictors()` works", {
   testthat::expect_true(
     all(predictors %in% vi_predictors)
   )
-
-
 })

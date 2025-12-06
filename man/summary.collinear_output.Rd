@@ -2,7 +2,7 @@
 % Please edit documentation in R/summary.collinear_output.R
 \name{summary.collinear_output}
 \alias{summary.collinear_output}
-\title{Summary of \code{class.collinear_output}}
+\title{Summarize all results of \code{collinear()}}
 \usage{
 \method{summary}{collinear_output}(object = NULL, ...)
 }
@@ -16,7 +16,7 @@ list:
 If \code{object} was created with \code{responses = NULL}, a sublist named "result" containing a vector with the selected predictors. Otherwise, a list named after each response containing the corresponding variable selection.
 }
 \description{
-Summary of \code{class.collinear_output}
+Summarize all results of \code{collinear()}
 }
 \seealso{
 Other S3_methods: 

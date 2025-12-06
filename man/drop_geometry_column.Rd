@@ -7,17 +7,22 @@
 drop_geometry_column(df = NULL, quiet = FALSE, ...)
 }
 \arguments{
-\item{df}{(required; dataframe, tibble, or sf) A dataframe with responses (optional) and predictors. Must have at least 10 rows for pairwise correlation analysis, and \code{10 * (length(predictors) - 1)} for VIF analysis.  Default: NULL.}
+\item{df}{(required; dataframe, tibble, or sf) A dataframe with responses
+(optional) and predictors. Must have at least 10 rows for pairwise
+correlation analysis, and \code{10 * (length(predictors) - 1)} for VIF.
+Default: NULL.}
 
-\item{quiet}{(optional; logical) If FALSE, messages are printed to the console. Default: FALSE}
+\item{quiet}{(optional; logical) If FALSE, messages are printed. Default: FALSE.}
 
-\item{...}{(optional) Used to pass internal arguments such as \code{function_name} for \link{validate_arg_function_name} in nested calls, or \code{m}, a correlation matrix generated via \code{\link[stats:cor]{stats::cor()}} or \code{\link[=cor_matrix]{cor_matrix()}}, and the cross-validation arguments of \code{\link[=preference_order]{preference_order()}}: \code{cv_iterations}, and \code{cv_training_fraction}.}
+\item{...}{(optional) Internal args (e.g. \code{function_name} for
+\code{\link{validate_arg_function_name}}, a precomputed correlation matrix
+\code{m}, or cross-validation args for \code{\link{preference_order}}).}
 }
 \value{
 dataframe
 }
 \description{
-Replicates the functionality of \code{sf::st_drop_geometry()} without depending on the \code{sf} package.
+Remove geometry column from sf objects
 }
 \examples{
 data(vi_smol)

@@ -2,7 +2,7 @@
 % Please edit documentation in R/validate_arg_function_name.R
 \name{validate_arg_function_name}
 \alias{validate_arg_function_name}
-\title{Validate Argument \code{function_name}}
+\title{Build hierarchical function names for messages}
 \usage{
 validate_arg_function_name(default_name = NULL, function_name = NULL, ...)
 }

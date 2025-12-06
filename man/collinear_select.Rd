@@ -2,35 +2,43 @@
 % Please edit documentation in R/collinear_select.R
 \name{collinear_select}
 \alias{collinear_select}
-\title{Automated Multicollinearity Filtering}
+\title{Dual multicollinearity filtering algorithm}
 \usage{
 collinear_select(
   df = NULL,
   response = NULL,
   predictors = NULL,
   preference_order = NULL,
-  max_cor = 0.7,
+  max_cor = 0.61,
   max_vif = 5,
   quiet = FALSE,
   ...
 )
 }
 \arguments{
-\item{df}{(required; dataframe, tibble, or sf) A dataframe with responses (optional) and predictors. Must have at least 10 rows for pairwise correlation analysis, and \code{10 * (length(predictors) - 1)} for VIF analysis.  Default: NULL.}
+\item{df}{(required; dataframe, tibble, or sf) A dataframe with responses
+(optional) and predictors. Must have at least 10 rows for pairwise
+correlation analysis, and \code{10 * (length(predictors) - 1)} for VIF.
+Default: NULL.}
 
 \item{response}{(optional; character or NULL) Name of one response variable in \code{df}. Used to exclude columns when \code{predictors} is NULL, and to filter \code{preference_order} when it is a dataframe and contains several responses. Default: NULL.}
 
-\item{predictors}{(optional; character vector or NULL) Names of the predictors in \code{df}. If NULL, all columns in \code{df} except the ones in \code{responses} and those with constant values or near zero variance are used. Default: NULL}
+\item{predictors}{(optional; character vector or NULL) Names of the
+predictors in \code{df}. If NULL, all columns except \code{responses} and
+constant/near-zero-variance columns are used. Default: NULL.}
 
-\item{preference_order}{(optional; character vector, dataframe resulting from \code{\link[=preference_order]{preference_order()}}, or NULL). Prioritizes predictors to preserve the most relevant ones during multicollinearity filtering. Overrides \code{f} when not NULL.}
+\item{preference_order}{(optional; character vector, dataframe from
+\code{\link{preference_order}}, or NULL) Prioritizes predictors to preserve.}
 
 \item{max_cor}{(optional; numeric or NULL) Maximum correlation allowed between pairs of \code{predictors}. Valid values are between 0.01 and 0.99, and recommended values are between 0.5 (strict) and 0.9 (permissive). Default: 0.7}
 
 \item{max_vif}{(optional, numeric or NULL) Maximum Variance Inflation Factor allowed for \code{predictors} during multicollinearity filtering. Recommended values are between 2.5 (strict) and 10 (permissive). Default: 5}
 
-\item{quiet}{(optional; logical) If FALSE, messages are printed to the console. Default: FALSE}
+\item{quiet}{(optional; logical) If FALSE, messages are printed. Default: FALSE.}
 
-\item{...}{(optional) Used to pass internal arguments such as \code{function_name} for \link{validate_arg_function_name} in nested calls, or \code{m}, a correlation matrix generated via \code{\link[stats:cor]{stats::cor()}} or \code{\link[=cor_matrix]{cor_matrix()}}, and the cross-validation arguments of \code{\link[=preference_order]{preference_order()}}: \code{cv_iterations}, and \code{cv_training_fraction}.}
+\item{...}{(optional) Internal args (e.g. \code{function_name} for
+\code{\link{validate_arg_function_name}}, a precomputed correlation matrix
+\code{m}, or cross-validation args for \code{\link{preference_order}}).}
 }
 \value{
 character vector: names of selected predictors
@@ -46,55 +54,26 @@ Please check the sections \strong{Variance Inflation Factors}, \strong{VIF-based
 \section{Pairwise Correlation Filtering}{
 
 
-This algorithm is implemented in \code{\link[=cor_select]{cor_select()}}, and selects numeric and categorical predictors with Pearson correlation or Cramer's V association lower than \code{max_cor} while preserving those with a higher ranking in \code{preference_order}, if provided.
-
-It works as follows:
-
-\enumerate{
-
-\item The correlation matrix of all predictors is computed, its diagonals are set to zero, and the rows and columns are ordered according to \code{preference_order}, or from lower to higher sum of correlations with the other predictors ((\code{\link[=colSums]{colSums()}} applied to the output of \code{\link[=cor_matrix]{cor_matrix()}})) otherwise.
-
-\item The predictor with the higher rank is added to the selection.
-
-\item The correlation/s between the predictor/s in the selection and the next predictor in the ranking is/are extracted from the global correlation matrix. If the maximum correlation is below the value of \code{max_cor}, the new predictor is added to the selection. Otherwise it is removed.
-
-\item Step 3 is repeated until all predictors are processed.
-
-}
-
-This filtering method ensures that all predictors in the selection are correlated below \code{max_cor} and that the selection respects the prioritization defined in \code{preference_order}.
+\code{\link{cor_select}} computes the global correlation matrix, orders
+predictors by \code{preference_order} or by lower-to-higher summed
+correlations, and sequentially selects predictors with pairwise correlations
+below \code{max_cor}.
 }
 
 \section{Variance Inflation Factors}{
 
 
-The Variance Inflation Factor of a given predictor \eqn{a} is computed as \eqn{1/(1-R2)}, where \eqn{R2} is the multiple R-squared of a multiple regression model fitted using \eqn{a} as response against all other predictors, as in  \eqn{a = b + c + ...}.
-
-The square root of the VIF of \eqn{a} is the factor by which the confidence interval of the estimate for \eqn{a} in the linear model \eqn{y = a + b + c + ...} is widened by multicollinearity in the predictors.
-
-The range of VIF values is (1, Inf]. The recommended thresholds for maximum VIF may vary depending on the source consulted, being the most common values, 2.5 (most conservative), 5, and 10 (most permissive).
+VIF for predictor \eqn{a} is computed as \eqn{1/(1-R^2)}, where \eqn{R^2} is
+the multiple R-squared from regressing \eqn{a} on the other predictors.
+Recommended maximums commonly used are 2.5, 5, and 10.
 }
 
 \section{VIF-based Filtering}{
 
 
-This algorithm, implemented in \code{\link[=vif_select]{vif_select()}}, selects numeric predictors with a Variance Inflation Factor lower than \code{max_vif} while preserving those with a higher ranking in \code{preference_order}, if provided.
-
-The algorithm works as follows:
-
-\enumerate{
-
-\item All numeric predictors are ranked according to the argument \code{preference_order}, or from lower to higher VIF with the other predictors (as computed by \code{\link[=vif_df]{vif_df()}}) otherwise. Categorical predictors are ignored.
-
-\item The predictor with the higher rank is added to the selection.
-
-\item The VIF of the next predictor in the ranking against the predictor/s in the selection is computed via \code{\link[=cor_matrix]{cor_matrix()}} and \code{\link[=vif]{vif()}}. If the resulting VIF is lower than \code{max_vif}, the new predictor is added to the selection. Otherwise it is removed.
-
-\item Step 3 is repeated until all predictors are processed.
-
-}
-
-This filtering method ensures that all predictors in the selection are correlated below \code{max_vif} and that the selection respects the prioritization defined in \code{preference_order}.
+\code{\link{vif_select}} ranks numeric predictors (user \code{preference_order}
+if provided, otherwise from lower to higher VIF) and sequentially adds
+predictors whose VIF against the current selection is below \code{max_vif}.
 }
 
 \examples{
@@ -111,91 +90,15 @@ data(vi_smol)
 ## OPTIONAL: progress bar
 # progressr::handlers(global = TRUE)
 
-#predictors
-predictors = c(
-  "koppen_zone", #character
-  "soil_type", #factor
-  "topo_elevation", #numeric
-  "soil_temperature_mean" #numeric
-)
-
-#predictors ordered from lower to higher multicollinearity
 x <- collinear_select(
   df = vi_smol,
-  predictors = predictors,
+  predictors = c(
+  "koppen_zone",           #character
+  "soil_type",             #factor
+  "topo_elevation",        #numeric
+  "soil_temperature_mean"  #numeric
+    ),
   max_cor = 0.7,
-  max_vif = 5
-)
-
-x
-
-
-#with incomplete preference order vector
-x <- collinear_select(
-  df = vi_smol,
-  predictors = predictors,
-  preference_order = c(
-    "koppen_zone",
-    "soil_type"
-  ),
-  max_cor = 0.7,
-  max_vif = 5
-)
-
-x
-
-#with complete preference order vector
-x <- collinear_select(
-  df = vi_smol,
-  predictors = predictors,
-  preference_order = c(
-    "soil_temperature_mean",
-    "koppen_zone",
-    "soil_type",
-    "topo_elevation"
-  ),
-  max_cor = 0.7,
-  max_vif = 5
-)
-
-x
-
-#with preference order dataframe
-df_preference <- preference_order(
-  df = vi_smol,
-  response = "vi_numeric",
-  predictors = predictors
-)
-
-df_preference
-
-x <- collinear_select(
-  df = vi_smol,
-  predictors = predictors,
-  preference_order = df_preference,
-  max_cor = 0.7,
-  max_vif = 5
-)
-
-x
-
-#identical to cor_select()
-x <- collinear_select(
-  df = vi_smol,
-  predictors = predictors,
-  preference_order = df_preference,
-  max_cor = 0.7,
-  max_vif = NULL
-)
-
-x
-
-#identical to vif_select()
-x <- collinear_select(
-  df = vi_smol,
-  predictors = predictors,
-  preference_order = df_preference,
-  max_cor = NULL,
   max_vif = 5
 )
 

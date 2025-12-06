@@ -4,7 +4,7 @@
 \alias{step_collinear}
 \alias{prep.step_collinear}
 \alias{bake.step_collinear}
-\title{Tidymodels Integration of \code{\link[=collinear]{collinear()}}}
+\title{Tidymodels recipe step for multicollinearity filtering}
 \usage{
 step_collinear(
   recipe,
@@ -63,7 +63,7 @@ Note: \code{encoding_method} is not supported in this step. The automatic thresh
 Updated recipe with new step.
 }
 \description{
-Adds a step to a recipe created by \code{\link[recipes:recipe]{recipes::recipe()}} to apply multicollinearity filtering via \code{\link[=collinear]{collinear()}}.
+Adds a step to a recipe created by \code{recipes::recipe()]+} to apply multicollinearity filtering via \code{\link[=collinear]{collinear()}}.
 
 This function requires the \code{recipes} package to be installed.
 

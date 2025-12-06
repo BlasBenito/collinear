@@ -2,7 +2,7 @@
 % Please edit documentation in R/f_binomial_rf.R
 \name{f_binomial_rf}
 \alias{f_binomial_rf}
-\title{Area Under the Curve of Binomial Random Forest Predictions vs. Observations}
+\title{Area Under the Curve of Binomial Random Forest predictions vs. observations}
 \usage{
 f_binomial_rf(df, ...)
 }
@@ -19,7 +19,7 @@ f_binomial_rf(df, ...)
 numeric or numeric vector: AUC
 }
 \description{
-Fits a univariate random forest model \code{y ~ x} with the binomial (values 0 and 1) response \code{y} and the numeric, character or factor predictor \code{x} using \code{\link[ranger:ranger]{ranger::ranger()}} and returns the area under the ROC curve between the observed responses and the model predictions (see \code{\link[=score_auc]{score_auc()}}).
+Fits a univariate random forest model \code{y ~ x} with the binomial (values 0 and 1) response \code{y} and the numeric, character or factor predictor \code{x} using \code{ranger::ranger()} and returns the area under the ROC curve between the observed responses and the model predictions (see \code{\link[=score_auc]{score_auc()}}).
 
 Cases are weighted with \code{\link[=case_weights]{case_weights()}} to prevent issues arising from class imbalance.
 

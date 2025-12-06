@@ -1,4 +1,5 @@
 testthat::test_that("`vif_df()` works", {
+  testthat::skip_on_cran()
 
   data(vi_smol, vi_predictors)
 
@@ -29,7 +30,6 @@ testthat::test_that("`vif_df()` works", {
     regexp = "may bias the multicollinearity analysis"
   )
 
-
   testthat::expect_true(
     is.data.frame(x)
   )
@@ -42,8 +42,6 @@ testthat::test_that("`vif_df()` works", {
     nrow(x) == length(vi_predictors[1:10])
   )
 
-
-
   # edge cases ----
 
   #no arguments
@@ -55,7 +53,6 @@ testthat::test_that("`vif_df()` works", {
     regexp = "argument 'df' cannot be NULL"
   )
 
-
   #single predictor
   testthat::expect_message(
     x <- vif_df(
@@ -65,7 +62,6 @@ testthat::test_that("`vif_df()` works", {
     regexp = "only one valid predictor"
   ) |>
     suppressMessages()
-
 
   testthat::expect_true(
     is.data.frame(x)
@@ -78,5 +74,4 @@ testthat::test_that("`vif_df()` works", {
   testthat::expect_true(
     x$vif == 0
   )
-
 })

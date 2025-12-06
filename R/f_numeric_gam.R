@@ -1,7 +1,7 @@
-#' R-squared of Gaussian GAM Predictions vs. Observations
+#' R-squared of Gaussian GAM predictions vs. observations
 #'
 #' @description
-#' Fits a Gaussian GAM model \code{y ~ s(x)} (\code{y ~ x} if \code{x} is non-numeric) with the numeric response \code{y} and the numeric, character or factor predictor \code{x} using [mgcv::gam()] and returns the R-squared of the observations against the predictions (see [score_r2()]).
+#' Fits a Gaussian GAM model \code{y ~ s(x)} (\code{y ~ x} if \code{x} is non-numeric) with the numeric response \code{y} and the numeric, character or factor predictor \code{x} using \code{mgcv::gam()} and returns the R-squared of the observations against the predictions (see [score_r2()]).
 #'
 #' Supports cross-validation via the arguments arguments \code{cv_training_fraction} (numeric between 0 and 1) and \code{cv_iterations} (integer between 1 and \code{n}) introduced via ellipsis (\code{...}). See [preference_order()] for further details.
 #'

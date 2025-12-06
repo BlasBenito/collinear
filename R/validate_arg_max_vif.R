@@ -1,4 +1,4 @@
-#' Validate Argument \code{max_vif}
+#' Check and constrain argument \code{max_vif}
 #'
 #' @inheritParams collinear_select
 #' @inheritParams validate_arg_quiet
@@ -32,14 +32,6 @@ validate_arg_max_vif <- function(
   }
 
   if (is.null(max_vif)) {
-    if (quiet == FALSE) {
-      message(
-        "\n",
-        function_name,
-        ": argument 'max_vif' is NULL, skipping VIF filtering."
-      )
-    }
-
     return(NULL)
   }
 

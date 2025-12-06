@@ -1,4 +1,4 @@
-#' Validate Arguments \code{response} or \code{responses}
+#' Check and validate arguments `response` and `responses`
 #'
 #' @description Internal function validate the arguments \code{response} and \code{responses}. It checks that its value exists as a column name of \code{df},
 #'

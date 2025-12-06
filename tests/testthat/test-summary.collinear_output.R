@@ -1,11 +1,12 @@
 testthat::test_that("`summary.collinear_selection()` works", {
+  testthat::skip_on_cran()
 
   library(collinear)
 
   data(
     vi_smol,
     vi_predictors_numeric
-    )
+  )
 
   x <- collinear(
     df = vi_smol,
@@ -27,6 +28,4 @@ testthat::test_that("`summary.collinear_selection()` works", {
   testthat::expect_true(
     all(x$vi_numeric$selection %in% y$vi_numeric)
   )
-
-
 })

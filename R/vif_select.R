@@ -1,4 +1,4 @@
-#' Automated Multicollinearity Filtering with Variance Inflation Factors
+#' Multicollinearity filtering by variance inflation factor threshold
 #'
 #' @description
 #'

@@ -1,4 +1,4 @@
-#' Identify Near-Zero Variance Variables
+#' Find near-zero variance variables in a dataframe
 #'
 #'
 #' @description

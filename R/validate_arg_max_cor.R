@@ -1,4 +1,4 @@
-#' Validate Argument \code{max_cor}
+#' Check and constrain argument \code{max_cor}
 #'
 #' @inheritParams collinear_select
 #' @inheritParams validate_arg_quiet
@@ -32,14 +32,6 @@ validate_arg_max_cor <- function(
   }
 
   if (is.null(max_cor)) {
-    if (quiet == FALSE) {
-      message(
-        "\n",
-        function_name,
-        ": argument 'max_cor' is NULL, skipping correlation filtering."
-      )
-    }
-
     return(NULL)
   }
 

@@ -2,18 +2,22 @@
 % Please edit documentation in R/collinear_stats.R
 \name{collinear_stats}
 \alias{collinear_stats}
-\title{Multicollinearity Stats}
+\title{Compute summary statistics for correlation and VIF}
 \usage{
 collinear_stats(df = NULL, predictors = NULL, quiet = FALSE, ...)
 }
 \arguments{
 \item{df}{(required; dataframe, tibble, or sf) A dataframe with predictors or the output of \code{\link[=cor_df]{cor_df()}}. Default: NULL.}
 
-\item{predictors}{(optional; character vector or NULL) Names of the predictors in \code{df}. If NULL, all columns in \code{df} except the ones in \code{responses} and those with constant values or near zero variance are used. Default: NULL}
+\item{predictors}{(optional; character vector or NULL) Names of the
+predictors in \code{df}. If NULL, all columns except \code{responses} and
+constant/near-zero-variance columns are used. Default: NULL.}
 
-\item{quiet}{(optional; logical) If FALSE, messages are printed to the console. Default: FALSE}
+\item{quiet}{(optional; logical) If FALSE, messages are printed. Default: FALSE.}
 
-\item{...}{(optional) Used to pass internal arguments such as \code{function_name} for \link{validate_arg_function_name} in nested calls, or \code{m}, a correlation matrix generated via \code{\link[stats:cor]{stats::cor()}} or \code{\link[=cor_matrix]{cor_matrix()}}, and the cross-validation arguments of \code{\link[=preference_order]{preference_order()}}: \code{cv_iterations}, and \code{cv_training_fraction}.}
+\item{...}{(optional) Internal args (e.g. \code{function_name} for
+\code{\link{validate_arg_function_name}}, a precomputed correlation matrix
+\code{m}, or cross-validation args for \code{\link{preference_order}}).}
 }
 \value{
 dataframe with columns \code{method} (with values "correlation" and "vif"), \code{statistic} and \code{value}

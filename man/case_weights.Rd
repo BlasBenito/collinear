@@ -2,14 +2,16 @@
 % Please edit documentation in R/case_weights.R
 \name{case_weights}
 \alias{case_weights}
-\title{Case Weights for Binomial, Logical, or Categorical Responses}
+\title{Generate sample weights for imbalanced responses}
 \usage{
 case_weights(x = NULL, ...)
 }
 \arguments{
 \item{x}{(required, integer, character, or factor vector) Values of a binomial, categorical, or factor variable. Default: NULL}
 
-\item{...}{(optional) Used to pass internal arguments such as \code{function_name} for \link{validate_arg_function_name} in nested calls, or \code{m}, a correlation matrix generated via \code{\link[stats:cor]{stats::cor()}} or \code{\link[=cor_matrix]{cor_matrix()}}, and the cross-validation arguments of \code{\link[=preference_order]{preference_order()}}: \code{cv_iterations}, and \code{cv_training_fraction}.}
+\item{...}{(optional) Internal args (e.g. \code{function_name} for
+\code{\link{validate_arg_function_name}}, a precomputed correlation matrix
+\code{m}, or cross-validation args for \code{\link{preference_order}}).}
 }
 \value{
 numeric vector: case weights

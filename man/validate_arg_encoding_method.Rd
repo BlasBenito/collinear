@@ -2,7 +2,7 @@
 % Please edit documentation in R/validate_arg_encoding_method.R
 \name{validate_arg_encoding_method}
 \alias{validate_arg_encoding_method}
-\title{Validate Argument \code{encoding_method}}
+\title{Check and validate argument \code{encoding_method}}
 \usage{
 validate_arg_encoding_method(
   encoding_method = "loo",
@@ -16,7 +16,7 @@ validate_arg_encoding_method(
 
 \item{overwrite}{(optional; logical) If TRUE, the original predictors in \code{df} are overwritten with their encoded versions, but only one encoding method, smoothing, white noise, and seed are allowed. Otherwise, encoded predictors with their descriptive names are added to \code{df}. Default: FALSE}
 
-\item{quiet}{(optional; logical) If FALSE, messages are printed to the console. Default: FALSE}
+\item{quiet}{(optional; logical) If FALSE, messages are printed. Default: FALSE.}
 
 \item{function_name}{(optional, character string) Name of the function performing the argument check. Default: NULL}
 }

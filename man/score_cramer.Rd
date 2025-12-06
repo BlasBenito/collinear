@@ -2,7 +2,7 @@
 % Please edit documentation in R/score_cramer.R
 \name{score_cramer}
 \alias{score_cramer}
-\title{Cramer's V of Observations vs Predictions}
+\title{Compute Cramer's V between categorical observations and predictions}
 \usage{
 score_cramer(o = NULL, p = NULL, ...)
 }
@@ -11,7 +11,9 @@ score_cramer(o = NULL, p = NULL, ...)
 
 \item{p}{(required; character vector) categorical predictions. Default: NULL}
 
-\item{...}{(optional) Used to pass internal arguments such as \code{function_name} for \link{validate_arg_function_name} in nested calls, or \code{m}, a correlation matrix generated via \code{\link[stats:cor]{stats::cor()}} or \code{\link[=cor_matrix]{cor_matrix()}}, and the cross-validation arguments of \code{\link[=preference_order]{preference_order()}}: \code{cv_iterations}, and \code{cv_training_fraction}.}
+\item{...}{(optional) Internal args (e.g. \code{function_name} for
+\code{\link{validate_arg_function_name}}, a precomputed correlation matrix
+\code{m}, or cross-validation args for \code{\link{preference_order}}).}
 }
 \value{
 numeric: Cramer's V

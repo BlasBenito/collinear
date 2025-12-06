@@ -1,5 +1,5 @@
 testthat::test_that("f_count_glm() works", {
-
+  testthat::skip_on_cran()
   data(vi_smol)
 
   response <- "vi_counts"
@@ -49,7 +49,6 @@ testthat::test_that("f_count_glm() works", {
   testthat::expect_true(
     f_count_glm(df = df) < 1
   )
-
 
   #wrong column names ----
   df <- data.frame(
@@ -177,5 +176,4 @@ testthat::test_that("f_count_glm() works", {
   testthat::expect_true(
     length(x_factor) == 100
   )
-
 })

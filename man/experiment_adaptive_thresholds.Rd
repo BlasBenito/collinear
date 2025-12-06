@@ -3,7 +3,7 @@
 \docType{data}
 \name{experiment_adaptive_thresholds}
 \alias{experiment_adaptive_thresholds}
-\title{Results of Adaptive Threshold Validation Experiment}
+\title{Dataframe resulting from experiment to test the automatic selection of multicollinearity thresholds}
 \format{
 A dataframe with 10,000 rows and 9 variables:
 \describe{
@@ -19,7 +19,7 @@ A dataframe with 10,000 rows and 9 variables:
 }
 }
 \usage{
-experiment_adaptive_thresholds
+data(experiment_adaptive_thresholds)
 }
 \description{
 A dataframe summarizing 10,000 experiments validating the adaptive multicollinearity threshold system in \code{\link[=collinear]{collinear()}}. Each row records input data characteristics and the resulting multicollinearity metrics after filtering.

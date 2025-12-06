@@ -1,5 +1,5 @@
 testthat::test_that("`drop_geometry_column()` works", {
-
+  testthat::skip_on_cran()
   data(vi_smol)
 
   vi_smol
@@ -10,7 +10,7 @@ testthat::test_that("`drop_geometry_column()` works", {
   attr(
     x = vi_smol,
     which = "sf_column"
-    ) <- "geometry"
+  ) <- "geometry"
 
   #check new attribute
   testthat::expect_true(
@@ -21,7 +21,6 @@ testthat::test_that("`drop_geometry_column()` works", {
     "geometry" %in% colnames(vi_smol)
   )
 
-
   #drop geometry column
   testthat::expect_message(
     vi_smol <- drop_geometry_column(
@@ -31,7 +30,6 @@ testthat::test_that("`drop_geometry_column()` works", {
     regexp = "dropping geometry column from 'df'"
   )
 
-
   #checking that the geometry was droppped
   testthat::expect_false(
     "geometry" %in% colnames(vi_smol)
@@ -40,7 +38,4 @@ testthat::test_that("`drop_geometry_column()` works", {
   testthat::expect_true(
     is.null(attributes(vi_smol)$sf_column)
   )
-
-
-
 })

@@ -1,4 +1,4 @@
-#' Rules Used by \code{f_auto()} to Select an \code{f} Function
+#' Decision rules for `f_auto()`
 #'
 #' @description
 #' Dataframe with rules used by [f_auto()] to select the function \code{f} in [f_functions()] to compute preference order in [preference_order()]. In most cases, random forest is selected as base model to provide homogeneous results across case types.

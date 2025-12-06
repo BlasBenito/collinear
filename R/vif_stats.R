@@ -1,9 +1,9 @@
-#' Pairwise Correlation Stats
+#' VIF Statistics
 #'
-#' Computes the the minimum, mean, maximum, and quantiles 0.05, 0.25, median (0.5), 0.75, and 0.95 of the column "correlation" in the output of [cor_df()].
+#' Computes the the minimum, mean, maximum, and quantiles 0.05, 0.25, median (0.5), 0.75, and 0.95 of the column "vif" in the output of [vif_df()].
 #'
 #' @inheritParams collinear
-#' @returns dataframe with columns \code{statistic} and \code{value}
+#' @returns dataframe with columns \code{method} with the value "vif", \code{statistic} with the statistic name, and \code{value}.
 #'
 #' @examples
 #' data(

@@ -1,5 +1,5 @@
 testthat::test_that("`cor_select()` works", {
-
+  testthat::skip_on_cran()
   data(vi_smol, vi_predictors)
 
   # mixed types ----
@@ -22,7 +22,7 @@ testthat::test_that("`cor_select()` works", {
   )
 
   testthat::expect_true(
-   length(vi_predictors[1:10]) > length(x)
+    length(vi_predictors[1:10]) > length(x)
   )
 
   #custom preference order
@@ -45,7 +45,6 @@ testthat::test_that("`cor_select()` works", {
     )
   ) |>
     suppressMessages()
-
 
   testthat::expect_true(
     is.character(x)
@@ -123,7 +122,6 @@ testthat::test_that("`cor_select()` works", {
   ) |>
     suppressMessages()
 
-
   # edge cases ----
 
   #no df
@@ -196,5 +194,4 @@ testthat::test_that("`cor_select()` works", {
   testthat::expect_true(
     length(vi_predictors_categorical[1]) == length(x)
   )
-
 })

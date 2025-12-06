@@ -1,5 +1,5 @@
 testthat::test_that("`collinear()` works", {
-
+  testthat::skip_on_cran()
   #load data
   data(
     vi_smol,
@@ -39,17 +39,13 @@ testthat::test_that("`collinear()` works", {
     suppressMessages() |>
     suppressWarnings()
 
-  testthat::expect_message(
-    x <- collinear(
-      df = vi_smol[1:9, ],
-      predictors = vi_predictors_numeric,
-      max_cor = 0.7,
-      max_vif = NULL
-    ),
-    regexp = "skipping VIF filtering"
-  ) |>
-    suppressWarnings() |>
-    suppressMessages()
+  x <- collinear(
+    df = vi_smol[1:9, ],
+    predictors = vi_predictors_numeric,
+    max_cor = 0.7,
+    max_vif = NULL,
+    quiet = TRUE
+  )
 
   ##fewer than 30 rows ----
   testthat::expect_message(
@@ -88,7 +84,7 @@ testthat::test_that("`collinear()` works", {
     suppressMessages()
 
   #max_cor and max_vif invalid
-  f_test <- function(){
+  f_test <- function() {
     collinear(
       df = vi_smol,
       predictors = vi_predictors_numeric,
@@ -130,12 +126,11 @@ testthat::test_that("`collinear()` works", {
   )
 
   #check that the given response is never in selections
-  for(i in vi_responses[1:2]){
+  for (i in vi_responses[1:2]) {
     testthat::expect_true(
       !i %in% x[[i]]$selection
     )
   }
-
 
   #PREDICTORS ----
 
@@ -225,7 +220,6 @@ testthat::test_that("`collinear()` works", {
   ) |>
     suppressMessages()
 
-
   testthat::expect_true(
     inherits(x = x, what = "collinear_output")
   )
@@ -233,7 +227,6 @@ testthat::test_that("`collinear()` works", {
   testthat::expect_true(
     all(c("linear", "smooth") %in% names(x$vi_numeric$formulas))
   )
-
 
   ##categorical numeric ----
   testthat::expect_message(
@@ -249,7 +242,6 @@ testthat::test_that("`collinear()` works", {
     regexp = "'predictors' from lower to higher multicollinearity"
   ) |>
     suppressMessages()
-
 
   testthat::expect_true(
     inherits(x = x, what = "collinear_output")
@@ -291,7 +283,7 @@ testthat::test_that("`collinear()` works", {
     suppressMessages()
 
   #check that the given response does not appear in the selections
-  for(i in names(x)){
+  for (i in names(x)) {
     testthat::expect_true(
       !i %in% x[[i]]$selection
     )
@@ -318,9 +310,8 @@ testthat::test_that("`collinear()` works", {
     all(c("classification") %in% names(x$vi_categorical$formulas))
   )
 
-
   #TARGET ENCODING ----
-  f_test <- function(){
+  f_test <- function() {
     collinear(
       df = vi_smol,
       responses = c("vi_numeric", "vi_categorical"),
@@ -350,7 +341,6 @@ testthat::test_that("`collinear()` works", {
       !is.numeric(x$vi_categorical$df[["soil_type"]]) &&
       is.numeric(x$vi_numeric$df[["soil_type"]])
   )
-
 
   # PREFERENCE ORDER ----
 
@@ -426,16 +416,13 @@ testthat::test_that("`collinear()` works", {
   ) |>
     suppressMessages()
 
-
   testthat::expect_true(
     all(preference_order %in% x$vi_numeric$selection)
   )
 
-
   testthat::expect_true(
     all(vi_predictors_numeric %in% x$vi_numeric$preference_order$predictor)
   )
-
 
   ### valid dataframe ----
   preference_df <- preference_order(
@@ -506,7 +493,6 @@ testthat::test_that("`collinear()` works", {
   ) |>
     suppressMessages()
 
-
   testthat::expect_true(
     all(preference %in% x$result$selection)
   )
@@ -518,7 +504,6 @@ testthat::test_that("`collinear()` works", {
   testthat::expect_true(
     preference[2] == x$result$preference_order$predictor[2]
   )
-
 
   ### f_auto ----
   testthat::expect_message(
@@ -566,9 +551,10 @@ testthat::test_that("`collinear()` works", {
     x$vi_numeric$preference_order$f[1] == "f_numeric_rf"
   )
 
-
   ### bad function name ----
-  my_f <- function(){return(NULL)}
+  my_f <- function() {
+    return(NULL)
+  }
 
   testthat::expect_error(
     x <- collinear(
@@ -645,7 +631,6 @@ testthat::test_that("`collinear()` works", {
     time_no_matrix[3] > time_matrix[3]
   )
 
-
   #losing one column
   df <- vi_smol
   df$logical <- TRUE
@@ -669,7 +654,6 @@ testthat::test_that("`collinear()` works", {
   testthat::expect_true(
     !"logical" %in% colnames(x$vi_numeric$df)
   )
-
 
   #cross validation
   time_no_cv <- system.time(
@@ -702,14 +686,11 @@ testthat::test_that("`collinear()` works", {
         quiet = TRUE,
         cv_iterations = 100,
         cv_training_fraction = 0.5
-        )
+      )
     }
   )
 
   testthat::expect_true(
     time_cv[3] > time_no_cv[3]
   )
-
-
-
 })

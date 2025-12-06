@@ -1,4 +1,4 @@
-#' Validate Argument \code{predictors}
+#' Check and validate argument `predictors`
 #'
 #' @description
 #' Validates the argument \code{predictors} by ensuring that all provided predictors are in \code{df} and don't intersect with \code{responses}, if any.

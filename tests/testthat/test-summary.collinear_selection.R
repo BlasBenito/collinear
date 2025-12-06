@@ -1,9 +1,10 @@
 testthat::test_that("`summary.collinear_selection()` works", {
+  testthat::skip_on_cran()
 
   data(
     vi_smol,
     vi_predictors_numeric
-    )
+  )
 
   #normal usage
   x <- collinear(
@@ -21,6 +22,4 @@ testthat::test_that("`summary.collinear_selection()` works", {
   testthat::expect_true(
     all(x$selection %in% z)
   )
-
-
 })

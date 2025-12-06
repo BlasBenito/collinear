@@ -2,7 +2,7 @@
 % Please edit documentation in R/validate_arg_responses.R
 \name{validate_arg_responses}
 \alias{validate_arg_responses}
-\title{Validate Arguments \code{response} or \code{responses}}
+\title{Check and validate arguments \code{response} and \code{responses}}
 \usage{
 validate_arg_responses(
   df = NULL,
@@ -13,13 +13,17 @@ validate_arg_responses(
 )
 }
 \arguments{
-\item{df}{(required; dataframe, tibble, or sf) A dataframe with responses (optional) and predictors. Must have at least 10 rows for pairwise correlation analysis, and \code{10 * (length(predictors) - 1)} for VIF analysis.  Default: NULL.}
+\item{df}{(required; dataframe, tibble, or sf) A dataframe with responses
+(optional) and predictors. Must have at least 10 rows for pairwise
+correlation analysis, and \code{10 * (length(predictors) - 1)} for VIF.
+Default: NULL.}
 
-\item{responses}{(optional; character, character vector, or NULL) Name of one or several response variables in \code{df}. Default: NULL.}
+\item{responses}{(optional; character, character vector, or NULL) Name of
+one or several response variables in \code{df}. Default: NULL.}
 
 \item{max_responses}{(required, integer or NULL) Maximum number of responses to consider. Default: NULL}
 
-\item{quiet}{(optional; logical) If FALSE, messages are printed to the console. Default: FALSE}
+\item{quiet}{(optional; logical) If FALSE, messages are printed. Default: FALSE.}
 
 \item{function_name}{(optional, character string) Name of the function performing the argument check. Default: NULL}
 }

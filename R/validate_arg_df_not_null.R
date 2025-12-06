@@ -1,4 +1,4 @@
-#' Ensures \code{df} Is Not \code{NULL}
+#' Ensure that argument `df` is not `NULL`
 #'
 #' @description
 #' Internal function to validate the default value of the argument \code{df}.

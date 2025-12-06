@@ -2,18 +2,25 @@
 % Please edit documentation in R/vif_df.R
 \name{vif_df}
 \alias{vif_df}
-\title{Variance Inflation Factors Dataframe}
+\title{Compute variance inflation factors dataframe}
 \usage{
 vif_df(df = NULL, predictors = NULL, quiet = FALSE, ...)
 }
 \arguments{
-\item{df}{(required; dataframe, tibble, or sf) A dataframe with responses (optional) and predictors. Must have at least 10 rows for pairwise correlation analysis, and \code{10 * (length(predictors) - 1)} for VIF analysis.  Default: NULL.}
+\item{df}{(required; dataframe, tibble, or sf) A dataframe with responses
+(optional) and predictors. Must have at least 10 rows for pairwise
+correlation analysis, and \code{10 * (length(predictors) - 1)} for VIF.
+Default: NULL.}
 
-\item{predictors}{(optional; character vector or NULL) Names of the predictors in \code{df}. If NULL, all columns in \code{df} except the ones in \code{responses} and those with constant values or near zero variance are used. Default: NULL}
+\item{predictors}{(optional; character vector or NULL) Names of the
+predictors in \code{df}. If NULL, all columns except \code{responses} and
+constant/near-zero-variance columns are used. Default: NULL.}
 
-\item{quiet}{(optional; logical) If FALSE, messages are printed to the console. Default: FALSE}
+\item{quiet}{(optional; logical) If FALSE, messages are printed. Default: FALSE.}
 
-\item{...}{(optional) Used to pass internal arguments such as \code{function_name} for \link{validate_arg_function_name} in nested calls, or \code{m}, a correlation matrix generated via \code{\link[stats:cor]{stats::cor()}} or \code{\link[=cor_matrix]{cor_matrix()}}, and the cross-validation arguments of \code{\link[=preference_order]{preference_order()}}: \code{cv_iterations}, and \code{cv_training_fraction}.}
+\item{...}{(optional) Internal args (e.g. \code{function_name} for
+\code{\link{validate_arg_function_name}}, a precomputed correlation matrix
+\code{m}, or cross-validation args for \code{\link{preference_order}}).}
 }
 \value{
 dataframe with columns:
@@ -28,11 +35,9 @@ Computes the pairwise correlation matrix between all pairs of predictors via \co
 \section{Variance Inflation Factors}{
 
 
-The Variance Inflation Factor of a given predictor \eqn{a} is computed as \eqn{1/(1-R2)}, where \eqn{R2} is the multiple R-squared of a multiple regression model fitted using \eqn{a} as response against all other predictors, as in  \eqn{a = b + c + ...}.
-
-The square root of the VIF of \eqn{a} is the factor by which the confidence interval of the estimate for \eqn{a} in the linear model \eqn{y = a + b + c + ...} is widened by multicollinearity in the predictors.
-
-The range of VIF values is (1, Inf]. The recommended thresholds for maximum VIF may vary depending on the source consulted, being the most common values, 2.5 (most conservative), 5, and 10 (most permissive).
+VIF for predictor \eqn{a} is computed as \eqn{1/(1-R^2)}, where \eqn{R^2} is
+the multiple R-squared from regressing \eqn{a} on the other predictors.
+Recommended maximums commonly used are 2.5, 5, and 10.
 }
 
 \examples{

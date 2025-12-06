@@ -1,4 +1,4 @@
-#' Identify Numeric Variables
+#' Find valid numeric variables in a dataframe
 #'
 #' @description
 #' Identifies valid numeric variables and ignores those with constant values.

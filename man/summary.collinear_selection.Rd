@@ -2,7 +2,7 @@
 % Please edit documentation in R/summary.collinear_selection.R
 \name{summary.collinear_selection}
 \alias{summary.collinear_selection}
-\title{Summary of \code{class.collinear_selection}}
+\title{Summarize single response selection results of \code{collinear}}
 \usage{
 \method{summary}{collinear_selection}(object = NULL, ...)
 }
@@ -15,7 +15,7 @@
 list: response name and character vector of selected predictors.
 }
 \description{
-Summary of \code{class.collinear_selection}
+Summarize single response selection results of \code{collinear}
 }
 \seealso{
 Other S3_methods: 

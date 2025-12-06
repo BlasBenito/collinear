@@ -1,4 +1,5 @@
 testthat::test_that("`validate_arg_encoding_method()` works", {
+  testthat::skip_on_cran()
 
   testthat::expect_message(
     x <- validate_arg_encoding_method(
@@ -19,7 +20,7 @@ testthat::test_that("`validate_arg_encoding_method()` works", {
     x <- validate_arg_encoding_method(
       encoding_method = "hola",
       quiet = TRUE
-      )
+    )
   )
 
   testthat::expect_true(
@@ -52,5 +53,4 @@ testthat::test_that("`validate_arg_encoding_method()` works", {
     ),
     regexp = "only one encoding method allowed when 'overwrite = TRUE', using method: 'loo'"
   )
-
 })

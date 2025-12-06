@@ -1,9 +1,10 @@
 testthat::test_that("`vif_stats()` works", {
+  testthat::skip_on_cran()
 
   data(
     vi_smol,
     vi_predictors_numeric
-    )
+  )
 
   #general usage
 
@@ -49,6 +50,4 @@ testthat::test_that("`vif_stats()` works", {
     x <- vif_stats(),
     regexp = "argument 'df' cannot be NULL"
   )
-
-
 })

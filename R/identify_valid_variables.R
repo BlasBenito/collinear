@@ -1,4 +1,4 @@
-#' Identify Numeric, Categorical, and Logical Variables
+#' Find valid numeric, categorical, and logical variables in a dataframe
 #'
 #' @description
 #' Returns a list with the names of the valid numeric, categorical, and logical variables in a modelling dataframe.

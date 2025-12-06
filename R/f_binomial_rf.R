@@ -1,7 +1,7 @@
-#' Area Under the Curve of Binomial Random Forest Predictions vs. Observations
+#' Area Under the Curve of Binomial Random Forest predictions vs. observations
 #'
 #' @description
-#' Fits a univariate random forest model \code{y ~ x} with the binomial (values 0 and 1) response \code{y} and the numeric, character or factor predictor \code{x} using [ranger::ranger()] and returns the area under the ROC curve between the observed responses and the model predictions (see [score_auc()]).
+#' Fits a univariate random forest model \code{y ~ x} with the binomial (values 0 and 1) response \code{y} and the numeric, character or factor predictor \code{x} using \code{ranger::ranger()} and returns the area under the ROC curve between the observed responses and the model predictions (see [score_auc()]).
 #'
 #' Cases are weighted with [case_weights()] to prevent issues arising from class imbalance.
 #'

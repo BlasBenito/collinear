@@ -1,4 +1,5 @@
 testthat::test_that("`validate_arg_quiet()` works", {
+  testthat::skip_on_cran()
 
   testthat::expect_true(
     validate_arg_quiet(
@@ -38,6 +39,4 @@ testthat::test_that("`validate_arg_quiet()` works", {
   testthat::expect_true(
     attributes(x)$validated
   )
-
-
 })

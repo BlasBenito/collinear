@@ -1,4 +1,5 @@
 testthat::test_that("`identify_zero_variance_variables()` works", {
+  testthat::skip_on_cran()
 
   data(vi_smol, vi_predictors, vi_predictors_categorical)
 
@@ -8,7 +9,7 @@ testthat::test_that("`identify_zero_variance_variables()` works", {
     n = nrow(vi_smol),
     min = 0,
     max = 1e-04
-    )
+  )
 
   testthat::expect_message(
     x <- identify_zero_variance_variables(
@@ -21,7 +22,6 @@ testthat::test_that("`identify_zero_variance_variables()` works", {
     ),
     regexp = "invalid predictors due to near-zero variance"
   )
-
 
   testthat::expect_true(
     is.character(x),
@@ -48,7 +48,6 @@ testthat::test_that("`identify_zero_variance_variables()` works", {
     regexp = "invalid responses due to near-zero variance"
   )
 
-
   testthat::expect_true(
     is.character(x),
   )
@@ -74,7 +73,6 @@ testthat::test_that("`identify_zero_variance_variables()` works", {
     regexp = "invalid variables due to near-zero variance"
   )
 
-
   testthat::expect_true(
     is.character(x),
   )
@@ -86,7 +84,6 @@ testthat::test_that("`identify_zero_variance_variables()` works", {
   testthat::expect_true(
     all(c("zv_1", "zv_2") %in% x)
   )
-
 
   ##
   x <- identify_zero_variance_variables(
@@ -111,7 +108,6 @@ testthat::test_that("`identify_zero_variance_variables()` works", {
     regexp = "there are no variables to identify"
   )
 
-
   #edge cases
   testthat::expect_error(
     x <- identify_zero_variance_variables(
@@ -127,7 +123,7 @@ testthat::test_that("`identify_zero_variance_variables()` works", {
       predictors = c("hola", "adios")
     ),
     regexp = "there are no variables to identify"
-    ) |>
+  ) |>
     suppressWarnings()
 
   x <- identify_zero_variance_variables(
@@ -138,7 +134,4 @@ testthat::test_that("`identify_zero_variance_variables()` works", {
   testthat::expect_null(
     x
   )
-
-
 })
-

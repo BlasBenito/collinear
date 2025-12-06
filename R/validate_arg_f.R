@@ -1,4 +1,4 @@
-#' Validate Argument \code{f}
+#' Check and validate argument \code{f}
 #'
 #' @inheritParams preference_order
 #' @inheritParams validate_arg_df

@@ -1,4 +1,4 @@
-#' Identify Response Type
+#' Detect response variable type for model selection
 #'
 #' @description
 #' Used by [f_auto()] to identify the type of a response variable and select a proper modelling method to compute preference order.

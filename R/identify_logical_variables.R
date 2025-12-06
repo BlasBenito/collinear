@@ -1,4 +1,4 @@
-#' Identify Valid Logical Variables
+#' Find logical variables in a dataframe
 #'
 #' @description
 #' Identifies logical predictors and excludes those with constant values.

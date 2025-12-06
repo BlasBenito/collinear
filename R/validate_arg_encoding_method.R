@@ -1,4 +1,4 @@
-#' Validate Argument \code{encoding_method}
+#' Check and validate argument \code{encoding_method}
 #'
 #' @description
 #' Internal function to validate the argument \code{encoding_method} of [target_encoding_lab()].

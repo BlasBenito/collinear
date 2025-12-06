@@ -1,7 +1,7 @@
-#' Area Under the Curve of Binomial GLM Predictions vs. Observations
+#' Area Under the Curve of Binomial GLM predictions vs. observations
 #'
 #' @description
-#' Fits a Quasibinomial GLM model \code{y ~ x} with the binomial  response \code{y} (values 0 and 1) and the numeric, character, or factor predictor \code{x} using [stats::glm()] and returns the area under the ROC curve of the observations against the predictions (see [score_auc()]).
+#' Fits a Quasibinomial GLM model \code{y ~ x} with the binomial  response \code{y} (values 0 and 1) and the numeric, character, or factor predictor \code{x} using \code{stats::glm()} and returns the area under the ROC curve of the observations against the predictions (see [score_auc()]).
 #'
 #' Cases are weighted with [case_weights()] to prevent issues arising from class imbalance.
 #'

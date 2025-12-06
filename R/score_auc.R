@@ -1,4 +1,4 @@
-#' Area Under the Curve
+#' Compute area under the ROC curve between binomial observations and probabilistic predictions
 #'
 #' @description
 #' Internal function to compute the AUC of binomial models within [preference_order()]. Used within [f_binomial_glm()], [f_binomial_gam()], and [f_binomial_rf()]. This function is build for speed and it does not check the inputs.

@@ -1,4 +1,4 @@
-#' Dataframe of Functions to Compute Preference Order
+#' List predictor scoring functions
 #'
 #' @return dataframe
 #' @export

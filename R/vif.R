@@ -1,14 +1,14 @@
-#' Variance Inflation Factors From Correlation Matrix
+#' Compute variance inflation factors from a correlation matrix
 #'
 #' @description Computes the Variance Inflation Factors from a correlation matrix in two steps:
 #' \itemize{
-#'   \item Applies [base::solve()] to transform the correlation matrix into a precision matrix, which is the inverse of the covariance matrix between all variables in \code{predictors}.
-#'   \item Applies [base::diag()] to extract the diagonal of the precision matrix, which contains the variance of the regression of each predictor against all other predictors, also known as Variance Inflation Factor
+#'   \item Applies \code{base::solve()} to transform the correlation matrix into a precision matrix, which is the inverse of the covariance matrix between all variables in \code{predictors}.
+#'   \item Applies \code{base::diag()} to extract the diagonal of the precision matrix, which contains the variance of the regression of each predictor against all other predictors, also known as Variance Inflation Factor
 #'}
 #'
 #' @inheritSection collinear Variance Inflation Factors
 #'
-#' @param m (required, matrix) Correlation matrix generated via [stats::cor()] or [cor_matrix()]. Must have named dimensions. Default: NULL
+#' @param m (required, matrix) Correlation matrix generated via \code{stats::cor()} or [cor_matrix()]. Must have named dimensions. Default: NULL
 #' @inheritParams collinear
 #'
 #' @return named numeric vector

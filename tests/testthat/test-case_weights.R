@@ -1,4 +1,5 @@
 testthat::test_that("`case_weights()` works", {
+  testthat::skip_on_cran()
 
   tol <- 0.000001
 
@@ -59,7 +60,6 @@ testthat::test_that("`case_weights()` works", {
     x = c(TRUE, TRUE, FALSE, FALSE)
   )
 
-
   testthat::expect_true(
     all(weights - 0.25 < tol)
   )
@@ -80,7 +80,6 @@ testthat::test_that("`case_weights()` works", {
     ),
     regexp = "NA, Inf, -Inf, or NaN values are not allowed when 'x' is numeric or logical"
   )
-
 
   testthat::expect_true(
     all(weights - 0.25 < tol)
@@ -136,5 +135,4 @@ testthat::test_that("`case_weights()` works", {
   testthat::expect_true(
     all(c("NA", "Inf", "-Inf", "NaN") %in% names(weights))
   )
-
 })

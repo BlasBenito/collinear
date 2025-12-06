@@ -1,4 +1,5 @@
 testthat::test_that("`identify_logical_variables()` works", {
+  testthat::skip_on_cran()
 
   data(vi_smol, vi_predictors, vi_predictors_numeric)
 
@@ -24,7 +25,6 @@ testthat::test_that("`identify_logical_variables()` works", {
     ),
     regexp = "invalid logical predictors"
   )
-
 
   testthat::expect_true(
     "logical_invalid" == x$invalid
@@ -56,7 +56,6 @@ testthat::test_that("`identify_logical_variables()` works", {
     regexp = "invalid logical variables"
   )
 
-
   testthat::expect_true(
     "logical_invalid" == x$invalid
   )
@@ -77,7 +76,6 @@ testthat::test_that("`identify_logical_variables()` works", {
     regexp = "invalid logical responses"
   )
 
-
   testthat::expect_true(
     "logical_invalid" == x$invalid
   )
@@ -94,8 +92,6 @@ testthat::test_that("`identify_logical_variables()` works", {
     regexp = "there are no variables to identify"
   )
 
-
-
   ##
   x <- identify_logical_variables(
     df = vi_smol,
@@ -105,5 +101,4 @@ testthat::test_that("`identify_logical_variables()` works", {
   testthat::expect_true(
     all(is.null(x$valid), is.null(x$invalid))
   )
-
 })

@@ -1,7 +1,7 @@
-#' Cramer's V of Categorical Random Forest Predictions vs. Observations
+#' Cramer's V of Categorical Random Forest predictions vs. observations
 #'
 #' @description
-#' Fits a univariate random forest model \code{y ~ x} with the character or factor response \code{y} and the numeric, character or factor predictor \code{x} using [ranger::ranger()] and returns the Cramer's V (see [cor_cramer()]) between the observed responses and the model predictions. Cases are weighted with [case_weights()] to prevent issues arising from class imbalance.
+#' Fits a univariate random forest model \code{y ~ x} with the character or factor response \code{y} and the numeric, character or factor predictor \code{x} using \code{ranger::ranger()} and returns the Cramer's V (see [cor_cramer()]) between the observed responses and the model predictions. Cases are weighted with [case_weights()] to prevent issues arising from class imbalance.
 #'
 #' Cases are weighted with [case_weights()] to prevent issues arising from class imbalance.
 #'

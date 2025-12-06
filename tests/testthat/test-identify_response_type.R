@@ -1,4 +1,5 @@
 testthat::test_that("`identify_response_type()` works", {
+  testthat::skip_on_cran()
 
   data(vi_smol)
 
@@ -27,7 +28,6 @@ testthat::test_that("`identify_response_type()` works", {
   testthat::expect_true(
     x == "continuous-high"
   )
-
 
   x <- identify_response_type(
     df = vi_smol,
@@ -103,7 +103,11 @@ testthat::test_that("`identify_response_type()` works", {
     x == "integer-binary"
   )
 
-  vi_smol$response_trinary <- sample(c(1.1, 2.1, 3.1), size = nrow(vi_smol), replace = TRUE)
+  vi_smol$response_trinary <- sample(
+    c(1.1, 2.1, 3.1),
+    size = nrow(vi_smol),
+    replace = TRUE
+  )
 
   testthat::expect_message(
     x <- identify_response_type(
@@ -114,7 +118,11 @@ testthat::test_that("`identify_response_type()` works", {
   ) |>
     suppressMessages()
 
-  vi_smol$response_trinary <- sample(c(1, 2, 3), size = nrow(vi_smol), replace = TRUE)
+  vi_smol$response_trinary <- sample(
+    c(1, 2, 3),
+    size = nrow(vi_smol),
+    replace = TRUE
+  )
 
   x <- identify_response_type(
     df = vi_smol,
@@ -125,6 +133,4 @@ testthat::test_that("`identify_response_type()` works", {
   testthat::expect_true(
     x == "integer-low"
   )
-
-
 })

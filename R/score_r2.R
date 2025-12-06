@@ -1,7 +1,7 @@
-#' Pearson's R-squared of Observations vs Predictions
+#' Compute R-squared between numeric observations and predictions
 #'
 #' @description
-#' Internal function to compute the R-squared of observations versus predictions via [stats::cor()]. Used within [f_numeric_glm()], [f_numeric_gam()], [f_numeric_rf()], [f_count_glm()], and [f_count_gam()].
+#' Internal function to compute the R-squared of observations versus predictions via \code{stats::cor()}. Used within [f_numeric_glm()], [f_numeric_gam()], [f_numeric_rf()], [f_count_glm()], and [f_count_gam()].
 #'
 #' @param o (required, numeric vector) Observations. Default: NULL
 #' @param p (required, numeric vector) Predictions. Default: NULL

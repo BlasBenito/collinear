@@ -1,9 +1,10 @@
 testthat::test_that("`summary.collinear_selection()` works", {
+  testthat::skip_on_cran()
 
   data(
     vi_smol,
     vi_predictors_numeric
-    )
+  )
 
   x <- collinear(
     df = vi_smol,
@@ -33,7 +34,6 @@ testthat::test_that("`summary.collinear_selection()` works", {
     regexp = "df"
   )
 
-
   testthat::expect_output(
     print(x$vi_numeric),
     regexp = "preference order"
@@ -59,5 +59,4 @@ testthat::test_that("`summary.collinear_selection()` works", {
     print(x$vi_categorical),
     regexp = "formula"
   )
-
 })

@@ -1,4 +1,6 @@
 title: collinear
+home:
+  title: "collinear: Automated Multicollinearity Management"
 url: https://blasbenito.github.io/collinear/
 template:
   bootstrap: 5
@@ -37,56 +39,79 @@ navbar:
     right: [search, github]
 
 reference:
-
 - title: Multicollinearity Filtering
-  desc: Functions to manage multicollinearity.
+  desc: >
+    Remove redundant predictors from modelling datasets. These functions
+    filter variables by pairwise correlation, variance inflation factors,
+    or both, while respecting user-defined predictor priorities.
 - contents:
   - has_concept("multicollinearity_filtering")
 
 - title: Multicollinearity Assessment
-  desc: Functions to assess multicollinearity.
+  desc: >
+    Quantify redundancy among predictors. Compute pairwise correlations,
+    variance inflation factors, and summary statistics for datasets with
+    numeric and categorical variables.
 - contents:
   - has_concept("multicollinearity_assessment")
 
-- title: Preference Order
-  desc: Functions rank predictors by their relationship with a response variable.
+- title: Predictor Ranking
+  desc: >
+    Prioritize predictors for multicollinearity filtering. Rank variables
+    by their association with a response or by their redundancy with other
+    predictors. Supports cross-validation and multiple response types.
 - contents:
   - has_concept("preference_order_functions")
   - has_concept("preference_order_tools")
 
 - title: Target Encoding
-  desc: Functions to map categorical predictors to numeric using a numeric response as reference.
+  desc: >
+    Convert categorical predictors to numeric using response values.
+    Implements mean, leave-one-out, and rank encoding methods for
+    seamless integration of categorical variables in correlation and
+    VIF analyses.
 - contents:
   - has_concept("target_encoding")
 
-
-- title: Example Datasets
-  desc: Example data to play with `collinear()` and company.
+- title: Example Data
+  desc: >
+    Sample datasets for exploring package functionality. Includes
+    dataframes with numeric, categorical, and mixed predictor types,
+    plus multiple response encodings.
 - contents:
   - has_concept("example_data")
 
-- title: Experiment Results
-  desc: Data and models resulting from experiments used to tune `collinear()` and understand how it works.
+- title: Validation Experiments
+  desc: >
+    Results from simulation studies used to calibrate adaptive thresholds
+    and validate the equivalence between correlation and VIF filtering.
 - contents:
   - has_concept("experiments")
 
-
-- title: S3 Methods
-  desc: Methods for the classes `collinear_selection` and `collinear_output`.
+- title: Print and Summary Methods
+  desc: >
+    S3 methods for displaying and summarizing results from `collinear()`
+    and related functions.
 - contents:
   - has_concept("S3_methods")
 
-- title: Data Types
-  desc: Functions to detect the variable types of responses and predictors.
+- title: Variable Type Detection
+  desc: >
+    Identify and classify variables by type. Detect numeric, categorical,
+    logical, and near-zero variance columns in modelling datasets.
 - contents:
   - has_concept("data_types")
 
-- title: Modelling Tools
-  desc: Miscellany of modelling functions used throughout the package.
+- title: Modelling Utilities
+  desc: >
+    Helper functions for model fitting and evaluation. Generate formulas,
+    compute performance metrics, and create class-balancing weights.
 - contents:
   - has_concept("modelling_tools")
 
-- title: Argument Validation
-  desc: Functions to validate input arguments across the package.
+- title: Input Validation
+  desc: >
+    Internal functions for checking and preparing function arguments.
+    Ensure data frames, variable names, and parameters meet requirements.
 - contents:
   - has_concept("argument_validation")

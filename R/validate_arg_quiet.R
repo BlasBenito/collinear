@@ -1,4 +1,4 @@
-#' Validate Argument \code{quiet}
+#' Check and validate argument \code{quiet}
 #'
 #' @description
 #' Internal function to validate the logical argument \code{quiet}, which triggers messaging when \code{FALSE}

@@ -1,4 +1,5 @@
 test_that("step_collinear works!", {
+  testthat::skip_on_cran()
 
   data(vi_smol, vi_predictors_numeric)
 
@@ -20,7 +21,7 @@ test_that("step_collinear works!", {
   rec <- recipes::recipe(
     formula = vi_formula,
     data = vi_smol
-    ) |>
+  ) |>
     step_collinear(
       recipes::all_predictors()
     )
@@ -28,12 +29,12 @@ test_that("step_collinear works!", {
   rec_prep <- recipes::prep(
     rec,
     training = vi_smol
-    )
+  )
 
   baked <- recipes::bake(
     rec_prep,
     new_data = vi_smol
-    )
+  )
 
   testthat::expect_true(is.data.frame(baked))
 
@@ -43,6 +44,5 @@ test_that("step_collinear works!", {
 
   testthat::expect_true(
     all(c("vi_numeric", rec_prep$steps[[1]]$selected) %in% names(baked))
-    )
-
+  )
 })

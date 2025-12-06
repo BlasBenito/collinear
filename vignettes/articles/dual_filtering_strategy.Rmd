@@ -18,13 +18,19 @@ knitr::opts_chunk$set(
 
 ## Summary
 
-The function [collinear_select()](reference/collinear_select.html), called by [collinear()](reference/collinear.html), applies two complementary methods to assess different aspects of multicollinearity: pairwise correlation (and/or Cramer's V) and Variance Inflation Factors. The function allows using either method alone or both in combination. At the same time, it respects predictor rankings to protect relevant variables during filtering.
+The function [collinear_select()](reference/collinear_select.html) applies two complementary methods to assess different aspects of multicollinearity: 
+
+ - **Pairwise correlation (Pearson and/or Cramer's V)**: identifies pairs of highly redundant variables.
+ 
+ - **Variance Inflation Factors**: measures how much the variance of a regression coefficient is inflated due to multicollinearity with *all other* predictors.
+ 
+By combining a pairwise method (correlation) and a multivariate one (VIF), [collinear_select()](reference/collinear_select.html) is able to capture multicollinearity that either method alone might miss. At the same time, it respects predictor rankings to protect relevant variables during filtering.
 
 This article explains how this dual filtering algorithm works, demonstrates its behavior with examples, and provides guidance on when to use each filtering method.
 
 ## Setup
 
-This article requires the following setup.
+The examples herein require the following setup.
 
 ```{r, message = FALSE, warning = FALSE, include = FALSE}
 library(collinear)
@@ -45,41 +51,31 @@ future::plan(
 data(vi_smol, vi_predictors_numeric)
 ```
 
-## Combining Pairwise Correlation and VIF
+## The Multicollinearity Filtering Algorithm
 
-These methods capture different aspects of multicollinearity.
-
-**Pairwise correlation** measures the linear relationship between two variables alone, while **Variance Inflation Factor** measures how much the variance of a regression coefficient is inflated due to multicollinearity with *all other* predictors. A VIF of 5 means the standard error of that predictor's coefficient in a multivariate linear regression is √5 ≈ 2.24 times larger than it would be without multicollinearity.
-
-The key difference is that correlation is *pairwise* while VIF is *multivariate*. Consider three predictors where `a` correlates 0.6 with `b` and 0.6 with `c`, but `b` and `c` are uncorrelated. No pairwise correlation exceeds a typical threshold of 0.7, yet `a` may still have a high VIF because `b` and `c` together explain much of its variance.
-
-By combining a pairwise method (correlation) and a multivariate one (VIF), [collinear_select()](reference/collinear_select.html) catches multicollinearity that either method alone might miss.
-
-## The Algorithm
-
-The dual filtering algorithm in `collinear_select()` works as follows:
+The filtering algorithm in `collinear_select()` works as follows:
 
   1. Predictors are ranked according to `preference_order`, or from lower to higher overall multicollinearity.
   
   2. The correlation matrix between all predictors is computed with [cor_matrix()](reference/cor_matrix.html).
   
-  3. The first predictor in the ranking is *selected*.
+  3. The first predictor in the ranking is *selected*, while all others are *candidates*.
   
-  4. The remaining candidates are evaluated sequentially. For each new candidate:
+  4. The candidates are evaluated sequentially:
   
-   4a. If `max_cor` is set, and the maximum correlation between the candidate and the selected predictors is higher than `max_cor`, the candidate is discarded and the algorithm moves into the next one. Otherwise, the candidate goes to the next step.
+   4a. If `max_cor` is set, and the maximum correlation between the candidate and the selected is higher than `max_cor`, the candidate is discarded and the algorithm moves to the next one. Otherwise, the candidate goes to the next step.
    
    4b. If `max_vif` is set, and the maximum VIF of the candidate against all selected predictors is higher than `max_vif`, the candidate is discarded. Otherwise, the candidate is selected, and the algorithm moves into the next candidate.
    
 To finalize, the selected predictors are returned.
 
-## Step-by-Step Example
+Let's take a look at how that works in code with the multicollinearity thresholds and the predictors and below.
 
-This example shows in detail how the multicollinearity filtering algorithm works.
-
-For simplicity, it is focused on these four predictors already ranked from higher to lower *preference*.
 
 ```{r}
+max_vif = 5
+max_cor = 0.7
+
 predictors <- c(
   "swi_mean",
   "soil_temperature_mean", 
@@ -88,14 +84,9 @@ predictors <- c(
 )
 ```
 
-We also need to define our target multicollinearity thresholds.
+To simplify the code below a bit, the **predictors are already ordered by preference**, and we omit the cases `max_vif = NULL` or `max_cor = NULL`.
 
-```{r}
-max_vif = 5
-max_cor = 0.6
-```
-
-First, `collinear_select()` computes their correlation matrix and orders it according to the preference order.
+The correlation matrix is computed with [cor_matrix()](reference/cor_matrix.html) and ordered after `preference_order`.
 
 ```{r}
 m <- collinear::cor_matrix(
@@ -104,19 +95,136 @@ m <- collinear::cor_matrix(
   quiet = TRUE
 )
 
-m <- m[predictors, predictors]
+m <- m[
+  predictors, 
+  predictors
+  ]
+
 round(m, 2)
 ```
-Second, it creates the vectors `selected` and `candidates`.
+The first predictor in `preference_order` is added to `selected` while the remaining ones go to `candidates`.
 
 ```{r}
 selected <- predictors[1]
 candidates <- predictors[-1]
 ```
 
-This is where the candidates are evaluated sequentially. Let's start with the first candidate.
+The first `candidate` gets ready for evaluation.
 
 ```{r}
 candidate <- candidates[1]
 ```
 
+
+The maximum correlation between `selected` and `candidate` is assessed by extracting the `selected` rows and the `candidate` column of the absolute correlation matrix, computing its maximum, and comparing it with `max_cor`.
+
+
+```{r}
+max(
+  abs(
+    m[
+      selected, 
+      candidate
+      ]
+    )
+  ) > max_cor
+```
+
+If the expression above evaluates to `TRUE`, the candidate is removed from `candidates`, as in `candidates <- candidates[-1]`, and a new candidate is selected for evaluation.
+
+Otherwise the algorithm moves to the VIF evaluation. 
+
+The subset of `m` with all rows and columns of `selected` and `candidate` is used as input for [vif()](reference/vif.html).
+
+```{r}
+max(
+  collinear::vif(
+    m = m[
+      c(selected, candidate),
+      c(selected, candidate)
+    ]
+  )
+) > max_vif
+```
+If it evaluates to `TRUE`, `candidate` is rejected and the algorithm goes to the next candidate. 
+
+Otherwise, `candidate` is added to `selected` and removed from `candidates`, and a new `candidate` is selected for evaluation.
+
+```{r}
+selected <- c(selected, candidate)
+candidates <- candidates[-1]
+candidate <- candidates[1]
+```
+
+Let's take a look at the whole loop:
+
+```{r}
+#compute and reorder correlation matrix
+m <- collinear::cor_matrix(
+  df = vi_smol,
+  predictors = predictors,
+  quiet = TRUE
+)
+
+m <- m[
+  predictors,
+  predictors
+]
+
+#generate selected and candidates
+selected <- predictors[1]
+candidates <- predictors[-1]
+
+#iterate over candidates
+for (candidate in candidates) {
+  
+  #correlation
+  if (
+    max(
+      abs(
+        m[
+          selected,
+          candidate
+        ]
+      )
+    ) > max_cor
+  ) {
+    #if TRUE move to next candidate
+    next
+  }
+
+  #vif evaluation
+  if (
+    max(
+      vif(
+        m[
+          c(selected, candidate),
+          c(selected, candidate)
+        ]
+      )
+    ) > max_vif
+  ) {
+    #if TRUE, move to next candidate
+    next
+  }
+
+  selected <- c(selected, candidate)
+  
+}
+
+selected
+```
+Let's see if [collinear_select()](reference/collinear_select.html) returns the same selection.
+
+```{r}
+collinear::collinear_select(
+  df = vi_smol,
+  predictors = predictors,
+  preference_order = predictors,
+  max_cor = 0.7,
+  max_vif = 5
+)
+```
+All good, nice!
+
+And that is all about how multicollinearity filtering works within `collinear`!

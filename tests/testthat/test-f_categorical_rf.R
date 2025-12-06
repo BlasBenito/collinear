@@ -1,5 +1,5 @@
 testthat::test_that("f_categorical_rf() works", {
-
+  testthat::skip_on_cran()
   data(vi_smol)
 
   response <- "vi_categorical"
@@ -39,7 +39,6 @@ testthat::test_that("f_categorical_rf() works", {
     f_categorical_rf(df = df),
     regexp = "column 'y' of dataframe 'df' must be character or factor"
   )
-
 
   #wrong column names ----
   df <- data.frame(
@@ -173,5 +172,4 @@ testthat::test_that("f_categorical_rf() works", {
   testthat::expect_true(
     length(x_factor) == 10
   )
-
 })

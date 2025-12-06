@@ -2,7 +2,7 @@
 % Please edit documentation in R/f_binomial_glm.R
 \name{f_binomial_glm}
 \alias{f_binomial_glm}
-\title{Area Under the Curve of Binomial GLM Predictions vs. Observations}
+\title{Area Under the Curve of Binomial GLM predictions vs. observations}
 \usage{
 f_binomial_glm(df, ...)
 }
@@ -19,7 +19,7 @@ f_binomial_glm(df, ...)
 numeric or numeric vector: AUC
 }
 \description{
-Fits a Quasibinomial GLM model \code{y ~ x} with the binomial  response \code{y} (values 0 and 1) and the numeric, character, or factor predictor \code{x} using \code{\link[stats:glm]{stats::glm()}} and returns the area under the ROC curve of the observations against the predictions (see \code{\link[=score_auc]{score_auc()}}).
+Fits a Quasibinomial GLM model \code{y ~ x} with the binomial  response \code{y} (values 0 and 1) and the numeric, character, or factor predictor \code{x} using \code{stats::glm()} and returns the area under the ROC curve of the observations against the predictions (see \code{\link[=score_auc]{score_auc()}}).
 
 Cases are weighted with \code{\link[=case_weights]{case_weights()}} to prevent issues arising from class imbalance.
 

@@ -2,7 +2,7 @@
 % Please edit documentation in R/f_functions.R
 \name{f_functions}
 \alias{f_functions}
-\title{Dataframe of Functions to Compute Preference Order}
+\title{List predictor scoring functions}
 \usage{
 f_functions()
 }
@@ -10,7 +10,7 @@ f_functions()
 dataframe
 }
 \description{
-Dataframe of Functions to Compute Preference Order
+List predictor scoring functions
 }
 \examples{
 f_functions()

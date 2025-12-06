@@ -1,4 +1,5 @@
 testthat::test_that("`model_formula()` works", {
+  testthat::skip_on_cran()
 
   data(vi_smol, vi_predictors_numeric)
 
@@ -36,7 +37,6 @@ testthat::test_that("`model_formula()` works", {
   testthat::expect_true(
     inherits(x = m, what = "lm")
   )
-
 
   #polynomial formula
   x <- model_formula(
@@ -102,7 +102,6 @@ testthat::test_that("`model_formula()` works", {
     regexp = "argument 'random_effects' must name variables not in argument 'predictors'"
   )
 
-
   x <- model_formula(
     df = vi_smol,
     response = "vi_numeric",
@@ -113,5 +112,4 @@ testthat::test_that("`model_formula()` works", {
   testthat::expect_true(
     inherits(x = x, what = "formula")
   )
-
 })

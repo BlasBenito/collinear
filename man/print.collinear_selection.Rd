@@ -2,7 +2,7 @@
 % Please edit documentation in R/print.collinear_selection.R
 \name{print.collinear_selection}
 \alias{print.collinear_selection}
-\title{Print \code{collinear_selection}}
+\title{Print single selection results from \code{collinear}}
 \usage{
 \method{print}{collinear_selection}(x = NULL, n = 5, ...)
 }
@@ -14,7 +14,7 @@
 \item{...}{Ignored, kept for consistency with generic.}
 }
 \description{
-Print \code{collinear_selection}
+Print single selection results from \code{collinear}
 }
 \seealso{
 Other S3_methods: 

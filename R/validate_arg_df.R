@@ -1,4 +1,4 @@
-#' Validate Structure and Values of Argument \code{df}
+#' Check and prepare argument `df`
 #'
 #' @description
 #' Internal function to validate the integrity of the argument \code{df}. It ensures that the dataframe has suitable dimensions for a multicollinearity analysis, transforms logical columns to numeric, character columns to factors, and converts \code{NaN}, \code{Inf} and \code{-Inf} to NA. Additionally, it checks the values of \code{responses} and \code{predictors} if these arguments are provided.

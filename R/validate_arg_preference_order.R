@@ -1,4 +1,4 @@
-#' Validate Argument \code{preference_order}
+#' Check and complete argument `preference_order`
 #'
 #' @description
 #' Internal function to validate the argument \code{preference_order} in [cor_select()], [vif_select()], [collinear_select()], [collinear()], and [collinear()]. Predictors not in \code{preference_order} are ranked from lower to higher sum of Pearson correlations with all other predictors.

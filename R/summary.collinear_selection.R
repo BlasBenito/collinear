@@ -1,4 +1,4 @@
-#' Summary of \code{class.collinear_selection}
+#' Summarize single response selection results of `collinear`
 #'
 #' @param object (sub-list in output of [collinear()] ) Object to summarize. Default: NULL
 #' @param ... Ignored, kept for consistency with generic.

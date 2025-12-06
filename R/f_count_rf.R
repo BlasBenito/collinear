@@ -1,7 +1,7 @@
-#' R-squared of Random Forest Predictions vs. Observations
+#' R-squared of Random Forest predictions vs. observations
 #'
 #' @description
-#' Fits a univariate random forest model \code{y ~ x} with the integer response \code{y} and the numeric, character or factor predictor \code{x} using [ranger::ranger()] and returns the R-squared of the observations against the predictions (see [score_r2()]).
+#' Fits a univariate random forest model \code{y ~ x} with the integer response \code{y} and the numeric, character or factor predictor \code{x} using \code{ranger::ranger()} and returns the R-squared of the observations against the predictions (see [score_r2()]).
 #'
 #' Supports cross-validation via the arguments arguments \code{cv_training_fraction} (numeric between 0 and 1) and \code{cv_iterations} (integer between 1 and \code{n}) introduced via ellipsis (\code{...}). See [preference_order()] for further details.
 #'

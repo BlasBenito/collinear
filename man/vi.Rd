@@ -3,7 +3,7 @@
 \docType{data}
 \name{vi}
 \alias{vi}
-\title{Example Data With Different Response and Predictor Types}
+\title{Large example dataframe}
 \format{
 dataframe with 30.000 rows and 68 columns.
 }

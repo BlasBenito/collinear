@@ -1,10 +1,10 @@
 testthat::test_that("`cor_stats()` works", {
-
+  testthat::skip_on_cran()
   data(
     vi_smol,
     vi_predictors,
     vi_predictors_numeric
-    )
+  )
 
   #general usage
 
@@ -22,7 +22,6 @@ testthat::test_that("`cor_stats()` works", {
   testthat::expect_true(
     all(colnames(x) %in% c("method", "statistic", "value"))
   )
-
 
   #from cor_df results
   x <- cor_df(
@@ -44,6 +43,4 @@ testthat::test_that("`cor_stats()` works", {
     x <- cor_stats(),
     regexp = "argument 'df' cannot be NULL"
   )
-
-
 })

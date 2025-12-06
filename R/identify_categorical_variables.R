@@ -1,4 +1,4 @@
-#' Identify Valid Categorical Variables
+#' Find valid categorical variables in a dataframe
 #'
 #' @description
 #' Identifies valid and invalid character or factor variables. Invalid categorical predictors are those with a single category, or as many categories as cases (full-cardinality).

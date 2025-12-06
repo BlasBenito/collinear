@@ -2,14 +2,14 @@
 % Please edit documentation in R/validate_arg_max_vif.R
 \name{validate_arg_max_vif}
 \alias{validate_arg_max_vif}
-\title{Validate Argument \code{max_vif}}
+\title{Check and constrain argument \code{max_vif}}
 \usage{
 validate_arg_max_vif(max_vif = NULL, quiet = FALSE, function_name = NULL)
 }
 \arguments{
 \item{max_vif}{(optional, numeric or NULL) Maximum Variance Inflation Factor allowed for \code{predictors} during multicollinearity filtering. Recommended values are between 2.5 (strict) and 10 (permissive). Default: 5}
 
-\item{quiet}{(optional; logical) If FALSE, messages are printed to the console. Default: FALSE}
+\item{quiet}{(optional; logical) If FALSE, messages are printed. Default: FALSE.}
 
 \item{function_name}{(optional, character string) Name of the function performing the argument check. Default: NULL}
 }
@@ -17,7 +17,7 @@ validate_arg_max_vif(max_vif = NULL, quiet = FALSE, function_name = NULL)
 numeric or NULL
 }
 \description{
-Validate Argument \code{max_vif}
+Check and constrain argument \code{max_vif}
 }
 \examples{
 max_vif <- validate_arg_max_vif(

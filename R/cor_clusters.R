@@ -1,12 +1,12 @@
-#' Hierarchical Correlation Clustering
+#' Group predictors by hierarchical correlation clustering
 #'
 #' @description
 #'
-#' Hierarchical clustering of predictors from their correlation matrix. Computes the correlation matrix with [cor_df()] and [cor_matrix()], transforms it to a distance matrix using [stats::dist()], computes a clustering solution with [stats::hclust()], and applies [stats::cutree()] to separate groups based on the value of the argument \code{max_cor}.
+#' Hierarchical clustering of predictors from their correlation matrix. Computes the correlation matrix with [cor_df()] and [cor_matrix()], transforms it to a distance matrix using \code{stats::dist()}, computes a clustering solution with \code{stats::hclust()}, and applies \code{stats::cutree()} to separate groups based on the value of the argument \code{max_cor}.
 #'
 #' Returns a dataframe with predictor names and their clusters, and optionally, prints a dendrogram of the clustering solution.
 #'
-#' Accepts a parallelization setup via [future::plan()] and a progress bar via [progressr::handlers()] (see examples).
+#' Accepts a parallelization setup via \code{future::plan()} and a progress bar via \code{progressr::handlers()} (see examples).
 #'
 #' @inheritParams cor_matrix
 #' @param max_cor (optional; numeric or NULL) Correlation value used to separate clustering groups. Valid values are between 0.01 and 0.99. Default: 0.7

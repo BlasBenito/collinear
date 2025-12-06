@@ -1,4 +1,5 @@
 testthat::test_that("`validate_arg_preference_order()` works", {
+  testthat::skip_on_cran()
 
   data(
     vi_smol,
@@ -46,7 +47,6 @@ testthat::test_that("`validate_arg_preference_order()` works", {
     preference_order = x
   )
 
-
   #df and response, no predictors ----
   testthat::expect_message(
     x <- validate_arg_preference_order(
@@ -63,7 +63,6 @@ testthat::test_that("`validate_arg_preference_order()` works", {
   testthat::expect_true(
     unique(x$response) == "vi_numeric"
   )
-
 
   testthat::expect_true(
     attributes(x)$validated
@@ -103,7 +102,6 @@ testthat::test_that("`validate_arg_preference_order()` works", {
   ) |>
     suppressMessages()
 
-
   #preference_order vector ----
   x <- validate_arg_preference_order(
     df = vi_smol,
@@ -141,7 +139,6 @@ testthat::test_that("`validate_arg_preference_order()` works", {
     unique(x$metric) == "user_preference"
   )
 
-
   #incomplete preference order vector ----
   testthat::expect_message(
     x <- validate_arg_preference_order(
@@ -153,7 +150,6 @@ testthat::test_that("`validate_arg_preference_order()` works", {
     ),
     regexp = "4 'predictors' from lower to higher multicollinearity"
   )
-
 
   testthat::expect_true(
     attributes(x)$validated
@@ -183,7 +179,6 @@ testthat::test_that("`validate_arg_preference_order()` works", {
     all(unique(x$metric) %in% c("user_preference", "1 - R-squared"))
   )
 
-
   #preference_order dataframe ----
   preference_df <- preference_order(
     df = vi_smol,
@@ -195,7 +190,7 @@ testthat::test_that("`validate_arg_preference_order()` works", {
   #missing one predictor
   x <- validate_arg_preference_order(
     df = vi_smol,
-    response  = "vi_numeric",
+    response = "vi_numeric",
     predictors = vi_predictors_numeric[1:13],
     preference_order = preference_df,
     quiet = FALSE
@@ -209,7 +204,7 @@ testthat::test_that("`validate_arg_preference_order()` works", {
   testthat::expect_error(
     x <- validate_arg_preference_order(
       df = vi_smol,
-      response  = "vi_binomial",
+      response = "vi_binomial",
       predictors = vi_predictors_numeric[1:12],
       preference_order = preference_df,
       quiet = FALSE
@@ -222,7 +217,7 @@ testthat::test_that("`validate_arg_preference_order()` works", {
   testthat::expect_error(
     x <- validate_arg_preference_order(
       df = vi_smol,
-      response  = "vi_numeric",
+      response = "vi_numeric",
       predictors = vi_predictors_numeric[1:10],
       preference_order = preference_df[, c("response", "predictor")],
       quiet = FALSE
@@ -235,7 +230,7 @@ testthat::test_that("`validate_arg_preference_order()` works", {
   testthat::expect_error(
     x <- validate_arg_preference_order(
       df = vi_smol,
-      response  = "vi_numeric",
+      response = "vi_numeric",
       predictors = vi_predictors_numeric[13:20],
       preference_order = preference_df,
       quiet = FALSE
@@ -244,15 +239,13 @@ testthat::test_that("`validate_arg_preference_order()` works", {
   ) |>
     suppressMessages()
 
-
   x <- validate_arg_preference_order(
     df = vi_smol,
-    response  = "vi_numeric",
+    response = "vi_numeric",
     predictors = vi_predictors_numeric[1:10],
     preference_order = preference_df,
     quiet = FALSE
   )
-
 
   testthat::expect_true(
     attributes(x)$validated
@@ -281,7 +274,6 @@ testthat::test_that("`validate_arg_preference_order()` works", {
   testthat::expect_true(
     unique(x$f) == "f_numeric_glm"
   )
-
 
   #filtering responses ----
   preference_df <- preference_order(
@@ -357,7 +349,6 @@ testthat::test_that("`validate_arg_preference_order()` works", {
     regexp = "argument 'response' must be of length 1"
   )
 
-
   testthat::expect_true(
     attributes(x)$validated
   )
@@ -369,7 +360,6 @@ testthat::test_that("`validate_arg_preference_order()` works", {
   testthat::expect_true(
     nrow(x) == length(vi_predictors_numeric[1:10])
   )
-
 
   testthat::expect_true(
     unique(x$response) == "vi_numeric"
@@ -394,6 +384,4 @@ testthat::test_that("`validate_arg_preference_order()` works", {
     ),
     regexp = "argument 'response' does not match the column 'response' of the dataframe 'preference_order'"
   )
-
-
 })

@@ -1,5 +1,5 @@
 testthat::test_that("`collinear_select()` works", {
-
+  testthat::skip_on_cran()
   data(vi_smol, vi_predictors)
 
   #only max_cor, filtering not required
@@ -10,7 +10,7 @@ testthat::test_that("`collinear_select()` works", {
       max_vif = NULL,
       quiet = FALSE
     ),
-    regexp = "maximum pairwise correlation is <= 0.7, multicollinearity filtering is not required"
+    regexp = "multicollinearity filtering is not required"
   ) |>
     suppressMessages()
 
@@ -45,7 +45,7 @@ testthat::test_that("`collinear_select()` works", {
   )
 
   testthat::expect_true(
-   length(vi_predictors[1:10]) > length(x)
+    length(vi_predictors[1:10]) > length(x)
   )
 
   #custom preference order
@@ -68,7 +68,6 @@ testthat::test_that("`collinear_select()` works", {
     )
   ) |>
     suppressMessages()
-
 
   testthat::expect_true(
     is.character(x)
@@ -146,7 +145,6 @@ testthat::test_that("`collinear_select()` works", {
   ) |>
     suppressMessages()
 
-
   # edge cases ----
 
   #no df
@@ -177,32 +175,24 @@ testthat::test_that("`collinear_select()` works", {
   )
 
   #null max cor
-  testthat::expect_message(
-    x <- collinear_select(
-      df = vi_smol[, 1:5],
-      predictors = NULL,
-      max_cor = NULL,
-      quiet = FALSE
-    ),
-    regexp = "argument 'max_cor' is NULL, skipping correlation filtering"
-  ) |>
-    suppressMessages()
+  x <- collinear_select(
+    df = vi_smol[, 1:5],
+    predictors = NULL,
+    max_cor = NULL,
+    quiet = TRUE
+  )
 
   testthat::expect_true(
     all(x %in% colnames(vi_smol[, 1:5]))
   )
 
   #null max_vif
-  testthat::expect_message(
-    x <- collinear_select(
-      df = vi_smol[, 1:5],
-      predictors = NULL,
-      max_vif = NULL,
-      quiet = FALSE
-    ),
-    regexp = "argument 'max_vif' is NULL, skipping VIF filtering"
-  ) |>
-    suppressMessages()
+  x <- collinear_select(
+    df = vi_smol[, 1:5],
+    predictors = NULL,
+    max_vif = NULL,
+    quiet = TRUE
+  )
 
   testthat::expect_true(
     all(x %in% colnames(vi_smol[, 1:5]))
@@ -224,7 +214,6 @@ testthat::test_that("`collinear_select()` works", {
   testthat::expect_true(
     all(x %in% colnames(vi_smol[, 1:5]))
   )
-
 
   #no predictors
   x <- collinear_select(
@@ -258,5 +247,4 @@ testthat::test_that("`collinear_select()` works", {
   testthat::expect_true(
     length(vi_predictors_categorical[1]) == length(x)
   )
-
 })

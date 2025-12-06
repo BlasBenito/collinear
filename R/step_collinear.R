@@ -1,8 +1,8 @@
-#' @title Tidymodels Integration of [collinear()]
+#' @title Tidymodels recipe step for multicollinearity filtering
 #'
 #' @description
 #'
-#' Adds a step to a recipe created by [recipes::recipe()] to apply multicollinearity filtering via [collinear::collinear()].
+#' Adds a step to a recipe created by \code{recipes::recipe()]+} to apply multicollinearity filtering via [collinear()].
 #'
 #' This function requires the \code{recipes} package to be installed.
 #'

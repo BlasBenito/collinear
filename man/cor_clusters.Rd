@@ -2,7 +2,7 @@
 % Please edit documentation in R/cor_clusters.R
 \name{cor_clusters}
 \alias{cor_clusters}
-\title{Hierarchical Correlation Clustering}
+\title{Group predictors by hierarchical correlation clustering}
 \usage{
 cor_clusters(
   df = NULL,
@@ -16,15 +16,19 @@ cor_clusters(
 \arguments{
 \item{df}{(required; dataframe, tibble, or sf) A dataframe with predictors or the output of \code{\link[=cor_df]{cor_df()}}. Default: NULL.}
 
-\item{predictors}{(optional; character vector or NULL) Names of the predictors in \code{df}. If NULL, all columns in \code{df} except the ones in \code{responses} and those with constant values or near zero variance are used. Default: NULL}
+\item{predictors}{(optional; character vector or NULL) Names of the
+predictors in \code{df}. If NULL, all columns except \code{responses} and
+constant/near-zero-variance columns are used. Default: NULL.}
 
 \item{max_cor}{(optional; numeric or NULL) Correlation value used to separate clustering groups. Valid values are between 0.01 and 0.99. Default: 0.7}
 
 \item{method}{(optional, character string) Argument of \code{\link[stats:hclust]{stats::hclust()}} defining the agglomerative method. One of: "ward.D", "ward.D2", "single", "complete", "average" (= UPGMA), "mcquitty" (= WPGMA), "median" (= WPGMC) or "centroid" (= UPGMC). Unambiguous abbreviations are accepted as well. Default: "complete".}
 
-\item{quiet}{(optional; logical) If FALSE, messages are printed to the console. Default: FALSE}
+\item{quiet}{(optional; logical) If FALSE, messages are printed. Default: FALSE.}
 
-\item{...}{(optional) Used to pass internal arguments such as \code{function_name} for \link{validate_arg_function_name} in nested calls, or \code{m}, a correlation matrix generated via \code{\link[stats:cor]{stats::cor()}} or \code{\link[=cor_matrix]{cor_matrix()}}, and the cross-validation arguments of \code{\link[=preference_order]{preference_order()}}: \code{cv_iterations}, and \code{cv_training_fraction}.}
+\item{...}{(optional) Internal args (e.g. \code{function_name} for
+\code{\link{validate_arg_function_name}}, a precomputed correlation matrix
+\code{m}, or cross-validation args for \code{\link{preference_order}}).}
 }
 \value{
 list:
@@ -34,11 +38,11 @@ list:
 }
 }
 \description{
-Hierarchical clustering of predictors from their correlation matrix. Computes the correlation matrix with \code{\link[=cor_df]{cor_df()}} and \code{\link[=cor_matrix]{cor_matrix()}}, transforms it to a distance matrix using \code{\link[stats:dist]{stats::dist()}}, computes a clustering solution with \code{\link[stats:hclust]{stats::hclust()}}, and applies \code{\link[stats:cutree]{stats::cutree()}} to separate groups based on the value of the argument \code{max_cor}.
+Hierarchical clustering of predictors from their correlation matrix. Computes the correlation matrix with \code{\link[=cor_df]{cor_df()}} and \code{\link[=cor_matrix]{cor_matrix()}}, transforms it to a distance matrix using \code{stats::dist()}, computes a clustering solution with \code{stats::hclust()}, and applies \code{stats::cutree()} to separate groups based on the value of the argument \code{max_cor}.
 
 Returns a dataframe with predictor names and their clusters, and optionally, prints a dendrogram of the clustering solution.
 
-Accepts a parallelization setup via \code{\link[future:plan]{future::plan()}} and a progress bar via \code{\link[progressr:handlers]{progressr::handlers()}} (see examples).
+Accepts a parallelization setup via \code{future::plan()} and a progress bar via \code{progressr::handlers()} (see examples).
 }
 \examples{
 data(vi_smol)

@@ -5,7 +5,7 @@
 \alias{target_encoding_loo}
 \alias{target_encoding_mean}
 \alias{target_encoding_rank}
-\title{Target Encoding Methods}
+\title{Encode categories as response means}
 \usage{
 target_encoding_loo(
   df = NULL,
@@ -35,7 +35,10 @@ target_encoding_rank(
 )
 }
 \arguments{
-\item{df}{(required; dataframe, tibble, or sf) A dataframe with responses (optional) and predictors. Must have at least 10 rows for pairwise correlation analysis, and \code{10 * (length(predictors) - 1)} for VIF analysis.  Default: NULL.}
+\item{df}{(required; dataframe, tibble, or sf) A dataframe with responses
+(optional) and predictors. Must have at least 10 rows for pairwise
+correlation analysis, and \code{10 * (length(predictors) - 1)} for VIF.
+Default: NULL.}
 
 \item{response}{(optional, character string) Name of a numeric response variable in \code{df}. Default: NULL.}
 
@@ -45,13 +48,15 @@ target_encoding_rank(
 
 \item{smoothing}{(optional; integer) Groups smaller than this number have their means pulled towards the mean of the response across all cases. Ignored by \code{\link[=target_encoding_rank]{target_encoding_rank()}} and \code{\link[=target_encoding_loo]{target_encoding_loo()}}. Default: 0}
 
-\item{...}{(optional) Used to pass internal arguments such as \code{function_name} for \link{validate_arg_function_name} in nested calls, or \code{m}, a correlation matrix generated via \code{\link[stats:cor]{stats::cor()}} or \code{\link[=cor_matrix]{cor_matrix()}}, and the cross-validation arguments of \code{\link[=preference_order]{preference_order()}}: \code{cv_iterations}, and \code{cv_training_fraction}.}
+\item{...}{(optional) Internal args (e.g. \code{function_name} for
+\code{\link{validate_arg_function_name}}, a precomputed correlation matrix
+\code{m}, or cross-validation args for \code{\link{preference_order}}).}
 }
 \value{
 dataframe
 }
 \description{
-Target Encoding Methods
+Encode categories as response means
 }
 \examples{
 

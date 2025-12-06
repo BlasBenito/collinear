@@ -3,7 +3,7 @@
 \docType{data}
 \name{vi_predictors}
 \alias{vi_predictors}
-\title{All Predictor Names in Example Dataframe vi}
+\title{Vector of all predictor names in \code{vi} and \code{vi_smol}}
 \format{
 Character vector with predictor names.
 }
@@ -11,7 +11,7 @@ Character vector with predictor names.
 data(vi_predictors)
 }
 \description{
-All Predictor Names in Example Dataframe vi
+Vector of all predictor names in \code{vi} and \code{vi_smol}
 }
 \seealso{
 \link{vi}

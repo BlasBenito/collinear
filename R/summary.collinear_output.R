@@ -1,4 +1,4 @@
-#' Summary of \code{class.collinear_output}
+#' Summarize all results of `collinear()`
 #'
 #' @param object (required, list of class \code{collinear_output}) Object to summarize. Default: NULL
 #' @param ... Ignored, kept for consistency with generic.

@@ -1,5 +1,4 @@
-#' @title Case Weights for Binomial, Logical, or Categorical Responses
-#'
+#' @title Generate sample weights for imbalanced responses
 #' @description Computes case weights adding to one for response variables of these types:
 #'
 #' \itemize{

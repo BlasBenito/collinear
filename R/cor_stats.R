@@ -1,4 +1,4 @@
-#' Absolute Correlation Stats
+#' Compute summary statistics for absolute pairwise correlations
 #'
 #' Computes the the minimum, mean, maximum, and quantiles 0.05, 0.25, median (0.5), 0.75, and 0.95 on the absolute values of the column "correlation" in the output of [cor_df()].
 #'

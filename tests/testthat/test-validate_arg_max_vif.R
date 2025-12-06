@@ -1,12 +1,9 @@
 testthat::test_that("`validate_arg_max_vif()` works", {
+  testthat::skip_on_cran()
 
-
-  testthat::expect_message(
-    x <- validate_arg_max_vif(
-      max_vif = NULL,
-      quiet = FALSE
-    ),
-    regexp = "argument 'max_vif' is NULL, skipping VIF filtering"
+  x <- validate_arg_max_vif(
+    max_vif = NULL,
+    quiet = FALSE
   )
 
   testthat::expect_null(x)
@@ -33,7 +30,6 @@ testthat::test_that("`validate_arg_max_vif()` works", {
       quiet = FALSE
     )
   )
-
 
   testthat::expect_message(
     x <- validate_arg_max_vif(
@@ -62,7 +58,4 @@ testthat::test_that("`validate_arg_max_vif()` works", {
   testthat::expect_true(
     attributes(x)$validated
   )
-
-
-
 })

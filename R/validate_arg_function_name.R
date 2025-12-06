@@ -1,4 +1,4 @@
-#' Validate Argument \code{function_name}
+#' Build hierarchical function names for messages
 #'
 #' @description
 #' Concatenates parent and child function names for a better message, warning, and error tracing.

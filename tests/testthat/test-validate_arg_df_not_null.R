@@ -1,4 +1,5 @@
 testthat::test_that("`validate_arg_df_not_null()` works", {
+  testthat::skip_on_cran()
 
   data(vi_smol)
 
@@ -24,7 +25,4 @@ testthat::test_that("`validate_arg_df_not_null()` works", {
   x <- validate_arg_df_not_null(
     df = df
   )
-
-
-
 })

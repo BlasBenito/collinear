@@ -2,12 +2,15 @@
 % Please edit documentation in R/validate_arg_df_not_null.R
 \name{validate_arg_df_not_null}
 \alias{validate_arg_df_not_null}
-\title{Ensures \code{df} Is Not \code{NULL}}
+\title{Ensure that argument \code{df} is not \code{NULL}}
 \usage{
 validate_arg_df_not_null(df = NULL, function_name = NULL)
 }
 \arguments{
-\item{df}{(required; dataframe, tibble, or sf) A dataframe with responses (optional) and predictors. Must have at least 10 rows for pairwise correlation analysis, and \code{10 * (length(predictors) - 1)} for VIF analysis.  Default: NULL.}
+\item{df}{(required; dataframe, tibble, or sf) A dataframe with responses
+(optional) and predictors. Must have at least 10 rows for pairwise
+correlation analysis, and \code{10 * (length(predictors) - 1)} for VIF.
+Default: NULL.}
 
 \item{function_name}{(optional, character string) Name of the function performing the argument check. Default: NULL}
 }

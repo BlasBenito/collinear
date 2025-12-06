@@ -1,4 +1,4 @@
-#' Target Encoding Lab: Transform Categorical Variables to Numeric
+#' Convert categorical predictors to numeric via target encoding
 #'
 #' @description
 #'
@@ -10,7 +10,7 @@
 #'   \item "loo" (implemented in [target_encoding_loo()]): Known as the "leave-one-out method" in the literature, it encodes each categorical value with the mean of the response variable across all other group cases. This method controls overfitting better than "mean". Variables encoded with this method are identified with the suffix "__encoded_loo".
 #' }
 #'
-#' Accepts a parallelization setup via [future::plan()] and a progress bar via [progressr::handlers()] (see examples).
+#' Accepts a parallelization setup via \code{future::plan()} and a progress bar via \code{progressr::handlers()} (see examples).
 #'
 #' @inheritParams collinear
 #'

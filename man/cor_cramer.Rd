@@ -2,7 +2,7 @@
 % Please edit documentation in R/cor_cramer.R
 \name{cor_cramer}
 \alias{cor_cramer}
-\title{Bias Corrected Cramer's V}
+\title{Quantify association between categorical variables}
 \usage{
 cor_cramer(x = NULL, y = NULL, check_input = TRUE, ...)
 }
@@ -13,7 +13,9 @@ cor_cramer(x = NULL, y = NULL, check_input = TRUE, ...)
 
 \item{check_input}{(required; logical) If FALSE, disables data checking for a slightly faster execution. Default: TRUE}
 
-\item{...}{(optional) Used to pass internal arguments such as \code{function_name} for \link{validate_arg_function_name} in nested calls, or \code{m}, a correlation matrix generated via \code{\link[stats:cor]{stats::cor()}} or \code{\link[=cor_matrix]{cor_matrix()}}, and the cross-validation arguments of \code{\link[=preference_order]{preference_order()}}: \code{cv_iterations}, and \code{cv_training_fraction}.}
+\item{...}{(optional) Internal args (e.g. \code{function_name} for
+\code{\link{validate_arg_function_name}}, a precomputed correlation matrix
+\code{m}, or cross-validation args for \code{\link{preference_order}}).}
 }
 \value{
 numeric: Cramer's V
@@ -23,7 +25,7 @@ Cramer's V extends the chi-squared test to quantify how strongly the categories 
 
 This function implements a bias-corrected version of Cramer's V, which adjusts for sample size and is more accurate for small samples. However, this bias correction means that even for binary variables, Cramer's V will no equal the Pearson correlation (the standard, uncorrected Cramer's V does match Pearson for binary data).
 
-As the number of categories increases, Cramer's V and Pearson correlationmeasure increasingly different aspects of association and should not be directly compared.
+As the number of categories increases, Cramer's V and Pearson correlation measure increasingly different aspects of association and should not be directly compared.
 
 If you intend to combine these measures in a multicollinearity analysis, interpret them with care. It is often preferable to convert non-numeric variables to numeric form (for example, via target encoding) before assessing multicollinearity.
 }

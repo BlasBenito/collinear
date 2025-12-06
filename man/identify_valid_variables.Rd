@@ -2,7 +2,7 @@
 % Please edit documentation in R/identify_valid_variables.R
 \name{identify_valid_variables}
 \alias{identify_valid_variables}
-\title{Identify Numeric, Categorical, and Logical Variables}
+\title{Find valid numeric, categorical, and logical variables in a dataframe}
 \usage{
 identify_valid_variables(
   df = NULL,
@@ -14,17 +14,23 @@ identify_valid_variables(
 )
 }
 \arguments{
-\item{df}{(required; dataframe, tibble, or sf) A dataframe with responses (optional) and predictors. Must have at least 10 rows for pairwise correlation analysis, and \code{10 * (length(predictors) - 1)} for VIF analysis.  Default: NULL.}
+\item{df}{(required; dataframe, tibble, or sf) A dataframe with responses
+(optional) and predictors. Must have at least 10 rows for pairwise
+correlation analysis, and \code{10 * (length(predictors) - 1)} for VIF.
+Default: NULL.}
 
-\item{responses}{(optional; character, character vector, or NULL) Name of one or several response variables in \code{df}. Default: NULL.}
+\item{responses}{(optional; character, character vector, or NULL) Name of
+one or several response variables in \code{df}. Default: NULL.}
 
 \item{predictors}{(required, character vector) Names of the predictors to identify. Default: NULL}
 
 \item{decimals}{(required, integer) Number of decimal places for the zero variance test. Smaller numbers will increase the number of variables detected as near-zero variance. Recommended values will depend on the range of the numeric variables in 'df'. Default: 4}
 
-\item{quiet}{(optional; logical) If FALSE, messages are printed to the console. Default: FALSE}
+\item{quiet}{(optional; logical) If FALSE, messages are printed. Default: FALSE.}
 
-\item{...}{(optional) Used to pass internal arguments such as \code{function_name} for \link{validate_arg_function_name} in nested calls, or \code{m}, a correlation matrix generated via \code{\link[stats:cor]{stats::cor()}} or \code{\link[=cor_matrix]{cor_matrix()}}, and the cross-validation arguments of \code{\link[=preference_order]{preference_order()}}: \code{cv_iterations}, and \code{cv_training_fraction}.}
+\item{...}{(optional) Internal args (e.g. \code{function_name} for
+\code{\link{validate_arg_function_name}}, a precomputed correlation matrix
+\code{m}, or cross-validation args for \code{\link{preference_order}}).}
 }
 \value{
 list

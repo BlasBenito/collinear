@@ -2,7 +2,7 @@
 % Please edit documentation in R/validate_arg_df.R
 \name{validate_arg_df}
 \alias{validate_arg_df}
-\title{Validate Structure and Values of Argument \code{df}}
+\title{Check and prepare argument \code{df}}
 \usage{
 validate_arg_df(
   df = NULL,
@@ -13,13 +13,19 @@ validate_arg_df(
 )
 }
 \arguments{
-\item{df}{(required; dataframe, tibble, or sf) A dataframe with responses (optional) and predictors. Must have at least 10 rows for pairwise correlation analysis, and \code{10 * (length(predictors) - 1)} for VIF analysis.  Default: NULL.}
+\item{df}{(required; dataframe, tibble, or sf) A dataframe with responses
+(optional) and predictors. Must have at least 10 rows for pairwise
+correlation analysis, and \code{10 * (length(predictors) - 1)} for VIF.
+Default: NULL.}
 
-\item{responses}{(optional; character, character vector, or NULL) Name of one or several response variables in \code{df}. Default: NULL.}
+\item{responses}{(optional; character, character vector, or NULL) Name of
+one or several response variables in \code{df}. Default: NULL.}
 
-\item{predictors}{(optional; character vector or NULL) Names of the predictors in \code{df}. If NULL, all columns in \code{df} except the ones in \code{responses} and those with constant values or near zero variance are used. Default: NULL}
+\item{predictors}{(optional; character vector or NULL) Names of the
+predictors in \code{df}. If NULL, all columns except \code{responses} and
+constant/near-zero-variance columns are used. Default: NULL.}
 
-\item{quiet}{(optional; logical) If FALSE, messages are printed to the console. Default: FALSE}
+\item{quiet}{(optional; logical) If FALSE, messages are printed. Default: FALSE.}
 
 \item{function_name}{(optional, character string) Name of the function performing the argument check. Default: NULL}
 }

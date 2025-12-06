@@ -1,4 +1,5 @@
 testthat::test_that("`target_encoding_rank()` works", {
+  testthat::skip_on_cran()
 
   data(vi_smol)
 
@@ -24,5 +25,4 @@ testthat::test_that("`target_encoding_rank()` works", {
   testthat::expect_true(
     "soil_type__encoded" %in% colnames(df)
   )
-
 })

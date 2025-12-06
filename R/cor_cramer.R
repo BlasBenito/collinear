@@ -1,4 +1,4 @@
-#' Bias Corrected Cramer's V
+#' Quantify association between categorical variables
 #'
 #' @description
 #'
@@ -6,7 +6,7 @@
 #'
 #' This function implements a bias-corrected version of Cramer's V, which adjusts for sample size and is more accurate for small samples. However, this bias correction means that even for binary variables, Cramer's V will no equal the Pearson correlation (the standard, uncorrected Cramer's V does match Pearson for binary data).
 #'
-#' As the number of categories increases, Cramer's V and Pearson correlationmeasure increasingly different aspects of association and should not be directly compared.
+#' As the number of categories increases, Cramer's V and Pearson correlation measure increasingly different aspects of association and should not be directly compared.
 #'
 #' If you intend to combine these measures in a multicollinearity analysis, interpret them with care. It is often preferable to convert non-numeric variables to numeric form (for example, via target encoding) before assessing multicollinearity.
 #'

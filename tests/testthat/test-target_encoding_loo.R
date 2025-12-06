@@ -1,4 +1,5 @@
 testthat::test_that("`target_encoding_loo()` works", {
+  testthat::skip_on_cran()
 
   data(vi_smol)
 
@@ -14,7 +15,6 @@ testthat::test_that("`target_encoding_loo()` works", {
     class(df[["encoded_column"]]) == "numeric"
   )
 
-
   df <- target_encoding_loo(
     df = vi_smol,
     response = "vi_numeric",
@@ -25,5 +25,4 @@ testthat::test_that("`target_encoding_loo()` works", {
   testthat::expect_true(
     "soil_type__encoded" %in% colnames(df)
   )
-
 })

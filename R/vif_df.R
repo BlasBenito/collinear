@@ -1,4 +1,4 @@
-#' Variance Inflation Factors Dataframe
+#' Compute variance inflation factors dataframe
 #'
 #' @description
 #'

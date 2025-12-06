@@ -1,5 +1,5 @@
 testthat::test_that("`cor_df()` works", {
-
+  testthat::skip_on_cran()
   data(vi_smol, vi_predictors, vi_predictors_categorical)
 
   #mixed types
@@ -11,7 +11,6 @@ testthat::test_that("`cor_df()` works", {
     ),
     regexp = "may bias the multicollinearity analysis"
   )
-
 
   testthat::expect_true(
     "collinear_cor_df" %in% class(x)
@@ -33,7 +32,8 @@ testthat::test_that("`cor_df()` works", {
           m = 2
         )
       )
-    ) == nrow(x)
+    ) ==
+      nrow(x)
   )
 
   testthat::expect_true(
@@ -47,8 +47,6 @@ testthat::test_that("`cor_df()` works", {
   testthat::expect_true(
     all(x$correlation < 1)
   )
-
-
 
   # edge cases ----
 
@@ -71,14 +69,12 @@ testthat::test_that("`cor_df()` works", {
     regexp = "argument 'df' has fewer than 3 rows"
   )
 
-
   #no predictors
   x <- cor_df(
     df = vi_smol[, 1:5],
     predictors = NULL,
     quiet = TRUE
   )
-
 
   testthat::expect_true(
     "collinear_cor_df" %in% class(x)
@@ -91,7 +87,8 @@ testthat::test_that("`cor_df()` works", {
           x$x,
           x$y
         )
-      ) %in% colnames(vi)[1:5]
+      ) %in%
+        colnames(vi)[1:5]
     )
   )
 
@@ -106,11 +103,9 @@ testthat::test_that("`cor_df()` works", {
   ) |>
     suppressMessages()
 
-
   testthat::expect_true(
     "collinear_cor_df" %in% class(x)
   )
-
 
   testthat::expect_true(
     is.data.frame(x)
@@ -129,7 +124,4 @@ testthat::test_that("`cor_df()` works", {
   testthat::expect_true(x$y == vi_predictors[1])
 
   testthat::expect_true(x$correlation == 1)
-
-
-
 })

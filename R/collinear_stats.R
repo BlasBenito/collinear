@@ -1,4 +1,4 @@
-#' Multicollinearity Stats
+#' Compute summary statistics for correlation and VIF
 #'
 #' Computes the the minimum, mean, maximum, and quantiles 0.05, 0.25, median (0.5), 0.75, and 0.95 of the correlations and variance inflation factors in a given dataframe. Wraps the functions [cor_stats()] and [vif_stats()]
 #'

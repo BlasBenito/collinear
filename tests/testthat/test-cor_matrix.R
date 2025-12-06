@@ -1,5 +1,5 @@
 testthat::test_that("`cor_matrix()` works", {
-
+  testthat::skip_on_cran()
   data(vi_smol, vi_predictors)
 
   #nput from cor_df()
@@ -12,7 +12,6 @@ testthat::test_that("`cor_matrix()` works", {
     ),
     regexp = "may bias the multicollinearity analysis"
   )
-
 
   m <- cor_matrix(df = df)
 
@@ -46,11 +45,10 @@ testthat::test_that("`cor_matrix()` works", {
   ) |>
     suppressMessages()
 
-
   m <- cor_matrix(
     df = df,
     quiet = TRUE
-    )
+  )
 
   testthat::expect_true(
     "collinear_cor_matrix" %in% class(m)
@@ -71,7 +69,6 @@ testthat::test_that("`cor_matrix()` works", {
   testthat::expect_true(
     all(diag(m) == 1)
   )
-
 
   #few rows
   testthat::expect_error(
@@ -121,10 +118,11 @@ testthat::test_that("`cor_matrix()` works", {
   )
 
   testthat::expect_equal(
-    object = m1, expected = m2
+    object = m1,
+    expected = m2
   )
 
-  m3 <-  cor_matrix(
+  m3 <- cor_matrix(
     df = vi_smol,
     predictors = vi_predictors_numeric[11:20],
     quiet = TRUE,
@@ -138,6 +136,4 @@ testthat::test_that("`cor_matrix()` works", {
   testthat::expect_false(
     all(colnames(m1) %in% colnames(m3))
   )
-
-
 })

@@ -2,7 +2,7 @@
 % Please edit documentation in R/print.collinear_output.R
 \name{print.collinear_output}
 \alias{print.collinear_output}
-\title{Print \code{class.collinear_output}}
+\title{Print all collinear selection results of \code{collinear()}}
 \usage{
 \method{print}{collinear_output}(x = NULL, n = 5, ...)
 }
@@ -14,7 +14,7 @@
 \item{...}{Ignored, kept for consistency with generic.}
 }
 \description{
-Print \code{class.collinear_output}
+Print all collinear selection results of \code{collinear()}
 }
 \seealso{
 Other S3_methods: 

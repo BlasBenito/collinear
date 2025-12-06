@@ -1,4 +1,5 @@
 testthat::test_that("`validate_arg_df()` works", {
+  testthat::skip_on_cran()
 
   data(vi_smol, vi_predictors_numeric)
 
@@ -70,7 +71,6 @@ testthat::test_that("`validate_arg_df()` works", {
     ),
     regexp = "argument 'df' has one valid column, multicollinearity analysis cannot be performed"
   )
-
 
   testthat::expect_error(
     x <- validate_arg_df(
@@ -206,6 +206,4 @@ testthat::test_that("`validate_arg_df()` works", {
     ),
     regexp = "converted the following character columns to factor"
   )
-
-
 })

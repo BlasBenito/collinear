@@ -2,7 +2,7 @@
 % Please edit documentation in R/f_auto_rules.R
 \name{f_auto_rules}
 \alias{f_auto_rules}
-\title{Rules Used by \code{f_auto()} to Select an \code{f} Function}
+\title{Decision rules for \code{f_auto()}}
 \usage{
 f_auto_rules()
 }

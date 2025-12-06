@@ -1,4 +1,5 @@
 testthat::test_that("`validate_arg_function_name()` works", {
+  testthat::skip_on_cran()
 
   x <- validate_arg_function_name(
     default_name = NULL,
@@ -28,5 +29,4 @@ testthat::test_that("`validate_arg_function_name()` works", {
   testthat::expect_true(
     grepl(pattern = "adios", x = x)
   )
-
 })

@@ -3,7 +3,7 @@
 \docType{data}
 \name{gam_cor_to_vif}
 \alias{gam_cor_to_vif}
-\title{GAM Relating Maximum Correlation to VIF Threshold}
+\title{GAM describing the relationship between correlation and VIF thresholds}
 \format{
 A \code{\link[mgcv]{gam}} object.
 }
@@ -11,7 +11,7 @@ A \code{\link[mgcv]{gam}} object.
 Generated internally from \link{experiment_cor_vs_vif}.
 }
 \usage{
-gam_cor_to_vif
+data(gam_cor_to_vif)
 }
 \description{
 A fitted generalized additive model describing \code{max_vif} as a function of \code{max_cor} in \link{experiment_cor_vs_vif}.
@@ -20,14 +20,6 @@ A fitted generalized additive model describing \code{max_vif} as a function of \
 The model parameters (basis dimension \code{k} and weight exponent) were selected via optimization, filtering for models in the top 90\\% of R-squared and bottom 10\\% of effective degrees of freedom to balance fit quality and parsimony.
 
 The final model uses squared Jaccard similarity as weights to emphasize cases with high agreement between \code{\link[=cor_select]{cor_select()}} and \code{\link[=vif_select]{vif_select()}}.
-
-\preformatted{
-gam_cor_to_vif <- mgcv::gam(
-  formula = max_vif ~ s(max_cor, k = 6),
-  weights = experiment_cor_vs_vif$out_selection_jaccard^2,
-  data = experiment_cor_vs_vif
-)
-}
 
 Model performance:
 \itemize{

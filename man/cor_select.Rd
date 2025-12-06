@@ -2,7 +2,7 @@
 % Please edit documentation in R/cor_select.R
 \name{cor_select}
 \alias{cor_select}
-\title{Automated Multicollinearity Filtering with Pairwise Correlations}
+\title{Multicollinearity filtering by pairwise correlation threshold}
 \usage{
 cor_select(
   df = NULL,
@@ -15,19 +15,27 @@ cor_select(
 )
 }
 \arguments{
-\item{df}{(required; dataframe, tibble, or sf) A dataframe with responses (optional) and predictors. Must have at least 10 rows for pairwise correlation analysis, and \code{10 * (length(predictors) - 1)} for VIF analysis.  Default: NULL.}
+\item{df}{(required; dataframe, tibble, or sf) A dataframe with responses
+(optional) and predictors. Must have at least 10 rows for pairwise
+correlation analysis, and \code{10 * (length(predictors) - 1)} for VIF.
+Default: NULL.}
 
 \item{response}{(optional; character or NULL) Name of one response variable in \code{df}. Used to exclude columns when \code{predictors} is NULL, and to filter \code{preference_order} when it is a dataframe and contains several responses. Default: NULL.}
 
-\item{predictors}{(optional; character vector or NULL) Names of the predictors in \code{df}. If NULL, all columns in \code{df} except the ones in \code{responses} and those with constant values or near zero variance are used. Default: NULL}
+\item{predictors}{(optional; character vector or NULL) Names of the
+predictors in \code{df}. If NULL, all columns except \code{responses} and
+constant/near-zero-variance columns are used. Default: NULL.}
 
-\item{preference_order}{(optional; character vector, dataframe resulting from \code{\link[=preference_order]{preference_order()}}, or NULL). Prioritizes predictors to preserve the most relevant ones during multicollinearity filtering. Overrides \code{f} when not NULL.}
+\item{preference_order}{(optional; character vector, dataframe from
+\code{\link{preference_order}}, or NULL) Prioritizes predictors to preserve.}
 
 \item{max_cor}{(optional; numeric or NULL) Maximum correlation allowed between pairs of \code{predictors}. Valid values are between 0.01 and 0.99, and recommended values are between 0.5 (strict) and 0.9 (permissive). Default: 0.7}
 
-\item{quiet}{(optional; logical) If FALSE, messages are printed to the console. Default: FALSE}
+\item{quiet}{(optional; logical) If FALSE, messages are printed. Default: FALSE.}
 
-\item{...}{(optional) Used to pass internal arguments such as \code{function_name} for \link{validate_arg_function_name} in nested calls, or \code{m}, a correlation matrix generated via \code{\link[stats:cor]{stats::cor()}} or \code{\link[=cor_matrix]{cor_matrix()}}, and the cross-validation arguments of \code{\link[=preference_order]{preference_order()}}: \code{cv_iterations}, and \code{cv_training_fraction}.}
+\item{...}{(optional) Internal args (e.g. \code{function_name} for
+\code{\link{validate_arg_function_name}}, a precomputed correlation matrix
+\code{m}, or cross-validation args for \code{\link{preference_order}}).}
 }
 \value{
 character vector of selected predictors
@@ -44,23 +52,10 @@ Please check the section \strong{Pairwise Correlation Filtering} at the end of t
 \section{Pairwise Correlation Filtering}{
 
 
-This algorithm is implemented in \code{\link[=cor_select]{cor_select()}}, and selects numeric and categorical predictors with Pearson correlation or Cramer's V association lower than \code{max_cor} while preserving those with a higher ranking in \code{preference_order}, if provided.
-
-It works as follows:
-
-\enumerate{
-
-\item The correlation matrix of all predictors is computed, its diagonals are set to zero, and the rows and columns are ordered according to \code{preference_order}, or from lower to higher sum of correlations with the other predictors ((\code{\link[=colSums]{colSums()}} applied to the output of \code{\link[=cor_matrix]{cor_matrix()}})) otherwise.
-
-\item The predictor with the higher rank is added to the selection.
-
-\item The correlation/s between the predictor/s in the selection and the next predictor in the ranking is/are extracted from the global correlation matrix. If the maximum correlation is below the value of \code{max_cor}, the new predictor is added to the selection. Otherwise it is removed.
-
-\item Step 3 is repeated until all predictors are processed.
-
-}
-
-This filtering method ensures that all predictors in the selection are correlated below \code{max_cor} and that the selection respects the prioritization defined in \code{preference_order}.
+\code{\link{cor_select}} computes the global correlation matrix, orders
+predictors by \code{preference_order} or by lower-to-higher summed
+correlations, and sequentially selects predictors with pairwise correlations
+below \code{max_cor}.
 }
 
 \examples{

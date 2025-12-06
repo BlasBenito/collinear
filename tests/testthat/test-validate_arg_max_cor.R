@@ -1,12 +1,9 @@
 testthat::test_that("`validate_arg_max_cor()` works", {
+  testthat::skip_on_cran()
 
-
-  testthat::expect_message(
-    x <- validate_arg_max_cor(
-      max_cor = NULL,
-      quiet = FALSE
-    ),
-    regexp = "argument 'max_cor' is NULL, skipping correlation filtering"
+  x <- validate_arg_max_cor(
+    max_cor = NULL,
+    quiet = FALSE
   )
 
   testthat::expect_null(x)
@@ -33,7 +30,6 @@ testthat::test_that("`validate_arg_max_cor()` works", {
       quiet = FALSE
     )
   )
-
 
   testthat::expect_message(
     x <- validate_arg_max_cor(
@@ -62,6 +58,4 @@ testthat::test_that("`validate_arg_max_cor()` works", {
   testthat::expect_true(
     attributes(x)$validated
   )
-
-
 })

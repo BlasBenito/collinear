@@ -1,4 +1,4 @@
-#' @title Automated Multicollinearity Filtering with Pairwise Correlations
+#' @title Multicollinearity filtering by pairwise correlation threshold
 #'
 #' @description
 #'

@@ -1,4 +1,5 @@
 testthat::test_that("`identify_numeric_variables()` works", {
+  testthat::skip_on_cran()
 
   data(vi_smol, vi_predictors_numeric, vi_predictors_categorical, vi_predictors)
 
@@ -107,7 +108,6 @@ testthat::test_that("`identify_numeric_variables()` works", {
     regexp = "there are no variables to identify"
   )
 
-
   x <- identify_numeric_variables(
     df = vi_smol,
     predictors = vi_predictors_categorical,
@@ -121,5 +121,4 @@ testthat::test_that("`identify_numeric_variables()` works", {
   testthat::expect_null(
     x$invalid
   )
-
 })

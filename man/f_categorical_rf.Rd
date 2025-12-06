@@ -2,7 +2,7 @@
 % Please edit documentation in R/f_categorical_rf.R
 \name{f_categorical_rf}
 \alias{f_categorical_rf}
-\title{Cramer's V of Categorical Random Forest Predictions vs. Observations}
+\title{Cramer's V of Categorical Random Forest predictions vs. observations}
 \usage{
 f_categorical_rf(df, ...)
 }
@@ -19,7 +19,7 @@ f_categorical_rf(df, ...)
 numeric or numeric vector: Cramer's V
 }
 \description{
-Fits a univariate random forest model \code{y ~ x} with the character or factor response \code{y} and the numeric, character or factor predictor \code{x} using \code{\link[ranger:ranger]{ranger::ranger()}} and returns the Cramer's V (see \code{\link[=cor_cramer]{cor_cramer()}}) between the observed responses and the model predictions. Cases are weighted with \code{\link[=case_weights]{case_weights()}} to prevent issues arising from class imbalance.
+Fits a univariate random forest model \code{y ~ x} with the character or factor response \code{y} and the numeric, character or factor predictor \code{x} using \code{ranger::ranger()} and returns the Cramer's V (see \code{\link[=cor_cramer]{cor_cramer()}}) between the observed responses and the model predictions. Cases are weighted with \code{\link[=case_weights]{case_weights()}} to prevent issues arising from class imbalance.
 
 Cases are weighted with \code{\link[=case_weights]{case_weights()}} to prevent issues arising from class imbalance.
 

@@ -1,5 +1,5 @@
 testthat::test_that("`cor_cramer()` works", {
-
+  testthat::skip_on_cran()
   data(vi_smol)
 
   testthat::expect_error(
@@ -21,7 +21,7 @@ testthat::test_that("`cor_cramer()` works", {
   testthat::expect_error(
     x <- cor_cramer(
       x = vi_smol$koppen_zone,
-      y =  vi_smol$soil_type[1:10],
+      y = vi_smol$soil_type[1:10],
     ),
     regexp = "arguments 'x' and 'y' must be of the same length"
   )
@@ -99,5 +99,4 @@ testthat::test_that("`cor_cramer()` works", {
   testthat::expect_true(
     x == 1
   )
-
 })

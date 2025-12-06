@@ -2,7 +2,7 @@
 % Please edit documentation in R/validate_arg_f.R
 \name{validate_arg_f}
 \alias{validate_arg_f}
-\title{Validate Argument \code{f}}
+\title{Check and validate argument \code{f}}
 \usage{
 validate_arg_f(f = NULL, f_name = NULL, function_name = NULL)
 }
@@ -17,7 +17,7 @@ validate_arg_f(f = NULL, f_name = NULL, function_name = NULL)
 function
 }
 \description{
-Validate Argument \code{f}
+Check and validate argument \code{f}
 }
 \examples{
 x <- validate_arg_f(f = f_auto)

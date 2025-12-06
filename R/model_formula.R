@@ -1,4 +1,4 @@
-#' Generate Model Formulas
+#' Build model formulas from response and predictors
 #'
 #' @description
 #' Generates model formulas from a dataframe, a response name, and a vector of predictors that can be the output of a multicollinearity management function such as [collinear_select()] and the likes. Intended to help fit exploratory models from the result of a multicollinearity analysis.
@@ -14,7 +14,7 @@
 #' @inheritParams collinear
 #' @inheritParams f_auto
 #'
-#' @param term_f (optional; string). Name of function to apply to each term in the formula, such as "s" for [mgcv::s()] or any other smoothing function, "poly" for [stats::poly()]. Default: NULL
+#' @param term_f (optional; string). Name of function to apply to each term in the formula, such as "s" for \code{mgcv::s()} or any other smoothing function, "poly" for \code{stats::poly()}. Default: NULL
 #'
 #' @param term_args (optional; string). Arguments of the function applied to each term. For example, for "poly" it can be "degree = 2, raw = TRUE". Default: NULL
 #'

@@ -1,4 +1,5 @@
 testthat::test_that("`preference_order()` works", {
+  testthat::skip_on_cran()
 
   expected_colnames <- c(
     "response",
@@ -50,37 +51,35 @@ testthat::test_that("`preference_order()` works", {
   ) |>
     suppressMessages()
 
+  testthat::expect_true(
+    unique(x$metric) == "1 - R-squared"
+  )
 
-    testthat::expect_true(
-      unique(x$metric) == "1 - R-squared"
-    )
+  testthat::expect_true(
+    unique(x$response) == "none"
+  )
 
-    testthat::expect_true(
-      unique(x$response) == "none"
-    )
+  #no predictors
+  x <- preference_order(
+    df = vi_smol,
+    responses = "vi_numeric",
+    predictors = NULL,
+    f = f_auto,
+    quiet = TRUE
+  )
 
+  #all df column names but vi_numeric
+  testthat::expect_true(
+    sum(colnames(vi_smol) %in% x$predictor) == ncol(vi_smol) - 1
+  )
 
-    #no predictors
-    x <- preference_order(
-      df = vi_smol,
-      responses = "vi_numeric",
-      predictors = NULL,
-      f = f_auto,
-      quiet = TRUE
-    )
+  testthat::expect_true(
+    !"vi_numeric" %in% x$predictor
+  )
 
-    #all df column names but vi_numeric
-    testthat::expect_true(
-      sum(colnames(vi_smol) %in% x$predictor) == ncol(vi_smol) - 1
-    )
-
-    testthat::expect_true(
-      !"vi_numeric" %in% x$predictor
-    )
-
-    testthat::expect_true(
-      "vi_numeric" %in% x$response
-    )
+  testthat::expect_true(
+    "vi_numeric" %in% x$response
+  )
 
   testthat::expect_message(
     x <- preference_order(
@@ -163,8 +162,6 @@ testthat::test_that("`preference_order()` works", {
     all(colnames(x) %in% expected_colnames)
   )
 
-
-
   #numeric response
 
   ##all types
@@ -191,7 +188,6 @@ testthat::test_that("`preference_order()` works", {
   testthat::expect_true(
     all(colnames(x) %in% expected_colnames)
   )
-
 
   testthat::expect_message(
     x <- preference_order(
@@ -220,7 +216,6 @@ testthat::test_that("`preference_order()` works", {
   testthat::expect_true(
     all(colnames(x) %in% expected_colnames)
   )
-
 
   #count response
 
@@ -333,9 +328,8 @@ testthat::test_that("`preference_order()` works", {
       quiet = FALSE
     ),
     regexp = "f_categorical_rf"
-  )|>
+  ) |>
     suppressMessages()
-
 
   #categorical response and categorical and numeric predictors
   x <- preference_order(
@@ -375,12 +369,12 @@ testthat::test_that("`preference_order()` works", {
     suppressMessages()
 
   #custom function
-  f_rsquared <- function(df, ...){
-      stats::cor(
-        x = df$x,
-        y = df$y,
-        use = "complete.obs"
-      )^2
+  f_rsquared <- function(df, ...) {
+    stats::cor(
+      x = df$x,
+      y = df$y,
+      use = "complete.obs"
+    )^2
   }
 
   x <- preference_order(
@@ -393,6 +387,4 @@ testthat::test_that("`preference_order()` works", {
   testthat::expect_true(
     all(x$metric == "custom")
   )
-
-
 })

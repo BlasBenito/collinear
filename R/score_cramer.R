@@ -1,4 +1,4 @@
-#' Cramer's V of Observations vs Predictions
+#' Compute Cramer's V between categorical observations and predictions
 #'
 #' @description
 #' Internal function to compute the Cramer's V of categorical observations versus categorical model predictions. Please read the help file of [cor_cramer()] for further details.

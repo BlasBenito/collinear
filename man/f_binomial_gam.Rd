@@ -2,7 +2,7 @@
 % Please edit documentation in R/f_binomial_gam.R
 \name{f_binomial_gam}
 \alias{f_binomial_gam}
-\title{Area Under the Curve of Binomial GAM Predictions vs. Observations}
+\title{Area under the curve of binomial GAM predictions vs. observations}
 \usage{
 f_binomial_gam(df, ...)
 }
@@ -19,7 +19,7 @@ f_binomial_gam(df, ...)
 numeric or numeric vector: AUC
 }
 \description{
-Fits a Quasibinomial GAM model \code{y ~ s(x)} (\code{y ~ x} if \code{x} is non-numeric) with the binomial response \code{y} (values 0 and 1) and the numeric, character or factor predictor \code{x} using \code{\link[mgcv:gam]{mgcv::gam()}} and returns the area under the ROC curve between the observed responses and the model predictions (see \code{\link[=score_auc]{score_auc()}}).
+Fits a Quasibinomial GAM model \code{y ~ s(x)} (\code{y ~ x} if \code{x} is non-numeric) with the binomial response \code{y} (values 0 and 1) and the numeric, character or factor predictor \code{x} using \code{mgcv::gam()} and returns the area under the ROC curve between the observed responses and the model predictions (see \code{\link[=score_auc]{score_auc()}}).
 
 Cases are weighted with \code{\link[=case_weights]{case_weights()}} to prevent issues arising from class imbalance.
 

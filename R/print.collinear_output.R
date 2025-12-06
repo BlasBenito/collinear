@@ -1,4 +1,4 @@
-#' Print \code{class.collinear_output}
+#' Print all collinear selection results of `collinear()`
 #'
 #' @param x (required, list of class \code{class.collinear_output}) Object to print. Default: NULL
 #' @param n (optional, integer) Maximum printed vector length. Default: 5.

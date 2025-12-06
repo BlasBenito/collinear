@@ -1,4 +1,4 @@
-#' @title Automated Multicollinearity Filtering
+#' @title Dual multicollinearity filtering algorithm
 #'
 #' @description
 #' Automatizes multicollinearity filtering via pairwise correlation and/or variance inflation factors in dataframes with numeric and categorical predictors.
@@ -33,91 +33,15 @@
 #' ## OPTIONAL: progress bar
 #' # progressr::handlers(global = TRUE)
 #'
-#' #predictors
-#' predictors = c(
-#'   "koppen_zone", #character
-#'   "soil_type", #factor
-#'   "topo_elevation", #numeric
-#'   "soil_temperature_mean" #numeric
-#' )
-#'
-#' #predictors ordered from lower to higher multicollinearity
 #' x <- collinear_select(
 #'   df = vi_smol,
-#'   predictors = predictors,
+#'   predictors = c(
+#'   "koppen_zone",           #character
+#'   "soil_type",             #factor
+#'   "topo_elevation",        #numeric
+#'   "soil_temperature_mean"  #numeric
+#'     ),
 #'   max_cor = 0.7,
-#'   max_vif = 5
-#' )
-#'
-#' x
-#'
-#'
-#' #with incomplete preference order vector
-#' x <- collinear_select(
-#'   df = vi_smol,
-#'   predictors = predictors,
-#'   preference_order = c(
-#'     "koppen_zone",
-#'     "soil_type"
-#'   ),
-#'   max_cor = 0.7,
-#'   max_vif = 5
-#' )
-#'
-#' x
-#'
-#' #with complete preference order vector
-#' x <- collinear_select(
-#'   df = vi_smol,
-#'   predictors = predictors,
-#'   preference_order = c(
-#'     "soil_temperature_mean",
-#'     "koppen_zone",
-#'     "soil_type",
-#'     "topo_elevation"
-#'   ),
-#'   max_cor = 0.7,
-#'   max_vif = 5
-#' )
-#'
-#' x
-#'
-#' #with preference order dataframe
-#' df_preference <- preference_order(
-#'   df = vi_smol,
-#'   response = "vi_numeric",
-#'   predictors = predictors
-#' )
-#'
-#' df_preference
-#'
-#' x <- collinear_select(
-#'   df = vi_smol,
-#'   predictors = predictors,
-#'   preference_order = df_preference,
-#'   max_cor = 0.7,
-#'   max_vif = 5
-#' )
-#'
-#' x
-#'
-#' #identical to cor_select()
-#' x <- collinear_select(
-#'   df = vi_smol,
-#'   predictors = predictors,
-#'   preference_order = df_preference,
-#'   max_cor = 0.7,
-#'   max_vif = NULL
-#' )
-#'
-#' x
-#'
-#' #identical to vif_select()
-#' x <- collinear_select(
-#'   df = vi_smol,
-#'   predictors = predictors,
-#'   preference_order = df_preference,
-#'   max_cor = NULL,
 #'   max_vif = 5
 #' )
 #'
@@ -134,7 +58,7 @@ collinear_select <- function(
   response = NULL,
   predictors = NULL,
   preference_order = NULL,
-  max_cor = 0.7,
+  max_cor = 0.61,
   max_vif = 5,
   quiet = FALSE,
   ...

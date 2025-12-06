@@ -2,16 +2,18 @@
 % Please edit documentation in R/vif.R
 \name{vif}
 \alias{vif}
-\title{Variance Inflation Factors From Correlation Matrix}
+\title{Compute variance inflation factors from a correlation matrix}
 \usage{
 vif(m = NULL, quiet = FALSE, ...)
 }
 \arguments{
-\item{m}{(required, matrix) Correlation matrix generated via \code{\link[stats:cor]{stats::cor()}} or \code{\link[=cor_matrix]{cor_matrix()}}. Must have named dimensions. Default: NULL}
+\item{m}{(required, matrix) Correlation matrix generated via \code{stats::cor()} or \code{\link[=cor_matrix]{cor_matrix()}}. Must have named dimensions. Default: NULL}
 
-\item{quiet}{(optional; logical) If FALSE, messages are printed to the console. Default: FALSE}
+\item{quiet}{(optional; logical) If FALSE, messages are printed. Default: FALSE.}
 
-\item{...}{(optional) Used to pass internal arguments such as \code{function_name} for \link{validate_arg_function_name} in nested calls, or \code{m}, a correlation matrix generated via \code{\link[stats:cor]{stats::cor()}} or \code{\link[=cor_matrix]{cor_matrix()}}, and the cross-validation arguments of \code{\link[=preference_order]{preference_order()}}: \code{cv_iterations}, and \code{cv_training_fraction}.}
+\item{...}{(optional) Internal args (e.g. \code{function_name} for
+\code{\link{validate_arg_function_name}}, a precomputed correlation matrix
+\code{m}, or cross-validation args for \code{\link{preference_order}}).}
 }
 \value{
 named numeric vector
@@ -19,18 +21,16 @@ named numeric vector
 \description{
 Computes the Variance Inflation Factors from a correlation matrix in two steps:
 \itemize{
-\item Applies \code{\link[base:solve]{base::solve()}} to transform the correlation matrix into a precision matrix, which is the inverse of the covariance matrix between all variables in \code{predictors}.
-\item Applies \code{\link[base:diag]{base::diag()}} to extract the diagonal of the precision matrix, which contains the variance of the regression of each predictor against all other predictors, also known as Variance Inflation Factor
+\item Applies \code{base::solve()} to transform the correlation matrix into a precision matrix, which is the inverse of the covariance matrix between all variables in \code{predictors}.
+\item Applies \code{base::diag()} to extract the diagonal of the precision matrix, which contains the variance of the regression of each predictor against all other predictors, also known as Variance Inflation Factor
 }
 }
 \section{Variance Inflation Factors}{
 
 
-The Variance Inflation Factor of a given predictor \eqn{a} is computed as \eqn{1/(1-R2)}, where \eqn{R2} is the multiple R-squared of a multiple regression model fitted using \eqn{a} as response against all other predictors, as in  \eqn{a = b + c + ...}.
-
-The square root of the VIF of \eqn{a} is the factor by which the confidence interval of the estimate for \eqn{a} in the linear model \eqn{y = a + b + c + ...} is widened by multicollinearity in the predictors.
-
-The range of VIF values is (1, Inf]. The recommended thresholds for maximum VIF may vary depending on the source consulted, being the most common values, 2.5 (most conservative), 5, and 10 (most permissive).
+VIF for predictor \eqn{a} is computed as \eqn{1/(1-R^2)}, where \eqn{R^2} is
+the multiple R-squared from regressing \eqn{a} on the other predictors.
+Recommended maximums commonly used are 2.5, 5, and 10.
 }
 
 \examples{

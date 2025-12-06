@@ -2,7 +2,7 @@
 % Please edit documentation in R/target_encoding_lab.R
 \name{target_encoding_lab}
 \alias{target_encoding_lab}
-\title{Target Encoding Lab: Transform Categorical Variables to Numeric}
+\title{Convert categorical predictors to numeric via target encoding}
 \usage{
 target_encoding_lab(
   df = NULL,
@@ -16,11 +16,16 @@ target_encoding_lab(
 )
 }
 \arguments{
-\item{df}{(required; dataframe, tibble, or sf) A dataframe with responses (optional) and predictors. Must have at least 10 rows for pairwise correlation analysis, and \code{10 * (length(predictors) - 1)} for VIF analysis.  Default: NULL.}
+\item{df}{(required; dataframe, tibble, or sf) A dataframe with responses
+(optional) and predictors. Must have at least 10 rows for pairwise
+correlation analysis, and \code{10 * (length(predictors) - 1)} for VIF.
+Default: NULL.}
 
 \item{response}{(optional, character string) Name of a numeric response variable in \code{df}. Default: NULL.}
 
-\item{predictors}{(optional; character vector or NULL) Names of the predictors in \code{df}. If NULL, all columns in \code{df} except the ones in \code{responses} and those with constant values or near zero variance are used. Default: NULL}
+\item{predictors}{(optional; character vector or NULL) Names of the
+predictors in \code{df}. If NULL, all columns except \code{responses} and
+constant/near-zero-variance columns are used. Default: NULL.}
 
 \item{encoding_method}{(optional; character vector or NULL). Name of the target encoding methods. One or several of: "mean", "rank", "loo". If NULL, target encoding is ignored, and \code{df} is returned with no modification. Default: "loo"}
 
@@ -28,9 +33,11 @@ target_encoding_lab(
 
 \item{overwrite}{(optional; logical) If TRUE, the original predictors in \code{df} are overwritten with their encoded versions, but only one encoding method, smoothing, white noise, and seed are allowed. Otherwise, encoded predictors with their descriptive names are added to \code{df}. Default: FALSE}
 
-\item{quiet}{(optional; logical) If FALSE, messages are printed to the console. Default: FALSE}
+\item{quiet}{(optional; logical) If FALSE, messages are printed. Default: FALSE.}
 
-\item{...}{(optional) Used to pass internal arguments such as \code{function_name} for \link{validate_arg_function_name} in nested calls, or \code{m}, a correlation matrix generated via \code{\link[stats:cor]{stats::cor()}} or \code{\link[=cor_matrix]{cor_matrix()}}, and the cross-validation arguments of \code{\link[=preference_order]{preference_order()}}: \code{cv_iterations}, and \code{cv_training_fraction}.}
+\item{...}{(optional) Internal args (e.g. \code{function_name} for
+\code{\link{validate_arg_function_name}}, a precomputed correlation matrix
+\code{m}, or cross-validation args for \code{\link{preference_order}}).}
 }
 \value{
 dataframe
@@ -44,7 +51,7 @@ Target encoding maps the values of categorical variables (of class \code{charact
 \item "loo" (implemented in \code{\link[=target_encoding_loo]{target_encoding_loo()}}): Known as the "leave-one-out method" in the literature, it encodes each categorical value with the mean of the response variable across all other group cases. This method controls overfitting better than "mean". Variables encoded with this method are identified with the suffix "__encoded_loo".
 }
 
-Accepts a parallelization setup via \code{\link[future:plan]{future::plan()}} and a progress bar via \code{\link[progressr:handlers]{progressr::handlers()}} (see examples).
+Accepts a parallelization setup via \code{future::plan()} and a progress bar via \code{progressr::handlers()} (see examples).
 }
 \examples{
 

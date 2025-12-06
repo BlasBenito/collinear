@@ -1,4 +1,5 @@
 testthat::test_that("`vif_select()` works", {
+  testthat::skip_on_cran()
 
   data(vi_smol, vi_predictors, vi_predictors_numeric)
 
@@ -21,7 +22,6 @@ testthat::test_that("`vif_select()` works", {
   ) |>
     suppressWarnings()
 
-
   testthat::expect_true(
     is.character(x)
   )
@@ -43,7 +43,6 @@ testthat::test_that("`vif_select()` works", {
     regexp = "maximum VIF is <= 5, multicollinearity filtering is not required"
   ) |>
     suppressMessages()
-
 
   testthat::expect_true(
     all(x %in% y)
@@ -100,7 +99,6 @@ testthat::test_that("`vif_select()` works", {
   ) |>
     suppressWarnings()
 
-
   testthat::expect_true(
     is.character(x)
   )
@@ -116,7 +114,6 @@ testthat::test_that("`vif_select()` works", {
   testthat::expect_true(
     all(preference_order$predictor[1] == x[1])
   )
-
 
   # edge cases ----
 
@@ -161,9 +158,7 @@ testthat::test_that("`vif_select()` works", {
   ) |>
     suppressMessages()
 
-
   testthat::expect_true(
     x == vi_predictors_numeric[1]
   )
-
 })

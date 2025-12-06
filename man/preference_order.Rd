@@ -2,7 +2,7 @@
 % Please edit documentation in R/preference_order.R
 \name{preference_order}
 \alias{preference_order}
-\title{Quantitative Prioritization for Multicollinearity Filtering}
+\title{Rank predictors by importance or multicollinearity}
 \usage{
 preference_order(
   df = NULL,
@@ -17,11 +17,17 @@ preference_order(
 )
 }
 \arguments{
-\item{df}{(required; dataframe, tibble, or sf) A dataframe with responses (optional) and predictors. Must have at least 10 rows for pairwise correlation analysis, and \code{10 * (length(predictors) - 1)} for VIF analysis.  Default: NULL.}
+\item{df}{(required; dataframe, tibble, or sf) A dataframe with responses
+(optional) and predictors. Must have at least 10 rows for pairwise
+correlation analysis, and \code{10 * (length(predictors) - 1)} for VIF.
+Default: NULL.}
 
-\item{responses}{(optional; character, character vector, or NULL) Name of one or several response variables in \code{df}. Default: NULL.}
+\item{responses}{(optional; character, character vector, or NULL) Name of
+one or several response variables in \code{df}. Default: NULL.}
 
-\item{predictors}{(optional; character vector or NULL) Names of the predictors in \code{df}. If NULL, all columns in \code{df} except the ones in \code{responses} and those with constant values or near zero variance are used. Default: NULL}
+\item{predictors}{(optional; character vector or NULL) Names of the
+predictors in \code{df}. If NULL, all columns except \code{responses} and
+constant/near-zero-variance columns are used. Default: NULL.}
 
 \item{f}{(optional: function name) Unquoted function name without parenthesis (see \link{f_functions}). By default calls to \code{\link[=f_auto]{f_auto()}}, which selects a suitable function depending on the nature of the response and predictors. Set to NULL if \code{responses = NULL}. If NULL, predictors are ranked from lower to higher multicollinearity. Default: \code{f_auto}}
 
@@ -31,9 +37,11 @@ preference_order(
 
 \item{seed}{(optional, integer) Random seed, required for reproducibility when using cross-validation or random forest models. Default: 1}
 
-\item{quiet}{(optional; logical) If FALSE, messages are printed to the console. Default: FALSE}
+\item{quiet}{(optional; logical) If FALSE, messages are printed. Default: FALSE.}
 
-\item{...}{(optional) Used to pass internal arguments such as \code{function_name} for \link{validate_arg_function_name} in nested calls, or \code{m}, a correlation matrix generated via \code{\link[stats:cor]{stats::cor()}} or \code{\link[=cor_matrix]{cor_matrix()}}, and the cross-validation arguments of \code{\link[=preference_order]{preference_order()}}: \code{cv_iterations}, and \code{cv_training_fraction}.}
+\item{...}{(optional) Internal args (e.g. \code{function_name} for
+\code{\link{validate_arg_function_name}}, a precomputed correlation matrix
+\code{m}, or cross-validation args for \code{\link{preference_order}}).}
 }
 \value{
 dataframe:
@@ -68,14 +76,14 @@ For more fine-tuned control, the package offers the following \code{f} functions
 \item \strong{Numeric response}:
 \itemize{
 \item \code{\link[=f_numeric_glm]{f_numeric_glm()}}: Pearson's R-squared of response versus the predictions of a Gaussian GLM.
-\item \code{\link[=f_numeric_gam]{f_numeric_gam()}}: GAM model fitted with \code{\link[mgcv:gam]{mgcv::gam()}}.
-\item \code{\link[=f_numeric_rf]{f_numeric_rf()}}: Random Forest model fitted with \code{\link[ranger:ranger]{ranger::ranger()}}.
+\item \code{\link[=f_numeric_gam]{f_numeric_gam()}}: GAM model fitted with \code{mgcv::gam()}.
+\item \code{\link[=f_numeric_rf]{f_numeric_rf()}}: Random Forest model fitted with \code{ranger::ranger()}.
 }
 \item \strong{Integer counts response}:
 \itemize{
 \item \code{\link[=f_count_glm]{f_count_glm()}}: Pearson's R-squared of a Poisson GLM.
 \item \code{\link[=f_count_gam]{f_count_gam()}}: Poisson GAM.
-\item \code{\link[=f_count_rf]{f_count_rf()}}: Random Forest model fitted with \code{\link[ranger:ranger]{ranger::ranger()}}.
+\item \code{\link[=f_count_rf]{f_count_rf()}}: Random Forest model fitted with \code{ranger::ranger()}.
 }
 \item \strong{Binomial response (1 and 0)}:
 \itemize{
@@ -93,7 +101,7 @@ These functions accept a cross-validation setup via the arguments \code{cv_itera
 
 Additionally, the argument \code{f} accepts any custom function taking a dataframe with the columns "x" (predictor) and "y" (response) and returning a numeric indicator of association.
 
-Accepts a parallelization setup via \code{\link[future:plan]{future::plan()}} and a progress bar via \code{\link[progressr:handlers]{progressr::handlers()}} (see examples).
+Accepts a parallelization setup via \code{future::plan()} and a progress bar via \code{progressr::handlers()} (see examples).
 
 Accepts a character vector of response variables as input for the argument \code{responses}. When more than one response is provided, the output is a named list of preference data frames.
 }

@@ -1,7 +1,7 @@
-#' Area Under the Curve of Binomial GAM Predictions vs. Observations
+#' Area under the curve of binomial GAM predictions vs. observations
 #'
 #' @description
-#' Fits a Quasibinomial GAM model \code{y ~ s(x)} (\code{y ~ x} if \code{x} is non-numeric) with the binomial response \code{y} (values 0 and 1) and the numeric, character or factor predictor \code{x} using [mgcv::gam()] and returns the area under the ROC curve between the observed responses and the model predictions (see [score_auc()]).
+#' Fits a Quasibinomial GAM model \code{y ~ s(x)} (\code{y ~ x} if \code{x} is non-numeric) with the binomial response \code{y} (values 0 and 1) and the numeric, character or factor predictor \code{x} using \code{mgcv::gam()} and returns the area under the ROC curve between the observed responses and the model predictions (see [score_auc()]).
 #'
 #' Cases are weighted with [case_weights()] to prevent issues arising from class imbalance.
 #'

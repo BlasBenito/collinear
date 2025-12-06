@@ -1,4 +1,4 @@
-#' Quantitative Prioritization for Multicollinearity Filtering
+#' Rank predictors by importance or multicollinearity
 #'
 #' @description
 #' Generates a valid input for the argument \code{preference_order} of the functions [vif_select()], [cor_select()], [collinear_select()], and [collinear()]. This argument helps preserve important predictors during multicollinearity filtering.
@@ -17,14 +17,14 @@
 #'   \item **Numeric response**:
 #'   \itemize{
 #'    \item [f_numeric_glm()]: Pearson's R-squared of response versus the predictions of a Gaussian GLM.
-#'    \item [f_numeric_gam()]: GAM model fitted with [mgcv::gam()].
-#'    \item [f_numeric_rf()]: Random Forest model fitted with [ranger::ranger()].
+#'    \item [f_numeric_gam()]: GAM model fitted with \code{mgcv::gam()}.
+#'    \item [f_numeric_rf()]: Random Forest model fitted with \code{ranger::ranger()}.
 #'   }
 #'   \item **Integer counts response**:
 #'   \itemize{
 #'     \item [f_count_glm()]: Pearson's R-squared of a Poisson GLM.
 #'     \item [f_count_gam()]: Poisson GAM.
-#'     \item [f_count_rf()]: Random Forest model fitted with [ranger::ranger()].
+#'     \item [f_count_rf()]: Random Forest model fitted with \code{ranger::ranger()}.
 #'   }
 #'   \item **Binomial response (1 and 0)**:
 #'   \itemize{
@@ -42,7 +42,7 @@
 #'
 #' Additionally, the argument \code{f} accepts any custom function taking a dataframe with the columns "x" (predictor) and "y" (response) and returning a numeric indicator of association.
 #'
-#' Accepts a parallelization setup via [future::plan()] and a progress bar via [progressr::handlers()] (see examples).
+#' Accepts a parallelization setup via \code{future::plan()} and a progress bar via \code{progressr::handlers()} (see examples).
 #'
 #' Accepts a character vector of response variables as input for the argument \code{responses}. When more than one response is provided, the output is a named list of preference data frames.
 #'

@@ -1,9 +1,10 @@
 testthat::test_that("`validate_arg_quiet()` works", {
+  testthat::skip_on_cran()
 
   x <- validate_arg_f(
     f = f_auto,
     f_name = "f_auto"
-    )
+  )
 
   testthat::expect_true(
     attributes(x)$validated
@@ -35,8 +36,6 @@ testthat::test_that("`validate_arg_quiet()` works", {
     regexp = "argument 'f' must be a uquoted function name without parentheses"
   )
 
-
-
   x <- validate_arg_f(f = f_count_rf)
 
   testthat::expect_true(
@@ -47,6 +46,4 @@ testthat::test_that("`validate_arg_quiet()` works", {
     x <- validate_arg_f(f = stats::lm),
     regexp = "the function 'f' must have the argument 'df'"
   )
-
-
 })

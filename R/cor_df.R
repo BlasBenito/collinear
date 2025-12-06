@@ -1,14 +1,14 @@
-#' Pairwise Correlation Dataframe
+#' Compute signed pairwise correlations dataframe
 #'
 #' @description
 #' Computes pairwise correlations between predictors using appropriate methods for different variable types:
 #' \itemize{
-#'   \item **Numeric vs. Numeric**: Pearson correlation via [stats::cor()].
+#'   \item **Numeric vs. Numeric**: Pearson correlation via \code{stats::cor()}.
 #'   \item **Numeric vs. Categorical**: Target-encodes the categorical variable  using the numeric variable as reference via [target_encoding_lab()] with leave-one-out method, then computes Pearson correlation.
 #'   \item **Categorical vs. Categorical**: Cramer's V via [cor_cramer()] as a measure of association. See [cor_cramer()] for important notes on mixing Pearson correlation and Cramer's V in multicollinearity analysis.
 #' }
 #'
-#' Parallelization via [future::plan()] and progress bars via [progressr::handlers()] are supported but only beneficial for large datasets with categorical predictors. Numeric-only correlations do not use parallelization or progress bars. Example: With 16 workers, 30k rows (dataframe [vi]), 49 numeric and 12 categorical predictors (see [vi_predictors]), parallelization achieves a 5.4x speedup (147s → 27s).
+#' Parallelization via \code{future::plan()} and progress bars via \code{progressr::handlers()} are supported but only beneficial for large datasets with categorical predictors. Numeric-only correlations do not use parallelization or progress bars. Example: With 16 workers, 30k rows (dataframe [vi]), 49 numeric and 12 categorical predictors (see [vi_predictors]), parallelization achieves a 5.4x speedup (147s → 27s).
 #'
 #' @inheritParams collinear
 #'
