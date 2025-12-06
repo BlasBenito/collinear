@@ -115,3 +115,12 @@ reference:
     Ensure data frames, variable names, and parameters meet requirements.
 - contents:
   - has_concept("argument_validation")
+
+build:
+  extra_packages:
+    - patchwork
+    - ggplot2
+    - rstudioapi
+    - future
+    - dplyr
+    - DT
