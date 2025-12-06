@@ -8,7 +8,7 @@
 ## Citation
 
 Source:
-[`inst/CITATION`](https://github.com/blasbenito/collinear/blob/main/inst/CITATION)
+[`inst/CITATION`](https://github.com/blasbenito/collinear/blob/v3.0.0/inst/CITATION)
 
 Benito B (2023). “collinear: R Package for Seamless Multicollinearity
 Management.”
