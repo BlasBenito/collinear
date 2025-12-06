@@ -32,8 +32,9 @@ jobs:
 
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
-          extra-packages: any::pkgdown, local::.
-          needs: website
+  with:
+    extra-packages: any::pkgdown, any::patchwork, any::ggplot2, any::rstudioapi, any::future, any::dplyr, any::DT, local::.
+    needs: website
 
       - name: Build site
         run: pkgdown::build_site_github_pages(new_process = FALSE, install = FALSE)
