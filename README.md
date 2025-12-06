@@ -355,14 +355,14 @@ x$vi_numeric$formulas
 #>     evapotranspiration_range + swi_min + soil_soc + humidity_range + 
 #>     topo_elevation + cloud_cover_range + continent + soil_sand + 
 #>     topo_diversity + topo_slope
-#> <environment: 0x58a529a52b68>
+#> <environment: 0x60459b4ab2c8>
 #> 
 #> $smooth
 #> vi_numeric ~ s(rainfall_mean) + s(swi_mean) + s(evapotranspiration_max) + 
 #>     s(evapotranspiration_range) + s(swi_min) + s(soil_soc) + 
 #>     s(humidity_range) + s(topo_elevation) + s(cloud_cover_range) + 
 #>     continent + s(soil_sand) + s(topo_diversity) + s(topo_slope)
-#> <environment: 0x58a529a52b68>
+#> <environment: 0x60459b4ab2c8>
 ```
 
 The function returns linear formulas for numeric outcomes, and
@@ -515,9 +515,9 @@ vi_workflow
 
 If you find this package useful, please cite it as:
 
-*Blas M. Benito (2025). collinear: R Package for Seamless
+*Blas M. Benito (2025). collinear: R Package for Automated
 Multicollinearity Management. Version 3.0.0. doi:
-10.5281/zenodo.10039489*
+10.5281/zenodo.17843578 *
 
 ## Getting help
 
