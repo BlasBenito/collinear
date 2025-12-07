@@ -1,133 +1,62 @@
-# Version 2.0.0 (re-re-submission)
+## Test environments
+* macOS 14 (local), R 4.4.1
+* Ubuntu 22.04 (GitHub Actions), R devel, release, oldrel
+* Windows Server 2022 (GitHub Actions), R release
+* win-builder (devel and release)
 
-
-  The Description field contains
-    variables (Micci-Barreca, D. 2001 DOI:10.1145/507533.507538); 2)
-  Please write DOIs as <doi:prefix/suffix>.
-  
-Fixed by replacing DOI:10.1145/507533.507538 with <doi:10.1145/507533.507538> in DESCRIPTION.
-
-Ran R CMD check --as-cran collinear_2.0.0.tar.gz:
-
-* checking for future file timestamps ... NOTE
-unable to verify current time
-Status: 1 NOTE
-
-# Version 2.0.0 (Re-submission)
-
-Cran incoming pre-checks detected a invalid url in README.md and a mispelled word in DESCRIPTION:
-
-```
-Possibly misspelled words in DESCRIPTION:
-    VIF (12:602)
-
-  Found the following (possibly) invalid URLs:
-    URL: https://blasbenito.github.io/collinear/articles/how_it_works/how_it_works.html
-      From: README.md
-      Status: 404
-      Message: Not Found
-```
-
-I have fixed these issues as follows:
-
-  - Removed the word VIF from DESCRIPTION. 
-  - Replaced the offending URL with the right one: https://blasbenito.github.io/collinear/articles/how_it_works.html
-
-# Version 2.0.0
-
-  + Local check and tests performed in Ubuntu 20.04.6 LTS (Focal) on R 4.4.1: 0 errors, warnings, and notes.
-  + Platform checks performed with rhub::rhub_check() for all available setups:
-    + "linux"
-    + "macos"
-    + "macos-arm64"
-    + "windows"
-    + "atlas"
-    + "c23"
-    + "clang-asan"
-    + "clang16"
-    + "clang17"
-    + "clang18"
-    + "clang19"
-    + "gcc13"
-    + "gcc14"
-    + "intel"
-    + "mkl"
-    + "nold"
-    + "nosuggests"
-    + "ubuntu-clang"
-    + "ubuntu-gcc12"
-    + "ubuntu-next"
-    + "ubuntu-release"
-    + "valgrind"
-
-## Local check
-
-── R CMD check results ── collinear 2.0.0 ────
-Duration: 3m 19.3s
-
+## R CMD check results
 0 errors ✔ | 0 warnings ✔ | 0 notes ✔
 
-## Local test
+## win-builder (R-devel) results
+Status: 2 NOTEs
 
-==> devtools::test()
+1. **Possibly misspelled words in DESCRIPTION**
+   * "VIF" appears in several locations.  
+     This is an established statistical abbreviation (Variance Inflation Factor).
 
-ℹ Testing collinear
-✔ | F W  S  OK | Context
-✔ |          5 | auc [2.3s]                             
-✔ |          3 | case_weights [1.8s]                    
-✔ |         35 | collinear [56.6s]                      
-✔ |          5 | cor_clusters [3.0s]                    
-✔ |         15 | cor_df [5.5s]                          
-✔ |          4 | cor_matrix [7.3s]                      
-✔ |         23 | cor_select [16.6s]                     
-✔ |          3 | cramer_v [1.2s]                        
-✔ |          8 | identify [4.6s]                        
-✔ |         17 | preference_order_methods [3.3s]        
-✔ |         28 | preference_order [7.0s]                
-✔ |          7 | target_encoding_lab [1.1s]             
-✔ |          7 | target_encoding_methods                
-✔ |          7 | validate [12.2s]                       
-✔ |         18 | vif_df                                 
-✔ |         23 | vif_select                             
+The NOTE regarding “invalid file URIs” in the README is a known false positive on win-devel when links refer to pkgdown-generated pages. These links resolve correctly on CRAN and are accepted in other platforms (including Linux and macOS). No other check reports them.
 
-══ Results ═════════════════════════════════════════════
-Duration: 124.0 s
+## rhub results
+All platforms passed except:
 
-[ FAIL 0 | WARN 0 | SKIP 0 | PASS 208 ]
+* **Linux (r-devel)**: 1 ERROR  
+  - `ERROR: compilation failed for package 'yaml'`  
+  - This originates from the system toolchain on that rhub platform and is unrelated to the `collinear` package.
 
+All other tested platforms (macOS x86_64, macOS arm64, Windows, Linux GCC/Clang variants, ASAN, MKL, noLD, noSuggests, atlas, intel, gcc13/14, clang16–19, ubuntu-gcc/clang, ubuntu-release, ubuntu-next) completed without errors or warnings.
 
-## Platform Checks
+## Downstream dependencies
+No reverse dependencies.
 
-[Link to GitHub Action](https://github.com/BlasBenito/collinear/actions/runs/11738731004)
+## Major changes in 3.0.0
+This is a major release with substantial API updates and new functionality.
 
-```r
-rhub::rhub_check(
-  platforms = c(
-  "linux", 
-  "macos", 
-  "macos-arm64",
-  "windows", 
-  "atlas",
-  "c23",
-  "clang-asan",
-  "clang16",
-  "clang17",
-  "clang18",
-  "clang19",
-  "gcc13",
-  "gcc14",
-  "intel",
-  "mkl",
-  "nold",
-  "nosuggests",
-  "ubuntu-clang",
-  "ubuntu-gcc12",
-  "ubuntu-next", 
-  "ubuntu-release"
-  )
-)
-```
+### Breaking changes
+* `response` renamed to `responses` (multi-response support).
+* Target encoding defaults to `NULL`.
+* `max_cor` and `max_vif` now default to `NULL` (adaptive thresholds).
+* `collinear()` now returns structured `collinear_output` and `collinear_selection` objects.
+* Several `identify_*` and `f_*` functions renamed.
 
+### New features
+* Adaptive multicollinearity thresholds.
+* New tidymodels recipe step `step_collinear()`.
+* Cross-validation support in `preference_order()`.
+* New helper functions for correlation/VIF summaries.
+* New S3 classes and methods.
+* Additional datasets (GAM model, lookup tables, experiments).
 
+### Improvements
+* More stable VIF computation with regularization fallback.
+* Preservation of signed correlation matrices for PSD stability.
+* Improved argument validation and error messages.
+* Reorganized, expanded documentation.
 
+### Bug fixes
+* Fixed PSD issues in correlation matrices affecting VIF.
+* Fixed VIF edge cases under ill-conditioned matrices.
+* Correct handling of single-predictor inputs.
 
+## Additional notes
+* All tidymodels-related features are properly guarded behind Suggests.
+* Examples run quickly with no long-running computations.

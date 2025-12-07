@@ -3,6 +3,9 @@ Sys.setenv(GITHUB_PAT = "xxx")
 rhub::rhub_setup()
 rhub::rhub_doctor()
 
+#windows
+devtools::check_win_devel()
+
 #full check
 rhub::rhub_check(
   platforms = c(
