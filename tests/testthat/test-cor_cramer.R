@@ -94,7 +94,5 @@ testthat::test_that("`cor_cramer()` works", {
     y = c(TRUE, TRUE, FALSE, FALSE)
   )
 
-  testthat::expect_true(
-    x == 1
-  )
+  testthat::expect_equal(x, 1, tolerance = 1e-10)
 })
