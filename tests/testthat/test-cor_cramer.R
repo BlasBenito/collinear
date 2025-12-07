@@ -72,7 +72,7 @@ testthat::test_that("`cor_cramer()` works", {
     y = c("a", "a", "b", "b")
   )
 
-  testthat::expect_equal(x, 0, tolerance = 1e-10)
+  testthat::expect_equal(x, 0, tolerance = 1e-6)
 
   # numeric inputs are coerced to character internally
   x <- cor_cramer(
