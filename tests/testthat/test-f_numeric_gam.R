@@ -16,8 +16,10 @@ testthat::test_that("f_numeric_gam() works", {
     x = vi_smol[[response]]
   )
 
-  testthat::expect_true(
-    f_numeric_gam(df = df) == 1
+  testthat::expect_equal(
+    f_numeric_gam(df = df),
+    1,
+    tolerance = 1e-10
   )
 
   #imperfect result

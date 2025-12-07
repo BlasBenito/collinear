@@ -15,8 +15,10 @@ testthat::test_that("f_categorical_rf() works", {
     x = vi_smol[[response]]
   )
 
-  testthat::expect_true(
-    f_categorical_rf(df = df) == 1
+  testthat::expect_equal(
+    f_categorical_rf(df = df),
+    1,
+    tolerance = 1e-10
   )
 
   #imperfect result

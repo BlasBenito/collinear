@@ -51,3 +51,4 @@ rsconnect/
 docs
 dev_scripts/example_data.R
 _pkgdown.yml.backup
+dev_scripts/rhub.R
