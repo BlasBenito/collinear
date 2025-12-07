@@ -16,9 +16,7 @@ testthat::test_that("`validate_arg_max_vif()` works", {
     regexp = "argument 'max_vif' must be of length one, using value '5'"
   )
 
-  testthat::expect_true(
-    x == 5
-  )
+  testthat::expect_equal(as.numeric(x), 5, tolerance = 1e-10)
 
   testthat::expect_true(
     attributes(x)$validated
@@ -39,9 +37,7 @@ testthat::test_that("`validate_arg_max_vif()` works", {
     regexp = "argument 'max_vif' is non-numeric, resetting it to to '5'"
   )
 
-  testthat::expect_true(
-    x == 5
-  )
+  testthat::expect_equal(as.numeric(x), 5, tolerance = 1e-10)
 
   testthat::expect_message(
     x <- validate_arg_max_vif(
@@ -51,9 +47,7 @@ testthat::test_that("`validate_arg_max_vif()` works", {
     regexp = "is outside its valid range"
   )
 
-  testthat::expect_true(
-    x == 5
-  )
+  testthat::expect_equal(as.numeric(x), 5, tolerance = 1e-10)
 
   testthat::expect_true(
     attributes(x)$validated

@@ -16,9 +16,7 @@ testthat::test_that("`validate_arg_max_cor()` works", {
     regexp = "argument 'max_cor' must be of length one, using value '0.5'"
   )
 
-  testthat::expect_true(
-    x == 0.5
-  )
+  testthat::expect_equal(as.numeric(x), 0.5, tolerance = 1e-10)
 
   testthat::expect_true(
     attributes(x)$validated
@@ -39,9 +37,7 @@ testthat::test_that("`validate_arg_max_cor()` works", {
     regexp = "argument 'max_cor' is non-numeric, resetting it to '0.7'"
   )
 
-  testthat::expect_true(
-    x == 0.7
-  )
+  testthat::expect_equal(as.numeric(x), 0.7, tolerance = 1e-10)
 
   testthat::expect_message(
     x <- validate_arg_max_cor(
@@ -51,9 +47,7 @@ testthat::test_that("`validate_arg_max_cor()` works", {
     regexp = "is outside its valid range"
   )
 
-  testthat::expect_true(
-    x == 0.7
-  )
+  testthat::expect_equal(as.numeric(x), 0.7, tolerance = 1e-10)
 
   testthat::expect_true(
     attributes(x)$validated

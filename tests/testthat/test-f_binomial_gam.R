@@ -19,6 +19,8 @@ testthat::test_that("f_binomial_gam() works", {
     f_binomial_gam(df = df) == 1
   )
 
+  testthat::expect_equal(f_binomial_gam(df = df), 1, tolerance = 1e-10)
+
   #imperfect result
   df <- data.frame(
     y = vi_smol[[response]],
@@ -79,9 +81,7 @@ testthat::test_that("f_binomial_gam() works", {
     cv_iterations = 1
   )
 
-  testthat::expect_true(
-    x0 == x1
-  )
+  testthat::expect_equal(x0, x1, tolerance = 1e-10)
 
   x2 <- f_binomial_gam(
     df = df,
@@ -137,9 +137,7 @@ testthat::test_that("f_binomial_gam() works", {
     cv_iterations = 10
   )
 
-  testthat::expect_true(
-    mean(x5) == mean(x6)
-  )
+  testthat::expect_equal(mean(x5), mean(x6), tolerance = 1e-10)
 
   #categorical predictor
   df <- data.frame(

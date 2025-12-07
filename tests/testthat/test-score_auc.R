@@ -9,9 +9,7 @@ testthat::test_that("`score_auc()` works", {
     p = vi_smol$vi_numeric
   )
 
-  testthat::expect_true(
-    x == 1
-  )
+  testthat::expect_equal(x, 1, tolerance = 1e-10)
 
   #random prediction
   x <- score_auc(

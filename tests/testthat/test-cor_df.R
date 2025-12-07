@@ -123,5 +123,5 @@ testthat::test_that("`cor_df()` works", {
 
   testthat::expect_true(x$y == vi_predictors[1])
 
-  testthat::expect_true(x$correlation == 1)
+  testthat::expect_equal(x$correlation, 1, tolerance = 1e-10)
 })

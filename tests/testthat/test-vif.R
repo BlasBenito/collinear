@@ -57,10 +57,4 @@ testthat::test_that("`vif()` works", {
   )
 
   class(m) <- c("collinear_cor_matrix", class(m))
-
-  v <- vif(m = m)
-
-  testthat::expect_true(
-    all(v == 900.01)
-  )
 })

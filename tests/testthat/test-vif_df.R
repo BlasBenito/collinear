@@ -71,7 +71,5 @@ testthat::test_that("`vif_df()` works", {
     nrow(x) == 1
   )
 
-  testthat::expect_true(
-    x$vif == 0
-  )
+  testthat::expect_equal(x$vif, 0, tolerance = 1e-10)
 })

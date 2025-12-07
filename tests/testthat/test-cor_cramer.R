@@ -45,9 +45,7 @@ testthat::test_that("`cor_cramer()` works", {
     y = c("a", "a", "b", "c")
   )
 
-  testthat::expect_true(
-    x == 1
-  )
+  testthat::expect_equal(x, 1, tolerance = 1e-10)
 
   # still perfect: labels differ but mapping is unique
   x <- cor_cramer(
@@ -55,9 +53,7 @@ testthat::test_that("`cor_cramer()` works", {
     y = c("a", "a", "b", "d")
   )
 
-  testthat::expect_true(
-    x == 1
-  )
+  testthat::expect_equal(x, 1, tolerance = 1e-10)
 
   # high but < 1: mostly aligned, one category of y repeats
   x <- cor_cramer(
