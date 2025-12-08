@@ -135,7 +135,7 @@ collinear::cor_cramer(
 
 Now that you know how `cor_df()` handles different cases, there is an important question to answer: *Are Cramer's V and Pearson correlation comparable?*
 
-Let's try to answer that question empirically with a small simulation. It generates integer vectors with different cardinality levels and compares them using both `stats::cor()` and `collinear::cor_cramer()`.
+Let's try to answer that question empirically with a small simulation. It generates integer vectors with different cardinality levels and compares them using both `stats::cor()` and `cor_cramer()`.
 
 ```{r}
 set.seed(1)
@@ -167,9 +167,7 @@ for(i in seq_len(nrow(sim))) {
 
 The scatterplot below shows the simulation results across cardinality levels, with linear smooths for each group.
 
-```{r, fig.width=7, fig.height=5}
-library(ggplot2)
-
+```{r, fig.width=7, fig.height=5, echo = FALSE}
 ggplot2::ggplot(sim) +
   ggplot2::aes(
     x = cramer_v, 

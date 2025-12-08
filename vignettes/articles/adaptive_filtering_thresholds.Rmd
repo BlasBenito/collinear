@@ -19,7 +19,9 @@ knitr::opts_chunk$set(
 
 ## Summary
 
-The function `collinear()` automatically configures multicollinearity filtering thresholds when the arguments `max_cor` and `max_vif` are not specified. This adaptive approach:
+The function `collinear()` automatically configures multicollinearity filtering thresholds when the arguments `max_cor` and `max_vif` are not specified. 
+
+This adaptive approach has several advantages:
 
 - Eliminates the guesswork of choosing threshold values.
 - Adapts filtering intensity to the correlation structure of the data.
@@ -74,7 +76,7 @@ Unlike `collinear_select()`, `cor_select()`, and `vif_select()`, which use fixed
 
 Let's see how that works.
 
-The vector `vi_predictors_numeric` names numeric predictors with a moderate multicollinearity, as the stats below show.
+The vector [`vi_predictors_numeric`](reference/vi_predictors_numeric.html) names numeric predictors with a moderate multicollinearity, as the stats below show.
 
 ```{r}
 collinear::collinear_stats(
@@ -129,6 +131,7 @@ collinear::collinear_stats(
     statistic %in% c("quantile_0.75", "maximum")
   )
 ```
+
 By adapting thresholds to each dataset's structure, `collinear()` provides sensible defaults while still allowing manual override when needed.
 
 ## Validation
@@ -145,9 +148,9 @@ system.file(
   rstudioapi::navigateToFile()
 ```
 
-The results of this experiment are in the dataframe [experiment_adaptive_thresholds], plotted below. 
+The results of this experiment are in the dataframe [`experiment_adaptive_thresholds`](reference/experiment_adaptive_thresholds.html), plotted below. 
 
-```{r, echo = FALSE, fig.width=8, fig.height=3.5}
+```{r, echo = FALSE, fig.width=8, fig.height=3.5, echo = FALSE}
 #left panel: shows output VIF across correlation structures
 p1 <- ggplot2::ggplot(experiment_adaptive_thresholds) +
   ggplot2::aes(
@@ -236,7 +239,7 @@ These results indicate that the adaptive threshold selection works well across m
 
 The adaptive selection of multicollinearity thresholds requires three steps:
 
-**1.** Compute the quantile 0.75 of the correlation for the input predictors via [cor_stats()]. This quantile is used because it captures the upper tail of the correlation distribution, where the problematic multicollinearity begins.
+**1.** Compute the quantile 0.75 of the correlation for the input predictors via `cor_stats()`. This quantile is used because it captures the upper tail of the correlation distribution, where the problematic multicollinearity begins.
 
 ```{r}
 cor_0.75 <- collinear::cor_stats(
@@ -257,16 +260,17 @@ max_cor <- 0.493 + 0.242 / (1 + exp(-15 * (cor_0.75 - 0.614)))
 
 max_cor
 ```
+
 Where:
 
- - `0.493`: floor of the curve, corresponding to VIF ≈ 2.5 in [prediction_cor_to_vif] (conservative filtering).
- - `0.735`: ceiling of the curve (0.545 + 0.24), corresponding to VIF ≈ 7.5 in [prediction_cor_to_vif] (permissive filtering).
+ - `0.493`: floor of the curve, corresponding to VIF ≈ 2.5 in `prediction_cor_to_vif` (conservative filtering).
+ - `0.735`: ceiling of the curve (0.545 + 0.24), corresponding to VIF ≈ 7.5 in `prediction_cor_to_vif` (permissive filtering).
  - `0.614`: midpoint where the transition is steepest.
  - `-15`: steepness parameter controlling how sharply the curve transitions.
  
 The full sigmoid curve is shown below.
 
-```{r, echo = FALSE, fig.width=6, fig.height=3.5}
+```{r, echo = FALSE, fig.width=6, fig.height=3.5, echo = FALSE}
 sigmoid_df <- data.frame(
   cor_input = seq(0, 1, by = 0.01)
 ) |>
@@ -291,7 +295,7 @@ ggplot2::ggplot(sigmoid_df) +
 
 Datasets with low correlation (quantile 0.75 < 0.5) receive thresholds near the floor, while highly correlated datasets (quantile 0.75 > 0.8) approach the ceiling. This prevents both over-filtering of clean datasets and under-filtering of problematic ones.
 
-3. The pre-trained GAM model [gam_cor_to_vif] predicts a suitable `max_vif` from the `max_cor` resulting from the transformation.
+3. The pre-trained GAM model [`gam_cor_to_vif`](reference/gam_cor_to_vif.html) predicts a suitable `max_vif` from the `max_cor` resulting from the transformation.
 
 ```{r}
 max_vif <- mgcv::predict.gam(
@@ -302,7 +306,7 @@ max_vif <- mgcv::predict.gam(
 max_vif
 ```
 
-This model was fitted on the simulation results in [experiment_cor_vs_vif], where both filtering methods were applied across 10,000 random dataset configurations. For each `max_cor` value, the `max_vif` producing the highest Jaccard similarity between the two selections was identified.
+This model was fitted on the simulation results in [`experiment_cor_vs_vif`](reference/experiment_cor_vs_vif.html), where both filtering methods were applied across 10,000 random dataset configurations. For each `max_cor` value, the `max_vif` producing the highest Jaccard similarity between the two selections was identified.
 
 The experiment script can be opened in RStudio as follows:
 
@@ -326,7 +330,7 @@ m <- mgcv::gam(
 
 The plot below shows the simulation results and the fitted model.
 
-```{r, echo = FALSE, fig.width=7, fig.height=3.5}
+```{r, echo = FALSE, fig.width=7, fig.height=3.5, echo = FALSE}
 collinear::experiment_cor_vs_vif |> 
   dplyr::arrange(
     out_selection_jaccard
