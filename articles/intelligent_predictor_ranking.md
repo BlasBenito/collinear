@@ -7,23 +7,30 @@ filtering method devised to preserve as many *relevant* predictors as
 possible. This principle helps balance multicollinearity reduction with
 predictive power retention.
 
-This feature is implemented in \[collinear()\], \[collinear_select()\],
-\[vif_select()\] and \[cor_select()\] via the argument
-`preference_order`. This argument allows representing predictor
-relevance in three ways:
+This feature is implemented in
+[`collinear()`](https://blasbenito.github.io/collinear/reference/collinear.md),
+[`collinear_select()`](https://blasbenito.github.io/collinear/reference/collinear_select.md),
+[`vif_select()`](https://blasbenito.github.io/collinear/reference/vif_select.md)
+and
+[`cor_select()`](https://blasbenito.github.io/collinear/reference/cor_select.md)
+via the argument `preference_order`. This argument allows representing
+predictor relevance in three ways:
 
 - **Expert Mode**: Vector of predictor names ordered from left to right
-  according to the user’s preference. This option helps `collinear` get
-  domain expertise into account, and lets the user focus on specific
+  according to the user’s preference. This option helps
+  [`collinear()`](https://blasbenito.github.io/collinear/reference/collinear.md)
+  get domain expertise into account, and lets the user focus on specific
   predictors.
 
 - **Intelligent Predictor Ranking**: This functionality, implemented in
-  \[preference_order()\], prioritizes predictors by their univariate
-  association with the response to ensure that the most relevant ones
-  are retained during multicollinearity filtering. This option maximizes
-  the predictive power of the filtered predictors.
+  [`preference_order()`](https://blasbenito.github.io/collinear/reference/preference_order.md),
+  prioritizes predictors by their univariate association with the
+  response to ensure that the most relevant ones are retained during
+  multicollinearity filtering. This option maximizes the predictive
+  power of the filtered predictors.
 
-- **Naive Option**: If none of the options above are used, `collinear`
+- **Naive Option**: If none of the options above are used,
+  [`collinear()`](https://blasbenito.github.io/collinear/reference/collinear.md)
   ranks predictors from lower to higher collinearity with all other
   predictors. This option preserves the less redundant predictors, but
   it might not lead to robust models.
@@ -33,6 +40,25 @@ These options are explained in detail in the following sections.
 ## Setup
 
 This article requires the following setup.
+
+``` r
+library(collinear)
+library(future)
+library(DT)
+
+#parallelization setup
+#only useful for categorical predictors
+future::plan(
+  future::multisession,
+  workers = future::availableCores() - 1
+)
+
+#progress bar (does not work in Rmarkdown)
+#progressr::handlers(global = TRUE)
+
+#example data
+data(vi_smol, vi_predictors_numeric)
+```
 
 ## Expert Mode
 
@@ -58,11 +84,11 @@ making a response variable entirely optional.
 
 What happens from here?:
 
-- `"a"`: Selected.
-- `"b"`: Selected if its correlation with `"a"` is \<= 0.5, and filtered
+- `a`: Selected.
+- `b`: Selected if its correlation with `"a"` is \<= 0.5, and filtered
   away otherwise.
-- `"c"`: Selected if its maximum correlation with `"a"` and `"b"` is \<=
-  0.5, and filtered away otherwise.
+- `c`: Selected if its maximum correlation with `a` and `b` is \<= 0.5,
+  and filtered away otherwise.
 
 In summary, the first predictor in `preference_order` is always
 selected, and the other ones are selected or rejected conditionally on
@@ -74,9 +100,13 @@ order to the preference vector.
 
 Let’s take a look at a more tangible case now. The code below calls
 [`collinear()`](https://blasbenito.github.io/collinear/reference/collinear.md)
-on the dataset `vi_smol`, which contains a numeric response `vi_numeric`
+on the dataset
+[`vi_smol`](https://blasbenito.github.io/collinear/articles/reference/vi_smol.md),
+which contains a numeric response
+[`vi_numeric`](https://blasbenito.github.io/collinear/articles/reference/vi_numeric.md)
 (values of a vegetation index) and a bunch of numeric predictors named
-in the vector `vi_predictors_numeric`.
+in the vector
+[`vi_predictors_numeric`](https://blasbenito.github.io/collinear/articles/reference/vi_predictors_numeric.md).
 
 Let’s say we’d like to focus our analysis in the limiting role of the
 soil water content (variables `swi_xxx`, from soil water index) in
@@ -112,8 +142,8 @@ y$vi_numeric$selection
 
 Notice how `swi_min` and `swi_range` are selected, but `swi_max` and
 `swi_mean` are removed because they are collinear with `swi_min`. As
-said before, all predictors not in `preference_order` were ranked from
-lower to higher mutual collinearity.
+said above, all predictors not in the argument `preference_order` were
+ranked from lower to higher mutual collinearity.
 
 Now we can quickly fit a quick exploratory model, and save the R-squared
 for later.
@@ -167,8 +197,9 @@ model predictions, and ranks the predictors from best to worse according
 to this metric.
 
 This functionality is implemented in the function
-\[preference_order()\], which can take advantage of a parallelization
-backend to speed-up operations.
+[`preference_order()`](https://blasbenito.github.io/collinear/reference/preference_order.md),
+which can take advantage of a parallelization backend to speed-up
+operations.
 
 Let’s take a look at how it works, step by step. Let me start with the
 simplest approach.
@@ -185,12 +216,17 @@ x <- collinear::preference_order(
 The function returns a dataframe with the predictors ordered from better
 to worse modelling performance against the response. The column `f`
 indicates the name of the function used to fit the univariate models,
-\[f_numeric_glm()\] in this case. This function has been selected
-automatically because the argument `f` of
+[`f_numeric_glm()`](https://blasbenito.github.io/collinear/reference/f_numeric_glm.md)
+in this case. This function has been selected automatically because the
+argument `f` of
 [`preference_order()`](https://blasbenito.github.io/collinear/reference/preference_order.md)
-is set to \[f_auto()\] by default. This function looks at the types of
-the responses and predictors, and select one of the functions in
-returned by \[f_functions()\] to perform the operation.
+is set to
+[`f_auto`](https://blasbenito.github.io/collinear/articles/reference/f_auto.md)
+by default (`f` functions must not have parenthesis when calling them
+via the `f` argument). This function looks at the types of the responses
+and predictors, and select one of the functions in returned by
+[`f_functions()`](https://blasbenito.github.io/collinear/reference/f_functions.md)
+to perform the operation.
 
 Let’s talk more about that later, but for now, we can plug the
 preference order dataframe directly into
@@ -255,8 +291,10 @@ m2
 ```
 
 If we compare the R-squared of the two models we have created so far, we
-can see that \[preference_order()\] helps balance aggressive
-multicollinearity filtering and robust modelling outcomes.
+can see that
+[`preference_order()`](https://blasbenito.github.io/collinear/reference/preference_order.md)
+helps balance aggressive multicollinearity filtering and robust
+modelling outcomes.
 
 ``` r
 m1$r.squared
@@ -265,9 +303,11 @@ m2$r.squared
 #> [1] 0.8463813
 ```
 
-Let’s go back to what \[f_auto()\] does for a moment. This function
-looks at the input data to assess the type of the response and the
-predictors, and then looks at the dataframe below to choose a function.
+Let’s go back to what
+[`f_auto()`](https://blasbenito.github.io/collinear/reference/f_auto.md)
+does for a moment. This function looks at the input data to assess the
+type of the response and the predictors, and then looks at the dataframe
+below to choose a function.
 
 ``` r
 collinear::f_auto_rules()
@@ -317,15 +357,19 @@ collinear::f_auto(
 
 All `f_...()` functions available for usage in
 [`preference_order()`](https://blasbenito.github.io/collinear/reference/preference_order.md)
-are listed in the dataframe returned by \[f_functions()\].
+are listed in the dataframe returned by
+[`f_functions()`](https://blasbenito.github.io/collinear/reference/f_functions.md).
 
 ``` r
 collinear::f_functions()
 ```
 
 Once you know your way around these functions, you can choose the one
-you prefer for your case. For example, below we replace `f_auto` with
-`f_numeric_gam` to fit univariate GAM models.
+you prefer for your case. For example, below we replace
+[`f_auto`](https://blasbenito.github.io/collinear/articles/reference/f_auto.md)
+with
+[`f_numeric_gam`](https://blasbenito.github.io/collinear/articles/reference/f_numeric_gam)
+to fit univariate GAM models.
 
 ``` r
 x <- collinear::preference_order(
@@ -341,7 +385,7 @@ A gentle reminder to finish this section:
 [`collinear()`](https://blasbenito.github.io/collinear/reference/collinear.md)
 runs
 [`preference_order()`](https://blasbenito.github.io/collinear/reference/preference_order.md)
-internally when `preference_order`is NULL and the argument `f` receives
+internally when `preference_order = NULL` and the argument `f` receives
 a valid function. And like
 [`preference_order()`](https://blasbenito.github.io/collinear/reference/preference_order.md),
 it can use cross-validation to assess the association between response
@@ -395,9 +439,10 @@ have written above, and sets `f = NULL` in
 In this scenario,
 [`preference_order()`](https://blasbenito.github.io/collinear/reference/preference_order.md)
 computes the pairwise correlation between all pairs of predictors `a`,
-`b`, and `c` with \[cor_matrix()\], and sums the correlations of each
-predictor with all others. Finally, it ranks the predictors from lowest
-to highest sum of correlations.
+`b`, and `c` with
+[`cor_matrix()`](https://blasbenito.github.io/collinear/reference/cor_matrix.md),
+and sums the correlations of each predictor with all others. Finally, it
+ranks the predictors from lowest to highest sum of correlations.
 
 This option gives preference to those predictors that contain more
 *exclusive* information, but in exchange, might not lead to robust

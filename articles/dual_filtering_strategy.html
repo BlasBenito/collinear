@@ -89,8 +89,8 @@
 <div class="section level2">
 <h2 id="summary">Summary<a class="anchor" aria-label="anchor" href="#summary"></a>
 </h2>
-<p>The function <a href="reference/collinear_select.html">collinear_select()</a> applies
-two complementary methods to assess different aspects of
+<p>The function <code><a href="../reference/collinear_select.html">collinear_select()</a></code> applies two
+complementary methods to assess different aspects of
 multicollinearity:</p>
 <ul>
 <li><p><strong>Pairwise correlation (Pearson and/or Cramer’s
@@ -100,10 +100,10 @@ the variance of a regression coefficient is inflated due to
 multicollinearity with <em>all other</em> predictors.</p></li>
 </ul>
 <p>By combining a pairwise method (correlation) and a multivariate one
-(VIF), <a href="reference/collinear_select.html">collinear_select()</a>
-is able to capture multicollinearity that either method alone might
-miss. At the same time, it respects predictor rankings to protect
-relevant variables during filtering.</p>
+(VIF), <code><a href="../reference/collinear_select.html">collinear_select()</a></code> is able to capture
+multicollinearity that either method alone might miss. At the same time,
+it respects predictor rankings to protect relevant variables during
+filtering.</p>
 <p>This article explains how this dual filtering algorithm works,
 demonstrates its behavior with examples, and provides guidance on when
 to use each filtering method.</p>
@@ -119,9 +119,11 @@ to use each filtering method.</p>
 <p>The filtering algorithm in <code><a href="../reference/collinear_select.html">collinear_select()</a></code> works as
 follows:</p>
 <ol style="list-style-type: decimal">
-<li><p>Predictors are ranked according to <code>preference_order</code>,
-or from lower to higher overall multicollinearity.</p></li>
-<li><p>The correlation matrix between all predictors is computed with <a href="reference/cor_matrix.html">cor_matrix()</a>.</p></li>
+<li><p>Predictors are ranked according to the argument
+<code>preference_order</code>, or from lower to higher overall
+multicollinearity otherwise.</p></li>
+<li><p>The correlation matrix between all predictors is computed with
+<code><a href="../reference/cor_matrix.html">cor_matrix()</a></code>.</p></li>
 <li><p>The first predictor in the ranking is <em>selected</em>, while
 all others are <em>candidates</em>.</p></li>
 <li><p>The candidates are evaluated sequentially:</p></li>
@@ -151,8 +153,8 @@ multicollinearity thresholds and the predictors and below.</p>
 <p>To simplify the code below a bit, the <strong>predictors are already
 ordered by preference</strong>, and we omit the cases
 <code>max_vif = NULL</code> or <code>max_cor = NULL</code>.</p>
-<p>The correlation matrix is computed with <a href="reference/cor_matrix.html">cor_matrix()</a> and ordered after
-<code>preference_order</code>.</p>
+<p>The correlation matrix is computed with <code><a href="../reference/cor_matrix.html">cor_matrix()</a></code> and
+ordered after the argument <code>preference_order</code>.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">m</span> <span class="op">&lt;-</span> <span class="fu">collinear</span><span class="fu">::</span><span class="fu"><a href="../reference/cor_matrix.html">cor_matrix</a></span><span class="op">(</span></span>
 <span>  df <span class="op">=</span> <span class="va">vi_smol</span>,</span>
@@ -206,7 +208,8 @@ is removed from <code>candidates</code>, as in
 selected for evaluation.</p>
 <p>Otherwise the algorithm moves to the VIF evaluation.</p>
 <p>The subset of <code>m</code> with all rows and columns of
-<code>selected</code> and <code>candidate</code> is used as input for <a href="reference/vif.html">vif()</a>.</p>
+<code>selected</code> and <code>candidate</code> is used as input for
+<code><a href="../reference/vif.html">vif()</a></code>.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span></span>
 <span>  <span class="fu">collinear</span><span class="fu">::</span><span class="fu"><a href="../reference/vif.html">vif</a></span><span class="op">(</span></span>
@@ -283,8 +286,8 @@ and removed from <code>candidates</code>, and a new
 <span></span>
 <span><span class="va">selected</span></span>
 <span><span class="co">#&gt; [1] "swi_mean"              "soil_temperature_mean" "rainfall_mean"</span></span></code></pre></div>
-<p>Let’s see if <a href="reference/collinear_select.html">collinear_select()</a> returns
-the same selection.</p>
+<p>Let’s see if <code><a href="../reference/collinear_select.html">collinear_select()</a></code> returns the same
+selection.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">collinear</span><span class="fu">::</span><span class="fu"><a href="../reference/collinear_select.html">collinear_select</a></span><span class="op">(</span></span>
 <span>  df <span class="op">=</span> <span class="va">vi_smol</span>,</span>
@@ -296,7 +299,6 @@ the same selection.</p>
 <span><span class="co">#&gt; [1] "swi_mean"              "soil_temperature_mean" "rainfall_mean"        </span></span>
 <span><span class="co">#&gt; attr(,"validated")</span></span>
 <span><span class="co">#&gt; [1] TRUE</span></span></code></pre></div>
-<p>All good, nice!</p>
 <p>And that is all about how multicollinearity filtering works within
 <code>collinear</code>!</p>
 </div>

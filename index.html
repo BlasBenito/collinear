@@ -91,16 +91,16 @@
 <div class="section level2">
 <h2 id="summary">Summary<a class="anchor" aria-label="anchor" href="#summary"></a>
 </h2>
-<p>The R package <code>collinear</code> provides a comprehensive toolkit for smart multicollinearity management in datasets with mixed variable types. The main function, <a href="reference/collinear.html"><code>collinear()</code></a>, integrates five core components:</p>
+<p>The R package <code>collinear</code> provides a comprehensive toolkit for smart multicollinearity management in datasets with mixed variable types. The main function, <a href="https://blasbenito.github.io/collinear/reference/collinear.html"><code>collinear()</code></a>, integrates five core components:</p>
 <ul>
-<li><p><a href="articles/target_encoding.html"><strong>Target Encoding</strong></a> (function <a href="reference/target_encoding_lab.html">target_encoding_lab()</a>): Transparently converts categorical predictors to numeric when required, enabling VIF and correlation analysis across mixed data types.</p></li>
-<li><p><a href="articles/intelligent_predictor_ranking.html"><strong>Intelligent Predictor Ranking</strong></a> (function <a href="reference/preference_order.html">preference_order()</a>): Prioritizes predictors by their univariate association with the response to ensure that the most relevant ones are retained during filtering.</p></li>
-<li><p><a href="articles/unified_correlation_framework.html"><strong>Unified Correlation Framework</strong></a> (function <a href="reference/cor_df.html">cor_df()</a>): Computes pairwise correlations between any variable types using Pearson correlation (numeric-numeric), target encoding (numeric-categorical), and Cramer’s V (categorical-categorical) within a single, consistent workflow.</p></li>
-<li><p><a href="articles/adaptive_filtering_thresholds.html"><strong>Adaptive Filtering Thresholds</strong></a> (function <a href="reference/collinear.html">collinear()</a>): Automatically configures correlation and VIF thresholds based on each dataset’s correlation structure, eliminating guesswork while allowing manual override.</p></li>
-<li><p><a href="articles/dual_filtering_strategy.html"><strong>Dual Filtering Strategy</strong></a> (function <a href="reference/collinear_select.html">collinear_select()</a>): Combines pairwise correlation and Variance Inflation Factor filtering while considering predictor rankings to manage multicollinearity while maximizing the predictive power of the resulting selection of predictors.</p></li>
+<li><p><a href="https://blasbenito.github.io/collinear/articles/target_encoding.html"><strong>Target Encoding</strong></a> (function <a href="https://blasbenito.github.io/collinear/reference/target_encoding_lab.html">target_encoding_lab()</a>): Transparently converts categorical predictors to numeric when required, enabling VIF and correlation analysis across mixed data types.</p></li>
+<li><p><a href="https://blasbenito.github.io/collinear/articles/intelligent_predictor_ranking.html"><strong>Intelligent Predictor Ranking</strong></a> (function <a href="https://blasbenito.github.io/collinear/reference/preference_order.html">preference_order()</a>): Prioritizes predictors by their univariate association with the response to ensure that the most relevant ones are retained during filtering.</p></li>
+<li><p><a href="https://blasbenito.github.io/collinear/articles/unified_correlation_framework.html"><strong>Unified Correlation Framework</strong></a> (function <a href="https://blasbenito.github.io/collinear/reference/cor_df.html">cor_df()</a>): Computes pairwise correlations between any variable types using Pearson correlation (numeric-numeric), target encoding (numeric-categorical), and Cramer’s V (categorical-categorical) within a single, consistent workflow.</p></li>
+<li><p><a href="https://blasbenito.github.io/collinear/articles/adaptive_filtering_thresholds.html"><strong>Adaptive Filtering Thresholds</strong></a> (function <a href="https://blasbenito.github.io/collinear/reference/collinear.html">collinear()</a>): Automatically configures correlation and VIF thresholds based on each dataset’s correlation structure, eliminating guesswork while allowing manual override.</p></li>
+<li><p><a href="https://blasbenito.github.io/collinear/articles/dual_filtering_strategy.html"><strong>Dual Filtering Strategy</strong></a> (function <a href="https://blasbenito.github.io/collinear/reference/collinear_select.html">collinear_select()</a>): Combines pairwise correlation and Variance Inflation Factor filtering while considering predictor rankings to manage multicollinearity while maximizing the predictive power of the resulting selection of predictors.</p></li>
 </ul>
-<p>These methods, except target encoding are also fully integrated into the <code>tidymodels</code> implementation <a href="reference/step_collinear.html">step_collinear()</a>.</p>
-<p>The package also provides diagnostic functions (<a href="reference/cor_df.html">cor_df()</a>, <a href="reference/vif_df.html">vif_df()</a>, <a href="reference/collinear_stats.html">collinear_stats()</a>) to help users assess multicollinearity in their data before and after filtering.</p>
+<p>These methods, except target encoding are also fully integrated into the <code>tidymodels</code> implementation <a href="https://blasbenito.github.io/collinear/reference/step_collinear.html">step_collinear()</a>.</p>
+<p>The package also provides diagnostic functions (<a href="https://blasbenito.github.io/collinear/reference/cor_df.html">cor_df()</a>, <a href="https://blasbenito.github.io/collinear/reference/vif_df.html">vif_df()</a>, <a href="https://blasbenito.github.io/collinear/reference/collinear_stats.html">collinear_stats()</a>) to help users assess multicollinearity in their data before and after filtering.</p>
 </div>
 <div class="section level2">
 <h2 id="install">Install<a class="anchor" aria-label="anchor" href="#install"></a>
@@ -144,7 +144,7 @@
 <div class="section level3">
 <h3 id="example-data">Example Data<a class="anchor" aria-label="anchor" href="#example-data"></a>
 </h3>
-<p>The example dataframe <a href="reference/vi_smol.html">vi_smol</a> has several response variables and a large set of predictors. Here we focus on the numeric response <code>vi_numeric</code>, and the complete set of numeric and categorical predictors, stored in the vector <a href="reference/vi_predictors.html">vi_predictors</a>.</p>
+<p>The example dataframe <a href="https://blasbenito.github.io/collinear/reference/vi_smol.html">vi_smol</a> has several response variables and a large set of predictors. Here we focus on the numeric response <code>vi_numeric</code>, and the complete set of numeric and categorical predictors, stored in the vector <a href="https://blasbenito.github.io/collinear/reference/vi_predictors.html">vi_predictors</a>.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">vi_smol</span>, <span class="va">vi_predictors</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">vi_smol</span><span class="op">)</span></span>
@@ -156,7 +156,7 @@
 <h3 id="multicollinearity-analysis">Multicollinearity Analysis<a class="anchor" aria-label="anchor" href="#multicollinearity-analysis"></a>
 </h3>
 <p>The package provides several functions to assess multicollinearity.</p>
-<p>The functions <a href="reference/cor_df.html">cor_df()</a> and <a href="reference/vif_df.html">vif_df()</a> generate dataframes with the pairwise correlations and VIF scores of the predictors, while the functions <a href="reference/cor_stats.html">cor_stats()</a>, <a href="reference/vif_stats.html">vif_stats()</a> (used below) and <a href="reference/collinear_stats.html">collinear_stats()</a> generate descriptive multicollinearity statistics. Notice that the function takes a while to execute because computing correlations for the categorical variables in <code>vi_predictors</code> is computationally expensive.</p>
+<p>The functions <a href="https://blasbenito.github.io/collinear/reference/cor_df.html">cor_df()</a> and <a href="https://blasbenito.github.io/collinear/reference/vif_df.html">vif_df()</a> generate dataframes with the pairwise correlations and VIF scores of the predictors, while the functions <a href="https://blasbenito.github.io/collinear/reference/cor_stats.html">cor_stats()</a>, <a href="https://blasbenito.github.io/collinear/reference/vif_stats.html">vif_stats()</a> (used below) and <a href="https://blasbenito.github.io/collinear/reference/collinear_stats.html">collinear_stats()</a> generate descriptive multicollinearity statistics. Notice that the function takes a while to execute because computing correlations for the categorical variables in <code>vi_predictors</code> is computationally expensive.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">collinear</span><span class="fu">::</span><span class="fu"><a href="reference/vif_stats.html">vif_stats</a></span><span class="op">(</span></span>
 <span>  df <span class="op">=</span> <span class="va">vi_smol</span>,</span>
@@ -183,7 +183,7 @@
 <div class="section level3">
 <h3 id="multicollinearity-filtering">Multicollinearity Filtering<a class="anchor" aria-label="anchor" href="#multicollinearity-filtering"></a>
 </h3>
-<p>To reduce multicollinearity in <code>vi_smol</code> we apply <a href="reference/collinear.html">collinear()</a> with a minimal setup.</p>
+<p>To reduce multicollinearity in <code>vi_smol</code> we apply <a href="https://blasbenito.github.io/collinear/reference/collinear.html">collinear()</a> with a minimal setup.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu">collinear</span><span class="fu">::</span><span class="fu"><a href="reference/collinear.html">collinear</a></span><span class="op">(</span></span>
 <span>  df <span class="op">=</span> <span class="va">vi_smol</span>,</span>
@@ -278,7 +278,7 @@
 <span><span class="co">#&gt;  [9] "topo_elevation"           "cloud_cover_range"       </span></span>
 <span><span class="co">#&gt; [11] "continent"                "soil_sand"               </span></span>
 <span><span class="co">#&gt; [13] "topo_diversity"           "topo_slope"</span></span></code></pre></div>
-<p>The object <code>preference_order</code> contains the ranking of predictors. It is computed by the function <a href="reference/preference_order.html">preference_order()</a> by assessing the association between the response and the predictors. In this case, it fits univariate models between the response and each predictor using <a href="reference/f_numeric_rf.html">f_numeric_rf</a>, and returns the R-squared of the observations vs the model predictions. This ranking ensures that the most important predictors are protected during multicollinearity filtering.</p>
+<p>The object <code>preference_order</code> contains the ranking of predictors. It is computed by the function <a href="https://blasbenito.github.io/collinear/reference/preference_order.html">preference_order()</a> by assessing the association between the response and the predictors. In this case, it fits univariate models between the response and each predictor using <a href="https://blasbenito.github.io/collinear/reference/f_numeric_rf.html">f_numeric_rf</a>, and returns the R-squared of the observations vs the model predictions. This ranking ensures that the most important predictors are protected during multicollinearity filtering.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">x</span><span class="op">$</span><span class="va">vi_numeric</span><span class="op">$</span><span class="va">preference_order</span><span class="op">)</span></span>
 <span><span class="co">#&gt;     response               predictor            f    metric  score rank</span></span>
@@ -300,7 +300,7 @@
 <span><span class="co">#&gt; [13] "topo_slope"              </span></span>
 <span><span class="co">#&gt; attr(,"validated")</span></span>
 <span><span class="co">#&gt; [1] TRUE</span></span></code></pre></div>
-<p>We can check that this selection of predictors shows low multicollinearity by running the function <a href="reference/vif_df.html">vif_df()</a> on them.</p>
+<p>We can check that this selection of predictors shows low multicollinearity by running the function <a href="https://blasbenito.github.io/collinear/reference/vif_df.html">vif_df()</a> on them.</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">collinear</span><span class="fu">::</span><span class="fu"><a href="reference/vif_df.html">vif_df</a></span><span class="op">(</span></span>
 <span>  df <span class="op">=</span> <span class="va">x</span><span class="op">$</span><span class="va">vi_numeric</span><span class="op">$</span><span class="va">df</span>,</span>
@@ -329,14 +329,14 @@
 <span><span class="co">#&gt;     evapotranspiration_range + swi_min + soil_soc + humidity_range + </span></span>
 <span><span class="co">#&gt;     topo_elevation + cloud_cover_range + continent + soil_sand + </span></span>
 <span><span class="co">#&gt;     topo_diversity + topo_slope</span></span>
-<span><span class="co">#&gt; &lt;environment: 0x60138d419bf8&gt;</span></span>
+<span><span class="co">#&gt; &lt;environment: 0x5adb1977e4b0&gt;</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $smooth</span></span>
 <span><span class="co">#&gt; vi_numeric ~ s(rainfall_mean) + s(swi_mean) + s(evapotranspiration_max) + </span></span>
 <span><span class="co">#&gt;     s(evapotranspiration_range) + s(swi_min) + s(soil_soc) + </span></span>
 <span><span class="co">#&gt;     s(humidity_range) + s(topo_elevation) + s(cloud_cover_range) + </span></span>
 <span><span class="co">#&gt;     continent + s(soil_sand) + s(topo_diversity) + s(topo_slope)</span></span>
-<span><span class="co">#&gt; &lt;environment: 0x60138d419bf8&gt;</span></span></code></pre></div>
+<span><span class="co">#&gt; &lt;environment: 0x5adb1977e4b0&gt;</span></span></code></pre></div>
 <p>The function returns linear formulas for numeric outcomes, and classification formulas for categorical outcomes.</p>
 </div>
 <div class="section level3">
@@ -392,7 +392,7 @@
 <h3 id="integration-with-tidymodels">Integration with <code>tidymodels</code>
 <a class="anchor" aria-label="anchor" href="#integration-with-tidymodels"></a>
 </h3>
-<p>The function <a href="reference/step_collinear.html">step_collinear()</a> wraps <a href="reference/collinear.html">collinear()</a> to facilitate its usage in <code>tidymodels</code> recipes. Please notice that <code><a href="reference/step_collinear.html">step_collinear()</a></code> does not perform target encoding, as combining this functionality with multicollinearity filtering does not fit well with how <code>recipes</code> works.</p>
+<p>The function <a href="https://blasbenito.github.io/collinear/reference/step_collinear.html">step_collinear()</a> wraps <a href="https://blasbenito.github.io/collinear/reference/collinear.html">collinear()</a> to facilitate its usage in <code>tidymodels</code> recipes. Please notice that <code><a href="reference/step_collinear.html">step_collinear()</a></code> does not perform target encoding, as combining this functionality with multicollinearity filtering does not fit well with how <code>recipes</code> works.</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>

@@ -125,7 +125,7 @@ y
 #> vi_numeric ~ topo_elevation + topo_slope + humidity_range + topo_diversity + 
 #>     soil_clay + cloud_cover_range + soil_silt + rainfall_min + 
 #>     growing_season_temperature + swi_max + soil_nitrogen + evapotranspiration_range
-#> <environment: 0x555845d207e0>
+#> <environment: 0x55aed4112110>
 
 #using a formula in a model
 m <- stats::lm(
@@ -177,7 +177,7 @@ y
 #>     topo_diversity + soil_clay + cloud_cover_range + soil_silt + 
 #>     rainfall_min + growing_season_temperature + swi_max + soil_nitrogen + 
 #>     evapotranspiration_range
-#> <environment: 0x555845d207e0>
+#> <environment: 0x55aed4112110>
 
 
 #polynomial formula (3rd degree)
@@ -199,7 +199,7 @@ y
 #>     degree = 3, raw = TRUE) + poly(swi_max, degree = 3, raw = TRUE) + 
 #>     poly(soil_nitrogen, degree = 3, raw = TRUE) + poly(evapotranspiration_range, 
 #>     degree = 3, raw = TRUE)
-#> <environment: 0x555845d207e0>
+#> <environment: 0x55aed4112110>
 
 #gam formula
 y <- model_formula(
@@ -214,7 +214,7 @@ y
 #>     s(topo_diversity) + s(soil_clay) + s(cloud_cover_range) + 
 #>     s(soil_silt) + s(rainfall_min) + s(growing_season_temperature) + 
 #>     s(swi_max) + s(soil_nitrogen) + s(evapotranspiration_range)
-#> <environment: 0x555845d207e0>
+#> <environment: 0x55aed4112110>
 
 #random effect
 y <- model_formula(
@@ -229,5 +229,5 @@ y
 #>     soil_clay + cloud_cover_range + soil_silt + rainfall_min + 
 #>     growing_season_temperature + swi_max + soil_nitrogen + evapotranspiration_range + 
 #>     (1 | country_name)
-#> <environment: 0x555845d207e0>
+#> <environment: 0x55aed4112110>
 ```

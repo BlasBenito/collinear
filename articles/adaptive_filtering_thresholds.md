@@ -5,8 +5,9 @@
 The function
 [`collinear()`](https://blasbenito.github.io/collinear/reference/collinear.md)
 automatically configures multicollinearity filtering thresholds when the
-arguments `max_cor` and `max_vif` are not specified. This adaptive
-approach:
+arguments `max_cor` and `max_vif` are not specified.
+
+This adaptive approach has several advantages:
 
 - Eliminates the guesswork of choosing threshold values.
 - Adapts filtering intensity to the correlation structure of the data.
@@ -75,8 +76,10 @@ sets these to `NULL` and computes appropriate thresholds from the data.
 
 Let’s see how that works.
 
-The vector `vi_predictors_numeric` names numeric predictors with a
-moderate multicollinearity, as the stats below show.
+The vector
+[`vi_predictors_numeric`](https://blasbenito.github.io/collinear/articles/reference/vi_predictors_numeric.md)
+names numeric predictors with a moderate multicollinearity, as the stats
+below show.
 
 ``` r
 collinear::collinear_stats(
@@ -220,7 +223,8 @@ system.file(
 ```
 
 The results of this experiment are in the dataframe
-\[experiment_adaptive_thresholds\], plotted below.
+[`experiment_adaptive_thresholds`](https://blasbenito.github.io/collinear/articles/reference/experiment_adaptive_thresholds.md),
+plotted below.
 
 ![](reference/figures/README-unnamed-chunk-8-1.png)
 
@@ -244,9 +248,11 @@ The adaptive selection of multicollinearity thresholds requires three
 steps:
 
 **1.** Compute the quantile 0.75 of the correlation for the input
-predictors via \[cor_stats()\]. This quantile is used because it
-captures the upper tail of the correlation distribution, where the
-problematic multicollinearity begins.
+predictors via
+[`cor_stats()`](https://blasbenito.github.io/collinear/reference/cor_stats.md).
+This quantile is used because it captures the upper tail of the
+correlation distribution, where the problematic multicollinearity
+begins.
 
 ``` r
 cor_0.75 <- collinear::cor_stats(
@@ -275,9 +281,9 @@ max_cor
 Where:
 
 - `0.493`: floor of the curve, corresponding to VIF ≈ 2.5 in
-  \[prediction_cor_to_vif\] (conservative filtering).
+  `prediction_cor_to_vif` (conservative filtering).
 - `0.735`: ceiling of the curve (0.545 + 0.24), corresponding to VIF ≈
-  7.5 in \[prediction_cor_to_vif\] (permissive filtering).
+  7.5 in `prediction_cor_to_vif` (permissive filtering).
 - `0.614`: midpoint where the transition is steepest.
 - `-15`: steepness parameter controlling how sharply the curve
   transitions.
@@ -291,8 +297,10 @@ near the floor, while highly correlated datasets (quantile 0.75 \> 0.8)
 approach the ceiling. This prevents both over-filtering of clean
 datasets and under-filtering of problematic ones.
 
-3.  The pre-trained GAM model \[gam_cor_to_vif\] predicts a suitable
-    `max_vif` from the `max_cor` resulting from the transformation.
+3.  The pre-trained GAM model
+    [`gam_cor_to_vif`](https://blasbenito.github.io/collinear/articles/reference/gam_cor_to_vif.md)
+    predicts a suitable `max_vif` from the `max_cor` resulting from the
+    transformation.
 
 ``` r
 max_vif <- mgcv::predict.gam(
@@ -306,10 +314,10 @@ max_vif
 ```
 
 This model was fitted on the simulation results in
-\[experiment_cor_vs_vif\], where both filtering methods were applied
-across 10,000 random dataset configurations. For each `max_cor` value,
-the `max_vif` producing the highest Jaccard similarity between the two
-selections was identified.
+[`experiment_cor_vs_vif`](https://blasbenito.github.io/collinear/articles/reference/experiment_cor_vs_vif.md),
+where both filtering methods were applied across 10,000 random dataset
+configurations. For each `max_cor` value, the `max_vif` producing the
+highest Jaccard similarity between the two selections was identified.
 
 The experiment script can be opened in RStudio as follows:
 

@@ -136,7 +136,7 @@ Let’s try to answer that question empirically with a small simulation.
 It generates integer vectors with different cardinality levels and
 compares them using both
 [`stats::cor()`](https://rdrr.io/r/stats/cor.html) and
-[`collinear::cor_cramer()`](https://blasbenito.github.io/collinear/reference/cor_cramer.md).
+[`cor_cramer()`](https://blasbenito.github.io/collinear/reference/cor_cramer.md).
 
 ``` r
 set.seed(1)
@@ -168,32 +168,6 @@ for(i in seq_len(nrow(sim))) {
 
 The scatterplot below shows the simulation results across cardinality
 levels, with linear smooths for each group.
-
-``` r
-library(ggplot2)
-
-ggplot2::ggplot(sim) +
-  ggplot2::aes(
-    x = cramer_v, 
-    y = cor, 
-    color = factor(classes),
-    group = factor(classes)
-  ) +
-  ggplot2::geom_point(alpha = 0.25) +
-  ggplot2::geom_smooth(method = "lm", formula = y ~ x, se = FALSE) +
-  ggplot2::geom_abline(slope = 1, color = "gray50", lty = "dashed") +
-  ggplot2::labs(
-    x = "Bias-Corrected Cramer's V",
-    y = "Absolute Pearson Correlation",
-    color = "Cardinality",
-    title = "Pearson Correlation vs. Cramer's V"
-  ) +
-  ggplot2::coord_fixed(
-    xlim = c(0, max(sim$cor)),
-    ylim = c(0, max(sim$cor))
-  ) +
-  ggplot2::theme_bw()
-```
 
 ![](unified_correlation_framework_files/figure-html/unnamed-chunk-8-1.png)
 

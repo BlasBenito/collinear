@@ -92,14 +92,15 @@
 <p><a href="https://www.blasbenito.com/post/target-encoding/" class="external-link"><strong>Target
 encoding</strong></a> maps categorical predictors to a statistic of a
 reference numeric variable across categories.</p>
-<p>This functionality, implemented in [target_encoding_lab()], is used
-in two different ways:</p>
+<p>This functionality, implemented in
+<code><a href="../reference/target_encoding_lab.html">target_encoding_lab()</a></code>, is used in two different ways:</p>
 <ul>
-<li>[cor_df()] applies it to compute pairwise correlations between
-numeric and categorical predictors, if any.</li>
-<li>[collinear()] applies it optionally if the user requests it and the
-response is numeric to transform all categorical predictors to numeric
-and speed-up the multicollinearity analysis.</li>
+<li>The function <code><a href="../reference/cor_df.html">cor_df()</a></code> applies it to compute pairwise
+correlations between numeric and categorical predictors, if any.</li>
+<li>The function <code><a href="../reference/collinear.html">collinear()</a></code> applies it optionally if the
+user requests it and the response is numeric to transform all
+categorical predictors to numeric and speed-up the multicollinearity
+analysis.</li>
 </ul>
 </div>
 <div class="section level2">
@@ -148,8 +149,8 @@ shown in the code below using the <code>dplyr</code> syntax.</p>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span>     4 b            5</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span>     5 b            5</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span>     6 b            5</span></span></code></pre></div>
-<p>This is equivalent to the “mean” encoding method implemented in
-<code><a href="../reference/target_encoding_lab.html">target_encoding_lab()</a></code>.</p>
+<p>This is equivalent to the <code>"mean"</code> encoding method
+implemented in <code><a href="../reference/target_encoding_lab.html">target_encoding_lab()</a></code>.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu">collinear</span><span class="fu">::</span><span class="fu"><a href="../reference/target_encoding_lab.html">target_encoding_lab</a></span><span class="op">(</span></span>
 <span>  df <span class="op">=</span> <span class="va">df</span>,</span>
@@ -229,14 +230,15 @@ values.</p>
 <p>The <code>dplyr</code> version of this algorithm is a bit more
 verbose, but I hope it does the trick:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">df</span> <span class="op">&lt;-</span> <span class="va">df</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">cat</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>cat_mean <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">num</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">ungroup</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html" class="external-link">arrange</a></span><span class="op">(</span><span class="va">cat_mean</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">cat</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>cat_rank <span class="op">=</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">cur_group_id</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">ungroup</a></span><span class="op">(</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">df</span> <span class="op">&lt;-</span> <span class="va">df</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">cat</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span></span>
+<span>    cat_mean <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">num</span><span class="op">)</span></span>
+<span>    <span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">ungroup</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span></span>
+<span>    cat_rank <span class="op">=</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/row_number.html" class="external-link">dense_rank</a></span><span class="op">(</span><span class="va">cat_mean</span><span class="op">)</span></span>
+<span>    <span class="op">)</span></span>
 <span></span>
 <span><span class="va">df</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 6 × 4</span></span></span>
@@ -249,7 +251,7 @@ verbose, but I hope it does the trick:</p>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span>     5 b            5        2</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span>     6 b            5        2</span></span></code></pre></div>
 <p>The same method can be applied via <code><a href="../reference/target_encoding_lab.html">target_encoding_lab()</a></code>
-with `encoding_method = “rank”.</p>
+with <code>encoding_method = "rank"</code>.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu">collinear</span><span class="fu">::</span><span class="fu"><a href="../reference/target_encoding_lab.html">target_encoding_lab</a></span><span class="op">(</span></span>
 <span>  df <span class="op">=</span> <span class="va">df</span>,</span>
@@ -276,8 +278,8 @@ with `encoding_method = “rank”.</p>
 <h3 id="computing-correlations-with-mixed-variable-types">Computing Correlations with Mixed Variable Types<a class="anchor" aria-label="anchor" href="#computing-correlations-with-mixed-variable-types"></a>
 </h3>
 <p>When computing pairwise correlations between numeric and categorical
-predictors, [cor_df()] automatically applies leave-one-out target
-encoding behind the scenes.</p>
+predictors, <code><a href="../reference/cor_df.html">cor_df()</a></code> automatically applies leave-one-out
+target encoding behind the scenes.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu">collinear</span><span class="fu">::</span><span class="fu"><a href="../reference/cor_df.html">cor_df</a></span><span class="op">(</span></span>
 <span>  df <span class="op">=</span> <span class="fu">collinear</span><span class="fu">::</span><span class="va"><a href="../reference/vi_smol.html">vi_smol</a></span>,</span>
@@ -314,11 +316,14 @@ method <code>"loo"</code> and then compute the pairwise correlation with
 <h3 id="speeding-up-multicollinearity-analysis">Speeding Up Multicollinearity Analysis<a class="anchor" aria-label="anchor" href="#speeding-up-multicollinearity-analysis"></a>
 </h3>
 <p>Enabling target encoding when working with numeric responses and
-categorical predictors in [collinear()] provides two key advantages: it
-speeds up computation considerably, and more importantly, it replaces
-Cramer’s V associations between pairs of categorical variables with
-Pearson correlations between pairs of numeric variables, providing a
-more statistically sound multicollinearity assessment.</p>
+categorical predictors in <code><a href="../reference/collinear.html">collinear()</a></code> provides two key
+advantages:</p>
+<ul>
+<li>Speeds up computation considerably, and more importantly.</li>
+<li>Replaces Cramer’s V associations between pairs of categorical
+variables with Pearson correlations between pairs of numeric variables,
+providing a more statistically sound multicollinearity assessment.</li>
+</ul>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># without target encoding</span></span>
 <span><span class="va">time_without</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.time.html" class="external-link">system.time</a></span><span class="op">(</span><span class="op">{</span></span>
@@ -347,8 +352,8 @@ more statistically sound multicollinearity assessment.</p>
 <span>  seconds <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">time_without</span><span class="op">[</span><span class="st">"elapsed"</span><span class="op">]</span>, <span class="va">time_with</span><span class="op">[</span><span class="st">"elapsed"</span><span class="op">]</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt;   encoding seconds</span></span>
-<span><span class="co">#&gt; 1       No  10.570</span></span>
-<span><span class="co">#&gt; 2      Yes   2.518</span></span></code></pre></div>
+<span><span class="co">#&gt; 1       No  10.443</span></span>
+<span><span class="co">#&gt; 2      Yes   2.510</span></span></code></pre></div>
 <p>The speed-up is considerable!</p>
 <p>But that’s not the only consequence of applying target encoding.
 Let’s take a look at the variable selections on each run.</p>

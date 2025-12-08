@@ -5,46 +5,46 @@
 The R package `collinear` provides a comprehensive toolkit for smart
 multicollinearity management in datasets with mixed variable types. The
 main function,
-[`collinear()`](https://blasbenito.github.io/collinear/reference/collinear.md),
+[`collinear()`](https://blasbenito.github.io/collinear/reference/collinear.html),
 integrates five core components:
 
 - [**Target
-  Encoding**](https://blasbenito.github.io/collinear/articles/target_encoding.md)
+  Encoding**](https://blasbenito.github.io/collinear/articles/target_encoding.html)
   (function
-  [target_encoding_lab()](https://blasbenito.github.io/collinear/reference/target_encoding_lab.md)):
+  [target_encoding_lab()](https://blasbenito.github.io/collinear/reference/target_encoding_lab.html)):
   Transparently converts categorical predictors to numeric when
   required, enabling VIF and correlation analysis across mixed data
   types.
 
 - [**Intelligent Predictor
-  Ranking**](https://blasbenito.github.io/collinear/articles/intelligent_predictor_ranking.md)
+  Ranking**](https://blasbenito.github.io/collinear/articles/intelligent_predictor_ranking.html)
   (function
-  [preference_order()](https://blasbenito.github.io/collinear/reference/preference_order.md)):
+  [preference_order()](https://blasbenito.github.io/collinear/reference/preference_order.html)):
   Prioritizes predictors by their univariate association with the
   response to ensure that the most relevant ones are retained during
   filtering.
 
 - [**Unified Correlation
-  Framework**](https://blasbenito.github.io/collinear/articles/unified_correlation_framework.md)
+  Framework**](https://blasbenito.github.io/collinear/articles/unified_correlation_framework.html)
   (function
-  [cor_df()](https://blasbenito.github.io/collinear/reference/cor_df.md)):
+  [cor_df()](https://blasbenito.github.io/collinear/reference/cor_df.html)):
   Computes pairwise correlations between any variable types using
   Pearson correlation (numeric-numeric), target encoding
   (numeric-categorical), and Cramer’s V (categorical-categorical) within
   a single, consistent workflow.
 
 - [**Adaptive Filtering
-  Thresholds**](https://blasbenito.github.io/collinear/articles/adaptive_filtering_thresholds.md)
+  Thresholds**](https://blasbenito.github.io/collinear/articles/adaptive_filtering_thresholds.html)
   (function
-  [collinear()](https://blasbenito.github.io/collinear/reference/collinear.md)):
+  [collinear()](https://blasbenito.github.io/collinear/reference/collinear.html)):
   Automatically configures correlation and VIF thresholds based on each
   dataset’s correlation structure, eliminating guesswork while allowing
   manual override.
 
 - [**Dual Filtering
-  Strategy**](https://blasbenito.github.io/collinear/articles/dual_filtering_strategy.md)
+  Strategy**](https://blasbenito.github.io/collinear/articles/dual_filtering_strategy.html)
   (function
-  [collinear_select()](https://blasbenito.github.io/collinear/reference/collinear_select.md)):
+  [collinear_select()](https://blasbenito.github.io/collinear/reference/collinear_select.html)):
   Combines pairwise correlation and Variance Inflation Factor filtering
   while considering predictor rankings to manage multicollinearity while
   maximizing the predictive power of the resulting selection of
@@ -52,12 +52,12 @@ integrates five core components:
 
 These methods, except target encoding are also fully integrated into the
 `tidymodels` implementation
-[step_collinear()](https://blasbenito.github.io/collinear/reference/step_collinear.md).
+[step_collinear()](https://blasbenito.github.io/collinear/reference/step_collinear.html).
 
 The package also provides diagnostic functions
-([cor_df()](https://blasbenito.github.io/collinear/reference/cor_df.md),
-[vif_df()](https://blasbenito.github.io/collinear/reference/vif_df.md),
-[collinear_stats()](https://blasbenito.github.io/collinear/reference/collinear_stats.md))
+([cor_df()](https://blasbenito.github.io/collinear/reference/cor_df.html),
+[vif_df()](https://blasbenito.github.io/collinear/reference/vif_df.html),
+[collinear_stats()](https://blasbenito.github.io/collinear/reference/collinear_stats.html))
 to help users assess multicollinearity in their data before and after
 filtering.
 
@@ -115,11 +115,11 @@ future::plan(
 ### Example Data
 
 The example dataframe
-[vi_smol](https://blasbenito.github.io/collinear/reference/vi_smol.md)
+[vi_smol](https://blasbenito.github.io/collinear/reference/vi_smol.html)
 has several response variables and a large set of predictors. Here we
 focus on the numeric response `vi_numeric`, and the complete set of
 numeric and categorical predictors, stored in the vector
-[vi_predictors](https://blasbenito.github.io/collinear/reference/vi_predictors.md).
+[vi_predictors](https://blasbenito.github.io/collinear/reference/vi_predictors.html).
 
 ``` r
 data(vi_smol, vi_predictors)
@@ -134,15 +134,15 @@ length(vi_predictors)
 The package provides several functions to assess multicollinearity.
 
 The functions
-[cor_df()](https://blasbenito.github.io/collinear/reference/cor_df.md)
+[cor_df()](https://blasbenito.github.io/collinear/reference/cor_df.html)
 and
-[vif_df()](https://blasbenito.github.io/collinear/reference/vif_df.md)
+[vif_df()](https://blasbenito.github.io/collinear/reference/vif_df.html)
 generate dataframes with the pairwise correlations and VIF scores of the
 predictors, while the functions
-[cor_stats()](https://blasbenito.github.io/collinear/reference/cor_stats.md),
-[vif_stats()](https://blasbenito.github.io/collinear/reference/vif_stats.md)
+[cor_stats()](https://blasbenito.github.io/collinear/reference/cor_stats.html),
+[vif_stats()](https://blasbenito.github.io/collinear/reference/vif_stats.html)
 (used below) and
-[collinear_stats()](https://blasbenito.github.io/collinear/reference/collinear_stats.md)
+[collinear_stats()](https://blasbenito.github.io/collinear/reference/collinear_stats.html)
 generate descriptive multicollinearity statistics. Notice that the
 function takes a while to execute because computing correlations for the
 categorical variables in `vi_predictors` is computationally expensive.
@@ -178,7 +178,7 @@ This suggests substantial redundancy in the set of predictors.
 ### Multicollinearity Filtering
 
 To reduce multicollinearity in `vi_smol` we apply
-[collinear()](https://blasbenito.github.io/collinear/reference/collinear.md)
+[collinear()](https://blasbenito.github.io/collinear/reference/collinear.html)
 with a minimal setup.
 
 ``` r
@@ -287,11 +287,11 @@ colnames(x$vi_numeric$df)
 
 The object `preference_order` contains the ranking of predictors. It is
 computed by the function
-[preference_order()](https://blasbenito.github.io/collinear/reference/preference_order.md)
+[preference_order()](https://blasbenito.github.io/collinear/reference/preference_order.html)
 by assessing the association between the response and the predictors. In
 this case, it fits univariate models between the response and each
 predictor using
-[f_numeric_rf](https://blasbenito.github.io/collinear/reference/f_numeric_rf.md),
+[f_numeric_rf](https://blasbenito.github.io/collinear/reference/f_numeric_rf.html),
 and returns the R-squared of the observations vs the model predictions.
 This ranking ensures that the most important predictors are protected
 during multicollinearity filtering.
@@ -326,7 +326,7 @@ x$vi_numeric$selection
 
 We can check that this selection of predictors shows low
 multicollinearity by running the function
-[vif_df()](https://blasbenito.github.io/collinear/reference/vif_df.md)
+[vif_df()](https://blasbenito.github.io/collinear/reference/vif_df.html)
 on them.
 
 ``` r
@@ -365,14 +365,14 @@ x$vi_numeric$formulas
 #>     evapotranspiration_range + swi_min + soil_soc + humidity_range + 
 #>     topo_elevation + cloud_cover_range + continent + soil_sand + 
 #>     topo_diversity + topo_slope
-#> <environment: 0x60138d419bf8>
+#> <environment: 0x5adb1977e4b0>
 #> 
 #> $smooth
 #> vi_numeric ~ s(rainfall_mean) + s(swi_mean) + s(evapotranspiration_max) + 
 #>     s(evapotranspiration_range) + s(swi_min) + s(soil_soc) + 
 #>     s(humidity_range) + s(topo_elevation) + s(cloud_cover_range) + 
 #>     continent + s(soil_sand) + s(topo_diversity) + s(topo_slope)
-#> <environment: 0x60138d419bf8>
+#> <environment: 0x5adb1977e4b0>
 ```
 
 The function returns linear formulas for numeric outcomes, and
@@ -433,9 +433,9 @@ summary(m)
 ### Integration with `tidymodels`
 
 The function
-[step_collinear()](https://blasbenito.github.io/collinear/reference/step_collinear.md)
+[step_collinear()](https://blasbenito.github.io/collinear/reference/step_collinear.html)
 wraps
-[collinear()](https://blasbenito.github.io/collinear/reference/collinear.md)
+[collinear()](https://blasbenito.github.io/collinear/reference/collinear.html)
 to facilitate its usage in `tidymodels` recipes. Please notice that
 [`step_collinear()`](https://blasbenito.github.io/collinear/reference/step_collinear.md)
 does not perform target encoding, as combining this functionality with

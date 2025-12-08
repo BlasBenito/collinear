@@ -6,14 +6,19 @@
 maps categorical predictors to a statistic of a reference numeric
 variable across categories.
 
-This functionality, implemented in \[target_encoding_lab()\], is used in
-two different ways:
+This functionality, implemented in
+[`target_encoding_lab()`](https://blasbenito.github.io/collinear/reference/target_encoding_lab.md),
+is used in two different ways:
 
-- \[cor_df()\] applies it to compute pairwise correlations between
-  numeric and categorical predictors, if any.
-- \[collinear()\] applies it optionally if the user requests it and the
-  response is numeric to transform all categorical predictors to numeric
-  and speed-up the multicollinearity analysis.
+- The function
+  [`cor_df()`](https://blasbenito.github.io/collinear/reference/cor_df.md)
+  applies it to compute pairwise correlations between numeric and
+  categorical predictors, if any.
+- The function
+  [`collinear()`](https://blasbenito.github.io/collinear/reference/collinear.md)
+  applies it optionally if the user requests it and the response is
+  numeric to transform all categorical predictors to numeric and
+  speed-up the multicollinearity analysis.
 
 ## Setup
 
@@ -64,7 +69,7 @@ df
 #> 6     6 b            5
 ```
 
-This is equivalent to the “mean” encoding method implemented in
+This is equivalent to the `"mean"` encoding method implemented in
 [`target_encoding_lab()`](https://blasbenito.github.io/collinear/reference/target_encoding_lab.md).
 
 ``` r
@@ -153,14 +158,15 @@ The `dplyr` version of this algorithm is a bit more verbose, but I hope
 it does the trick:
 
 ``` r
-df <- df |> 
-  dplyr::group_by(cat) |> 
-  dplyr::mutate(cat_mean = mean(num)) |> 
-  dplyr::ungroup() |> 
-  dplyr::arrange(cat_mean) |> 
-  dplyr::group_by(cat) |> 
-  dplyr::mutate(cat_rank = dplyr::cur_group_id()) |> 
-  dplyr::ungroup()
+df <- df |>
+  dplyr::group_by(cat) |>
+  dplyr::mutate(
+    cat_mean = mean(num)
+    ) |>
+  dplyr::ungroup() |>
+  dplyr::mutate(
+    cat_rank = dplyr::dense_rank(cat_mean)
+    )
 
 df
 #> # A tibble: 6 × 4
@@ -176,7 +182,7 @@ df
 
 The same method can be applied via
 [`target_encoding_lab()`](https://blasbenito.github.io/collinear/reference/target_encoding_lab.md)
-with \`encoding_method = “rank”.
+with `encoding_method = "rank"`.
 
 ``` r
 df <- collinear::target_encoding_lab(
@@ -202,8 +208,9 @@ df
 ### Computing Correlations with Mixed Variable Types
 
 When computing pairwise correlations between numeric and categorical
-predictors, \[cor_df()\] automatically applies leave-one-out target
-encoding behind the scenes.
+predictors,
+[`cor_df()`](https://blasbenito.github.io/collinear/reference/cor_df.md)
+automatically applies leave-one-out target encoding behind the scenes.
 
 ``` r
 x <- collinear::cor_df(
@@ -245,11 +252,15 @@ stats::cor(
 ### Speeding Up Multicollinearity Analysis
 
 Enabling target encoding when working with numeric responses and
-categorical predictors in \[collinear()\] provides two key advantages:
-it speeds up computation considerably, and more importantly, it replaces
-Cramer’s V associations between pairs of categorical variables with
-Pearson correlations between pairs of numeric variables, providing a
-more statistically sound multicollinearity assessment.
+categorical predictors in
+[`collinear()`](https://blasbenito.github.io/collinear/reference/collinear.md)
+provides two key advantages:
+
+- Speeds up computation considerably, and more importantly.
+- Replaces Cramer’s V associations between pairs of categorical
+  variables with Pearson correlations between pairs of numeric
+  variables, providing a more statistically sound multicollinearity
+  assessment.
 
 ``` r
 # without target encoding
@@ -279,8 +290,8 @@ data.frame(
   seconds = c(time_without["elapsed"], time_with["elapsed"])
 )
 #>   encoding seconds
-#> 1       No  10.570
-#> 2      Yes   2.518
+#> 1       No  10.443
+#> 2      Yes   2.510
 ```
 
 The speed-up is considerable!

@@ -91,8 +91,8 @@
 </h2>
 <p>The function <code><a href="../reference/collinear.html">collinear()</a></code> automatically configures
 multicollinearity filtering thresholds when the arguments
-<code>max_cor</code> and <code>max_vif</code> are not specified. This
-adaptive approach:</p>
+<code>max_cor</code> and <code>max_vif</code> are not specified.</p>
+<p>This adaptive approach has several advantages:</p>
 <ul>
 <li>Eliminates the guesswork of choosing threshold values.</li>
 <li>Adapts filtering intensity to the correlation structure of the
@@ -156,9 +156,9 @@ and <code><a href="../reference/vif_select.html">vif_select()</a></code>, which 
 <code><a href="../reference/collinear.html">collinear()</a></code> sets these to <code>NULL</code> and computes
 appropriate thresholds from the data.</p>
 <p>Let’s see how that works.</p>
-<p>The vector <code>vi_predictors_numeric</code> names numeric
-predictors with a moderate multicollinearity, as the stats below
-show.</p>
+<p>The vector <a href="reference/vi_predictors_numeric.html"><code>vi_predictors_numeric</code></a>
+names numeric predictors with a moderate multicollinearity, as the stats
+below show.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">collinear</span><span class="fu">::</span><span class="fu"><a href="../reference/collinear_stats.html">collinear_stats</a></span><span class="op">(</span></span>
 <span>  df <span class="op">=</span> <span class="va">vi_smol</span>,</span>
@@ -282,8 +282,8 @@ output multicollinearity statistics.</p>
 <span>  package <span class="op">=</span> <span class="st">"collinear"</span></span>
 <span>  <span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu">rstudioapi</span><span class="fu">::</span><span class="fu"><a href="https://rstudio.github.io/rstudioapi/reference/navigateToFile.html" class="external-link">navigateToFile</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<p>The results of this experiment are in the dataframe
-[experiment_adaptive_thresholds], plotted below.</p>
+<p>The results of this experiment are in the dataframe <a href="reference/experiment_adaptive_thresholds.html"><code>experiment_adaptive_thresholds</code></a>,
+plotted below.</p>
 <p><img src="reference/figures/README-unnamed-chunk-8-1.png" class="r-plt" width="100%"></p>
 <p>The left panel shows the 75th percentile of input correlation against
 the maximum VIF of the resulting selection. The cases below the VIF =
@@ -303,9 +303,9 @@ well across most use cases.</p>
 <p>The adaptive selection of multicollinearity thresholds requires three
 steps:</p>
 <p><strong>1.</strong> Compute the quantile 0.75 of the correlation for
-the input predictors via [cor_stats()]. This quantile is used because it
-captures the upper tail of the correlation distribution, where the
-problematic multicollinearity begins.</p>
+the input predictors via <code><a href="../reference/cor_stats.html">cor_stats()</a></code>. This quantile is used
+because it captures the upper tail of the correlation distribution,
+where the problematic multicollinearity begins.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">cor_0.75</span> <span class="op">&lt;-</span> <span class="fu">collinear</span><span class="fu">::</span><span class="fu"><a href="../reference/cor_stats.html">cor_stats</a></span><span class="op">(</span></span>
 <span>  df <span class="op">=</span> <span class="va">vi_smol</span>,</span>
@@ -329,11 +329,11 @@ input correlation to a bounded <code>max_cor</code> threshold.</p>
 <ul>
 <li>
 <code>0.493</code>: floor of the curve, corresponding to VIF ≈ 2.5
-in [prediction_cor_to_vif] (conservative filtering).</li>
+in <code>prediction_cor_to_vif</code> (conservative filtering).</li>
 <li>
 <code>0.735</code>: ceiling of the curve (0.545 + 0.24),
-corresponding to VIF ≈ 7.5 in [prediction_cor_to_vif] (permissive
-filtering).</li>
+corresponding to VIF ≈ 7.5 in <code>prediction_cor_to_vif</code>
+(permissive filtering).</li>
 <li>
 <code>0.614</code>: midpoint where the transition is steepest.</li>
 <li>
@@ -347,9 +347,9 @@ thresholds near the floor, while highly correlated datasets (quantile
 0.75 &gt; 0.8) approach the ceiling. This prevents both over-filtering
 of clean datasets and under-filtering of problematic ones.</p>
 <ol start="3" style="list-style-type: decimal">
-<li>The pre-trained GAM model [gam_cor_to_vif] predicts a suitable
-<code>max_vif</code> from the <code>max_cor</code> resulting from the
-transformation.</li>
+<li>The pre-trained GAM model <a href="reference/gam_cor_to_vif.html"><code>gam_cor_to_vif</code></a>
+predicts a suitable <code>max_vif</code> from the <code>max_cor</code>
+resulting from the transformation.</li>
 </ol>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">max_vif</span> <span class="op">&lt;-</span> <span class="fu">mgcv</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/mgcv/man/predict.gam.html" class="external-link">predict.gam</a></span><span class="op">(</span></span>
@@ -360,12 +360,11 @@ transformation.</li>
 <span><span class="va">max_vif</span></span>
 <span><span class="co">#&gt;        1 </span></span>
 <span><span class="co">#&gt; 5.031596</span></span></code></pre></div>
-<p>This model was fitted on the simulation results in
-[experiment_cor_vs_vif], where both filtering methods were applied
-across 10,000 random dataset configurations. For each
-<code>max_cor</code> value, the <code>max_vif</code> producing the
-highest Jaccard similarity between the two selections was
-identified.</p>
+<p>This model was fitted on the simulation results in <a href="reference/experiment_cor_vs_vif.html"><code>experiment_cor_vs_vif</code></a>,
+where both filtering methods were applied across 10,000 random dataset
+configurations. For each <code>max_cor</code> value, the
+<code>max_vif</code> producing the highest Jaccard similarity between
+the two selections was identified.</p>
 <p>The experiment script can be opened in RStudio as follows:</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span></span>

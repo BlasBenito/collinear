@@ -3,7 +3,7 @@
 ## Summary
 
 The function
-[collinear_select()](https://blasbenito.github.io/collinear/articles/reference/collinear_select.md)
+[`collinear_select()`](https://blasbenito.github.io/collinear/reference/collinear_select.md)
 applies two complementary methods to assess different aspects of
 multicollinearity:
 
@@ -16,7 +16,7 @@ multicollinearity:
 
 By combining a pairwise method (correlation) and a multivariate one
 (VIF),
-[collinear_select()](https://blasbenito.github.io/collinear/articles/reference/collinear_select.md)
+[`collinear_select()`](https://blasbenito.github.io/collinear/reference/collinear_select.md)
 is able to capture multicollinearity that either method alone might
 miss. At the same time, it respects predictor rankings to protect
 relevant variables during filtering.
@@ -35,11 +35,11 @@ The filtering algorithm in
 [`collinear_select()`](https://blasbenito.github.io/collinear/reference/collinear_select.md)
 works as follows:
 
-1.  Predictors are ranked according to `preference_order`, or from lower
-    to higher overall multicollinearity.
+1.  Predictors are ranked according to the argument `preference_order`,
+    or from lower to higher overall multicollinearity otherwise.
 
 2.  The correlation matrix between all predictors is computed with
-    [cor_matrix()](https://blasbenito.github.io/collinear/articles/reference/cor_matrix.md).
+    [`cor_matrix()`](https://blasbenito.github.io/collinear/reference/cor_matrix.md).
 
 3.  The first predictor in the ranking is *selected*, while all others
     are *candidates*.
@@ -78,8 +78,8 @@ by preference**, and we omit the cases `max_vif = NULL` or
 `max_cor = NULL`.
 
 The correlation matrix is computed with
-[cor_matrix()](https://blasbenito.github.io/collinear/articles/reference/cor_matrix.md)
-and ordered after `preference_order`.
+[`cor_matrix()`](https://blasbenito.github.io/collinear/reference/cor_matrix.md)
+and ordered after the argument `preference_order`.
 
 ``` r
 m <- collinear::cor_matrix(
@@ -145,7 +145,7 @@ Otherwise the algorithm moves to the VIF evaluation.
 
 The subset of `m` with all rows and columns of `selected` and
 `candidate` is used as input for
-[vif()](https://blasbenito.github.io/collinear/articles/reference/vif.md).
+[`vif()`](https://blasbenito.github.io/collinear/reference/vif.md).
 
 ``` r
 max(
@@ -232,7 +232,7 @@ selected
 ```
 
 Let’s see if
-[collinear_select()](https://blasbenito.github.io/collinear/articles/reference/collinear_select.md)
+[`collinear_select()`](https://blasbenito.github.io/collinear/reference/collinear_select.md)
 returns the same selection.
 
 ``` r
@@ -247,8 +247,6 @@ collinear::collinear_select(
 #> attr(,"validated")
 #> [1] TRUE
 ```
-
-All good, nice!
 
 And that is all about how multicollinearity filtering works within
 `collinear`!
