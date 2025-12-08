@@ -284,7 +284,7 @@ output multicollinearity statistics.</p>
 <span>  <span class="fu">rstudioapi</span><span class="fu">::</span><span class="fu"><a href="https://rstudio.github.io/rstudioapi/reference/navigateToFile.html" class="external-link">navigateToFile</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p>The results of this experiment are in the dataframe <a href="reference/experiment_adaptive_thresholds.html"><code>experiment_adaptive_thresholds</code></a>,
 plotted below.</p>
-<p><img src="reference/figures/README-unnamed-chunk-8-1.png" class="r-plt" width="100%"></p>
+<p><img src="adaptive_filtering_thresholds_files/figure-html/unnamed-chunk-8-1.png" class="r-plt" width="100%"></p>
 <p>The left panel shows the 75th percentile of input correlation against
 the maximum VIF of the resulting selection. The cases below the VIF =
 2.5 line (4% of all cases) are datasets with a small number of
@@ -341,7 +341,7 @@ corresponding to VIF ≈ 7.5 in <code>prediction_cor_to_vif</code>
 curve transitions.</li>
 </ul>
 <p>The full sigmoid curve is shown below.</p>
-<p><img src="reference/figures/README-unnamed-chunk-11-1.png" class="r-plt" width="100%"></p>
+<p><img src="adaptive_filtering_thresholds_files/figure-html/unnamed-chunk-11-1.png" class="r-plt" width="100%"></p>
 <p>Datasets with low correlation (quantile 0.75 &lt; 0.5) receive
 thresholds near the floor, while highly correlated datasets (quantile
 0.75 &gt; 0.8) approach the ceiling. This prevents both over-filtering
@@ -382,7 +382,7 @@ achieved strong agreement.</p>
 <span>  data <span class="op">=</span> <span class="va">experiment_cor_vs_vif</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <p>The plot below shows the simulation results and the fitted model.</p>
-<p><img src="reference/figures/README-unnamed-chunk-15-1.png" class="r-plt" width="100%"></p>
+<p><img src="adaptive_filtering_thresholds_files/figure-html/unnamed-chunk-15-1.png" class="r-plt" width="100%"></p>
 <p>The curve tracks through the high-similarity region (red/orange
 points), indicating that the model successfully captures the
 relationship between <code>max_cor</code> and <code>max_vif</code> for

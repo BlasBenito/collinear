@@ -226,7 +226,7 @@ The results of this experiment are in the dataframe
 [`experiment_adaptive_thresholds`](https://blasbenito.github.io/collinear/articles/reference/experiment_adaptive_thresholds.md),
 plotted below.
 
-![](reference/figures/README-unnamed-chunk-8-1.png)
+![](adaptive_filtering_thresholds_files/figure-html/unnamed-chunk-8-1.png)
 
 The left panel shows the 75th percentile of input correlation against
 the maximum VIF of the resulting selection. The cases below the VIF =
@@ -290,7 +290,7 @@ Where:
 
 The full sigmoid curve is shown below.
 
-![](reference/figures/README-unnamed-chunk-11-1.png)
+![](adaptive_filtering_thresholds_files/figure-html/unnamed-chunk-11-1.png)
 
 Datasets with low correlation (quantile 0.75 \< 0.5) receive thresholds
 near the floor, while highly correlated datasets (quantile 0.75 \> 0.8)
@@ -346,7 +346,7 @@ m <- mgcv::gam(
 
 The plot below shows the simulation results and the fitted model.
 
-![](reference/figures/README-unnamed-chunk-15-1.png)
+![](adaptive_filtering_thresholds_files/figure-html/unnamed-chunk-15-1.png)
 
 The curve tracks through the high-similarity region (red/orange points),
 indicating that the model successfully captures the relationship between
