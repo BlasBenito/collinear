@@ -290,8 +290,8 @@ data.frame(
   seconds = c(time_without["elapsed"], time_with["elapsed"])
 )
 #>   encoding seconds
-#> 1       No  10.676
-#> 2      Yes   2.641
+#> 1       No  10.466
+#> 2      Yes   2.560
 ```
 
 The speed-up is considerable!
