@@ -10,15 +10,15 @@
 Source:
 [`inst/CITATION`](https://github.com/blasbenito/collinear/blob/main/inst/CITATION)
 
-Benito B (2023). “collinear: R Package for Seamless Multicollinearity
+Benito B (2025). “collinear: R Package for Automated Multicollinearity
 Management.”
-[doi:10.5281/zenodo.10039489](https://doi.org/10.5281/zenodo.10039489),
+[doi:10.5281/zenodo.10039396](https://doi.org/10.5281/zenodo.10039396),
 <https://blasbenito.github.io/collinear/>.
 
     @Misc{,
-      title = {{collinear}: R Package for Seamless Multicollinearity Management},
+      title = {{collinear}: R Package for Automated Multicollinearity Management},
       author = {Blas M. Benito},
-      year = {2023},
+      year = {2025},
       url = {https://blasbenito.github.io/collinear/},
-      doi = {10.5281/zenodo.10039489},
+      doi = {10.5281/zenodo.10039396},
     }

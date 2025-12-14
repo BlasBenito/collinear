@@ -2,6 +2,8 @@
 
 ## collinear 3.0.0
 
+CRAN release: 2025-12-08
+
 ### Breaking Changes
 
 #### API Changes
