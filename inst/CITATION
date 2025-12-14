@@ -1,9 +1,9 @@
 citHeader("To cite the R package 'collinear' in publications, please use:")
 
 bibentry(bibtype = "Misc",
-         title = "{collinear}: R Package for Seamless Multicollinearity Management",
+         title = "{collinear}: R Package for Automated Multicollinearity Management",
          author = person(given = "Blas M.", family = "Benito"),
-         year = 2023,
+         year = 2025,
          url = c("https://blasbenito.github.io/collinear/"),
-         doi = "10.5281/zenodo.10039489"
+         doi = "10.5281/zenodo.10039396"
 )
