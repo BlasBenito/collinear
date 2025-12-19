@@ -5,5 +5,5 @@ bibentry(bibtype = "Misc",
          author = person(given = "Blas M.", family = "Benito"),
          year = 2025,
          url = c("https://blasbenito.github.io/collinear/"),
-         doi = "10.5281/zenodo.10039396"
+         doi = "10.5281/zenodo.17843578"
 )

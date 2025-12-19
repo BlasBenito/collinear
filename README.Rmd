@@ -250,7 +250,7 @@ vi_workflow
 
 If you find this package useful, please cite it as:
 
-*Blas M. Benito (2025). collinear: R Package for Automated Multicollinearity Management. Version 3.0.0. doi: 10.5281/zenodo.17843578 *
+*Blas M. Benito (2025). collinear: R Package for Automated Multicollinearity Management. Version 3.0.0. doi: 10.5281/zenodo.17843578*
 
 ## Getting help
 
