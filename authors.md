@@ -12,7 +12,7 @@ Source:
 
 Benito B (2025). “collinear: R Package for Automated Multicollinearity
 Management.”
-[doi:10.5281/zenodo.10039396](https://doi.org/10.5281/zenodo.10039396),
+[doi:10.5281/zenodo.17843578](https://doi.org/10.5281/zenodo.17843578),
 <https://blasbenito.github.io/collinear/>.
 
     @Misc{,
@@ -20,5 +20,5 @@ Management.”
       author = {Blas M. Benito},
       year = {2025},
       url = {https://blasbenito.github.io/collinear/},
-      doi = {10.5281/zenodo.10039396},
+      doi = {10.5281/zenodo.17843578},
     }

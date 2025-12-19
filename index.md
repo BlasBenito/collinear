@@ -365,14 +365,14 @@ x$vi_numeric$formulas
 #>     evapotranspiration_range + swi_min + soil_soc + humidity_range + 
 #>     topo_elevation + cloud_cover_range + continent + soil_sand + 
 #>     topo_diversity + topo_slope
-#> <environment: 0x5adb1977e4b0>
+#> <environment: 0x5d31fd2fc7a0>
 #> 
 #> $smooth
 #> vi_numeric ~ s(rainfall_mean) + s(swi_mean) + s(evapotranspiration_max) + 
 #>     s(evapotranspiration_range) + s(swi_min) + s(soil_soc) + 
 #>     s(humidity_range) + s(topo_elevation) + s(cloud_cover_range) + 
 #>     continent + s(soil_sand) + s(topo_diversity) + s(topo_slope)
-#> <environment: 0x5adb1977e4b0>
+#> <environment: 0x5d31fd2fc7a0>
 ```
 
 The function returns linear formulas for numeric outcomes, and
