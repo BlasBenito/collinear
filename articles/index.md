@@ -14,3 +14,5 @@
   Strategy](https://blasbenito.github.io/collinear/articles/dual_filtering_strategy.md):
 - [collinear In The
   Wild](https://blasbenito.github.io/collinear/articles/collinear_in_the_wild.md):
+- [Download
+  history](https://blasbenito.github.io/collinear/articles/download_history.md):

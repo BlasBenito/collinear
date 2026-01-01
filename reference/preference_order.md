@@ -333,7 +333,7 @@ x
 #> 4  vi_binomial  soil_temperature_min f_binomial_glm    AUC 0.7445    4
 #> 5  vi_binomial               swi_min f_binomial_glm    AUC 0.7230    5
 #> 6  vi_binomial               swi_max f_binomial_glm    AUC 0.7162    6
-#> 7  vi_binomial        topo_diversity f_binomial_glm    AUC 0.6805    7
+#> 7  vi_binomial        topo_diversity f_binomial_glm    AUC 0.6804    7
 #> 8  vi_binomial            topo_slope f_binomial_glm    AUC 0.5975    8
 #> 9  vi_binomial        topo_elevation f_binomial_glm    AUC 0.5508    9
 #> 10 vi_binomial soil_temperature_mean f_binomial_glm    AUC 0.4432   10
@@ -357,7 +357,7 @@ x
 #> 4  vi_binomial             swi_range f_binomial_glm    AUC 0.7434    4
 #> 5  vi_binomial               swi_min f_binomial_glm    AUC 0.7229    5
 #> 6  vi_binomial               swi_max f_binomial_glm    AUC 0.7174    6
-#> 7  vi_binomial        topo_diversity f_binomial_glm    AUC 0.6846    7
+#> 7  vi_binomial        topo_diversity f_binomial_glm    AUC 0.6845    7
 #> 8  vi_binomial            topo_slope f_binomial_glm    AUC 0.5911    8
 #> 9  vi_binomial        topo_elevation f_binomial_glm    AUC 0.5505    9
 #> 10 vi_binomial soil_temperature_mean f_binomial_glm    AUC 0.4615   10
