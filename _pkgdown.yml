@@ -23,6 +23,7 @@ articles:
   - articles/adaptive_filtering_thresholds
   - articles/dual_filtering_strategy
   - articles/collinear_in_the_wild
+  - articles/download_history
 navbar:
   components:
     blog:
