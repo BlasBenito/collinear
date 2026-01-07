@@ -4,6 +4,15 @@
 
 This article lists mentions and citations to the R package `collinear`.
 
+## 2026
+
+Wu, L., Wang, Q., Shang, Z., Chen, H., Deng, A., Song, Z., Zheng, C., &
+Zhang, W. (2026). [Straw return boosts N₂O emissions primarily during
+the pre-jointing stage in winter wheat fields: A
+meta-analysis](https://doi.org/10.1016/j.agee.2025.110175) .
+Agriculture, Ecosystems & Environment, 399, 110175.
+<https://doi.org/10.1016/j.agee.2025.110175>
+
 ## 2025
 
 Zhang, F., Hu, B., Meng, L., Pang, M., Chen, Y., Song, W., Feng, Y., &
