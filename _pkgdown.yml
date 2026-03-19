@@ -125,3 +125,14 @@ build:
     - future
     - dplyr
     - DT
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+  release:
+    types: [published]
+  workflow_dispatch:  # allows manual triggering
+  schedule:
+    - cron: '0 0 1 * *'  # runs at midnight UTC on the 1st of each month
