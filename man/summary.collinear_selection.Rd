@@ -18,9 +18,9 @@ list: response name and character vector of selected predictors.
 Summarize single response selection results of \code{collinear}
 }
 \seealso{
-Other S3_methods: 
-\code{\link{print.collinear_output}()},
-\code{\link{print.collinear_selection}()},
-\code{\link{summary.collinear_output}()}
+Other S3_methods:
+\code{\link[=print.collinear_output]{print.collinear_output()}},
+\code{\link[=print.collinear_selection]{print.collinear_selection()}},
+\code{\link[=summary.collinear_output]{summary.collinear_output()}}
 }
 \concept{S3_methods}

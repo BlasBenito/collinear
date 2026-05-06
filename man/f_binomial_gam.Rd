@@ -26,7 +26,7 @@ Cases are weighted with \code{\link[=case_weights]{case_weights()}} to prevent i
 Supports cross-validation via the arguments arguments \code{cv_training_fraction} (numeric between 0 and 1) and \code{cv_iterations} (integer between 1 and \code{n}) introduced via ellipsis (\code{...}). See \code{\link[=preference_order]{preference_order()}} for further details.
 }
 \examples{
-data(vi_smol)
+data(vi_smol, package = "spatialData")
 
 df <- data.frame(
   y = vi_smol[["vi_binomial"]],
@@ -52,16 +52,16 @@ df <- data.frame(
 f_binomial_gam(df = df)
 }
 \seealso{
-Other preference_order_functions: 
-\code{\link{f_binomial_glm}()},
-\code{\link{f_binomial_rf}()},
-\code{\link{f_categorical_rf}()},
-\code{\link{f_count_gam}()},
-\code{\link{f_count_glm}()},
-\code{\link{f_count_rf}()},
-\code{\link{f_numeric_gam}()},
-\code{\link{f_numeric_glm}()},
-\code{\link{f_numeric_rf}()},
-\code{\link{preference_order}()}
+Other preference_order_functions:
+\code{\link[=f_binomial_glm]{f_binomial_glm()}},
+\code{\link[=f_binomial_rf]{f_binomial_rf()}},
+\code{\link[=f_categorical_rf]{f_categorical_rf()}},
+\code{\link[=f_count_gam]{f_count_gam()}},
+\code{\link[=f_count_glm]{f_count_glm()}},
+\code{\link[=f_count_rf]{f_count_rf()}},
+\code{\link[=f_numeric_gam]{f_numeric_gam()}},
+\code{\link[=f_numeric_glm]{f_numeric_glm()}},
+\code{\link[=f_numeric_rf]{f_numeric_rf()}},
+\code{\link[=preference_order]{preference_order()}}
 }
 \concept{preference_order_functions}

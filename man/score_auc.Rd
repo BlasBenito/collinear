@@ -29,10 +29,10 @@ Internal function to compute the AUC of binomial models within \code{\link[=pref
 
 }
 \seealso{
-Other modelling_tools: 
-\code{\link{case_weights}()},
-\code{\link{model_formula}()},
-\code{\link{score_cramer}()},
-\code{\link{score_r2}()}
+Other modelling_tools:
+\code{\link[=case_weights]{case_weights()}},
+\code{\link[=model_formula]{model_formula()}},
+\code{\link[=score_cramer]{score_cramer()}},
+\code{\link[=score_r2]{score_r2()}}
 }
 \concept{modelling_tools}

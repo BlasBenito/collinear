@@ -1,7 +1,7 @@
 testthat::test_that("`validate_arg_responses()` works", {
   testthat::skip_on_cran()
 
-  data(vi_smol)
+  data(vi_smol, package = "spatialData")
 
   #no arguments
   testthat::expect_error(

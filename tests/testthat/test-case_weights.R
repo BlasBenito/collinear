@@ -97,7 +97,7 @@ testthat::test_that("`case_weights()` works", {
     regexp = "NA, Inf, -Inf, or NaN values are not allowed when 'x' is numeric or logical"
   )
 
-  data(vi)
+  data(vi, package = "spatialData")
 
   #binomial weights
   weights <- case_weights(

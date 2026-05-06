@@ -45,6 +45,11 @@ score_auc <- function(
     )
   }
 
+  # remove incomplete cases
+  complete <- !is.na(o) & !is.na(p)
+  o <- o[complete]
+  p <- p[complete]
+
   #predicted values of the ones and the zeroes
   ones <- p[o == 1]
   zeros <- p[o == 0]

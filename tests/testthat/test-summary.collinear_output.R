@@ -3,10 +3,11 @@ testthat::test_that("`summary.collinear_selection()` works", {
 
   library(collinear)
 
-  data(
-    vi_smol,
-    vi_predictors_numeric
-  )
+  data(vi_smol, vi_predictors, package = "spatialData")
+  vi_predictors_numeric <- identify_numeric_variables(
+    df = vi_smol,
+    predictors = vi_predictors
+  )$valid
 
   x <- collinear(
     df = vi_smol,

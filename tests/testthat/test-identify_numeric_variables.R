@@ -1,7 +1,15 @@
 testthat::test_that("`identify_numeric_variables()` works", {
   testthat::skip_on_cran()
 
-  data(vi_smol, vi_predictors_numeric, vi_predictors_categorical, vi_predictors)
+  data(vi_smol, vi_predictors, package = "spatialData")
+  vi_predictors_numeric <- identify_numeric_variables(
+    df = vi_smol,
+    predictors = vi_predictors
+  )$valid
+  vi_predictors_categorical <- identify_categorical_variables(
+    df = vi_smol,
+    predictors = vi_predictors
+  )$valid
 
   df <- vi_smol
   df$zero_variance <- 1

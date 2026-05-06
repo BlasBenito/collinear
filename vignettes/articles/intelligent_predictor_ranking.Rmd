@@ -16,6 +16,10 @@ knitr::opts_chunk$set(
 )
 ```
 
+## Source Code
+
+You can download the Rmarkdown notebook used to render this article [here](https://github.com/BlasBenito/collinear/blob/main/vignettes/articles/intelligent_predictor_ranking.Rmd). To download the file, use the button *Download raw file* on the upper-right hand of the `Code` panel.
+
 ## Summary
 
 The package `collinear` implements an automated multicollinearity filtering method devised to preserve as many *relevant* predictors as possible. This principle helps balance multicollinearity reduction with predictive power retention.
@@ -31,6 +35,22 @@ This feature is implemented in `collinear()`, `collinear_select()`, `vif_select(
 These options are explained in detail in the following sections.
 
 ## Setup
+
+```{r, include = FALSE}
+if (!requireNamespace("pak", quietly = TRUE)) {
+  install.packages("pak")
+}
+library(pak)
+pak::pkg_install(
+  c(
+    "DT",
+    "future",
+    "collinear",
+    "spatialData"
+  ),
+  ask = FALSE
+)
+```
 
 This article requires the following setup.
 
@@ -50,7 +70,16 @@ future::plan(
 #progressr::handlers(global = TRUE)
 
 #example data
-data(vi_smol, vi_predictors_numeric)
+data(
+  vi_smol, 
+  vi_predictors, 
+  package = "spatialData"
+  )
+
+vi_predictors_numeric <- collinear::identify_numeric_variables(
+  df = vi_smol,
+  predictors = vi_predictors
+)$valid
 ```
   
 ## Expert Mode

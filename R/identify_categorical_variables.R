@@ -12,7 +12,7 @@
 #' }
 #' @examples
 #'
-#' data(vi_smol, vi_predictors)
+#' data(vi_smol, vi_predictors, package = "spatialData")
 #'
 #' #create an invalid categorical
 #' vi_smol$invalid_categorical <- "a"

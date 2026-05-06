@@ -77,7 +77,7 @@ predictors whose VIF against the current selection is below \code{max_vif}.
 }
 
 \examples{
-data(vi_smol)
+data(vi_smol, package = "spatialData")
 
 ## OPTIONAL: parallelization setup
 ## irrelevant when all predictors are numeric
@@ -108,11 +108,11 @@ x
 #future::plan(future::sequential)
 }
 \seealso{
-Other multicollinearity_filtering: 
-\code{\link{collinear}()},
-\code{\link{cor_select}()},
-\code{\link{step_collinear}()},
-\code{\link{vif_select}()}
+Other multicollinearity_filtering:
+\code{\link[=collinear]{collinear()}},
+\code{\link[=cor_select]{cor_select()}},
+\code{\link[=step_collinear]{step_collinear()}},
+\code{\link[=vif_select]{vif_select()}}
 }
 \author{
 Blas M. Benito, PhD

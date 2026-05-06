@@ -13,8 +13,19 @@ install.packages(c("cranlogs", "ggplot2"))
 
 
 ```{r, echo = FALSE}
-# Install packages if needed
-# install.packages(c("cranlogs", "ggplot2"))
+if (!requireNamespace("pak", quietly = TRUE)) {
+  install.packages("pak")
+}
+library(pak)
+pak::pkg_install(
+  c(
+    "cranlogs",
+    "ggplot2"
+  ),
+  ask = FALSE
+)
+
+
 library(cranlogs)
 library(ggplot2)
 

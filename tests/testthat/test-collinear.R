@@ -1,12 +1,15 @@
 testthat::test_that("`collinear()` works", {
   testthat::skip_on_cran()
   #load data
-  data(
-    vi_smol,
-    vi_predictors_numeric,
-    vi_predictors_categorical,
-    vi_responses
-  )
+  data(vi, vi_smol, vi_responses, vi_predictors, package = "spatialData")
+  vi_predictors_numeric <- identify_numeric_variables(
+    df = vi_smol,
+    predictors = vi_predictors
+  )$valid
+  vi_predictors_categorical <- identify_categorical_variables(
+    df = vi_smol,
+    predictors = vi_predictors
+  )$valid
 
   #DEFAULT CALL ----
   #Error: collinear::collinear(): argument 'df' cannot be NULL

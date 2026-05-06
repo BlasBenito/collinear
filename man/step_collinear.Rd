@@ -76,10 +76,12 @@ if(requireNamespace("recipes", quietly = TRUE) &&
     requireNamespace("workflows", quietly = TRUE)
     ){
 
-data(
-  vi_smol,
-  vi_predictors_numeric
-  )
+data(vi_smol, package = "spatialData")
+data(vi_predictors, package = "spatialData")
+vi_predictors_numeric <- identify_numeric_variables(
+  df = vi_smol,
+  predictors = vi_predictors
+)$valid
 
 # model formula
 vi_formula <- collinear::model_formula(
@@ -123,10 +125,10 @@ vi_workflow
 }
 }
 \seealso{
-Other multicollinearity_filtering: 
-\code{\link{collinear}()},
-\code{\link{collinear_select}()},
-\code{\link{cor_select}()},
-\code{\link{vif_select}()}
+Other multicollinearity_filtering:
+\code{\link[=collinear]{collinear()}},
+\code{\link[=collinear_select]{collinear_select()}},
+\code{\link[=cor_select]{cor_select()}},
+\code{\link[=vif_select]{vif_select()}}
 }
 \concept{multicollinearity_filtering}

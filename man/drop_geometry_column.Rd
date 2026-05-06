@@ -25,7 +25,7 @@ dataframe
 Remove geometry column from sf objects
 }
 \examples{
-data(vi_smol)
+data(vi_smol, package = "spatialData")
 
 #creating fake geometry column without sf loaded
 vi_smol$geometry <- NA
@@ -48,18 +48,18 @@ attributes(df)$sf_column
 
 }
 \seealso{
-Other argument_validation: 
-\code{\link{validate_arg_df}()},
-\code{\link{validate_arg_df_not_null}()},
-\code{\link{validate_arg_encoding_method}()},
-\code{\link{validate_arg_f}()},
-\code{\link{validate_arg_function_name}()},
-\code{\link{validate_arg_max_cor}()},
-\code{\link{validate_arg_max_vif}()},
-\code{\link{validate_arg_predictors}()},
-\code{\link{validate_arg_preference_order}()},
-\code{\link{validate_arg_quiet}()},
-\code{\link{validate_arg_responses}()}
+Other argument_validation:
+\code{\link[=validate_arg_df]{validate_arg_df()}},
+\code{\link[=validate_arg_df_not_null]{validate_arg_df_not_null()}},
+\code{\link[=validate_arg_encoding_method]{validate_arg_encoding_method()}},
+\code{\link[=validate_arg_f]{validate_arg_f()}},
+\code{\link[=validate_arg_function_name]{validate_arg_function_name()}},
+\code{\link[=validate_arg_max_cor]{validate_arg_max_cor()}},
+\code{\link[=validate_arg_max_vif]{validate_arg_max_vif()}},
+\code{\link[=validate_arg_predictors]{validate_arg_predictors()}},
+\code{\link[=validate_arg_preference_order]{validate_arg_preference_order()}},
+\code{\link[=validate_arg_quiet]{validate_arg_quiet()}},
+\code{\link[=validate_arg_responses]{validate_arg_responses()}}
 }
 \author{
 Blas M. Benito, PhD

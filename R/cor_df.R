@@ -8,7 +8,7 @@
 #'   \item **Categorical vs. Categorical**: Cramer's V via [cor_cramer()] as a measure of association. See [cor_cramer()] for important notes on mixing Pearson correlation and Cramer's V in multicollinearity analysis.
 #' }
 #'
-#' Parallelization via \code{future::plan()} and progress bars via \code{progressr::handlers()} are supported but only beneficial for large datasets with categorical predictors. Numeric-only correlations do not use parallelization or progress bars. Example: With 16 workers, 30k rows (dataframe [vi]), 49 numeric and 12 categorical predictors (see [vi_predictors]), parallelization achieves a 5.4x speedup (147s → 27s).
+#' Parallelization via \code{future::plan()} and progress bars via \code{progressr::handlers()} are supported but only beneficial for large datasets with categorical predictors. Numeric-only correlations do not use parallelization or progress bars. Example: With 16 workers, 30k rows (dataframe [spatialData::vi]), 49 numeric and 12 categorical predictors (see [spatialData::vi_predictors]), parallelization achieves a 5.4x speedup (147s → 27s).
 #'
 #' @inheritParams collinear
 #'
@@ -21,7 +21,7 @@
 #'
 #'
 #' @examples
-#' data(vi_smol)
+#' data(vi_smol, package = "spatialData")
 #'
 #' ## OPTIONAL: parallelization setup
 #' ## irrelevant when all predictors are numeric

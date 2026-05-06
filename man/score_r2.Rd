@@ -28,10 +28,10 @@ Internal function to compute the R-squared of observations versus predictions vi
   )
 }
 \seealso{
-Other modelling_tools: 
-\code{\link{case_weights}()},
-\code{\link{model_formula}()},
-\code{\link{score_auc}()},
-\code{\link{score_cramer}()}
+Other modelling_tools:
+\code{\link[=case_weights]{case_weights()}},
+\code{\link[=model_formula]{model_formula()}},
+\code{\link[=score_auc]{score_auc()}},
+\code{\link[=score_cramer]{score_cramer()}}
 }
 \concept{modelling_tools}

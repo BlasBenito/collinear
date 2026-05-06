@@ -16,6 +16,10 @@ knitr::opts_chunk$set(
 )
 ```
 
+## Source Code
+
+You can download the Rmarkdown notebook used to render this article [here](https://github.com/BlasBenito/collinear/blob/main/vignettes/articles/adaptive_filtering_thresholds.Rmd). To download the file, use the button *Download raw file* on the upper-right hand of the `Code` panel.
+
 ## Summary
 
 The function `collinear()` automatically configures multicollinearity filtering thresholds when the arguments `max_cor` and `max_vif` are not specified. 
@@ -33,9 +37,28 @@ This article explains how the automatic threshold configuration works, demonstra
 
 ## Setup
 
+```{r, include = FALSE}
+if (!requireNamespace("pak", quietly = TRUE)) {
+  install.packages("pak")
+}
+library(pak)
+pak::pkg_install(
+  c(
+    "spatialData",
+    "collinear",
+    "future",
+    "ggplot2",
+    "patchwork",
+    "rstudioapi"
+  ),
+  ask = FALSE
+)
+```
+
 This article requires the following packages, setup, and example data.
 
 ```{r, message = FALSE, warning = FALSE, results = "hide"}
+library(spatialData)
 library(collinear)
 library(future)
 library(ggplot2)
@@ -52,12 +75,19 @@ future::plan(
 #progress bar (does not work in Rmarkdown)
 #progressr::handlers(global = TRUE)
 
+data(
+  vi_smol,
+  vi_predictors,
+  package = "spatialData"
+  )
+
+vi_predictors_numeric <- collinear::identify_numeric_variables(
+  df = vi_smol,
+  predictors = vi_predictors
+)$valid
+
 #example data
 data(
-  #dataframe with predictors
-  vi_smol, 
-  #vector of predictor names
-  vi_predictors_numeric,
   #dataframes with experiment data
   experiment_adaptive_thresholds,
   experiment_cor_vs_vif,

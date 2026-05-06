@@ -1,7 +1,7 @@
 testthat::test_that("`identify_response_type()` works", {
   testthat::skip_on_cran()
 
-  data(vi_smol)
+  data(vi_smol, package = "spatialData")
 
   testthat::expect_error(
     x <- identify_response_type(

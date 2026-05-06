@@ -10,7 +10,7 @@
 #' @return numeric or numeric vector: R-squared
 #' @examples
 #'
-#' data(vi_smol)
+#' data(vi_smol, package = "spatialData")
 #'
 #' df <- data.frame(
 #'   y = vi_smol[["vi_numeric"]],
@@ -57,6 +57,8 @@ f_numeric_rf <- function(
     function_name = dots$function_name
   )
 
+  df <- stats::na.omit(object = df)
+
   #check column names in df
   if (!all(c("x", "y") %in% names(df))) {
     stop(
@@ -75,8 +77,6 @@ f_numeric_rf <- function(
       call. = FALSE
     )
   }
-
-  df <- stats::na.omit(object = df)
 
   scores <- rep(x = NA_real_, times = cv_iterations)
 

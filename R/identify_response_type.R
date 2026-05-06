@@ -21,7 +21,7 @@
 #' @return character string: response type
 #'
 #' @examples
-#' data(vi_smol)
+#' data(vi_smol, package = "spatialData")
 #'
 #' identify_response_type(
 #'   df = vi_smol,

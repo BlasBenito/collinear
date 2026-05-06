@@ -9,7 +9,7 @@
 #' @family argument_validation
 #' @export
 #' @examples
-#' data(vi_smol)
+#' data(vi_smol, package = "spatialData")
 #' df <- validate_arg_df_not_null(
 #'   df = vi_smol
 #'   )

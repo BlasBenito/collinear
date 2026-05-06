@@ -108,7 +108,7 @@ future::plan(
 The example dataframe [vi_smol](https://blasbenito.github.io/collinear/reference/vi_smol.html) has several response variables and a large set of predictors. Here we focus on the numeric response `vi_numeric`, and the complete set of numeric and categorical predictors, stored in the vector [vi_predictors](https://blasbenito.github.io/collinear/reference/vi_predictors.html).
 
 ```{r}
-data(vi_smol, vi_predictors)
+data(vi_smol, vi_predictors, package = "spatialData")
 nrow(vi_smol)
 length(vi_predictors)
 ```

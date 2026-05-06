@@ -16,8 +16,8 @@ List predictor scoring functions
 f_functions()
 }
 \seealso{
-Other preference_order_tools: 
-\code{\link{f_auto}()},
-\code{\link{f_auto_rules}()}
+Other preference_order_tools:
+\code{\link[=f_auto]{f_auto()}},
+\code{\link[=f_auto_rules]{f_auto_rules()}}
 }
 \concept{preference_order_tools}

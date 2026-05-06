@@ -11,7 +11,7 @@
 #' }
 #' @examples
 #'
-#' data(vi_smol, vi_predictors)
+#' data(vi_smol, vi_predictors, package = "spatialData")
 #'
 #' #invalid logical
 #' vi_smol$logical_invalid <- TRUE

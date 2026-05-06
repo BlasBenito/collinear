@@ -38,10 +38,10 @@ Computes pairwise correlations between predictors using appropriate methods for 
 \item \strong{Categorical vs. Categorical}: Cramer's V via \code{\link[=cor_cramer]{cor_cramer()}} as a measure of association. See \code{\link[=cor_cramer]{cor_cramer()}} for important notes on mixing Pearson correlation and Cramer's V in multicollinearity analysis.
 }
 
-Parallelization via \code{future::plan()} and progress bars via \code{progressr::handlers()} are supported but only beneficial for large datasets with categorical predictors. Numeric-only correlations do not use parallelization or progress bars. Example: With 16 workers, 30k rows (dataframe \link{vi}), 49 numeric and 12 categorical predictors (see \link{vi_predictors}), parallelization achieves a 5.4x speedup (147s → 27s).
+Parallelization via \code{future::plan()} and progress bars via \code{progressr::handlers()} are supported but only beneficial for large datasets with categorical predictors. Numeric-only correlations do not use parallelization or progress bars. Example: With 16 workers, 30k rows (dataframe \link[spatialData:vi]{spatialData::vi}), 49 numeric and 12 categorical predictors (see \link[spatialData:vi_predictors]{spatialData::vi_predictors}), parallelization achieves a 5.4x speedup (147s → 27s).
 }
 \examples{
-data(vi_smol)
+data(vi_smol, package = "spatialData")
 
 ## OPTIONAL: parallelization setup
 ## irrelevant when all predictors are numeric
@@ -73,14 +73,14 @@ x
 #future::plan(future::sequential)
 }
 \seealso{
-Other multicollinearity_assessment: 
-\code{\link{collinear_stats}()},
-\code{\link{cor_clusters}()},
-\code{\link{cor_cramer}()},
-\code{\link{cor_matrix}()},
-\code{\link{cor_stats}()},
-\code{\link{vif}()},
-\code{\link{vif_df}()},
-\code{\link{vif_stats}()}
+Other multicollinearity_assessment:
+\code{\link[=collinear_stats]{collinear_stats()}},
+\code{\link[=cor_clusters]{cor_clusters()}},
+\code{\link[=cor_cramer]{cor_cramer()}},
+\code{\link[=cor_matrix]{cor_matrix()}},
+\code{\link[=cor_stats]{cor_stats()}},
+\code{\link[=vif]{vif()}},
+\code{\link[=vif_df]{vif_df()}},
+\code{\link[=vif_stats]{vif_stats()}}
 }
 \concept{multicollinearity_assessment}

@@ -1,6 +1,6 @@
 testthat::test_that("`drop_geometry_column()` works", {
   testthat::skip_on_cran()
-  data(vi_smol)
+  data(vi_smol, package = "spatialData")
 
   vi_smol
 

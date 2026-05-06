@@ -2,7 +2,11 @@ testthat::test_that("`vif()` works", {
   testthat::skip_on_cran()
 
   # numeric types ----
-  data(vi_smol, vi_predictors_numeric)
+  data(vi_smol, vi_predictors, package = "spatialData")
+  vi_predictors_numeric <- identify_numeric_variables(
+    df = vi_smol,
+    predictors = vi_predictors
+  )$valid
 
   m <- cor_matrix(
     df = vi_smol,

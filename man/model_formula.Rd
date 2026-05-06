@@ -54,10 +54,12 @@ The types of formulas it can generate are:
 }
 }
 \examples{
-data(
-  vi_smol,
-  vi_predictors_numeric
-  )
+data(vi_smol, package = "spatialData")
+data(vi_predictors, package = "spatialData")
+vi_predictors_numeric <- identify_numeric_variables(
+  df = vi_smol,
+  predictors = vi_predictors
+)$valid
 
 #reduce collinearity
 x <- collinear_select(
@@ -124,10 +126,10 @@ y <- model_formula(
 y
 }
 \seealso{
-Other modelling_tools: 
-\code{\link{case_weights}()},
-\code{\link{score_auc}()},
-\code{\link{score_cramer}()},
-\code{\link{score_r2}()}
+Other modelling_tools:
+\code{\link[=case_weights]{case_weights()}},
+\code{\link[=score_auc]{score_auc()}},
+\code{\link[=score_cramer]{score_cramer()}},
+\code{\link[=score_r2]{score_r2()}}
 }
 \concept{modelling_tools}

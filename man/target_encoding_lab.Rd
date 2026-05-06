@@ -55,7 +55,7 @@ Accepts a parallelization setup via \code{future::plan()} and a progress bar via
 }
 \examples{
 
-data(vi_smol)
+data(vi_smol, package = "spatialData")
 
 #applying all methods for a continuous response
 df <- target_encoding_lab(
@@ -86,8 +86,8 @@ head(df[, predictors.encoded])
 }
 }
 \seealso{
-Other target_encoding: 
-\code{\link{target_encoding_loo}()}
+Other target_encoding:
+\code{\link[=target_encoding_loo]{target_encoding_loo()}}
 }
 \author{
 Blas M. Benito, PhD

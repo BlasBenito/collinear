@@ -8,7 +8,7 @@
 #'
 #' @return character vector: predictor names
 #' @examples
-#' data(vi_smol, vi_predictors)
+#' data(vi_smol, vi_predictors, package = "spatialData")
 #'
 #' x <- validate_arg_predictors(
 #'   df = vi_smol,

@@ -133,7 +133,12 @@
 #'   named "result" is returned; otherwise a sublist per response is returned.
 #'
 #' @examples
-#' data(vi_smol, vi_predictors_numeric)
+#' data(vi_smol, package = "spatialData")
+#' data(vi_predictors, package = "spatialData")
+#' vi_predictors_numeric <- identify_numeric_variables(
+#'   df = vi_smol,
+#'   predictors = vi_predictors
+#' )$valid
 #' x <- collinear(df = vi_smol[, vi_predictors_numeric])
 #'
 #' @autoglobal

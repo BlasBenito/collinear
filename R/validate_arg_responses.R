@@ -9,7 +9,7 @@
 #' @return character string: response name
 #' @examples
 #'
-#' data(vi_smol)
+#' data(vi_smol, package = "spatialData")
 #'
 #' x <- validate_arg_responses(
 #'   df = vi_smol,

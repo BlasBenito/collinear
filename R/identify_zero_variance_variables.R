@@ -9,7 +9,7 @@
 #' @return character vector: names of near-zero variance columns.
 #' @examples
 #'
-#' data(vi_smol, vi_predictors)
+#' data(vi_smol, vi_predictors, package = "spatialData")
 #'
 #' #create zero and near variance predictors
 #' vi_smol$zero_variance <- 1

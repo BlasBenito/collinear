@@ -44,10 +44,12 @@ character vector: ranked variable names
 Internal function to validate the argument \code{preference_order} in \code{\link[=cor_select]{cor_select()}}, \code{\link[=vif_select]{vif_select()}}, \code{\link[=collinear_select]{collinear_select()}}, \code{\link[=collinear]{collinear()}}, and \code{\link[=collinear]{collinear()}}. Predictors not in \code{preference_order} are ranked from lower to higher sum of Pearson correlations with all other predictors.
 }
 \examples{
-data(
-  vi_smol,
-  vi_predictors_numeric
-  )
+data(vi_smol, package = "spatialData")
+data(vi_predictors, package = "spatialData")
+vi_predictors_numeric <- identify_numeric_variables(
+  df = vi_smol,
+  predictors = vi_predictors
+)$valid
 
 #input arguments must be validated first
 df <- validate_arg_df(
@@ -117,17 +119,17 @@ y
 attributes(y)$validated
 }
 \seealso{
-Other argument_validation: 
-\code{\link{drop_geometry_column}()},
-\code{\link{validate_arg_df}()},
-\code{\link{validate_arg_df_not_null}()},
-\code{\link{validate_arg_encoding_method}()},
-\code{\link{validate_arg_f}()},
-\code{\link{validate_arg_function_name}()},
-\code{\link{validate_arg_max_cor}()},
-\code{\link{validate_arg_max_vif}()},
-\code{\link{validate_arg_predictors}()},
-\code{\link{validate_arg_quiet}()},
-\code{\link{validate_arg_responses}()}
+Other argument_validation:
+\code{\link[=drop_geometry_column]{drop_geometry_column()}},
+\code{\link[=validate_arg_df]{validate_arg_df()}},
+\code{\link[=validate_arg_df_not_null]{validate_arg_df_not_null()}},
+\code{\link[=validate_arg_encoding_method]{validate_arg_encoding_method()}},
+\code{\link[=validate_arg_f]{validate_arg_f()}},
+\code{\link[=validate_arg_function_name]{validate_arg_function_name()}},
+\code{\link[=validate_arg_max_cor]{validate_arg_max_cor()}},
+\code{\link[=validate_arg_max_vif]{validate_arg_max_vif()}},
+\code{\link[=validate_arg_predictors]{validate_arg_predictors()}},
+\code{\link[=validate_arg_quiet]{validate_arg_quiet()}},
+\code{\link[=validate_arg_responses]{validate_arg_responses()}}
 }
 \concept{argument_validation}

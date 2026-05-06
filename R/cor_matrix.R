@@ -13,7 +13,7 @@
 #' @return correlation matrix
 #'
 #' @examples
-#' data(vi_smol)
+#' data(vi_smol, package = "spatialData")
 #'
 #' ## OPTIONAL: parallelization setup
 #' ## irrelevant when all predictors are numeric
@@ -43,7 +43,7 @@
 #'
 #' #from correlation dataframe
 #' x <- cor_df(
-#'   df = vi,
+#'   df = vi_smol,
 #'   predictors = predictors
 #' ) |>
 #'   cor_matrix()

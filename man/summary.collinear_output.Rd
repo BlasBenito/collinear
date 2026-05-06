@@ -19,9 +19,9 @@ If \code{object} was created with \code{responses = NULL}, a sublist named "resu
 Summarize all results of \code{collinear()}
 }
 \seealso{
-Other S3_methods: 
-\code{\link{print.collinear_output}()},
-\code{\link{print.collinear_selection}()},
-\code{\link{summary.collinear_selection}()}
+Other S3_methods:
+\code{\link[=print.collinear_output]{print.collinear_output()}},
+\code{\link[=print.collinear_selection]{print.collinear_selection()}},
+\code{\link[=summary.collinear_selection]{summary.collinear_selection()}}
 }
 \concept{S3_methods}

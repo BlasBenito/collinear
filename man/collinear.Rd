@@ -159,7 +159,12 @@ below \code{max_cor}.
 }
 
 \examples{
-data(vi_smol, vi_predictors_numeric)
+data(vi_smol, package = "spatialData")
+data(vi_predictors, package = "spatialData")
+vi_predictors_numeric <- identify_numeric_variables(
+  df = vi_smol,
+  predictors = vi_predictors
+)$valid
 x <- collinear(df = vi_smol[, vi_predictors_numeric])
 
 }
@@ -174,10 +179,10 @@ Explor. Newsl. 3, 1, 27-32. DOI: 10.1145/507533.507538
 }
 }
 \seealso{
-Other multicollinearity_filtering: 
-\code{\link{collinear_select}()},
-\code{\link{cor_select}()},
-\code{\link{step_collinear}()},
-\code{\link{vif_select}()}
+Other multicollinearity_filtering:
+\code{\link[=collinear_select]{collinear_select()}},
+\code{\link[=cor_select]{cor_select()}},
+\code{\link[=step_collinear]{step_collinear()}},
+\code{\link[=vif_select]{vif_select()}}
 }
 \concept{multicollinearity_filtering}

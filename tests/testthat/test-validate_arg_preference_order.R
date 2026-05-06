@@ -1,10 +1,11 @@
 testthat::test_that("`validate_arg_preference_order()` works", {
   testthat::skip_on_cran()
 
-  data(
-    vi_smol,
-    vi_predictors_numeric
-  )
+  data(vi_smol, vi_predictors, package = "spatialData")
+  vi_predictors_numeric <- identify_numeric_variables(
+    df = vi_smol,
+    predictors = vi_predictors
+  )$valid
 
   #no arguments
   testthat::expect_error(

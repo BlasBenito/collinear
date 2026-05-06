@@ -12,10 +12,12 @@
 #' @family argument_validation
 #' @autoglobal
 #' @examples
-#' data(
-#'   vi_smol,
-#'   vi_predictors_numeric
-#'   )
+#' data(vi_smol, package = "spatialData")
+#' data(vi_predictors, package = "spatialData")
+#' vi_predictors_numeric <- identify_numeric_variables(
+#'   df = vi_smol,
+#'   predictors = vi_predictors
+#' )$valid
 #'
 #' #input arguments must be validated first
 #' df <- validate_arg_df(

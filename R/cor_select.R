@@ -15,7 +15,7 @@
 #' @inheritParams collinear_select
 #' @return character vector of selected predictors
 #' @examples
-#' data(vi_smol)
+#' data(vi_smol, package = "spatialData")
 #'
 #' ## OPTIONAL: parallelization setup
 #' ## irrelevant when all predictors are numeric

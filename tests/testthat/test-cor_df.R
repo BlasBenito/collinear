@@ -1,6 +1,10 @@
 testthat::test_that("`cor_df()` works", {
   testthat::skip_on_cran()
-  data(vi_smol, vi_predictors, vi_predictors_categorical)
+  data(vi_smol, vi_predictors, package = "spatialData")
+  vi_predictors_categorical <- identify_categorical_variables(
+    df = vi_smol,
+    predictors = vi_predictors
+  )$valid
 
   #mixed types
   testthat::expect_warning(
@@ -88,7 +92,7 @@ testthat::test_that("`cor_df()` works", {
           x$y
         )
       ) %in%
-        colnames(vi)[1:5]
+        colnames(vi_smol)[1:5]
     )
   )
 

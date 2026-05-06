@@ -17,9 +17,9 @@
 Print single selection results from \code{collinear}
 }
 \seealso{
-Other S3_methods: 
-\code{\link{print.collinear_output}()},
-\code{\link{summary.collinear_output}()},
-\code{\link{summary.collinear_selection}()}
+Other S3_methods:
+\code{\link[=print.collinear_output]{print.collinear_output()}},
+\code{\link[=summary.collinear_output]{summary.collinear_output()}},
+\code{\link[=summary.collinear_selection]{summary.collinear_selection()}}
 }
 \concept{S3_methods}

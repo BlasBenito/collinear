@@ -107,10 +107,12 @@ Accepts a character vector of response variables as input for the argument \code
 }
 \examples{
 #load example data
-data(
-  vi_smol,
-  vi_predictors_numeric
-)
+data(vi_smol, package = "spatialData")
+data(vi_predictors, package = "spatialData")
+vi_predictors_numeric <- identify_numeric_variables(
+  df = vi_smol,
+  predictors = vi_predictors
+)$valid
 
 ##OPTIONAL: parallelization setup
 # future::plan(
@@ -193,17 +195,17 @@ x
 #future::plan(future::sequential)
 }
 \seealso{
-Other preference_order_functions: 
-\code{\link{f_binomial_gam}()},
-\code{\link{f_binomial_glm}()},
-\code{\link{f_binomial_rf}()},
-\code{\link{f_categorical_rf}()},
-\code{\link{f_count_gam}()},
-\code{\link{f_count_glm}()},
-\code{\link{f_count_rf}()},
-\code{\link{f_numeric_gam}()},
-\code{\link{f_numeric_glm}()},
-\code{\link{f_numeric_rf}()}
+Other preference_order_functions:
+\code{\link[=f_binomial_gam]{f_binomial_gam()}},
+\code{\link[=f_binomial_glm]{f_binomial_glm()}},
+\code{\link[=f_binomial_rf]{f_binomial_rf()}},
+\code{\link[=f_categorical_rf]{f_categorical_rf()}},
+\code{\link[=f_count_gam]{f_count_gam()}},
+\code{\link[=f_count_glm]{f_count_glm()}},
+\code{\link[=f_count_rf]{f_count_rf()}},
+\code{\link[=f_numeric_gam]{f_numeric_gam()}},
+\code{\link[=f_numeric_glm]{f_numeric_glm()}},
+\code{\link[=f_numeric_rf]{f_numeric_rf()}}
 }
 \author{
 Blas M. Benito, PhD

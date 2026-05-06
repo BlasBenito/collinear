@@ -2,8 +2,12 @@ title: collinear
 home:
   title: "collinear: Automated Multicollinearity Management"
 url: https://blasbenito.github.io/collinear/
+
+llm-docs: false
+
 template:
   bootstrap: 5
+  bootswatch: yeti
   fonts:
     heading: Montserrat
     body: Montserrat
@@ -13,6 +17,7 @@ template:
 authors:
   Blas M. Benito:
     href: https://blasbenito.com
+
 articles:
 - title: "Tutorials"
   navbar: "Tutorials"
@@ -24,6 +29,7 @@ articles:
   - articles/dual_filtering_strategy
   - articles/collinear_in_the_wild
   - articles/download_history
+
 navbar:
   components:
     blog:
@@ -117,22 +123,3 @@ reference:
 - contents:
   - has_concept("argument_validation")
 
-build:
-  extra_packages:
-    - patchwork
-    - ggplot2
-    - rstudioapi
-    - future
-    - dplyr
-    - DT
-
-on:
-  push:
-    branches: [main, master]
-  pull_request:
-    branches: [main, master]
-  release:
-    types: [published]
-  workflow_dispatch:  # allows manual triggering
-  schedule:
-    - cron: '0 0 1 * *'  # runs at midnight UTC on the 1st of each month

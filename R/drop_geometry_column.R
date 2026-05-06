@@ -10,7 +10,7 @@
 #' @author Blas M. Benito, PhD
 #' @export
 #' @examples
-#' data(vi_smol)
+#' data(vi_smol, package = "spatialData")
 #'
 #' #creating fake geometry column without sf loaded
 #' vi_smol$geometry <- NA

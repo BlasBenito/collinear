@@ -30,14 +30,5 @@ d       6.804
 c       13.263
 a       16.161
 }
-\seealso{
-Other example_data: 
-\code{\link{vi}},
-\code{\link{vi_predictors}},
-\code{\link{vi_predictors_categorical}},
-\code{\link{vi_predictors_numeric}},
-\code{\link{vi_responses}},
-\code{\link{vi_smol}}
-}
 \concept{example_data}
 \keyword{datasets}

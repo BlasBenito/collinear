@@ -10,12 +10,15 @@
 #'
 #' @return function name
 #' @examples
-#' data(
-#'   vi_smol,
-#'   vi_predictors_numeric,
-#'   vi_predictors_categorical,
-#'   vi_predictors
-#'   )
+#' data(vi_smol, vi_predictors, package = "spatialData")
+#' vi_predictors_numeric <- identify_numeric_variables(
+#'   df = vi_smol,
+#'   predictors = vi_predictors
+#' )$valid
+#' vi_predictors_categorical <- identify_categorical_variables(
+#'   df = vi_smol,
+#'   predictors = vi_predictors
+#' )$valid
 #'
 #' f_auto(
 #'   df = vi_smol,

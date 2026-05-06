@@ -29,10 +29,12 @@ dataframe with columns \code{method} with the value "vif", \code{statistic} with
 Computes the the minimum, mean, maximum, and quantiles 0.05, 0.25, median (0.5), 0.75, and 0.95 of the column "vif" in the output of \code{\link[=vif_df]{vif_df()}}.
 }
 \examples{
-data(
-  vi_smol,
-  vi_predictors_numeric
-  )
+data(vi_smol, package = "spatialData")
+data(vi_predictors, package = "spatialData")
+vi_predictors_numeric <- identify_numeric_variables(
+  df = vi_smol,
+  predictors = vi_predictors
+)$valid
 
 # ## OPTIONAL: parallelization setup
 # ## irrelevant when all predictors are numeric
@@ -56,14 +58,14 @@ x
 #future::plan(future::sequential)
 }
 \seealso{
-Other multicollinearity_assessment: 
-\code{\link{collinear_stats}()},
-\code{\link{cor_clusters}()},
-\code{\link{cor_cramer}()},
-\code{\link{cor_df}()},
-\code{\link{cor_matrix}()},
-\code{\link{cor_stats}()},
-\code{\link{vif}()},
-\code{\link{vif_df}()}
+Other multicollinearity_assessment:
+\code{\link[=collinear_stats]{collinear_stats()}},
+\code{\link[=cor_clusters]{cor_clusters()}},
+\code{\link[=cor_cramer]{cor_cramer()}},
+\code{\link[=cor_df]{cor_df()}},
+\code{\link[=cor_matrix]{cor_matrix()}},
+\code{\link[=cor_stats]{cor_stats()}},
+\code{\link[=vif]{vif()}},
+\code{\link[=vif_df]{vif_df()}}
 }
 \concept{multicollinearity_assessment}

@@ -16,8 +16,8 @@ Dataframe with rules used by \code{\link[=f_auto]{f_auto()}} to select the funct
 f_auto_rules()
 }
 \seealso{
-Other preference_order_tools: 
-\code{\link{f_auto}()},
-\code{\link{f_functions}()}
+Other preference_order_tools:
+\code{\link[=f_auto]{f_auto()}},
+\code{\link[=f_functions]{f_functions()}}
 }
 \concept{preference_order_tools}

@@ -35,7 +35,7 @@ Internal function validate the arguments \code{response} and \code{responses}. I
 }
 \examples{
 
-data(vi_smol)
+data(vi_smol, package = "spatialData")
 
 x <- validate_arg_responses(
   df = vi_smol,
@@ -46,17 +46,17 @@ attributes(x)$validated
 
 }
 \seealso{
-Other argument_validation: 
-\code{\link{drop_geometry_column}()},
-\code{\link{validate_arg_df}()},
-\code{\link{validate_arg_df_not_null}()},
-\code{\link{validate_arg_encoding_method}()},
-\code{\link{validate_arg_f}()},
-\code{\link{validate_arg_function_name}()},
-\code{\link{validate_arg_max_cor}()},
-\code{\link{validate_arg_max_vif}()},
-\code{\link{validate_arg_predictors}()},
-\code{\link{validate_arg_preference_order}()},
-\code{\link{validate_arg_quiet}()}
+Other argument_validation:
+\code{\link[=drop_geometry_column]{drop_geometry_column()}},
+\code{\link[=validate_arg_df]{validate_arg_df()}},
+\code{\link[=validate_arg_df_not_null]{validate_arg_df_not_null()}},
+\code{\link[=validate_arg_encoding_method]{validate_arg_encoding_method()}},
+\code{\link[=validate_arg_f]{validate_arg_f()}},
+\code{\link[=validate_arg_function_name]{validate_arg_function_name()}},
+\code{\link[=validate_arg_max_cor]{validate_arg_max_cor()}},
+\code{\link[=validate_arg_max_vif]{validate_arg_max_vif()}},
+\code{\link[=validate_arg_predictors]{validate_arg_predictors()}},
+\code{\link[=validate_arg_preference_order]{validate_arg_preference_order()}},
+\code{\link[=validate_arg_quiet]{validate_arg_quiet()}}
 }
 \concept{argument_validation}

@@ -75,15 +75,15 @@ cor_cramer(
 }
 }
 \seealso{
-Other multicollinearity_assessment: 
-\code{\link{collinear_stats}()},
-\code{\link{cor_clusters}()},
-\code{\link{cor_df}()},
-\code{\link{cor_matrix}()},
-\code{\link{cor_stats}()},
-\code{\link{vif}()},
-\code{\link{vif_df}()},
-\code{\link{vif_stats}()}
+Other multicollinearity_assessment:
+\code{\link[=collinear_stats]{collinear_stats()}},
+\code{\link[=cor_clusters]{cor_clusters()}},
+\code{\link[=cor_df]{cor_df()}},
+\code{\link[=cor_matrix]{cor_matrix()}},
+\code{\link[=cor_stats]{cor_stats()}},
+\code{\link[=vif]{vif()}},
+\code{\link[=vif_df]{vif_df()}},
+\code{\link[=vif_stats]{vif_stats()}}
 }
 \author{
 Blas M. Benito, PhD

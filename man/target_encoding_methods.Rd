@@ -61,7 +61,7 @@ Encode categories as response means
 \examples{
 
 #  loading example data
-data(vi_smol)
+data(vi_smol, package = "spatialData")
 
 #mean encoding
 #-------------
@@ -130,10 +130,7 @@ if(interactive()){
 
 }
 \seealso{
-Other target_encoding: 
-\code{\link{target_encoding_lab}()}
-
-Other target_encoding: 
-\code{\link{target_encoding_lab}()}
+Other target_encoding:
+\code{\link[=target_encoding_lab]{target_encoding_lab()}}
 }
 \concept{target_encoding}

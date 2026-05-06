@@ -9,7 +9,11 @@
 #' @return dataframe
 #' @examples
 #'
-#' data(vi_smol, vi_predictors)
+#' data(vi_smol, vi_predictors, package = "spatialData")
+#' vi_predictors_numeric <- identify_numeric_variables(
+#'   df = vi_smol,
+#'   predictors = vi_predictors
+#' )$valid
 #'
 #' df <- validate_arg_df(
 #'   df = vi_smol,

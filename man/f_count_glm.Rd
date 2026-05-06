@@ -25,7 +25,7 @@ Supports cross-validation via the arguments arguments \code{cv_training_fraction
 }
 \examples{
 
-data(vi_smol)
+data(vi_smol, package = "spatialData")
 
 df <- data.frame(
   y = vi_smol[["vi_counts"]],
@@ -52,16 +52,16 @@ f_count_glm(df = df)
 
 }
 \seealso{
-Other preference_order_functions: 
-\code{\link{f_binomial_gam}()},
-\code{\link{f_binomial_glm}()},
-\code{\link{f_binomial_rf}()},
-\code{\link{f_categorical_rf}()},
-\code{\link{f_count_gam}()},
-\code{\link{f_count_rf}()},
-\code{\link{f_numeric_gam}()},
-\code{\link{f_numeric_glm}()},
-\code{\link{f_numeric_rf}()},
-\code{\link{preference_order}()}
+Other preference_order_functions:
+\code{\link[=f_binomial_gam]{f_binomial_gam()}},
+\code{\link[=f_binomial_glm]{f_binomial_glm()}},
+\code{\link[=f_binomial_rf]{f_binomial_rf()}},
+\code{\link[=f_categorical_rf]{f_categorical_rf()}},
+\code{\link[=f_count_gam]{f_count_gam()}},
+\code{\link[=f_count_rf]{f_count_rf()}},
+\code{\link[=f_numeric_gam]{f_numeric_gam()}},
+\code{\link[=f_numeric_glm]{f_numeric_glm()}},
+\code{\link[=f_numeric_rf]{f_numeric_rf()}},
+\code{\link[=preference_order]{preference_order()}}
 }
 \concept{preference_order_functions}

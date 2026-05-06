@@ -46,10 +46,10 @@ All returned weights sum to one.
    )
 }
 \seealso{
-Other modelling_tools: 
-\code{\link{model_formula}()},
-\code{\link{score_auc}()},
-\code{\link{score_cramer}()},
-\code{\link{score_r2}()}
+Other modelling_tools:
+\code{\link[=model_formula]{model_formula()}},
+\code{\link[=score_auc]{score_auc()}},
+\code{\link[=score_cramer]{score_cramer()}},
+\code{\link[=score_r2]{score_r2()}}
 }
 \concept{modelling_tools}

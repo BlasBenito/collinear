@@ -42,7 +42,7 @@ Recommended maximums commonly used are 2.5, 5, and 10.
 
 \examples{
 
-data(vi_smol)
+data(vi_smol, package = "spatialData")
 
 # ## OPTIONAL: parallelization setup
 # ## irrelevant when all predictors are numeric
@@ -80,14 +80,14 @@ x
 }
 }
 \seealso{
-Other multicollinearity_assessment: 
-\code{\link{collinear_stats}()},
-\code{\link{cor_clusters}()},
-\code{\link{cor_cramer}()},
-\code{\link{cor_df}()},
-\code{\link{cor_matrix}()},
-\code{\link{cor_stats}()},
-\code{\link{vif}()},
-\code{\link{vif_stats}()}
+Other multicollinearity_assessment:
+\code{\link[=collinear_stats]{collinear_stats()}},
+\code{\link[=cor_clusters]{cor_clusters()}},
+\code{\link[=cor_cramer]{cor_cramer()}},
+\code{\link[=cor_df]{cor_df()}},
+\code{\link[=cor_matrix]{cor_matrix()}},
+\code{\link[=cor_stats]{cor_stats()}},
+\code{\link[=vif]{vif()}},
+\code{\link[=vif_stats]{vif_stats()}}
 }
 \concept{multicollinearity_assessment}

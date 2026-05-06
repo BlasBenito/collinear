@@ -26,7 +26,7 @@ head(prediction_cor_to_vif)
 plot(max_vif ~ max_cor, data = prediction_cor_to_vif, type = "l")
 }
 \seealso{
-Other experiments: 
+Other experiments:
 \code{\link{experiment_adaptive_thresholds}},
 \code{\link{experiment_cor_vs_vif}},
 \code{\link{gam_cor_to_vif}}

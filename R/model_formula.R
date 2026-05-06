@@ -24,10 +24,12 @@
 #' @export
 #' @autoglobal
 #' @examples
-#' data(
-#'   vi_smol,
-#'   vi_predictors_numeric
-#'   )
+#' data(vi_smol, package = "spatialData")
+#' data(vi_predictors, package = "spatialData")
+#' vi_predictors_numeric <- identify_numeric_variables(
+#'   df = vi_smol,
+#'   predictors = vi_predictors
+#' )$valid
 #'
 #' #reduce collinearity
 #' x <- collinear_select(
@@ -110,6 +112,12 @@ model_formula <- function(
 
   df <- validate_arg_df_not_null(
     df = df,
+    function_name = function_name
+  )
+
+  df <- drop_geometry_column(
+    df = df,
+    quiet = quiet,
     function_name = function_name
   )
 

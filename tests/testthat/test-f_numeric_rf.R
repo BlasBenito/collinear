@@ -1,7 +1,7 @@
 testthat::test_that("f_numeric_rf() works", {
   testthat::skip_on_cran()
 
-  data(vi_smol)
+  data(vi_smol, package = "spatialData")
 
   response <- "vi_numeric"
   numeric_predictor <- "swi_mean"
@@ -60,6 +60,33 @@ testthat::test_that("f_numeric_rf() works", {
   testthat::expect_error(
     f_numeric_rf(df = df),
     regexp = "dataframe 'df' must have the column names 'x' and 'y'."
+  )
+
+  #NA in data
+  df <- data.frame(
+    y = vi_smol[[response]],
+    x = vi_smol[[categorical_predictor]]
+  )
+  df$x[1:5] <- NA
+  df$y[6:10] <- NA
+
+  x <- f_numeric_rf(df = df)
+
+  testthat::expect_true(
+    is.numeric(x)
+  )
+
+  df <- data.frame(
+    y = vi_smol[[response]],
+    x = vi_smol[[numeric_predictor]]
+  )
+  df$x[1:5] <- NA
+  df$y[6:10] <- NA
+
+  x <- f_numeric_rf(df = df)
+
+  testthat::expect_true(
+    is.numeric(x)
   )
 
   #cross validation ----

@@ -1,7 +1,7 @@
 testthat::test_that("`target_encoding_rank()` works", {
   testthat::skip_on_cran()
 
-  data(vi_smol)
+  data(vi_smol, package = "spatialData")
 
   #rank
   df <- target_encoding_rank(

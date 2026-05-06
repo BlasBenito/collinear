@@ -31,7 +31,7 @@ data(experiment_cor_vs_vif)
 str(experiment_cor_vs_vif)
 }
 \seealso{
-Other experiments: 
+Other experiments:
 \code{\link{experiment_adaptive_thresholds}},
 \code{\link{gam_cor_to_vif}},
 \code{\link{prediction_cor_to_vif}}

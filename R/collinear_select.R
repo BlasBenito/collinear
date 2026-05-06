@@ -20,7 +20,7 @@
 #' @param max_vif (optional, numeric or NULL) Maximum Variance Inflation Factor allowed for \code{predictors} during multicollinearity filtering. Recommended values are between 2.5 (strict) and 10 (permissive). Default: 5
 #' @return character vector: names of selected predictors
 #' @examples
-#' data(vi_smol)
+#' data(vi_smol, package = "spatialData")
 #'
 #' ## OPTIONAL: parallelization setup
 #' ## irrelevant when all predictors are numeric

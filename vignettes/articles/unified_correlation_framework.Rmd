@@ -16,6 +16,11 @@ knitr::opts_chunk$set(
 )
 ```
 
+## Source Code
+
+You can download the Rmarkdown notebook used to render this article [here](https://github.com/BlasBenito/collinear/blob/main/vignettes/articles/unified_correlation_framework.Rmd). To download the file, use the button *Download raw file* on the upper-right hand of the `Code` panel.
+
+
 ## Summary
 
 The function `cor_df()` combines several methods to compute pairwise associations between variables of different types:
@@ -28,12 +33,29 @@ This article provides fine-grained details on this functionality and describes t
 
 ## Setup
 
+```{r, include = FALSE}
+if (!requireNamespace("pak", quietly = TRUE)) {
+  install.packages("pak")
+}
+library(pak)
+pak::pkg_install(
+  c(
+    "ggplot2",
+    "future",
+    "collinear",
+    "spatialData"
+  ),
+  ask = FALSE
+)
+```
+
 This article requires the following setup Don't miss the object `predictors` and the variables it contains, as most of the explanatory code herein will be focusing on these.
 
 ```{r, message = FALSE, warning = FALSE, include = FALSE}
 library(collinear)
 library(future)
 library(ggplot2)
+library(spatialData)
 
 #parallelization setup
 #only useful for categorical predictors
@@ -46,7 +68,7 @@ future::plan(
 #progressr::handlers(global = TRUE)
 
 #example dataframe
-data(vi_smol)
+data(vi_smol, package = "spatialData")
 
 #mixed predictors
 predictors <- c(

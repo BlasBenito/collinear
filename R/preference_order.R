@@ -75,10 +75,12 @@
 #' }
 #' @examples
 #' #load example data
-#' data(
-#'   vi_smol,
-#'   vi_predictors_numeric
-#' )
+#' data(vi_smol, package = "spatialData")
+#' data(vi_predictors, package = "spatialData")
+#' vi_predictors_numeric <- identify_numeric_variables(
+#'   df = vi_smol,
+#'   predictors = vi_predictors
+#' )$valid
 #'
 #' ##OPTIONAL: parallelization setup
 #' # future::plan(
@@ -249,7 +251,7 @@ preference_order <- function(
 
   f <- validate_arg_f(
     f = f,
-    f_name = deparse(substitute(f)),
+    f_name = sub(".*::", "", deparse(substitute(f))),
     function_name = function_name
   )
 
@@ -456,10 +458,10 @@ preference_order <- function(
         p()
 
         out <- f.response(
-          df = data.frame(
+          df = stats::na.omit(data.frame(
             y = df[[response]],
             x = df[[x]]
-          ),
+          )),
           function_name = function_name,
           cv_training_fraction = cv_training_fraction,
           cv_iterations = cv_iterations

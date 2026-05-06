@@ -1,12 +1,15 @@
 testthat::test_that("`f_auto()` works", {
   testthat::skip_on_cran()
 
-  data(
-    vi_smol,
-    vi_predictors,
-    vi_predictors_categorical,
-    vi_predictors_numeric
-  )
+  data(vi_smol, vi_predictors, package = "spatialData")
+  vi_predictors_numeric <- identify_numeric_variables(
+    df = vi_smol,
+    predictors = vi_predictors
+  )$valid
+  vi_predictors_categorical <- identify_categorical_variables(
+    df = vi_smol,
+    predictors = vi_predictors
+  )$valid
 
   responses_vector <- c(
     "vi_numeric",

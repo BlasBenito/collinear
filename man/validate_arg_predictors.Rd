@@ -36,7 +36,7 @@ character vector: predictor names
 Validates the argument \code{predictors} by ensuring that all provided predictors are in \code{df} and don't intersect with \code{responses}, if any.
 }
 \examples{
-data(vi_smol, vi_predictors)
+data(vi_smol, vi_predictors, package = "spatialData")
 
 x <- validate_arg_predictors(
   df = vi_smol,
@@ -47,17 +47,17 @@ attributes(x)$validated
 
 }
 \seealso{
-Other argument_validation: 
-\code{\link{drop_geometry_column}()},
-\code{\link{validate_arg_df}()},
-\code{\link{validate_arg_df_not_null}()},
-\code{\link{validate_arg_encoding_method}()},
-\code{\link{validate_arg_f}()},
-\code{\link{validate_arg_function_name}()},
-\code{\link{validate_arg_max_cor}()},
-\code{\link{validate_arg_max_vif}()},
-\code{\link{validate_arg_preference_order}()},
-\code{\link{validate_arg_quiet}()},
-\code{\link{validate_arg_responses}()}
+Other argument_validation:
+\code{\link[=drop_geometry_column]{drop_geometry_column()}},
+\code{\link[=validate_arg_df]{validate_arg_df()}},
+\code{\link[=validate_arg_df_not_null]{validate_arg_df_not_null()}},
+\code{\link[=validate_arg_encoding_method]{validate_arg_encoding_method()}},
+\code{\link[=validate_arg_f]{validate_arg_f()}},
+\code{\link[=validate_arg_function_name]{validate_arg_function_name()}},
+\code{\link[=validate_arg_max_cor]{validate_arg_max_cor()}},
+\code{\link[=validate_arg_max_vif]{validate_arg_max_vif()}},
+\code{\link[=validate_arg_preference_order]{validate_arg_preference_order()}},
+\code{\link[=validate_arg_quiet]{validate_arg_quiet()}},
+\code{\link[=validate_arg_responses]{validate_arg_responses()}}
 }
 \concept{argument_validation}

@@ -1,7 +1,11 @@
 test_that("step_collinear works!", {
   testthat::skip_on_cran()
 
-  data(vi_smol, vi_predictors_numeric)
+  data(vi_smol, vi_predictors, package = "spatialData")
+  vi_predictors_numeric <- identify_numeric_variables(
+    df = vi_smol,
+    predictors = vi_predictors
+  )$valid
 
   test_selection <- collinear(
     df = vi_smol,

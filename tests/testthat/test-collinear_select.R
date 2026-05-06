@@ -1,6 +1,14 @@
 testthat::test_that("`collinear_select()` works", {
   testthat::skip_on_cran()
-  data(vi_smol, vi_predictors)
+  data(vi_smol, vi_predictors, package = "spatialData")
+  vi_predictors_numeric <- identify_numeric_variables(
+    df = vi_smol,
+    predictors = vi_predictors
+  )$valid
+  vi_predictors_categorical <- identify_categorical_variables(
+    df = vi_smol,
+    predictors = vi_predictors
+  )$valid
 
   #only max_cor, filtering not required
   testthat::expect_message(

@@ -17,9 +17,9 @@
 Print all collinear selection results of \code{collinear()}
 }
 \seealso{
-Other S3_methods: 
-\code{\link{print.collinear_selection}()},
-\code{\link{summary.collinear_output}()},
-\code{\link{summary.collinear_selection}()}
+Other S3_methods:
+\code{\link[=print.collinear_selection]{print.collinear_selection()}},
+\code{\link[=summary.collinear_output]{summary.collinear_output()}},
+\code{\link[=summary.collinear_selection]{summary.collinear_selection()}}
 }
 \concept{S3_methods}

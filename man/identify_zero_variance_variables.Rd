@@ -42,7 +42,7 @@ Returns the names of near-zero variance variables in a modelling dataframe.
 }
 \examples{
 
-data(vi_smol, vi_predictors)
+data(vi_smol, vi_predictors, package = "spatialData")
 
 #create zero and near variance predictors
 vi_smol$zero_variance <- 1
@@ -70,12 +70,12 @@ x
 
 }
 \seealso{
-Other data_types: 
-\code{\link{identify_categorical_variables}()},
-\code{\link{identify_logical_variables}()},
-\code{\link{identify_numeric_variables}()},
-\code{\link{identify_response_type}()},
-\code{\link{identify_valid_variables}()}
+Other data_types:
+\code{\link[=identify_categorical_variables]{identify_categorical_variables()}},
+\code{\link[=identify_logical_variables]{identify_logical_variables()}},
+\code{\link[=identify_numeric_variables]{identify_numeric_variables()}},
+\code{\link[=identify_response_type]{identify_response_type()}},
+\code{\link[=identify_valid_variables]{identify_valid_variables()}}
 }
 \author{
 Blas M. Benito, PhD

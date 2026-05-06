@@ -27,7 +27,7 @@
 #' @return dataframe
 #' @examples
 #'
-#' data(vi_smol)
+#' data(vi_smol, package = "spatialData")
 #'
 #' #applying all methods for a continuous response
 #' df <- target_encoding_lab(

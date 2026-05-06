@@ -15,7 +15,7 @@
 #' @inheritParams f_numeric_glm
 #' @return numeric or numeric vector: AUC
 #' @examples
-#' data(vi_smol)
+#' data(vi_smol, package = "spatialData")
 #'
 #' df <- data.frame(
 #'   y = vi_smol[["vi_binomial"]],
@@ -61,6 +61,8 @@ f_binomial_glm <- function(
     function_name = dots$function_name
   )
 
+  df <- stats::na.omit(object = df)
+
   #check column names in df
   if (!all(c("x", "y") %in% names(df))) {
     stop(
@@ -74,19 +76,19 @@ f_binomial_glm <- function(
   u <- unique(df[["y"]])
   if (
     !is.numeric(df[["y"]]) ||
-      !is.integer(df[["y"]]) ||
       length(u) != 2L ||
       !all(u %in% 0:1)
   ) {
     stop(
       "\n",
       function_name,
-      ": column 'y' of dataframe 'df' must be integer and have 0 and 1 as unique values.",
+      ": column 'y' of dataframe 'df' must be a numeric or integer vector with 0 and 1 as unique values.",
       call. = FALSE
     )
   }
-
-  df <- stats::na.omit(object = df)
+  if (!is.integer(df[["y"]])) {
+    df[["y"]] <- as.integer(df[["y"]])
+  }
 
   scores <- rep(x = NA_real_, times = cv_iterations)
 

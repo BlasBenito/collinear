@@ -39,7 +39,7 @@ Supported types are:
 }
 }
 \examples{
-data(vi_smol)
+data(vi_smol, package = "spatialData")
 
 identify_response_type(
   df = vi_smol,
@@ -68,11 +68,11 @@ identify_response_type(
 
 }
 \seealso{
-Other data_types: 
-\code{\link{identify_categorical_variables}()},
-\code{\link{identify_logical_variables}()},
-\code{\link{identify_numeric_variables}()},
-\code{\link{identify_valid_variables}()},
-\code{\link{identify_zero_variance_variables}()}
+Other data_types:
+\code{\link[=identify_categorical_variables]{identify_categorical_variables()}},
+\code{\link[=identify_logical_variables]{identify_logical_variables()}},
+\code{\link[=identify_numeric_variables]{identify_numeric_variables()}},
+\code{\link[=identify_valid_variables]{identify_valid_variables()}},
+\code{\link[=identify_zero_variance_variables]{identify_zero_variance_variables()}}
 }
 \concept{data_types}

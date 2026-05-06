@@ -1,6 +1,6 @@
 testthat::test_that("`cor_cramer()` works", {
   testthat::skip_on_cran()
-  data(vi_smol)
+  data(vi_smol, package = "spatialData")
 
   testthat::expect_error(
     x <- cor_cramer(

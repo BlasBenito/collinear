@@ -44,7 +44,7 @@ Identifies valid numeric variables and ignores those with constant values.
 }
 \examples{
 
-data(vi_smol, vi_predictors)
+data(vi_smol, vi_predictors, package = "spatialData")
 
 x <- identify_numeric_variables(
   df = vi_smol,
@@ -60,12 +60,12 @@ x$invalid
 
 }
 \seealso{
-Other data_types: 
-\code{\link{identify_categorical_variables}()},
-\code{\link{identify_logical_variables}()},
-\code{\link{identify_response_type}()},
-\code{\link{identify_valid_variables}()},
-\code{\link{identify_zero_variance_variables}()}
+Other data_types:
+\code{\link[=identify_categorical_variables]{identify_categorical_variables()}},
+\code{\link[=identify_logical_variables]{identify_logical_variables()}},
+\code{\link[=identify_response_type]{identify_response_type()}},
+\code{\link[=identify_valid_variables]{identify_valid_variables()}},
+\code{\link[=identify_zero_variance_variables]{identify_zero_variance_variables()}}
 }
 \author{
 Blas M. Benito, PhD

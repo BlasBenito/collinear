@@ -1,7 +1,7 @@
 testthat::test_that("`target_encoding_mean()` works", {
   testthat::skip_on_cran()
 
-  data(vi_smol)
+  data(vi_smol, package = "spatialData")
 
   #target_encoding_mean
   df <- target_encoding_mean(

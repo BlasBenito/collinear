@@ -10,12 +10,15 @@ testthat::test_that("`preference_order()` works", {
     "rank"
   )
 
-  data(
-    vi_smol,
-    vi_predictors,
-    vi_predictors_categorical,
-    vi_predictors_numeric
-  )
+  data(vi_smol, vi_predictors, package = "spatialData")
+  vi_predictors_numeric <- identify_numeric_variables(
+    df = vi_smol,
+    predictors = vi_predictors
+  )$valid
+  vi_predictors_categorical <- identify_categorical_variables(
+    df = vi_smol,
+    predictors = vi_predictors
+  )$valid
 
   #several responses
   responses <- c(
@@ -387,4 +390,34 @@ testthat::test_that("`preference_order()` works", {
   testthat::expect_true(
     all(x$metric == "custom")
   )
+
+  # namespace-qualified built-in should still resolve metric correctly (issue #16)
+  x <- preference_order(
+    df = vi_smol,
+    responses = "vi_counts",
+    predictors = vi_predictors_numeric[1:5],
+    f = collinear::f_count_gam,
+    quiet = TRUE
+  ) |>
+    suppressMessages()
+
+  testthat::expect_false(
+    unique(x$metric) == "custom"
+  )
+
+  # NA values in response column should not crash preference_order (issue #18)
+  vi_smol_inf <- vi_smol
+  vi_smol_inf$vi_numeric[1:3] <- Inf
+
+  x <- preference_order(
+    df = vi_smol_inf,
+    responses = "vi_numeric",
+    predictors = vi_predictors_numeric[1:5],
+    f = f_numeric_glm,
+    quiet = TRUE
+  ) |>
+    suppressMessages()
+
+  testthat::expect_true(is.data.frame(x))
+  testthat::expect_true(nrow(x) == 5)
 })

@@ -6,10 +6,12 @@
 #' @returns dataframe with columns \code{method} with the value "vif", \code{statistic} with the statistic name, and \code{value}.
 #'
 #' @examples
-#' data(
-#'   vi_smol,
-#'   vi_predictors_numeric
-#'   )
+#' data(vi_smol, package = "spatialData")
+#' data(vi_predictors, package = "spatialData")
+#' vi_predictors_numeric <- identify_numeric_variables(
+#'   df = vi_smol,
+#'   predictors = vi_predictors
+#' )$valid
 #'
 #' # ## OPTIONAL: parallelization setup
 #' # ## irrelevant when all predictors are numeric

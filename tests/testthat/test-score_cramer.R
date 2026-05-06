@@ -1,7 +1,7 @@
 testthat::test_that("`score_r2()` works", {
   testthat::skip_on_cran()
 
-  data(vi_smol)
+  data(vi_smol, package = "spatialData")
 
   #perfect prediction
   x <- score_cramer(

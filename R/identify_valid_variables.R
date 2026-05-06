@@ -14,7 +14,7 @@
 #' }
 #' @examples
 #'
-#' data(vi_smol, vi_predictors)
+#' data(vi_smol, vi_predictors, package = "spatialData")
 #'
 #' x <- identify_valid_variables(
 #'   df = vi_smol,

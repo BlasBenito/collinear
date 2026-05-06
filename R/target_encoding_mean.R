@@ -12,7 +12,7 @@
 #' @examples
 #'
 #' #  loading example data
-#' data(vi_smol)
+#' data(vi_smol, package = "spatialData")
 #'
 #' #mean encoding
 #' #-------------

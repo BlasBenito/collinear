@@ -1,7 +1,7 @@
 testthat::test_that("`vif_df()` works", {
   testthat::skip_on_cran()
 
-  data(vi_smol, vi_predictors)
+  data(vi_smol, vi_predictors, package = "spatialData")
 
   testthat::expect_message(
     x <- vif_df(

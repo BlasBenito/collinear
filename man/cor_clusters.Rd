@@ -45,7 +45,7 @@ Returns a dataframe with predictor names and their clusters, and optionally, pri
 Accepts a parallelization setup via \code{future::plan()} and a progress bar via \code{progressr::handlers()} (see examples).
 }
 \examples{
-data(vi_smol)
+data(vi_smol, package = "spatialData")
 
 ## OPTIONAL: parallelization setup
 ## irrelevant when all predictors are numeric
@@ -88,14 +88,14 @@ clusters$df
 #future::plan(future::sequential)
 }
 \seealso{
-Other multicollinearity_assessment: 
-\code{\link{collinear_stats}()},
-\code{\link{cor_cramer}()},
-\code{\link{cor_df}()},
-\code{\link{cor_matrix}()},
-\code{\link{cor_stats}()},
-\code{\link{vif}()},
-\code{\link{vif_df}()},
-\code{\link{vif_stats}()}
+Other multicollinearity_assessment:
+\code{\link[=collinear_stats]{collinear_stats()}},
+\code{\link[=cor_cramer]{cor_cramer()}},
+\code{\link[=cor_df]{cor_df()}},
+\code{\link[=cor_matrix]{cor_matrix()}},
+\code{\link[=cor_stats]{cor_stats()}},
+\code{\link[=vif]{vif()}},
+\code{\link[=vif_df]{vif_df()}},
+\code{\link[=vif_stats]{vif_stats()}}
 }
 \concept{multicollinearity_assessment}

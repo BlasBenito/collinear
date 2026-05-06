@@ -41,7 +41,7 @@ Identifies logical predictors and excludes those with constant values.
 }
 \examples{
 
-data(vi_smol, vi_predictors)
+data(vi_smol, vi_predictors, package = "spatialData")
 
 #invalid logical
 vi_smol$logical_invalid <- TRUE
@@ -67,12 +67,12 @@ x$invalid
 
 }
 \seealso{
-Other data_types: 
-\code{\link{identify_categorical_variables}()},
-\code{\link{identify_numeric_variables}()},
-\code{\link{identify_response_type}()},
-\code{\link{identify_valid_variables}()},
-\code{\link{identify_zero_variance_variables}()}
+Other data_types:
+\code{\link[=identify_categorical_variables]{identify_categorical_variables()}},
+\code{\link[=identify_numeric_variables]{identify_numeric_variables()}},
+\code{\link[=identify_response_type]{identify_response_type()}},
+\code{\link[=identify_valid_variables]{identify_valid_variables()}},
+\code{\link[=identify_zero_variance_variables]{identify_zero_variance_variables()}}
 }
 \author{
 Blas M. Benito, PhD

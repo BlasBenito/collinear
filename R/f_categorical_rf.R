@@ -15,7 +15,7 @@
 #' @inheritParams f_numeric_glm
 #' @return numeric or numeric vector: Cramer's V
 #' @examples
-#' data(vi_smol)
+#' data(vi_smol, package = "spatialData")
 #'
 #' df <- data.frame(
 #'   y = vi_smol[["vi_factor"]],
@@ -62,6 +62,8 @@ f_categorical_rf <- function(
     function_name = dots$function_name
   )
 
+  df <- stats::na.omit(object = df)
+
   #check column names in df
   if (!all(c("x", "y") %in% names(df))) {
     stop(
@@ -83,8 +85,6 @@ f_categorical_rf <- function(
   if (!is.factor(df[["y"]])) {
     df[["y"]] <- as.factor(df[["y"]])
   }
-
-  df <- stats::na.omit(object = df)
 
   scores <- rep(x = NA_real_, times = cv_iterations)
 
