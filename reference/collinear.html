@@ -115,11 +115,11 @@ cor_select."><meta property="og:image" content="https://blasbenito.github.io/col
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
 
 
-    <nav class="navbar navbar-expand-lg fixed-top bg-light" data-bs-theme="light" aria-label="Site navigation"><div class="container">
+    <nav class="navbar navbar-expand-lg fixed-top bg-primary" data-bs-theme="dark" aria-label="Site navigation"><div class="container">
 
     <a class="navbar-brand me-2" href="../index.html">collinear</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.0.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.0.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -359,12 +359,17 @@ Explor. Newsl. 3, 1, 27-32. DOI: 10.1145/507533.507538</p></li>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">vi_smol</span>, <span class="va">vi_predictors_numeric</span><span class="op">)</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">vi_smol</span>, package <span class="op">=</span> <span class="st">"spatialData"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">vi_predictors</span>, package <span class="op">=</span> <span class="st">"spatialData"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">vi_predictors_numeric</span> <span class="op">&lt;-</span> <span class="fu"><a href="identify_numeric_variables.html">identify_numeric_variables</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>  df <span class="op">=</span> <span class="va">vi_smol</span>,</span></span>
+<span class="r-in"><span>  predictors <span class="op">=</span> <span class="va">vi_predictors</span></span></span>
+<span class="r-in"><span><span class="op">)</span><span class="op">$</span><span class="va">valid</span></span></span>
 <span class="r-in"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu">collinear</span><span class="op">(</span>df <span class="op">=</span> <span class="va">vi_smol</span><span class="op">[</span>, <span class="va">vi_predictors_numeric</span><span class="op">]</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> collinear::collinear(): setting 'max_cor' to 0.618.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> collinear::collinear(): setting 'max_cor' to 0.6161.</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> collinear::collinear(): setting 'max_vif' to 5.0318.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> collinear::collinear(): setting 'max_vif' to 4.9877.</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> collinear::collinear()</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> └── collinear::validate_arg_preference_order()</span>
@@ -372,9 +377,9 @@ Explor. Newsl. 3, 1, 27-32. DOI: 10.1145/507533.507538</p></li>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> collinear::collinear(): selected predictors: </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>  - topo_elevation</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span>  - topo_slope</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>  - humidity_range</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>  - topo_diversity</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>  - topo_slope</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>  - soil_clay</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>  - cloud_cover_range</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>  - soil_silt</span>

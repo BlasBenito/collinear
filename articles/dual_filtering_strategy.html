@@ -23,11 +23,11 @@
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
 
 
-    <nav class="navbar navbar-expand-lg fixed-top bg-light" data-bs-theme="light" aria-label="Site navigation"><div class="container">
+    <nav class="navbar navbar-expand-lg fixed-top bg-primary" data-bs-theme="dark" aria-label="Site navigation"><div class="container">
 
     <a class="navbar-brand me-2" href="../index.html">collinear</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.0.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.0.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -87,6 +87,14 @@
 
     
     
+<div class="section level2">
+<h2 id="source-code">Source Code<a class="anchor" aria-label="anchor" href="#source-code"></a>
+</h2>
+<p>You can download the Rmarkdown notebook used to render this article
+<a href="https://github.com/BlasBenito/collinear/blob/main/vignettes/articles/dual_filtering_strategy.Rmd" class="external-link">here</a>.
+To download the file, use the button <em>Download raw file</em> on the
+upper-right hand of the <code>Code</code> panel.</p>
+</div>
 <div class="section level2">
 <h2 id="summary">Summary<a class="anchor" aria-label="anchor" href="#summary"></a>
 </h2>
@@ -170,13 +178,13 @@ ordered after the argument <code>preference_order</code>.</p>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">m</span>, <span class="fl">2</span><span class="op">)</span></span>
 <span><span class="co">#&gt;                       swi_mean soil_temperature_mean rainfall_mean</span></span>
-<span><span class="co">#&gt; swi_mean                  1.00                 -0.19          0.66</span></span>
-<span><span class="co">#&gt; soil_temperature_mean    -0.19                  1.00          0.05</span></span>
+<span><span class="co">#&gt; swi_mean                  1.00                 -0.18          0.66</span></span>
+<span><span class="co">#&gt; soil_temperature_mean    -0.18                  1.00          0.05</span></span>
 <span><span class="co">#&gt; rainfall_mean             0.66                  0.05          1.00</span></span>
-<span><span class="co">#&gt; growing_season_length     0.88                 -0.07          0.78</span></span>
+<span><span class="co">#&gt; growing_season_length     0.88                 -0.06          0.78</span></span>
 <span><span class="co">#&gt;                       growing_season_length</span></span>
 <span><span class="co">#&gt; swi_mean                               0.88</span></span>
-<span><span class="co">#&gt; soil_temperature_mean                 -0.07</span></span>
+<span><span class="co">#&gt; soil_temperature_mean                 -0.06</span></span>
 <span><span class="co">#&gt; rainfall_mean                          0.78</span></span>
 <span><span class="co">#&gt; growing_season_length                  1.00</span></span></code></pre></div>
 <p>The first predictor in <code>preference_order</code> is added to

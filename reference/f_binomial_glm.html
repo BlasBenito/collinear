@@ -7,11 +7,11 @@ Supports cross-validation via the arguments arguments cv_training_fraction (nume
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
 
 
-    <nav class="navbar navbar-expand-lg fixed-top bg-light" data-bs-theme="light" aria-label="Site navigation"><div class="container">
+    <nav class="navbar navbar-expand-lg fixed-top bg-primary" data-bs-theme="dark" aria-label="Site navigation"><div class="container">
 
     <a class="navbar-brand me-2" href="../index.html">collinear</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.0.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.0.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -100,7 +100,7 @@ Supports cross-validation via the arguments arguments cv_training_fraction (nume
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">vi_smol</span><span class="op">)</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">vi_smol</span>, package <span class="op">=</span> <span class="st">"spatialData"</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span></span>
 <span class="r-in"><span>  y <span class="op">=</span> <span class="va">vi_smol</span><span class="op">[[</span><span class="st">"vi_binomial"</span><span class="op">]</span><span class="op">]</span>,</span></span>
@@ -109,7 +109,7 @@ Supports cross-validation via the arguments arguments cv_training_fraction (nume
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#no cross-validation</span></span></span>
 <span class="r-in"><span><span class="fu">f_binomial_glm</span><span class="op">(</span>df <span class="op">=</span> <span class="va">df</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.7161608</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.7191808</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#cross-validation</span></span></span>
 <span class="r-in"><span><span class="fu">f_binomial_glm</span><span class="op">(</span></span></span>
@@ -117,8 +117,8 @@ Supports cross-validation via the arguments arguments cv_training_fraction (nume
 <span class="r-in"><span>  cv_training_fraction <span class="op">=</span> <span class="fl">0.5</span>,</span></span>
 <span class="r-in"><span>  cv_iterations <span class="op">=</span> <span class="fl">10</span></span></span>
 <span class="r-in"><span>  <span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] 0.7406385 0.7470000 0.7267345 0.7109775 0.7183745 0.7152365 0.6981429</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [8] 0.7284071 0.7129516 0.6773125</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] 0.7154906 0.7395156 0.7486550 0.7081053 0.7109592 0.7047650 0.7556911</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [8] 0.7163672 0.7115638 0.7278369</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#categorical predictor</span></span></span>
 <span class="r-in"><span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span></span>
@@ -127,7 +127,7 @@ Supports cross-validation via the arguments arguments cv_training_fraction (nume
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu">f_binomial_glm</span><span class="op">(</span>df <span class="op">=</span> <span class="va">df</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.9334159</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.9331935</span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

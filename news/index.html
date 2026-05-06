@@ -3,11 +3,11 @@
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
 
 
-    <nav class="navbar navbar-expand-lg fixed-top bg-light" data-bs-theme="light" aria-label="Site navigation"><div class="container">
+    <nav class="navbar navbar-expand-lg fixed-top bg-primary" data-bs-theme="dark" aria-label="Site navigation"><div class="container">
 
     <a class="navbar-brand me-2" href="../index.html">collinear</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.0.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.0.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -50,6 +50,20 @@
     </div>
 
     <div class="section level2">
+<h2 class="pkg-version" data-toc-text="3.0.1" id="collinear-301">collinear 3.0.1<a class="anchor" aria-label="anchor" href="#collinear-301"></a></h2>
+<div class="section level3">
+<h3 id="bug-fixes-3-0-1">Bug Fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-3-0-1"></a></h3>
+<ul><li><p><strong><code><a href="../reference/preference_order.html">preference_order()</a></code> (<a href="https://github.com/blasbenito/collinear/issues/16" class="external-link">#16</a>)</strong>: Namespace-qualified function names (e.g., <code><a href="../reference/f_count_gam.html">collinear::f_count_gam</a></code>) are now correctly recognised as package functions instead of being labelled <code>metric = "custom"</code>. Fixed by stripping the namespace prefix before name lookup in <code>R/preference_order.R</code>.</p></li>
+<li><p><strong><code><a href="../reference/model_formula.html">model_formula()</a></code> (<a href="https://github.com/blasbenito/collinear/issues/17" class="external-link">#17</a>)</strong>: No longer crashes on <code>sf</code> spatial data frames with <code>"default method not implemented for type 'list'"</code>. Fixed by calling <code><a href="../reference/drop_geometry_column.html">drop_geometry_column()</a></code> early in <code>R/model_formula.R</code> before variable-type detection.</p></li>
+<li><p><strong><code><a href="../reference/preference_order.html">preference_order()</a></code> (<a href="https://github.com/blasbenito/collinear/issues/18" class="external-link">#18</a>)</strong>: <code>NA</code> values in the response variable (including those converted from <code>Inf</code>/<code>-Inf</code>/<code>NaN</code>) are now handled correctly. Fixed by wrapping the <code>(y, x)</code> data frame construction in <code><a href="https://rdrr.io/r/stats/na.fail.html" class="external-link">stats::na.omit()</a></code> in <code>R/preference_order.R</code>.</p></li>
+<li><p><strong><code><a href="../reference/score_auc.html">score_auc()</a></code> (<a href="https://github.com/blasbenito/collinear/issues/19" class="external-link">#19</a>)</strong>: No longer crashes when <code>o</code> or <code>p</code> contain <code>NA</code>. Fixed by removing incomplete cases before computing <code>ones</code>/<code>zeros</code> in <code>R/score_auc.R</code>.</p></li>
+</ul></div>
+<div class="section level3">
+<h3 id="data-changes-3-0-1">Data Changes<a class="anchor" aria-label="anchor" href="#data-changes-3-0-1"></a></h3>
+<ul><li>Example datasets (<code>vi</code>, <code>vi_smol</code>, <code>vi_predictors</code>, <code>vi_predictors_numeric</code>, <code>vi_predictors_categorical</code>, <code>vi_responses</code>) have been moved to the package <strong><code>spatialData</code></strong> and are no longer bundled with <code>collinear</code>. All function examples and README code now load data via <code>data(..., package = "spatialData")</code>. This reduces installed package size and keeps the CRAN submission within size limits.</li>
+</ul></div>
+</div>
+    <div class="section level2">
 <h2 class="pkg-version" data-toc-text="3.0.0" id="collinear-300">collinear 3.0.0<a class="anchor" aria-label="anchor" href="#collinear-300"></a></h2><p class="text-muted">CRAN release: 2025-12-08</p>
 <div class="section level3">
 <h3 id="breaking-changes-3-0-0">Breaking Changes<a class="anchor" aria-label="anchor" href="#breaking-changes-3-0-0"></a></h3>
@@ -62,43 +76,43 @@
 </ul></div>
 <div class="section level4">
 <h4 id="renamed-functions-3-0-0">Renamed Functions<a class="anchor" aria-label="anchor" href="#renamed-functions-3-0-0"></a></h4>
-<table class="table"><colgroup><col width="50%"><col width="50%"></colgroup><thead><tr class="header"><th>Old Name (v2.0)</th>
+<table class="table"><colgroup><col width="50%"><col width="50%"></colgroup><thead><tr><th>Old Name (v2.0)</th>
 <th>New Name (v3.0)</th>
-</tr></thead><tbody><tr class="odd"><td><code>identify_predictors()</code></td>
+</tr></thead><tbody><tr><td><code>identify_predictors()</code></td>
 <td>Split into <code><a href="../reference/identify_valid_variables.html">identify_valid_variables()</a></code>, <code><a href="../reference/identify_numeric_variables.html">identify_numeric_variables()</a></code>, <code><a href="../reference/identify_categorical_variables.html">identify_categorical_variables()</a></code>, <code><a href="../reference/identify_logical_variables.html">identify_logical_variables()</a></code>
 </td>
-</tr><tr class="even"><td><code>identify_predictors_categorical()</code></td>
+</tr><tr><td><code>identify_predictors_categorical()</code></td>
 <td><code><a href="../reference/identify_categorical_variables.html">identify_categorical_variables()</a></code></td>
-</tr><tr class="odd"><td><code>identify_predictors_numeric()</code></td>
+</tr><tr><td><code>identify_predictors_numeric()</code></td>
 <td><code><a href="../reference/identify_numeric_variables.html">identify_numeric_variables()</a></code></td>
-</tr><tr class="even"><td><code>identify_predictors_zero_variance()</code></td>
+</tr><tr><td><code>identify_predictors_zero_variance()</code></td>
 <td><code><a href="../reference/identify_zero_variance_variables.html">identify_zero_variance_variables()</a></code></td>
-</tr><tr class="odd"><td><code>identify_predictors_type()</code></td>
+</tr><tr><td><code>identify_predictors_type()</code></td>
 <td>Removed (merged into <code><a href="../reference/identify_valid_variables.html">identify_valid_variables()</a></code>)</td>
 </tr></tbody></table></div>
 <div class="section level4">
 <h4 id="renamed-f_-functions-for-preference-order-3-0-0">Renamed <code>f_</code> Functions for Preference Order<a class="anchor" aria-label="anchor" href="#renamed-f_-functions-for-preference-order-3-0-0"></a></h4>
-<table class="table"><thead><tr class="header"><th>Old Name (v2.0)</th>
+<table class="table"><thead><tr><th>Old Name (v2.0)</th>
 <th>New Name (v3.0)</th>
-</tr></thead><tbody><tr class="odd"><td><code>f_r2_glm_gaussian()</code></td>
+</tr></thead><tbody><tr><td><code>f_r2_glm_gaussian()</code></td>
 <td><code><a href="../reference/f_numeric_glm.html">f_numeric_glm()</a></code></td>
-</tr><tr class="even"><td><code>f_r2_gam_gaussian()</code></td>
+</tr><tr><td><code>f_r2_gam_gaussian()</code></td>
 <td><code><a href="../reference/f_numeric_gam.html">f_numeric_gam()</a></code></td>
-</tr><tr class="odd"><td><code>f_r2_rf()</code></td>
+</tr><tr><td><code>f_r2_rf()</code></td>
 <td><code><a href="../reference/f_numeric_rf.html">f_numeric_rf()</a></code></td>
-</tr><tr class="even"><td><code>f_r2_glm_poisson()</code></td>
+</tr><tr><td><code>f_r2_glm_poisson()</code></td>
 <td><code><a href="../reference/f_count_glm.html">f_count_glm()</a></code></td>
-</tr><tr class="odd"><td><code>f_r2_gam_poisson()</code></td>
+</tr><tr><td><code>f_r2_gam_poisson()</code></td>
 <td><code><a href="../reference/f_count_gam.html">f_count_gam()</a></code></td>
-</tr><tr class="even"><td><code>f_auc_glm_binomial()</code></td>
+</tr><tr><td><code>f_auc_glm_binomial()</code></td>
 <td><code><a href="../reference/f_binomial_glm.html">f_binomial_glm()</a></code></td>
-</tr><tr class="odd"><td><code>f_auc_gam_binomial()</code></td>
+</tr><tr><td><code>f_auc_gam_binomial()</code></td>
 <td><code><a href="../reference/f_binomial_gam.html">f_binomial_gam()</a></code></td>
-</tr><tr class="even"><td><code>f_auc_rf_binomial()</code></td>
+</tr><tr><td><code>f_auc_rf_binomial()</code></td>
 <td><code><a href="../reference/f_binomial_rf.html">f_binomial_rf()</a></code></td>
-</tr><tr class="odd"><td><code>f_v_rf()</code></td>
+</tr><tr><td><code>f_v_rf()</code></td>
 <td><code><a href="../reference/f_categorical_rf.html">f_categorical_rf()</a></code></td>
-</tr><tr class="even"><td>—</td>
+</tr><tr><td>—</td>
 <td>
 <code><a href="../reference/f_count_rf.html">f_count_rf()</a></code> (new)</td>
 </tr></tbody></table><hr></div>
@@ -164,22 +178,22 @@
 </ul></div>
 <div class="section level4">
 <h4 id="new-datasets-and-models-3-0-0">New Datasets and Models<a class="anchor" aria-label="anchor" href="#new-datasets-and-models-3-0-0"></a></h4>
-<table class="table"><colgroup><col width="31%"><col width="68%"></colgroup><thead><tr class="header"><th>Name</th>
+<table class="table"><colgroup><col width="31%"><col width="68%"></colgroup><thead><tr><th>Name</th>
 <th>Description</th>
-</tr></thead><tbody><tr class="odd"><td><code>experiment_adaptive_thresholds</code></td>
+</tr></thead><tbody><tr><td><code>experiment_adaptive_thresholds</code></td>
 <td>Validation experiment results (10,000 iterations)</td>
-</tr><tr class="even"><td><code>experiment_cor_vs_vif</code></td>
+</tr><tr><td><code>experiment_cor_vs_vif</code></td>
 <td>Correlation vs VIF equivalence experiment results</td>
-</tr><tr class="odd"><td><code>gam_cor_to_vif</code></td>
+</tr><tr><td><code>gam_cor_to_vif</code></td>
 <td>Fitted GAM for mapping <code>max_cor</code> to <code>max_vif</code>
 </td>
-</tr><tr class="even"><td><code>prediction_cor_to_vif</code></td>
+</tr><tr><td><code>prediction_cor_to_vif</code></td>
 <td>Look-up table for threshold equivalence</td>
-</tr><tr class="odd"><td><code>toy</code></td>
+</tr><tr><td><code>toy</code></td>
 <td>Simple dataset illustrating multicollinearity concepts</td>
-</tr><tr class="even"><td><code>vi_smol</code></td>
+</tr><tr><td><code>vi_smol</code></td>
 <td>Smaller version of <code>vi</code> dataset (610 rows) for faster examples</td>
-</tr><tr class="odd"><td><code>vi_responses</code></td>
+</tr><tr><td><code>vi_responses</code></td>
 <td>Character vector of response variable names</td>
 </tr></tbody></table><hr></div>
 </div>

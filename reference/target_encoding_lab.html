@@ -17,11 +17,11 @@ Accepts a parallelization setup via future::plan() and a progress bar via progre
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
 
 
-    <nav class="navbar navbar-expand-lg fixed-top bg-light" data-bs-theme="light" aria-label="Site navigation"><div class="container">
+    <nav class="navbar navbar-expand-lg fixed-top bg-primary" data-bs-theme="dark" aria-label="Site navigation"><div class="container">
 
     <a class="navbar-brand me-2" href="../index.html">collinear</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.0.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.0.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -151,7 +151,7 @@ constant/near-zero-variance columns are used. Default: NULL.</p></dd>
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">vi_smol</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">vi_smol</span>, package <span class="op">=</span> <span class="st">"spatialData"</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#applying all methods for a continuous response</span></span></span>
 <span class="r-in"><span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu">target_encoding_lab</span><span class="op">(</span></span></span>
@@ -181,19 +181,19 @@ constant/near-zero-variance columns are used. Default: NULL.</p></dd>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">df</span><span class="op">[</span>, <span class="va">predictors.encoded</span><span class="op">]</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       koppen_zone__encoded_mean koppen_zone__encoded_loo</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 17401                 0.3233333                0.3231250</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 24388                 0.5233028                0.5225926</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4775                  0.6555814                0.6566667</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 26753                 0.5233028                0.5237037</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 13218                 0.6676000                0.6633333</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 26109                 0.5233028                0.5225000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 17401                 0.3161290                0.3156667</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 24388                 0.5273077                0.5266019</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4775                  0.6525000                0.6535897</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 26753                 0.5273077                0.5277670</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 13218                 0.6637500                0.6591304</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 26109                 0.5273077                0.5265049</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       koppen_zone__encoded_rank</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 17401                         7</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 24388                         7</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4775                          7</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 26753                         7</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 13218                         7</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 26109                         7</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 17401                         8</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 24388                         8</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4775                          8</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 26753                         8</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 13218                         8</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 26109                         8</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span></span></span>
 </code></pre></div>

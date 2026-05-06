@@ -24,6 +24,7 @@
 <url><loc>https://blasbenito.github.io/collinear/reference/cor_matrix.html</loc></url>
 <url><loc>https://blasbenito.github.io/collinear/reference/cor_select.html</loc></url>
 <url><loc>https://blasbenito.github.io/collinear/reference/cor_stats.html</loc></url>
+<url><loc>https://blasbenito.github.io/collinear/reference/declare_spatialData.html</loc></url>
 <url><loc>https://blasbenito.github.io/collinear/reference/drop_geometry_column.html</loc></url>
 <url><loc>https://blasbenito.github.io/collinear/reference/experiment_adaptive_thresholds.html</loc></url>
 <url><loc>https://blasbenito.github.io/collinear/reference/experiment_cor_vs_vif.html</loc></url>
@@ -73,12 +74,6 @@
 <url><loc>https://blasbenito.github.io/collinear/reference/validate_arg_preference_order.html</loc></url>
 <url><loc>https://blasbenito.github.io/collinear/reference/validate_arg_quiet.html</loc></url>
 <url><loc>https://blasbenito.github.io/collinear/reference/validate_arg_responses.html</loc></url>
-<url><loc>https://blasbenito.github.io/collinear/reference/vi.html</loc></url>
-<url><loc>https://blasbenito.github.io/collinear/reference/vi_predictors.html</loc></url>
-<url><loc>https://blasbenito.github.io/collinear/reference/vi_predictors_categorical.html</loc></url>
-<url><loc>https://blasbenito.github.io/collinear/reference/vi_predictors_numeric.html</loc></url>
-<url><loc>https://blasbenito.github.io/collinear/reference/vi_responses.html</loc></url>
-<url><loc>https://blasbenito.github.io/collinear/reference/vi_smol.html</loc></url>
 <url><loc>https://blasbenito.github.io/collinear/reference/vif.html</loc></url>
 <url><loc>https://blasbenito.github.io/collinear/reference/vif_df.html</loc></url>
 <url><loc>https://blasbenito.github.io/collinear/reference/vif_select.html</loc></url>

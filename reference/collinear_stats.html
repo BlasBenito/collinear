@@ -3,11 +3,11 @@
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
 
 
-    <nav class="navbar navbar-expand-lg fixed-top bg-light" data-bs-theme="light" aria-label="Site navigation"><div class="container">
+    <nav class="navbar navbar-expand-lg fixed-top bg-primary" data-bs-theme="dark" aria-label="Site navigation"><div class="container">
 
     <a class="navbar-brand me-2" href="../index.html">collinear</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.0.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.0.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -102,10 +102,12 @@ constant/near-zero-variance columns are used. Default: NULL.</p></dd>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span></span></span>
-<span class="r-in"><span>  <span class="va">vi_smol</span>,</span></span>
-<span class="r-in"><span>  <span class="va">vi_predictors_numeric</span></span></span>
-<span class="r-in"><span>  <span class="op">)</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">vi_smol</span>, package <span class="op">=</span> <span class="st">"spatialData"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">vi_predictors</span>, package <span class="op">=</span> <span class="st">"spatialData"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">vi_predictors_numeric</span> <span class="op">&lt;-</span> <span class="fu"><a href="identify_numeric_variables.html">identify_numeric_variables</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>  df <span class="op">=</span> <span class="va">vi_smol</span>,</span></span>
+<span class="r-in"><span>  predictors <span class="op">=</span> <span class="va">vi_predictors</span></span></span>
+<span class="r-in"><span><span class="op">)</span><span class="op">$</span><span class="va">valid</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## OPTIONAL: parallelization setup</span></span></span>
 <span class="r-in"><span><span class="co">## irrelevant when all predictors are numeric</span></span></span>
@@ -126,23 +128,23 @@ constant/near-zero-variance columns are used. Default: NULL.</p></dd>
 <span class="r-in"><span><span class="va">x</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         method     statistic     value</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1  correlation             n 1081.0000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2  correlation       minimum    0.0011</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3  correlation quantile_0.05    0.0426</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4  correlation quantile_0.25    0.1817</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5  correlation          mean    0.3980</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6  correlation        median    0.3610</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7  correlation quantile_0.75    0.6184</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8  correlation quantile_0.95    0.8264</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2  correlation       minimum    0.0004</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3  correlation quantile_0.05    0.0390</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4  correlation quantile_0.25    0.1831</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5  correlation          mean    0.3985</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6  correlation        median    0.3600</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7  correlation quantile_0.75    0.6163</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8  correlation quantile_0.95    0.8302</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 9  correlation       maximum    0.9893</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 10         vif             n   47.0000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 11         vif       minimum    1.8158</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 12         vif quantile_0.05    3.7499</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 13         vif quantile_0.25   58.1814</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 14         vif          mean  214.5167</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 15         vif        median  170.1444</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 16         vif quantile_0.75  354.2920</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 17         vif quantile_0.95  520.9411</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 18         vif       maximum  553.2944</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 11         vif       minimum    1.8184</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 12         vif quantile_0.05    3.7601</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 13         vif quantile_0.25   58.0508</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 14         vif          mean  214.7214</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 15         vif        median  166.4398</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 16         vif quantile_0.75  355.9232</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 17         vif quantile_0.95  520.4861</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 18         vif       maximum  554.3664</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## OPTIONAL: disable parallelization</span></span></span>
 <span class="r-in"><span><span class="co">#future::plan(future::sequential)</span></span></span>

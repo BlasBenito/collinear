@@ -3,11 +3,11 @@
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
 
 
-    <nav class="navbar navbar-expand-lg fixed-top bg-light" data-bs-theme="light" aria-label="Site navigation"><div class="container">
+    <nav class="navbar navbar-expand-lg fixed-top bg-primary" data-bs-theme="dark" aria-label="Site navigation"><div class="container">
 
     <a class="navbar-brand me-2" href="../index.html">collinear</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.0.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.0.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -129,10 +129,12 @@ constant/near-zero-variance columns are used. Default: NULL.</p></dd>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span></span></span>
-<span class="r-in"><span>  <span class="va">vi_smol</span>,</span></span>
-<span class="r-in"><span>  <span class="va">vi_predictors_numeric</span></span></span>
-<span class="r-in"><span>  <span class="op">)</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">vi_smol</span>, package <span class="op">=</span> <span class="st">"spatialData"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">vi_predictors</span>, package <span class="op">=</span> <span class="st">"spatialData"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">vi_predictors_numeric</span> <span class="op">&lt;-</span> <span class="fu"><a href="identify_numeric_variables.html">identify_numeric_variables</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>  df <span class="op">=</span> <span class="va">vi_smol</span>,</span></span>
+<span class="r-in"><span>  predictors <span class="op">=</span> <span class="va">vi_predictors</span></span></span>
+<span class="r-in"><span><span class="op">)</span><span class="op">$</span><span class="va">valid</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#input arguments must be validated first</span></span></span>
 <span class="r-in"><span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="validate_arg_df.html">validate_arg_df</a></span><span class="op">(</span></span></span>
@@ -169,16 +171,16 @@ constant/near-zero-variance columns are used. Default: NULL.</p></dd>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">y</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    response             predictor            f        metric  score rank</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1      none        topo_elevation stats::cor() 1 - R-squared 0.8184    1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2      none        topo_diversity stats::cor() 1 - R-squared 0.8183    2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3      none            topo_slope stats::cor() 1 - R-squared 0.8001    3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4      none  soil_temperature_min stats::cor() 1 - R-squared 0.7434    4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5      none             swi_range stats::cor() 1 - R-squared 0.7387    5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6      none soil_temperature_mean stats::cor() 1 - R-squared 0.6534    6</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7      none              swi_mean stats::cor() 1 - R-squared 0.6272    7</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8      none               swi_max stats::cor() 1 - R-squared 0.6259    8</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 9      none               swi_min stats::cor() 1 - R-squared 0.6170    9</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 10     none  soil_temperature_max stats::cor() 1 - R-squared 0.6021   10</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1      none        topo_diversity stats::cor() 1 - R-squared 0.8194    1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2      none        topo_elevation stats::cor() 1 - R-squared 0.8145    2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3      none            topo_slope stats::cor() 1 - R-squared 0.7924    3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4      none  soil_temperature_min stats::cor() 1 - R-squared 0.7418    4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5      none             swi_range stats::cor() 1 - R-squared 0.7371    5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6      none soil_temperature_mean stats::cor() 1 - R-squared 0.6517    6</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7      none              swi_mean stats::cor() 1 - R-squared 0.6243    7</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8      none               swi_max stats::cor() 1 - R-squared 0.6239    8</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9      none               swi_min stats::cor() 1 - R-squared 0.6133    9</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10     none  soil_temperature_max stats::cor() 1 - R-squared 0.5999   10</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/attributes.html" class="external-link">attributes</a></span><span class="op">(</span><span class="va">y</span><span class="op">)</span><span class="op">$</span><span class="va">validated</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
 <span class="r-in"><span></span></span>
@@ -201,14 +203,14 @@ constant/near-zero-variance columns are used. Default: NULL.</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    response             predictor            f          metric  score rank</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1      none               swi_max         &lt;NA&gt; user_preference 1.0000    1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2      none               swi_min         &lt;NA&gt; user_preference 0.0000    2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3      none        topo_diversity stats::cor()   1 - R-squared 0.8049    3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4      none             swi_range stats::cor()   1 - R-squared 0.7981    4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5      none        topo_elevation stats::cor()   1 - R-squared 0.7859    5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6      none            topo_slope stats::cor()   1 - R-squared 0.7855    6</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7      none  soil_temperature_min stats::cor()   1 - R-squared 0.7452    7</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8      none              swi_mean stats::cor()   1 - R-squared 0.7229    8</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 9      none soil_temperature_mean stats::cor()   1 - R-squared 0.7057    9</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 10     none  soil_temperature_max stats::cor()   1 - R-squared 0.6854   10</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3      none        topo_diversity stats::cor()   1 - R-squared 0.8062    3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4      none             swi_range stats::cor()   1 - R-squared 0.7968    4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5      none        topo_elevation stats::cor()   1 - R-squared 0.7820    5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6      none            topo_slope stats::cor()   1 - R-squared 0.7804    6</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7      none  soil_temperature_min stats::cor()   1 - R-squared 0.7425    7</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8      none              swi_mean stats::cor()   1 - R-squared 0.7195    8</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9      none soil_temperature_mean stats::cor()   1 - R-squared 0.7032    9</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10     none  soil_temperature_max stats::cor()   1 - R-squared 0.6837   10</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/attributes.html" class="external-link">attributes</a></span><span class="op">(</span><span class="va">y</span><span class="op">)</span><span class="op">$</span><span class="va">validated</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
 <span class="r-in"><span></span></span>
@@ -224,16 +226,16 @@ constant/near-zero-variance columns are used. Default: NULL.</p></dd>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">x</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      response             predictor             f    metric  score rank</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1  vi_numeric              swi_mean f_numeric_glm R-squared 0.7182    1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2  vi_numeric               swi_max f_numeric_glm R-squared 0.5549    2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3  vi_numeric  soil_temperature_max f_numeric_glm R-squared 0.5462    3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4  vi_numeric             swi_range f_numeric_glm R-squared 0.4225    4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5  vi_numeric               swi_min f_numeric_glm R-squared 0.2130    5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6  vi_numeric  soil_temperature_min f_numeric_glm R-squared 0.0972    6</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7  vi_numeric        topo_diversity f_numeric_glm R-squared 0.0663    7</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8  vi_numeric        topo_elevation f_numeric_glm R-squared 0.0351    8</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 9  vi_numeric            topo_slope f_numeric_glm R-squared 0.0176    9</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 10 vi_numeric soil_temperature_mean f_numeric_glm R-squared 0.0151   10</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1  vi_numeric              swi_mean f_numeric_glm R-squared 0.7223    1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2  vi_numeric               swi_max f_numeric_glm R-squared 0.5562    2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3  vi_numeric  soil_temperature_max f_numeric_glm R-squared 0.5475    3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4  vi_numeric             swi_range f_numeric_glm R-squared 0.4245    4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5  vi_numeric               swi_min f_numeric_glm R-squared 0.2153    5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6  vi_numeric  soil_temperature_min f_numeric_glm R-squared 0.1016    6</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7  vi_numeric        topo_diversity f_numeric_glm R-squared 0.0637    7</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8  vi_numeric        topo_elevation f_numeric_glm R-squared 0.0371    8</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9  vi_numeric            topo_slope f_numeric_glm R-squared 0.0219    9</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10 vi_numeric soil_temperature_mean f_numeric_glm R-squared 0.0136   10</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">y</span> <span class="op">&lt;-</span> <span class="fu">validate_arg_preference_order</span><span class="op">(</span></span></span>
 <span class="r-in"><span>  df <span class="op">=</span> <span class="va">df</span>,</span></span>
@@ -244,16 +246,16 @@ constant/near-zero-variance columns are used. Default: NULL.</p></dd>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">y</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      response             predictor             f    metric  score rank</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1  vi_numeric              swi_mean f_numeric_glm R-squared 0.7182    1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2  vi_numeric               swi_max f_numeric_glm R-squared 0.5549    2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3  vi_numeric  soil_temperature_max f_numeric_glm R-squared 0.5462    3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4  vi_numeric             swi_range f_numeric_glm R-squared 0.4225    4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5  vi_numeric               swi_min f_numeric_glm R-squared 0.2130    5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6  vi_numeric  soil_temperature_min f_numeric_glm R-squared 0.0972    6</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7  vi_numeric        topo_diversity f_numeric_glm R-squared 0.0663    7</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8  vi_numeric        topo_elevation f_numeric_glm R-squared 0.0351    8</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 9  vi_numeric            topo_slope f_numeric_glm R-squared 0.0176    9</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 10 vi_numeric soil_temperature_mean f_numeric_glm R-squared 0.0151   10</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1  vi_numeric              swi_mean f_numeric_glm R-squared 0.7223    1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2  vi_numeric               swi_max f_numeric_glm R-squared 0.5562    2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3  vi_numeric  soil_temperature_max f_numeric_glm R-squared 0.5475    3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4  vi_numeric             swi_range f_numeric_glm R-squared 0.4245    4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5  vi_numeric               swi_min f_numeric_glm R-squared 0.2153    5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6  vi_numeric  soil_temperature_min f_numeric_glm R-squared 0.1016    6</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7  vi_numeric        topo_diversity f_numeric_glm R-squared 0.0637    7</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8  vi_numeric        topo_elevation f_numeric_glm R-squared 0.0371    8</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9  vi_numeric            topo_slope f_numeric_glm R-squared 0.0219    9</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10 vi_numeric soil_temperature_mean f_numeric_glm R-squared 0.0136   10</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/attributes.html" class="external-link">attributes</a></span><span class="op">(</span><span class="va">y</span><span class="op">)</span><span class="op">$</span><span class="va">validated</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
 </code></pre></div>

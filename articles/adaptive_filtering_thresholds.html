@@ -23,11 +23,11 @@
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
 
 
-    <nav class="navbar navbar-expand-lg fixed-top bg-light" data-bs-theme="light" aria-label="Site navigation"><div class="container">
+    <nav class="navbar navbar-expand-lg fixed-top bg-primary" data-bs-theme="dark" aria-label="Site navigation"><div class="container">
 
     <a class="navbar-brand me-2" href="../index.html">collinear</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.0.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.0.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -88,6 +88,14 @@
     
     
 <div class="section level2">
+<h2 id="source-code">Source Code<a class="anchor" aria-label="anchor" href="#source-code"></a>
+</h2>
+<p>You can download the Rmarkdown notebook used to render this article
+<a href="https://github.com/BlasBenito/collinear/blob/main/vignettes/articles/adaptive_filtering_thresholds.Rmd" class="external-link">here</a>.
+To download the file, use the button <em>Download raw file</em> on the
+upper-right hand of the <code>Code</code> panel.</p>
+</div>
+<div class="section level2">
 <h2 id="summary">Summary<a class="anchor" aria-label="anchor" href="#summary"></a>
 </h2>
 <p>The function <code><a href="../reference/collinear.html">collinear()</a></code> automatically configures
@@ -116,7 +124,8 @@ provides guidance on when manual configuration might be preferred.</p>
 <p>This article requires the following packages, setup, and example
 data.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://blasbenito.github.io/collinear/">collinear</a></span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://blasbenito.github.io/spatialData/" class="external-link">spatialData</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://blasbenito.github.io/collinear/">collinear</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://future.futureverse.org" class="external-link">future</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://patchwork.data-imaginist.com" class="external-link">patchwork</a></span><span class="op">)</span></span>
@@ -132,12 +141,19 @@ data.</p>
 <span><span class="co">#progress bar (does not work in Rmarkdown)</span></span>
 <span><span class="co">#progressr::handlers(global = TRUE)</span></span>
 <span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span></span>
+<span>  <span class="va">vi_smol</span>,</span>
+<span>  <span class="va">vi_predictors</span>,</span>
+<span>  package <span class="op">=</span> <span class="st">"spatialData"</span></span>
+<span>  <span class="op">)</span></span>
+<span></span>
+<span><span class="va">vi_predictors_numeric</span> <span class="op">&lt;-</span> <span class="fu">collinear</span><span class="fu">::</span><span class="fu"><a href="../reference/identify_numeric_variables.html">identify_numeric_variables</a></span><span class="op">(</span></span>
+<span>  df <span class="op">=</span> <span class="va">vi_smol</span>,</span>
+<span>  predictors <span class="op">=</span> <span class="va">vi_predictors</span></span>
+<span><span class="op">)</span><span class="op">$</span><span class="va">valid</span></span>
+<span></span>
 <span><span class="co">#example data</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span></span>
-<span>  <span class="co">#dataframe with predictors</span></span>
-<span>  <span class="va">vi_smol</span>, </span>
-<span>  <span class="co">#vector of predictor names</span></span>
-<span>  <span class="va">vi_predictors_numeric</span>,</span>
 <span>  <span class="co">#dataframes with experiment data</span></span>
 <span>  <span class="va">experiment_adaptive_thresholds</span>,</span>
 <span>  <span class="va">experiment_cor_vs_vif</span>,</span>
@@ -169,10 +185,10 @@ below show.</p>
 <span>    <span class="va">statistic</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"quantile_0.75"</span>, <span class="st">"maximum"</span><span class="op">)</span></span>
 <span>  <span class="op">)</span></span>
 <span><span class="co">#&gt;        method     statistic    value</span></span>
-<span><span class="co">#&gt; 1 correlation quantile_0.75   0.6184</span></span>
+<span><span class="co">#&gt; 1 correlation quantile_0.75   0.6163</span></span>
 <span><span class="co">#&gt; 2 correlation       maximum   0.9893</span></span>
-<span><span class="co">#&gt; 3         vif quantile_0.75 354.2920</span></span>
-<span><span class="co">#&gt; 4         vif       maximum 553.2944</span></span></code></pre></div>
+<span><span class="co">#&gt; 3         vif quantile_0.75 355.9232</span></span>
+<span><span class="co">#&gt; 4         vif       maximum 554.3664</span></span></code></pre></div>
 <p>Notice that the VIF scores are very large! To fix this issue can run
 these predictors through <code><a href="../reference/collinear.html">collinear()</a></code>.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
@@ -181,9 +197,9 @@ these predictors through <code><a href="../reference/collinear.html">collinear()
 <span>  predictors <span class="op">=</span> <span class="va">vi_predictors_numeric</span></span>
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; collinear::collinear(): setting 'max_cor' to 0.618.</span></span>
+<span><span class="co">#&gt; collinear::collinear(): setting 'max_cor' to 0.6161.</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; collinear::collinear(): setting 'max_vif' to 5.0318.</span></span>
+<span><span class="co">#&gt; collinear::collinear(): setting 'max_vif' to 4.9877.</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; collinear::collinear()</span></span>
 <span><span class="co">#&gt; └── collinear::validate_arg_preference_order()</span></span>
@@ -191,9 +207,9 @@ these predictors through <code><a href="../reference/collinear.html">collinear()
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; collinear::collinear(): selected predictors: </span></span>
 <span><span class="co">#&gt;  - topo_elevation</span></span>
-<span><span class="co">#&gt;  - topo_slope</span></span>
 <span><span class="co">#&gt;  - humidity_range</span></span>
 <span><span class="co">#&gt;  - topo_diversity</span></span>
+<span><span class="co">#&gt;  - topo_slope</span></span>
 <span><span class="co">#&gt;  - soil_clay</span></span>
 <span><span class="co">#&gt;  - cloud_cover_range</span></span>
 <span><span class="co">#&gt;  - soil_silt</span></span>
@@ -218,10 +234,10 @@ stats are shown below.</p>
 <span>    <span class="va">statistic</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"quantile_0.75"</span>, <span class="st">"maximum"</span><span class="op">)</span></span>
 <span>  <span class="op">)</span></span>
 <span><span class="co">#&gt;        method     statistic  value</span></span>
-<span><span class="co">#&gt; 1 correlation quantile_0.75 0.3342</span></span>
-<span><span class="co">#&gt; 2 correlation       maximum 0.6109</span></span>
-<span><span class="co">#&gt; 3         vif quantile_0.75 2.4148</span></span>
-<span><span class="co">#&gt; 4         vif       maximum 3.4733</span></span></code></pre></div>
+<span><span class="co">#&gt; 1 correlation quantile_0.75 0.3359</span></span>
+<span><span class="co">#&gt; 2 correlation       maximum 0.6139</span></span>
+<span><span class="co">#&gt; 3         vif quantile_0.75 2.4419</span></span>
+<span><span class="co">#&gt; 4         vif       maximum 3.4970</span></span></code></pre></div>
 <p>These stats show much more reasonable VIF scores now.</p>
 <p>However, if you are aiming for specific multicollinearity thresholds,
 the automatic setup can be overriden by providing the desired values for
@@ -241,8 +257,8 @@ defined, it will be ignored.</p>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; collinear::collinear(): selected predictors: </span></span>
 <span><span class="co">#&gt;  - topo_elevation</span></span>
-<span><span class="co">#&gt;  - topo_slope</span></span>
 <span><span class="co">#&gt;  - humidity_range</span></span>
+<span><span class="co">#&gt;  - topo_diversity</span></span>
 <span><span class="co">#&gt;  - soil_clay</span></span>
 <span><span class="co">#&gt;  - cloud_cover_range</span></span>
 <span><span class="co">#&gt;  - soil_silt</span></span>
@@ -259,10 +275,10 @@ defined, it will be ignored.</p>
 <span>    <span class="va">statistic</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"quantile_0.75"</span>, <span class="st">"maximum"</span><span class="op">)</span></span>
 <span>  <span class="op">)</span></span>
 <span><span class="co">#&gt;        method     statistic  value</span></span>
-<span><span class="co">#&gt; 1 correlation quantile_0.75 0.2926</span></span>
-<span><span class="co">#&gt; 2 correlation       maximum 0.4573</span></span>
-<span><span class="co">#&gt; 3         vif quantile_0.75 1.8224</span></span>
-<span><span class="co">#&gt; 4         vif       maximum 2.1159</span></span></code></pre></div>
+<span><span class="co">#&gt; 1 correlation quantile_0.75 0.2499</span></span>
+<span><span class="co">#&gt; 2 correlation       maximum 0.4648</span></span>
+<span><span class="co">#&gt; 3         vif quantile_0.75 1.8329</span></span>
+<span><span class="co">#&gt; 4         vif       maximum 2.0830</span></span></code></pre></div>
 <p>By adapting thresholds to each dataset’s structure,
 <code><a href="../reference/collinear.html">collinear()</a></code> provides sensible defaults while still allowing
 manual override when needed.</p>
@@ -285,7 +301,7 @@ output multicollinearity statistics.</p>
 <span>  <span class="fu">rstudioapi</span><span class="fu">::</span><span class="fu"><a href="https://rstudio.github.io/rstudioapi/reference/navigateToFile.html" class="external-link">navigateToFile</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p>The results of this experiment are in the dataframe <a href="reference/experiment_adaptive_thresholds.html"><code>experiment_adaptive_thresholds</code></a>,
 plotted below.</p>
-<p><img src="adaptive_filtering_thresholds_files/figure-html/unnamed-chunk-8-1.png" class="r-plt" alt="" width="100%"></p>
+<p><img src="adaptive_filtering_thresholds_files/figure-html/unnamed-chunk-9-1.png" class="r-plt" alt="" width="100%"></p>
 <p>The left panel shows the 75th percentile of input correlation against
 the maximum VIF of the resulting selection. The cases below the VIF =
 2.5 line (4% of all cases) are datasets with a small number of
@@ -317,7 +333,7 @@ where the problematic multicollinearity begins.</p>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html" class="external-link">pull</a></span><span class="op">(</span><span class="va">value</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">cor_0.75</span></span>
-<span><span class="co">#&gt; [1] 0.6184</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] 0.6163</span></span></code></pre></div>
 <p><strong>2.</strong> Sigmoid transformation of the
 <code>cor_0.75</code> value. This sigmoid function smoothly maps the
 input correlation to a bounded <code>max_cor</code> threshold.</p>
@@ -325,7 +341,7 @@ input correlation to a bounded <code>max_cor</code> threshold.</p>
 <code class="sourceCode R"><span><span class="va">max_cor</span> <span class="op">&lt;-</span> <span class="fl">0.493</span> <span class="op">+</span> <span class="fl">0.242</span> <span class="op">/</span> <span class="op">(</span><span class="fl">1</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">exp</a></span><span class="op">(</span><span class="op">-</span><span class="fl">15</span> <span class="op">*</span> <span class="op">(</span><span class="va">cor_0.75</span> <span class="op">-</span> <span class="fl">0.614</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">max_cor</span></span>
-<span><span class="co">#&gt; [1] 0.6179916</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] 0.616087</span></span></code></pre></div>
 <p>Where:</p>
 <ul>
 <li>
@@ -342,7 +358,7 @@ corresponding to VIF ≈ 7.5 in <code>prediction_cor_to_vif</code>
 curve transitions.</li>
 </ul>
 <p>The full sigmoid curve is shown below.</p>
-<p><img src="adaptive_filtering_thresholds_files/figure-html/unnamed-chunk-11-1.png" class="r-plt" alt="" width="100%"></p>
+<p><img src="adaptive_filtering_thresholds_files/figure-html/unnamed-chunk-12-1.png" class="r-plt" alt="" width="100%"></p>
 <p>Datasets with low correlation (quantile 0.75 &lt; 0.5) receive
 thresholds near the floor, while highly correlated datasets (quantile
 0.75 &gt; 0.8) approach the ceiling. This prevents both over-filtering
@@ -360,7 +376,7 @@ resulting from the transformation.</li>
 <span></span>
 <span><span class="va">max_vif</span></span>
 <span><span class="co">#&gt;        1 </span></span>
-<span><span class="co">#&gt; 5.031596</span></span></code></pre></div>
+<span><span class="co">#&gt; 4.987421</span></span></code></pre></div>
 <p>This model was fitted on the simulation results in <a href="reference/experiment_cor_vs_vif.html"><code>experiment_cor_vs_vif</code></a>,
 where both filtering methods were applied across 10,000 random dataset
 configurations. For each <code>max_cor</code> value, the
@@ -383,7 +399,7 @@ achieved strong agreement.</p>
 <span>  data <span class="op">=</span> <span class="va">experiment_cor_vs_vif</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <p>The plot below shows the simulation results and the fitted model.</p>
-<p><img src="adaptive_filtering_thresholds_files/figure-html/unnamed-chunk-15-1.png" class="r-plt" alt="" width="100%"></p>
+<p><img src="adaptive_filtering_thresholds_files/figure-html/unnamed-chunk-16-1.png" class="r-plt" alt="" width="100%"></p>
 <p>The curve tracks through the high-similarity region (red/orange
 points), indicating that the model successfully captures the
 relationship between <code>max_cor</code> and <code>max_vif</code> for

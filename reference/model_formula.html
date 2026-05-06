@@ -17,11 +17,11 @@ random effect: y ~ x + (1 \ z)
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
 
 
-    <nav class="navbar navbar-expand-lg fixed-top bg-light" data-bs-theme="light" aria-label="Site navigation"><div class="container">
+    <nav class="navbar navbar-expand-lg fixed-top bg-primary" data-bs-theme="dark" aria-label="Site navigation"><div class="container">
 
     <a class="navbar-brand me-2" href="../index.html">collinear</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.0.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.0.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -144,10 +144,12 @@ constant/near-zero-variance columns are used. Default: NULL.</p></dd>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span></span></span>
-<span class="r-in"><span>  <span class="va">vi_smol</span>,</span></span>
-<span class="r-in"><span>  <span class="va">vi_predictors_numeric</span></span></span>
-<span class="r-in"><span>  <span class="op">)</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">vi_smol</span>, package <span class="op">=</span> <span class="st">"spatialData"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">vi_predictors</span>, package <span class="op">=</span> <span class="st">"spatialData"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">vi_predictors_numeric</span> <span class="op">&lt;-</span> <span class="fu"><a href="identify_numeric_variables.html">identify_numeric_variables</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>  df <span class="op">=</span> <span class="va">vi_smol</span>,</span></span>
+<span class="r-in"><span>  predictors <span class="op">=</span> <span class="va">vi_predictors</span></span></span>
+<span class="r-in"><span><span class="op">)</span><span class="op">$</span><span class="va">valid</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#reduce collinearity</span></span></span>
 <span class="r-in"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="collinear_select.html">collinear_select</a></span><span class="op">(</span></span></span>
@@ -167,10 +169,11 @@ constant/near-zero-variance columns are used. Default: NULL.</p></dd>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">y</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> vi_numeric ~ topo_elevation + topo_slope + humidity_range + topo_diversity + </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     soil_clay + cloud_cover_range + soil_silt + rainfall_min + </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     growing_season_temperature + swi_max + soil_nitrogen + evapotranspiration_range</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x557dd9a96380&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> vi_numeric ~ topo_elevation + humidity_range + topo_diversity + </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     topo_slope + soil_clay + cloud_cover_range + soil_silt + </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     rainfall_min + growing_season_temperature + swi_max + soil_nitrogen + </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     evapotranspiration_range</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x55cb0b2914b8&gt;</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#using a formula in a model</span></span></span>
 <span class="r-in"><span><span class="va">m</span> <span class="op">&lt;-</span> <span class="fu">stats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span></span></span>
@@ -185,29 +188,29 @@ constant/near-zero-variance columns are used. Default: NULL.</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Residuals:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      Min       1Q   Median       3Q      Max </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> -0.43746 -0.06323 -0.00511  0.06252  0.28047 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> -0.43415 -0.06399 -0.00387  0.06028  0.28264 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Coefficients:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                              Estimate Std. Error t value Pr(&gt;|t|)    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> (Intercept)                 2.765e-01  5.235e-02   5.282 1.79e-07 ***</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> topo_elevation             -6.039e-05  8.326e-06  -7.253 1.27e-12 ***</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> topo_slope                  1.710e-03  1.607e-03   1.064 0.287743    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> humidity_range             -7.068e-03  7.024e-04 -10.064  &lt; 2e-16 ***</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> topo_diversity              4.630e-03  1.035e-03   4.473 9.22e-06 ***</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> soil_clay                   9.984e-04  5.495e-04   1.817 0.069708 .  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cloud_cover_range           1.352e-03  3.792e-04   3.564 0.000394 ***</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> soil_silt                  -1.026e-03  4.380e-04  -2.342 0.019525 *  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> rainfall_min                3.945e-04  9.916e-05   3.979 7.78e-05 ***</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> growing_season_temperature -2.520e-03  1.016e-03  -2.480 0.013408 *  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> swi_max                     4.917e-03  2.713e-04  18.123  &lt; 2e-16 ***</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> soil_nitrogen               1.644e-03  4.077e-03   0.403 0.686886    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> evapotranspiration_range   -1.344e-03  1.396e-04  -9.625  &lt; 2e-16 ***</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> (Intercept)                 2.881e-01  5.376e-02   5.359 1.22e-07 ***</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> topo_elevation             -6.188e-05  8.563e-06  -7.227 1.61e-12 ***</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> humidity_range             -7.066e-03  7.210e-04  -9.800  &lt; 2e-16 ***</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> topo_diversity              4.616e-03  1.053e-03   4.385 1.38e-05 ***</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> topo_slope                  1.544e-03  1.664e-03   0.928 0.354033    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> soil_clay                   9.599e-04  5.623e-04   1.707 0.088324 .  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> cloud_cover_range           1.457e-03  3.878e-04   3.758 0.000189 ***</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> soil_silt                  -1.000e-03  4.447e-04  -2.249 0.024927 *  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> rainfall_min                3.613e-04  1.013e-04   3.567 0.000392 ***</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> growing_season_temperature -2.778e-03  1.052e-03  -2.641 0.008495 ** </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> swi_max                     4.817e-03  2.792e-04  17.250  &lt; 2e-16 ***</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> soil_nitrogen               2.561e-03  4.217e-03   0.607 0.543967    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> evapotranspiration_range   -1.375e-03  1.440e-04  -9.546  &lt; 2e-16 ***</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ---</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Residual standard error: 0.09681 on 597 degrees of freedom</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Multiple R-squared:  0.7932,	Adjusted R-squared:  0.789 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> F-statistic: 190.8 on 12 and 597 DF,  p-value: &lt; 2.2e-16</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Residual standard error: 0.0966 on 567 degrees of freedom</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Multiple R-squared:  0.7946,	Adjusted R-squared:  0.7903 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> F-statistic: 182.8 on 12 and 567 DF,  p-value: &lt; 2.2e-16</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#classification formula (character response)</span></span></span>
@@ -218,11 +221,11 @@ constant/near-zero-variance columns are used. Default: NULL.</p></dd>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">y</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> vi_categorical ~ topo_elevation + topo_slope + humidity_range + </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     topo_diversity + soil_clay + cloud_cover_range + soil_silt + </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> vi_categorical ~ topo_elevation + humidity_range + topo_diversity + </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     topo_slope + soil_clay + cloud_cover_range + soil_silt + </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     rainfall_min + growing_season_temperature + swi_max + soil_nitrogen + </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     evapotranspiration_range</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x557dd9a96380&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x55cb0b2914b8&gt;</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#polynomial formula (3rd degree)</span></span></span>
@@ -235,16 +238,16 @@ constant/near-zero-variance columns are used. Default: NULL.</p></dd>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">y</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> vi_numeric ~ poly(topo_elevation, degree = 3, raw = TRUE) + poly(topo_slope, </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     degree = 3, raw = TRUE) + poly(humidity_range, degree = 3, </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     raw = TRUE) + poly(topo_diversity, degree = 3, raw = TRUE) + </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> vi_numeric ~ poly(topo_elevation, degree = 3, raw = TRUE) + poly(humidity_range, </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     degree = 3, raw = TRUE) + poly(topo_diversity, degree = 3, </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     raw = TRUE) + poly(topo_slope, degree = 3, raw = TRUE) + </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     poly(soil_clay, degree = 3, raw = TRUE) + poly(cloud_cover_range, </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     degree = 3, raw = TRUE) + poly(soil_silt, degree = 3, raw = TRUE) + </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     poly(rainfall_min, degree = 3, raw = TRUE) + poly(growing_season_temperature, </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     degree = 3, raw = TRUE) + poly(swi_max, degree = 3, raw = TRUE) + </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     poly(soil_nitrogen, degree = 3, raw = TRUE) + poly(evapotranspiration_range, </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     degree = 3, raw = TRUE)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x557dd9a96380&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x55cb0b2914b8&gt;</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#gam formula</span></span></span>
 <span class="r-in"><span><span class="va">y</span> <span class="op">&lt;-</span> <span class="fu">model_formula</span><span class="op">(</span></span></span>
@@ -255,11 +258,11 @@ constant/near-zero-variance columns are used. Default: NULL.</p></dd>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">y</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> vi_numeric ~ s(topo_elevation) + s(topo_slope) + s(humidity_range) + </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     s(topo_diversity) + s(soil_clay) + s(cloud_cover_range) + </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     s(soil_silt) + s(rainfall_min) + s(growing_season_temperature) + </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     s(swi_max) + s(soil_nitrogen) + s(evapotranspiration_range)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x557dd9a96380&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> vi_numeric ~ s(topo_elevation) + s(humidity_range) + s(topo_diversity) + </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     s(topo_slope) + s(soil_clay) + s(cloud_cover_range) + s(soil_silt) + </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     s(rainfall_min) + s(growing_season_temperature) + s(swi_max) + </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     s(soil_nitrogen) + s(evapotranspiration_range)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x55cb0b2914b8&gt;</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#random effect</span></span></span>
 <span class="r-in"><span><span class="va">y</span> <span class="op">&lt;-</span> <span class="fu">model_formula</span><span class="op">(</span></span></span>
@@ -270,11 +273,11 @@ constant/near-zero-variance columns are used. Default: NULL.</p></dd>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">y</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> vi_numeric ~ topo_elevation + topo_slope + humidity_range + topo_diversity + </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     soil_clay + cloud_cover_range + soil_silt + rainfall_min + </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     growing_season_temperature + swi_max + soil_nitrogen + evapotranspiration_range + </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     (1 | country_name)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x557dd9a96380&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> vi_numeric ~ topo_elevation + humidity_range + topo_diversity + </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     topo_slope + soil_clay + cloud_cover_range + soil_silt + </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     rainfall_min + growing_season_temperature + swi_max + soil_nitrogen + </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     evapotranspiration_range + (1 | country_name)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x55cb0b2914b8&gt;</span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

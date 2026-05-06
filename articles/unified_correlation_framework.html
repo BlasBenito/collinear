@@ -23,11 +23,11 @@
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
 
 
-    <nav class="navbar navbar-expand-lg fixed-top bg-light" data-bs-theme="light" aria-label="Site navigation"><div class="container">
+    <nav class="navbar navbar-expand-lg fixed-top bg-primary" data-bs-theme="dark" aria-label="Site navigation"><div class="container">
 
     <a class="navbar-brand me-2" href="../index.html">collinear</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.0.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.0.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -88,6 +88,14 @@
     
     
 <div class="section level2">
+<h2 id="source-code">Source Code<a class="anchor" aria-label="anchor" href="#source-code"></a>
+</h2>
+<p>You can download the Rmarkdown notebook used to render this article
+<a href="https://github.com/BlasBenito/collinear/blob/main/vignettes/articles/unified_correlation_framework.Rmd" class="external-link">here</a>.
+To download the file, use the button <em>Download raw file</em> on the
+upper-right hand of the <code>Code</code> panel.</p>
+</div>
+<div class="section level2">
 <h2 id="summary">Summary<a class="anchor" aria-label="anchor" href="#summary"></a>
 </h2>
 <p>The function <code><a href="../reference/cor_df.html">cor_df()</a></code> combines several methods to
@@ -130,12 +138,12 @@ association between all unique pairs of predictors.</p>
 <span></span>
 <span><span class="va">x</span></span>
 <span><span class="co">#&gt;                  x             y correlation     metric</span></span>
-<span><span class="co">#&gt; 1 temperature_mean   koppen_zone   0.9283292    Pearson</span></span>
-<span><span class="co">#&gt; 2    rainfall_mean   koppen_zone   0.8443112    Pearson</span></span>
-<span><span class="co">#&gt; 3    rainfall_mean     soil_type   0.6741559    Pearson</span></span>
-<span><span class="co">#&gt; 4 temperature_mean     soil_type   0.6406734    Pearson</span></span>
-<span><span class="co">#&gt; 5      koppen_zone     soil_type   0.3146128 Cramer's V</span></span>
-<span><span class="co">#&gt; 6 temperature_mean rainfall_mean   0.2126887    Pearson</span></span></code></pre></div>
+<span><span class="co">#&gt; 1 temperature_mean   koppen_zone   0.9247202    Pearson</span></span>
+<span><span class="co">#&gt; 2    rainfall_mean   koppen_zone   0.8427524    Pearson</span></span>
+<span><span class="co">#&gt; 3    rainfall_mean     soil_type   0.6730865    Pearson</span></span>
+<span><span class="co">#&gt; 4 temperature_mean     soil_type   0.6327089    Pearson</span></span>
+<span><span class="co">#&gt; 5      koppen_zone     soil_type   0.3109082 Cramer's V</span></span>
+<span><span class="co">#&gt; 6 temperature_mean rainfall_mean   0.2159485    Pearson</span></span></code></pre></div>
 <p>Let’s examine how the function handles different predictor types.</p>
 <div class="section level3">
 <h3 id="numeric-vs--numeric">Numeric vs. Numeric<a class="anchor" aria-label="anchor" href="#numeric-vs--numeric"></a>
@@ -157,8 +165,8 @@ fast <code><a href="https://rdrr.io/r/stats/cor.html" class="external-link">stat
 <span><span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">abs</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt;                  temperature_mean rainfall_mean</span></span>
-<span><span class="co">#&gt; temperature_mean        1.0000000     0.2126887</span></span>
-<span><span class="co">#&gt; rainfall_mean           0.2126887     1.0000000</span></span></code></pre></div>
+<span><span class="co">#&gt; temperature_mean        1.0000000     0.2159485</span></span>
+<span><span class="co">#&gt; rainfall_mean           0.2159485     1.0000000</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="numeric-vs--categorical">Numeric vs. Categorical<a class="anchor" aria-label="anchor" href="#numeric-vs--categorical"></a>
@@ -185,7 +193,7 @@ correlation.</p>
 <span>  method <span class="op">=</span> <span class="st">"pearson"</span></span>
 <span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">abs</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 0.9283292</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] 0.9247202</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="categorical-vs--categorical">Categorical vs. Categorical<a class="anchor" aria-label="anchor" href="#categorical-vs--categorical"></a>
@@ -198,7 +206,7 @@ the function <code><a href="../reference/cor_cramer.html">cor_cramer()</a></code
 <span>  x <span class="op">=</span> <span class="va">vi_smol</span><span class="op">[[</span><span class="st">"koppen_zone"</span><span class="op">]</span><span class="op">]</span>,</span>
 <span>  y <span class="op">=</span> <span class="va">vi_smol</span><span class="op">[[</span><span class="st">"soil_type"</span><span class="op">]</span><span class="op">]</span></span>
 <span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 0.3146128</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] 0.3109082</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="comparing-cramers-v-and-pearson-correlation">Comparing Cramer’s V and Pearson Correlation<a class="anchor" aria-label="anchor" href="#comparing-cramers-v-and-pearson-correlation"></a>
@@ -238,7 +246,7 @@ levels and compares them using both <code><a href="https://rdrr.io/r/stats/cor.h
 <span><span class="op">}</span></span></code></pre></div>
 <p>The scatterplot below shows the simulation results across cardinality
 levels, with linear smooths for each group.</p>
-<p><img src="unified_correlation_framework_files/figure-html/unnamed-chunk-8-1.png" class="r-plt" alt="" width="100%"></p>
+<p><img src="unified_correlation_framework_files/figure-html/unnamed-chunk-9-1.png" class="r-plt" alt="" width="100%"></p>
 <p>Notice how the relationship between Cramer’s V and Pearson
 correlation is tight for binary variables, but deteriorates rapidly as
 cardinality increases.</p>
