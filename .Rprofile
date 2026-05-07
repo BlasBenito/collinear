@@ -1,21 +1,22 @@
-doc <- function(){
-  devtools::document()
-  devtools::document()
+if (interactive()) {
+  Sys.setenv("_R_CHECK_SYSTEM_CLOCK_" = 0)
+
+  doc <- function() {
+    devtools::document()
+    devtools::document()
+  }
+
+  minicheck <- function() {
+    doc()
+    devtools::check(args = c("--no-tests", "--no-examples"))
+  }
+
+  maxicheck <- function() {
+    doc()
+    devtools::check()
+  }
+
+  load <- function() {
+    devtools::load_all()
+  }
 }
-
-minicheck <- function() {
-  doc()
-  devtools::check(args = c("--no-tests", "--no-examples"))
-}
-
-maxicheck <- function() {
-  doc()
-  devtools::check()
-}
-
-load <- function(){
-  devtools::load_all()
-}
-
-
-

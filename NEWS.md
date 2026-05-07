@@ -14,6 +14,10 @@
 
 - Example datasets (`vi`, `vi_smol`, `vi_predictors`, `vi_predictors_numeric`, `vi_predictors_categorical`, `vi_responses`) have been moved to the package [`spatialData`](https://cran.r-project.org/package=spatialData). All function examples and README code now load data via `data(..., package = "spatialData")`.
 
+## Other Changes
+
+- The package now prints its version on attach.
+
 # collinear 3.0.0
 
 ## Breaking Changes

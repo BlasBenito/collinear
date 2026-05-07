@@ -1,14 +1,14 @@
 ## New submission
 
-This is a patch release (v3.0.1) addressing four bug fixes and moving
-bundled example datasets to a companion package (`spatialData`).
+This is a patch release (v3.0.1) addressing four bug fixes and moving bundled example datasets to a companion package (`spatialData`).
 
 ### Bug fixes in this release
 
-- `preference_order()`: namespace-qualified function names now matched correctly (#16)
-- `model_formula()`: no longer crashes on `sf` spatial data frames (#17)
-- `preference_order()`: NA values in the response variable handled correctly (#18)
-- `score_auc()`: NA values in observations or predictions handled correctly (#19)
+- `preference_order()`: namespace-qualified function names now matched correctly.
+- `model_formula()`: no longer crashes on `sf` spatial data frames.
+
+- `preference_order()`: NA values in the response variable handled correctly.
+- `score_auc()`: NA values in observations or predictions handled correctly.
 
 ## Test environments
 
@@ -19,4 +19,7 @@ bundled example datasets to a companion package (`spatialData`).
 
 ## R CMD check results
 
-0 errors | 0 warnings | 0 notes
+── R CMD check results  collinear 3.0.1 ──
+Duration: 2m 31.9s
+
+0 errors ✔ | 0 warnings ✔ | 0 notes ✔

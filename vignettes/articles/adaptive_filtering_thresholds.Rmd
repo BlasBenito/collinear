@@ -47,6 +47,7 @@ pak::pkg_install(
     "spatialData",
     "collinear",
     "future",
+    "viridis",
     "ggplot2",
     "patchwork",
     "rstudioapi"
@@ -61,6 +62,7 @@ This article requires the following packages, setup, and example data.
 library(spatialData)
 library(collinear)
 library(future)
+library(viridis)
 library(ggplot2)
 library(patchwork)
 library(rstudioapi)
