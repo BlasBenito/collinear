@@ -155,7 +155,13 @@ redundant predictors, but it might not lead to robust models.</p></li>
 <span>  package <span class="op">=</span> <span class="st">"spatialData"</span></span>
 <span>  <span class="op">)</span></span>
 <span></span>
+<span><span class="co">#separate vi_predictors in numeric and categorical</span></span>
 <span><span class="va">vi_predictors_numeric</span> <span class="op">&lt;-</span> <span class="fu">collinear</span><span class="fu">::</span><span class="fu"><a href="../reference/identify_numeric_variables.html">identify_numeric_variables</a></span><span class="op">(</span></span>
+<span>  df <span class="op">=</span> <span class="va">vi_smol</span>,</span>
+<span>  predictors <span class="op">=</span> <span class="va">vi_predictors</span></span>
+<span><span class="op">)</span><span class="op">$</span><span class="va">valid</span></span>
+<span></span>
+<span><span class="va">vi_predictors_categorical</span> <span class="op">&lt;-</span> <span class="fu">collinear</span><span class="fu">::</span><span class="fu"><a href="../reference/identify_categorical_variables.html">identify_categorical_variables</a></span><span class="op">(</span></span>
 <span>  df <span class="op">=</span> <span class="va">vi_smol</span>,</span>
 <span>  predictors <span class="op">=</span> <span class="va">vi_predictors</span></span>
 <span><span class="op">)</span><span class="op">$</span><span class="va">valid</span></span></code></pre></div>
@@ -163,12 +169,11 @@ redundant predictors, but it might not lead to robust models.</p></li>
 <div class="section level2">
 <h2 id="expert-mode">Expert Mode<a class="anchor" aria-label="anchor" href="#expert-mode"></a>
 </h2>
-<p>Let’s consider a little hypothetical.</p>
-<p>The user has dataframe <code>x</code> with three variables
-<code>a</code>, <code>b</code> and <code>c</code>, and domain knowledge
-indicating that <code>a</code> and <code>b</code> are key and should be
-preserved when possible. Then, the user calls <code><a href="../reference/collinear.html">collinear()</a></code>
-as follows:</p>
+<p>Let’s consider a hypothetical: The user has dataframe <code>x</code>
+with three variables <code>a</code>, <code>b</code> and <code>c</code>,
+and domain knowledge indicating that <code>a</code> and <code>b</code>
+are key and should be preserved when possible. Then, the user calls
+<code><a href="../reference/collinear.html">collinear()</a></code> as follows:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">y</span> <span class="op">&lt;-</span> <span class="fu">collinear</span><span class="fu">::</span><span class="fu"><a href="../reference/collinear.html">collinear</a></span><span class="op">(</span></span>
 <span>  df <span class="op">=</span> <span class="va">x</span>,</span>
@@ -197,11 +202,12 @@ conditionally on their collinearity with the already selected ones.</p>
 <code>preference_order</code> are ranked from lower to higher
 collinearity among themselves, and added in such order to the preference
 vector.</p>
-<p>Let’s take a look at a more tangible case now. The code below calls
-<code><a href="../reference/collinear.html">collinear()</a></code> on the dataset <a href="reference/vi_smol.html"><code>vi_smol</code></a>, which contains a
-numeric response <a href="reference/vi_numeric.html"><code>vi_numeric</code></a> (values of
-a vegetation index) and a bunch of numeric predictors named in the
-vector <a href="reference/vi_predictors_numeric.html"><code>vi_predictors_numeric</code></a>.</p>
+<p>Let’s use some real data now. The code below calls
+<code><a href="../reference/collinear.html">collinear()</a></code> on the dataset <a href="https://blasbenito.github.io/spatialData/reference/vi_smol.html" class="external-link"><code>spatialData::vi_smol</code></a>,
+which contains a numeric response <code>vi_numeric</code> (values of a
+vegetation index) and a bunch of numeric predictors named in the vector
+<code>vi_predictors_numeric</code> (generated from <a href="https://blasbenito.github.io/spatialData/reference/vi_predictors.html" class="external-link"><code>spatialData::vi_predictors</code></a>
+in the setup).</p>
 <p>Let’s say we’d like to focus our analysis in the limiting role of the
 soil water content (variables <code>swi_xxx</code>, from soil water
 index) in controlling <code>vi_numeric</code>. In such case, we can call
@@ -232,12 +238,19 @@ index) in controlling <code>vi_numeric</code>. In such case, we can call
 <span><span class="co">#&gt; [1] TRUE</span></span></code></pre></div>
 <p>Notice how <code>swi_min</code> and <code>swi_range</code> are
 selected, but <code>swi_max</code> and <code>swi_mean</code> are removed
-because they are collinear with <code>swi_min</code>. As said above, all
-predictors not in the argument <code>preference_order</code> were ranked
-from lower to higher mutual collinearity.</p>
-<p>Now we can quickly fit a quick exploratory model, and save the
-R-squared for later.</p>
+because they are collinear with <code>swi_min</code>. All predictors not
+in the argument <code>preference_order</code> were ranked from lower to
+higher mutual collinearity.</p>
+<p>Notice that there’s a linear formula in the <code>formulas</code>
+slot of the output.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">y</span><span class="op">$</span><span class="va">vi_numeric</span><span class="op">$</span><span class="va">formulas</span><span class="op">$</span><span class="va">linear</span></span>
+<span><span class="co">#&gt; vi_numeric ~ swi_min + swi_range + topo_elevation + humidity_range + </span></span>
+<span><span class="co">#&gt;     topo_diversity + soil_clay + soil_silt + rainfall_min + growing_season_temperature</span></span>
+<span><span class="co">#&gt; &lt;environment: 0x5628bc20de00&gt;</span></span></code></pre></div>
+<p>We can use it to fit a quick exploratory model, and save it for
+later.</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">m1</span> <span class="op">&lt;-</span> <span class="fu">stats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span></span>
 <span>  formula <span class="op">=</span> <span class="va">y</span><span class="op">$</span><span class="va">vi_numeric</span><span class="op">$</span><span class="va">formulas</span><span class="op">$</span><span class="va">linear</span>,</span>
 <span>  data <span class="op">=</span> <span class="va">y</span><span class="op">$</span><span class="va">vi_numeric</span><span class="op">$</span><span class="va">df</span></span>
@@ -278,18 +291,17 @@ R-squared for later.</p>
 <p>Let’s go back to our little hypothetical with the dataframe
 <code>x</code>, and the three variables <code>a</code>, <code>b</code>
 and <code>c</code>. But this time we also have a response
-<code>y</code>, and a user with not as much domain knowledge as they’d
-like (it happens, I’ve seen it).</p>
-<p>In this case, <code>collinear</code> first fits the univariate models
-<code>y ~ a</code>, <code>y ~ b</code>, and <code>y ~ c</code>, computes
-the R-squared between observations and model predictions, and ranks the
-predictors from best to worse according to this metric.</p>
+<code>y</code>, and a user with not as much domain knowledge.</p>
+<p>In this case, <code><a href="../reference/collinear.html">collinear()</a></code> first fits the univariate
+models <code>y ~ a</code>, <code>y ~ b</code>, and <code>y ~ c</code>,
+computes the R-squared between observations and model predictions, and
+ranks the predictors from best to worse according to this metric.</p>
 <p>This functionality is implemented in the function
 <code><a href="../reference/preference_order.html">preference_order()</a></code>, which can take advantage of a
-parallelization backend to speed-up operations.</p>
-<p>Let’s take a look at how it works, step by step. Let me start with
-the simplest approach.</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code>future</code> parallelization backend to speed-up operations.</p>
+<p>Let’s take a look at how this option works with real data. Let me
+start with the simplest approach.</p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu">collinear</span><span class="fu">::</span><span class="fu"><a href="../reference/preference_order.html">preference_order</a></span><span class="op">(</span></span>
 <span>  df <span class="op">=</span> <span class="va">vi_smol</span>,</span>
 <span>  responses <span class="op">=</span> <span class="st">"vi_numeric"</span>,</span>
@@ -302,14 +314,15 @@ better to worse modelling performance against the response. The column
 <code>f</code> indicates the name of the function used to fit the
 univariate models, <code><a href="../reference/f_numeric_glm.html">f_numeric_glm()</a></code> in this case. This
 function has been selected automatically because the argument
-<code>f</code> of <code><a href="../reference/preference_order.html">preference_order()</a></code> is set to <a href="reference/f_auto.html"><code>f_auto</code></a> by default
-(<code>f</code> functions must not have parenthesis when calling them
-via the <code>f</code> argument). This function looks at the types of
-the responses and predictors, and select one of the functions in
-returned by <code><a href="../reference/f_functions.html">f_functions()</a></code> to perform the operation.</p>
+<code>f</code> of <code><a href="../reference/preference_order.html">preference_order()</a></code> is set to
+<code>f_auto</code> by default (<code>f</code> functions must not have
+parenthesis when calling them via the <code>f</code> argument). This
+function looks at the types of the responses and predictors, and select
+one of the functions in returned by <code><a href="../reference/f_functions.html">f_functions()</a></code> to
+perform the operation.</p>
 <p>Let’s talk more about that later, but for now, we can plug the
 preference order dataframe directly into <code><a href="../reference/collinear.html">collinear()</a></code>.</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">y</span> <span class="op">&lt;-</span> <span class="fu">collinear</span><span class="fu">::</span><span class="fu"><a href="../reference/collinear.html">collinear</a></span><span class="op">(</span></span>
 <span>  df <span class="op">=</span> <span class="va">vi_smol</span>,</span>
 <span>  response <span class="op">=</span> <span class="st">"vi_numeric"</span>,</span>
@@ -328,7 +341,7 @@ preference order dataframe directly into <code><a href="../reference/collinear.h
 <span><span class="co">#&gt; [1] TRUE</span></span></code></pre></div>
 <p>Again, we can use the <code><a href="../reference/collinear.html">collinear()</a></code> output to fit a little
 model.</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">m2</span> <span class="op">&lt;-</span> <span class="fu">stats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span></span>
 <span>  formula <span class="op">=</span> <span class="va">y</span><span class="op">$</span><span class="va">vi_numeric</span><span class="op">$</span><span class="va">formulas</span><span class="op">$</span><span class="va">linear</span>,</span>
 <span>  data <span class="op">=</span> <span class="va">y</span><span class="op">$</span><span class="va">vi_numeric</span><span class="op">$</span><span class="va">df</span></span>
@@ -362,9 +375,9 @@ model.</p>
 <span><span class="co">#&gt; Multiple R-squared:  0.8499, Adjusted R-squared:  0.8478 </span></span>
 <span><span class="co">#&gt; F-statistic: 404.2 on 8 and 571 DF,  p-value: &lt; 2.2e-16</span></span></code></pre></div>
 <p>If we compare the R-squared of the two models we have created so far,
-we can see that <code><a href="../reference/preference_order.html">preference_order()</a></code> helps balance aggressive
-multicollinearity filtering and robust modelling outcomes.</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+we can see that using <code><a href="../reference/preference_order.html">preference_order()</a></code> has improved model
+fit.</p>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">m1</span><span class="op">$</span><span class="va">r.squared</span></span>
 <span><span class="co">#&gt; [1] 0.7532484</span></span>
 <span><span class="va">m2</span><span class="op">$</span><span class="va">r.squared</span></span>
@@ -373,11 +386,11 @@ multicollinearity filtering and robust modelling outcomes.</p>
 function looks at the input data to assess the type of the response and
 the predictors, and then looks at the dataframe below to choose a
 function.</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">collinear</span><span class="fu">::</span><span class="fu"><a href="../reference/f_auto_rules.html">f_auto_rules</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <div class="datatables html-widget html-fill-item" id="htmlwidget-e5c8c404fe174e4c81bd" style="width:100%;height:auto;"></div>
 <script type="application/json" data-for="htmlwidget-e5c8c404fe174e4c81bd">{"x":{"filter":"none","vertical":false,"data":[["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24"],["f_numeric_glm","f_numeric_rf","f_numeric_rf","f_numeric_glm","f_numeric_rf","f_numeric_rf","f_numeric_glm","f_numeric_rf","f_numeric_rf","f_binomial_glm","f_binomial_rf","f_binomial_rf","f_count_glm","f_count_rf","f_count_rf","f_count_glm","f_count_rf","f_count_rf","f_count_glm","f_count_rf","f_count_rf","f_categorical_rf","f_categorical_rf","f_categorical_rf"],["continuous-binary","continuous-binary","continuous-binary","continuous-low","continuous-low","continuous-low","continuous-high","continuous-high","continuous-high","integer-binomial","integer-binomial","integer-binomial","integer-binary","integer-binary","integer-binary","integer-low","integer-low","integer-low","integer-high","integer-high","integer-high","categorical","categorical","categorical"],["numeric","categorical","mixed","numeric","categorical","mixed","numeric","categorical","mixed","numeric","categorical","mixed","numeric","categorical","mixed","numeric","categorical","mixed","numeric","categorical","mixed","numeric","mixed","categorical"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>name<\/th>\n      <th>response_type<\/th>\n      <th>predictors_type<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"orderable":false,"targets":0},{"name":" ","targets":0},{"name":"name","targets":1},{"name":"response_type","targets":2},{"name":"predictors_type","targets":3}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><p>You can see it in action across different settings below.</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">collinear</span><span class="fu">::</span><span class="fu"><a href="../reference/f_auto.html">f_auto</a></span><span class="op">(</span></span>
 <span>  df <span class="op">=</span> <span class="va">vi_smol</span>,</span>
 <span>  response <span class="op">=</span> <span class="st">"vi_categorical"</span>,</span>
@@ -385,7 +398,7 @@ function.</p>
 <span>  quiet <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] "f_categorical_rf"</span></span></code></pre></div>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">collinear</span><span class="fu">::</span><span class="fu"><a href="../reference/f_auto.html">f_auto</a></span><span class="op">(</span></span>
 <span>  df <span class="op">=</span> <span class="va">vi_smol</span>,</span>
 <span>  response <span class="op">=</span> <span class="st">"vi_binomial"</span>, <span class="co">#ones and zeros</span></span>
@@ -393,7 +406,7 @@ function.</p>
 <span>  quiet <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] "f_binomial_glm"</span></span></code></pre></div>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">collinear</span><span class="fu">::</span><span class="fu"><a href="../reference/f_auto.html">f_auto</a></span><span class="op">(</span></span>
 <span>  df <span class="op">=</span> <span class="va">vi_smol</span>,</span>
 <span>  response <span class="op">=</span> <span class="st">"vi_counts"</span>, <span class="co">#integer counts</span></span>
@@ -401,7 +414,7 @@ function.</p>
 <span>  quiet <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] "f_count_glm"</span></span></code></pre></div>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">collinear</span><span class="fu">::</span><span class="fu"><a href="../reference/f_auto.html">f_auto</a></span><span class="op">(</span></span>
 <span>  df <span class="op">=</span> <span class="va">vi_smol</span>,</span>
 <span>  response <span class="op">=</span> <span class="st">"vi_counts"</span>,</span>
@@ -412,13 +425,13 @@ function.</p>
 <p>All <code>f_...()</code> functions available for usage in
 <code><a href="../reference/preference_order.html">preference_order()</a></code> are listed in the dataframe returned by
 <code><a href="../reference/f_functions.html">f_functions()</a></code>.</p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">collinear</span><span class="fu">::</span><span class="fu"><a href="../reference/f_functions.html">f_functions</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <div class="datatables html-widget html-fill-item" id="htmlwidget-36aa3d2a04d42bbc2145" style="width:100%;height:auto;"></div>
 <script type="application/json" data-for="htmlwidget-36aa3d2a04d42bbc2145">{"x":{"filter":"none","vertical":false,"data":[["1","2","3","4","5","6","7","8","9","10"],["f_numeric_glm","f_numeric_gam","f_numeric_rf","f_count_rf","f_count_glm","f_count_gam","f_binomial_glm","f_binomial_gam","f_binomial_rf","f_categorical_rf"],["numeric","numeric","numeric","integer","integer","integer","binomial","binomial","binomial","categorical"],["mixed","numeric","mixed","mixed","mixed","mixed","mixed","numeric","mixed","mixed"],["stats::glm(y ~ x, family = gaussian(link = 'identity'))","mgcv::gam(y ~ s(x), family = gaussian(link = 'identity'))","ranger::ranger(y ~ x)","ranger::ranger(y ~ x)","stats::glm(y ~ x, family = poisson(link = 'log'))","mgcv::gam(y ~ s(x), family = poisson(link = 'log'))","stats::glm(y ~ x, family = quasibinomial(link = 'logit'), weights = case_weights(y))","mgcv::gam(y ~ s(x), family = quasibinomial(link = 'logit'), weights = collinear::case_weights(y))","ranger::ranger(y ~ x, case.weights = collinear::case_weights(y))","ranger::ranger(y ~ x, case.weights = collinear::case_weights(y))"],["R-squared","R-squared","R-squared","R-squared","R-squared","R-squared","AUC","AUC","AUC","Cramer's V"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>name<\/th>\n      <th>response_type<\/th>\n      <th>predictors_types<\/th>\n      <th>expression<\/th>\n      <th>metric<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"orderable":false,"targets":0},{"name":" ","targets":0},{"name":"name","targets":1},{"name":"response_type","targets":2},{"name":"predictors_types","targets":3},{"name":"expression","targets":4},{"name":"metric","targets":5}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><p>Once you know your way around these functions, you can choose the one
 you prefer for your case. For example, below we replace <a href="reference/f_auto.html"><code>f_auto</code></a> with <a href="reference/f_numeric_gam"><code>f_numeric_gam</code></a> to fit
 univariate GAM models.</p>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu">collinear</span><span class="fu">::</span><span class="fu"><a href="../reference/preference_order.html">preference_order</a></span><span class="op">(</span></span>
 <span>  df <span class="op">=</span> <span class="va">vi_smol</span>,</span>
 <span>  responses <span class="op">=</span> <span class="st">"vi_numeric"</span>,</span>
@@ -433,7 +446,7 @@ runs <code><a href="../reference/preference_order.html">preference_order()</a></
 receives a valid function. And like <code><a href="../reference/preference_order.html">preference_order()</a></code>, it
 can use cross-validation to assess the association between response and
 predictor in a more robust manner.</p>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">y</span> <span class="op">&lt;-</span> <span class="fu">collinear</span><span class="fu">::</span><span class="fu"><a href="../reference/collinear.html">collinear</a></span><span class="op">(</span></span>
 <span>  df <span class="op">=</span> <span class="va">vi_smol</span>,</span>
 <span>  response <span class="op">=</span> <span class="st">"vi_numeric"</span>,</span>
@@ -462,7 +475,7 @@ predictor in a more robust manner.</p>
 <span><span class="co">#&gt;  - topo_slope</span></span></code></pre></div>
 <p>The output of <code><a href="../reference/preference_order.html">preference_order()</a></code> is returned by
 <code><a href="../reference/collinear.html">collinear()</a></code>.</p>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">y</span><span class="op">$</span><span class="va">vi_numeric</span><span class="op">$</span><span class="va">preference_order</span></span></code></pre></div>
 <div class="datatables html-widget html-fill-item" id="htmlwidget-1fb4450895fe099f74a1" style="width:100%;height:auto;"></div>
 <script type="application/json" data-for="htmlwidget-1fb4450895fe099f74a1">{"x":{"filter":"none","vertical":false,"data":[["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31","32","33","34","35","36","37","38","39","40","41","42","43","44","45","46","47"],["vi_numeric","vi_numeric","vi_numeric","vi_numeric","vi_numeric","vi_numeric","vi_numeric","vi_numeric","vi_numeric","vi_numeric","vi_numeric","vi_numeric","vi_numeric","vi_numeric","vi_numeric","vi_numeric","vi_numeric","vi_numeric","vi_numeric","vi_numeric","vi_numeric","vi_numeric","vi_numeric","vi_numeric","vi_numeric","vi_numeric","vi_numeric","vi_numeric","vi_numeric","vi_numeric","vi_numeric","vi_numeric","vi_numeric","vi_numeric","vi_numeric","vi_numeric","vi_numeric","vi_numeric","vi_numeric","vi_numeric","vi_numeric","vi_numeric","vi_numeric","vi_numeric","vi_numeric","vi_numeric","vi_numeric"],["growing_season_length","soil_ph","swi_mean","humidity_mean","cloud_cover_mean","cloud_cover_max","humidity_max","humidity_min","swi_max","soil_temperature_range","soil_temperature_max","rainfall_mean","solar_rad_max","growing_season_rainfall","rainfall_max","evapotranspiration_range","evapotranspiration_max","aridity_index","swi_range","temperature_range","cloud_cover_min","rainfall_range","temperature_seasonality","swi_min","solar_rad_mean","rainfall_min","soil_nitrogen","temperature_max","solar_rad_range","cloud_cover_range","soil_soc","evapotranspiration_mean","temperature_min","soil_temperature_min","soil_clay","topo_diversity","humidity_range","soil_sand","topo_elevation","topo_slope","growing_season_temperature","soil_temperature_mean","temperature_mean","growing_degree_days","evapotranspiration_min","soil_silt","solar_rad_min"],["f_numeric_glm","f_numeric_glm","f_numeric_glm","f_numeric_glm","f_numeric_glm","f_numeric_glm","f_numeric_glm","f_numeric_glm","f_numeric_glm","f_numeric_glm","f_numeric_glm","f_numeric_glm","f_numeric_glm","f_numeric_glm","f_numeric_glm","f_numeric_glm","f_numeric_glm","f_numeric_glm","f_numeric_glm","f_numeric_glm","f_numeric_glm","f_numeric_glm","f_numeric_glm","f_numeric_glm","f_numeric_glm","f_numeric_glm","f_numeric_glm","f_numeric_glm","f_numeric_glm","f_numeric_glm","f_numeric_glm","f_numeric_glm","f_numeric_glm","f_numeric_glm","f_numeric_glm","f_numeric_glm","f_numeric_glm","f_numeric_glm","f_numeric_glm","f_numeric_glm","f_numeric_glm","f_numeric_glm","f_numeric_glm","f_numeric_glm","f_numeric_glm","f_numeric_glm","f_numeric_glm"],["R-squared","R-squared","R-squared","R-squared","R-squared","R-squared","R-squared","R-squared","R-squared","R-squared","R-squared","R-squared","R-squared","R-squared","R-squared","R-squared","R-squared","R-squared","R-squared","R-squared","R-squared","R-squared","R-squared","R-squared","R-squared","R-squared","R-squared","R-squared","R-squared","R-squared","R-squared","R-squared","R-squared","R-squared","R-squared","R-squared","R-squared","R-squared","R-squared","R-squared","R-squared","R-squared","R-squared","R-squared","R-squared","R-squared","R-squared"],[0.8187,0.7706,0.7214,0.6927,0.5935,0.5659999999999999,0.5651,0.5620000000000001,0.5570000000000001,0.5552,0.548,0.5346,0.4841,0.4719,0.464,0.46,0.4592,0.4296,0.426,0.3829,0.374,0.3587,0.2584,0.2166,0.2001,0.1932,0.1797,0.1487,0.1455,0.1423,0.1399,0.1298,0.1226,0.1019,0.0755,0.0626,0.0533,0.0454,0.0402,0.0233,0.0194,0.0149,0.0089,0.0063,0.0062,0.0061,0.0013],[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>response<\/th>\n      <th>predictor<\/th>\n      <th>f<\/th>\n      <th>metric<\/th>\n      <th>score<\/th>\n      <th>rank<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[5,6]},{"orderable":false,"targets":0},{"name":" ","targets":0},{"name":"response","targets":1},{"name":"predictor","targets":2},{"name":"f","targets":3},{"name":"metric","targets":4},{"name":"score","targets":5},{"name":"rank","targets":6}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
@@ -481,7 +494,7 @@ ranks the predictors from lowest to highest sum of correlations.</p>
 <p>This option gives preference to those predictors that contain more
 <em>exclusive</em> information, but in exchange, might not lead to
 robust models.</p>
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu">collinear</span><span class="fu">::</span><span class="fu"><a href="../reference/preference_order.html">preference_order</a></span><span class="op">(</span></span>
 <span>  df <span class="op">=</span> <span class="va">vi_smol</span>,</span>
 <span>  responses <span class="op">=</span> <span class="st">"vi_numeric"</span>,</span>
@@ -495,7 +508,7 @@ sum of correlations, as indicated in the column <code>metric</code>.</p>
 <div class="datatables html-widget html-fill-item" id="htmlwidget-10b3b7155e8045a1b2ad" style="width:100%;height:auto;"></div>
 <script type="application/json" data-for="htmlwidget-10b3b7155e8045a1b2ad">{"x":{"filter":"none","vertical":false,"data":[["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31","32","33","34","35","36","37","38","39","40","41","42","43","44","45","46","47"],["vi_numeric","vi_numeric","vi_numeric","vi_numeric","vi_numeric","vi_numeric","vi_numeric","vi_numeric","vi_numeric","vi_numeric","vi_numeric","vi_numeric","vi_numeric","vi_numeric","vi_numeric","vi_numeric","vi_numeric","vi_numeric","vi_numeric","vi_numeric","vi_numeric","vi_numeric","vi_numeric","vi_numeric","vi_numeric","vi_numeric","vi_numeric","vi_numeric","vi_numeric","vi_numeric","vi_numeric","vi_numeric","vi_numeric","vi_numeric","vi_numeric","vi_numeric","vi_numeric","vi_numeric","vi_numeric","vi_numeric","vi_numeric","vi_numeric","vi_numeric","vi_numeric","vi_numeric","vi_numeric","vi_numeric"],["topo_elevation","humidity_range","topo_diversity","topo_slope","soil_clay","soil_sand","cloud_cover_range","soil_silt","rainfall_min","swi_range","growing_season_temperature","soil_soc","rainfall_range","solar_rad_min","solar_rad_range","evapotranspiration_min","swi_max","soil_nitrogen","growing_degree_days","temperature_mean","soil_temperature_min","swi_min","temperature_min","soil_temperature_mean","temperature_seasonality","temperature_max","evapotranspiration_range","cloud_cover_min","swi_mean","temperature_range","evapotranspiration_mean","rainfall_max","aridity_index","solar_rad_max","growing_season_rainfall","solar_rad_mean","cloud_cover_max","humidity_max","soil_temperature_range","soil_ph","humidity_min","evapotranspiration_max","growing_season_length","rainfall_mean","soil_temperature_max","cloud_cover_mean","humidity_mean"],["stats::cor()","stats::cor()","stats::cor()","stats::cor()","stats::cor()","stats::cor()","stats::cor()","stats::cor()","stats::cor()","stats::cor()","stats::cor()","stats::cor()","stats::cor()","stats::cor()","stats::cor()","stats::cor()","stats::cor()","stats::cor()","stats::cor()","stats::cor()","stats::cor()","stats::cor()","stats::cor()","stats::cor()","stats::cor()","stats::cor()","stats::cor()","stats::cor()","stats::cor()","stats::cor()","stats::cor()","stats::cor()","stats::cor()","stats::cor()","stats::cor()","stats::cor()","stats::cor()","stats::cor()","stats::cor()","stats::cor()","stats::cor()","stats::cor()","stats::cor()","stats::cor()","stats::cor()","stats::cor()","stats::cor()"],["1 - R-squared","1 - R-squared","1 - R-squared","1 - R-squared","1 - R-squared","1 - R-squared","1 - R-squared","1 - R-squared","1 - R-squared","1 - R-squared","1 - R-squared","1 - R-squared","1 - R-squared","1 - R-squared","1 - R-squared","1 - R-squared","1 - R-squared","1 - R-squared","1 - R-squared","1 - R-squared","1 - R-squared","1 - R-squared","1 - R-squared","1 - R-squared","1 - R-squared","1 - R-squared","1 - R-squared","1 - R-squared","1 - R-squared","1 - R-squared","1 - R-squared","1 - R-squared","1 - R-squared","1 - R-squared","1 - R-squared","1 - R-squared","1 - R-squared","1 - R-squared","1 - R-squared","1 - R-squared","1 - R-squared","1 - R-squared","1 - R-squared","1 - R-squared","1 - R-squared","1 - R-squared","1 - R-squared"],[0.8399,0.8186,0.8172,0.8169,0.7879,0.7618,0.7379,0.7361,0.6714,0.6667,0.6516,0.6413,0.62,0.6166,0.6139,0.6123,0.601,0.6002,0.5962,0.5961,0.5931999999999999,0.5875,0.5851,0.5786,0.5784,0.5713,0.5661,0.5627,0.5609,0.5599,0.5562,0.5554,0.5515,0.5483,0.5435,0.543,0.5417999999999999,0.5412,0.5406,0.5404,0.5361,0.5327,0.5306999999999999,0.5273,0.5215,0.5105,0.5021],[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>response<\/th>\n      <th>predictor<\/th>\n      <th>f<\/th>\n      <th>metric<\/th>\n      <th>score<\/th>\n      <th>rank<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[5,6]},{"orderable":false,"targets":0},{"name":" ","targets":0},{"name":"response","targets":1},{"name":"predictor","targets":2},{"name":"f","targets":3},{"name":"metric","targets":4},{"name":"score","targets":5},{"name":"rank","targets":6}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><p>Let’s use this ranking in <code><a href="../reference/collinear.html">collinear()</a></code> to then fit a
 linear model.</p>
-<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">y</span> <span class="op">&lt;-</span> <span class="fu">collinear</span><span class="fu">::</span><span class="fu"><a href="../reference/collinear.html">collinear</a></span><span class="op">(</span></span>
 <span>  df <span class="op">=</span> <span class="va">vi_smol</span>,</span>
 <span>  responses <span class="op">=</span> <span class="st">"vi_numeric"</span>,</span>
@@ -513,21 +526,23 @@ linear model.</p>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p>And finally, an informal comparison between the three preference
 order methods described in this article.</p>
-<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#expert mode: focused on specific variables (swi_...)</span></span>
 <span><span class="va">m1</span><span class="op">$</span><span class="va">r.squared</span></span>
 <span><span class="co">#&gt; [1] 0.7532484</span></span></code></pre></div>
-<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#intelligent predictor ranking: optimized for prediction</span></span>
 <span><span class="va">m2</span><span class="op">$</span><span class="va">r.squared</span></span>
 <span><span class="co">#&gt; [1] 0.8499317</span></span></code></pre></div>
-<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#naive option: minimizes redundancy, not optimized for prediction</span></span>
 <span><span class="va">m3</span><span class="op">$</span><span class="va">r.squared</span></span>
 <span><span class="co">#&gt; [1] 0.7615246</span></span></code></pre></div>
 <p>Please, take in mind that these R-squared values are just coarse
 indicators of model robustness, and should not be interpreted as proof
 that one method is better than any other.</p>
+<p>Now you know the different ways you can take advantage of
+<code><a href="../reference/collinear.html">collinear()</a></code> depending on your goals!</p>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>

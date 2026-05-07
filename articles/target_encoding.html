@@ -164,19 +164,20 @@ implemented in <code><a href="../reference/target_encoding_lab.html">target_enco
 <code class="sourceCode R"><span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu">collinear</span><span class="fu">::</span><span class="fu"><a href="../reference/target_encoding_lab.html">target_encoding_lab</a></span><span class="op">(</span></span>
 <span>  df <span class="op">=</span> <span class="va">df</span>,</span>
 <span>  response <span class="op">=</span> <span class="st">"num"</span>,</span>
-<span>  predictors <span class="op">=</span> <span class="st">"cat"</span>,</span>
-<span>  methods <span class="op">=</span> <span class="st">"mean"</span>,</span>
+<span>  encoding_method <span class="op">=</span> <span class="st">"mean"</span>,</span>
 <span>  quiet <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">df</span></span>
-<span><span class="co">#&gt;   num cat cat__encoded_loo</span></span>
-<span><span class="co">#&gt; 1   1   a              2.5</span></span>
-<span><span class="co">#&gt; 2   2   a              2.0</span></span>
-<span><span class="co">#&gt; 3   3   a              1.5</span></span>
-<span><span class="co">#&gt; 4   4   b              5.5</span></span>
-<span><span class="co">#&gt; 5   5   b              5.0</span></span>
-<span><span class="co">#&gt; 6   6   b              4.5</span></span></code></pre></div>
+<span><span class="co">#&gt;   num cat cat_mean cat__encoded_mean</span></span>
+<span><span class="co">#&gt; 1   1   a        2                 2</span></span>
+<span><span class="co">#&gt; 2   2   a        2                 2</span></span>
+<span><span class="co">#&gt; 3   3   a        2                 2</span></span>
+<span><span class="co">#&gt; 4   4   b        5                 5</span></span>
+<span><span class="co">#&gt; 5   5   b        5                 5</span></span>
+<span><span class="co">#&gt; 6   6   b        5                 5</span></span></code></pre></div>
+<p>The column <code>cat_encoded_mean</code> is the one produced by
+<code><a href="../reference/target_encoding_lab.html">target_encoding_lab()</a></code>.</p>
 </div>
 <div class="section level3">
 <h3 id="leave-one-out-target-encoding">Leave-One-Out Target Encoding<a class="anchor" aria-label="anchor" href="#leave-one-out-target-encoding"></a>
@@ -196,16 +197,16 @@ behavior.</p>
 <span>    <span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">ungroup</a></span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">df</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 6 × 4</span></span></span>
-<span><span class="co">#&gt;     num cat   cat__encoded_loo cat_loo</span></span>
-<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>            <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span>     1 a                  2.5     2.5</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span>     2 a                  2       2  </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span>     3 a                  1.5     1.5</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span>     4 b                  5.5     5.5</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span>     5 b                  5       5  </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span>     6 b                  4.5     4.5</span></span></code></pre></div>
+<span><span class="va">df</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"num"</span>, <span class="st">"cat"</span>, <span class="st">"cat_loo"</span><span class="op">)</span><span class="op">]</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 6 × 3</span></span></span>
+<span><span class="co">#&gt;     num cat   cat_loo</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span>     1 a         2.5</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span>     2 a         2  </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span>     3 a         1.5</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span>     4 b         5.5</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span>     5 b         5  </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span>     6 b         4.5</span></span></code></pre></div>
 <p>Notice how the encoded values now vary within each category. For
 category “a”: rows get values based on the other two observations in
 “a”, and the same happens with “b”.</p>
@@ -215,19 +216,18 @@ when setting <code>method</code> to <code>"loo"</code>.</p>
 <code class="sourceCode R"><span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu">collinear</span><span class="fu">::</span><span class="fu"><a href="../reference/target_encoding_lab.html">target_encoding_lab</a></span><span class="op">(</span></span>
 <span>  df <span class="op">=</span> <span class="va">df</span>,</span>
 <span>  response <span class="op">=</span> <span class="st">"num"</span>,</span>
-<span>  predictors <span class="op">=</span> <span class="st">"cat"</span>,</span>
-<span>  methods <span class="op">=</span> <span class="st">"loo"</span>,</span>
+<span>  encoding_method <span class="op">=</span> <span class="st">"loo"</span>,</span>
 <span>  quiet <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">df</span></span>
-<span><span class="co">#&gt;   num cat cat__encoded_loo</span></span>
-<span><span class="co">#&gt; 1   1   a              2.5</span></span>
-<span><span class="co">#&gt; 2   2   a              2.0</span></span>
-<span><span class="co">#&gt; 3   3   a              1.5</span></span>
-<span><span class="co">#&gt; 4   4   b              5.5</span></span>
-<span><span class="co">#&gt; 5   5   b              5.0</span></span>
-<span><span class="co">#&gt; 6   6   b              4.5</span></span></code></pre></div>
+<span><span class="va">df</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"num"</span>, <span class="st">"cat"</span>, <span class="st">"cat_loo"</span>, <span class="st">"cat__encoded_loo"</span><span class="op">)</span><span class="op">]</span></span>
+<span><span class="co">#&gt;   num cat cat_loo cat__encoded_loo</span></span>
+<span><span class="co">#&gt; 1   1   a     2.5              2.5</span></span>
+<span><span class="co">#&gt; 2   2   a     2.0              2.0</span></span>
+<span><span class="co">#&gt; 3   3   a     1.5              1.5</span></span>
+<span><span class="co">#&gt; 4   4   b     5.5              5.5</span></span>
+<span><span class="co">#&gt; 5   5   b     5.0              5.0</span></span>
+<span><span class="co">#&gt; 6   6   b     4.5              4.5</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="rank-target-encoding">Rank Target Encoding<a class="anchor" aria-label="anchor" href="#rank-target-encoding"></a>
@@ -236,48 +236,43 @@ when setting <code>method</code> to <code>"loo"</code>.</p>
 them integer ranks. It is useful to capture the ordinal relationship
 between categories without being sensitive to outliers or extreme
 values.</p>
-<p>The <code>dplyr</code> version of this algorithm is a bit more
-verbose, but I hope it does the trick:</p>
+<p>The <code>dplyr</code> version of this algorithm is shown below.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">df</span> <span class="op">&lt;-</span> <span class="va">df</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">cat</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span></span>
-<span>    cat_mean <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">num</span><span class="op">)</span></span>
-<span>    <span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">ungroup</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span></span>
 <span>    cat_rank <span class="op">=</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/row_number.html" class="external-link">dense_rank</a></span><span class="op">(</span><span class="va">cat_mean</span><span class="op">)</span></span>
 <span>    <span class="op">)</span></span>
 <span></span>
-<span><span class="va">df</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 6 × 4</span></span></span>
-<span><span class="co">#&gt;     num cat   cat_mean cat_rank</span></span>
-<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span>     1 a            2        1</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span>     2 a            2        1</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span>     3 a            2        1</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span>     4 b            5        2</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span>     5 b            5        2</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span>     6 b            5        2</span></span></code></pre></div>
+<span><span class="va">df</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"num"</span>, <span class="st">"cat"</span>, <span class="st">"cat_rank"</span><span class="op">)</span><span class="op">]</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 6 × 3</span></span></span>
+<span><span class="co">#&gt;     num cat   cat_rank</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span>     1 a            1</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span>     2 a            1</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span>     3 a            1</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span>     4 b            2</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span>     5 b            2</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span>     6 b            2</span></span></code></pre></div>
 <p>The same method can be applied via <code><a href="../reference/target_encoding_lab.html">target_encoding_lab()</a></code>
 with <code>encoding_method = "rank"</code>.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu">collinear</span><span class="fu">::</span><span class="fu"><a href="../reference/target_encoding_lab.html">target_encoding_lab</a></span><span class="op">(</span></span>
 <span>  df <span class="op">=</span> <span class="va">df</span>,</span>
 <span>  response <span class="op">=</span> <span class="st">"num"</span>,</span>
-<span>  predictors <span class="op">=</span> <span class="st">"cat"</span>,</span>
-<span>  methods <span class="op">=</span> <span class="st">"rank"</span>,</span>
+<span>  encoding_method <span class="op">=</span> <span class="st">"rank"</span>,</span>
 <span>  quiet <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">df</span></span>
-<span><span class="co">#&gt;   num cat cat__encoded_loo</span></span>
-<span><span class="co">#&gt; 1   1   a              2.5</span></span>
-<span><span class="co">#&gt; 2   2   a              2.0</span></span>
-<span><span class="co">#&gt; 3   3   a              1.5</span></span>
-<span><span class="co">#&gt; 4   4   b              5.5</span></span>
-<span><span class="co">#&gt; 5   5   b              5.0</span></span>
-<span><span class="co">#&gt; 6   6   b              4.5</span></span></code></pre></div>
+<span><span class="va">df</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"num"</span>, <span class="st">"cat"</span>, <span class="st">"cat_rank"</span>, <span class="st">"cat__encoded_rank"</span><span class="op">)</span><span class="op">]</span></span>
+<span><span class="co">#&gt;   num cat cat_rank cat__encoded_rank</span></span>
+<span><span class="co">#&gt; 1   1   a        1                 1</span></span>
+<span><span class="co">#&gt; 2   2   a        1                 1</span></span>
+<span><span class="co">#&gt; 3   3   a        1                 1</span></span>
+<span><span class="co">#&gt; 4   4   b        2                 2</span></span>
+<span><span class="co">#&gt; 5   5   b        2                 2</span></span>
+<span><span class="co">#&gt; 6   6   b        2                 2</span></span></code></pre></div>
 </div>
 </div>
 <div class="section level2">
@@ -361,8 +356,8 @@ providing a more statistically sound multicollinearity assessment.</li>
 <span>  seconds <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">time_without</span><span class="op">[</span><span class="st">"elapsed"</span><span class="op">]</span>, <span class="va">time_with</span><span class="op">[</span><span class="st">"elapsed"</span><span class="op">]</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt;   encoding seconds</span></span>
-<span><span class="co">#&gt; 1       No   8.097</span></span>
-<span><span class="co">#&gt; 2      Yes   0.349</span></span></code></pre></div>
+<span><span class="co">#&gt; 1       No   8.100</span></span>
+<span><span class="co">#&gt; 2      Yes   0.362</span></span></code></pre></div>
 <p>The speed-up is considerable!</p>
 <p>But that’s not the only consequence of applying target encoding.
 Let’s take a look at the variable selections on each run.</p>
