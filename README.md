@@ -138,9 +138,9 @@ numeric and categorical predictors, stored in the vector
 [vi_predictors](https://blasbenito.github.io/collinear/reference/vi_predictors.html).
 
 ``` r
-data(vi_smol, vi_predictors)
+data(vi_smol, vi_predictors, package = "spatialData")
 nrow(vi_smol)
-#> [1] 610
+#> [1] 580
 length(vi_predictors)
 #> [1] 58
 ```
@@ -174,16 +174,16 @@ collinear::vif_stats(
 #> └── collinear::vif_df()
 #>     └── collinear::cor_matrix()
 #>         └── collinear::cor_df(): 11 categorical predictors have cardinality > 2 and may bias the multicollinearity analysis. Applying target encoding to convert them to numeric will solve this issue.
-#>   method     statistic     value
-#> 1    vif             n   58.0000
-#> 2    vif       minimum -194.5080
-#> 3    vif quantile_0.05  -11.2993
-#> 4    vif quantile_0.25    0.4528
-#> 5    vif          mean   67.8998
-#> 6    vif        median   25.2999
-#> 7    vif quantile_0.75   90.3970
-#> 8    vif quantile_0.95  316.6229
-#> 9    vif       maximum  629.6362
+#>   method     statistic    value
+#> 1    vif             n  58.0000
+#> 2    vif       minimum  -6.0304
+#> 3    vif quantile_0.05  -1.0855
+#> 4    vif quantile_0.25   4.5649
+#> 5    vif          mean 105.5328
+#> 6    vif        median  50.9527
+#> 7    vif quantile_0.75 124.4136
+#> 8    vif quantile_0.95 409.8273
+#> 9    vif       maximum 835.4799
 ```
 
 The quantile 0.75 returned by `vif_stats()` indicates that 25% of the
@@ -219,9 +219,9 @@ x <- collinear::collinear(
 #> collinear::collinear()
 #> └── collinear::cor_df(): 11 categorical predictors have cardinality > 2 and may bias the multicollinearity analysis. Applying target encoding to convert them to numeric will solve this issue.
 #> 
-#> collinear::collinear(): setting 'max_cor' to 0.6842.
+#> collinear::collinear(): setting 'max_cor' to 0.6846.
 #> 
-#> collinear::collinear(): setting 'max_vif' to 6.5269.
+#> collinear::collinear(): setting 'max_vif' to 6.5354.
 #> 
 #> collinear::collinear()
 #> └── collinear::preference_order()
@@ -243,6 +243,7 @@ x <- collinear::collinear(
 #>  - cloud_cover_range
 #>  - continent
 #>  - soil_sand
+#>  - soil_clay
 #>  - topo_diversity
 #>  - topo_slope
 ```
@@ -258,8 +259,8 @@ x
 #>    --------------------
 #> 
 #>  + df:
-#>    - rows: 610
-#>    - cols: 14
+#>    - rows: 580
+#>    - cols: 15
 #> 
 #>  + preference order:
 #>    + df:
@@ -279,11 +280,11 @@ x
 #>    - evapotranspiration_max
 #>    - evapotranspiration_range
 #>    - swi_min
-#>    - ... (8 ommited)
+#>    - ... (9 ommited)
 #> 
 #>  + formulas:
-#>    - linear: vi_numeric ~ rainfall_mean + swi_mean + evapotranspiration_max + evapotranspiration_range + swi_min + ... (8 terms omitted) 
-#>    - smooth: vi_numeric ~ s(rainfall_mean) + s(swi_mean) + s(evapotranspiration_max) + s(evapotranspiration_range) + s(swi_min) + ... (8 terms omitted)
+#>    - linear: vi_numeric ~ rainfall_mean + swi_mean + evapotranspiration_max + evapotranspiration_range + swi_min + ... (9 terms omitted) 
+#>    - smooth: vi_numeric ~ s(rainfall_mean) + s(swi_mean) + s(evapotranspiration_max) + s(evapotranspiration_range) + s(swi_min) + ... (9 terms omitted)
 ```
 
 The object `df` contains the response and the selected predictors.
@@ -296,7 +297,8 @@ colnames(x$vi_numeric$df)
 #>  [7] "soil_soc"                 "humidity_range"          
 #>  [9] "topo_elevation"           "cloud_cover_range"       
 #> [11] "continent"                "soil_sand"               
-#> [13] "topo_diversity"           "topo_slope"
+#> [13] "soil_clay"                "topo_diversity"          
+#> [15] "topo_slope"
 ```
 
 The object `preference_order` contains the ranking of predictors. It is
@@ -313,12 +315,12 @@ during multicollinearity filtering.
 ``` r
 head(x$vi_numeric$preference_order)
 #>     response               predictor            f    metric  score rank
-#> 1 vi_numeric           rainfall_mean f_numeric_rf R-squared 0.8835    1
-#> 2 vi_numeric growing_season_rainfall f_numeric_rf R-squared 0.8731    2
-#> 3 vi_numeric   growing_season_length f_numeric_rf R-squared 0.8644    3
-#> 4 vi_numeric                swi_mean f_numeric_rf R-squared 0.8333    4
-#> 5 vi_numeric           aridity_index f_numeric_rf R-squared 0.8279    5
-#> 6 vi_numeric             koppen_zone f_numeric_rf R-squared 0.8174    6
+#> 1 vi_numeric           rainfall_mean f_numeric_rf R-squared 0.8830    1
+#> 2 vi_numeric growing_season_rainfall f_numeric_rf R-squared 0.8716    2
+#> 3 vi_numeric   growing_season_length f_numeric_rf R-squared 0.8660    3
+#> 4 vi_numeric                swi_mean f_numeric_rf R-squared 0.8330    4
+#> 5 vi_numeric           aridity_index f_numeric_rf R-squared 0.8276    5
+#> 6 vi_numeric             koppen_zone f_numeric_rf R-squared 0.8160    6
 ```
 
 The object `selection` contains non-collinear predictors chosen by
@@ -332,8 +334,8 @@ x$vi_numeric$selection
 #>  [5] "swi_min"                  "soil_soc"                
 #>  [7] "humidity_range"           "topo_elevation"          
 #>  [9] "cloud_cover_range"        "continent"               
-#> [11] "soil_sand"                "topo_diversity"          
-#> [13] "topo_slope"              
+#> [11] "soil_sand"                "soil_clay"               
+#> [13] "topo_diversity"           "topo_slope"              
 #> attr(,"validated")
 #> [1] TRUE
 ```
@@ -349,19 +351,20 @@ collinear::vif_df(
   predictors = x$vi_numeric$selection
 )
 #>        vif                predictor
-#> 1   4.7203        cloud_cover_range
-#> 2   3.3447                continent
-#> 3   3.1112   evapotranspiration_max
-#> 4   3.0627 evapotranspiration_range
-#> 5   2.3856           humidity_range
-#> 6   2.0747            rainfall_mean
-#> 7   1.9928                soil_sand
-#> 8   1.7690                 soil_soc
-#> 9   1.6346                 swi_mean
-#> 10  1.5984                  swi_min
-#> 11  1.3531           topo_diversity
-#> 12  0.9320           topo_elevation
-#> 13 -0.2235               topo_slope
+#> 1   4.9323        cloud_cover_range
+#> 2   3.4887                continent
+#> 3   3.3868   evapotranspiration_max
+#> 4   3.3125 evapotranspiration_range
+#> 5   3.1740           humidity_range
+#> 6   2.1249            rainfall_mean
+#> 7   2.0856                soil_clay
+#> 8   2.0259                soil_sand
+#> 9   1.8021                 soil_soc
+#> 10  1.6395                 swi_mean
+#> 11  1.5953                  swi_min
+#> 12  1.5152           topo_diversity
+#> 13  1.4237           topo_elevation
+#> 14 -0.1557               topo_slope
 ```
 
 All VIF scores are below 2.5, `collinear()` did a good job here!
@@ -375,15 +378,16 @@ x$vi_numeric$formulas
 #> vi_numeric ~ rainfall_mean + swi_mean + evapotranspiration_max + 
 #>     evapotranspiration_range + swi_min + soil_soc + humidity_range + 
 #>     topo_elevation + cloud_cover_range + continent + soil_sand + 
-#>     topo_diversity + topo_slope
-#> <environment: 0x5d31fd2fc7a0>
+#>     soil_clay + topo_diversity + topo_slope
+#> <environment: 0x5804319df388>
 #> 
 #> $smooth
 #> vi_numeric ~ s(rainfall_mean) + s(swi_mean) + s(evapotranspiration_max) + 
 #>     s(evapotranspiration_range) + s(swi_min) + s(soil_soc) + 
 #>     s(humidity_range) + s(topo_elevation) + s(cloud_cover_range) + 
-#>     continent + s(soil_sand) + s(topo_diversity) + s(topo_slope)
-#> <environment: 0x5d31fd2fc7a0>
+#>     continent + s(soil_sand) + s(soil_clay) + s(topo_diversity) + 
+#>     s(topo_slope)
+#> <environment: 0x5804319df388>
 ```
 
 The function returns linear formulas for numeric outcomes, and
@@ -409,35 +413,36 @@ summary(m)
 #> 
 #> Residuals:
 #>      Min       1Q   Median       3Q      Max 
-#> -0.42639 -0.04274  0.00107  0.04804  0.24228 
+#> -0.42086 -0.04433  0.00069  0.04656  0.23475 
 #> 
 #> Coefficients:
 #>                            Estimate Std. Error t value Pr(>|t|)    
-#> (Intercept)               3.027e-01  4.557e-02   6.644 6.97e-11 ***
-#> rainfall_mean             4.183e-05  7.152e-06   5.849 8.22e-09 ***
-#> swi_mean                  6.997e-03  4.415e-04  15.850  < 2e-16 ***
-#> evapotranspiration_max   -1.206e-03  1.694e-04  -7.117 3.22e-12 ***
-#> evapotranspiration_range -1.763e-04  1.396e-04  -1.263 0.207122    
-#> swi_min                  -2.473e-03  6.162e-04  -4.013 6.77e-05 ***
-#> soil_soc                 -4.845e-04  1.944e-04  -2.492 0.012964 *  
-#> humidity_range           -1.042e-03  6.301e-04  -1.654 0.098731 .  
-#> topo_elevation           -3.991e-05  7.280e-06  -5.481 6.27e-08 ***
-#> cloud_cover_range         5.109e-04  3.588e-04   1.424 0.155005    
-#> continentAsia            -2.847e-02  1.227e-02  -2.320 0.020687 *  
-#> continentEurope           3.893e-02  1.895e-02   2.054 0.040412 *  
-#> continentNorth America    6.304e-02  1.525e-02   4.134 4.08e-05 ***
-#> continentOceania          4.555e-02  1.478e-02   3.083 0.002146 ** 
-#> continentSouth America    5.547e-02  1.242e-02   4.466 9.54e-06 ***
-#> soil_sand                 5.123e-04  2.821e-04   1.816 0.069887 .  
-#> topo_diversity            3.318e-03  8.973e-04   3.698 0.000238 ***
-#> topo_slope                4.209e-03  1.392e-03   3.024 0.002600 ** 
+#> (Intercept)               2.444e-01  6.263e-02   3.902 0.000107 ***
+#> rainfall_mean             3.900e-05  7.425e-06   5.252 2.14e-07 ***
+#> swi_mean                  6.849e-03  4.593e-04  14.910  < 2e-16 ***
+#> evapotranspiration_max   -1.165e-03  1.759e-04  -6.624 8.24e-11 ***
+#> evapotranspiration_range -1.928e-04  1.449e-04  -1.330 0.183968    
+#> swi_min                  -2.014e-03  6.539e-04  -3.080 0.002168 ** 
+#> soil_soc                 -4.742e-04  1.989e-04  -2.384 0.017453 *  
+#> humidity_range           -1.145e-03  6.473e-04  -1.769 0.077474 .  
+#> topo_elevation           -4.054e-05  7.512e-06  -5.397 1.00e-07 ***
+#> cloud_cover_range         6.015e-04  3.665e-04   1.641 0.101330    
+#> continentAsia            -2.660e-02  1.280e-02  -2.078 0.038199 *  
+#> continentEurope           4.071e-02  1.995e-02   2.041 0.041765 *  
+#> continentNorth America    6.344e-02  1.595e-02   3.977 7.90e-05 ***
+#> continentOceania          3.910e-02  1.579e-02   2.476 0.013573 *  
+#> continentSouth America    5.631e-02  1.296e-02   4.345 1.65e-05 ***
+#> soil_sand                 9.846e-04  4.855e-04   2.028 0.043043 *  
+#> soil_clay                 1.127e-03  8.111e-04   1.390 0.165089    
+#> topo_diversity            3.321e-03  9.168e-04   3.622 0.000319 ***
+#> topo_slope                4.702e-03  1.457e-03   3.227 0.001324 ** 
 #> ---
 #> Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 #> 
-#> Residual standard error: 0.08237 on 589 degrees of freedom
+#> Residual standard error: 0.08245 on 558 degrees of freedom
 #>   (3 observations deleted due to missingness)
-#> Multiple R-squared:  0.8515, Adjusted R-squared:  0.8473 
-#> F-statistic: 198.7 on 17 and 589 DF,  p-value: < 2.2e-16
+#> Multiple R-squared:  0.852,  Adjusted R-squared:  0.8472 
+#> F-statistic: 178.4 on 18 and 558 DF,  p-value: < 2.2e-16
 ```
 
 ### Integration with `tidymodels`
@@ -522,17 +527,19 @@ vi_workflow
 #> 
 #> Coefficients:
 #>              (Intercept)             rainfall_mean                  swi_mean  
-#>                3.027e-01                 4.183e-05                 6.997e-03  
+#>                2.444e-01                 3.900e-05                 6.849e-03  
 #>   evapotranspiration_max  evapotranspiration_range                   swi_min  
-#>               -1.206e-03                -1.763e-04                -2.473e-03  
+#>               -1.165e-03                -1.928e-04                -2.014e-03  
 #>                 soil_soc            humidity_range            topo_elevation  
-#>               -4.845e-04                -1.042e-03                -3.991e-05  
+#>               -4.742e-04                -1.145e-03                -4.054e-05  
 #>        cloud_cover_range             continentAsia           continentEurope  
-#>                5.109e-04                -2.847e-02                 3.893e-02  
+#>                6.015e-04                -2.660e-02                 4.071e-02  
 #>   continentNorth America          continentOceania    continentSouth America  
-#>                6.304e-02                 4.555e-02                 5.547e-02  
-#>                soil_sand            topo_diversity                topo_slope  
-#>                5.123e-04                 3.318e-03                 4.209e-03
+#>                6.344e-02                 3.910e-02                 5.631e-02  
+#>                soil_sand                 soil_clay            topo_diversity  
+#>                9.846e-04                 1.127e-03                 3.321e-03  
+#>               topo_slope  
+#>                4.702e-03
 ```
 
 ## Citation
