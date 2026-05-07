@@ -147,9 +147,9 @@
 </h3>
 <p>The example dataframe <a href="https://blasbenito.github.io/collinear/reference/vi_smol.html">vi_smol</a> has several response variables and a large set of predictors. Here we focus on the numeric response <code>vi_numeric</code>, and the complete set of numeric and categorical predictors, stored in the vector <a href="https://blasbenito.github.io/collinear/reference/vi_predictors.html">vi_predictors</a>.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">vi_smol</span>, <span class="va">vi_predictors</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">vi_smol</span>, <span class="va">vi_predictors</span>, package <span class="op">=</span> <span class="st">"spatialData"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">vi_smol</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 610</span></span>
+<span><span class="co">#&gt; [1] 580</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">vi_predictors</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] 58</span></span></code></pre></div>
 </div>
@@ -169,16 +169,16 @@
 <span><span class="co">#&gt; └── collinear::vif_df()</span></span>
 <span><span class="co">#&gt;     └── collinear::cor_matrix()</span></span>
 <span><span class="co">#&gt;         └── collinear::cor_df(): 11 categorical predictors have cardinality &gt; 2 and may bias the multicollinearity analysis. Applying target encoding to convert them to numeric will solve this issue.</span></span>
-<span><span class="co">#&gt;   method     statistic     value</span></span>
-<span><span class="co">#&gt; 1    vif             n   58.0000</span></span>
-<span><span class="co">#&gt; 2    vif       minimum -194.5080</span></span>
-<span><span class="co">#&gt; 3    vif quantile_0.05  -11.2993</span></span>
-<span><span class="co">#&gt; 4    vif quantile_0.25    0.4528</span></span>
-<span><span class="co">#&gt; 5    vif          mean   67.8998</span></span>
-<span><span class="co">#&gt; 6    vif        median   25.2999</span></span>
-<span><span class="co">#&gt; 7    vif quantile_0.75   90.3970</span></span>
-<span><span class="co">#&gt; 8    vif quantile_0.95  316.6229</span></span>
-<span><span class="co">#&gt; 9    vif       maximum  629.6362</span></span></code></pre></div>
+<span><span class="co">#&gt;   method     statistic    value</span></span>
+<span><span class="co">#&gt; 1    vif             n  58.0000</span></span>
+<span><span class="co">#&gt; 2    vif       minimum  -6.0304</span></span>
+<span><span class="co">#&gt; 3    vif quantile_0.05  -1.0855</span></span>
+<span><span class="co">#&gt; 4    vif quantile_0.25   4.5649</span></span>
+<span><span class="co">#&gt; 5    vif          mean 105.5328</span></span>
+<span><span class="co">#&gt; 6    vif        median  50.9527</span></span>
+<span><span class="co">#&gt; 7    vif quantile_0.75 124.4136</span></span>
+<span><span class="co">#&gt; 8    vif quantile_0.95 409.8273</span></span>
+<span><span class="co">#&gt; 9    vif       maximum 835.4799</span></span></code></pre></div>
 <p>The quantile 0.75 returned by <code><a href="reference/vif_stats.html">vif_stats()</a></code> indicates that 25% of the predictors have a VIF score higher than 6.5. This suggests substantial redundancy in the set of predictors.</p>
 </div>
 <div class="section level3">
@@ -208,9 +208,9 @@
 <span><span class="co">#&gt; collinear::collinear()</span></span>
 <span><span class="co">#&gt; └── collinear::cor_df(): 11 categorical predictors have cardinality &gt; 2 and may bias the multicollinearity analysis. Applying target encoding to convert them to numeric will solve this issue.</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; collinear::collinear(): setting 'max_cor' to 0.6842.</span></span>
+<span><span class="co">#&gt; collinear::collinear(): setting 'max_cor' to 0.6846.</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; collinear::collinear(): setting 'max_vif' to 6.5269.</span></span>
+<span><span class="co">#&gt; collinear::collinear(): setting 'max_vif' to 6.5354.</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; collinear::collinear()</span></span>
 <span><span class="co">#&gt; └── collinear::preference_order()</span></span>
@@ -232,6 +232,7 @@
 <span><span class="co">#&gt;  - cloud_cover_range</span></span>
 <span><span class="co">#&gt;  - continent</span></span>
 <span><span class="co">#&gt;  - soil_sand</span></span>
+<span><span class="co">#&gt;  - soil_clay</span></span>
 <span><span class="co">#&gt;  - topo_diversity</span></span>
 <span><span class="co">#&gt;  - topo_slope</span></span></code></pre></div>
 <p>The function returns an object of class <code>collinear_output</code>, that has its own <code><a href="https://rdrr.io/r/base/print.html" class="external-link">print()</a></code> and <code><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary()</a></code> methods.</p>
@@ -243,8 +244,8 @@
 <span><span class="co">#&gt;    --------------------</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;  + df:</span></span>
-<span><span class="co">#&gt;    - rows: 610</span></span>
-<span><span class="co">#&gt;    - cols: 14</span></span>
+<span><span class="co">#&gt;    - rows: 580</span></span>
+<span><span class="co">#&gt;    - cols: 15</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;  + preference order:</span></span>
 <span><span class="co">#&gt;    + df:</span></span>
@@ -264,11 +265,11 @@
 <span><span class="co">#&gt;    - evapotranspiration_max</span></span>
 <span><span class="co">#&gt;    - evapotranspiration_range</span></span>
 <span><span class="co">#&gt;    - swi_min</span></span>
-<span><span class="co">#&gt;    - ... (8 ommited)</span></span>
+<span><span class="co">#&gt;    - ... (9 ommited)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;  + formulas:</span></span>
-<span><span class="co">#&gt;    - linear: vi_numeric ~ rainfall_mean + swi_mean + evapotranspiration_max + evapotranspiration_range + swi_min + ... (8 terms omitted) </span></span>
-<span><span class="co">#&gt;    - smooth: vi_numeric ~ s(rainfall_mean) + s(swi_mean) + s(evapotranspiration_max) + s(evapotranspiration_range) + s(swi_min) + ... (8 terms omitted)</span></span></code></pre></div>
+<span><span class="co">#&gt;    - linear: vi_numeric ~ rainfall_mean + swi_mean + evapotranspiration_max + evapotranspiration_range + swi_min + ... (9 terms omitted) </span></span>
+<span><span class="co">#&gt;    - smooth: vi_numeric ~ s(rainfall_mean) + s(swi_mean) + s(evapotranspiration_max) + s(evapotranspiration_range) + s(swi_min) + ... (9 terms omitted)</span></span></code></pre></div>
 <p>The object <code>df</code> contains the response and the selected predictors.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">x</span><span class="op">$</span><span class="va">vi_numeric</span><span class="op">$</span><span class="va">df</span><span class="op">)</span></span>
@@ -278,17 +279,18 @@
 <span><span class="co">#&gt;  [7] "soil_soc"                 "humidity_range"          </span></span>
 <span><span class="co">#&gt;  [9] "topo_elevation"           "cloud_cover_range"       </span></span>
 <span><span class="co">#&gt; [11] "continent"                "soil_sand"               </span></span>
-<span><span class="co">#&gt; [13] "topo_diversity"           "topo_slope"</span></span></code></pre></div>
+<span><span class="co">#&gt; [13] "soil_clay"                "topo_diversity"          </span></span>
+<span><span class="co">#&gt; [15] "topo_slope"</span></span></code></pre></div>
 <p>The object <code>preference_order</code> contains the ranking of predictors. It is computed by the function <a href="https://blasbenito.github.io/collinear/reference/preference_order.html">preference_order()</a> by assessing the association between the response and the predictors. In this case, it fits univariate models between the response and each predictor using <a href="https://blasbenito.github.io/collinear/reference/f_numeric_rf.html">f_numeric_rf</a>, and returns the R-squared of the observations vs the model predictions. This ranking ensures that the most important predictors are protected during multicollinearity filtering.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">x</span><span class="op">$</span><span class="va">vi_numeric</span><span class="op">$</span><span class="va">preference_order</span><span class="op">)</span></span>
 <span><span class="co">#&gt;     response               predictor            f    metric  score rank</span></span>
-<span><span class="co">#&gt; 1 vi_numeric           rainfall_mean f_numeric_rf R-squared 0.8835    1</span></span>
-<span><span class="co">#&gt; 2 vi_numeric growing_season_rainfall f_numeric_rf R-squared 0.8731    2</span></span>
-<span><span class="co">#&gt; 3 vi_numeric   growing_season_length f_numeric_rf R-squared 0.8644    3</span></span>
-<span><span class="co">#&gt; 4 vi_numeric                swi_mean f_numeric_rf R-squared 0.8333    4</span></span>
-<span><span class="co">#&gt; 5 vi_numeric           aridity_index f_numeric_rf R-squared 0.8279    5</span></span>
-<span><span class="co">#&gt; 6 vi_numeric             koppen_zone f_numeric_rf R-squared 0.8174    6</span></span></code></pre></div>
+<span><span class="co">#&gt; 1 vi_numeric           rainfall_mean f_numeric_rf R-squared 0.8830    1</span></span>
+<span><span class="co">#&gt; 2 vi_numeric growing_season_rainfall f_numeric_rf R-squared 0.8716    2</span></span>
+<span><span class="co">#&gt; 3 vi_numeric   growing_season_length f_numeric_rf R-squared 0.8660    3</span></span>
+<span><span class="co">#&gt; 4 vi_numeric                swi_mean f_numeric_rf R-squared 0.8330    4</span></span>
+<span><span class="co">#&gt; 5 vi_numeric           aridity_index f_numeric_rf R-squared 0.8276    5</span></span>
+<span><span class="co">#&gt; 6 vi_numeric             koppen_zone f_numeric_rf R-squared 0.8160    6</span></span></code></pre></div>
 <p>The object <code>selection</code> contains non-collinear predictors chosen by taking into account their pairwise correlation and VIF against all other predictors, and their position in the ranking above.</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">x</span><span class="op">$</span><span class="va">vi_numeric</span><span class="op">$</span><span class="va">selection</span></span>
@@ -297,8 +299,8 @@
 <span><span class="co">#&gt;  [5] "swi_min"                  "soil_soc"                </span></span>
 <span><span class="co">#&gt;  [7] "humidity_range"           "topo_elevation"          </span></span>
 <span><span class="co">#&gt;  [9] "cloud_cover_range"        "continent"               </span></span>
-<span><span class="co">#&gt; [11] "soil_sand"                "topo_diversity"          </span></span>
-<span><span class="co">#&gt; [13] "topo_slope"              </span></span>
+<span><span class="co">#&gt; [11] "soil_sand"                "soil_clay"               </span></span>
+<span><span class="co">#&gt; [13] "topo_diversity"           "topo_slope"              </span></span>
 <span><span class="co">#&gt; attr(,"validated")</span></span>
 <span><span class="co">#&gt; [1] TRUE</span></span></code></pre></div>
 <p>We can check that this selection of predictors shows low multicollinearity by running the function <a href="https://blasbenito.github.io/collinear/reference/vif_df.html">vif_df()</a> on them.</p>
@@ -308,19 +310,20 @@
 <span>  predictors <span class="op">=</span> <span class="va">x</span><span class="op">$</span><span class="va">vi_numeric</span><span class="op">$</span><span class="va">selection</span></span>
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt;        vif                predictor</span></span>
-<span><span class="co">#&gt; 1   4.7203        cloud_cover_range</span></span>
-<span><span class="co">#&gt; 2   3.3447                continent</span></span>
-<span><span class="co">#&gt; 3   3.1112   evapotranspiration_max</span></span>
-<span><span class="co">#&gt; 4   3.0627 evapotranspiration_range</span></span>
-<span><span class="co">#&gt; 5   2.3856           humidity_range</span></span>
-<span><span class="co">#&gt; 6   2.0747            rainfall_mean</span></span>
-<span><span class="co">#&gt; 7   1.9928                soil_sand</span></span>
-<span><span class="co">#&gt; 8   1.7690                 soil_soc</span></span>
-<span><span class="co">#&gt; 9   1.6346                 swi_mean</span></span>
-<span><span class="co">#&gt; 10  1.5984                  swi_min</span></span>
-<span><span class="co">#&gt; 11  1.3531           topo_diversity</span></span>
-<span><span class="co">#&gt; 12  0.9320           topo_elevation</span></span>
-<span><span class="co">#&gt; 13 -0.2235               topo_slope</span></span></code></pre></div>
+<span><span class="co">#&gt; 1   4.9323        cloud_cover_range</span></span>
+<span><span class="co">#&gt; 2   3.4887                continent</span></span>
+<span><span class="co">#&gt; 3   3.3868   evapotranspiration_max</span></span>
+<span><span class="co">#&gt; 4   3.3125 evapotranspiration_range</span></span>
+<span><span class="co">#&gt; 5   3.1740           humidity_range</span></span>
+<span><span class="co">#&gt; 6   2.1249            rainfall_mean</span></span>
+<span><span class="co">#&gt; 7   2.0856                soil_clay</span></span>
+<span><span class="co">#&gt; 8   2.0259                soil_sand</span></span>
+<span><span class="co">#&gt; 9   1.8021                 soil_soc</span></span>
+<span><span class="co">#&gt; 10  1.6395                 swi_mean</span></span>
+<span><span class="co">#&gt; 11  1.5953                  swi_min</span></span>
+<span><span class="co">#&gt; 12  1.5152           topo_diversity</span></span>
+<span><span class="co">#&gt; 13  1.4237           topo_elevation</span></span>
+<span><span class="co">#&gt; 14 -0.1557               topo_slope</span></span></code></pre></div>
 <p>All VIF scores are below 2.5, <code><a href="reference/collinear.html">collinear()</a></code> did a good job here!</p>
 <p>Finally, <code><a href="reference/collinear.html">collinear()</a></code> also returns modeling formulas to help kick start exploratory modelling.</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
@@ -329,15 +332,16 @@
 <span><span class="co">#&gt; vi_numeric ~ rainfall_mean + swi_mean + evapotranspiration_max + </span></span>
 <span><span class="co">#&gt;     evapotranspiration_range + swi_min + soil_soc + humidity_range + </span></span>
 <span><span class="co">#&gt;     topo_elevation + cloud_cover_range + continent + soil_sand + </span></span>
-<span><span class="co">#&gt;     topo_diversity + topo_slope</span></span>
-<span><span class="co">#&gt; &lt;environment: 0x5d31fd2fc7a0&gt;</span></span>
+<span><span class="co">#&gt;     soil_clay + topo_diversity + topo_slope</span></span>
+<span><span class="co">#&gt; &lt;environment: 0x5804319df388&gt;</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $smooth</span></span>
 <span><span class="co">#&gt; vi_numeric ~ s(rainfall_mean) + s(swi_mean) + s(evapotranspiration_max) + </span></span>
 <span><span class="co">#&gt;     s(evapotranspiration_range) + s(swi_min) + s(soil_soc) + </span></span>
 <span><span class="co">#&gt;     s(humidity_range) + s(topo_elevation) + s(cloud_cover_range) + </span></span>
-<span><span class="co">#&gt;     continent + s(soil_sand) + s(topo_diversity) + s(topo_slope)</span></span>
-<span><span class="co">#&gt; &lt;environment: 0x5d31fd2fc7a0&gt;</span></span></code></pre></div>
+<span><span class="co">#&gt;     continent + s(soil_sand) + s(soil_clay) + s(topo_diversity) + </span></span>
+<span><span class="co">#&gt;     s(topo_slope)</span></span>
+<span><span class="co">#&gt; &lt;environment: 0x5804319df388&gt;</span></span></code></pre></div>
 <p>The function returns linear formulas for numeric outcomes, and classification formulas for categorical outcomes.</p>
 </div>
 <div class="section level3">
@@ -359,35 +363,36 @@
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Residuals:</span></span>
 <span><span class="co">#&gt;      Min       1Q   Median       3Q      Max </span></span>
-<span><span class="co">#&gt; -0.42639 -0.04274  0.00107  0.04804  0.24228 </span></span>
+<span><span class="co">#&gt; -0.42086 -0.04433  0.00069  0.04656  0.23475 </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Coefficients:</span></span>
 <span><span class="co">#&gt;                            Estimate Std. Error t value Pr(&gt;|t|)    </span></span>
-<span><span class="co">#&gt; (Intercept)               3.027e-01  4.557e-02   6.644 6.97e-11 ***</span></span>
-<span><span class="co">#&gt; rainfall_mean             4.183e-05  7.152e-06   5.849 8.22e-09 ***</span></span>
-<span><span class="co">#&gt; swi_mean                  6.997e-03  4.415e-04  15.850  &lt; 2e-16 ***</span></span>
-<span><span class="co">#&gt; evapotranspiration_max   -1.206e-03  1.694e-04  -7.117 3.22e-12 ***</span></span>
-<span><span class="co">#&gt; evapotranspiration_range -1.763e-04  1.396e-04  -1.263 0.207122    </span></span>
-<span><span class="co">#&gt; swi_min                  -2.473e-03  6.162e-04  -4.013 6.77e-05 ***</span></span>
-<span><span class="co">#&gt; soil_soc                 -4.845e-04  1.944e-04  -2.492 0.012964 *  </span></span>
-<span><span class="co">#&gt; humidity_range           -1.042e-03  6.301e-04  -1.654 0.098731 .  </span></span>
-<span><span class="co">#&gt; topo_elevation           -3.991e-05  7.280e-06  -5.481 6.27e-08 ***</span></span>
-<span><span class="co">#&gt; cloud_cover_range         5.109e-04  3.588e-04   1.424 0.155005    </span></span>
-<span><span class="co">#&gt; continentAsia            -2.847e-02  1.227e-02  -2.320 0.020687 *  </span></span>
-<span><span class="co">#&gt; continentEurope           3.893e-02  1.895e-02   2.054 0.040412 *  </span></span>
-<span><span class="co">#&gt; continentNorth America    6.304e-02  1.525e-02   4.134 4.08e-05 ***</span></span>
-<span><span class="co">#&gt; continentOceania          4.555e-02  1.478e-02   3.083 0.002146 ** </span></span>
-<span><span class="co">#&gt; continentSouth America    5.547e-02  1.242e-02   4.466 9.54e-06 ***</span></span>
-<span><span class="co">#&gt; soil_sand                 5.123e-04  2.821e-04   1.816 0.069887 .  </span></span>
-<span><span class="co">#&gt; topo_diversity            3.318e-03  8.973e-04   3.698 0.000238 ***</span></span>
-<span><span class="co">#&gt; topo_slope                4.209e-03  1.392e-03   3.024 0.002600 ** </span></span>
+<span><span class="co">#&gt; (Intercept)               2.444e-01  6.263e-02   3.902 0.000107 ***</span></span>
+<span><span class="co">#&gt; rainfall_mean             3.900e-05  7.425e-06   5.252 2.14e-07 ***</span></span>
+<span><span class="co">#&gt; swi_mean                  6.849e-03  4.593e-04  14.910  &lt; 2e-16 ***</span></span>
+<span><span class="co">#&gt; evapotranspiration_max   -1.165e-03  1.759e-04  -6.624 8.24e-11 ***</span></span>
+<span><span class="co">#&gt; evapotranspiration_range -1.928e-04  1.449e-04  -1.330 0.183968    </span></span>
+<span><span class="co">#&gt; swi_min                  -2.014e-03  6.539e-04  -3.080 0.002168 ** </span></span>
+<span><span class="co">#&gt; soil_soc                 -4.742e-04  1.989e-04  -2.384 0.017453 *  </span></span>
+<span><span class="co">#&gt; humidity_range           -1.145e-03  6.473e-04  -1.769 0.077474 .  </span></span>
+<span><span class="co">#&gt; topo_elevation           -4.054e-05  7.512e-06  -5.397 1.00e-07 ***</span></span>
+<span><span class="co">#&gt; cloud_cover_range         6.015e-04  3.665e-04   1.641 0.101330    </span></span>
+<span><span class="co">#&gt; continentAsia            -2.660e-02  1.280e-02  -2.078 0.038199 *  </span></span>
+<span><span class="co">#&gt; continentEurope           4.071e-02  1.995e-02   2.041 0.041765 *  </span></span>
+<span><span class="co">#&gt; continentNorth America    6.344e-02  1.595e-02   3.977 7.90e-05 ***</span></span>
+<span><span class="co">#&gt; continentOceania          3.910e-02  1.579e-02   2.476 0.013573 *  </span></span>
+<span><span class="co">#&gt; continentSouth America    5.631e-02  1.296e-02   4.345 1.65e-05 ***</span></span>
+<span><span class="co">#&gt; soil_sand                 9.846e-04  4.855e-04   2.028 0.043043 *  </span></span>
+<span><span class="co">#&gt; soil_clay                 1.127e-03  8.111e-04   1.390 0.165089    </span></span>
+<span><span class="co">#&gt; topo_diversity            3.321e-03  9.168e-04   3.622 0.000319 ***</span></span>
+<span><span class="co">#&gt; topo_slope                4.702e-03  1.457e-03   3.227 0.001324 ** </span></span>
 <span><span class="co">#&gt; ---</span></span>
 <span><span class="co">#&gt; Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Residual standard error: 0.08237 on 589 degrees of freedom</span></span>
+<span><span class="co">#&gt; Residual standard error: 0.08245 on 558 degrees of freedom</span></span>
 <span><span class="co">#&gt;   (3 observations deleted due to missingness)</span></span>
-<span><span class="co">#&gt; Multiple R-squared:  0.8515, Adjusted R-squared:  0.8473 </span></span>
-<span><span class="co">#&gt; F-statistic: 198.7 on 17 and 589 DF,  p-value: &lt; 2.2e-16</span></span></code></pre></div>
+<span><span class="co">#&gt; Multiple R-squared:  0.852,  Adjusted R-squared:  0.8472 </span></span>
+<span><span class="co">#&gt; F-statistic: 178.4 on 18 and 558 DF,  p-value: &lt; 2.2e-16</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="integration-with-tidymodels">Integration with <code>tidymodels</code>
@@ -465,17 +470,19 @@
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Coefficients:</span></span>
 <span><span class="co">#&gt;              (Intercept)             rainfall_mean                  swi_mean  </span></span>
-<span><span class="co">#&gt;                3.027e-01                 4.183e-05                 6.997e-03  </span></span>
+<span><span class="co">#&gt;                2.444e-01                 3.900e-05                 6.849e-03  </span></span>
 <span><span class="co">#&gt;   evapotranspiration_max  evapotranspiration_range                   swi_min  </span></span>
-<span><span class="co">#&gt;               -1.206e-03                -1.763e-04                -2.473e-03  </span></span>
+<span><span class="co">#&gt;               -1.165e-03                -1.928e-04                -2.014e-03  </span></span>
 <span><span class="co">#&gt;                 soil_soc            humidity_range            topo_elevation  </span></span>
-<span><span class="co">#&gt;               -4.845e-04                -1.042e-03                -3.991e-05  </span></span>
+<span><span class="co">#&gt;               -4.742e-04                -1.145e-03                -4.054e-05  </span></span>
 <span><span class="co">#&gt;        cloud_cover_range             continentAsia           continentEurope  </span></span>
-<span><span class="co">#&gt;                5.109e-04                -2.847e-02                 3.893e-02  </span></span>
+<span><span class="co">#&gt;                6.015e-04                -2.660e-02                 4.071e-02  </span></span>
 <span><span class="co">#&gt;   continentNorth America          continentOceania    continentSouth America  </span></span>
-<span><span class="co">#&gt;                6.304e-02                 4.555e-02                 5.547e-02  </span></span>
-<span><span class="co">#&gt;                soil_sand            topo_diversity                topo_slope  </span></span>
-<span><span class="co">#&gt;                5.123e-04                 3.318e-03                 4.209e-03</span></span></code></pre></div>
+<span><span class="co">#&gt;                6.344e-02                 3.910e-02                 5.631e-02  </span></span>
+<span><span class="co">#&gt;                soil_sand                 soil_clay            topo_diversity  </span></span>
+<span><span class="co">#&gt;                9.846e-04                 1.127e-03                 3.321e-03  </span></span>
+<span><span class="co">#&gt;               topo_slope  </span></span>
+<span><span class="co">#&gt;                4.702e-03</span></span></code></pre></div>
 </div>
 </div>
 <div class="section level2">
