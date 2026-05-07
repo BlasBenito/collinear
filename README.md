@@ -8,7 +8,7 @@
 [![Devel-version](https://img.shields.io/badge/devel%20version-1.0.1-blue.svg)](https://github.com/blasbenito/collinear)
 &#10;<!-- badges: start -->
 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.10039489.svg)](https://doi.org/10.5281/zenodo.17843578)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.10039396.svg)](https://doi.org/10.5281/zenodo.10039396)
 [![CRAN
 status](https://www.r-pkg.org/badges/version/collinear)](https://cran.r-project.org/package=collinear)
 [![CRAN_Download_Badge](http://cranlogs.r-pkg.org/badges/grand-total/collinear)](https://CRAN.R-project.org/package=collinear)
@@ -379,7 +379,7 @@ x$vi_numeric$formulas
 #>     evapotranspiration_range + swi_min + soil_soc + humidity_range + 
 #>     topo_elevation + cloud_cover_range + continent + soil_sand + 
 #>     soil_clay + topo_diversity + topo_slope
-#> <environment: 0x5804319df388>
+#> <environment: 0x5ca0746a67c0>
 #> 
 #> $smooth
 #> vi_numeric ~ s(rainfall_mean) + s(swi_mean) + s(evapotranspiration_max) + 
@@ -387,7 +387,7 @@ x$vi_numeric$formulas
 #>     s(humidity_range) + s(topo_elevation) + s(cloud_cover_range) + 
 #>     continent + s(soil_sand) + s(soil_clay) + s(topo_diversity) + 
 #>     s(topo_slope)
-#> <environment: 0x5804319df388>
+#> <environment: 0x5ca0746a67c0>
 ```
 
 The function returns linear formulas for numeric outcomes, and
@@ -548,7 +548,7 @@ If you find this package useful, please cite it as:
 
 *Blas M. Benito (2025). collinear: R Package for Automated
 Multicollinearity Management. Version 3.0.0. doi:
-10.5281/zenodo.17843578*
+10.5281/zenodo.10039396*
 
 ## Getting help
 
