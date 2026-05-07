@@ -308,17 +308,46 @@ sigmoid_df <- data.frame(
   )
 
 ggplot2::ggplot(sigmoid_df) +
-  ggplot2::aes(x = cor_input, y = max_cor) +
-  ggplot2::geom_line(linewidth = 1, color = "red4") +
-  ggplot2::geom_hline(yintercept = c(0.493, 0.735), linetype = "dashed", alpha = 0.5) +
-  ggplot2::geom_vline(xintercept = 0.614, linetype = "dotted", alpha = 0.5) +
+  ggplot2::aes(
+    x = cor_input, 
+    y = max_cor
+    ) +
+  ggplot2::geom_line(
+    linewidth = 1, 
+    color = viridis::turbo(
+      n = 1, 
+      direction = -1
+      )
+    ) +
+  ggplot2::geom_hline(
+    yintercept = c(0.493, 0.735),
+    linetype = "dashed",
+    alpha = 0.5
+  ) +
+  ggplot2::geom_vline(
+    xintercept = 0.614, 
+    linetype = "dotted", 
+    alpha = 0.5
+    ) +
   ggplot2::labs(
     title = "Sigmoid Transformation",
     x = "Input Correlation (quantile 0.75)",
     y = "Adaptive Correlation Threshold"
   ) +
-  ggplot2::annotate("text", x = 0.80, y = 0.493 + 0.015, label = "floor (VIF ≈ 2.5)", size = 3) +
-  ggplot2::annotate("text", x = 0.15, y = 0.735 - 0.015, label = "ceiling (VIF ≈ 7.5)", size = 3) +
+  ggplot2::annotate(
+    "text",
+    x = 0.80,
+    y = 0.493 + 0.015,
+    label = "floor (VIF ≈ 2.5)",
+    size = 3
+  ) +
+  ggplot2::annotate(
+    "text",
+    x = 0.15,
+    y = 0.735 - 0.015,
+    label = "ceiling (VIF ≈ 7.5)",
+    size = 3
+  ) +
   ggplot2::theme_bw()
 ```
 
@@ -371,7 +400,9 @@ ggplot2::ggplot() +
     color = out_selection_jaccard,
     weight = out_selection_jaccard^3
   ) + 
-  ggplot2::geom_point(alpha = 0.5) + 
+  ggplot2::geom_point(
+    alpha = 0.5
+    ) + 
   ggplot2::geom_smooth(
     method = "gam",
     formula = y ~ s(x, k = 9),

@@ -51,7 +51,7 @@ pak::pkg_install(
 )
 ```
 
-The examples herein require the following setup.
+The examples here require the following setup.
 
 ```{r, message = FALSE, warning = FALSE, include = FALSE}
 library(collinear)
@@ -70,8 +70,10 @@ future::plan(
 #progressr::handlers(global = TRUE)
 
 #example data
-data(vi_smol, package = "spatialData")
-data(vi_predictors_numeric)
+data(
+  vi_smol, 
+  package = "spatialData"
+  )
 ```
 
 ## The Multicollinearity Filtering Algorithm

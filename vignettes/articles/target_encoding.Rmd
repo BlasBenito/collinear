@@ -73,6 +73,7 @@ data(
   package = "spatialData"
   )
 
+#vector of categorical predictors
 vi_predictors_categorical <- collinear::identify_categorical_variables(
   df = vi_smol,
   predictors = vi_predictors
@@ -111,18 +112,14 @@ This is equivalent to the `"mean"` encoding method implemented in `target_encodi
 df <- collinear::target_encoding_lab(
   df = df,
   response = "num",
-  predictors = "cat",
-  methods = "mean",
+  encoding_method = "mean",
   quiet = TRUE
 )
 
 df
 ```
 
-```{r, echo = FALSE}
-df$cat_mean <- NULL
-df$cat__encoded_mean <- NULL
-```
+The column `cat_encoded_mean` is the one produced by `target_encoding_lab()`.
 
 ### Leave-One-Out Target Encoding
 
@@ -138,7 +135,7 @@ df <- df |>
     ) |> 
   dplyr::ungroup()
 
-df
+df[, c("num", "cat", "cat_loo")]
 ```
 
 Notice how the encoded values now vary within each category. For category "a": rows get values based on the other two observations in "a", and the same happens with "b".
@@ -149,38 +146,28 @@ The same method can be applied in `target_encoding_lab()` when setting `method` 
 df <- collinear::target_encoding_lab(
   df = df,
   response = "num",
-  predictors = "cat",
-  methods = "loo",
+  encoding_method = "loo",
   quiet = TRUE
 )
 
-df
+df[, c("num", "cat", "cat_loo", "cat__encoded_loo")]
 ```
-
-```{r, echo = FALSE}
-df$cat_loo <- NULL
-df$cat__encoded_loo <- NULL
-```
-
 
 ### Rank Target Encoding
 
-The rank method orders categories by their mean values and assigns them integer ranks. It is useful  to capture the ordinal relationship between categories without being sensitive to outliers or extreme values.
+The rank method orders categories by their mean values and assigns them integer ranks. It is useful to capture the ordinal relationship between categories without being sensitive to outliers or extreme values.
 
-The `dplyr` version of this algorithm is a bit more verbose, but I hope it does the trick:
+The `dplyr` version of this algorithm is shown below.
 
 ```{r}
 df <- df |>
   dplyr::group_by(cat) |>
-  dplyr::mutate(
-    cat_mean = mean(num)
-    ) |>
   dplyr::ungroup() |>
   dplyr::mutate(
     cat_rank = dplyr::dense_rank(cat_mean)
     )
 
-df
+df[, c("num", "cat", "cat_rank")]
 ```
 
 The same method can be applied via `target_encoding_lab()` with `encoding_method = "rank"`.
@@ -189,12 +176,11 @@ The same method can be applied via `target_encoding_lab()` with `encoding_method
 df <- collinear::target_encoding_lab(
   df = df,
   response = "num",
-  predictors = "cat",
-  methods = "rank",
+  encoding_method = "rank",
   quiet = TRUE
 )
 
-df
+df[, c("num", "cat", "cat_rank", "cat__encoded_rank")]
 ```
 
 ## Target Encoding in Practice

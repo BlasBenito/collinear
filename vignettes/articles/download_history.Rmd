@@ -7,12 +7,8 @@ output:
     source: false
 ---
 
-```{r, include=FALSE, echo = FALSE}
-install.packages(c("cranlogs", "ggplot2"))
-```
 
-
-```{r, echo = FALSE}
+```{r, , include = FALSE}
 if (!requireNamespace("pak", quietly = TRUE)) {
   install.packages("pak")
 }
@@ -24,20 +20,22 @@ pak::pkg_install(
   ),
   ask = FALSE
 )
+```
 
 
+```{r, echo = FALSE}
 library(cranlogs)
 library(ggplot2)
 
 
-# Get download data from the beginning
+#get download data from the beginning
 download_history <- cranlogs::cran_downloads(
   packages = "collinear",
-  from = "2023-10-01",  # Earliest available data
+  from = "2023-10-01",
   to = Sys.Date()
 )
 
-# Optional: Monthly aggregation for cleaner visualization
+#monthly aggregation for cleaner visualization
 download_history$year_month <- format(download_history$date, "%Y-%m")
 monthly_downloads <- aggregate(
   count ~ year_month,
@@ -46,20 +44,20 @@ monthly_downloads <- aggregate(
 )
 monthly_downloads$date <- as.Date(paste0(monthly_downloads$year_month, "-01"))
 
-# Calculate average monthly downloads
+#calculate average monthly downloads
 avg_monthly <- mean(monthly_downloads$count)
 
-# Version 2.0.0 release date
+#release date of major versions
 release_date_2.0 <- as.Date("2025-01-01")
 release_date_3.0 <- as.Date("2025-12-06")
 
-# Plot monthly downloads
+#plot monthly downloads
 ggplot(monthly_downloads, aes(x = date, y = count)) +
-  geom_col(fill = "#F5191C", alpha = 0.8) +
+  geom_col(fill = "#008cba", alpha = 0.8) +
   geom_hline(
     yintercept = avg_monthly,
     linetype = "dashed",
-    color = "#3B99B1",
+    color = "#006584",
     linewidth = 0.8
   ) +
   geom_vline(
@@ -81,7 +79,7 @@ ggplot(monthly_downloads, aes(x = date, y = count)) +
     label = paste0("Avg: ", round(avg_monthly)),
     vjust = -0.5,
     hjust = 0.1,
-    color = "#3B99B1",
+    color = "#006584",
     size = 3.5
   ) +
   annotate(
