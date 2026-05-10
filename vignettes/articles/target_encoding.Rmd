@@ -17,10 +17,6 @@ knitr::opts_chunk$set(
 ```
 
 
-## Source Code
-
-You can download the Rmarkdown notebook used to render this article [here](https://github.com/BlasBenito/collinear/blob/main/vignettes/articles/target_encoding.Rmd). To download the file, use the button *Download raw file* on the upper-right hand of the `Code` panel.
-
 ## Summary
 
 [**Target encoding**](https://www.blasbenito.com/post/target-encoding/) maps categorical predictors to a statistic of a reference numeric variable across categories. 
