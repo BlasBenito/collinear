@@ -88,14 +88,6 @@
     
     
 <div class="section level2">
-<h2 id="source-code">Source Code<a class="anchor" aria-label="anchor" href="#source-code"></a>
-</h2>
-<p>You can download the Rmarkdown notebook used to render this article
-<a href="https://github.com/BlasBenito/collinear/blob/main/vignettes/articles/target_encoding.Rmd" class="external-link">here</a>.
-To download the file, use the button <em>Download raw file</em> on the
-upper-right hand of the <code>Code</code> panel.</p>
-</div>
-<div class="section level2">
 <h2 id="summary">Summary<a class="anchor" aria-label="anchor" href="#summary"></a>
 </h2>
 <p><a href="https://www.blasbenito.com/post/target-encoding/" class="external-link"><strong>Target
@@ -356,8 +348,8 @@ providing a more statistically sound multicollinearity assessment.</li>
 <span>  seconds <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">time_without</span><span class="op">[</span><span class="st">"elapsed"</span><span class="op">]</span>, <span class="va">time_with</span><span class="op">[</span><span class="st">"elapsed"</span><span class="op">]</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt;   encoding seconds</span></span>
-<span><span class="co">#&gt; 1       No   8.111</span></span>
-<span><span class="co">#&gt; 2      Yes   0.348</span></span></code></pre></div>
+<span><span class="co">#&gt; 1       No   8.100</span></span>
+<span><span class="co">#&gt; 2      Yes   0.351</span></span></code></pre></div>
 <p>The speed-up is considerable!</p>
 <p>But that’s not the only consequence of applying target encoding.
 Let’s take a look at the variable selections on each run.</p>
