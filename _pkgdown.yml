@@ -28,8 +28,12 @@ articles:
   - articles/target_encoding
   - articles/adaptive_filtering_thresholds
   - articles/dual_filtering_strategy
-  - articles/collinear_in_the_wild
+
+- title: Impact
+  navbar: Impact
+  contents:
   - articles/download_history
+  - articles/collinear_in_the_wild
 
 navbar:
   components:

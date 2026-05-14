@@ -17,19 +17,43 @@ knitr::opts_chunk$set(
 # options(tibble.print_min = 5, tibble.print_max = 5)
 ```
 
-# Summary
+## Summary
 
-This article lists mentions and citations to the R package `collinear`.
+This article lists known applications of the R package `collinear` found in the literature.
 
-# 2026
+This page is maintained by hand and may be incomplete. If you've used `collinear` in a publication, talk, or blog post and would like it listed here, please open an issue at the [package repository](https://github.com/BlasBenito/collinear).
+# References (APA 7th Edition)
 
-Wu, L., Wang, Q., Shang, Z., Chen, H., Deng, A., Song, Z., Zheng, C., & Zhang, W. (2026). [Straw return boosts N₂O emissions primarily during the pre-jointing stage in winter wheat fields: A meta-analysis](https://doi.org/10.1016/j.agee.2025.110175)
-. Agriculture, Ecosystems & Environment, 399, 110175. https://doi.org/10.1016/j.agee.2025.110175
+## Research Papers
 
-# 2025
+### 2026
 
-Zhang, F., Hu, B., Meng, L., Pang, M., Chen, Y., Song, W., Feng, Y., & Ma, Y. (2025). [Appropriate biochar application methods can simultaneously mitigate Cd concentrations in different parts of soil and crops: A meta-analysis](https://bsssjournals.onlinelibrary.wiley.com/doi/full/10.1111/sum.70044?casa_token=Mnx9EBo57A0AAAAA%3A_wB2jlui5iWiCq18vjCQd7o5RhXYYTt3YGGPrfUbav0L7Q4Z4Xiwv-Bo7YPJg8GF67iXO3v90iSr3Q). Soil Use and Management, 41, e70044. https://doi.org/10.1111/sum.70044 
+Stachura, G., & Ustrnul, Z. (2026). Identification and correction of snow depth bias in ERA5 datasets over Central Europe using machine learning. *The Cryosphere, 20*(4), 2295–2315. https://doi.org/10.5194/tc-20-2295-2026
 
-# 2024
+Villar, D. A., Clark-Ginsberg, A., & Tisherman, R. (2026). Decadal predictions of future habitat favourability of the European green crab (*Carcinus maenas*) on the Pacific Coast of North America. *Hydrobiologia*. https://doi.org/10.1007/s10750-026-06149-4
 
-Simons, A. L., Baez, H., Acharya-Patel, N., Helbing, C. C., Jeffers, J., Stanford, J., & Meyer, R. S. (2024). [TerraDactyl: A tool for connecting environmental data to when and where](https://www.sciencedirect.com/science/article/pii/S1574954124005168). Ecological Informatics, 102974. https://doi.org/10.1016/j.ecoinf.2024.102974
+Wu, L., Wang, Q., Shang, Z., Chen, H., Deng, A., Song, Z., Zheng, C., & Zhang, W. (2026). Straw return boosts N₂O emissions primarily during the pre-jointing stage in winter wheat fields: A meta-analysis. *Agriculture, Ecosystems & Environment, 399*, 110175. https://doi.org/10.1016/j.agee.2025.110175
+
+Zengeya, F. M., Jafter, O., Rusike, T., Mufandaedza, E., Rwasoka, D. T., & Gwitira, I. (2026). Coupling ensemble of small models with UAV-derived structural and textural metrics to predict occurrence of an invasive alien plant in an urban woodland reserve. *Applied Geomatics, 18*, 19. https://doi.org/10.1007/s12518-025-00672-0
+
+### 2025
+
+Georgopoulou, E., Kougioumoutzis, K., & Simaiakis, S. M. (2025). The impact of climate and land use change on Greek centipede biodiversity and conservation. *Land, 14*(8), 1685. https://doi.org/10.3390/land14081685
+
+Kougioumoutzis, K., Kokkoris, I. P., Trigas, P., Strid, A., & Dimopoulos, P. (2025). Projected impacts of climate and land use change on endemic plant distributions in a Mediterranean island hotspot: The case of Evvia (Aegean, Greece). *Climate, 13*(5), 100. https://doi.org/10.3390/cli13050100
+
+Savvides, A. M., Themistokleous, G., Philippou, K., Panagiotou, M., & Omirou, M. (2025). Exploratory flux pulses and emerging trade-offs in a semi-arid lettuce experiment: Plant and nitrogen effects on GHG and NH₃ emissions. *Horticulturae, 11*(11), 1287. https://doi.org/10.3390/horticulturae11111287
+
+Stachura, G., & Ustrnul, Z. (2025). *Identification and correction of snow depth bias in ERA5 datasets over Central Europe using machine learning* [Preprint]. EGUsphere. https://doi.org/10.5194/egusphere-2025-5084
+
+Stefanidis, A., Kougioumoutzis, K., Zografou, K., Fotiadis, G., Tzortzakaki, O., Willemse, L., & Kati, V. (2025). Mitigating the extinction risk of globally threatened and endemic mountainous Orthoptera species: *Parnassiana parnassica* and *Oropodisma parnassica*. *Insect Conservation and Diversity, 18*(1), 54–68. https://doi.org/10.1111/icad.12784
+
+Stefanidis, A., Kougioumoutzis, K., Zografou, K., Fotiadis, G., Willemse, L., Tzortzakaki, O., & Kati, V. (2025). Distribution patterns and habitat preferences of five globally threatened and endemic montane Orthoptera (*Parnassiana* and *Oropodisma*). *Ecologies, 6*(1), 5. https://doi.org/10.3390/ecologies6010005
+
+Wang, J., Wang, B., Wang, D., Yu, Y., Zhao, Y., & Xu, P. (2025). Trade-off strategies between drought resistance and growth rate of dominant tree species in karst forests within heterogeneous habitats. *Scientific Reports, 15*, 26381. https://doi.org/10.1038/s41598-025-97550-x
+
+Zhang, F., Hu, B., Meng, L., Pang, M., Chen, Y., Song, W., Feng, Y., & Ma, Y. (2025). Appropriate biochar application methods can simultaneously mitigate Cd concentrations in different parts of soil and crops: A meta-analysis. *Soil Use and Management, 41*, e70044. https://doi.org/10.1111/sum.70044
+
+### 2024
+
+Simons, A. L., Baez, H., Acharya-Patel, N., Helbing, C. C., Jeffers, J., Stanford, J., & Meyer, R. S. (2024). TerraDactyl: A tool for connecting environmental data to when and where. *Ecological Informatics, 84*, 102974. https://doi.org/10.1016/j.ecoinf.2024.102974
