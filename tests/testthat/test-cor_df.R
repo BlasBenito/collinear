@@ -6,6 +6,11 @@ testthat::test_that("`cor_df()` works", {
     predictors = vi_predictors
   )$valid
 
+  vi_predictors_numeric <- identify_numeric_variables(
+    df = vi_smol,
+    predictors = vi_predictors
+  )$valid
+
   #mixed types
   testthat::expect_warning(
     x <- cor_df(
@@ -75,7 +80,7 @@ testthat::test_that("`cor_df()` works", {
 
   #no predictors
   x <- cor_df(
-    df = vi_smol[, 1:5],
+    df = vi_smol[, vi_predictors_numeric],
     predictors = NULL,
     quiet = TRUE
   )
@@ -92,7 +97,7 @@ testthat::test_that("`cor_df()` works", {
           x$y
         )
       ) %in%
-        colnames(vi_smol)[1:5]
+        colnames(vi_smol[, vi_predictors_numeric])
     )
   )
 

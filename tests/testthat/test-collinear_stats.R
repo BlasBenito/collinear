@@ -26,7 +26,8 @@ testthat::test_that("`collinear_stats()` works", {
   #from cor_df results
   x <- cor_df(
     df = vi_smol,
-    predictors = vi_predictors_numeric[1:10]
+    predictors = vi_predictors_numeric[1:10],
+    quiet = TRUE
   ) |>
     collinear_stats(
       quiet = TRUE

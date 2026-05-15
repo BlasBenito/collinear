@@ -23,10 +23,12 @@ testthat::test_that("`validate_arg_df()` works", {
     x <- validate_arg_df(
       df = vi_smol,
       responses = NULL,
-      predictors = NULL
+      predictors = NULL,
+      quiet = FALSE
     ),
     regexp = "arguments 'responses' and 'predictors' are NULL, skipping validation of column values"
-  )
+  ) |>
+    suppressMessages()
 
   testthat::expect_true(
     is.data.frame(x)
@@ -38,11 +40,13 @@ testthat::test_that("`validate_arg_df()` works", {
       df = vi_smol[1:2, ]
     ),
     regexp = "has fewer than 3 rows"
-  )
+  ) |>
+    suppressMessages()
 
   testthat::expect_message(
     x <- validate_arg_df(
-      df = vi_smol[1:9, ]
+      df = vi_smol[1:9, ],
+      quiet = FALSE
     ),
     regexp = "has fewer than 10 rows"
   ) |>
@@ -55,10 +59,12 @@ testthat::test_that("`validate_arg_df()` works", {
   testthat::expect_message(
     x <- validate_arg_df(
       df = vi_smol[1:29, ],
-      predictors = vi_predictors_numeric
+      predictors = vi_predictors_numeric,
+      quiet = FALSE
     ),
     regexp = "has fewer than 30 rows"
-  )
+  ) |>
+    suppressMessages()
 
   testthat::expect_true(
     nrow(x) == 29
@@ -67,7 +73,8 @@ testthat::test_that("`validate_arg_df()` works", {
   testthat::expect_error(
     x <- validate_arg_df(
       df = vi_smol[, 0],
-      predictors = vi_predictors_numeric
+      predictors = vi_predictors_numeric,
+      quiet = TRUE
     ),
     regexp = "argument 'df' has zero columns"
   )
@@ -75,14 +82,16 @@ testthat::test_that("`validate_arg_df()` works", {
   testthat::expect_error(
     x <- validate_arg_df(
       df = vi_smol[, vi_predictors_numeric[1], drop = FALSE],
-      predictors = vi_predictors_numeric[1]
+      predictors = vi_predictors_numeric[1],
+      quiet = TRUE
     ),
     regexp = "argument 'df' has one valid column, multicollinearity analysis cannot be performed"
   )
 
   testthat::expect_error(
     x <- validate_arg_df(
-      df = stats::lm
+      df = stats::lm,
+      quiet = TRUE
     ),
     regexp = "cannot coerce argument 'df' to class 'data.frame'"
   ) |>
@@ -90,7 +99,8 @@ testthat::test_that("`validate_arg_df()` works", {
 
   testthat::expect_error(
     x <- validate_arg_df(
-      df = FALSE
+      df = FALSE,
+      quiet = TRUE
     ),
     regexp = "cannot coerce argument 'df' to class 'data.frame'"
   ) |>
@@ -158,7 +168,7 @@ testthat::test_that("`validate_arg_df()` works", {
     df = vi_smol,
     responses = "vi_numeric",
     predictors = vi_predictors_numeric,
-    quiet = FALSE
+    quiet = TRUE
   )
 
   testthat::expect_true(attributes(x)$validated)
@@ -169,7 +179,8 @@ testthat::test_that("`validate_arg_df()` works", {
 
   #pass a validated data frame
   x <- validate_arg_df(
-    df = x
+    df = x,
+    quiet = TRUE
   )
 
   testthat::expect_true(attributes(x)$validated)
@@ -179,7 +190,7 @@ testthat::test_that("`validate_arg_df()` works", {
     df = vi_smol,
     responses = NULL,
     predictors = vi_predictors_numeric[1],
-    quiet = FALSE
+    quiet = TRUE
   )
 
   testthat::expect_true(attributes(x)$validated)
@@ -210,8 +221,10 @@ testthat::test_that("`validate_arg_df()` works", {
   testthat::expect_message(
     x <- validate_arg_df(
       df = vi_smol,
-      predictors = vi_predictors_categorical
+      predictors = vi_predictors_categorical,
+      quiet = FALSE
     ),
     regexp = "converted the following character columns to factor"
-  )
+  ) |>
+    suppressMessages()
 })

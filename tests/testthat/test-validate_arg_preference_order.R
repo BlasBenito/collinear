@@ -14,7 +14,7 @@ testthat::test_that("`validate_arg_preference_order()` works", {
       predictors = NULL,
       preference_order = NULL,
       function_name = NULL,
-      quiet = FALSE
+      quiet = TRUE
     ),
     regexp = "argument 'df' cannot be NULL"
   )
@@ -45,7 +45,8 @@ testthat::test_that("`validate_arg_preference_order()` works", {
     df = vi_smol,
     response = NULL,
     predictors = vi_predictors_numeric,
-    preference_order = x
+    preference_order = x,
+    quiet = TRUE
   )
 
   #df and response, no predictors ----
@@ -109,7 +110,7 @@ testthat::test_that("`validate_arg_preference_order()` works", {
     response = "vi_numeric",
     predictors = vi_predictors_numeric[1:10],
     preference_order = vi_predictors_numeric[1:10],
-    quiet = FALSE
+    quiet = TRUE
   )
 
   testthat::expect_true(
@@ -150,7 +151,8 @@ testthat::test_that("`validate_arg_preference_order()` works", {
       quiet = FALSE
     ),
     regexp = "4 'predictors' from lower to higher multicollinearity"
-  )
+  ) |>
+    suppressMessages()
 
   testthat::expect_true(
     attributes(x)$validated
@@ -194,7 +196,7 @@ testthat::test_that("`validate_arg_preference_order()` works", {
     response = "vi_numeric",
     predictors = vi_predictors_numeric[1:13],
     preference_order = preference_df,
-    quiet = FALSE
+    quiet = TRUE
   )
 
   testthat::expect_true(
@@ -245,7 +247,7 @@ testthat::test_that("`validate_arg_preference_order()` works", {
     response = "vi_numeric",
     predictors = vi_predictors_numeric[1:10],
     preference_order = preference_df,
-    quiet = FALSE
+    quiet = TRUE
   )
 
   testthat::expect_true(
@@ -294,7 +296,7 @@ testthat::test_that("`validate_arg_preference_order()` works", {
     predictors = vi_predictors_numeric[1:10],
     preference_order = preference_df,
     function_name = NULL,
-    quiet = FALSE
+    quiet = TRUE
   )
 
   testthat::expect_true(
@@ -348,7 +350,8 @@ testthat::test_that("`validate_arg_preference_order()` works", {
       quiet = FALSE
     ),
     regexp = "argument 'response' must be of length 1"
-  )
+  ) |>
+    suppressMessages()
 
   testthat::expect_true(
     attributes(x)$validated
@@ -384,5 +387,6 @@ testthat::test_that("`validate_arg_preference_order()` works", {
       quiet = FALSE
     ),
     regexp = "argument 'response' does not match the column 'response' of the dataframe 'preference_order'"
-  )
+  ) |>
+    suppressMessages()
 })

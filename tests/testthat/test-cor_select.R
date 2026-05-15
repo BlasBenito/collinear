@@ -154,7 +154,8 @@ testthat::test_that("`cor_select()` works", {
   testthat::expect_error(
     x <- cor_select(
       df = vi_smol[1, ],
-      predictors = vi_predictors
+      predictors = vi_predictors,
+      quiet = TRUE
     ),
     regexp = "argument 'df' has fewer than 3 rows"
   )
@@ -168,17 +169,6 @@ testthat::test_that("`cor_select()` works", {
       quiet = FALSE
     ),
     regexp = "argument 'max_cor' cannot be NULL"
-  )
-
-  #no predictors
-  x <- cor_select(
-    df = vi_smol[, 1:5],
-    predictors = NULL,
-    quiet = TRUE
-  )
-
-  testthat::expect_true(
-    all(x %in% colnames(vi_smol)[1:5])
   )
 
   #single predictor

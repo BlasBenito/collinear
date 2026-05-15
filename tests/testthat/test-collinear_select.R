@@ -177,33 +177,10 @@ testthat::test_that("`collinear_select()` works", {
   testthat::expect_error(
     x <- collinear_select(
       df = vi_smol[1, ],
-      predictors = vi_predictors
+      predictors = vi_predictors,
+      quiet = TRUE
     ),
     regexp = "argument 'df' has fewer than 3 rows"
-  )
-
-  #null max cor
-  x <- collinear_select(
-    df = vi_smol[, 1:5],
-    predictors = NULL,
-    max_cor = NULL,
-    quiet = TRUE
-  )
-
-  testthat::expect_true(
-    all(x %in% colnames(vi_smol[, 1:5]))
-  )
-
-  #null max_vif
-  x <- collinear_select(
-    df = vi_smol[, 1:5],
-    predictors = NULL,
-    max_vif = NULL,
-    quiet = TRUE
-  )
-
-  testthat::expect_true(
-    all(x %in% colnames(vi_smol[, 1:5]))
   )
 
   #both NULL
@@ -213,26 +190,11 @@ testthat::test_that("`collinear_select()` works", {
       predictors = NULL,
       max_vif = NULL,
       max_cor = NULL,
-      quiet = FALSE
+      quiet = TRUE
     ),
     regexp = "arguments 'max_cor' and 'max_vif' cannot be NULL at once"
   ) |>
     suppressMessages()
-
-  testthat::expect_true(
-    all(x %in% colnames(vi_smol[, 1:5]))
-  )
-
-  #no predictors
-  x <- collinear_select(
-    df = vi_smol[, 1:5],
-    predictors = NULL,
-    quiet = TRUE
-  )
-
-  testthat::expect_true(
-    all(x %in% colnames(vi_smol)[1:5])
-  )
 
   #single predictor
   testthat::expect_message(

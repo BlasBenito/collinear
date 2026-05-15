@@ -11,6 +11,12 @@ testthat::test_that("`preference_order()` works", {
   )
 
   data(vi_smol, vi_predictors, package = "spatialData")
+
+  vi_smol <- collinear::drop_geometry_column(
+    df = vi_smol,
+    quiet = TRUE
+  )
+
   vi_predictors_numeric <- identify_numeric_variables(
     df = vi_smol,
     predictors = vi_predictors
@@ -384,7 +390,8 @@ testthat::test_that("`preference_order()` works", {
     df = vi_smol,
     responses = "vi_numeric",
     predictors = vi_predictors_numeric[1:10],
-    f = f_rsquared
+    f = f_rsquared,
+    quiet = TRUE
   )
 
   testthat::expect_true(

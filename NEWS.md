@@ -8,7 +8,7 @@
 
 - **`model_formula()`**: No longer crashes on `sf` spatial data frames with `"default method not implemented for type 'list'"`. Fixed by calling `drop_geometry_column()` early in `R/model_formula.R` before variable-type detection.
 
-- **`score_auc()` (#19)**: No longer crashes when `o` or `p` contain `NA`. Fixed by removing incomplete cases before computing `ones`/`zeros` in `R/score_auc.R`.
+- **`score_auc()`**: No longer crashes when `o` or `p` contain `NA`. Fixed by removing incomplete cases before computing `ones`/`zeros` in `R/score_auc.R`.
 
 ## Data Changes
 

@@ -2,6 +2,12 @@ testthat::test_that("`collinear()` works", {
   testthat::skip_on_cran()
   #load data
   data(vi, vi_smol, vi_responses, vi_predictors, package = "spatialData")
+
+  vi_smol <- collinear::drop_geometry_column(
+    df = vi_smol,
+    quiet = TRUE
+  )
+
   vi_predictors_numeric <- identify_numeric_variables(
     df = vi_smol,
     predictors = vi_predictors

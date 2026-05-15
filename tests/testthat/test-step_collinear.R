@@ -1,6 +1,13 @@
 test_that("step_collinear works!", {
   testthat::skip_on_cran()
 
+  data(vi_smol, package = "spatialData")
+
+  vi_smol <- collinear::drop_geometry_column(
+    df = vi_smol,
+    quiet = TRUE
+  )
+
   data(vi_smol, vi_predictors, package = "spatialData")
   vi_predictors_numeric <- identify_numeric_variables(
     df = vi_smol,
@@ -19,7 +26,8 @@ test_that("step_collinear works!", {
   vi_formula <- model_formula(
     df = vi_smol,
     response = "vi_numeric",
-    predictors = vi_predictors_numeric
+    predictors = vi_predictors_numeric,
+    quiet = TRUE
   )
 
   rec <- recipes::recipe(

@@ -16,7 +16,8 @@ testthat::test_that("`model_formula()` works", {
   testthat::expect_error(
     x <- model_formula(
       df = vi_smol,
-      response = NULL
+      response = NULL,
+      quiet = TRUE
     ),
     regexp = "argument 'response' cannot be NULL"
   )
@@ -25,7 +26,8 @@ testthat::test_that("`model_formula()` works", {
   x <- model_formula(
     df = vi_smol,
     response = "vi_numeric",
-    predictors = vi_predictors_numeric[1:3]
+    predictors = vi_predictors_numeric[1:3],
+    quiet = TRUE
   )
 
   testthat::expect_true(
@@ -48,7 +50,8 @@ testthat::test_that("`model_formula()` works", {
     response = "vi_numeric",
     predictors = vi_predictors_numeric[1:3],
     term_f = "poly",
-    term_args = "degree = 3, raw = TRUE"
+    term_args = "degree = 3, raw = TRUE",
+    quiet = TRUE
   )
 
   testthat::expect_true(
@@ -69,7 +72,8 @@ testthat::test_that("`model_formula()` works", {
     df = vi_smol,
     response = "vi_numeric",
     predictors = vi_predictors_numeric[1:3],
-    term_f = "s"
+    term_f = "s",
+    quiet = TRUE
   )
 
   testthat::expect_true(
@@ -91,7 +95,8 @@ testthat::test_that("`model_formula()` works", {
       df = vi_smol,
       response = "vi_numeric",
       predictors = vi_predictors_numeric[1:3],
-      random_effects = 2
+      random_effects = 2,
+      quiet = TRUE
     ),
     regexp = "argument 'random_effects' must be a character string or vector"
   )
@@ -101,7 +106,8 @@ testthat::test_that("`model_formula()` works", {
       df = vi_smol,
       response = "vi_numeric",
       predictors = c(vi_predictors_numeric[1:3], "country_name"),
-      random_effects = "country_name"
+      random_effects = "country_name",
+      quiet = TRUE
     ),
     regexp = "argument 'random_effects' must name variables not in argument 'predictors'"
   )
@@ -110,7 +116,8 @@ testthat::test_that("`model_formula()` works", {
     df = vi_smol,
     response = "vi_numeric",
     predictors = vi_predictors_numeric[1:3],
-    random_effects = "country_name" #from vi_smol$country_name
+    random_effects = "country_name", #from vi_smol$country_name
+    quiet = TRUE
   )
 
   testthat::expect_true(

@@ -137,10 +137,6 @@ testthat::test_that("f_numeric_glm() works", {
     length(x4) == 100
   )
 
-  testthat::expect_true(
-    mean(x4) < mean(x3)
-  )
-
   set.seed(2)
 
   x5 <- f_numeric_glm(

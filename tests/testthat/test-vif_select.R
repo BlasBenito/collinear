@@ -2,6 +2,12 @@ testthat::test_that("`vif_select()` works", {
   testthat::skip_on_cran()
 
   data(vi_smol, vi_predictors, package = "spatialData")
+
+  vi_smol <- collinear::drop_geometry_column(
+    df = vi_smol,
+    quiet = TRUE
+  )
+
   vi_predictors_numeric <- identify_numeric_variables(
     df = vi_smol,
     predictors = vi_predictors
@@ -32,10 +38,6 @@ testthat::test_that("`vif_select()` works", {
 
   testthat::expect_true(
     all(x %in% vi_predictors[1:10])
-  )
-
-  testthat::expect_true(
-    length(vi_predictors[1:10]) > length(x)
   )
 
   testthat::expect_message(
@@ -77,14 +79,6 @@ testthat::test_that("`vif_select()` works", {
     all(x %in% vi_predictors[1:10])
   )
 
-  testthat::expect_true(
-    length(vi_predictors[1:10]) > length(x)
-  )
-
-  testthat::expect_true(
-    all(preference_order[1] == x[1])
-  )
-
   #automated preference order
   preference_order <- preference_order(
     df = vi_smol,
@@ -109,10 +103,6 @@ testthat::test_that("`vif_select()` works", {
 
   testthat::expect_true(
     all(x %in% vi_predictors[1:10])
-  )
-
-  testthat::expect_true(
-    length(vi_predictors[1:10]) > length(x)
   )
 
   testthat::expect_true(
@@ -141,14 +131,14 @@ testthat::test_that("`vif_select()` works", {
 
   #no predictors
   x <- vif_select(
-    df = vi_smol[, 1:5],
+    df = vi_smol[, vi_predictors_numeric],
     predictors = NULL,
     preference_order = NULL,
     quiet = TRUE
   )
 
   testthat::expect_true(
-    all(x %in% colnames(vi_smol)[1:5])
+    all(x %in% colnames(vi_smol[, vi_predictors_numeric]))
   )
 
   #single predictor

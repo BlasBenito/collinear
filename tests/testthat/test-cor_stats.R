@@ -26,9 +26,12 @@ testthat::test_that("`cor_stats()` works", {
   #from cor_df results
   x <- cor_df(
     df = vi_smol,
-    predictors = vi_predictors_numeric[1:10]
+    predictors = vi_predictors_numeric[1:10],
+    quiet = TRUE
   ) |>
-    cor_stats()
+    cor_stats(
+      quiet = TRUE
+    )
 
   testthat::expect_true(
     is.data.frame(x)
