@@ -14,10 +14,12 @@ README_files/
 ^docs$
 ^pkgdown$
 ^vignettes/articles$
+^vignettes$
 ^README_files$
 TODO.md
 .Rprofile
 _pkgdown.yml.backup
 ^\.claude$
 ^CLAUDE\.md$
+^man/figures$
 ^man/figures/logo\.png$
