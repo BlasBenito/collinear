@@ -249,9 +249,8 @@ preference_order <- function(
     f <- NULL
   }
 
-  if (!is.null(attributes(f)$name)) {
-    f_name <- attributes(f)$name
-  }
+  #get function name
+  f_name <- attributes(f)$name
   if (is.null(f_name)) {
     f_name <- sub(".*::", "", deparse(substitute(f)))
   }
