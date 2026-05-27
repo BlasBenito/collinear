@@ -249,9 +249,16 @@ preference_order <- function(
     f <- NULL
   }
 
+  if (!is.null(attributes(f)$name)) {
+    f_name <- attributes(f)$name
+  }
+  if (is.null(f_name)) {
+    f_name <- sub(".*::", "", deparse(substitute(f)))
+  }
+
   f <- validate_arg_f(
     f = f,
-    f_name = sub(".*::", "", deparse(substitute(f))),
+    f_name = f_name,
     function_name = function_name
   )
 

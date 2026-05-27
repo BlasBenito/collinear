@@ -1,3 +1,7 @@
+# collinear 3.0.2
+
+The `preference_order` dataframe returned by `collinear()` now returns the correct metric name instead of "custom" when a known `f` function is used.
+
 # collinear 3.0.1
 
 ## Bug Fixes
