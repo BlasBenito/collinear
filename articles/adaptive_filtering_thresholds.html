@@ -12,8 +12,8 @@
 <link rel="icon" sizes="any" href="../favicon.ico">
 <link rel="manifest" href="../site.webmanifest">
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
+<link href="../deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><link href="../extra.css" rel="stylesheet">
 <meta property="og:title" content="Adaptive Filtering Thresholds">
@@ -27,7 +27,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">collinear</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.0.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.0.2</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -187,11 +187,15 @@ below show.</p>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span></span>
 <span>    <span class="va">statistic</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"quantile_0.75"</span>, <span class="st">"maximum"</span><span class="op">)</span></span>
 <span>  <span class="op">)</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; collinear::collinear_stats()</span></span>
+<span><span class="co">#&gt; └── collinear::validate_arg_df()</span></span>
+<span><span class="co">#&gt;     └── collinear::drop_geometry_column(): dropping geometry column from 'df'.</span></span>
 <span><span class="co">#&gt;        method     statistic    value</span></span>
-<span><span class="co">#&gt; 1 correlation quantile_0.75   0.6163</span></span>
-<span><span class="co">#&gt; 2 correlation       maximum   0.9893</span></span>
-<span><span class="co">#&gt; 3         vif quantile_0.75 355.9232</span></span>
-<span><span class="co">#&gt; 4         vif       maximum 554.3664</span></span></code></pre></div>
+<span><span class="co">#&gt; 1 correlation quantile_0.75   0.5646</span></span>
+<span><span class="co">#&gt; 2 correlation       maximum   0.9919</span></span>
+<span><span class="co">#&gt; 3         vif quantile_0.75 358.5660</span></span>
+<span><span class="co">#&gt; 4         vif       maximum 564.8668</span></span></code></pre></div>
 <p>Notice that the VIF scores are very large! To fix this issue can run
 these predictors through <code><a href="../reference/collinear.html">collinear()</a></code>.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
@@ -200,9 +204,13 @@ these predictors through <code><a href="../reference/collinear.html">collinear()
 <span>  predictors <span class="op">=</span> <span class="va">vi_predictors_numeric</span></span>
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; collinear::collinear(): setting 'max_cor' to 0.6161.</span></span>
+<span><span class="co">#&gt; collinear::collinear()</span></span>
+<span><span class="co">#&gt; └── collinear::validate_arg_df()</span></span>
+<span><span class="co">#&gt;     └── collinear::drop_geometry_column(): dropping geometry column from 'df'.</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; collinear::collinear(): setting 'max_vif' to 4.9877.</span></span>
+<span><span class="co">#&gt; collinear::collinear(): setting 'max_cor' to 0.5711.</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; collinear::collinear(): setting 'max_vif' to 3.9685.</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; collinear::collinear()</span></span>
 <span><span class="co">#&gt; └── collinear::validate_arg_preference_order()</span></span>
@@ -210,18 +218,17 @@ these predictors through <code><a href="../reference/collinear.html">collinear()
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; collinear::collinear(): selected predictors: </span></span>
 <span><span class="co">#&gt;  - topo_elevation</span></span>
-<span><span class="co">#&gt;  - humidity_range</span></span>
-<span><span class="co">#&gt;  - topo_diversity</span></span>
 <span><span class="co">#&gt;  - topo_slope</span></span>
 <span><span class="co">#&gt;  - soil_clay</span></span>
+<span><span class="co">#&gt;  - humidity_range</span></span>
 <span><span class="co">#&gt;  - cloud_cover_range</span></span>
 <span><span class="co">#&gt;  - soil_silt</span></span>
 <span><span class="co">#&gt;  - rainfall_min</span></span>
-<span><span class="co">#&gt;  - growing_season_temperature</span></span>
 <span><span class="co">#&gt;  - swi_max</span></span>
-<span><span class="co">#&gt;  - soil_nitrogen</span></span>
-<span><span class="co">#&gt;  - temperature_seasonality</span></span>
-<span><span class="co">#&gt;  - rainfall_max</span></span></code></pre></div>
+<span><span class="co">#&gt;  - soil_soc</span></span>
+<span><span class="co">#&gt;  - rainfall_max</span></span>
+<span><span class="co">#&gt;  - solar_rad_range</span></span>
+<span><span class="co">#&gt;  - solar_rad_max</span></span></code></pre></div>
 <p>The first two messages above indicate the values of
 <code>max_cor</code> and <code>max_vif</code> selected by
 <code><a href="../reference/collinear.html">collinear()</a></code> based on the data properties (more about that
@@ -237,10 +244,10 @@ stats are shown below.</p>
 <span>    <span class="va">statistic</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"quantile_0.75"</span>, <span class="st">"maximum"</span><span class="op">)</span></span>
 <span>  <span class="op">)</span></span>
 <span><span class="co">#&gt;        method     statistic  value</span></span>
-<span><span class="co">#&gt; 1 correlation quantile_0.75 0.3359</span></span>
-<span><span class="co">#&gt; 2 correlation       maximum 0.6139</span></span>
-<span><span class="co">#&gt; 3         vif quantile_0.75 2.4419</span></span>
-<span><span class="co">#&gt; 4         vif       maximum 3.4970</span></span></code></pre></div>
+<span><span class="co">#&gt; 1 correlation quantile_0.75 0.2929</span></span>
+<span><span class="co">#&gt; 2 correlation       maximum 0.5631</span></span>
+<span><span class="co">#&gt; 3         vif quantile_0.75 2.3006</span></span>
+<span><span class="co">#&gt; 4         vif       maximum 3.2638</span></span></code></pre></div>
 <p>These stats show much more reasonable VIF scores now.</p>
 <p>However, if you are aiming for specific multicollinearity thresholds,
 the automatic setup can be overriden by providing the desired values for
@@ -255,20 +262,24 @@ defined, it will be ignored.</p>
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; collinear::collinear()</span></span>
+<span><span class="co">#&gt; └── collinear::validate_arg_df()</span></span>
+<span><span class="co">#&gt;     └── collinear::drop_geometry_column(): dropping geometry column from 'df'.</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; collinear::collinear()</span></span>
 <span><span class="co">#&gt; └── collinear::validate_arg_preference_order()</span></span>
 <span><span class="co">#&gt;     └── collinear::preference_order(): ranking 47 'predictors' from lower to higher multicollinearity.</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; collinear::collinear(): selected predictors: </span></span>
 <span><span class="co">#&gt;  - topo_elevation</span></span>
-<span><span class="co">#&gt;  - humidity_range</span></span>
-<span><span class="co">#&gt;  - topo_diversity</span></span>
+<span><span class="co">#&gt;  - topo_slope</span></span>
 <span><span class="co">#&gt;  - soil_clay</span></span>
+<span><span class="co">#&gt;  - humidity_range</span></span>
 <span><span class="co">#&gt;  - cloud_cover_range</span></span>
 <span><span class="co">#&gt;  - soil_silt</span></span>
 <span><span class="co">#&gt;  - rainfall_min</span></span>
-<span><span class="co">#&gt;  - growing_season_temperature</span></span>
 <span><span class="co">#&gt;  - swi_max</span></span>
 <span><span class="co">#&gt;  - soil_nitrogen</span></span>
+<span><span class="co">#&gt;  - solar_rad_range</span></span>
 <span></span>
 <span><span class="fu">collinear</span><span class="fu">::</span><span class="fu"><a href="../reference/collinear_stats.html">collinear_stats</a></span><span class="op">(</span></span>
 <span>  df <span class="op">=</span> <span class="va">x</span><span class="op">$</span><span class="va">result</span><span class="op">$</span><span class="va">df</span>,</span>
@@ -278,10 +289,10 @@ defined, it will be ignored.</p>
 <span>    <span class="va">statistic</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"quantile_0.75"</span>, <span class="st">"maximum"</span><span class="op">)</span></span>
 <span>  <span class="op">)</span></span>
 <span><span class="co">#&gt;        method     statistic  value</span></span>
-<span><span class="co">#&gt; 1 correlation quantile_0.75 0.2499</span></span>
-<span><span class="co">#&gt; 2 correlation       maximum 0.4648</span></span>
-<span><span class="co">#&gt; 3         vif quantile_0.75 1.8329</span></span>
-<span><span class="co">#&gt; 4         vif       maximum 2.0830</span></span></code></pre></div>
+<span><span class="co">#&gt; 1 correlation quantile_0.75 0.2711</span></span>
+<span><span class="co">#&gt; 2 correlation       maximum 0.4754</span></span>
+<span><span class="co">#&gt; 3         vif quantile_0.75 1.6726</span></span>
+<span><span class="co">#&gt; 4         vif       maximum 1.7726</span></span></code></pre></div>
 <p>By adapting thresholds to each dataset’s structure,
 <code><a href="../reference/collinear.html">collinear()</a></code> provides sensible defaults while still allowing
 manual override when needed.</p>
@@ -336,7 +347,7 @@ where the problematic multicollinearity begins.</p>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html" class="external-link">pull</a></span><span class="op">(</span><span class="va">value</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">cor_0.75</span></span>
-<span><span class="co">#&gt; [1] 0.6163</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] 0.5646</span></span></code></pre></div>
 <p><strong>2.</strong> Sigmoid transformation of the
 <code>cor_0.75</code> value. This sigmoid function smoothly maps the
 input correlation to a bounded <code>max_cor</code> threshold.</p>
@@ -344,7 +355,7 @@ input correlation to a bounded <code>max_cor</code> threshold.</p>
 <code class="sourceCode R"><span><span class="va">max_cor</span> <span class="op">&lt;-</span> <span class="fl">0.493</span> <span class="op">+</span> <span class="fl">0.242</span> <span class="op">/</span> <span class="op">(</span><span class="fl">1</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">exp</a></span><span class="op">(</span><span class="op">-</span><span class="fl">15</span> <span class="op">*</span> <span class="op">(</span><span class="va">cor_0.75</span> <span class="op">-</span> <span class="fl">0.614</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">max_cor</span></span>
-<span><span class="co">#&gt; [1] 0.616087</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] 0.5711141</span></span></code></pre></div>
 <p>Where:</p>
 <ul>
 <li>
@@ -379,7 +390,7 @@ resulting from the transformation.</li>
 <span></span>
 <span><span class="va">max_vif</span></span>
 <span><span class="co">#&gt;        1 </span></span>
-<span><span class="co">#&gt; 4.987421</span></span></code></pre></div>
+<span><span class="co">#&gt; 3.968778</span></span></code></pre></div>
 <p>This model was fitted on the simulation results in <a href="reference/experiment_cor_vs_vif.html"><code>experiment_cor_vs_vif</code></a>,
 where both filtering methods were applied across 10,000 random dataset
 configurations. For each <code>max_cor</code> value, the

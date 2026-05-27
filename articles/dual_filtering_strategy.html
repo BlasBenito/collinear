@@ -12,8 +12,8 @@
 <link rel="icon" sizes="any" href="../favicon.ico">
 <link rel="manifest" href="../site.webmanifest">
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
+<link href="../deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><link href="../extra.css" rel="stylesheet">
 <meta property="og:title" content="Dual Filtering Strategy">
@@ -27,7 +27,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">collinear</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.0.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.0.2</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -172,14 +172,14 @@ ordered after the argument <code>preference_order</code>.</p>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">m</span>, <span class="fl">2</span><span class="op">)</span></span>
 <span><span class="co">#&gt;                       swi_mean soil_temperature_mean rainfall_mean</span></span>
-<span><span class="co">#&gt; swi_mean                  1.00                 -0.18          0.66</span></span>
-<span><span class="co">#&gt; soil_temperature_mean    -0.18                  1.00          0.05</span></span>
-<span><span class="co">#&gt; rainfall_mean             0.66                  0.05          1.00</span></span>
-<span><span class="co">#&gt; growing_season_length     0.88                 -0.06          0.78</span></span>
+<span><span class="co">#&gt; swi_mean                  1.00                 -0.21          0.56</span></span>
+<span><span class="co">#&gt; soil_temperature_mean    -0.21                  1.00          0.12</span></span>
+<span><span class="co">#&gt; rainfall_mean             0.56                  0.12          1.00</span></span>
+<span><span class="co">#&gt; growing_season_length     0.81                 -0.04          0.73</span></span>
 <span><span class="co">#&gt;                       growing_season_length</span></span>
-<span><span class="co">#&gt; swi_mean                               0.88</span></span>
-<span><span class="co">#&gt; soil_temperature_mean                 -0.06</span></span>
-<span><span class="co">#&gt; rainfall_mean                          0.78</span></span>
+<span><span class="co">#&gt; swi_mean                               0.81</span></span>
+<span><span class="co">#&gt; soil_temperature_mean                 -0.04</span></span>
+<span><span class="co">#&gt; rainfall_mean                          0.73</span></span>
 <span><span class="co">#&gt; growing_season_length                  1.00</span></span></code></pre></div>
 <p>The first predictor in <code>preference_order</code> is added to
 <code>selected</code> while the remaining ones go to
@@ -299,6 +299,10 @@ selection.</p>
 <span>  max_cor <span class="op">=</span> <span class="fl">0.7</span>,</span>
 <span>  max_vif <span class="op">=</span> <span class="fl">5</span></span>
 <span><span class="op">)</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; collinear::collinear_select()</span></span>
+<span><span class="co">#&gt; └── collinear::validate_arg_df()</span></span>
+<span><span class="co">#&gt;     └── collinear::drop_geometry_column(): dropping geometry column from 'df'.</span></span>
 <span><span class="co">#&gt; [1] "swi_mean"              "soil_temperature_mean" "rainfall_mean"        </span></span>
 <span><span class="co">#&gt; attr(,"validated")</span></span>
 <span><span class="co">#&gt; [1] TRUE</span></span></code></pre></div>

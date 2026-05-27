@@ -12,8 +12,8 @@
 <link rel="icon" sizes="any" href="../favicon.ico">
 <link rel="manifest" href="../site.webmanifest">
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
+<link href="../deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><link href="../extra.css" rel="stylesheet">
 <meta property="og:title" content="Unified Correlation Framework">
@@ -27,7 +27,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">collinear</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.0.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.0.2</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -132,12 +132,12 @@ association between all unique pairs of predictors.</p>
 <span></span>
 <span><span class="va">x</span></span>
 <span><span class="co">#&gt;                  x             y correlation     metric</span></span>
-<span><span class="co">#&gt; 1 temperature_mean   koppen_zone   0.9247202    Pearson</span></span>
-<span><span class="co">#&gt; 2    rainfall_mean   koppen_zone   0.8427524    Pearson</span></span>
-<span><span class="co">#&gt; 3    rainfall_mean     soil_type   0.6730865    Pearson</span></span>
-<span><span class="co">#&gt; 4 temperature_mean     soil_type   0.6327089    Pearson</span></span>
-<span><span class="co">#&gt; 5      koppen_zone     soil_type   0.3109082 Cramer's V</span></span>
-<span><span class="co">#&gt; 6 temperature_mean rainfall_mean   0.2159485    Pearson</span></span></code></pre></div>
+<span><span class="co">#&gt; 1 temperature_mean   koppen_zone   0.9193102    Pearson</span></span>
+<span><span class="co">#&gt; 2    rainfall_mean   koppen_zone   0.8323873    Pearson</span></span>
+<span><span class="co">#&gt; 3 temperature_mean     soil_type   0.6706362    Pearson</span></span>
+<span><span class="co">#&gt; 4    rainfall_mean     soil_type   0.5921808    Pearson</span></span>
+<span><span class="co">#&gt; 5      koppen_zone     soil_type   0.3183130 Cramer's V</span></span>
+<span><span class="co">#&gt; 6 temperature_mean rainfall_mean   0.2575327    Pearson</span></span></code></pre></div>
 <p>Let’s examine how the function handles different predictor types.</p>
 <div class="section level3">
 <h3 id="numeric-vs--numeric">Numeric vs. Numeric<a class="anchor" aria-label="anchor" href="#numeric-vs--numeric"></a>
@@ -159,8 +159,8 @@ fast <code><a href="https://rdrr.io/r/stats/cor.html" class="external-link">stat
 <span><span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">abs</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt;                  temperature_mean rainfall_mean</span></span>
-<span><span class="co">#&gt; temperature_mean        1.0000000     0.2159485</span></span>
-<span><span class="co">#&gt; rainfall_mean           0.2159485     1.0000000</span></span></code></pre></div>
+<span><span class="co">#&gt; temperature_mean        1.0000000     0.2575327</span></span>
+<span><span class="co">#&gt; rainfall_mean           0.2575327     1.0000000</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="numeric-vs--categorical">Numeric vs. Categorical<a class="anchor" aria-label="anchor" href="#numeric-vs--categorical"></a>
@@ -187,7 +187,7 @@ correlation.</p>
 <span>  method <span class="op">=</span> <span class="st">"pearson"</span></span>
 <span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">abs</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 0.9247202</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] 0.9193102</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="categorical-vs--categorical">Categorical vs. Categorical<a class="anchor" aria-label="anchor" href="#categorical-vs--categorical"></a>
@@ -200,7 +200,7 @@ the function <code><a href="../reference/cor_cramer.html">cor_cramer()</a></code
 <span>  x <span class="op">=</span> <span class="va">vi_smol</span><span class="op">[[</span><span class="st">"koppen_zone"</span><span class="op">]</span><span class="op">]</span>,</span>
 <span>  y <span class="op">=</span> <span class="va">vi_smol</span><span class="op">[[</span><span class="st">"soil_type"</span><span class="op">]</span><span class="op">]</span></span>
 <span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 0.3109082</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] 0.318313</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="comparing-cramers-v-and-pearson-correlation">Comparing Cramer’s V and Pearson Correlation<a class="anchor" aria-label="anchor" href="#comparing-cramers-v-and-pearson-correlation"></a>
