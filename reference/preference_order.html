@@ -265,10 +265,21 @@ constant/near-zero-variance columns are used. Default: NULL.</p></dd>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> collinear::preference_order()</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> └── collinear::validate_arg_df()</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>     └── collinear::drop_geometry_column(): dropping geometry column from 'df'.</span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in preference_order(df = vi_smol, responses = NULL, predictors = vi_predictors_numeric[1:10],     f = NULL):</span> object 'f_name' not found</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> collinear::preference_order(): ranking 10 'predictors' from lower to higher multicollinearity.</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">x</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> object 'x' not found</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    response             predictor            f        metric  score rank</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1      none        topo_elevation stats::cor() 1 - R-squared 0.7977    1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2      none        topo_diversity stats::cor() 1 - R-squared 0.7737    2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3      none            topo_slope stats::cor() 1 - R-squared 0.7730    3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4      none             swi_range stats::cor() 1 - R-squared 0.7662    4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5      none  soil_temperature_min stats::cor() 1 - R-squared 0.7249    5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6      none               swi_max stats::cor() 1 - R-squared 0.6664    6</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7      none              swi_mean stats::cor() 1 - R-squared 0.6635    7</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8      none  soil_temperature_max stats::cor() 1 - R-squared 0.6330    8</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9      none soil_temperature_mean stats::cor() 1 - R-squared 0.6180    9</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10     none               swi_min stats::cor() 1 - R-squared 0.6147   10</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#automatic selection of ranking function</span></span></span>
 <span class="r-in"><span><span class="co">#------------------------------------------------</span></span></span>
@@ -290,10 +301,41 @@ constant/near-zero-variance columns are used. Default: NULL.</p></dd>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> collinear::preference_order()</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> └── collinear::validate_arg_responses(): argument 'response' must be of length 1, using response: </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>  - vi_numeric</span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in preference_order(df = vi_smol, responses = c("vi_numeric", "vi_categorical"),     predictors = vi_predictors_numeric[1:10], f = f_auto):</span> object 'f_name' not found</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> collinear::preference_order(): processing response 'vi_numeric'.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> ----------------------------------------------------------------</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> collinear::preference_order()</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> └── collinear::f_auto(): selected function 'f_numeric_glm()' to compute preference order.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> collinear::preference_order(): processing response 'vi_categorical'.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> --------------------------------------------------------------------</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> collinear::preference_order()</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> └── collinear::f_auto(): selected function 'f_categorical_rf()' to compute preference order.</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">x</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> object 'x' not found</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          response             predictor                f     metric  score rank</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1      vi_numeric              swi_mean    f_numeric_glm  R-squared 0.6072    1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2      vi_numeric  soil_temperature_max    f_numeric_glm  R-squared 0.4455    2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3      vi_numeric               swi_max    f_numeric_glm  R-squared 0.4351    3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4      vi_numeric             swi_range    f_numeric_glm  R-squared 0.2270    4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5      vi_numeric               swi_min    f_numeric_glm  R-squared 0.1596    5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6      vi_numeric        topo_diversity    f_numeric_glm  R-squared 0.0992    6</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7      vi_numeric  soil_temperature_min    f_numeric_glm  R-squared 0.0647    7</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8      vi_numeric        topo_elevation    f_numeric_glm  R-squared 0.0412    8</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9      vi_numeric            topo_slope    f_numeric_glm  R-squared 0.0145    9</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10     vi_numeric soil_temperature_mean    f_numeric_glm  R-squared 0.0099   10</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 11 vi_categorical              swi_mean f_categorical_rf Cramer's V 0.5707    1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 12 vi_categorical               swi_max f_categorical_rf Cramer's V 0.5431    2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 13 vi_categorical  soil_temperature_max f_categorical_rf Cramer's V 0.5131    3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 14 vi_categorical             swi_range f_categorical_rf Cramer's V 0.4467    4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 15 vi_categorical               swi_min f_categorical_rf Cramer's V 0.4301    5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 16 vi_categorical soil_temperature_mean f_categorical_rf Cramer's V 0.3957    6</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 17 vi_categorical  soil_temperature_min f_categorical_rf Cramer's V 0.3512    7</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 18 vi_categorical        topo_elevation f_categorical_rf Cramer's V 0.3381    8</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 19 vi_categorical        topo_diversity f_categorical_rf Cramer's V 0.1856    9</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 20 vi_categorical            topo_slope f_categorical_rf Cramer's V 0.1221   10</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#user selection of ranking function</span></span></span>
 <span class="r-in"><span><span class="co">#------------------------------------------------</span></span></span>
@@ -308,10 +350,19 @@ constant/near-zero-variance columns are used. Default: NULL.</p></dd>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> collinear::preference_order()</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> └── collinear::validate_arg_df()</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>     └── collinear::drop_geometry_column(): dropping geometry column from 'df'.</span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in preference_order(df = vi_smol, responses = "vi_binomial", predictors = vi_predictors_numeric[1:10],     f = f_binomial_glm):</span> object 'f_name' not found</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">x</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> object 'x' not found</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       response             predictor              f metric  score rank</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1  vi_binomial              swi_mean f_binomial_glm    AUC 0.8575    1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2  vi_binomial  soil_temperature_max f_binomial_glm    AUC 0.8293    2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3  vi_binomial               swi_max f_binomial_glm    AUC 0.7037    3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4  vi_binomial               swi_min f_binomial_glm    AUC 0.6996    4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5  vi_binomial        topo_diversity f_binomial_glm    AUC 0.6717    5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6  vi_binomial  soil_temperature_min f_binomial_glm    AUC 0.6572    6</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7  vi_binomial             swi_range f_binomial_glm    AUC 0.6533    7</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8  vi_binomial            topo_slope f_binomial_glm    AUC 0.5639    8</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9  vi_binomial soil_temperature_mean f_binomial_glm    AUC 0.5632    9</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10 vi_binomial        topo_elevation f_binomial_glm    AUC 0.5475   10</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#cross-validation</span></span></span>
 <span class="r-in"><span><span class="co">#------------------------------------------------</span></span></span>
@@ -327,10 +378,19 @@ constant/near-zero-variance columns are used. Default: NULL.</p></dd>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> collinear::preference_order()</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> └── collinear::validate_arg_df()</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>     └── collinear::drop_geometry_column(): dropping geometry column from 'df'.</span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in preference_order(df = vi_smol, responses = "vi_binomial", predictors = vi_predictors_numeric[1:10],     f = f_binomial_glm, cv_training_fraction = 0.5, cv_iterations = 10):</span> object 'f_name' not found</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">x</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> object 'x' not found</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       response             predictor              f metric  score rank</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1  vi_binomial              swi_mean f_binomial_glm    AUC 0.8551    1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2  vi_binomial  soil_temperature_max f_binomial_glm    AUC 0.8233    2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3  vi_binomial               swi_min f_binomial_glm    AUC 0.6964    3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4  vi_binomial               swi_max f_binomial_glm    AUC 0.6938    4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5  vi_binomial        topo_diversity f_binomial_glm    AUC 0.6680    5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6  vi_binomial             swi_range f_binomial_glm    AUC 0.6571    6</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7  vi_binomial  soil_temperature_min f_binomial_glm    AUC 0.6490    7</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8  vi_binomial            topo_slope f_binomial_glm    AUC 0.5560    8</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9  vi_binomial        topo_elevation f_binomial_glm    AUC 0.5501    9</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10 vi_binomial soil_temperature_mean f_binomial_glm    AUC 0.4966   10</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#custom pairwise correlation function</span></span></span>
 <span class="r-in"><span><span class="co">#------------------------------------------------</span></span></span>
@@ -353,10 +413,19 @@ constant/near-zero-variance columns are used. Default: NULL.</p></dd>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> collinear::preference_order()</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> └── collinear::validate_arg_df()</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>     └── collinear::drop_geometry_column(): dropping geometry column from 'df'.</span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in preference_order(df = vi_smol, responses = "vi_numeric", predictors = vi_predictors_numeric[1:10],     f = f_rsquared):</span> object 'f_name' not found</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">x</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> object 'x' not found</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>      response             predictor          f metric  score rank</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1  vi_numeric              swi_mean f_rsquared custom 0.6072    1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2  vi_numeric  soil_temperature_max f_rsquared custom 0.4455    2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3  vi_numeric               swi_max f_rsquared custom 0.4351    3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4  vi_numeric             swi_range f_rsquared custom 0.2270    4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5  vi_numeric               swi_min f_rsquared custom 0.1596    5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6  vi_numeric        topo_diversity f_rsquared custom 0.0992    6</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7  vi_numeric  soil_temperature_min f_rsquared custom 0.0647    7</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8  vi_numeric        topo_elevation f_rsquared custom 0.0412    8</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9  vi_numeric            topo_slope f_rsquared custom 0.0145    9</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10 vi_numeric soil_temperature_mean f_rsquared custom 0.0099   10</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#resetting to sequential processing</span></span></span>
 <span class="r-in"><span><span class="co">#future::plan(future::sequential)</span></span></span>

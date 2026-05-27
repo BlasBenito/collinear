@@ -206,10 +206,21 @@ predictors whose VIF against the current selection is below <code>max_vif</code>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> collinear::collinear_select()</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> └── collinear::cor_matrix()</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>     └── collinear::cor_df(): 2 categorical predictors have cardinality &gt; 2 and may bias the multicollinearity analysis. Applying target encoding to convert them to numeric will solve this issue.</span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in preference_order(df = df, responses = response, predictors = predictors_missing,     f = NULL, quiet = quiet, function_name = function_name):</span> object 'f_name' not found</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> collinear::collinear_select()</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> └── collinear::validate_arg_preference_order()</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>     └── collinear::preference_order(): ranking 4 'predictors' from lower to higher multicollinearity.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> collinear::collinear_select()</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> └── collinear::validate_arg_preference_order()</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>     └── collinear::preference_order()</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>         └── collinear::cor_matrix()</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>             └── collinear::cor_df(): 2 categorical predictors have cardinality &gt; 2 and may bias the multicollinearity analysis. Applying target encoding to convert them to numeric will solve this issue.</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">x</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> object 'x' not found</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "topo_elevation" "soil_type"      "koppen_zone"   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"validated")</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## OPTIONAL: disable parallelization</span></span></span>
 <span class="r-in"><span><span class="co">#future::plan(future::sequential)</span></span></span>

@@ -162,7 +162,10 @@ constant/near-zero-variance columns are used. Default: NULL.</p></dd>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> collinear::collinear_select()</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> └── collinear::validate_arg_df()</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>     └── collinear::drop_geometry_column(): dropping geometry column from 'df'.</span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in preference_order(df = df, responses = response, predictors = predictors_missing,     f = NULL, quiet = quiet, function_name = function_name):</span> object 'f_name' not found</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> collinear::collinear_select()</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> └── collinear::validate_arg_preference_order()</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>     └── collinear::preference_order(): ranking 47 'predictors' from lower to higher multicollinearity.</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#additive formula</span></span></span>
 <span class="r-in"><span><span class="va">y</span> <span class="op">&lt;-</span> <span class="fu">model_formula</span><span class="op">(</span></span></span>
@@ -173,20 +176,54 @@ constant/near-zero-variance columns are used. Default: NULL.</p></dd>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> collinear::model_formula()</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> └── collinear::drop_geometry_column(): dropping geometry column from 'df'.</span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> object 'x' not found</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">y</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> object 'y' not found</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> vi_numeric ~ topo_elevation + topo_slope + soil_clay + topo_diversity + </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     humidity_range + cloud_cover_range + swi_range + soil_silt + </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     rainfall_min + rainfall_range + soil_soc + swi_mean + solar_rad_range + </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     solar_rad_max + temperature_max</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x55db44bfe418&gt;</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#using a formula in a model</span></span></span>
 <span class="r-in"><span><span class="va">m</span> <span class="op">&lt;-</span> <span class="fu">stats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span></span></span>
 <span class="r-in"><span> formula <span class="op">=</span> <span class="va">y</span>,</span></span>
 <span class="r-in"><span> data <span class="op">=</span> <span class="va">vi_smol</span></span></span>
 <span class="r-in"><span> <span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in eval(mf, parent.frame()):</span> object 'y' not found</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">m</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> object 'm' not found</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Call:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> stats::lm(formula = y, data = vi_smol)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Residuals:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       Min        1Q    Median        3Q       Max </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> -0.280253 -0.053727  0.004544  0.053260  0.268436 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Coefficients:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                     Estimate Std. Error t value Pr(&gt;|t|)    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> (Intercept)        1.407e-01  6.682e-02   2.106 0.035645 *  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> topo_elevation    -2.859e-05  8.769e-06  -3.260 0.001180 ** </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> topo_slope         3.367e-03  1.319e-03   2.553 0.010940 *  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> soil_clay         -1.859e-04  5.068e-04  -0.367 0.713921    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> topo_diversity     4.302e-03  9.956e-04   4.322 1.83e-05 ***</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> humidity_range    -4.322e-03  6.997e-04  -6.177 1.25e-09 ***</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> cloud_cover_range  7.861e-04  3.645e-04   2.157 0.031427 *  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> swi_range          2.869e-03  4.160e-04   6.897 1.43e-11 ***</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> soil_silt         -1.354e-03  3.848e-04  -3.519 0.000467 ***</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> rainfall_min       7.734e-04  1.243e-04   6.223 9.54e-10 ***</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> rainfall_range     1.297e-04  3.911e-05   3.316 0.000971 ***</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> soil_soc           3.653e-04  2.260e-04   1.616 0.106588    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> swi_mean           5.618e-03  4.375e-04  12.840  &lt; 2e-16 ***</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> solar_rad_range   -2.840e-03  1.091e-03  -2.603 0.009477 ** </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> solar_rad_max      1.744e-03  1.940e-03   0.899 0.369004    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> temperature_max   -3.778e-03  1.357e-03  -2.784 0.005544 ** </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ---</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Residual standard error: 0.08573 on 564 degrees of freedom</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Multiple R-squared:  0.7792,	Adjusted R-squared:  0.7733 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> F-statistic: 132.7 on 15 and 564 DF,  p-value: &lt; 2.2e-16</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#classification formula (character response)</span></span></span>
 <span class="r-in"><span><span class="va">y</span> <span class="op">&lt;-</span> <span class="fu">model_formula</span><span class="op">(</span></span></span>
@@ -197,10 +234,13 @@ constant/near-zero-variance columns are used. Default: NULL.</p></dd>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> collinear::model_formula()</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> └── collinear::drop_geometry_column(): dropping geometry column from 'df'.</span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> object 'x' not found</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">y</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> object 'y' not found</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> vi_categorical ~ topo_elevation + topo_slope + soil_clay + topo_diversity + </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     humidity_range + cloud_cover_range + swi_range + soil_silt + </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     rainfall_min + rainfall_range + soil_soc + swi_mean + solar_rad_range + </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     solar_rad_max + temperature_max</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x55db44bfe418&gt;</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#polynomial formula (3rd degree)</span></span></span>
@@ -214,10 +254,20 @@ constant/near-zero-variance columns are used. Default: NULL.</p></dd>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> collinear::model_formula()</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> └── collinear::drop_geometry_column(): dropping geometry column from 'df'.</span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> object 'x' not found</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">y</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> object 'y' not found</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> vi_numeric ~ poly(topo_elevation, degree = 3, raw = TRUE) + poly(topo_slope, </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     degree = 3, raw = TRUE) + poly(soil_clay, degree = 3, raw = TRUE) + </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     poly(topo_diversity, degree = 3, raw = TRUE) + poly(humidity_range, </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     degree = 3, raw = TRUE) + poly(cloud_cover_range, degree = 3, </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     raw = TRUE) + poly(swi_range, degree = 3, raw = TRUE) + poly(soil_silt, </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     degree = 3, raw = TRUE) + poly(rainfall_min, degree = 3, </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     raw = TRUE) + poly(rainfall_range, degree = 3, raw = TRUE) + </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     poly(soil_soc, degree = 3, raw = TRUE) + poly(swi_mean, degree = 3, </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     raw = TRUE) + poly(solar_rad_range, degree = 3, raw = TRUE) + </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     poly(solar_rad_max, degree = 3, raw = TRUE) + poly(temperature_max, </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     degree = 3, raw = TRUE)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x55db44bfe418&gt;</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#gam formula</span></span></span>
 <span class="r-in"><span><span class="va">y</span> <span class="op">&lt;-</span> <span class="fu">model_formula</span><span class="op">(</span></span></span>
@@ -229,10 +279,14 @@ constant/near-zero-variance columns are used. Default: NULL.</p></dd>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> collinear::model_formula()</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> └── collinear::drop_geometry_column(): dropping geometry column from 'df'.</span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> object 'x' not found</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">y</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> object 'y' not found</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> vi_numeric ~ s(topo_elevation) + s(topo_slope) + s(soil_clay) + </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     s(topo_diversity) + s(humidity_range) + s(cloud_cover_range) + </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     s(swi_range) + s(soil_silt) + s(rainfall_min) + s(rainfall_range) + </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     s(soil_soc) + s(swi_mean) + s(solar_rad_range) + s(solar_rad_max) + </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     s(temperature_max)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x55db44bfe418&gt;</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#random effect</span></span></span>
 <span class="r-in"><span><span class="va">y</span> <span class="op">&lt;-</span> <span class="fu">model_formula</span><span class="op">(</span></span></span>
@@ -244,10 +298,13 @@ constant/near-zero-variance columns are used. Default: NULL.</p></dd>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> collinear::model_formula()</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> └── collinear::drop_geometry_column(): dropping geometry column from 'df'.</span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> object 'x' not found</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">y</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> object 'y' not found</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> vi_numeric ~ topo_elevation + topo_slope + soil_clay + topo_diversity + </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     humidity_range + cloud_cover_range + swi_range + soil_silt + </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     rainfall_min + rainfall_range + soil_soc + swi_mean + solar_rad_range + </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     solar_rad_max + temperature_max + (1 | country_name)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x55db44bfe418&gt;</span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

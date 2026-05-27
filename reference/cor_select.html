@@ -189,10 +189,23 @@ below <code>max_cor</code>.</p>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> └── collinear::collinear_select()</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>     └── collinear::cor_matrix()</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>         └── collinear::cor_df(): 2 categorical predictors have cardinality &gt; 2 and may bias the multicollinearity analysis. Applying target encoding to convert them to numeric will solve this issue.</span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in preference_order(df = df, responses = response, predictors = predictors_missing,     f = NULL, quiet = quiet, function_name = function_name):</span> object 'f_name' not found</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> collinear::cor_select()</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> └── collinear::collinear_select()</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>     └── collinear::validate_arg_preference_order()</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>         └── collinear::preference_order(): ranking 4 'predictors' from lower to higher multicollinearity.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> collinear::cor_select()</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> └── collinear::collinear_select()</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>     └── collinear::validate_arg_preference_order()</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>         └── collinear::preference_order()</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>             └── collinear::cor_matrix()</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>                 └── collinear::cor_df(): 2 categorical predictors have cardinality &gt; 2 and may bias the multicollinearity analysis. Applying target encoding to convert them to numeric will solve this issue.</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">x</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> object 'x' not found</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "topo_elevation" "soil_type"      "koppen_zone"   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"validated")</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#with custom preference order</span></span></span>
@@ -220,10 +233,16 @@ below <code>max_cor</code>.</p>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> └── collinear::collinear_select()</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>     └── collinear::cor_matrix()</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>         └── collinear::cor_df(): 2 categorical predictors have cardinality &gt; 2 and may bias the multicollinearity analysis. Applying target encoding to convert them to numeric will solve this issue.</span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in preference_order(df = df, responses = response, predictors = predictors_missing,     f = NULL, quiet = quiet, function_name = function_name):</span> object 'f_name' not found</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> collinear::cor_select()</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> └── collinear::collinear_select()</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>     └── collinear::validate_arg_preference_order()</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>         └── collinear::preference_order(): ranking 2 'predictors' from lower to higher multicollinearity.</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">x</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> object 'x' not found</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "koppen_zone"    "soil_type"      "topo_elevation"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"validated")</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#with automated preference order</span></span></span>
 <span class="r-in"><span><span class="va">df_preference</span> <span class="op">&lt;-</span> <span class="fu"><a href="preference_order.html">preference_order</a></span><span class="op">(</span></span></span>
@@ -239,10 +258,16 @@ below <code>max_cor</code>.</p>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> collinear::preference_order()</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> └── collinear::validate_arg_df(): converted the following character columns to factor:</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>  - koppen_zone</span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in preference_order(df = vi_smol, response = "vi_numeric", predictors = predictors):</span> object 'f_name' not found</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> collinear::preference_order()</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> └── collinear::f_auto(): selected function 'f_numeric_rf()' to compute preference order.</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">df_preference</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> object 'df_preference' not found</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     response             predictor            f    metric  score rank</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 vi_numeric           koppen_zone f_numeric_rf R-squared 0.7065    1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2 vi_numeric             soil_type f_numeric_rf R-squared 0.4792    2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3 vi_numeric soil_temperature_mean f_numeric_rf R-squared 0.4180    3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4 vi_numeric        topo_elevation f_numeric_rf R-squared 0.3966    4</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu">cor_select</span><span class="op">(</span></span></span>
 <span class="r-in"><span>  df <span class="op">=</span> <span class="va">vi_smol</span>,</span></span>
@@ -265,10 +290,11 @@ below <code>max_cor</code>.</p>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> └── collinear::collinear_select()</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>     └── collinear::cor_matrix()</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>         └── collinear::cor_df(): 2 categorical predictors have cardinality &gt; 2 and may bias the multicollinearity analysis. Applying target encoding to convert them to numeric will solve this issue.</span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> object 'df_preference' not found</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">x</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> object 'x' not found</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "koppen_zone"    "soil_type"      "topo_elevation"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"validated")</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#OPTIONAL: disable parallelization</span></span></span>
 <span class="r-in"><span><span class="co">#future::plan(future::sequential)</span></span></span>
