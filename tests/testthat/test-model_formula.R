@@ -139,4 +139,13 @@ testthat::test_that("`model_formula()` works", {
   testthat::expect_true(
     inherits(x = x, what = "formula")
   )
+
+  # formula environment must be tiny (no captured call-frame data)
+  x <- model_formula(
+    df = vi_smol,
+    response = "vi_numeric",
+    predictors = vi_predictors_numeric[1:3],
+    quiet = TRUE
+  )
+  testthat::expect_lt(as.numeric(object.size(environment(x))), 50000)
 })

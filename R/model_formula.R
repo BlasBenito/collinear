@@ -301,7 +301,10 @@ model_formula <- function(
   ) |>
     stats::as.formula()
 
-  environment(out) <- parent.frame()
+  env <- new.env(parent = baseenv())
+  env$poly <- stats::poly
+  env$s    <- mgcv::s
+  environment(out) <- env
 
   out
 }
