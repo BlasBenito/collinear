@@ -66,10 +66,7 @@
 
 
 <dl><dt id="arg-df">df<a class="anchor" aria-label="anchor" href="#arg-df"></a></dt>
-<dd><p>(required; dataframe, tibble, or sf) A dataframe with responses
-(optional) and predictors. Must have at least 10 rows for pairwise
-correlation analysis, and <code>10 * (length(predictors) - 1)</code> for VIF.
-Default: NULL.</p></dd>
+<dd><p>(required; dataframe, tibble, or sf) A dataframe with responses (optional) and predictors. Must have at least 10 rows for pairwise correlation analysis, and <code>10 * (length(predictors) - 1)</code> for VIF. Default: NULL.</p></dd>
 
 
 <dt id="arg-response">response<a class="anchor" aria-label="anchor" href="#arg-response"></a></dt>
@@ -77,9 +74,7 @@ Default: NULL.</p></dd>
 
 
 <dt id="arg-predictors">predictors<a class="anchor" aria-label="anchor" href="#arg-predictors"></a></dt>
-<dd><p>(optional; character vector or NULL) Names of the
-predictors in <code>df</code>. If NULL, all columns except <code>responses</code> and
-constant/near-zero-variance columns are used. Default: NULL.</p></dd>
+<dd><p>(optional; character vector or NULL) Names of the predictors in <code>df</code>. If NULL, all columns except <code>responses</code> and constant/near-zero-variance columns are used. Default: NULL.</p></dd>
 
 
 <dt id="arg-quiet">quiet<a class="anchor" aria-label="anchor" href="#arg-quiet"></a></dt>
@@ -87,9 +82,7 @@ constant/near-zero-variance columns are used. Default: NULL.</p></dd>
 
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
-<dd><p>(optional) Internal args (e.g. <code>function_name</code> for
-<code><a href="validate_arg_function_name.html">validate_arg_function_name</a></code>, a precomputed correlation matrix
-<code>m</code>, or cross-validation args for <code><a href="preference_order.html">preference_order</a></code>).</p></dd>
+<dd><p>(optional) Internal args (e.g. <code>function_name</code> for <code><a href="validate_arg_function_name.html">validate_arg_function_name</a></code>, a precomputed correlation matrix <code>m</code>, or cross-validation args for <code><a href="preference_order.html">preference_order</a></code>).</p></dd>
 
 </dl></div>
     <div class="section level2">

@@ -83,10 +83,7 @@ Please check the sections Variance Inflation Factors and VIF-based Filtering at 
 
 
 <dl><dt id="arg-df">df<a class="anchor" aria-label="anchor" href="#arg-df"></a></dt>
-<dd><p>(required; dataframe, tibble, or sf) A dataframe with responses
-(optional) and predictors. Must have at least 10 rows for pairwise
-correlation analysis, and <code>10 * (length(predictors) - 1)</code> for VIF.
-Default: NULL.</p></dd>
+<dd><p>(required; dataframe, tibble, or sf) A dataframe with responses (optional) and predictors. Must have at least 10 rows for pairwise correlation analysis, and <code>10 * (length(predictors) - 1)</code> for VIF. Default: NULL.</p></dd>
 
 
 <dt id="arg-response">response<a class="anchor" aria-label="anchor" href="#arg-response"></a></dt>
@@ -94,14 +91,11 @@ Default: NULL.</p></dd>
 
 
 <dt id="arg-predictors">predictors<a class="anchor" aria-label="anchor" href="#arg-predictors"></a></dt>
-<dd><p>(optional; character vector or NULL) Names of the
-predictors in <code>df</code>. If NULL, all columns except <code>responses</code> and
-constant/near-zero-variance columns are used. Default: NULL.</p></dd>
+<dd><p>(optional; character vector or NULL) Names of the predictors in <code>df</code>. If NULL, all columns except <code>responses</code> and constant/near-zero-variance columns are used. Default: NULL.</p></dd>
 
 
 <dt id="arg-preference-order">preference_order<a class="anchor" aria-label="anchor" href="#arg-preference-order"></a></dt>
-<dd><p>(optional; character vector, dataframe from
-<code><a href="preference_order.html">preference_order</a></code>, or NULL) Prioritizes predictors to preserve.</p></dd>
+<dd><p>(optional; character vector, dataframe from <code><a href="preference_order.html">preference_order</a></code>, or NULL) Prioritizes predictors to preserve.</p></dd>
 
 
 <dt id="arg-max-vif">max_vif<a class="anchor" aria-label="anchor" href="#arg-max-vif"></a></dt>
@@ -113,9 +107,7 @@ constant/near-zero-variance columns are used. Default: NULL.</p></dd>
 
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
-<dd><p>(optional) Internal args (e.g. <code>function_name</code> for
-<code><a href="validate_arg_function_name.html">validate_arg_function_name</a></code>, a precomputed correlation matrix
-<code>m</code>, or cross-validation args for <code><a href="preference_order.html">preference_order</a></code>).</p></dd>
+<dd><p>(optional) Internal args (e.g. <code>function_name</code> for <code><a href="validate_arg_function_name.html">validate_arg_function_name</a></code>, a precomputed correlation matrix <code>m</code>, or cross-validation args for <code><a href="preference_order.html">preference_order</a></code>).</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -127,18 +119,14 @@ constant/near-zero-variance columns are used. Default: NULL.</p></dd>
 
 
 
-<p>VIF for predictor \(a\) is computed as \(1/(1-R^2)\), where \(R^2\) is
-the multiple R-squared from regressing \(a\) on the other predictors.
-Recommended maximums commonly used are 2.5, 5, and 10.</p>
+<p>VIF for predictor \(a\) is computed as \(1/(1-R^2)\), where \(R^2\) is the multiple R-squared from regressing \(a\) on the other predictors. Recommended maximums commonly used are 2.5, 5, and 10.</p>
     </div>
     <div class="section level2">
     <h2 id="vif-based-filtering">VIF-based Filtering<a class="anchor" aria-label="anchor" href="#vif-based-filtering"></a></h2>
 
 
 
-<p><code>vif_select</code> ranks numeric predictors (user <code>preference_order</code>
-if provided, otherwise from lower to higher VIF) and sequentially adds
-predictors whose VIF against the current selection is below <code>max_vif</code>.</p>
+<p><code>vif_select</code> ranks numeric predictors (user <code>preference_order</code> if provided, otherwise from lower to higher VIF) and sequentially adds predictors whose VIF against the current selection is below <code>max_vif</code>.</p>
     </div>
     <div class="section level2">
     <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a></h2>

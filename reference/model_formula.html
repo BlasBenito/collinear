@@ -93,10 +93,7 @@ random effect: y ~ x + (1 \ z)
 
 
 <dl><dt id="arg-df">df<a class="anchor" aria-label="anchor" href="#arg-df"></a></dt>
-<dd><p>(required; dataframe, tibble, or sf) A dataframe with responses
-(optional) and predictors. Must have at least 10 rows for pairwise
-correlation analysis, and <code>10 * (length(predictors) - 1)</code> for VIF.
-Default: NULL.</p></dd>
+<dd><p>(required; dataframe, tibble, or sf) A dataframe with responses (optional) and predictors. Must have at least 10 rows for pairwise correlation analysis, and <code>10 * (length(predictors) - 1)</code> for VIF. Default: NULL.</p></dd>
 
 
 <dt id="arg-response">response<a class="anchor" aria-label="anchor" href="#arg-response"></a></dt>
@@ -104,9 +101,7 @@ Default: NULL.</p></dd>
 
 
 <dt id="arg-predictors">predictors<a class="anchor" aria-label="anchor" href="#arg-predictors"></a></dt>
-<dd><p>(optional; character vector or NULL) Names of the
-predictors in <code>df</code>. If NULL, all columns except <code>responses</code> and
-constant/near-zero-variance columns are used. Default: NULL.</p></dd>
+<dd><p>(optional; character vector or NULL) Names of the predictors in <code>df</code>. If NULL, all columns except <code>responses</code> and constant/near-zero-variance columns are used. Default: NULL.</p></dd>
 
 
 <dt id="arg-term-f">term_f<a class="anchor" aria-label="anchor" href="#arg-term-f"></a></dt>
@@ -126,9 +121,7 @@ constant/near-zero-variance columns are used. Default: NULL.</p></dd>
 
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
-<dd><p>(optional) Internal args (e.g. <code>function_name</code> for
-<code><a href="validate_arg_function_name.html">validate_arg_function_name</a></code>, a precomputed correlation matrix
-<code>m</code>, or cross-validation args for <code><a href="preference_order.html">preference_order</a></code>).</p></dd>
+<dd><p>(optional) Internal args (e.g. <code>function_name</code> for <code><a href="validate_arg_function_name.html">validate_arg_function_name</a></code>, a precomputed correlation matrix <code>m</code>, or cross-validation args for <code><a href="preference_order.html">preference_order</a></code>).</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -182,7 +175,7 @@ constant/near-zero-variance columns are used. Default: NULL.</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     humidity_range + cloud_cover_range + swi_range + soil_silt + </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     rainfall_min + rainfall_range + soil_soc + swi_mean + solar_rad_range + </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     solar_rad_max + temperature_max</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x55674396e648&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x563db30a88f0&gt;</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#using a formula in a model</span></span></span>
 <span class="r-in"><span><span class="va">m</span> <span class="op">&lt;-</span> <span class="fu">stats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span></span></span>
@@ -240,7 +233,7 @@ constant/near-zero-variance columns are used. Default: NULL.</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     humidity_range + cloud_cover_range + swi_range + soil_silt + </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     rainfall_min + rainfall_range + soil_soc + swi_mean + solar_rad_range + </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     solar_rad_max + temperature_max</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x556745395ee8&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x563da3e77828&gt;</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#polynomial formula (3rd degree)</span></span></span>
@@ -267,7 +260,7 @@ constant/near-zero-variance columns are used. Default: NULL.</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     raw = TRUE) + poly(solar_rad_range, degree = 3, raw = TRUE) + </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     poly(solar_rad_max, degree = 3, raw = TRUE) + poly(temperature_max, </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     degree = 3, raw = TRUE)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x556743f46458&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x563da5678428&gt;</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#gam formula</span></span></span>
 <span class="r-in"><span><span class="va">y</span> <span class="op">&lt;-</span> <span class="fu">model_formula</span><span class="op">(</span></span></span>
@@ -286,7 +279,7 @@ constant/near-zero-variance columns are used. Default: NULL.</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     s(swi_range) + s(soil_silt) + s(rainfall_min) + s(rainfall_range) + </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     s(soil_soc) + s(swi_mean) + s(solar_rad_range) + s(solar_rad_max) + </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     s(temperature_max)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x556745f44450&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x563da4f17970&gt;</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#random effect</span></span></span>
 <span class="r-in"><span><span class="va">y</span> <span class="op">&lt;-</span> <span class="fu">model_formula</span><span class="op">(</span></span></span>
@@ -304,7 +297,7 @@ constant/near-zero-variance columns are used. Default: NULL.</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     humidity_range + cloud_cover_range + swi_range + soil_silt + </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     rainfall_min + rainfall_range + soil_soc + swi_mean + solar_rad_range + </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     solar_rad_max + temperature_max + (1 | country_name)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x5567459b8148&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x563da76267c0&gt;</span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
