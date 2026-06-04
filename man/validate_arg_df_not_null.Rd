@@ -7,10 +7,7 @@
 validate_arg_df_not_null(df = NULL, function_name = NULL)
 }
 \arguments{
-\item{df}{(required; dataframe, tibble, or sf) A dataframe with responses
-(optional) and predictors. Must have at least 10 rows for pairwise
-correlation analysis, and \code{10 * (length(predictors) - 1)} for VIF.
-Default: NULL.}
+\item{df}{(required; dataframe, tibble, or sf) A dataframe with responses (optional) and predictors. Must have at least 10 rows for pairwise correlation analysis, and \code{10 * (length(predictors) - 1)} for VIF. Default: NULL.}
 
 \item{function_name}{(optional, character string) Name of the function performing the argument check. Default: NULL}
 }

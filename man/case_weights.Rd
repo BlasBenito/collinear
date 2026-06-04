@@ -9,9 +9,7 @@ case_weights(x = NULL, ...)
 \arguments{
 \item{x}{(required, integer, character, or factor vector) Values of a binomial, categorical, or factor variable. Default: NULL}
 
-\item{...}{(optional) Internal args (e.g. \code{function_name} for
-\code{\link{validate_arg_function_name}}, a precomputed correlation matrix
-\code{m}, or cross-validation args for \code{\link{preference_order}}).}
+\item{...}{(optional) Internal args (e.g. \code{function_name} for \code{\link{validate_arg_function_name}}, a precomputed correlation matrix \code{m}, or cross-validation args for \code{\link{preference_order}}).}
 }
 \value{
 numeric vector: case weights

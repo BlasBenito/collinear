@@ -35,10 +35,7 @@ target_encoding_rank(
 )
 }
 \arguments{
-\item{df}{(required; dataframe, tibble, or sf) A dataframe with responses
-(optional) and predictors. Must have at least 10 rows for pairwise
-correlation analysis, and \code{10 * (length(predictors) - 1)} for VIF.
-Default: NULL.}
+\item{df}{(required; dataframe, tibble, or sf) A dataframe with responses (optional) and predictors. Must have at least 10 rows for pairwise correlation analysis, and \code{10 * (length(predictors) - 1)} for VIF. Default: NULL.}
 
 \item{response}{(optional, character string) Name of a numeric response variable in \code{df}. Default: NULL.}
 
@@ -48,9 +45,7 @@ Default: NULL.}
 
 \item{smoothing}{(optional; integer) Groups smaller than this number have their means pulled towards the mean of the response across all cases. Ignored by \code{\link[=target_encoding_rank]{target_encoding_rank()}} and \code{\link[=target_encoding_loo]{target_encoding_loo()}}. Default: 0}
 
-\item{...}{(optional) Internal args (e.g. \code{function_name} for
-\code{\link{validate_arg_function_name}}, a precomputed correlation matrix
-\code{m}, or cross-validation args for \code{\link{preference_order}}).}
+\item{...}{(optional) Internal args (e.g. \code{function_name} for \code{\link{validate_arg_function_name}}, a precomputed correlation matrix \code{m}, or cross-validation args for \code{\link{preference_order}}).}
 }
 \value{
 dataframe

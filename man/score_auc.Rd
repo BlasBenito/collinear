@@ -11,9 +11,7 @@ score_auc(o = NULL, p = NULL, ...)
 
 \item{p}{(required, numeric vector) Prediction of binomial model in the range 0-1. Default: NULL}
 
-\item{...}{(optional) Internal args (e.g. \code{function_name} for
-\code{\link{validate_arg_function_name}}, a precomputed correlation matrix
-\code{m}, or cross-validation args for \code{\link{preference_order}}).}
+\item{...}{(optional) Internal args (e.g. \code{function_name} for \code{\link{validate_arg_function_name}}, a precomputed correlation matrix \code{m}, or cross-validation args for \code{\link{preference_order}}).}
 }
 \value{
 numeric: Area Under the ROC Curve

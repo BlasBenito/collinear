@@ -13,9 +13,7 @@ cor_cramer(x = NULL, y = NULL, check_input = TRUE, ...)
 
 \item{check_input}{(required; logical) If FALSE, disables data checking for a slightly faster execution. Default: TRUE}
 
-\item{...}{(optional) Internal args (e.g. \code{function_name} for
-\code{\link{validate_arg_function_name}}, a precomputed correlation matrix
-\code{m}, or cross-validation args for \code{\link{preference_order}}).}
+\item{...}{(optional) Internal args (e.g. \code{function_name} for \code{\link{validate_arg_function_name}}, a precomputed correlation matrix \code{m}, or cross-validation args for \code{\link{preference_order}}).}
 }
 \value{
 numeric: Cramer's V

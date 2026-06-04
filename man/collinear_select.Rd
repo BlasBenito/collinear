@@ -16,19 +16,13 @@ collinear_select(
 )
 }
 \arguments{
-\item{df}{(required; dataframe, tibble, or sf) A dataframe with responses
-(optional) and predictors. Must have at least 10 rows for pairwise
-correlation analysis, and \code{10 * (length(predictors) - 1)} for VIF.
-Default: NULL.}
+\item{df}{(required; dataframe, tibble, or sf) A dataframe with responses (optional) and predictors. Must have at least 10 rows for pairwise correlation analysis, and \code{10 * (length(predictors) - 1)} for VIF. Default: NULL.}
 
 \item{response}{(optional; character or NULL) Name of one response variable in \code{df}. Used to exclude columns when \code{predictors} is NULL, and to filter \code{preference_order} when it is a dataframe and contains several responses. Default: NULL.}
 
-\item{predictors}{(optional; character vector or NULL) Names of the
-predictors in \code{df}. If NULL, all columns except \code{responses} and
-constant/near-zero-variance columns are used. Default: NULL.}
+\item{predictors}{(optional; character vector or NULL) Names of the predictors in \code{df}. If NULL, all columns except \code{responses} and constant/near-zero-variance columns are used. Default: NULL.}
 
-\item{preference_order}{(optional; character vector, dataframe from
-\code{\link{preference_order}}, or NULL) Prioritizes predictors to preserve.}
+\item{preference_order}{(optional; character vector, dataframe from \code{\link{preference_order}}, or NULL) Prioritizes predictors to preserve.}
 
 \item{max_cor}{(optional; numeric or NULL) Maximum correlation allowed between pairs of \code{predictors}. Valid values are between 0.01 and 0.99, and recommended values are between 0.5 (strict) and 0.9 (permissive). Default: 0.7}
 
@@ -36,9 +30,7 @@ constant/near-zero-variance columns are used. Default: NULL.}
 
 \item{quiet}{(optional; logical) If FALSE, messages are printed. Default: FALSE.}
 
-\item{...}{(optional) Internal args (e.g. \code{function_name} for
-\code{\link{validate_arg_function_name}}, a precomputed correlation matrix
-\code{m}, or cross-validation args for \code{\link{preference_order}}).}
+\item{...}{(optional) Internal args (e.g. \code{function_name} for \code{\link{validate_arg_function_name}}, a precomputed correlation matrix \code{m}, or cross-validation args for \code{\link{preference_order}}).}
 }
 \value{
 character vector: names of selected predictors
@@ -54,26 +46,19 @@ Please check the sections \strong{Variance Inflation Factors}, \strong{VIF-based
 \section{Pairwise Correlation Filtering}{
 
 
-\code{\link{cor_select}} computes the global correlation matrix, orders
-predictors by \code{preference_order} or by lower-to-higher summed
-correlations, and sequentially selects predictors with pairwise correlations
-below \code{max_cor}.
+\code{\link{cor_select}} computes the global correlation matrix, orders predictors by \code{preference_order} or by lower-to-higher summed correlations, and sequentially selects predictors with pairwise correlations below \code{max_cor}.
 }
 
 \section{Variance Inflation Factors}{
 
 
-VIF for predictor \eqn{a} is computed as \eqn{1/(1-R^2)}, where \eqn{R^2} is
-the multiple R-squared from regressing \eqn{a} on the other predictors.
-Recommended maximums commonly used are 2.5, 5, and 10.
+VIF for predictor \eqn{a} is computed as \eqn{1/(1-R^2)}, where \eqn{R^2} is the multiple R-squared from regressing \eqn{a} on the other predictors. Recommended maximums commonly used are 2.5, 5, and 10.
 }
 
 \section{VIF-based Filtering}{
 
 
-\code{\link{vif_select}} ranks numeric predictors (user \code{preference_order}
-if provided, otherwise from lower to higher VIF) and sequentially adds
-predictors whose VIF against the current selection is below \code{max_vif}.
+\code{\link{vif_select}} ranks numeric predictors (user \code{preference_order} if provided, otherwise from lower to higher VIF) and sequentially adds predictors whose VIF against the current selection is below \code{max_vif}.
 }
 
 \examples{

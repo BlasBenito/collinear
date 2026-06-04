@@ -2,154 +2,143 @@
 #'
 #' @description
 #'
-#' Automates multicollinearity management in datasets with mixed variable types
-#' (numeric, categorical, and logical) through an integrated system of five key
-#' components:
+#' Automates multicollinearity management in datasets with mixed variable types (numeric, categorical, and logical) through an integrated system of five key components:
 #'
 #' \describe{
-#'   \item{Target Encoding Integration (opt-in)}{
-#'     When \code{responses} is numeric, categorical predictors can be converted
-#'     to numeric using response values as reference. This enables VIF and
-#'     correlation analysis across mixed types. See \code{\link{target_encoding_lab}}.
-#'   }
+#'   \item{Target Encoding Integration (opt-in)}{When \code{responses} is numeric, categorical predictors can be converted to numeric using response values as reference. This enables VIF and correlation analysis across mixed types. See \code{\link{target_encoding_lab}}.}
 #'
-#'   \item{Intelligent Predictor Ranking (active by default)}{
-#'     Three prioritization strategies ensure the most relevant predictors are
-#'     retained during filtering:
+#'   \item{Intelligent Predictor Ranking (active by default)}{Three prioritization strategies ensure the most relevant predictors are retained during filtering:
 #'     \itemize{
-#'       \item \strong{User-defined ranking} (argument \code{preference_order}):
-#'         Accepts a character vector of predictor names or a dataframe from
-#'         \code{\link{preference_order}}. Lower-ranked collinear predictors are removed.
+#'       \item \strong{User-defined ranking} (argument \code{preference_order}): Accepts a character vector of predictor names or a dataframe from \code{\link{preference_order}}. Lower-ranked collinear predictors are removed.
 #'       \item \strong{Response-based ranking} (\code{f}):
-#'         Uses \code{\link{f_auto}}, \code{\link{f_numeric_glm}}, or
-#'         \code{\link{f_binomial_rf}} to rank predictors by association with
-#'         the response. Supports cross-validation via \code{\link{preference_order}}.
-#'       \item \strong{Multicollinearity-based ranking} (default):
-#'         When both \code{preference_order} and \code{f} are \code{NULL},
-#'         predictors are ranked from lower to higher multicollinearity.
+#'         Uses \code{\link{f_auto}} to auto-select a function  (see \code{\link{f_numeric_glm}}) to rank predictors by their univariate association with the response. Supports cross-validation via \code{\link{preference_order}}.
+#'       \item \strong{Multicollinearity-based ranking} (default): When both \code{preference_order} and \code{f} are \code{NULL}, predictors are ranked from lower to higher multicollinearity.
 #'     }
 #'   }
 #'
-#'   \item{Unified Correlation Framework (active by default)}{
-#'     Computes pairwise correlations between variable types using Pearson
-#'     (numeric–numeric), target encoding (numeric–categorical), and Cramer's V
-#'     (categorical–categorical). See \code{\link{cor_df}}, \code{\link{cor_matrix}},
-#'     and \code{\link{cor_cramer}}.
-#'   }
+#'   \item{Unified Correlation Framework (active by default)}{ Computes pairwise correlations between variable types using Pearson (numeric–numeric), target encoding (numeric–categorical), and Cramer's V (categorical–categorical). See \code{\link{cor_df}}, \code{\link{cor_matrix}}, and \code{\link{cor_cramer}}.}
 #'
 #'   \item{Adaptive Filtering Thresholds (active by default)}{
-#'     When \code{max_cor} and \code{max_vif} are both \code{NULL}, thresholds
-#'     are determined from the median correlation structure of the predictors.
+#'     When \code{max_cor} and \code{max_vif} are both \code{NULL}, thresholds are determined from the median correlation structure of the predictors.
 #'   }
 #'
 #'   \item{Dual Filtering Strategy (active by default)}{
 #'     Combines two complementary methods while respecting predictor rankings:
 #'     \itemize{
 #'       \item \strong{Pairwise Correlation Filtering}:
-#'         Removes predictors with Pearson correlation or Cramer's V above
-#'         \code{max_cor}. See \code{\link{cor_select}}.
+#'         Removes predictors with Pearson correlation or Cramer's V above \code{max_cor}. See \code{\link{cor_select}}.
 #'       \item \strong{VIF-based Filtering}:
-#'         Removes numeric predictors with VIF above \code{max_vif}. See
-#'         \code{\link{vif_select}}, \code{\link{vif_df}}, and \code{\link{vif}}.
+#'         Removes numeric predictors with VIF above \code{max_vif}. See \code{\link{vif_select}}, \code{\link{vif_df}}, and \code{\link{vif}}.
 #'     }
 #'   }
 #' }
 #'
-#' This function accepts parallelization via \code{future::plan()} and progress
-#' bars via \code{progressr::handlers()}. Parallelization benefits
-#' \code{\link{target_encoding_lab}}, \code{\link{preference_order}}, and
-#' \code{\link{cor_select}}.
+#' This function accepts parallelization via \code{future::plan()} and progress bars via \code{progressr::handlers()}. Parallelization benefits \code{\link{target_encoding_lab}}, \code{\link{preference_order}}, and \code{\link{cor_select}}.
 #'
 #' @section Adaptive Multicollinearity Thresholds:
 #'
-#' When both \code{max_cor} and \code{max_vif} are \code{NULL}, the function
-#' determines thresholds as follows:
+#' When both \code{max_cor} and \code{max_vif} are \code{NULL}, the function determines thresholds as follows:
 #' \enumerate{
-#'   \item Compute the 75th percentile of pairwise correlations via
-#'     \code{\link{cor_stats}}.
-#'   \item Map that value through a sigmoid between 0.545 (VIF~2.5) and 0.785
-#'     (VIF~7.5), centered at 0.665, to get \code{max_cor}.
-#'   \item Compute \code{max_vif} from \code{max_cor} using
-#'     \code{\link{gam_cor_to_vif}}.
+#'   \item Compute the 75th percentile of pairwise correlations via \code{\link{cor_stats}}.
+#'   \item Map that value through a sigmoid between 0.545 (VIF~2.5) and 0.785 (VIF~7.5), centered at 0.665, to get \code{max_cor}.
+#'   \item Compute \code{max_vif} from \code{max_cor} using \code{\link{gam_cor_to_vif}}.
 #' }
 #'
 #' @section Variance Inflation Factors:
 #'
-#' VIF for predictor \eqn{a} is computed as \eqn{1/(1-R^2)}, where \eqn{R^2} is
-#' the multiple R-squared from regressing \eqn{a} on the other predictors.
-#' Recommended maximums commonly used are 2.5, 5, and 10.
+#' VIF for predictor \eqn{a} is computed as \eqn{1/(1-R^2)}, where \eqn{R^2} is the multiple R-squared from regressing \eqn{a} on the other predictors. Recommended maximums commonly used are 2.5, 5, and 10.
 #'
 #' @section VIF-based Filtering:
 #'
-#' \code{\link{vif_select}} ranks numeric predictors (user \code{preference_order}
-#' if provided, otherwise from lower to higher VIF) and sequentially adds
-#' predictors whose VIF against the current selection is below \code{max_vif}.
+#' \code{\link{vif_select}} ranks numeric predictors (user \code{preference_order} if provided, otherwise from lower to higher VIF) and sequentially adds predictors whose VIF against the current selection is below \code{max_vif}.
 #'
 #' @section Pairwise Correlation Filtering:
 #'
-#' \code{\link{cor_select}} computes the global correlation matrix, orders
-#' predictors by \code{preference_order} or by lower-to-higher summed
-#' correlations, and sequentially selects predictors with pairwise correlations
-#' below \code{max_cor}.
+#' \code{\link{cor_select}} computes the global correlation matrix, orders predictors by \code{preference_order} or by lower-to-higher summed correlations, and sequentially selects predictors with pairwise correlations below \code{max_cor}.
 #'
-#' @param df (required; dataframe, tibble, or sf) A dataframe with responses
-#'   (optional) and predictors. Must have at least 10 rows for pairwise
-#'   correlation analysis, and \code{10 * (length(predictors) - 1)} for VIF.
-#'   Default: NULL.
+#' @param df (required; dataframe, tibble, or sf) A dataframe with responses (optional) and predictors. Must have at least 10 rows for pairwise correlation analysis, and \code{10 * (length(predictors) - 1)} for VIF. Default: NULL.
 #'
-#' @param responses (optional; character, character vector, or NULL) Name of
-#'   one or several response variables in \code{df}. Default: NULL.
+#' @param responses (optional; character, character vector, or NULL) Name of one or several response variables in \code{df}. Default: NULL.
 #'
-#' @param predictors (optional; character vector or NULL) Names of the
-#'   predictors in \code{df}. If NULL, all columns except \code{responses} and
-#'   constant/near-zero-variance columns are used. Default: NULL.
+#' @param predictors (optional; character vector or NULL) Names of the predictors in \code{df}. If NULL, all columns except \code{responses} and constant/near-zero-variance columns are used. Default: NULL.
 #'
-#' @param encoding_method (optional; character or NULL) One of "loo", "mean",
-#'   or "rank". If NULL, target encoding is disabled. Default: NULL.
+#' @param encoding_method (optional; character or NULL) One of "loo", "mean", or "rank". If NULL, target encoding is disabled. Default: NULL.
 #'
-#' @param preference_order (optional; character vector, dataframe from
-#'   \code{\link{preference_order}}, or NULL) Prioritizes predictors to preserve.
+#' @param preference_order (optional; character vector, dataframe from \code{\link{preference_order}}, or NULL) Prioritizes predictors to preserve.
 #'
-#' @param f (optional; unquoted function name or NULL) Function to rank
-#'   predictors by relationship with \code{responses}. See \code{\link{f_functions}}.
-#'   Default: \code{f_auto}.
+#' @param f (optional; unquoted function name or NULL) Function to rank predictors by relationship with \code{responses}. See \code{\link{f_functions}}. Default: \code{f_auto}.
 #'
-#' @param max_cor (optional; numeric or NULL) Maximum allowed pairwise
-#'   correlation (0.01–0.99). Recommended between 0.5 and 0.9. If NULL and
-#'   \code{max_vif} is NULL, it is selected automatically. Default: NULL.
+#' @param max_cor (optional; numeric or NULL) Maximum allowed pairwise correlation (0.01–0.99). Recommended between 0.5 and 0.9. If NULL and \code{max_vif} is NULL, it is selected automatically. Default: NULL.
 #'
-#' @param max_vif (optional; numeric or NULL) Maximum allowed VIF. Recommended
-#'   between 2.5 and 10. If NULL and \code{max_cor} is NULL, configured
-#'   automatically. Default: NULL.
+#' @param max_vif (optional; numeric or NULL) Maximum allowed VIF. Recommended between 2.5 and 10. If NULL and \code{max_cor} is NULL, configured automatically. Default: NULL.
 #'
 #' @param quiet (optional; logical) If FALSE, messages are printed. Default: FALSE.
 #'
-#' @param ... (optional) Internal args (e.g. \code{function_name} for
-#'   \code{\link{validate_arg_function_name}}, a precomputed correlation matrix
-#'   \code{m}, or cross-validation args for \code{\link{preference_order}}).
+#' @param ... (optional) Internal args (e.g. \code{function_name} for \code{\link{validate_arg_function_name}}, a precomputed correlation matrix \code{m}, or cross-validation args for \code{\link{preference_order}}).
 #'
 #' @return A list of class \code{collinear_output} with sublists of class
-#'   \code{collinear_selection}. If \code{responses = NULL} a single sublist
-#'   named "result" is returned; otherwise a sublist per response is returned.
+#'   \code{collinear_selection}. If \code{responses = NULL} a single sublist named "result" is returned; otherwise a sublist per response is returned.
 #'
 #' @examples
-#' data(vi_smol, package = "spatialData")
-#' data(vi_predictors, package = "spatialData")
+#'
+#' #load example data
+#' data(
+#'   vi_smol,
+#'   vi_predictors,
+#'   package = "spatialData"
+#'   )
+#'
+#' #select numeric predictors only
 #' vi_predictors_numeric <- identify_numeric_variables(
 #'   df = vi_smol,
 #'   predictors = vi_predictors
 #' )$valid
-#' x <- collinear(df = vi_smol[, vi_predictors_numeric])
+#'
+#' #OPTIONAL: parallelization setup
+#' #worth it for large data
+#' # future::plan(
+#' #   strategy = future::multisession,
+#' #   workers = future::availableCores() - 2
+#' # )
+#'
+#' #OPTIONAL
+#' #progress bar (doesn't work when running an R example)
+#' #progressr::handlers(global = TRUE)
+#'
+#' #filter numeric predictors automatically
+#' x <- collinear(
+#'   df = vi_smol,
+#'   response = "vi_numeric",
+#'   predictors = vi_predictors_numeric
+#'   )
+#'
+#' #selected variable names
+#' x$vi_numeric$selection
+#'
+#' #preference order dataframe
+#' x$vi_numeric$preference_order
+#'
+#' #model formulas
+#' x$vi_numeric$formulas
+#'
+#' #using a formula
+#' m <- lm(
+#'   formula = x$vi_numeric$formulas$linear,
+#'   data = x$vi_numeric$df
+#' )
+#'
+#' summary(m)
+#'
+#' #disable parallelization
+#' # future::plan(
+#' #   strategy = future::sequential
+#' # )
 #'
 #' @autoglobal
 #' @references
 #' \itemize{
-#'  \item David A. Belsley, D.A., Kuh, E., Welsch, R.E. (1980). Regression
-#'    Diagnostics: Identifying Influential Data and Sources of Collinearity.
-#'    John Wiley & Sons. DOI: 10.1002/0471725153.
-#'  \item Micci-Barreca, D. (2001) A Preprocessing Scheme for High-Cardinality
-#'    Categorical Attributes in Classification and Prediction Problems. SIGKDD
-#'    Explor. Newsl. 3, 1, 27-32. DOI: 10.1145/507533.507538
+#'  \item David A. Belsley, D.A., Kuh, E., Welsch, R.E. (1980). Regression  Diagnostics: Identifying Influential Data and Sources of Collinearity. John Wiley & Sons. DOI: 10.1002/0471725153.
+#'  \item Micci-Barreca, D. (2001) A Preprocessing Scheme for High-Cardinality Categorical Attributes in Classification and Prediction Problems. SIGKDD Explor. Newsl. 3, 1, 27-32. DOI: 10.1145/507533.507538
 #' }
 #' @family multicollinearity_filtering
 #' @export

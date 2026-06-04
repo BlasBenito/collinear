@@ -15,27 +15,19 @@ cor_select(
 )
 }
 \arguments{
-\item{df}{(required; dataframe, tibble, or sf) A dataframe with responses
-(optional) and predictors. Must have at least 10 rows for pairwise
-correlation analysis, and \code{10 * (length(predictors) - 1)} for VIF.
-Default: NULL.}
+\item{df}{(required; dataframe, tibble, or sf) A dataframe with responses (optional) and predictors. Must have at least 10 rows for pairwise correlation analysis, and \code{10 * (length(predictors) - 1)} for VIF. Default: NULL.}
 
 \item{response}{(optional; character or NULL) Name of one response variable in \code{df}. Used to exclude columns when \code{predictors} is NULL, and to filter \code{preference_order} when it is a dataframe and contains several responses. Default: NULL.}
 
-\item{predictors}{(optional; character vector or NULL) Names of the
-predictors in \code{df}. If NULL, all columns except \code{responses} and
-constant/near-zero-variance columns are used. Default: NULL.}
+\item{predictors}{(optional; character vector or NULL) Names of the predictors in \code{df}. If NULL, all columns except \code{responses} and constant/near-zero-variance columns are used. Default: NULL.}
 
-\item{preference_order}{(optional; character vector, dataframe from
-\code{\link{preference_order}}, or NULL) Prioritizes predictors to preserve.}
+\item{preference_order}{(optional; character vector, dataframe from \code{\link{preference_order}}, or NULL) Prioritizes predictors to preserve.}
 
 \item{max_cor}{(optional; numeric or NULL) Maximum correlation allowed between pairs of \code{predictors}. Valid values are between 0.01 and 0.99, and recommended values are between 0.5 (strict) and 0.9 (permissive). Default: 0.7}
 
 \item{quiet}{(optional; logical) If FALSE, messages are printed. Default: FALSE.}
 
-\item{...}{(optional) Internal args (e.g. \code{function_name} for
-\code{\link{validate_arg_function_name}}, a precomputed correlation matrix
-\code{m}, or cross-validation args for \code{\link{preference_order}}).}
+\item{...}{(optional) Internal args (e.g. \code{function_name} for \code{\link{validate_arg_function_name}}, a precomputed correlation matrix \code{m}, or cross-validation args for \code{\link{preference_order}}).}
 }
 \value{
 character vector of selected predictors
@@ -52,10 +44,7 @@ Please check the section \strong{Pairwise Correlation Filtering} at the end of t
 \section{Pairwise Correlation Filtering}{
 
 
-\code{\link{cor_select}} computes the global correlation matrix, orders
-predictors by \code{preference_order} or by lower-to-higher summed
-correlations, and sequentially selects predictors with pairwise correlations
-below \code{max_cor}.
+\code{\link{cor_select}} computes the global correlation matrix, orders predictors by \code{preference_order} or by lower-to-higher summed correlations, and sequentially selects predictors with pairwise correlations below \code{max_cor}.
 }
 
 \examples{

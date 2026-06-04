@@ -16,16 +16,11 @@ target_encoding_lab(
 )
 }
 \arguments{
-\item{df}{(required; dataframe, tibble, or sf) A dataframe with responses
-(optional) and predictors. Must have at least 10 rows for pairwise
-correlation analysis, and \code{10 * (length(predictors) - 1)} for VIF.
-Default: NULL.}
+\item{df}{(required; dataframe, tibble, or sf) A dataframe with responses (optional) and predictors. Must have at least 10 rows for pairwise correlation analysis, and \code{10 * (length(predictors) - 1)} for VIF. Default: NULL.}
 
 \item{response}{(optional, character string) Name of a numeric response variable in \code{df}. Default: NULL.}
 
-\item{predictors}{(optional; character vector or NULL) Names of the
-predictors in \code{df}. If NULL, all columns except \code{responses} and
-constant/near-zero-variance columns are used. Default: NULL.}
+\item{predictors}{(optional; character vector or NULL) Names of the predictors in \code{df}. If NULL, all columns except \code{responses} and constant/near-zero-variance columns are used. Default: NULL.}
 
 \item{encoding_method}{(optional; character vector or NULL). Name of the target encoding methods. One or several of: "mean", "rank", "loo". If NULL, target encoding is ignored, and \code{df} is returned with no modification. Default: "loo"}
 
@@ -35,9 +30,7 @@ constant/near-zero-variance columns are used. Default: NULL.}
 
 \item{quiet}{(optional; logical) If FALSE, messages are printed. Default: FALSE.}
 
-\item{...}{(optional) Internal args (e.g. \code{function_name} for
-\code{\link{validate_arg_function_name}}, a precomputed correlation matrix
-\code{m}, or cross-validation args for \code{\link{preference_order}}).}
+\item{...}{(optional) Internal args (e.g. \code{function_name} for \code{\link{validate_arg_function_name}}, a precomputed correlation matrix \code{m}, or cross-validation args for \code{\link{preference_order}}).}
 }
 \value{
 dataframe

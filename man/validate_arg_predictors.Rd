@@ -13,17 +13,11 @@ validate_arg_predictors(
 )
 }
 \arguments{
-\item{df}{(required; dataframe, tibble, or sf) A dataframe with responses
-(optional) and predictors. Must have at least 10 rows for pairwise
-correlation analysis, and \code{10 * (length(predictors) - 1)} for VIF.
-Default: NULL.}
+\item{df}{(required; dataframe, tibble, or sf) A dataframe with responses (optional) and predictors. Must have at least 10 rows for pairwise correlation analysis, and \code{10 * (length(predictors) - 1)} for VIF. Default: NULL.}
 
-\item{responses}{(optional; character, character vector, or NULL) Name of
-one or several response variables in \code{df}. Default: NULL.}
+\item{responses}{(optional; character, character vector, or NULL) Name of one or several response variables in \code{df}. Default: NULL.}
 
-\item{predictors}{(optional; character vector or NULL) Names of the
-predictors in \code{df}. If NULL, all columns except \code{responses} and
-constant/near-zero-variance columns are used. Default: NULL.}
+\item{predictors}{(optional; character vector or NULL) Names of the predictors in \code{df}. If NULL, all columns except \code{responses} and constant/near-zero-variance columns are used. Default: NULL.}
 
 \item{quiet}{(optional; logical) If FALSE, messages are printed. Default: FALSE.}
 

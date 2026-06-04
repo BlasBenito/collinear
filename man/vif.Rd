@@ -11,9 +11,7 @@ vif(m = NULL, quiet = FALSE, ...)
 
 \item{quiet}{(optional; logical) If FALSE, messages are printed. Default: FALSE.}
 
-\item{...}{(optional) Internal args (e.g. \code{function_name} for
-\code{\link{validate_arg_function_name}}, a precomputed correlation matrix
-\code{m}, or cross-validation args for \code{\link{preference_order}}).}
+\item{...}{(optional) Internal args (e.g. \code{function_name} for \code{\link{validate_arg_function_name}}, a precomputed correlation matrix \code{m}, or cross-validation args for \code{\link{preference_order}}).}
 }
 \value{
 named numeric vector
@@ -28,9 +26,7 @@ Computes the Variance Inflation Factors from a correlation matrix in two steps:
 \section{Variance Inflation Factors}{
 
 
-VIF for predictor \eqn{a} is computed as \eqn{1/(1-R^2)}, where \eqn{R^2} is
-the multiple R-squared from regressing \eqn{a} on the other predictors.
-Recommended maximums commonly used are 2.5, 5, and 10.
+VIF for predictor \eqn{a} is computed as \eqn{1/(1-R^2)}, where \eqn{R^2} is the multiple R-squared from regressing \eqn{a} on the other predictors. Recommended maximums commonly used are 2.5, 5, and 10.
 }
 
 \examples{

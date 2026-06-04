@@ -14,25 +14,17 @@ identify_zero_variance_variables(
 )
 }
 \arguments{
-\item{df}{(required; dataframe, tibble, or sf) A dataframe with responses
-(optional) and predictors. Must have at least 10 rows for pairwise
-correlation analysis, and \code{10 * (length(predictors) - 1)} for VIF.
-Default: NULL.}
+\item{df}{(required; dataframe, tibble, or sf) A dataframe with responses (optional) and predictors. Must have at least 10 rows for pairwise correlation analysis, and \code{10 * (length(predictors) - 1)} for VIF. Default: NULL.}
 
-\item{responses}{(optional; character, character vector, or NULL) Name of
-one or several response variables in \code{df}. Default: NULL.}
+\item{responses}{(optional; character, character vector, or NULL) Name of one or several response variables in \code{df}. Default: NULL.}
 
-\item{predictors}{(optional; character vector or NULL) Names of the
-predictors in \code{df}. If NULL, all columns except \code{responses} and
-constant/near-zero-variance columns are used. Default: NULL.}
+\item{predictors}{(optional; character vector or NULL) Names of the predictors in \code{df}. If NULL, all columns except \code{responses} and constant/near-zero-variance columns are used. Default: NULL.}
 
 \item{decimals}{(required, integer) Number of decimal places for the zero variance test. Smaller numbers will increase the number of variables detected as near-zero variance. Recommended values will depend on the range of the numeric variables in 'df'. Default: 4}
 
 \item{quiet}{(optional; logical) If FALSE, messages are printed. Default: FALSE.}
 
-\item{...}{(optional) Internal args (e.g. \code{function_name} for
-\code{\link{validate_arg_function_name}}, a precomputed correlation matrix
-\code{m}, or cross-validation args for \code{\link{preference_order}}).}
+\item{...}{(optional) Internal args (e.g. \code{function_name} for \code{\link{validate_arg_function_name}}, a precomputed correlation matrix \code{m}, or cross-validation args for \code{\link{preference_order}}).}
 }
 \value{
 character vector: names of near-zero variance columns.
