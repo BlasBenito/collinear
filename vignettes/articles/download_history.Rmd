@@ -8,7 +8,7 @@ output:
 ---
 
 
-```{r, , include = FALSE}
+```{r, include = FALSE}
 if (!requireNamespace("pak", quietly = TRUE)) {
   install.packages("pak")
 }
