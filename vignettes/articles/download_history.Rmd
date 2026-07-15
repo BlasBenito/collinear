@@ -28,7 +28,7 @@ library(cranlogs)
 library(ggplot2)
 
 
-#get download data from the beginning
+#get download data from release
 download_history <- cranlogs::cran_downloads(
   packages = "collinear",
   from = "2023-10-01",
