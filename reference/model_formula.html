@@ -46,9 +46,9 @@ random effect: y ~ x + (1 \ z)
   </ul></li>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-blog-posts" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Blog Posts</button>
-  <ul class="dropdown-menu" aria-labelledby="dropdown-blog-posts"><li><a class="external-link dropdown-item" href="https://www.blasbenito.com/post/multicollinearity-model-interpretability/">Multicollinearity Hinders Model Interpretability</a></li>
-    <li><a class="external-link dropdown-item" href="https://www.blasbenito.com/post/variance-inflation-factor/">Everything About Variance Inflation Factors</a></li>
-    <li><a class="external-link dropdown-item" href="https://www.blasbenito.com/post/target-encoding/">Mapping Categorical Predictors to Numeric</a></li>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-blog-posts"><li><a class="external-link dropdown-item" href="https://www.blasbenito.com/2023/10/29/multicollinearity-model-interpretability/">Multicollinearity Hinders Model Interpretability</a></li>
+    <li><a class="external-link dropdown-item" href="https://www.blasbenito.com/2023/11/05/variance-inflation-factor/">Everything About Variance Inflation Factors</a></li>
+    <li><a class="external-link dropdown-item" href="https://www.blasbenito.com/2023/11/15/target-encoding/">Mapping Categorical Predictors to Numeric</a></li>
   </ul></li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
@@ -175,7 +175,7 @@ random effect: y ~ x + (1 \ z)
 <span class="r-out co"><span class="r-pr">#&gt;</span>     humidity_range + cloud_cover_range + swi_range + soil_silt + </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     rainfall_min + rainfall_range + soil_soc + swi_mean + solar_rad_range + </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     solar_rad_max + temperature_max</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x561772106570&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x5572ee2d2360&gt;</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#using a formula in a model</span></span></span>
 <span class="r-in"><span><span class="va">m</span> <span class="op">&lt;-</span> <span class="fu">stats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span></span></span>
@@ -233,7 +233,7 @@ random effect: y ~ x + (1 \ z)
 <span class="r-out co"><span class="r-pr">#&gt;</span>     humidity_range + cloud_cover_range + swi_range + soil_silt + </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     rainfall_min + rainfall_range + soil_soc + swi_mean + solar_rad_range + </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     solar_rad_max + temperature_max</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x56176e7df350&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x5572ee5ed7f0&gt;</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#polynomial formula (3rd degree)</span></span></span>
@@ -260,7 +260,7 @@ random effect: y ~ x + (1 \ z)
 <span class="r-out co"><span class="r-pr">#&gt;</span>     raw = TRUE) + poly(solar_rad_range, degree = 3, raw = TRUE) + </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     poly(solar_rad_max, degree = 3, raw = TRUE) + poly(temperature_max, </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     degree = 3, raw = TRUE)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x5617698871b8&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x5572ee7555b0&gt;</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#gam formula</span></span></span>
 <span class="r-in"><span><span class="va">y</span> <span class="op">&lt;-</span> <span class="fu">model_formula</span><span class="op">(</span></span></span>
@@ -279,7 +279,7 @@ random effect: y ~ x + (1 \ z)
 <span class="r-out co"><span class="r-pr">#&gt;</span>     s(swi_range) + s(soil_silt) + s(rainfall_min) + s(rainfall_range) + </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     s(soil_soc) + s(swi_mean) + s(solar_rad_range) + s(solar_rad_max) + </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     s(temperature_max)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x56177173faf0&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x5572ee8bfbc0&gt;</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#random effect</span></span></span>
 <span class="r-in"><span><span class="va">y</span> <span class="op">&lt;-</span> <span class="fu">model_formula</span><span class="op">(</span></span></span>
@@ -297,7 +297,7 @@ random effect: y ~ x + (1 \ z)
 <span class="r-out co"><span class="r-pr">#&gt;</span>     humidity_range + cloud_cover_range + swi_range + soil_silt + </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     rainfall_min + rainfall_range + soil_soc + swi_mean + solar_rad_range + </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     solar_rad_max + temperature_max + (1 | country_name)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x561770d770e8&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x5572eea32018&gt;</span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

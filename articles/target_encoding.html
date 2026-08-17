@@ -56,9 +56,9 @@
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-blog-posts" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Blog Posts</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-blog-posts">
-<li><a class="external-link dropdown-item" href="https://www.blasbenito.com/post/multicollinearity-model-interpretability/">Multicollinearity Hinders Model Interpretability</a></li>
-    <li><a class="external-link dropdown-item" href="https://www.blasbenito.com/post/variance-inflation-factor/">Everything About Variance Inflation Factors</a></li>
-    <li><a class="external-link dropdown-item" href="https://www.blasbenito.com/post/target-encoding/">Mapping Categorical Predictors to Numeric</a></li>
+<li><a class="external-link dropdown-item" href="https://www.blasbenito.com/2023/10/29/multicollinearity-model-interpretability/">Multicollinearity Hinders Model Interpretability</a></li>
+    <li><a class="external-link dropdown-item" href="https://www.blasbenito.com/2023/11/05/variance-inflation-factor/">Everything About Variance Inflation Factors</a></li>
+    <li><a class="external-link dropdown-item" href="https://www.blasbenito.com/2023/11/15/target-encoding/">Mapping Categorical Predictors to Numeric</a></li>
   </ul>
 </li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
@@ -350,8 +350,8 @@ providing a more statistically sound multicollinearity assessment.</li>
 <span>  seconds <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">time_without</span><span class="op">[</span><span class="st">"elapsed"</span><span class="op">]</span>, <span class="va">time_with</span><span class="op">[</span><span class="st">"elapsed"</span><span class="op">]</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt;   encoding seconds</span></span>
-<span><span class="co">#&gt; 1       No   7.649</span></span>
-<span><span class="co">#&gt; 2      Yes   0.267</span></span></code></pre></div>
+<span><span class="co">#&gt; 1       No   9.957</span></span>
+<span><span class="co">#&gt; 2      Yes   0.381</span></span></code></pre></div>
 <p>The speed-up is considerable!</p>
 <p>But that’s not the only consequence of applying target encoding.
 Let’s take a look at the variable selections on each run.</p>
