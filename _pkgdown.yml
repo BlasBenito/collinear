@@ -41,11 +41,11 @@ navbar:
       text: Blog Posts
       menu:
       - text: "Multicollinearity Hinders Model Interpretability"
-        href: https://www.blasbenito.com/post/multicollinearity-model-interpretability/
+        href: https://www.blasbenito.com/2023/10/29/multicollinearity-model-interpretability/
       - text: "Everything About Variance Inflation Factors"
-        href: https://www.blasbenito.com/post/variance-inflation-factor/
+        href: https://www.blasbenito.com/2023/11/05/variance-inflation-factor/
       - text: "Mapping Categorical Predictors to Numeric"
-        href: https://www.blasbenito.com/post/target-encoding/
+        href: https://www.blasbenito.com/2023/11/15/target-encoding/
   structure:
     left: [intro, reference, articles, blog, news]
     right: [search, github]
