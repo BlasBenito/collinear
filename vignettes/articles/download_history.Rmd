@@ -2,8 +2,6 @@
 title: "Download History"
 output: 
   rmarkdown::html_document:
-    toc: true
-    toc_title: "Content"
     source: false
 ---
 
