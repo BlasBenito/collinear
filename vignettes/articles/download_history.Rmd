@@ -46,6 +46,7 @@ monthly_downloads$date <- as.Date(paste0(monthly_downloads$year_month, "-01"))
 avg_monthly <- mean(monthly_downloads$count)
 
 #release date of major versions
+release_date_1.0 <- as.Date("2023-10-01")
 release_date_2.0 <- as.Date("2025-01-01")
 release_date_3.0 <- as.Date("2025-12-06")
 
@@ -55,6 +56,12 @@ ggplot(monthly_downloads, aes(x = date, y = count)) +
   geom_hline(
     yintercept = avg_monthly,
     linetype = "dashed",
+    color = "gray20",
+    linewidth = 0.8
+  ) +
+    geom_vline(
+    xintercept = release_date_1.0,
+    linetype = "solid",
     color = "gray20",
     linewidth = 0.8
   ) +
@@ -72,13 +79,24 @@ ggplot(monthly_downloads, aes(x = date, y = count)) +
   ) +
   annotate(
     "text",
-    x = min(monthly_downloads$date),
+    x = as.Date("2023-12-01"),
     y = avg_monthly,
     label = paste0("Monthly average: ", round(avg_monthly)),
     vjust = -0.5,
     hjust = 0.1,
     color = "gray20",
     size = 3.5
+  ) +
+    annotate(
+    "text",
+    x = release_date_1.0,
+    y = max(monthly_downloads$count),
+    label = "v1.0",
+    vjust = -0.5,
+    hjust = -0.1,
+    color = "gray20",
+    size = 3.5,
+    fontface = "bold"
   ) +
   annotate(
     "text",
@@ -106,14 +124,14 @@ ggplot(monthly_downloads, aes(x = date, y = count)) +
   scale_x_date(
     date_breaks = "1 month",
     date_labels = "%b %Y",
-    expand = expansion(mult = c(0.01, 0.02))
+    expand = expansion(mult = c(0.01, 0.01))
   ) +
   theme_minimal() +
   labs(
     title = "Monthly Downloads",
-    subtitle = paste0("Total downloads (", Sys.Date(), "): ", format(sum(monthly_downloads$count), big.mark = ",")),
+    subtitle = paste0("Total (", Sys.Date(), "): ", format(sum(monthly_downloads$count), big.mark = ",")),
     x = "",
-    y = "Monthly Downloads",
+    y = "Downloads",
     caption = "Data source: RStudio CRAN mirror via cranlogs"
   ) +
   theme(
