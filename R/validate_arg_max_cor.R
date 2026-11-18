@@ -31,6 +31,17 @@ validate_arg_max_cor <- function(
     return(max_cor)
   }
 
+  if (is.matrix(max_cor) || is.list(max_cor)) {
+    stop(
+      "\n",
+      function_name,
+      ": argument 'max_cor' must be a single number, not a ",
+      class(max_cor)[1],
+      ".",
+      call. = FALSE
+    )
+  }
+
   if (is.null(max_cor)) {
     return(NULL)
   }

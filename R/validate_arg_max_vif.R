@@ -31,6 +31,17 @@ validate_arg_max_vif <- function(
     return(max_vif)
   }
 
+  if (is.matrix(max_vif) || is.list(max_vif)) {
+    stop(
+      "\n",
+      function_name,
+      ": argument 'max_vif' must be a single number, not a ",
+      class(max_vif)[1],
+      ".",
+      call. = FALSE
+    )
+  }
+
   if (is.null(max_vif)) {
     return(NULL)
   }
