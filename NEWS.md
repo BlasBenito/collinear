@@ -1,3 +1,8 @@
+# collinear 3.0.3
+
+Fixed bug in `preference_order()` that printed the message "collinear::preference_order()
+└── collinear::validate_arg_responses(): argument 'response' must be of length 1, using response:" when providing several responses. This message was only triggered when `validate_arg_df()` removed a column (usual when `df` is an sf data frame).
+
 # collinear 3.0.2
 
 The `preference_order` dataframe returned by `collinear()` now shows the correct metric name instead of "custom" when a known `f` function is used.

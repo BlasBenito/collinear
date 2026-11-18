@@ -224,10 +224,9 @@ preference_order <- function(
     attributes(responses)$validated <- NULL
     attributes(predictors)$validated <- NULL
 
-    response <- validate_arg_responses(
+    responses <- validate_arg_responses(
       df = df,
       responses = responses,
-      max_responses = 1,
       quiet = quiet,
       function_name = function_name
     )
@@ -413,7 +412,7 @@ preference_order <- function(
       msg_length <- nchar(msg)
 
       message("\n", msg)
-      message(rep(x = "-", times = nchar(msg)))
+      # message(rep(x = "-", times = nchar(msg)))
     }
 
     #use f_auto to get function name
